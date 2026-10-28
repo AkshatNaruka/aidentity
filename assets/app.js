@@ -59,6 +59,52 @@
     fallback();
   });
 
+
+  // --- rotating hero command ---------------------------------------------
+  const rotator = document.querySelector(".cmd-rotate");
+  if (rotator) {
+    let commands = [];
+    try {
+      commands = JSON.parse(rotator.getAttribute("data-commands") || "[]");
+    } catch (error) {
+      commands = [];
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (commands.length > 1 && !reduce) {
+      const code = rotator.querySelector("code");
+      const button = rotator.querySelector("button");
+      let index = 0;
+      let timer = null;
+      const show = function (next) {
+        code.classList.add("swap");
+        window.setTimeout(function () {
+          code.textContent = next;
+          if (button) button.setAttribute("data-copy", next);
+          code.classList.remove("swap");
+        }, 200);
+      };
+      const start = function () {
+        timer = window.setInterval(function () {
+          index = (index + 1) % commands.length;
+          show(commands[index]);
+        }, 3400);
+      };
+      const stop = function () {
+        if (timer) window.clearInterval(timer);
+        timer = null;
+      };
+      rotator.addEventListener("mouseenter", stop);
+      rotator.addEventListener("mouseleave", start);
+      rotator.addEventListener("focusin", stop);
+      rotator.addEventListener("focusout", start);
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stop();
+        else if (!timer) start();
+      });
+      start();
+    }
+  }
+
   // --- browse filtering ---------------------------------------------------
   const list = document.getElementById("skill-list");
   if (!list) return;

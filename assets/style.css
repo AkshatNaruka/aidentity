@@ -103,6 +103,17 @@ img { max-width: 100%; }
 
 /* ---------- hero ---------- */
 .hero { padding: 88px 0 64px; border-bottom: 1px solid var(--rule); }
+.hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  gap: 56px; align-items: center;
+}
+.hero-copy { min-width: 0; }
+.hero-art { display: flex; align-items: center; justify-content: center; }
+.hero-art svg { width: 100%; max-width: 460px; height: auto; overflow: visible; }
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  .hero-art { display: none; }
+}
 .kicker {
   font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted); margin: 0 0 26px;
@@ -118,6 +129,7 @@ img { max-width: 100%; }
   font-size: 1.06rem; max-width: 62ch; color: var(--ink-soft); margin: 0 0 34px;
 }
 .hero .lede strong { font-weight: 600; color: var(--ink); }
+.hero .cmd { max-width: 100%; font-size: 13px; }
 
 /* ---------- command block ---------- */
 .cmd {
@@ -132,7 +144,13 @@ img { max-width: 100%; }
 }
 .cmd .prompt { color: var(--accent); user-select: none; flex: 0 0 auto; }
 /* min-width:0 is what lets a flex child shrink instead of pushing the button off-screen */
-.cmd code { flex: 1 1 180px; min-width: 0; overflow-x: auto; white-space: nowrap; }
+.cmd code {
+  flex: 1 1 180px; min-width: 0; overflow: hidden; white-space: nowrap;
+  text-overflow: ellipsis; scrollbar-width: none; -ms-overflow-style: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.cmd code::-webkit-scrollbar { display: none; }
+.cmd code.swap { opacity: 0; transform: translateY(4px); }
 .cmd button {
   flex: 0 0 auto;
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
@@ -438,3 +456,21 @@ p { margin: 0 0 1em; }
   cursor: pointer; text-decoration: none;
 }
 .share a:hover, .share button:hover { color: var(--accent); border-color: var(--accent); }
+
+
+/* ---------- hero skill graph ---------- */
+.hero-art .ring { transform-box: view-box; transform-origin: 240px 240px; }
+.hero-art .ring-a { animation: aid-spin 44s linear infinite; }
+.hero-art .ring-b { animation: aid-spin 30s linear infinite reverse; }
+.hero-art .ring-c { animation: aid-spin 20s linear infinite; }
+.hero-art .sat { animation: aid-spin 26s linear infinite; }
+.hero-art .core { transform-box: view-box; transform-origin: 240px 240px; animation: aid-pulse 5s ease-in-out infinite; }
+.hero-art .glow { animation: aid-glow 6s ease-in-out infinite; }
+.hero-art .blink { animation: aid-blink 3.4s ease-in-out infinite; }
+@keyframes aid-spin { to { transform: rotate(360deg); } }
+@keyframes aid-pulse { 0%,100% { opacity:.9; transform: rotate(45deg) scale(1); } 50% { opacity:1; transform: rotate(45deg) scale(1.06); } }
+@keyframes aid-glow { 0%,100% { opacity:.55; } 50% { opacity:.9; } }
+@keyframes aid-blink { 0%,100% { opacity:.25; } 50% { opacity:1; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-art .ring, .hero-art .sat, .hero-art .core, .hero-art .glow, .hero-art .blink { animation: none; }
+}
