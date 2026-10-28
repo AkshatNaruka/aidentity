@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-rag-engine-management — Aidentity</title>
+<meta name="description" content="Manage and query Agent Platform RAG Engine Corpora and retrieve grounded contexts using the Google GenAI SDK. Use when listing RAG corpora or files, inspecting a corpus, retrieving contexts, or generating content grounded in a RAG corpus. Do not use for standard database queries (use SQL/Spanner skills), Google Workspace RAG, or other RAG products like gRAG.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-rag-engine-management/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-rag-engine-management — Aidentity">
+<meta property="og:description" content="Manage and query Agent Platform RAG Engine Corpora and retrieve grounded contexts using the Google GenAI SDK. Use when listing RAG corpora or files, inspecting a corpus, retrieving contexts, or generating content grounded in a RAG corpus. Do not use for standard database queries (use SQL/Spanner skills), Google Workspace RAG, or other RAG products like gRAG.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-rag-engine-management/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-rag-engine-management","description":"Manage and query Agent Platform RAG Engine Corpora and retrieve grounded contexts using the Google GenAI SDK. Use when listing RAG corpora or files, inspecting a corpus, retrieving contexts, or generating content grounded in a RAG corpus. Do not use for standard database queries (use SQL/Spanner skills), Google Workspace RAG, or other RAG products like gRAG.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-rag-engine-management/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-rag-engine-management
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-rag-engine-management</h1>
+      <p class="summary">Manage and query Agent Platform RAG Engine Corpora and retrieve grounded contexts using the Google GenAI SDK. Use when listing RAG corpora or files, inspecting a corpus, retrieving contexts, or generating content grounded in a RAG corpus. Do not use for standard database queries (use SQL/Spanner skills), Google Workspace RAG, or other RAG products like gRAG.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Platform RAG Engine Management</h3>
+<p>This skill provides instructions on how to interact with Agent Platform RAG</p>
+<p>Engine using the Agent Platform Python SDK. You</p>
+<p>MUST use the <code>vertexai</code> Python SDK to perform RAG Engine operations, rather than</p>
+<p>raw REST calls or MCP tools, because this code is intended to be run by external</p>
+<p>clients.</p>
+<h4>Safety &amp; Confirmation Tiers (CRITICAL)</h4>
+<p>Before executing any commands or scripts on behalf of the user, you must adhere</p>
+<p>to the following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R: Read-only (<code>list_corpora</code>, <code>list_files</code>, <code>get_corpus</code>, <code>retrieval_query</code>)</strong></li>
+</ol>
+<ul>
+<li>No confirmation needed. Execute immediately to gather information or retrieve grounded contexts.</li>
+</ul>
+<ol>
+<li><strong>Tier RC: Read-only but consumes Compute Resources (<code>client.models.generate_content</code>)</strong></li>
+</ol>
+<ul>
+<li>Requires <strong>interactive confirmation</strong> with &#39;Yes&#39;/&#39;No&#39; options before</li>
+</ul>
+<p>    executing grounded content generation. The confirmation prompt MUST</p>
+<p>    clearly explain the proposed generation execution and its key parameters</p>
+<p>    (e.g., target corpus ID, query text, target model). Natural-language</p>
+<p>    paraphrases without specifying exact parameters are insufficient, as</p>
+<p>    explicit parameter listing is required to ensure unambiguous user approval</p>
+<p>    of the specific resource and configuration.</p>
+<ul>
+<li><strong>Same-turn restriction</strong>: Do not execute the generation code in the</li>
+</ul>
+<p>    same turn as presenting the confirmation prompt. Stop and wait for the</p>
+<p>    user&#39;s reply; only execute after explicit &#39;Yes&#39; / approval.</p>
+<ul>
+<li><strong>Gold Standard Example</strong>:</li>
+</ul>
+<p>        &gt; I will perform grounded content generation with the following</p>
+<p>        &gt; parameters. Please confirm this information before I proceed:</p>
+<p>        &gt; *   <strong>Target Corpus ID</strong>: <code>projects/123/locations/us/ragCorpora/abc</code></p>
+<p>        &gt; *   <strong>Target Model</strong>: <code>gemini-2.5-pro</code></p>
+<p>        &gt; *   <strong>Query Text</strong>: &quot;What are the company policies on remote work?&quot;</p>
+<p>        &gt; Do you confirm? [Yes/No]</p>
+<h4>Phase 0: Environment Setup</h4>
+<p><strong>CRITICAL</strong>: Before running any of the Python snippets below, you must ensure</p>
+<p>the environment is correctly initialized by following these steps:</p>
+<ol>
+<li><strong>Google Cloud Authentication</strong>: Authenticate with your Google Cloud</li>
+</ol>
+<p>    credentials and configure active Application Default Credentials (ADC) for</p>
+<p>    Agent Platform access:</p>
+<p>    <pre><code>    gcloud auth login
+    gcloud auth application-default login
+    </code></pre></p>
+<ol>
+<li><strong>Virtual Environment</strong>: Create and activate a dedicated virtual</li>
+</ol>
+<p>    environment:</p>
+<p>    <pre><code>    python3 -m venv ~/rag_agent_venv
+    source ~/rag_agent_venv/bin/activate
+    </code></pre></p>
+<ol>
+<li><strong>Install Dependencies</strong>: Install the required Agent Platform SDKs:</li>
+</ol>
+<p>    <pre><code>    pip install google-cloud-aiplatform google-genai
+    </code></pre></p>
+<ol>
+<li><strong>Execution</strong>: Advise the user that every time they execute a Python</li>
+</ol>
+<p>    snippet, they must ensure this virtual environment is activated first.</p>
+<h4>Workflow Decision Tree</h4>
+<ol>
+<li><strong>Information Gathering</strong>: Has the user provided the Project ID, Region, and</li>
+</ol>
+<p>    Corpus ID?</p>
+<ul>
+<li><strong>No</strong> -&gt; Proceed to [1. Listing Corpora and Files] to discover the</li>
+</ul>
+<p>        necessary Resource Names and IDs. Only ask the user if discovery fails.</p>
+<ul>
+<li><strong>Yes</strong> -&gt; Proceed.</li>
+</ul>
+<ol>
+<li><strong>Task Type</strong>: What does the user want to do?</li>
+</ol>
+<ul>
+<li><strong>List Corpora and Files</strong> -&gt; Proceed to [1. Listing Corpora and Files].</li>
+<li><strong>Inspect a Corpus</strong> -&gt; Proceed to [2. Getting / Inspecting a RAG Engine</li>
+</ul>
+<p>        Corpus].</p>
+<ul>
+<li><strong>Search for Contexts</strong> -&gt; Proceed to [3. Retrieving Contexts].</li>
+<li><strong>Answer questions using RAG Engine</strong> -&gt; Proceed to [4. Answering the</li>
+</ul>
+<p>        User with Retrieved Context].</p>
+<p>&gt; [!TIP] <strong>Placeholder Parameter Replacement:</strong> The Python scripts below use</p>
+<p>&gt; bracketed string placeholders (like <code>&quot;{project_id}&quot;</code>, <code>&quot;{region}&quot;</code>, and</p>
+<p>&gt; <code>&quot;{corpus_id}&quot;</code>). You <strong>MUST</strong> dynamically replace these placeholders with the</p>
+<p>&gt; actual Project ID, Region, and Corpus ID values provided in the user&#39;s prompt</p>
+<p>&gt; (or active context) before generating, providing, or executing the scripts.</p>
+<h4>1. Listing Corpora and Files (Discovery)</h4>
+<p>If you do not know the Resource Name of the corpus or file, you MUST list them</p>
+<p>first to discover them. The SDK handles pagination automatically when converted</p>
+<p>to a list, but you can also use manual pagination for large sets.</p>
+<h5>1.1 Listing and Discovering Corpora</h5>
+<p><pre><code>import vertexai
+from vertexai.preview import rag
+
+vertexai.init(project=&quot;{project_id}&quot;, location=&quot;{region}&quot;)
+
+# Approach A: List ALL (Automatic Pagination)
+# The SDK&#39;s Pager iterates through all pages for you.
+all_corpora = list(rag.list_corpora())
+print(f&quot;Found {len(all_corpora)} corpora in total.&quot;)
+for c in all_corpora:
+    print(f&quot;Corpus Name: {c.name} | Display Name: {c.display_name}&quot;)
+
+# Approach B: Manual Pagination (for very large projects)
+pager = rag.list_corpora(page_size=10)
+# Process first page
+for c in pager:
+    print(f&quot;Corpus: {c.display_name}&quot;)
+
+# Get next page if needed
+if pager.next_page_token:
+    second_page = rag.list_corpora(
+        page_size=10, page_token=pager.next_page_token
+    )</code></pre></p>
+<h5>1.2 Listing and Discovering Files</h5>
+<p>To understand what files (and types) are in a corpus, list them and inspect the</p>
+<p><code>display_name</code> (usually includes the extension).</p>
+<p><pre><code>import vertexai
+from vertexai.preview import rag
+
+vertexai.init(project=&quot;{project_id}&quot;, location=&quot;{region}&quot;)
+corpus_name = (
+    &quot;projects/{project_id}/locations/{region}/ragCorpora/{corpus_id}&quot;
+)
+
+# List files with automatic pagination
+files = list(rag.list_files(corpus_name=corpus_name))
+print(f&quot;Found {len(files)} files.&quot;)
+
+for f in files:
+    # High-level SDK RagFile objects usually have name, display_name,
+    # description
+    print(f&quot;File: {f.display_name} | Resource: {f.name}&quot;)
+    # Tip: Check extension to understand file type (PDF, TXT, etc.)
+    if f.display_name.lower().endswith(&quot;.pdf&quot;):
+        print(&quot;  Type: PDF&quot;)
+    elif f.display_name.lower().endswith(&quot;.txt&quot;):
+        print(&quot;  Type: Plain Text&quot;)</code></pre></p>
+<h4>2. Getting / Inspecting an Agent Platform RAG Engine Corpus</h4>
+<p>To retrieve details about an existing Agent Platform RAG Engine corpus:</p>
+<p><pre><code>import vertexai
+from vertexai.preview import rag
+
+vertexai.init(project=&quot;{project_id}&quot;, location=&quot;{region}&quot;)
+
+# To get details of a specific corpus
+corpus_name = (
+    &quot;projects/{project_id}/locations/{region}/ragCorpora/{corpus_id}&quot;
+)
+corpus = rag.get_corpus(name=corpus_name)
+print(f&quot;Corpus Name: {corpus.name}&quot;)
+print(f&quot;Display Name: {corpus.display_name}&quot;)</code></pre></p>
+<h4>3. Retrieving Contexts</h4>
+<p>To retrieve relevant contexts from a RAG Engine corpus based on a query:</p>
+<p><pre><code>import vertexai
+from vertexai.preview import rag
+
+vertexai.init(project=&quot;{project_id}&quot;, location=&quot;{region}&quot;)
+
+corpus_name = (
+    &quot;projects/{project_id}/locations/{region}/ragCorpora/{corpus_id}&quot;
+)
+query = &quot;What is the speed of light?&quot;
+
+# Retrieve contexts
+response = rag.retrieval_query(
+    rag_corpora=[corpus_name],
+    text=query,
+    similarity_top_k=3
+)
+
+for context in response.contexts.contexts:
+    print(f&quot;Context text: {context.text}&quot;)
+    print(f&quot;Source: {context.source_uri}&quot;)</code></pre></p>
+<h4>4. Answering the User with Retrieved Context</h4>
+<p>To use the retrieved context alongside an Agent Platform model to generate a</p>
+<p>grounded response:</p>
+<p><pre><code>from google import genai
+from google.genai import types
+
+client = genai.Client(enterprise=True, project=&quot;{project_id}&quot;, location=&quot;{region}&quot;)
+corpus_name = (
+    &quot;projects/{project_id}/locations/{region}/ragCorpora/{corpus_id}&quot;
+)
+
+# Define the Agent Platform RAG Engine tool pointing to the corpus
+rag_tool = types.Tool(
+    retrieval=types.Retrieval(
+        vertex_rag_store=types.VertexRagStore(
+            rag_resources=[types.VertexRagStoreRagResource(rag_corpus=corpus_name)],
+            rag_retrieval_config=types.RagRetrievalConfig(
+                top_k=3,
+                filter=types.RagRetrievalConfigFilter(
+                    vector_similarity_threshold=0.5,
+                ),
+            ),
+        )
+    )
+)
+
+# Generate content using the RAG Engine tool
+response = client.models.generate_content(
+    model=&quot;gemini-2.5-flash&quot;,
+    contents=&quot;What is the speed of light?&quot;,
+    config=types.GenerateContentConfig(
+        tools=[rag_tool]
+    )
+)
+print(response.text)</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-rag-engine-management</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-rag-engine-management" aria-label="Copy install agent-platform-rag-engine-management">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-rag-engine-management</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-rag-engine-management/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

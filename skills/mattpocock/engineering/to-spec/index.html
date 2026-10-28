@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>to-spec — Aidentity</title>
+<meta name="description" content="Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-spec/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="to-spec — Aidentity">
+<meta property="og:description" content="Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-spec/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"to-spec","description":"Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-spec/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=planning">planning</a><span>/</span>to-spec
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>to-spec</h1>
+      <p class="summary">Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=planning">planning</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.</p>
+<p>The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run <code>/setup-matt-pocock-skills</code>.</p>
+<h4>Process</h4>
+<ol>
+<li>Explore the repo to understand the current state of the codebase, if you haven&#39;t already. Use the project&#39;s domain glossary vocabulary throughout the spec, and respect any ADRs in the area you&#39;re touching.</li>
+</ol>
+<ol>
+<li>Sketch out the seams at which you&#39;re going to test the feature. Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can. The fewer seams across the codebase, the better - the ideal number is one.</li>
+</ol>
+<p>Check with the user that these seams match their expectations.</p>
+<ol>
+<li>Write the spec using the template below, then publish it to the project issue tracker. Apply the <code>ready-for-agent</code> triage label - no need for additional triage.</li>
+</ol>
+<p>&lt;spec-template&gt;</p>
+<h4>Problem Statement</h4>
+<p>The problem that the user is facing, from the user&#39;s perspective.</p>
+<h4>Solution</h4>
+<p>The solution to the problem, from the user&#39;s perspective.</p>
+<h4>User Stories</h4>
+<p>A LONG, numbered list of user stories. Each user story should be in the format of:</p>
+<ol>
+<li>As an &lt;actor&gt;, I want a &lt;feature&gt;, so that &lt;benefit&gt;</li>
+</ol>
+<p>&lt;user-story-example&gt;</p>
+<ol>
+<li>As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending</li>
+</ol>
+<p>&lt;/user-story-example&gt;</p>
+<p>This list of user stories should be extremely extensive and cover all aspects of the feature.</p>
+<h4>Implementation Decisions</h4>
+<p>A list of implementation decisions that were made. This can include:</p>
+<ul>
+<li>The modules that will be built/modified</li>
+<li>The interfaces of those modules that will be modified</li>
+<li>Technical clarifications from the developer</li>
+<li>Architectural decisions</li>
+<li>Schema changes</li>
+<li>API contracts</li>
+<li>Specific interactions</li>
+</ul>
+<p>Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.</p>
+<p>Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.</p>
+<h4>Testing Decisions</h4>
+<p>A list of testing decisions that were made. Include:</p>
+<ul>
+<li>A description of what makes a good test (only test external behavior, not implementation details)</li>
+<li>Which modules will be tested</li>
+<li>Prior art for the tests (i.e. similar types of tests in the codebase)</li>
+</ul>
+<h4>Out of Scope</h4>
+<p>A description of the things that are out of scope for this spec.</p>
+<h4>Further Notes</h4>
+<p>Any further notes about the feature.</p>
+<p>&lt;/spec-template&gt;</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/planning-and-task-breakdown/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="planning-and-task-breakdown breaks work into ordered tasks. use when you have a spec or clear requirements and need to break work into implementable tasks. use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">planning-and-task-breakdown</span>
+    <span class="r-desc">Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/spec-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="spec-driven-development creates specs before coding. use when starting a new project, feature, or significant change and no specification exists yet. use when requirements are unclear, ambiguous, or only exist as a vague idea. use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">spec-driven-development</span>
+    <span class="r-desc">Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/to-tickets/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-tickets break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker). planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-tickets</span>
+    <span class="r-desc">Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/in-progress/implement-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="implement-spec implement a specification in code. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">implement-spec</span>
+    <span class="r-desc">Implement a specification in code.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/to-spec</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/to-spec" aria-label="Copy install to-spec">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>planning</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/to-spec</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/to-spec/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

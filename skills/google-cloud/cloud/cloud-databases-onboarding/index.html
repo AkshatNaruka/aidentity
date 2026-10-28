@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-databases-onboarding — Aidentity</title>
+<meta name="description" content="Guides users through discovering their database requirements, recommends a Google Cloud database based on a recommendation matrix, and assists in database creation. Use when a user asks &#39;What database service should I use?&#39;, &#39;Help me pick a database&#39;, or when a user wants to create a new database on Google Cloud. Don&#39;t use for general Google Cloud maintenance, managing existing databases, or database migrations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-databases-onboarding/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-databases-onboarding — Aidentity">
+<meta property="og:description" content="Guides users through discovering their database requirements, recommends a Google Cloud database based on a recommendation matrix, and assists in database creation. Use when a user asks &#39;What database service should I use?&#39;, &#39;Help me pick a database&#39;, or when a user wants to create a new database on Google Cloud. Don&#39;t use for general Google Cloud maintenance, managing existing databases, or database migrations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-databases-onboarding/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-databases-onboarding","description":"Guides users through discovering their database requirements, recommends a Google Cloud database based on a recommendation matrix, and assists in database creation. Use when a user asks 'What database service should I use?', 'Help me pick a database', or when a user wants to create a new database on Google Cloud. Don't use for general Google Cloud maintenance, managing existing databases, or database migrations.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-databases-onboarding/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-databases-onboarding
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-databases-onboarding</h1>
+      <p class="summary">Guides users through discovering their database requirements, recommends a Google Cloud database based on a recommendation matrix, and assists in database creation. Use when a user asks &#39;What database service should I use?&#39;, &#39;Help me pick a database&#39;, or when a user wants to create a new database on Google Cloud. Don&#39;t use for general Google Cloud maintenance, managing existing databases, or database migrations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Database Onboarding Skill</h3>
+<p>This skill provides domain instructions, decision matrices, and</p>
+<p>Infrastructure-as-Code workflows to guide users through discovering their exact</p>
+<p>database requirements, selecting an optimal Google Cloud database service, and</p>
+<p>drafting starter resource provisioning code for user review.</p>
+<h4>Validation &amp; Progressive Disclosure</h4>
+<p>A validation script is provided to verify the skill&#39;s reference files and</p>
+<p>formatting:</p>
+<p><pre><code>python3 scripts/database_onboarding_skill.py --verify</code></pre></p>
+<ul>
+<li><strong>Reading / Progressive Disclosure:</strong> When interacting with a user during a</li>
+</ul>
+<p>    conversation, load reference files progressively. Follow the Just-in-Time</p>
+<p>    (JiT) loading instructions outlined in the phases below.</p>
+<hr>
+<h4>Workflow &amp; Just-in-Time (JiT) Instructions</h4>
+<p>This workflow operates in three distinct sequential phases. Evaluate the active</p>
+<p>conversation history to determine the current phase and follow the corresponding</p>
+<p>instructions:</p>
+<h5>Phase 1: Requirement Discovery &amp; Information Gathering</h5>
+<p>When a user asks <code>&quot;What database should I use?&quot;</code> or requires guidance on Google</p>
+<p>Cloud database selection, you must initiate the Discovery phase.</p>
+<ol>
+<li><strong>Load Discovery Instructions (JiT):</strong> Read the complete contents of</li>
+</ol>
+<p>    <code>references/onboarding_prompts.md</code> using <code>view_file</code>.</p>
+<ol>
+<li><strong>Execute Discovery:</strong> Follow the detailed Phase 1 instructions in</li>
+</ol>
+<p>    <code>onboarding_prompts.md</code> to gather core requirements (data model, workload,</p>
+<p>    scale, and migration context) using user-friendly phrasing and enforcing</p>
+<p>    constraints (such as the 90% confidence rule) before proposing any</p>
+<p>    recommendation.</p>
+<h5>Phase 2: Recommendation Analysis &amp; Matrix Consultation</h5>
+<p>Once you have gathered sufficient explicit discovery context, you must determine</p>
+<p>the optimal Google Cloud database recommendation.</p>
+<ol>
+<li><strong>Consult Matrix &amp; Formulate Recommendation (JiT):</strong> Follow the Phase 2</li>
+</ol>
+<p>    instructions in <code>references/onboarding_prompts.md</code>. This involves distilling</p>
+<p>    requirements, calling the database selection tool (or consulting</p>
+<p>    <code>references/recommendation_matrix.txt</code> directly if the tool is unavailable),</p>
+<p>    and formulating a single recommendation.</p>
+<ol>
+<li><strong>Deliver Recommendation:</strong> Deliver the recommendation to the user, mapping</li>
+</ol>
+<p>    destination codes to plain English, explaining the reasoning, and offering</p>
+<p>    to help with provisioning as detailed in <code>onboarding_prompts.md</code>.</p>
+<h5>Phase 3: Implementation &amp; Provisioning (Plan-Validate-Execute Pattern)</h5>
+<p>When the user accepts the recommendation and requests to provision or modify</p>
+<p>cloud resources, follow the Phase 3 instructions in</p>
+<p><code>references/onboarding_prompts.md</code> using a strict <strong>Plan-Validate-Execute</strong> pattern.</p>
+<p>Limit your actions to creating and validating draft artifacts for user review.</p>
+<ol>
+<li><strong>Analyze the Workspace:</strong> Scan the user&#39;s workspace/open files/related</li>
+</ol>
+<p>    directories with database resources scripts.</p>
+<ol>
+<li><strong>Obtain User Confirmation:</strong> If the target infrastructure files are not</li>
+</ol>
+<p>    clear, ask the user explicitly to confirm the file paths or target directory</p>
+<p>    before modifying anything.</p>
+<ol>
+<li><strong>Draft Infrastructure Plan (Plan):</strong> Create or edit the necessary Terraform</li>
+</ol>
+<p>    configuration files or any other relevant scripts necessary to provision the</p>
+<p>    resources. When creating or editing Terraform files or any other database</p>
+<p>    resource provisioning script, you MUST:</p>
+<ul>
+<li>Add a stamped header comment at the top of every generated Terraform</li>
+</ul>
+<p>        file/ shell script or any other resource provisioning script. (e.g., `#</p>
+<p>        Generated with cloud onboarding skills selector @date`, replacing</p>
+<p>        <code>@date</code> with the current date/timestamp).</p>
+<ul>
+<li>Add a custom default tag like `resource_generated_by = &quot;cloud db</li>
+</ul>
+<p>        onboarding skill&quot;<code> under the </code>default_tags` block or as a resource</p>
+<p>        label/tag.</p>
+<ol>
+<li><strong>Validate Infrastructure Code (Validate):</strong> Before finalizing, you must</li>
+</ol>
+<p>    validate the drafted infrastructure code to verify syntax and configuration</p>
+<p>    correctness. <em>Why this matters:</em> Validating Terraform code ensures that</p>
+<p>    configuration blocks, IAM bindings, and instance sizing are</p>
+<p>    syntax-error-free and strictly enforceable before code review.</p>
+<ol>
+<li><strong>Create Pull Request (Execute):</strong> Once validation succeeds with zero</li>
+</ol>
+<p>    errors, automatically create a Pull request containing the validated</p>
+<p>    Terraform/shell/scripts updates for user review. Leave live infrastructure</p>
+<p>    changes (<code>terraform apply</code> or <code>gcloud</code> commands) to human review or</p>
+<p>    automated CI/CD pipelines.</p>
+<hr>
+<h4>Supporting Resources &amp; Documentation</h4>
+<ul>
+<li><a href="https://cloud.google.com/products/databases.md.txt" rel="noopener">Google Cloud Databases Overview</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-databases-onboarding</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-databases-onboarding" aria-label="Copy install cloud-databases-onboarding">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-databases-onboarding</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-databases-onboarding/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

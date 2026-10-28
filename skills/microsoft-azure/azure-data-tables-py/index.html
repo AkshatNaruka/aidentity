@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-data-tables-py — Aidentity</title>
+<meta name="description" content="Azure Tables SDK for Python (Storage and Cosmos DB). Use for NoSQL key-value storage, entity CRUD, and batch operations. Triggers: &quot;table storage&quot;, &quot;TableServiceClient&quot;, &quot;TableClient&quot;, &quot;entities&quot;, &quot;PartitionKey&quot;, &quot;RowKey&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-data-tables-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-data-tables-py — Aidentity">
+<meta property="og:description" content="Azure Tables SDK for Python (Storage and Cosmos DB). Use for NoSQL key-value storage, entity CRUD, and batch operations. Triggers: &quot;table storage&quot;, &quot;TableServiceClient&quot;, &quot;TableClient&quot;, &quot;entities&quot;, &quot;PartitionKey&quot;, &quot;RowKey&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-data-tables-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-data-tables-py","description":"Azure Tables SDK for Python (Storage and Cosmos DB). Use for NoSQL key-value storage, entity CRUD, and batch operations. Triggers: \"table storage\", \"TableServiceClient\", \"TableClient\", \"entities\", \"PartitionKey\", \"RowKey\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-data-tables-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-data-tables-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-data-tables-py</h1>
+      <p class="summary">Azure Tables SDK for Python (Storage and Cosmos DB). Use for NoSQL key-value storage, entity CRUD, and batch operations. Triggers: &quot;table storage&quot;, &quot;TableServiceClient&quot;, &quot;TableClient&quot;, &quot;entities&quot;, &quot;PartitionKey&quot;, &quot;RowKey&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Tables SDK for Python</h3>
+<p>NoSQL key-value store for structured data (Azure Storage Tables or Cosmos DB Table API).</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-data-tables azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code># Azure Storage Tables
+AZURE_STORAGE_ACCOUNT_URL=https://&lt;account&gt;.table.core.windows.net  # Required for Azure Storage Tables
+
+# Cosmos DB Table API
+COSMOS_TABLE_ENDPOINT=https://&lt;account&gt;.table.cosmos.azure.com  # Required for Cosmos DB Table API
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.data.tables import TableServiceClient, TableClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+endpoint = &quot;https://&lt;account&gt;.table.core.windows.net&quot;
+
+# Service client (manage tables)
+with TableServiceClient(endpoint=endpoint, credential=credential) as service_client:
+    # Use service_client here (see following sections for operations)
+    ...
+
+# Table client (work with entities)
+with TableClient(endpoint=endpoint, table_name=&quot;mytable&quot;, credential=credential) as table_client:
+    # Use table_client here (see following sections for operations)
+    ...</code></pre></p>
+<h4>Client Types</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>TableServiceClient</code></td><td>Create/delete tables, list tables</td></tr>
+<tr><td><code>TableClient</code></td><td>Entity CRUD, queries</td></tr>
+</tbody></table>
+<h4>Table Operations</h4>
+<p><pre><code># Create table
+service_client.create_table(&quot;mytable&quot;)
+
+# Create if not exists
+service_client.create_table_if_not_exists(&quot;mytable&quot;)
+
+# Delete table
+service_client.delete_table(&quot;mytable&quot;)
+
+# List tables
+for table in service_client.list_tables():
+    print(table.name)
+
+# Get table client
+table_client = service_client.get_table_client(&quot;mytable&quot;)</code></pre></p>
+<h4>Entity Operations</h4>
+<p><strong>Important</strong>: Every entity requires <code>PartitionKey</code> and <code>RowKey</code> (together form unique ID).</p>
+<h5>Create Entity</h5>
+<p><pre><code>entity = {
+    &quot;PartitionKey&quot;: &quot;sales&quot;,
+    &quot;RowKey&quot;: &quot;order-001&quot;,
+    &quot;product&quot;: &quot;Widget&quot;,
+    &quot;quantity&quot;: 5,
+    &quot;price&quot;: 9.99,
+    &quot;shipped&quot;: False
+}
+
+# Create (fails if exists)
+table_client.create_entity(entity=entity)
+
+# Upsert (create or replace)
+table_client.upsert_entity(entity=entity)</code></pre></p>
+<h5>Get Entity</h5>
+<p><pre><code># Get by key (fastest)
+entity = table_client.get_entity(
+    partition_key=&quot;sales&quot;,
+    row_key=&quot;order-001&quot;
+)
+print(f&quot;Product: {entity[&#39;product&#39;]}&quot;)</code></pre></p>
+<h5>Update Entity</h5>
+<p><pre><code># Replace entire entity
+entity[&quot;quantity&quot;] = 10
+table_client.update_entity(entity=entity, mode=&quot;replace&quot;)
+
+# Merge (update specific fields only)
+update = {
+    &quot;PartitionKey&quot;: &quot;sales&quot;,
+    &quot;RowKey&quot;: &quot;order-001&quot;,
+    &quot;shipped&quot;: True
+}
+table_client.update_entity(entity=update, mode=&quot;merge&quot;)</code></pre></p>
+<h5>Delete Entity</h5>
+<p><pre><code>table_client.delete_entity(
+    partition_key=&quot;sales&quot;,
+    row_key=&quot;order-001&quot;
+)</code></pre></p>
+<h4>Query Entities</h4>
+<h5>Query Within Partition</h5>
+<p><pre><code># Query by partition (efficient)
+entities = table_client.query_entities(
+    query_filter=&quot;PartitionKey eq &#39;sales&#39;&quot;
+)
+for entity in entities:
+    print(entity)</code></pre></p>
+<h5>Query with Filters</h5>
+<p><pre><code># Filter by properties
+entities = table_client.query_entities(
+    query_filter=&quot;PartitionKey eq &#39;sales&#39; and quantity gt 3&quot;
+)
+
+# With parameters (safer)
+entities = table_client.query_entities(
+    query_filter=&quot;PartitionKey eq @pk and price lt @max_price&quot;,
+    parameters={&quot;pk&quot;: &quot;sales&quot;, &quot;max_price&quot;: 50.0}
+)</code></pre></p>
+<h5>Select Specific Properties</h5>
+<p><pre><code>entities = table_client.query_entities(
+    query_filter=&quot;PartitionKey eq &#39;sales&#39;&quot;,
+    select=[&quot;RowKey&quot;, &quot;product&quot;, &quot;price&quot;]
+)</code></pre></p>
+<h5>List All Entities</h5>
+<p><pre><code># List all (cross-partition - use sparingly)
+for entity in table_client.list_entities():
+    print(entity)</code></pre></p>
+<h4>Batch Operations</h4>
+<p><pre><code>from azure.data.tables import TableTransactionError
+
+# Batch operations (same partition only!)
+operations = [
+    (&quot;create&quot;, {&quot;PartitionKey&quot;: &quot;batch&quot;, &quot;RowKey&quot;: &quot;1&quot;, &quot;data&quot;: &quot;first&quot;}),
+    (&quot;create&quot;, {&quot;PartitionKey&quot;: &quot;batch&quot;, &quot;RowKey&quot;: &quot;2&quot;, &quot;data&quot;: &quot;second&quot;}),
+    (&quot;upsert&quot;, {&quot;PartitionKey&quot;: &quot;batch&quot;, &quot;RowKey&quot;: &quot;3&quot;, &quot;data&quot;: &quot;third&quot;}),
+]
+
+try:
+    table_client.submit_transaction(operations)
+except TableTransactionError as e:
+    print(f&quot;Transaction failed: {e}&quot;)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.data.tables.aio import TableServiceClient, TableClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def table_operations():
+    async with DefaultAzureCredential() as credential:
+        async with TableClient(
+            endpoint=&quot;https://&lt;account&gt;.table.core.windows.net&quot;,
+            table_name=&quot;mytable&quot;,
+            credential=credential
+        ) as client:
+            # Create
+            await client.create_entity(entity={
+                &quot;PartitionKey&quot;: &quot;async&quot;,
+                &quot;RowKey&quot;: &quot;1&quot;,
+                &quot;data&quot;: &quot;test&quot;
+            })
+            
+            # Query
+            async for entity in client.query_entities(&quot;PartitionKey eq &#39;async&#39;&quot;):
+                print(entity)
+
+import asyncio
+asyncio.run(table_operations())</code></pre></p>
+<h4>Data Types</h4>
+<table><thead><tr><th>Python Type</th><th>Table Storage Type</th></tr></thead><tbody>
+<tr><td><code>str</code></td><td>String</td></tr>
+<tr><td><code>int</code></td><td>Int64</td></tr>
+<tr><td><code>float</code></td><td>Double</td></tr>
+<tr><td><code>bool</code></td><td>Boolean</td></tr>
+<tr><td><code>datetime</code></td><td>DateTime</td></tr>
+<tr><td><code>bytes</code></td><td>Binary</td></tr>
+<tr><td><code>UUID</code></td><td>Guid</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.data.tables</code> sync clients with <code>azure.data.tables.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with TableClient(...) as client:</code> (sync) or <code>async with TableClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / API keys when possible).</li>
+<li><strong>Design partition keys</strong> for query patterns and even distribution</li>
+<li><strong>Query within partitions</strong> whenever possible (cross-partition is expensive)</li>
+<li><strong>Use batch operations</strong> for multiple entities in same partition</li>
+<li><strong>Use <code>upsert_entity</code></strong> for idempotent writes</li>
+<li><strong>Use parameterized queries</strong> to prevent injection</li>
+<li><strong>Keep entities small</strong> — max 1MB per entity</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-data-tables-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-data-tables-py" aria-label="Copy install azure-data-tables-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-data-tables-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-data-tables-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wayfinder — Aidentity</title>
+<meta name="description" content="Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/wayfinder/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="wayfinder — Aidentity">
+<meta property="og:description" content="Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/wayfinder/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"wayfinder","description":"Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/wayfinder/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>wayfinder
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>wayfinder</h1>
+      <p class="summary">Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>A loose idea has arrived, too big for one agent session, and wrapped in fog: the way from here to the <strong>destination</strong> isn&#39;t visible yet. Wayfinding is about finding that way, not charging at the destination. This skill charts the way as a <strong>shared map</strong> on the repo&#39;s issue tracker, then works its <strong>decision tickets</strong> (questions whose resolution is a decision, not slices of a build to execute) one at a time until the route is clear.</p>
+<p>The destination varies per effort, and naming it is the first act of charting: it shapes every ticket. It might be a spec to hand off and iterate on, a decision to lock before planning starts, or a change made in place like a data-structure migration. The map is domain-agnostic: engineering work, course content, whatever fits the shape.</p>
+<h4>Plan, don&#39;t do</h4>
+<p>Wayfinder is <strong>planning</strong> by default: each ticket resolves a decision, and the map is done when the way is clear, with nothing left to decide before someone goes and does the thing. The pull to just do the work is usually the signal you&#39;ve reached the edge of the map and it&#39;s time to hand off. An effort can override this in its <strong>Notes</strong>, carrying execution into the map itself, but absent that, produce decisions, not deliverables.</p>
+<h4>Refer by name</h4>
+<p>Every map and ticket is an issue, so it has a <strong>name</strong>: its title. In everything the human reads (narration, the map&#39;s Decisions-so-far), refer to it by that name, never by a bare id, number, or slug. A wall of <code>#42, #43, #44</code> is illegible; names read at a glance. The id and URL don&#39;t vanish; a name wraps its link, but they ride _inside_ the name, never stand in for it.</p>
+<h4>The Map</h4>
+<p>The map is a single issue on this repo&#39;s issue tracker, labelled <code>wayfinder:map</code>, the canonical artifact. Its tickets are child issues of the map.</p>
+<p>The map is an <strong>index</strong>, not a store. It lists the decisions made and points at the tickets that hold their detail; a decision lives in exactly one place, its ticket, so the map never restates it, only gists it and links.</p>
+<p><strong>Where the map, its child tickets, blocking, and frontier queries physically live is tracker-specific.</strong> The issue tracker should have been provided to you. If not, tell the user to run <code>/setup-matt-pocock-skills</code>. Consult the tracker doc&#39;s &quot;Wayfinding operations&quot; section for how _this_ repo expresses them. If no tracker has been provided, default to the local-markdown tracker.</p>
+<h5>The map body</h5>
+<p>The whole map at low resolution, loaded once per session. Open tickets are <strong>not</strong> listed: they are open child issues, found by query.</p>
+<p><pre><code>## Destination
+
+&lt;what reaching the end of this map looks like: the spec, decision, or change this effort is finding its way to. One or two lines; every session orients to it before choosing a ticket.&gt;
+
+## Notes
+
+&lt;domain; skills every session should consult; standing preferences for this effort&gt;
+
+## Decisions so far
+
+&lt;!-- the index: one line per closed ticket, enough to judge relevance, then zoom the link for the detail the ticket holds --&gt;
+
+- [&lt;closed ticket title&gt;](link): &lt;one-line gist of the answer&gt;
+
+## Not yet specified
+
+&lt;!-- see &quot;Fog of war&quot;: in-scope fog you can&#39;t ticket yet; graduates as the frontier advances --&gt;
+
+## Out of scope
+
+&lt;!-- see &quot;Out of scope&quot;: work ruled beyond the destination; closed, never graduates --&gt;</code></pre></p>
+<h5>Tickets</h5>
+<p>Each ticket is a <strong>child issue</strong> of the map; the tracker&#39;s issue id is its identity. Its body is the question, sized to one 100K token agent session:</p>
+<p><pre><code>## Question
+
+&lt;the decision or investigation this ticket resolves&gt;</code></pre></p>
+<p>Each ticket carries a <code>wayfinder:&lt;type&gt;</code> label, one of <code>research</code>, <code>prototype</code>, <code>grilling</code>, <code>task</code> (see [Ticket Types](#ticket-types)).</p>
+<p>A session <strong>claims</strong> a ticket by assigning it to the dev driving the map, <strong>first</strong>, before any work, so concurrent sessions skip it. That assignee _is_ the claim: an open, unassigned ticket is unclaimed.</p>
+<p>Blocking uses the tracker&#39;s <strong>native</strong> dependency relationship: essential because it renders the frontier _visually_ in the tracker&#39;s own UI, so the human sees what&#39;s takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is <strong>unblocked</strong> when every ticket blocking it is closed; the <strong>frontier</strong> is the open, unblocked, unclaimed children, the edge of the known.</p>
+<p>The answer isn&#39;t part of the body; it&#39;s recorded on resolution (see [Work through the map](#work-through-the-map)). Assets created while resolving a ticket are linked from the issue, not pasted in.</p>
+<h4>Ticket Types</h4>
+<p>Every ticket is either <strong>HITL</strong> (human in the loop, worked _with_ a human who speaks for themselves) or <strong>AFK</strong>, driven by the agent alone. A HITL ticket only resolves through that live exchange; the agent never stands in for the human&#39;s side of it (a grilling agent that answers its own questions has broken this).</p>
+<ul>
+<li><strong>Research</strong> (AFK): Reading documentation, third-party APIs, or local resources like knowledge bases to surface a fact a decision waits on. Resolved by a subagent that calls the Skill tool with &quot;research&quot;. Use when knowledge outside the current working directory is required.</li>
+<li><strong>Prototype</strong> (HITL): Raise the fidelity of the discussion by making a cheap, rough, concrete artifact to react to (an outline, a rough take, a stub, or UI/logic code) by calling the Skill tool with &quot;prototype&quot;. Links the prototype as an asset. Use when &quot;how should it look&quot; or &quot;how should it behave&quot; is the key question.</li>
+<li><strong>Grilling</strong> (HITL): Conversation. The default case. Always call the Skill tool twice, for &quot;grilling&quot; and &quot;domain-modeling&quot;.</li>
+<li><strong>Task</strong> (HITL or AFK): Manual work that must happen before a _decision_ can be made: nothing to decide, prototype, or research, but the discussion is blocked until it&#39;s done. Signing up for a service so its API can be judged, provisioning access, moving data so its shape can be seen. This is the one type that _does_ rather than decides, and it earns its place by unblocking a decision, not by delivering the destination. The agent drives it alone where it can (AFK); otherwise it hands the human a precise checklist (HITL). Resolved when the work is done; the answer records what was done and any resulting facts (credentials location, new URLs, row counts) later tickets depend on.</li>
+</ul>
+<h4>Fog of war</h4>
+<p>The map is _deliberately_ incomplete: don&#39;t chart what you can&#39;t yet see. Beyond the live tickets lies the <strong>fog of war</strong>: the dim view of decisions and investigations you can tell are coming but can&#39;t yet pin down, because they hang on questions still open. Resolving a ticket clears the fog ahead of it, graduating whatever&#39;s now specifiable into fresh tickets, one at a time, until the way to the destination is clear and no tickets remain.</p>
+<p>The map&#39;s <strong>Not yet specified</strong> section is where that dim view is written down: the suspected question, the area to revisit later. It&#39;s the undiscovered frontier _toward_ the destination: everything here is in scope, just not sharp enough to ticket. Write as loosely or as fully as the view allows; it doubles as a signpost for collaborators reading where the effort is headed.</p>
+<p><strong>Fog or ticket?</strong> The test is whether you can state the question precisely now, _not_ whether you can answer it now.</p>
+<ul>
+<li><strong>Ticket when</strong> the question is already sharp, even if it&#39;s blocked and you can&#39;t act on it yet.</li>
+<li><strong>Not yet specified when</strong> you can&#39;t yet phrase it that sharply. Don&#39;t pre-slice the fog into ticket-sized pieces: it&#39;s coarser than a ticket, and one patch may graduate into several tickets, or none, once the frontier reaches it.</li>
+</ul>
+<p><strong>Not yet specified</strong> excludes what&#39;s already decided (Decisions so far), what&#39;s already a live ticket, and what&#39;s out of scope (the next section).</p>
+<h4>Out of scope</h4>
+<p>Fog only ever gathers _toward_ the destination. The destination fixes the scope, so work beyond it is <strong>out of scope</strong>: it isn&#39;t fog, and it doesn&#39;t belong in <strong>Not yet specified</strong>. It gets its own <strong>Out of scope</strong> section on the map: work you&#39;ve consciously ruled out of _this_ effort. Scope, not sharpness, lands it here.</p>
+<p>Out-of-scope work never graduates (the frontier stops at the destination), so it returns only if the destination is redrawn, and then as a fresh effort, not a resumption.</p>
+<p>Ruling something out of scope is a scoping act, not a step on the route. When a ticket that already exists turns out to sit past the destination (mis-scoped in while charting, or exposed by a resolution), <strong>close it</strong> (a closed ticket is unambiguously off the frontier) and leave one line in the <strong>Out of scope</strong> section: the gist plus why it&#39;s out of scope, linking the closed ticket. It stays out of <strong>Decisions so far</strong>, which records the route actually walked; a scope boundary isn&#39;t a step on it.</p>
+<h4>Invocation</h4>
+<p>Two modes. Either way, <strong>never resolve more than one ticket per session</strong>, with the exception of research tickets.</p>
+<h5>Chart the map</h5>
+<p>User invokes with a loose idea.</p>
+<ol>
+<li><strong>Name the destination.</strong> Call the Skill tool twice, for &quot;grilling&quot; and &quot;domain-modeling&quot;, to pin down what this map is finding its way to: the spec, decision, or change. The destination fixes the scope, so it&#39;s settled first.</li>
+<li><strong>Map the frontier.</strong> Grill again, <strong>breadth-first</strong> this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. <strong>If this surfaces no fog</strong> (the way to the destination is already clear, the whole journey small enough for one session), you don&#39;t need a map. Stop and ask the user how they&#39;d like to proceed.</li>
+<li><strong>Create the map</strong> (label <code>wayfinder:map</code>): Destination and Notes filled in, Decisions-so-far empty, the fog sketched into <strong>Not yet specified</strong>.</li>
+<li><strong>Create the tickets you can specify now</strong> as child issues of the map, then wire blocking edges in a <strong>second pass</strong> (issues need ids before they can reference each other). Wiring sorts them into the frontier and the blocked; everything you can&#39;t yet specify stays in the fog: the <strong>Not yet specified</strong> section.</li>
+<li><strong>Fire the research subagents.</strong> For each <code>research</code> ticket you just created, spin up a subagent that calls the Skill tool with &quot;research&quot; to resolve it in parallel, capturing its findings on a throwaway <code>research/&lt;name&gt;</code> branch with a context pointer from the ticket.</li>
+<li>Stop: charting is one session&#39;s work; it hand-resolves nothing.</li>
+</ol>
+<h5>Work through the map</h5>
+<p>User invokes with a map (URL or number). A ticket is <strong>optional</strong>: without one, you pick the next decision, not the user.</p>
+<ol>
+<li>Load the <strong>map</strong>: the low-res view, not every ticket body.</li>
+<li>Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. <strong>Claim it</strong>: assign it to yourself before any work.</li>
+<li>Resolve it. <strong>Zoom as needed</strong>: fetch the full body of any related or closed ticket on demand; call the Skill tool for whichever skills the <code>## Notes</code> block names. If in doubt, call the Skill tool twice, for &quot;grilling&quot; and &quot;domain-modeling&quot;.</li>
+<li>Record the resolution: post the answer as a <strong>resolution comment</strong>, <strong>close</strong> the issue, and <strong>append a context pointer</strong> to the map&#39;s Decisions-so-far.</li>
+<li>Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from <strong>Not yet specified</strong> so it lives only as its new ticket. If the answer reveals that a ticket (this one or another) sits beyond the destination, <strong>rule it out of scope</strong> rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.</li>
+</ol>
+<p>The user may run unblocked tickets in parallel, so expect other sessions to be editing the tracker concurrently.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/wayfinder</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/wayfinder" aria-label="Copy install wayfinder">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/wayfinder</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/wayfinder/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

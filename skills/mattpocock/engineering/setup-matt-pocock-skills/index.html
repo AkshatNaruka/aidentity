@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>setup-matt-pocock-skills — Aidentity</title>
+<meta name="description" content="Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/setup-matt-pocock-skills/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="setup-matt-pocock-skills — Aidentity">
+<meta property="og:description" content="Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/setup-matt-pocock-skills/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"setup-matt-pocock-skills","description":"Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/setup-matt-pocock-skills/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>setup-matt-pocock-skills
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>setup-matt-pocock-skills</h1>
+      <p class="summary">Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Setup Matt Pocock&#39;s Skills</h3>
+<p>Scaffold the per-repo configuration that the engineering skills assume:</p>
+<ul>
+<li><strong>Issue tracker</strong>: where issues live (GitHub by default; local markdown is also supported out of the box)</li>
+<li><strong>Triage labels</strong>: the strings used for the five canonical triage roles</li>
+<li><strong>Domain docs</strong>: where <code>CONTEXT.md</code> and ADRs live, and the consumer rules for reading them</li>
+</ul>
+<p>This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.</p>
+<h4>Process</h4>
+<h5>1. Explore</h5>
+<p>Look at the current repo to understand its starting state. Read whatever exists; don&#39;t assume:</p>
+<ul>
+<li><code>git remote -v</code> and <code>.git/config</code>: is this a GitHub repo? Which one?</li>
+<li><code>AGENTS.md</code> and <code>CLAUDE.md</code> at the repo root: does either exist? Is there already an <code>## Agent skills</code> section in either?</li>
+<li><code>CONTEXT.md</code> and <code>CONTEXT-MAP.md</code> at the repo root</li>
+<li><code>docs/adr/</code> and any <code>src/*/docs/adr/</code> directories</li>
+<li><code>docs/agents/</code>: does this skill&#39;s prior output already exist?</li>
+<li><code>.scratch/</code>: a sign that a local-markdown issue tracker convention is already in use</li>
+<li>Is the <code>triage</code> skill installed? (a <code>triage</code> skill folder alongside this one, or <code>triage</code> in your available skills.) This decides whether Section B runs at all.</li>
+<li>Monorepo signals: a <code>pnpm-workspace.yaml</code>, a <code>workspaces</code> field in <code>package.json</code>, or a populated <code>packages/*</code> with its own <code>src/</code>. These are present only in a genuinely large multi-package repo; their absence means single-context, which is almost every repo.</li>
+</ul>
+<h5>2. Present findings and ask</h5>
+<p>Summarise what&#39;s present and what&#39;s missing. Then take the sections in order. One section, one answer, then the next.</p>
+<p>Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip the section entirely when exploration already settled it (Section B when <code>triage</code> isn&#39;t installed, Section C when there&#39;s no monorepo).</p>
+<p><strong>Section A: Issue tracker.</strong></p>
+<p>&gt; Explainer: The &quot;issue tracker&quot; is where issues live for this repo. Skills like <code>to-tickets</code>, <code>triage</code>, and <code>to-spec</code> read from and write to it. They need to know whether to call <code>gh issue create</code>, write a markdown file under <code>.scratch/</code>, or follow some other workflow you describe. Pick the place you actually track work for this repo.</p>
+<p>Default posture: these skills were designed for GitHub. If a <code>git remote</code> points at GitHub, propose that. If a <code>git remote</code> points at GitLab (<code>gitlab.com</code> or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:</p>
+<ul>
+<li><strong>GitHub</strong>: issues live in the repo&#39;s GitHub Issues (uses the <code>gh</code> CLI)</li>
+<li><strong>GitLab</strong>: issues live in the repo&#39;s GitLab Issues (uses the <a href="https://gitlab.com/gitlab-org/cli" rel="noopener"><code>glab</code></a> CLI)</li>
+<li><strong>Local markdown</strong>: issues live as files under <code>.scratch/&lt;feature&gt;/</code> in this repo (good for solo projects or repos without a remote)</li>
+<li><strong>Other</strong> (Jira, Linear, etc.): ask the user to describe the workflow in one paragraph; the skill will record it as freeform prose</li>
+</ul>
+<p>Record the choice in <code>docs/agents/issue-tracker.md</code>. The GitHub and GitLab templates carry a &quot;PRs as a request surface&quot; flag, defaulted <strong>off</strong>. Leave it off and don&#39;t raise it: a user who wants external PRs in the triage queue can flip the flag in the file later.</p>
+<p><strong>Section B: Triage label vocabulary.</strong> Skip this section entirely if the <code>triage</code> skill isn&#39;t installed (exploration told you), since an uninstalled skill needs no labels.</p>
+<p>If it is installed, ask exactly one question:</p>
+<p>&gt; Do you want to keep the default triage labels? (recommended: <strong>yes</strong>)</p>
+<p>The defaults are the five canonical roles, each label string equal to its name: <code>needs-triage</code>, <code>needs-info</code>, <code>ready-for-agent</code>, <code>ready-for-human</code>, <code>wontfix</code>. On <strong>yes</strong>, write them as-is. Only if the user says no, usually because their tracker already uses other names (e.g. <code>bug:triage</code> for <code>needs-triage</code>), collect the overrides so <code>triage</code> applies existing labels instead of creating duplicates.</p>
+<p><strong>Section C: Domain docs.</strong> Default to <strong>single-context</strong> (one <code>CONTEXT.md</code> + <code>docs/adr/</code> at the repo root). This fits almost every repo; write it without asking.</p>
+<p>Offer <strong>multi-context</strong> (a root <code>CONTEXT-MAP.md</code> pointing to per-context <code>CONTEXT.md</code> files) only when exploration found monorepo signals. Then confirm which layout they want.</p>
+<h5>3. Confirm and edit</h5>
+<p>Show the user a draft of:</p>
+<ul>
+<li>The <code>## Agent skills</code> block to add to whichever of <code>CLAUDE.md</code> / <code>AGENTS.md</code> is being edited (see step 4 for selection rules)</li>
+<li>The contents of <code>docs/agents/issue-tracker.md</code>, <code>docs/agents/domain.md</code>, and <code>docs/agents/triage-labels.md</code> (the last only when <code>triage</code> is installed)</li>
+</ul>
+<p>Let them edit before writing.</p>
+<h5>4. Write</h5>
+<p><strong>Pick the file to edit:</strong></p>
+<ul>
+<li>If <code>CLAUDE.md</code> exists, edit it.</li>
+<li>Else if <code>AGENTS.md</code> exists, edit it.</li>
+<li>If neither exists, ask the user which one to create; don&#39;t pick for them.</li>
+</ul>
+<p>Never create <code>AGENTS.md</code> when <code>CLAUDE.md</code> already exists (or vice versa); always edit the one that&#39;s already there.</p>
+<p>If an <code>## Agent skills</code> block already exists in the chosen file, update its contents in-place rather than appending a duplicate. Don&#39;t overwrite user edits to the surrounding sections.</p>
+<p>The block:</p>
+<p><pre><code>## Agent skills
+
+### Issue tracker
+
+[one-line summary of where issues are tracked]. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+[one-line summary of the label vocabulary]. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+[one-line summary of layout: &quot;single-context&quot; or &quot;multi-context&quot;]. See `docs/agents/domain.md`.</code></pre></p>
+<p>Include the <code>### Triage labels</code> sub-block, and write <code>docs/agents/triage-labels.md</code>, only when <code>triage</code> is installed and Section B ran. When it isn&#39;t, both are omitted.</p>
+<p>Then write the docs files using the seed templates in this skill folder as a starting point:</p>
+<ul>
+<li>[issue-tracker-github.md](./issue-tracker-github.md): GitHub issue tracker</li>
+<li>[issue-tracker-gitlab.md](./issue-tracker-gitlab.md): GitLab issue tracker</li>
+<li>[issue-tracker-local.md](./issue-tracker-local.md): local-markdown issue tracker</li>
+<li>[triage-labels.md](./triage-labels.md): label mapping (only if <code>triage</code> is installed)</li>
+<li>[domain.md](./domain.md): domain doc consumer rules + layout</li>
+</ul>
+<p>For &quot;other&quot; issue trackers, write <code>docs/agents/issue-tracker.md</code> from scratch using the user&#39;s description.</p>
+<h5>5. Done</h5>
+<p>Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit <code>docs/agents/*.md</code> directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/setup-matt-pocock-skills</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/setup-matt-pocock-skills" aria-label="Copy install setup-matt-pocock-skills">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/setup-matt-pocock-skills</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/setup-matt-pocock-skills/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

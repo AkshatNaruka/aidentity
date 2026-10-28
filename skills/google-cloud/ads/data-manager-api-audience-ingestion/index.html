@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>data-manager-api-audience-ingestion — Aidentity</title>
+<meta name="description" content="Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/data-manager-api-audience-ingestion/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="data-manager-api-audience-ingestion — Aidentity">
+<meta property="og:description" content="Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/data-manager-api-audience-ingestion/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"data-manager-api-audience-ingestion","description":"Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don't use for uploading events or conversions (use the data-manager-api-event-ingestion skill).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/data-manager-api-audience-ingestion/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=ads">ads</a><span>/</span>data-manager-api-audience-ingestion
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>data-manager-api-audience-ingestion</h1>
+      <p class="summary">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=ads">ads</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Data Manager API Audience Ingestion</h3>
+<h4>Implementation Workflow</h4>
+<h5>Prerequisites</h5>
+<ul>
+<li><strong>Authentication &amp; Library Installation</strong>: If you need to set up access to</li>
+</ul>
+<p>    the Data Manager API or install the client and utility libraries, refer to</p>
+<p>    the <code>data-manager-api-setup</code> skill.</p>
+<ul>
+<li><strong>Audience Creation (if needed)</strong>: If the user does not have an existing</li>
+</ul>
+<p>    audience or needs to create a new one, use the</p>
+<p>    [Create an Audience](references/create-audience.md) reference. This step</p>
+<p>    provides the <code>product_destination_id</code> needed for the ingestion or removal</p>
+<p>    requests.</p>
+<h5>Step 1: Identify Use Case &amp; Read Documentation</h5>
+<ul>
+<li><strong>Determine Destination Account Type</strong>: [CRITICAL] If it&#39;s not clear where</li>
+</ul>
+<p>    the data is being sent (e.g., Google Ads, Display &amp; Video 360, etc.), STOP</p>
+<p>    and CLARIFY with the user BEFORE generating any code. Do not assume Google</p>
+<p>    Ads by default. This maps to the <code>account_type</code> field of the</p>
+<p>    <code>operating_account</code> in the <code>Destination</code>.</p>
+<ul>
+<li><strong>Read the implementation guide</strong>: Read the relevant guide for your</li>
+</ul>
+<p>    destination and use case. Do this before answering questions or writing code</p>
+<p>    because each destination has unique payload structures, consent rules, and</p>
+<p>    required fields.</p>
+<table><thead><tr><th>Destination</th><th>Audience Type</th><th>Accepted Data Types</th><th>Upload Guide</th><th>Remove All/Replace All Guide</th></tr></thead><tbody>
+<tr><td><strong>Google Ads</strong></td><td>Customer Match</td><td><code>composite_data.user_data</code> (contact info), <code>mobile_data</code> (device IDs), <code>user_id_data</code> (user IDs)</td><td><a href="https://developers.google.com/data-manager/api/devguides/audiences/google-ads/customer-match/upload-data.md.txt" rel="noopener">Upload Data</a></td><td><a href="https://developers.google.com/data-manager/api/devguides/audiences/google-ads/customer-match/remove-all-members.md.txt" rel="noopener">Remove All/Replace All</a></td></tr>
+<tr><td><strong>Display &amp; Video 360</strong> (DV360)</td><td>Customer Match</td><td><code>composite_data.user_data</code> (contact info), <code>mobile_data</code> (device IDs)</td><td><a href="https://developers.google.com/data-manager/api/devguides/audiences/display-video/customer-match/upload-data.md.txt" rel="noopener">Upload Data</a></td><td><a href="https://developers.google.com/data-manager/api/devguides/audiences/display-video/customer-match/remove-all-members.md.txt" rel="noopener">Remove All/Replace All</a></td></tr>
+</tbody></table>
+<h5>Step 2: Retrieve Code Sample</h5>
+<p>&gt; [!IMPORTANT] If writing or updating an ingestion script, ALWAYS retrieve the</p>
+<p>&gt; relevant code sample to use as a reference:</p>
+<table><thead><tr><th>Language</th><th>Sample</th></tr></thead><tbody>
+<tr><td><strong>Python</strong></td><td><a href="https://github.com/googleads/data-manager-python/blob/main/samples/audiences/ingest_audience_members.py" rel="noopener"><code>ingest_audience_members.py</code></a></td></tr>
+<tr><td><strong>Java</strong></td><td><a href="https://github.com/googleads/data-manager-java/blob/main/data-manager-samples/src/main/java/com/google/ads/datamanager/samples/IngestAudienceMembers.java" rel="noopener"><code>IngestAudienceMembers.java</code></a></td></tr>
+<tr><td><strong>PHP</strong></td><td><a href="https://github.com/googleads/data-manager-php/blob/main/samples/audiences/ingest_audience_members.php" rel="noopener"><code>ingest_audience_members.php</code></a></td></tr>
+<tr><td><strong>Node</strong></td><td><a href="https://github.com/googleads/data-manager-node/blob/main/samples/audiences/ingest_audience_members.ts" rel="noopener"><code>ingest_audience_members.ts</code></a></td></tr>
+<tr><td><strong>.NET</strong></td><td><a href="https://github.com/googleads/data-manager-dotnet/blob/main/samples/IngestAudienceMembers.cs" rel="noopener"><code>IngestAudienceMembers.cs</code></a></td></tr>
+</tbody></table>
+<h5>Step 3: Retrieve Migration Guides</h5>
+<p>&gt; [!IMPORTANT] If refactoring code to upgrade from another Google API, ALWAYS</p>
+<p>&gt; extract the full contents of the relevant field mapping guide.</p>
+<h5>Google Ads</h5>
+<ul>
+<li><strong>Google Ads API Customer Match</strong>: [Google Ads API to Customer Match</li>
+</ul>
+<p>    Migration Field</p>
+<p>    Mappings](<a href="https://developers.google.com/data-manager/api/devguides/audiences/google-ads/customer-match/upgrade/field-mappings.md.txt" rel="noopener">https://developers.google.com/data-manager/api/devguides/audiences/google-ads/customer-match/upgrade/field-mappings.md.txt</a>)</p>
+<h5>Display &amp; Video 360</h5>
+<ul>
+<li><strong>Display &amp; Video 360 API Customer Match</strong>: [Display &amp; Video 360 API to</li>
+</ul>
+<p>    Customer Match Migration Field</p>
+<p>    Mappings](<a href="https://developers.google.com/data-manager/api/devguides/audiences/display-video/customer-match/upgrade/field-mappings.md.txt" rel="noopener">https://developers.google.com/data-manager/api/devguides/audiences/display-video/customer-match/upgrade/field-mappings.md.txt</a>)</p>
+<h5>Step 4: Implementation</h5>
+<p>Implement the ingestion logic using the following checkpoints:</p>
+<ul>
+<li>[ ] <strong>Initialize Client</strong>: Instantiate the Data Manager client</li>
+</ul>
+<p>    (<code>IngestionServiceClient</code>).</p>
+<ul>
+<li>[ ] <strong>Define Destinations</strong>: Build the <code>Destination</code> object using the</li>
+</ul>
+<p>    <code>product_destination_id</code> and the appropriate account configurations:</p>
+<p>    <code>operating_account</code> (target account receiving data), <code>login_account</code> (if</p>
+<p>    authenticating using a manager account or a data partner account), and</p>
+<p>    <code>linked_account</code> (if you&#39;re a data partner accessing the account via a</p>
+<p>    partner link to a manager account). <strong>STRONGLY RECOMMENDED</strong>: Refer to the</p>
+<p>    <a href="https://developers.google.com/data-manager/api/devguides/concepts/destinations.md.txt" rel="noopener">Configure destinations and headers</a></p>
+<p>    guide for more details on configuring destinations.</p>
+<ul>
+<li>[ ] <strong>Format User Data</strong>: If sending an <code>IngestAudienceMembersRequest</code> or</li>
+</ul>
+<p>    <code>RemoveAudienceMembersRequest</code>, refer to **[Formatting User</p>
+<p>    Data](references/formatting.md)** to properly normalize and hash user identifiers using</p>
+<p>    the utility library.</p>
+<ul>
+<li>[ ] <strong>Construct Payload</strong>: Build the appropriate request payload based on</li>
+</ul>
+<p>    the operation:</p>
+<ul>
+<li><strong>Add</strong>: <code>IngestAudienceMembersRequest</code></li>
+<li><strong>Remove</strong>: <code>RemoveAudienceMembersRequest</code></li>
+<li><strong>Remove All</strong>: <code>RemoveAllAudienceMembersRequest</code></li>
+<li>[ ] <strong>Support Validation</strong>: Support sending the <code>validate_only</code> boolean</li>
+</ul>
+<p>    option on the payload to allow developers to validate schemas without</p>
+<p>    actually applying changes.</p>
+<ul>
+<li>[ ] <strong>Send Request</strong>: Execute the appropriate method and record the returned</li>
+</ul>
+<p>    <code>request_id</code> for later diagnostics:</p>
+<ul>
+<li><strong>Add</strong>: <code>ingest_audience_members</code></li>
+<li><strong>Remove</strong>: <code>remove_audience_members</code></li>
+<li><strong>Remove All</strong>: <code>remove_all_audience_members</code></li>
+<li>[ ] <strong>Check for Ingestion Warnings</strong>: If any non-required field had a</li>
+</ul>
+<p>    validation failure, the response from <code>ingest_audience_members</code> will also</p>
+<p>    include <code>field_warnings</code>, a list of <code>FieldWarning</code> objects detailing the</p>
+<p>    issues.</p>
+<ul>
+<li>[ ] <strong>Retrieve Request Status</strong>: Check the status of the ingestion request</li>
+</ul>
+<p>    using diagnostics. Since request processing is asynchronous, a successful</p>
+<p>    response (HTTP 200 OK returning a <code>request_id</code>) only indicates the payload</p>
+<p>    was received. To check if the records actually succeeded, partially</p>
+<p>    succeeded, or failed to process, query <code>client.retrieve_request_status</code></p>
+<p>    using the <code>request_id</code>. Skipping this step is a common user mistake.</p>
+<h4>Critical Gotchas</h4>
+<ul>
+<li>If sending hashed user identifiers in <code>user_data</code> for</li>
+</ul>
+<p>    <code>ingest_audience_members</code> or <code>remove_audience_members</code>, you must set the</p>
+<p>    <code>encoding</code> field on the <code>IngestAudienceMembersRequest</code> to <code>HEX</code> or <code>BASE64</code>.</p>
+<ul>
+<li>If <em>uploading</em> to a Customer Match audience, the <code>terms_of_service</code> field is</li>
+</ul>
+<p>    required on the <code>IngestAudienceMembersRequest</code> to indicate the user has</p>
+<p>    accepted the policies.</p>
+<ul>
+<li>Only set the <code>address</code> field on <code>UserIdentifier</code> if all required fields</li>
+</ul>
+<p>    (<code>postal_code</code>, <code>family_name</code>, <code>given_name</code>, <code>region_code</code>) are present;</p>
+<p>    incomplete <code>address</code> fields will cause the API request to fail.</p>
+<ul>
+<li><code>product_destination_id</code> must be a numeric string. It is NOT a resource</li>
+</ul>
+<p>    name.</p>
+<ul>
+<li>The enum values for <code>ConsentStatus</code> are <code>CONSENT_GRANTED</code> and</li>
+</ul>
+<p>    <code>CONSENT_DENIED</code>. Do not use the values <code>GRANTED</code> and <code>DENIED</code>.</p>
+<ul>
+<li>Field names on <code>UserIdentifier</code> are <code>email_address</code> and <code>phone_number</code>. Do</li>
+</ul>
+<p>    not use the Google Ads API field names <code>hashed_email</code> and</p>
+<p>    <code>hashed_phone_number</code>.</p>
+<ul>
+<li>Do not call the diagnostics endpoint (<code>retrieve_request_status</code>) if</li>
+</ul>
+<p>    <code>validate_only</code> is set to <code>true</code>.</p>
+<h4>Error Handling &amp; Troubleshooting</h4>
+<h5>Inspecting Error Payloads &amp; Ingestion Warnings</h5>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; Refer to <a href="https://developers.google.com/data-manager/api/devguides/concepts/understand-errors.md.txt" rel="noopener">Understand API Errors</a></p>
+<p>&gt; for a detailed guide on how to understand the structure of errors and warnings</p>
+<p>&gt; returned by the API.</p>
+<h5>Retrieving Request Status (Diagnostics)</h5>
+<p>Periodically poll for status using exponential backoff, starting at least 30</p>
+<p>minutes after sending the request.</p>
+<ol>
+<li>Call <code>client.retrieve_request_status</code> using</li>
+</ol>
+<p>    <code>RetrieveRequestStatusRequest(request_id=...)</code>.</p>
+<ol>
+<li>Loop through <code>request_status_per_destination</code> in the response to inspect</li>
+</ol>
+<p>    each target&#39;s <code>request_status</code>.</p>
+<ol>
+<li>If processing is complete and <code>request_status</code> is <code>SUCCESS</code>,</li>
+</ol>
+<p>    <code>PARTIAL_SUCCESS</code>, or <code>FAILED</code>, inspect diagnostic values:</p>
+<ul>
+<li><strong>Audience Status</strong>: Check the status specific to your request:</li>
+<li><strong>Ingest</strong>: Check the data-type-specific status nested under</li>
+</ul>
+<p>            <code>audience_members_ingestion_status</code> (e.g.,</p>
+<p>            <code>composite_data_ingestion_status</code>).</p>
+<ul>
+<li><strong>Remove Individual Members</strong>: Check the data-type-specific status</li>
+</ul>
+<p>            nested under <code>audience_members_removal_status</code> (e.g.,</p>
+<p>            <code>composite_data_removal_status</code>).</p>
+<ul>
+<li><strong>Remove All Members</strong>: There are no nested status fields or record</li>
+</ul>
+<p>            counts available to check for this request type.</p>
+<ul>
+<li><strong>Record Count</strong>: If applicable (ingest or remove individual</li>
+</ul>
+<p>            members), check <code>record_count</code> (nested inside the data-type-specific</p>
+<p>            status object) which includes both success and failure.</p>
+<ul>
+<li><strong>Identifier Counts</strong>: If applicable (ingest or remove individual</li>
+</ul>
+<p>            members), check the data-type-specific count field nested inside the</p>
+<p>            status object (e.g., <code>data_type_counts</code> if uploading or removing</p>
+<p>            composite data, or <code>mobile_id_count</code> if uploading or removing</p>
+<p>            mobile IDs). Refer to the [Diagnostics</p>
+<p>            Guide](<a href="https://developers.google.com/data-manager/api/devguides/diagnostics.md.txt" rel="noopener">https://developers.google.com/data-manager/api/devguides/diagnostics.md.txt</a>)</p>
+<p>            for other count fields.</p>
+<ul>
+<li><strong>Match Rate Range</strong>: For uploads of <code>user_data</code> and</li>
+</ul>
+<p>            <code>composite_data</code>, check <code>upload_match_rate_range</code> nested inside the</p>
+<p>            status object.</p>
+<ul>
+<li><strong>Error Details</strong>: If status is <code>FAILED</code> or <code>PARTIAL_SUCCESS</code>, inspect</li>
+</ul>
+<p>        each error&#39;s <code>reason</code> and <code>record_count</code> under</p>
+<p>        <code>error_info.error_counts</code>.</p>
+<ul>
+<li><strong>Warning Details</strong>: Inspect each warning&#39;s <code>reason</code> and <code>record_count</code></li>
+</ul>
+<p>        under <code>warning_info.warning_counts</code> (even if the destination status is</p>
+<p>        <code>SUCCESS</code>).</p>
+<h4>API Reference</h4>
+<ul>
+<li><a href="https://developers.google.com/data-manager/api/devguides/audiences/send-audience-members.md.txt" rel="noopener">Send audience members guide</a></li>
+<li><a href="https://developers.google.com/data-manager/api/reference/rest/v1/audienceMembers/ingest.md.txt" rel="noopener">REST API Reference: Ingest</a></li>
+<li><a href="https://developers.google.com/data-manager/api/reference/rest/v1/audienceMembers/remove.md.txt" rel="noopener">REST API Reference: Remove</a></li>
+<li><a href="https://developers.google.com/data-manager/api/reference/rest/v1/audienceMembers/removeAll.md.txt" rel="noopener">REST API Reference: Remove All</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-mcp-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-mcp-setup guides developers through downloading, configuring, and installing the official open-source google ads mcp server. use this skill when a user wants to connect their ai assistant (such as gemini, claude code, or cursor) to their google ads account to query campaigns or retrieve reporting metrics using natural language. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-mcp-setup</span>
+    <span class="r-desc">Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-quickstart/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-quickstart guides developers through google ads api quickstart: credential setup, choosing from 6 client libraries/rest, configuring environments, and running a &quot;retrieve campaigns&quot; script. troubleshoots common setup errors: user_permission_denied, login_customer_id issues, and developer_token_not_approved. use this skill when: - the user asks how to get started with the google ads api. - the user needs to set up google ads credentials or developer tokens. - the user wants to write a quickstart/example script for google ads. - the user encounters errors like user_permission_denied or developer_token_not_approved. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-quickstart</span>
+    <span class="r-desc">Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/ads/data-manager-api-audience-ingestion</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/ads/data-manager-api-audience-ingestion" aria-label="Copy install data-manager-api-audience-ingestion">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>ads</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/ads/data-manager-api-audience-ingestion</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/ads/data-manager-api-audience-ingestion/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

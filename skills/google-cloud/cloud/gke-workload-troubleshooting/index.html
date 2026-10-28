@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-workload-troubleshooting — Aidentity</title>
+<meta name="description" content="Diagnoses GKE workload failures (CrashLoopBackOff, OOMKilled, ImagePullBackOff, Pending, etc.) via logs and events. Use when pods fail to start or crash repeatedly. Don&#39;t use for GKE cluster infrastructure provisioning, node pool creation, or non-Kubernetes Google Cloud services.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-troubleshooting/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-workload-troubleshooting — Aidentity">
+<meta property="og:description" content="Diagnoses GKE workload failures (CrashLoopBackOff, OOMKilled, ImagePullBackOff, Pending, etc.) via logs and events. Use when pods fail to start or crash repeatedly. Don&#39;t use for GKE cluster infrastructure provisioning, node pool creation, or non-Kubernetes Google Cloud services.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-troubleshooting/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-workload-troubleshooting","description":"Diagnoses GKE workload failures (CrashLoopBackOff, OOMKilled, ImagePullBackOff, Pending, etc.) via logs and events. Use when pods fail to start or crash repeatedly. Don't use for GKE cluster infrastructure provisioning, node pool creation, or non-Kubernetes Google Cloud services.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-troubleshooting/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-workload-troubleshooting
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-workload-troubleshooting</h1>
+      <p class="summary">Diagnoses GKE workload failures (CrashLoopBackOff, OOMKilled, ImagePullBackOff, Pending, etc.) via logs and events. Use when pods fail to start or crash repeatedly. Don&#39;t use for GKE cluster infrastructure provisioning, node pool creation, or non-Kubernetes Google Cloud services.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Workload Troubleshooting Skill</h3>
+<p>Use this skill to systematically diagnose and resolve failures in application</p>
+<p>workloads deployed in GKE clusters. This skill operates non-interactively and</p>
+<p>enforces a read-only diagnostics boundary before proposing manifest or config</p>
+<p>corrections.</p>
+<h4>🔍 Diagnostic Workflow</h4>
+<h5>Step 0: Non-Interactive Context Discovery &amp; Time Window Definition</h5>
+<ol>
+<li><strong>Parameter Extraction</strong>: Extract required context (<code>project_id</code>,</li>
+</ol>
+<p>    <code>cluster_name</code>, <code>cluster_location</code>, <code>workload_name</code>, <code>workload_namespace</code>)</p>
+<p>    non-interactively from the user prompt, active <code>SETTINGS.md</code>, or active</p>
+<p>    environment defaults:</p>
+<ul>
+<li>Default <code>workload_namespace</code> to <code>default</code> if omitted.</li>
+<li>Infer missing cluster parameters from active environment (`kubectl</li>
+</ul>
+<p>        config current-context<code> or </code>gcloud config get-value project`).</p>
+<ul>
+<li>Prioritize non-interactive context discovery from prompts and</li>
+</ul>
+<p>        environment defaults to ensure autonomous execution flow.</p>
+<ol>
+<li><strong>Cluster Credentials &amp; Fallback Mode</strong>:</li>
+</ol>
+<ul>
+<li>Attempt credential fetch: `gcloud container clusters get-credentials</li>
+</ul>
+<p>        {cluster_name} --region/--zone {cluster_location}`</p>
+<ul>
+<li><strong>Fallback / Dry-Run Mode</strong>: If the cluster is unreachable,</li>
+</ul>
+<p>        non-existent, or live command execution fails (such as in sandboxed</p>
+<p>        evaluations, dry-run mode, or offline analysis):</p>
+<ul>
+<li>Limit retry attempts to avoid resource exhaustion and context</li>
+</ul>
+<p>            overflow in unreachable cluster scenarios.</p>
+<ul>
+<li>Immediately present the exact sequence of <code>kubectl</code> diagnostic</li>
+</ul>
+<p>            commands for the human operator to run.</p>
+<ul>
+<li>Synthesize the root cause analysis and output the proposed GitOps</li>
+</ul>
+<p>            manifest fix based on the reported symptoms.</p>
+<ol>
+<li><strong>Time Handling &amp; Fallbacks</strong>:</li>
+</ol>
+<ul>
+<li><strong>Determine Issue Timestamp ({issue_time})</strong>:</li>
+<li><strong>Specific Time Provided</strong>: If the user provides a specific</li>
+</ul>
+<p>            timestamp, use it as <code>{issue_time}</code>.</p>
+<ul>
+<li><strong>Relative Time Provided (e.g., &quot;5 minutes ago&quot;)</strong>: Dynamically</li>
+</ul>
+<p>            calculate the corresponding UTC timestamp based on current system</p>
+<p>            time, and use it as <code>{issue_time}</code>.</p>
+<ul>
+<li><strong>No Time Provided (Default)</strong>: Use current system time as</li>
+</ul>
+<p>            <code>{issue_time}</code>.</p>
+<ul>
+<li><strong>Window Calculation</strong>: Center a 1-hour query window around</li>
+</ul>
+<p>        <code>{issue_time}</code> (<code>start_time</code> = <code>{issue_time} - 30m</code>, <code>end_time</code> =</p>
+<p>        <code>{issue_time} + 30m</code>).</p>
+<hr>
+<h5>Step 1: Analyze Pod Status and Conditions</h5>
+<p>Inspect the workload&#39;s active pod states and controller status.</p>
+<p><strong>Diagnostic Commands:</strong></p>
+<p><pre><code># 1. Inspect the deployment&#39;s actual selector labels:
+kubectl get deployment {workload_name} -n {workload_namespace} -o jsonpath=&#39;{.spec.selector.matchLabels}&#39;
+# 2. Query the pods using the returned labels, for example:
+kubectl get pods -l {selector_labels} -n {workload_namespace}
+kubectl get deploy/{workload_name} -n {workload_namespace} -o yaml</code></pre></p>
+<h5>Diagnostic Decision Tree:</h5>
+<ul>
+<li><strong>Phase: Pending</strong>:</li>
+<li>The Pod cannot schedule on any node. Proceed directly to **Step 2 (Query</li>
+</ul>
+<p>        Namespace Events)**.</p>
+<ul>
+<li><strong>State: CrashLoopBackOff / Error</strong>:</li>
+</ul>
+<ul>
+<li>Container is booting but exiting repeatedly. Check the terminated status</li>
+</ul>
+<p>        using:</p>
+<p>    <pre><code>    kubectl get pod {pod_name} -n {workload_namespace} -o jsonpath=&#39;{.status.containerStatuses[*].lastState.terminated}&#39;
+    </code></pre></p>
+<ul>
+<li><strong>ExitCode: 137 (OOMKilled)</strong>: Memory limit reached. Proceed to **Step 3</li>
+</ul>
+<p>        (Inspect Logs)** and inspect container startup command to differentiate</p>
+<p>        between an application-level memory leak/loop vs an infrastructure</p>
+<p>        capacity limit mismatch, then proceed to <strong>Step 5</strong> to propose fixes.</p>
+<ul>
+<li><strong>ExitCode: 1 or other non-zero codes</strong>: The application code crashed.</li>
+</ul>
+<p>        Proceed directly to <strong>Step 3 (Inspect Logs)</strong>.</p>
+<ul>
+<li><strong>State: ContainerCreating</strong>:</li>
+</ul>
+<ul>
+<li>The container is blocked during volume mount, networking setup, or image</li>
+</ul>
+<p>        pulling. Proceed directly to <strong>Step 2 (Query Namespace Events)</strong>.</p>
+<hr>
+<h5>Step 2: Query Namespace Events</h5>
+<p>Look for infrastructure, volume, image, or scheduling alerts in GKE.</p>
+<p><strong>Diagnostic Command:</strong></p>
+<p><pre><code>kubectl get events -n {workload_namespace} --sort-by=&#39;.metadata.creationTimestamp&#39;
+# Or query Cloud Logging for historical GKE events within the time window:
+gcloud logging read &quot;resource.type=\&quot;k8s_cluster\&quot; AND logName=\&quot;projects/{project_id}/logs/events\&quot; AND jsonPayload.involvedObject.namespace=\&quot;{workload_namespace}\&quot;&quot; --start-time=&quot;{start_time}&quot; --end-time=&quot;{end_time}&quot; --project=&quot;{project_id}&quot;</code></pre></p>
+<p>*Note: Retrieve the sorted events list and manually inspect the event timestamps</p>
+<p>(CreationTimestamp/LastSeen) to identify failures occurring within the</p>
+<p><code>{start_time}</code> and <code>{end_time}</code> window.*</p>
+<h5>Signature Identifiers:</h5>
+<ul>
+<li><strong><code>FailedScheduling</code></strong>: Node resource exhaustion. Look for messages like</li>
+</ul>
+<p>    <code>0/3 nodes are available: 3 Insufficient memory.</code> or missing node affinity</p>
+<p>    tolerations (e.g. Spot VM taints).</p>
+<ul>
+<li><strong><code>FailedMount</code></strong>:</li>
+<li>Missing PersistentVolumeClaim (<code>PVC</code>).</li>
+<li>Missing Secret (<code>Secret &quot;{secret_name}&quot; not found</code>).</li>
+<li>Missing ConfigMap (<code>ConfigMap &quot;{configmap_name}&quot; not found</code>).</li>
+<li><strong><code>Failed</code> / <code>BackOff</code> (Image Pull)</strong>:</li>
+<li>Wrong image tag, missing image registry authentication (e.g.,</li>
+</ul>
+<p>        ImagePullBackOff).</p>
+<ul>
+<li><strong>Resolution Steps for Wrong Image Tag</strong>:</li>
+<li>Identify the failing container image name and the invalid tag.</li>
+<li>Check the Git repository history for the last known working image tag</li>
+</ul>
+<p>        for this workload. Run `git log -p -S &quot;{image_name}&quot; --</p>
+<p>        {manifest_file_path}<code> (or use </code>git log` on the folder containing</p>
+<p>        manifests) to identify the previous working tag in Git.</p>
+<ul>
+<li>If the invalid tag is a recent change in git history, compare it to the</li>
+</ul>
+<p>        tag from the last successful commit.</p>
+<ul>
+<li>Propose reverting the image tag to the last working version, or</li>
+</ul>
+<p>        correcting the tag version in the manifest patch.</p>
+<hr>
+<h5>Step 3: Inspect Application Logs</h5>
+<p>Extract exceptions and stack traces from the application runtime.</p>
+<p><strong>Diagnostic Commands:</strong></p>
+<p><pre><code># Check current active log stream (handles multi-container pods)
+kubectl logs {pod_name} -n {workload_namespace} --all-containers --tail=100
+
+# Check logs from previously terminated container instances (handles multi-container pods)
+kubectl logs {pod_name} -n {workload_namespace} --all-containers -p --tail=100</code></pre></p>
+<h5>Signature Identifiers:</h5>
+<ul>
+<li><strong>Out-of-Memory (OOM) Analysis</strong>: Inspect container logs and startup</li>
+</ul>
+<p>    commands (<code>spec.containers[*].command</code>). Differentiate between an</p>
+<p>    <strong>Application Code Leak/Loop</strong> (unbounded array appending, memory leak</p>
+<p>    signatures) vs an <strong>Infrastructure Capacity Ceiling Mismatch</strong> (legitimate</p>
+<p>    workload demand exceeding limits).</p>
+<ul>
+<li><strong>Stack Trace / Unhandled Exception</strong>: Look for language-specific stack</li>
+</ul>
+<p>    traces (e.g., <code>panic:</code>, <code>NullPointerException</code>, `Traceback (most recent</p>
+<p>    call)`). This indicates an application bug.</p>
+<ul>
+<li><strong>Egress Network Timeout</strong>: Look for connection timeouts (e.g., `Connection</li>
+</ul>
+<p>    timed out<code>, </code>dial tcp: i/o timeout`). Proceed to **Step 4 (Verify</p>
+<p>    Connectivity)**.</p>
+<ul>
+<li><strong>Permission Errors (ReadOnlyRootFilesystem)</strong>: Look for write errors (e.g.,</li>
+</ul>
+<p>    <code>Read-only file system</code>, <code>Permission denied</code> when writing to <code>/tmp</code> or</p>
+<p>    <code>/var/log</code>). Propose adding an <code>emptyDir</code> volume mount to that directory in</p>
+<p>    the manifest.</p>
+<hr>
+<h5>Step 4: Verify Service Connectivity and Network Policies</h5>
+<p>Troubleshoot connection drops to other services.</p>
+<p><strong>Diagnostic Commands:</strong></p>
+<p><pre><code># Verify target endpoint is active
+kubectl get endpoints {target_service_name} -n {target_namespace}
+
+# Query network policies inside namespace
+kubectl get networkpolicies -n {workload_namespace} -o yaml</code></pre></p>
+<h5>Logic &amp; Dry-Run Fallback:</h5>
+<ol>
+<li><strong>Live Cluster Mode</strong>:</li>
+</ol>
+<ul>
+<li>If <code>kubectl get endpoints</code> returns an empty list, the target</li>
+</ul>
+<p>        microservice itself is failing to schedule or boot (troubleshoot target</p>
+<p>        service).</p>
+<ul>
+<li>If endpoints exist but logs show timeouts, analyze <code>NetworkPolicy</code></li>
+</ul>
+<p>        egress blocks to verify if egress traffic to the target service&#39;s</p>
+<p>        IP/port is allowed.</p>
+<ol>
+<li><strong>Sandboxed / Dry-Run Mode</strong>:</li>
+</ol>
+<ul>
+<li>If live <code>kubectl</code> queries fail or cluster connection is unavailable, do</li>
+</ul>
+<p>        NOT retry live cluster access or enter repetitive connection attempts.</p>
+<ul>
+<li>Immediately inspect the application source code (e.g. <code>worker.py</code>,</li>
+</ul>
+<p>        <code>app.go</code>, DB connection strings) or Deployment manifests to identify the</p>
+<p>        target service hostname (e.g. <code>account-db</code>) and destination port (e.g.</p>
+<p>        <code>5432</code>).</p>
+<ul>
+<li>Present the exact <code>kubectl get endpoints</code> and `kubectl get</li>
+</ul>
+<p>        networkpolicies` commands for the user, and synthesize the required</p>
+<p>        <code>NetworkPolicy</code> egress patch allowing traffic to the target service and</p>
+<p>        port.</p>
+<hr>
+<h5>Step 5: Propose GitOps Correction</h5>
+<p>Following the GitOps boundary, <strong>do not apply patches directly to the cluster</strong>.</p>
+<ol>
+<li>Synthesize the root cause analysis for the human operator (e.g.</li>
+</ol>
+<p>    *&quot;payment-api is failing with exit code 137 because its memory limit is set</p>
+<p>    to 256Mi while actual usage spiked to 270Mi&quot;*).</p>
+<ol>
+<li>Generate the corrected YAML manifest patch (e.g. increase memory limits, add</li>
+</ol>
+<p>    missing Secret mounts, or add tolerations for Spot nodes).</p>
+<ol>
+<li>Check if a branch or Pull Request (PR) already exists for this</li>
+</ol>
+<p>    workload/failure. If so, update the existing branch/PR or notify the user</p>
+<p>    instead of creating a duplicate. Otherwise, create a branch, commit the</p>
+<p>    change, open a Pull Request (PR) on GitHub, and conclude the workflow (do</p>
+<p>    not wait for human merge).</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-workload-troubleshooting</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-workload-troubleshooting" aria-label="Copy install gke-workload-troubleshooting">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-workload-troubleshooting</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-workload-troubleshooting/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

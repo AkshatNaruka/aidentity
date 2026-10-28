@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iam-helper-for-privileged-access-management — Aidentity</title>
+<meta name="description" content="Manages the end-to-end lifecycle of on-demand, temporary access using Privileged Access Manager (PAM). Use when a user asks to create, read, update, or delete PAM entitlements, request temporary access, or approve/deny pending PAM grants. Do NOT use for permanent IAM policy bindings, troubleshooting IAM permission errors, or general Google Cloud resource provisioning.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/iam-helper-for-privileged-access-management/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="iam-helper-for-privileged-access-management — Aidentity">
+<meta property="og:description" content="Manages the end-to-end lifecycle of on-demand, temporary access using Privileged Access Manager (PAM). Use when a user asks to create, read, update, or delete PAM entitlements, request temporary access, or approve/deny pending PAM grants. Do NOT use for permanent IAM policy bindings, troubleshooting IAM permission errors, or general Google Cloud resource provisioning.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/iam-helper-for-privileged-access-management/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"iam-helper-for-privileged-access-management","description":"Manages the end-to-end lifecycle of on-demand, temporary access using Privileged Access Manager (PAM). Use when a user asks to create, read, update, or delete PAM entitlements, request temporary access, or approve/deny pending PAM grants. Do NOT use for permanent IAM policy bindings, troubleshooting IAM permission errors, or general Google Cloud resource provisioning.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/iam-helper-for-privileged-access-management/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>iam-helper-for-privileged-access-management
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>iam-helper-for-privileged-access-management</h1>
+      <p class="summary">Manages the end-to-end lifecycle of on-demand, temporary access using Privileged Access Manager (PAM). Use when a user asks to create, read, update, or delete PAM entitlements, request temporary access, or approve/deny pending PAM grants. Do NOT use for permanent IAM policy bindings, troubleshooting IAM permission errors, or general Google Cloud resource provisioning.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Privileged Access Manager (PAM)</h3>
+<p>This skill provides step-by-step guidance for planning, validating, and</p>
+<p>executing Privileged Access Manager (PAM) entitlement CRUD operations, approval</p>
+<p>workflow configurations, access elevations, and grant approval/denial workflows.</p>
+<h4>Table of Contents</h4>
+<ul>
+<li>[Core Concepts](#core-concepts)</li>
+<li>[Approval Workflows &amp; Max Request Duration](#approval-workflows)</li>
+<li>[Safety &amp; Confirmation Strategy](#safety-confirmation)</li>
+<li>[Plan-Validate-Execute Pattern](#plan-validate-execute)</li>
+<li>[Mode 1: Interactive Access Elevation](#mode-1)</li>
+<li>[Mode 2: Standalone Entitlement CRUD](#mode-2)</li>
+<li>[Mode 3: Approver Workflow](#mode-3)</li>
+<li>[Supporting Links &amp; Resources](#supporting-links)</li>
+</ul>
+<h4>Core Concepts {#core-concepts}</h4>
+<p>Privileged Access Manager (PAM) replaces permanent or ambient IAM role</p>
+<p>assignments with on-demand, time-bound, and audited access elevations. Rather than</p>
+<p>appending permanent IAM policy bindings, PAM uses:</p>
+<ul>
+<li><strong>Entitlements:</strong> Configurations defining access scopes, eligible</li>
+</ul>
+<p>    requesters, and approvers.</p>
+<ul>
+<li><strong>Grants:</strong> Short-lived requests created against entitlements to activate</li>
+</ul>
+<p>    the entitlement&#39;s IAM roles.</p>
+<h5>Privileged Access (<code>privilegedAccess</code>)</h5>
+<p>The <code>privilegedAccess</code> block in an entitlement defines the precise access scope that will be granted. An access scope comprises three essential components:</p>
+<ul>
+<li><strong>Resource:</strong> The target Google Cloud resource (Project, Folder, or Organization) where access is granted.</li>
+<li><strong>Role Setup:</strong> The IAM role (<code>roleBindings.role</code>) to be assigned.</li>
+<li><strong>Condition:</strong> (Optional) An IAM condition expression (<code>roleBindings.conditionExpression</code>) restricting when or where the role applies.</li>
+</ul>
+<h5>Core Workflow</h5>
+<ol>
+<li>Administrators create Entitlements.</li>
+<li>Requesters can then request Grants against these entitlements.</li>
+<li>If the entitlement is configured with approvals, then an approver must</li>
+</ol>
+<p>    approve the requested grant.</p>
+<ol>
+<li>Once all necessary approval steps are completed, the grant is activated for</li>
+</ol>
+<p>    the requested time.</p>
+<ol>
+<li>The grant automatically ends after the requested duration has elapsed, and</li>
+</ol>
+<p>    the elevated access is removed.</p>
+<h4>Approval Workflows &amp; Max Request Duration {#approval-workflows}</h4>
+<h5>Approval Workflows (<code>approvalWorkflow</code>)</h5>
+<p>When sensitive environments require human approval before temporary access is</p>
+<p>activated, configure the <code>approvalWorkflow</code> block in the entitlement YAML</p>
+<p>manifest (<code>entitlement.yaml</code>).</p>
+<p><pre><code>approvalWorkflow:
+  manualApprovals:
+    # Optional: requires approver to supply a justification string
+    requireApproverJustification: true
+    steps:
+    - approvalsNeeded: 1
+      approverEmailRecipients:
+      - approver@example.com
+      approvers:
+      - principals:
+        - user:db-lead@my-company.com  # or group:sre-leads@my-company.com</code></pre></p>
+<ul>
+<li><strong>When to include:</strong> Include <code>approvalWorkflow</code> whenever the user prompt</li>
+</ul>
+<p>    specifies that manual approval or an approver (user or group) is required.</p>
+<ul>
+<li><strong>Outcome:</strong> When a user requests a grant against an entitlement</li>
+</ul>
+<p>    with <code>approvalWorkflow</code>, the grant transitions to <code>APPROVAL_AWAITED</code>.</p>
+<p>    Requesters must await an Approver&#39;s decision (<code>Mode 3</code>).</p>
+<h5>Max Request Duration (<code>maxRequestDuration</code>)</h5>
+<p><code>maxRequestDuration</code> defines the maximum single access elevation timeframe a requester</p>
+<p>may ask for when placing a grant request.</p>
+<ul>
+<li><strong>Flexible Configuration:</strong> Configure <code>maxRequestDuration</code> according to the</li>
+</ul>
+<p>    user&#39;s specific request (e.g. <code>8 hours</code> / <code>28800s</code>, <code>1 hour</code> / <code>3600s</code>, `24</p>
+<p>    hours<code> / </code>86400s`).</p>
+<ul>
+<li><strong>Default Value:</strong> If the user does NOT specify a maximum request duration,</li>
+</ul>
+<p>    default to <code>4 hours</code> (<code>14400s</code>).</p>
+<ul>
+<li><strong>YAML Syntax:</strong> Always format <code>maxRequestDuration</code> as a string in seconds</li>
+</ul>
+<p>    in the entitlement YAML (e.g., <code>&quot;14400s&quot;</code>, <code>&quot;28800s&quot;</code>).</p>
+<h4>Safety &amp; Confirmation Strategy {#safety-confirmation}</h4>
+<p>Adhere strictly to these workflow guards:</p>
+<ul>
+<li><strong>Modifying / Destructive Executions (Create, Update, Delete, Approve, Deny, Revoke):</strong> Always</li>
+</ul>
+<p>    present a plain-text summary of the planned adjustments and prompt the user</p>
+<p>    for explicit confirmation (Yes/No).</p>
+<ul>
+<li><strong>Read-Only Inspections (List, Describe, Search):</strong> Run autonomously without</li>
+</ul>
+<p>    requesting confirmation.</p>
+<ul>
+<li><strong>Batching Bash Commands (Reduce User Confirmations):</strong> The host environment</li>
+</ul>
+<p>    requires user approval for every individual shell tool call. To minimize</p>
+<p>    confirmation popups, combine sequential read-only and lookup commands into a</p>
+<p>    single compound bash script within one tool call (e.g., combining project,</p>
+<p>    folder, and organization hierarchy audits into a single multiline</p>
+<p>    execution).</p>
+<ul>
+<li><strong>Anti-Loop Strategy:</strong> If a command fails with a clear, actionable error,</li>
+</ul>
+<p>    you may attempt to self-debug and retry. If the error is ambiguous, halt</p>
+<p>    immediately, present the stderr output, and await user direction.</p>
+<h4>Plan-Validate-Execute Pattern {#plan-validate-execute}</h4>
+<p>For all modifying actions (Mode 1 Step 3, Mode 2 Create, Update, Delete, Mode 3 Approve, Deny):</p>
+<ol>
+<li><strong>Plan:</strong> Construct the proposed parameters or read the sample entitlement</li>
+</ol>
+<p>    structure. (For entitlement creation, load and use the template:</p>
+<p>    [assets/entitlement_template.yaml](assets/entitlement_template.yaml)).</p>
+<ol>
+<li><strong>Validate:</strong> Inspect the target configuration parameters (resource names,</li>
+</ol>
+<p>    role bindings, duration limits) for compliance with corporate rules.</p>
+<ol>
+<li><strong>Execute:</strong> Present the validated plan, obtain explicit user confirmation,</li>
+</ol>
+<p>    and run the <code>gcloud</code> command.</p>
+<hr>
+<h4>Mode 1: Interactive Access Elevation {#mode-1}</h4>
+<p>When the user requests temporary access elevation as a Requester, load and</p>
+<p>follow the detailed instructions in</p>
+<p>[<code>references/requester.md</code>](references/requester.md).</p>
+<hr>
+<h4>Mode 2: Standalone Entitlement CRUD {#mode-2}</h4>
+<p>Follow these steps for entitlement configurations.</p>
+<h5>Required Permissions for Entitlement Admins</h5>
+<ul>
+<li><code>roles/privilegedaccessmanager.admin</code>: Required to create, update, and</li>
+</ul>
+<p>    delete entitlement configurations (<code>Mode 1 Step 3</code> and <code>Mode 2 CRUD</code>).</p>
+<ul>
+<li><strong>Scope IAM Admin Rights:</strong> Required on the target hierarchy scope because</li>
+</ul>
+<p>    creating an entitlement authorizes future role evaluations and bindings on</p>
+<p>    that scope:</p>
+<ul>
+<li><strong>Organizations:</strong> <code>roles/iam.securityAdmin</code></li>
+<li><strong>Folders:</strong> <code>roles/resourcemanager.folderAdmin</code></li>
+<li><strong>Projects:</strong> <code>roles/resourcemanager.projectIamAdmin</code></li>
+<li><code>roles/privilegedaccessmanager.viewer</code>: Required to list and describe</li>
+</ul>
+<p>    entitlements across scopes.</p>
+<p>*(Rule: For all Standalone Entitlement CRUD commands below, use the flag</p>
+<p>matching where the entitlement is defined: pass <code>--project=PROJECT_ID</code>,</p>
+<p><code>--folder=FOLDER_ID</code>, or <code>--organization=ORGANIZATION_ID</code>).*</p>
+<h5>1. Create Entitlement</h5>
+<ol>
+<li>Check if <code>ENTITLEMENT_ID</code> exists:</li>
+</ol>
+<p><pre><code>gcloud pam entitlements describe ENTITLEMENT_ID \
+    --location=global \
+    --project=PROJECT_ID</code></pre></p>
+<ul>
+<li><strong>If Exists:</strong> Halt. Ask: *&quot;The requested PAM Entitlement <code>ENTITLEMENT_ID</code></li>
+</ul>
+<p>    already exists. Would you like to view its details or update it instead?</p>
+<p>    (View / Update / Exit)&quot;*</p>
+<ul>
+<li><strong>If NOT_FOUND:</strong> Load the template</li>
+</ul>
+<p>    [assets/entitlement_template.yaml](assets/entitlement_template.yaml).</p>
+<p>    Generate IDs in lowercase using hyphen separators derived from the role name</p>
+<p>    (e.g., <code>compute-admin</code> for <code>roles/compute.admin</code>). <strong>Note:</strong></p>
+<ul>
+<li>You may specify multiple IAM roles under <code>roleBindings</code>.</li>
+<li>You may also include an optional IAM <code>conditionExpression</code> for each role binding.</li>
+<li>Legacy basic roles (e.g., <code>roles/viewer</code>, <code>roles/editor</code>, <code>roles/owner</code>) are NOT supported. Instead, use their v2 basic role equivalents (e.g., <code>roles/basic.viewer</code>, <code>roles/basic.editor</code>, <code>roles/basic.owner</code>). Ensure you select a valid predefined, custom, or v2 basic role.</li>
+<li>Set <code>maxRequestDuration</code> based on user specification (e.g. <code>&quot;28800s&quot;</code> for 8</li>
+</ul>
+<p>    hours, <code>&quot;3600s&quot;</code> for 1 hour). If unspecified by the user, default to</p>
+<p>    <code>&quot;14400s&quot;</code> (4 hours). If manual approval is specified by policy or requested</p>
+<p>    by the user, configure the <code>approvalWorkflow</code> block in <code>entitlement.yaml</code>.</p>
+<p>    Preserve <code>requesterJustificationConfig: {unstructured: {}}</code>.</p>
+<ul>
+<li>Prompt: *&quot;You are about to create the PAM Entitlement <code>ENTITLEMENT_ID</code>. Do</li>
+</ul>
+<p>    you approve this creation? (Yes/No)&quot;*</p>
+<ul>
+<li>Deploy:</li>
+</ul>
+<p><pre><code>gcloud pam entitlements create ENTITLEMENT_ID \
+    --location=global \
+    --entitlement-file=entitlement.yaml \
+    --project=PROJECT_ID</code></pre></p>
+<h5>2. Read Entitlements</h5>
+<p>Run these read operations autonomously:</p>
+<p>List all entitlements at a single scope:</p>
+<p><pre><code>gcloud pam entitlements list \
+    --location=global \
+    --project=PROJECT_ID</code></pre></p>
+<p>To list all entitlements defined across the entire resource hierarchy (project, ancestor folders, and organization), use the hierarchy listing script:</p>
+<p><pre><code>bash scripts/list_entitlements_hierarchy.sh --project=PROJECT_ID</code></pre></p>
+<p><em>(Or pass <code>--folder=FOLDER_ID</code> or <code>--organization=ORGANIZATION_ID</code>).</em></p>
+<p>Describe target entitlement:</p>
+<p><pre><code>gcloud pam entitlements describe ENTITLEMENT_ID \
+    --location=global \
+    --project=PROJECT_ID</code></pre></p>
+<h5>3. Update Entitlement</h5>
+<ol>
+<li>Run the <code>export</code> command to generate the current config (which includes the <code>etag</code>):</li>
+</ol>
+<p>    <pre><code>    gcloud pam entitlements export ENTITLEMENT_ID \
+        --location=global \
+        --project=PROJECT_ID &gt; {scratch}/updated_entitlement.yaml
+    </code></pre></p>
+<p>    If missing, offer to run <code>list</code> or exit.</p>
+<ol>
+<li>Edit the exported <code>{scratch}/updated_entitlement.yaml</code> file to apply the requested changes (e.g., updating</li>
+</ol>
+<p>    <code>maxRequestDuration</code>, <code>approvalWorkflow</code>, or <code>eligibleUsers</code>). Do not alter the <code>etag</code>.</p>
+<ol>
+<li>Prompt: *&quot;You are about to update the PAM Entitlement <code>ENTITLEMENT_ID</code>. Do</li>
+</ol>
+<p>    you approve this update? (Yes/No)&quot;*</p>
+<ol>
+<li>Execute:</li>
+</ol>
+<p><pre><code>gcloud pam entitlements update ENTITLEMENT_ID \
+    --location=global \
+    --entitlement-file={scratch}/updated_entitlement.yaml \
+    --project=PROJECT_ID</code></pre></p>
+<h5>4. Delete Entitlement</h5>
+<ol>
+<li>Verify existence using <code>describe</code>. If missing, offer list/exit.</li>
+<li><strong>Safety Check:</strong> An entitlement cannot be deleted if there are open grants.</li>
+</ol>
+<p>    Before deleting, search for any <code>ACTIVE</code> or <code>SCHEDULED</code> grants:</p>
+<p>    <pre><code>    gcloud pam grants list \
+        --entitlement=ENTITLEMENT_ID \
+        --location=global \
+        --project=PROJECT_ID \
+        --filter=&quot;state:(ACTIVE, SCHEDULED)&quot;
+    </code></pre></p>
+<p>    If any open grants are found, prompt the user for permission to revoke them: <em>&quot;There are active or scheduled grants on this entitlement. Do you authorize me to revoke them so the entitlement can be deleted? (Yes/No)&quot;</em></p>
+<p>    If Yes, revoke them:</p>
+<p>    <pre><code>    gcloud pam grants revoke GRANT_ID \
+        --entitlement=ENTITLEMENT_ID \
+        --location=global \
+        --project=PROJECT_ID \
+        --reason=&quot;Revoking to delete entitlement&quot;
+    </code></pre></p>
+<ol>
+<li>Prompt: *&quot;You are about to permanently delete the PAM Entitlement</li>
+</ol>
+<p>    <code>ENTITLEMENT_ID</code>. Do you approve this deletion? (Yes/No)&quot;*</p>
+<ol>
+<li>Execute:</li>
+</ol>
+<p><pre><code>gcloud pam entitlements delete ENTITLEMENT_ID \
+    --location=global \
+    --project=PROJECT_ID</code></pre></p>
+<hr>
+<h4>Mode 3: Approver Workflow {#mode-3}</h4>
+<p>When an Approver needs to review, approve, or reject pending grant requests,</p>
+<p>load and follow the detailed instructions in</p>
+<p>[<code>references/approver.md</code>](references/approver.md).</p>
+<hr>
+<h4>Supporting Links &amp; Resources {#supporting-links}</h4>
+<p>For further information on working with Privileged Access Manager, refer to:</p>
+<ul>
+<li>[Google Cloud Privileged Access Manager Overview][pam-overview]</li>
+<li>[Setting up PAM Entitlements][pam-create]</li>
+<li>[Requesting and auditing PAM Grants][pam-grants]</li>
+<li>[gcloud SDK pam Reference Guide][pam-gcloud]</li>
+</ul>
+<p>[pam-overview]: <a href="https://cloud.google.com/iam/docs/pam-overview" rel="noopener">https://cloud.google.com/iam/docs/pam-overview</a></p>
+<p>[pam-create]: <a href="https://cloud.google.com/iam/docs/pam-create-entitlements" rel="noopener">https://cloud.google.com/iam/docs/pam-create-entitlements</a></p>
+<p>[pam-grants]: <a href="https://cloud.google.com/iam/docs/pam-request-temporary-elevated-access" rel="noopener">https://cloud.google.com/iam/docs/pam-request-temporary-elevated-access</a></p>
+<p>[pam-gcloud]: <a href="https://cloud.google.com/sdk/gcloud/reference/pam" rel="noopener">https://cloud.google.com/sdk/gcloud/reference/pam</a></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/iam-helper-for-privileged-access-management</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/iam-helper-for-privileged-access-management" aria-label="Copy install iam-helper-for-privileged-access-management">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/iam-helper-for-privileged-access-management</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/iam-helper-for-privileged-access-management/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

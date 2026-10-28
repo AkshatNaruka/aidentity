@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-ads-api-account-diagnostics — Aidentity</title>
+<meta name="description" content="Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-account-diagnostics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-ads-api-account-diagnostics — Aidentity">
+<meta property="og:description" content="Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-account-diagnostics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-ads-api-account-diagnostics","description":"Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don't use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-account-diagnostics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=ads">ads</a><span>/</span>google-ads-api-account-diagnostics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-ads-api-account-diagnostics</h1>
+      <p class="summary">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=ads">ads</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Ads API Account Performance Diagnostics Skill</h3>
+<p>This skill provides instructions on how to use the Google Ads MCP server tools to diagnose common account performance issues.</p>
+<h4>Workflows</h4>
+<h5>Identifying Active Client Accounts</h5>
+<p>Most diagnostics tasks require sending GAQL queries to a specific customer account. If the customer ID is not explicitly provided by the user, you must first call the <code>list_accessible_customers</code> (or <code>customers_list_accessible_customers</code>) tool to retrieve the customer resource names/IDs you have access to.</p>
+<p>Once you have the list of accessible customer IDs, query the <code>customer_client</code> resource using the <code>search</code> tool under those customer accounts to find active client customer accounts. Make sure to select only enabled client accounts and filter out manager accounts:</p>
+<p><pre><code>SELECT
+  customer_client.id,
+  customer_client.descriptive_name,
+  customer_client.status,
+  customer_client.manager
+FROM customer_client
+WHERE customer_client.status = &#39;ENABLED&#39; AND customer_client.manager = FALSE</code></pre></p>
+<p>Only run subsequent diagnostic queries against the enabled client customer IDs retrieved from this list. Do not query deactivated or manager accounts, as doing so will cause API errors.</p>
+<h5>Using the MCP Tools Directly</h5>
+<p>To retrieve information and run queries, you must call the <code>search</code> tool on the MCP server directly (with arguments like <code>customer_id</code>, <code>fields</code>, <code>resource</code>, and <code>conditions</code>). Do not write or execute custom Python scripts or use the Google Ads client library to query the API, as they will fail authentication inside the evaluation sandbox.</p>
+<h5>1. Conversion and Conversion Value Loss</h5>
+<p>When conversions or conversion value suddenly decline, use the following steps to diagnose the issue.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Discover Fields</strong>: Use <code>get_resource_metadata</code> with resource <code>campaign</code> or <code>ad_group</code> to ensure you have the correct field names.</li>
+<li><strong>Query Performance</strong>: Use <code>search</code> to retrieve performance data.</li>
+</ol>
+<ul>
+<li><strong>Resource</strong>: <code>campaign</code> or <code>ad_group</code></li>
+<li><strong>Fields</strong>: Include <code>campaign.name</code>, <code>metrics.conversions</code>, <code>metrics.conversions_value</code>, <code>metrics.cost_micros</code>.</li>
+<li><strong>Segments</strong>: To isolate the loss, include segments like <code>segments.date</code>, <code>segments.device</code>, <code>segments.conversion_action</code>.</li>
+<li><strong>Conditions</strong>: Compare the period of decline with a previous period (e.g., <code>segments.date &gt;= &#39;{start_date}&#39;</code>).</li>
+<li><em>Gotcha</em>: <code>metrics.cost_micros</code> must be divided by 1,000,000 to get standard currency amounts.</li>
+</ul>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    To query performance data for a customer account <code>{customer_id}</code> between <code>{start_date}</code> and <code>{end_date}</code>:</p>
+<p>    <pre><code>    SELECT
+      campaign.name,
+      metrics.conversions,
+      metrics.conversions_value,
+      metrics.cost_micros,
+      segments.date,
+      segments.device,
+      segments.conversion_action
+    FROM campaign
+    WHERE segments.date &gt;= &#39;{start_date}&#39; AND segments.date &lt;= &#39;{end_date}&#39;
+    </code></pre></p>
+<ol>
+<li><strong>Analyze</strong>: Check if the loss is limited to certain devices (e.g., mobile vs desktop) or specific conversion actions.</li>
+<li><strong>Check Uploads</strong>: If using offline imports, query <code>offline_conversion_upload_conversion_action_summary</code> to verify upload pipeline health. If the query returns no results, report that no offline uploads exist for the account and proceed.</li>
+</ol>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    To check upload pipeline health for a customer account <code>{customer_id}</code>:</p>
+<p>    <pre><code>    SELECT
+      offline_conversion_upload_conversion_action_summary.conversion_action_name,
+      offline_conversion_upload_conversion_action_summary.successful_event_count,
+      offline_conversion_upload_conversion_action_summary.total_event_count,
+      offline_conversion_upload_conversion_action_summary.status
+    FROM offline_conversion_upload_conversion_action_summary
+    </code></pre></p>
+<h5>2. Opportunities Lost (Impression Share)</h5>
+<p>To identify lost opportunities due to ad rank, bids, or budgets, analyze impression share metrics.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Query Impression Share</strong>: Use <code>search</code> to retrieve impression share metrics.</li>
+</ol>
+<ul>
+<li><strong>Resource</strong>: <code>campaign</code></li>
+<li><strong>Fields</strong>: Include <code>campaign.name</code>, <code>metrics.search_impression_share</code>, <code>metrics.search_rank_lost_impression_share</code>, <code>metrics.search_budget_lost_impression_share</code>.</li>
+<li><em>Gotcha</em>: Impression share values in the API are returned as decimals (e.g., 0.35 = 35%) or formatted strings (e.g., <code>&quot;&lt; 0.10&quot;</code>).</li>
+</ul>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    To query impression share metrics for a customer account <code>{customer_id}</code> between <code>{start_date}</code> and <code>{end_date}</code>:</p>
+<p>    <pre><code>    SELECT
+      campaign.name,
+      metrics.search_impression_share,
+      metrics.search_rank_lost_impression_share,
+      metrics.search_budget_lost_impression_share
+    FROM campaign
+    WHERE segments.date &gt;= &#39;{start_date}&#39; AND segments.date &lt;= &#39;{end_date}&#39;
+    </code></pre></p>
+<ol>
+<li><strong>Analyze</strong>:</li>
+</ol>
+<ul>
+<li>High <code>search_budget_lost_impression_share</code> indicates opportunities lost due to limited budget.</li>
+<li>High <code>search_rank_lost_impression_share</code> indicates opportunities lost due to low ad rank (bid or quality issues).</li>
+</ul>
+<h5>3. Low Lead Flow Diagnostics</h5>
+<p>When a user asks &quot;why is my lead flow low these past few days?&quot;, follow this systematic approach.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Confirm Drop</strong>: Query conversions segmented by date for the last few days vs the previous period.</li>
+<li><strong>Isolate Cause</strong>:</li>
+</ol>
+<ul>
+<li>Check if <strong>Traffic</strong> (clicks, impressions) dropped.</li>
+<li>Check if <strong>Conversion Rate</strong> (conversions/clicks) dropped.</li>
+</ul>
+<ol>
+<li><strong>If Traffic Dropped</strong>: Check Impression Share metrics (see Workflow 2) to see if it&#39;s a budget or rank issue, or if search volume generally declined.</li>
+<li><strong>If Conversion Rate Dropped</strong>: Check breakdowns by <code>segments.device</code> or <code>segments.conversion_action</code> to see if a specific area is failing.</li>
+<li><strong>Check Changes</strong>: Query the <code>change_event</code> resource to see if any changes were made to bids, budgets, or targeting around the time the drop started.</li>
+</ol>
+<ul>
+<li><em>Gotcha (change_event constraints)</em>: Queries to the <code>change_event</code> resource:</li>
+<li>Must specify a <code>LIMIT</code> clause of less than or equal to 10000.</li>
+<li>Must filter by date (<code>change_event.change_date_time</code>) within the past 30 days.</li>
+<li>Cannot select performance metrics (e.g., <code>metrics.*</code> is not supported; only <code>change_event</code> attributes and allowed resource fields can be selected).</li>
+</ul>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    To query change events for a customer account <code>{customer_id}</code> between <code>{start_date}</code> and <code>{end_date}</code>:</p>
+<p>    <pre><code>    SELECT
+      change_event.change_date_time,
+      change_event.change_resource_name,
+      change_event.resource_change_operation,
+      change_event.changed_fields
+    FROM change_event
+    WHERE change_event.change_date_time &gt;= &#39;{start_date}&#39; AND change_event.change_date_time &lt;= &#39;{end_date}&#39;
+    LIMIT 10000
+    </code></pre></p>
+<h5>4. Offline Upload Pipeline Diagnostics</h5>
+<p>When offline conversion uploads for a specific action (e.g., store-purchase) stop showing up or fail, use the following steps to diagnose the issue.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Retrieve Client Accounts</strong>: If <code>{customer_id}</code> is not provided, first call the <code>list_accessible_customers</code> (or <code>customers_list_accessible_customers</code>) tool to retrieve the customer resource names/IDs you have access to. Then, query the <code>customer_client</code> resource to find active client customer accounts, ensuring you filter out manager accounts and deactivated/canceled accounts to avoid query errors.</li>
+</ol>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    <pre><code>    SELECT
+      customer_client.id,
+      customer_client.descriptive_name,
+      customer_client.status,
+      customer_client.manager
+    FROM customer_client
+    WHERE customer_client.status = &#39;ENABLED&#39; AND customer_client.manager = FALSE
+    </code></pre></p>
+<ol>
+<li><strong>Verify Pipeline Health</strong>: Query <code>offline_conversion_upload_conversion_action_summary</code> for the active client account.</li>
+</ol>
+<ul>
+<li><strong>Fields</strong>: Include <code>offline_conversion_upload_conversion_action_summary.conversion_action_name</code>, <code>offline_conversion_upload_conversion_action_summary.successful_event_count</code>, <code>offline_conversion_upload_conversion_action_summary.total_event_count</code>, and <code>offline_conversion_upload_conversion_action_summary.status</code>.</li>
+</ul>
+<p>    <strong>Example GAQL Query:</strong></p>
+<p>    <pre><code>    SELECT
+      offline_conversion_upload_conversion_action_summary.conversion_action_name,
+      offline_conversion_upload_conversion_action_summary.successful_event_count,
+      offline_conversion_upload_conversion_action_summary.total_event_count,
+      offline_conversion_upload_conversion_action_summary.status
+    FROM offline_conversion_upload_conversion_action_summary
+    </code></pre></p>
+<ol>
+<li><strong>Analyze</strong>:</li>
+</ol>
+<ul>
+<li><em>Gotcha</em>: If the query to <code>offline_conversion_upload_conversion_action_summary</code> returns no results or is empty (indicating there are no offline conversion uploads configured or active for the customer account), immediately stop/break the diagnostic workflow. Report directly to the user that no offline conversion upload data or summaries exist in the accessible account(s), rather than retrying or attempting to generate custom scripts.</li>
+<li>If results are returned, verify the upload success rate by comparing <code>successful_event_count</code> with <code>total_event_count</code>. Check the <code>status</code> field to diagnose failures.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-mcp-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-mcp-setup guides developers through downloading, configuring, and installing the official open-source google ads mcp server. use this skill when a user wants to connect their ai assistant (such as gemini, claude code, or cursor) to their google ads account to query campaigns or retrieve reporting metrics using natural language. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-mcp-setup</span>
+    <span class="r-desc">Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-quickstart/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-quickstart guides developers through google ads api quickstart: credential setup, choosing from 6 client libraries/rest, configuring environments, and running a &quot;retrieve campaigns&quot; script. troubleshoots common setup errors: user_permission_denied, login_customer_id issues, and developer_token_not_approved. use this skill when: - the user asks how to get started with the google ads api. - the user needs to set up google ads credentials or developer tokens. - the user wants to write a quickstart/example script for google ads. - the user encounters errors like user_permission_denied or developer_token_not_approved. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-quickstart</span>
+    <span class="r-desc">Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/ads/google-ads-api-account-diagnostics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/ads/google-ads-api-account-diagnostics" aria-label="Copy install google-ads-api-account-diagnostics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>ads</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/ads/google-ads-api-account-diagnostics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/ads/google-ads-api-account-diagnostics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-multitenancy — Aidentity</title>
+<meta name="description" content="Plans and configures multi-tenancy on GKE. Covers namespace isolation, RBAC planning for teams, resource quotas, LimitRanges, network isolation, and cost allocation. Use when designing GKE multi-tenancy, configuring GKE namespaces, setting up resource quotas, or isolating GKE teams. Don&#39;t use for single-tenant cluster configuration or general deployment instructions (use gke-basics or gke-app-onboarding instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-multitenancy/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-multitenancy — Aidentity">
+<meta property="og:description" content="Plans and configures multi-tenancy on GKE. Covers namespace isolation, RBAC planning for teams, resource quotas, LimitRanges, network isolation, and cost allocation. Use when designing GKE multi-tenancy, configuring GKE namespaces, setting up resource quotas, or isolating GKE teams. Don&#39;t use for single-tenant cluster configuration or general deployment instructions (use gke-basics or gke-app-onboarding instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-multitenancy/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-multitenancy","description":"Plans and configures multi-tenancy on GKE. Covers namespace isolation, RBAC planning for teams, resource quotas, LimitRanges, network isolation, and cost allocation. Use when designing GKE multi-tenancy, configuring GKE namespaces, setting up resource quotas, or isolating GKE teams. Don't use for single-tenant cluster configuration or general deployment instructions (use gke-basics or gke-app-onboarding instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-multitenancy/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-multitenancy
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-multitenancy</h1>
+      <p class="summary">Plans and configures multi-tenancy on GKE. Covers namespace isolation, RBAC planning for teams, resource quotas, LimitRanges, network isolation, and cost allocation. Use when designing GKE multi-tenancy, configuring GKE namespaces, setting up resource quotas, or isolating GKE teams. Don&#39;t use for single-tenant cluster configuration or general deployment instructions (use gke-basics or gke-app-onboarding instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Multi-Tenancy</h3>
+<p>This reference covers enterprise multi-tenancy patterns on GKE, including</p>
+<p>namespace isolation, RBAC planning, resource quotas, and network segmentation.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>apply_k8s_manifest</code>, <code>get_k8s_resource</code>, <code>check_k8s_auth</code>,</p>
+<p>&gt; <code>describe_k8s_resource</code>, <code>delete_k8s_resource</code></p>
+<h4>When to Use</h4>
+<ul>
+<li>Multiple teams sharing a single GKE cluster</li>
+<li>Isolating workloads by environment (dev/staging/prod) within one cluster</li>
+<li>Implementing least-privilege access control</li>
+<li>Cost allocation across teams or projects</li>
+</ul>
+<h4>Multi-Tenancy Models</h4>
+<table><thead><tr><th>Model</th><th>Isolation</th><th>Complexity</th><th>Cost</th></tr></thead><tbody>
+<tr><td><strong>Namespace-per-team</strong></td><td>Soft (RBAC +</td><td>Low</td><td>Lowest (shared</td></tr>
+</tbody></table>
+<p>:                               : Network      :            : cluster)       :</p>
+<p>:                               : Policy)      :            :                :</p>
+<table><thead><tr><th><strong>Namespace-per-environment</strong></th><th>Soft</th><th>Low</th><th>Low</th></tr></thead><tbody>
+<tr><td><strong>Node pool-per-team</strong></td><td>Medium</td><td>Medium</td><td>Medium</td></tr>
+</tbody></table>
+<p>:                               : (dedicated   :            :                :</p>
+<p>:                               : compute)     :            :                :</p>
+<table><thead><tr><th><strong>Cluster-per-team</strong></th><th>Hard (full</th><th>High</th><th>Highest</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : isolation)   :            :                :</p>
+<p>&gt; <strong>Golden path recommendation</strong>: Start with namespace-per-team for cost</p>
+<p>&gt; efficiency. Escalate to stronger isolation only when compliance requires it.</p>
+<h4>Namespace Isolation Setup</h4>
+<h5>1. Create Namespaces</h5>
+<p><pre><code>kubectl create namespace team-a
+kubectl create namespace team-b
+kubectl label namespace team-a team=a
+kubectl label namespace team-b team=b</code></pre></p>
+<h5>2. RBAC Configuration</h5>
+<p><strong>Principle</strong>: Grant minimal permissions per namespace. Never bind to</p>
+<p><code>system:authenticated</code>.</p>
+<p><pre><code># Namespace-scoped role for a team
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: team-a-developer
+  namespace: team-a
+rules:
+- apiGroups: [&quot;&quot;, &quot;apps&quot;, &quot;batch&quot;]
+  resources: [&quot;pods&quot;, &quot;deployments&quot;, &quot;services&quot;, &quot;configmaps&quot;, &quot;jobs&quot;]
+  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: team-a-developers
+  namespace: team-a
+subjects:
+- kind: Group
+  name: &quot;team-a@example.com&quot;  # Google Group
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: team-a-developer
+  apiGroup: rbac.authorization.k8s.io</code></pre></p>
+<p><strong>RBAC best practices:</strong> Use Google Groups for subject bindings. Prefer</p>
+<p>namespace-scoped Roles over ClusterRoles. See the <code>gke-platform-security</code> skill</p>
+<p>for full RBAC hardening guidance.</p>
+<h5>3. Resource Quotas</h5>
+<p>Prevent any single team from consuming all cluster resources:</p>
+<p><pre><code>apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: team-a-quota
+  namespace: team-a
+spec:
+  hard:
+    requests.cpu: &quot;10&quot;
+    requests.memory: &quot;20Gi&quot;
+    limits.cpu: &quot;20&quot;
+    limits.memory: &quot;40Gi&quot;
+    pods: &quot;50&quot;
+    services: &quot;10&quot;
+    persistentvolumeclaims: &quot;10&quot;</code></pre></p>
+<h5>4. LimitRanges</h5>
+<p>Set default and maximum resource constraints per container:</p>
+<p><pre><code>apiVersion: v1
+kind: LimitRange
+metadata:
+  name: team-a-limits
+  namespace: team-a
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: &quot;500m&quot;
+      memory: &quot;512Mi&quot;
+    defaultRequest:
+      cpu: &quot;100m&quot;
+      memory: &quot;128Mi&quot;
+    max:
+      cpu: &quot;4&quot;
+      memory: &quot;8Gi&quot;</code></pre></p>
+<p>&gt; [!IMPORTANT] <strong>Mandatory Defaults</strong>: When defining <code>min</code> or <code>max</code> limits in a</p>
+<p>&gt; <code>LimitRange</code>, you <strong>must</strong> also define corresponding <code>default</code> and</p>
+<p>&gt; <code>defaultRequest</code> values. If you set a <code>min</code> or <code>max</code> without defaults, any pod</p>
+<p>&gt; deployed without explicit resource requests/limits will be rejected by the</p>
+<p>&gt; admission controller.</p>
+<h5>5. Network Isolation</h5>
+<p>Apply default-deny per namespace (see the <code>gke-workload-security</code> skill), then</p>
+<p>allow intra-team traffic:</p>
+<p><pre><code># Allow same-namespace pods to talk + DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: team-a
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+  - to:  # Allow DNS
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53</code></pre></p>
+<h4>Cost Allocation</h4>
+<h5>Labels for Cost Attribution</h5>
+<p><pre><code># Label namespaces for billing
+kubectl label namespace team-a cost-center=engineering
+kubectl label namespace team-b cost-center=data-science</code></pre></p>
+<h5>GKE Cost Allocation</h5>
+<p>Enable GKE cost allocation to break down costs by namespace and label:</p>
+<p><pre><code>gcloud container clusters update &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --enable-cost-allocation</code></pre></p>
+<p>View in Cloud Billing &gt; GKE Cost Allocation.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-multitenancy</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-multitenancy" aria-label="Copy install gke-multitenancy">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-multitenancy</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-multitenancy/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

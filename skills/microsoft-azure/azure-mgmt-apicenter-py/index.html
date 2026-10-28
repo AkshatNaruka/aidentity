@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-mgmt-apicenter-py — Aidentity</title>
+<meta name="description" content="Azure API Center Management SDK for Python. Use for managing API inventory, metadata, and governance across your organization. Triggers: &quot;azure-mgmt-apicenter&quot;, &quot;ApiCenterMgmtClient&quot;, &quot;API Center&quot;, &quot;API inventory&quot;, &quot;API governance&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apicenter-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-mgmt-apicenter-py — Aidentity">
+<meta property="og:description" content="Azure API Center Management SDK for Python. Use for managing API inventory, metadata, and governance across your organization. Triggers: &quot;azure-mgmt-apicenter&quot;, &quot;ApiCenterMgmtClient&quot;, &quot;API Center&quot;, &quot;API inventory&quot;, &quot;API governance&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apicenter-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-mgmt-apicenter-py","description":"Azure API Center Management SDK for Python. Use for managing API inventory, metadata, and governance across your organization. Triggers: \"azure-mgmt-apicenter\", \"ApiCenterMgmtClient\", \"API Center\", \"API inventory\", \"API governance\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apicenter-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-mgmt-apicenter-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-mgmt-apicenter-py</h1>
+      <p class="summary">Azure API Center Management SDK for Python. Use for managing API inventory, metadata, and governance across your organization. Triggers: &quot;azure-mgmt-apicenter&quot;, &quot;ApiCenterMgmtClient&quot;, &quot;API Center&quot;, &quot;API inventory&quot;, &quot;API governance&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure API Center Management SDK for Python</h3>
+<p>Manage API inventory, metadata, and governance in Azure API Center.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-mgmt-apicenter
+pip install azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SUBSCRIPTION_ID=your-subscription-id  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.mgmt.apicenter import ApiCenterMgmtClient
+import os
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with ApiCenterMgmtClient(
+    credential=credential,
+    subscription_id=os.environ[&quot;AZURE_SUBSCRIPTION_ID&quot;]
+) as client:
+    # Use `client` for all subsequent operations (see examples below)
+    ...</code></pre></p>
+<h4>Create API Center</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import Service
+
+api_center = client.services.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    resource=Service(
+        location=&quot;eastus&quot;,
+        tags={&quot;environment&quot;: &quot;production&quot;}
+    )
+)
+
+print(f&quot;Created API Center: {api_center.name}&quot;)</code></pre></p>
+<h4>List API Centers</h4>
+<p><pre><code>api_centers = client.services.list_by_subscription()
+
+for api_center in api_centers:
+    print(f&quot;{api_center.name} - {api_center.location}&quot;)</code></pre></p>
+<h4>Register an API</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import Api, ApiKind, ApiProperties
+
+api = client.apis.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    api_name=&quot;my-api&quot;,
+    resource=Api(
+        properties=ApiProperties(
+            title=&quot;My API&quot;,
+            description=&quot;A sample API for demonstration&quot;,
+            kind=ApiKind.REST,
+            terms_of_service={&quot;url&quot;: &quot;https://example.com/terms&quot;},
+            contacts=[{&quot;name&quot;: &quot;API Team&quot;, &quot;email&quot;: &quot;api-team@example.com&quot;}],
+        )
+    ),
+)
+
+print(f&quot;Registered API: {api.properties.title}&quot;)</code></pre></p>
+<h4>Create API Version</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import ApiVersion, ApiVersionProperties, LifecycleStage
+
+version = client.api_versions.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    api_name=&quot;my-api&quot;,
+    version_name=&quot;v1&quot;,
+    resource=ApiVersion(
+        properties=ApiVersionProperties(
+            title=&quot;Version 1.0&quot;,
+            lifecycle_stage=LifecycleStage.PRODUCTION,
+        )
+    ),
+)
+
+print(f&quot;Created version: {version.properties.title}&quot;)</code></pre></p>
+<h4>Add API Definition</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import ApiDefinition, ApiDefinitionProperties
+
+definition = client.api_definitions.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    api_name=&quot;my-api&quot;,
+    version_name=&quot;v1&quot;,
+    definition_name=&quot;openapi&quot;,
+    resource=ApiDefinition(
+        properties=ApiDefinitionProperties(
+            title=&quot;OpenAPI Definition&quot;,
+            description=&quot;OpenAPI 3.0 specification&quot;,
+        )
+    ),
+)</code></pre></p>
+<h4>Import API Specification</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import ApiSpecImportRequest, ApiSpecImportSourceFormat
+
+# Import from inline content
+client.api_definitions.begin_import_specification(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    api_name=&quot;my-api&quot;,
+    version_name=&quot;v1&quot;,
+    definition_name=&quot;openapi&quot;,
+    body=ApiSpecImportRequest(
+        format=ApiSpecImportSourceFormat.INLINE,
+        value=&#39;{&quot;openapi&quot;: &quot;3.0.0&quot;, &quot;info&quot;: {&quot;title&quot;: &quot;My API&quot;, &quot;version&quot;: &quot;1.0&quot;}, &quot;paths&quot;: {}}&#39;,
+    )
+).result()</code></pre></p>
+<h4>List APIs</h4>
+<p><pre><code>apis = client.apis.list(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;
+)
+
+for api in apis:
+    print(f&quot;{api.name}: {api.title} ({api.kind})&quot;)</code></pre></p>
+<h4>Create Environment</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import Environment, EnvironmentKind, EnvironmentProperties
+
+environment = client.environments.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    environment_name=&quot;production&quot;,
+    resource=Environment(
+        properties=EnvironmentProperties(
+            title=&quot;Production&quot;,
+            description=&quot;Production environment&quot;,
+            kind=EnvironmentKind.PRODUCTION,
+            server={&quot;type&quot;: &quot;Azure API Management&quot;, &quot;management_portal_uri&quot;: [&quot;https://portal.azure.com&quot;]},
+        )
+    ),
+)</code></pre></p>
+<h4>Create Deployment</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import Deployment, DeploymentProperties, DeploymentState
+
+deployment = client.deployments.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    workspace_name=&quot;default&quot;,
+    api_name=&quot;my-api&quot;,
+    deployment_name=&quot;prod-deployment&quot;,
+    resource=Deployment(
+        properties=DeploymentProperties(
+            title=&quot;Production Deployment&quot;,
+            description=&quot;Deployed to production APIM&quot;,
+            environment_id=&quot;/workspaces/default/environments/production&quot;,
+            definition_id=&quot;/workspaces/default/apis/my-api/versions/v1/definitions/openapi&quot;,
+            state=DeploymentState.ACTIVE,
+            server={&quot;runtime_uri&quot;: [&quot;https://api.example.com&quot;]},
+        )
+    ),
+)</code></pre></p>
+<h4>Define Custom Metadata</h4>
+<p><pre><code>from azure.mgmt.apicenter.models import MetadataSchema, MetadataSchemaProperties
+
+metadata = client.metadata_schemas.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-api-center&quot;,
+    metadata_schema_name=&quot;data-classification&quot;,
+    resource=MetadataSchema(
+        properties=MetadataSchemaProperties(
+            schema=&#39;{&quot;type&quot;: &quot;string&quot;, &quot;title&quot;: &quot;Data Classification&quot;, &quot;enum&quot;: [&quot;public&quot;, &quot;internal&quot;, &quot;confidential&quot;]}&#39;
+        )
+    ),
+)</code></pre></p>
+<h4>Client Types</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>ApiCenterMgmtClient</code></td><td>Main client for all operations</td></tr>
+</tbody></table>
+<h4>Operations</h4>
+<table><thead><tr><th>Operation Group</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>services</code></td><td>API Center service management</td></tr>
+<tr><td><code>workspaces</code></td><td>Workspace management</td></tr>
+<tr><td><code>apis</code></td><td>API registration and management</td></tr>
+<tr><td><code>api_versions</code></td><td>API version management</td></tr>
+<tr><td><code>api_definitions</code></td><td>API definition management</td></tr>
+<tr><td><code>deployments</code></td><td>Deployment tracking</td></tr>
+<tr><td><code>environments</code></td><td>Environment management</td></tr>
+<tr><td><code>metadata_schemas</code></td><td>Custom metadata definitions</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use workspaces</strong> to organize APIs by team or domain</li>
+<li><strong>Define metadata schemas</strong> for consistent governance</li>
+<li><strong>Track deployments</strong> to understand where APIs are running</li>
+<li><strong>Import specifications</strong> to enable API analysis and linting</li>
+<li><strong>Use lifecycle stages</strong> to track API maturity</li>
+<li><strong>Add contacts</strong> for API ownership and support</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-mgmt-apicenter-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-mgmt-apicenter-py" aria-label="Copy install azure-mgmt-apicenter-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-mgmt-apicenter-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-mgmt-apicenter-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

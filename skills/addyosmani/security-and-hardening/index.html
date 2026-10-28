@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>security-and-hardening — Aidentity</title>
+<meta name="description" content="Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/security-and-hardening/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="security-and-hardening — Aidentity">
+<meta property="og:description" content="Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/security-and-hardening/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"security-and-hardening","description":"Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/security-and-hardening/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=security">security</a><span>/</span>security-and-hardening
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>security-and-hardening</h1>
+      <p class="summary">Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=security">security</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Security and Hardening</h3>
+<h4>Overview</h4>
+<p>Security-first development practices for web applications. Treat every external input as hostile, every secret as sacred, and every authorization check as mandatory. Security isn&#39;t a phase — it&#39;s a constraint on every line of code that touches user data, authentication, or external systems.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Building anything that accepts user input</li>
+<li>Implementing authentication or authorization</li>
+<li>Storing or transmitting sensitive data</li>
+<li>Integrating with external APIs or services</li>
+<li>Adding file uploads, webhooks, or callbacks</li>
+<li>Handling payment or PII data</li>
+</ul>
+<h4>Process: Threat Model First</h4>
+<p>Controls bolted on without a threat model are guesses. Before hardening, spend five minutes thinking like an attacker:</p>
+<ol>
+<li><strong>Map the trust boundaries.</strong> Where does untrusted data cross into your system? HTTP requests, form fields, file uploads, webhooks, third-party APIs, message queues, and <strong>LLM output</strong>. Every boundary is attack surface.</li>
+<li><strong>Name the assets.</strong> What&#39;s worth stealing or breaking? Credentials, PII, payment data, admin actions, money movement.</li>
+<li><strong>Run STRIDE over each boundary</strong> — a quick lens, not a ceremony:</li>
+</ol>
+<table><thead><tr><th>Threat</th><th>Ask</th><th>Typical mitigation</th></tr></thead><tbody>
+<tr><td><strong>S</strong>poofing</td><td>Can someone impersonate a user/service?</td><td>Authentication, signature verification</td></tr>
+<tr><td><strong>T</strong>ampering</td><td>Can data be altered in transit or at rest?</td><td>Integrity checks, parameterized queries, HTTPS</td></tr>
+<tr><td><strong>R</strong>epudiation</td><td>Can an action be denied later?</td><td>Audit logging of security events</td></tr>
+<tr><td><strong>I</strong>nformation disclosure</td><td>Can data leak?</td><td>Encryption, field allowlists, generic errors</td></tr>
+<tr><td><strong>D</strong>enial of service</td><td>Can it be overwhelmed?</td><td>Rate limiting, input size caps, timeouts</td></tr>
+<tr><td><strong>E</strong>levation of privilege</td><td>Can a user gain rights they shouldn&#39;t?</td><td>Authorization checks, least privilege</td></tr>
+</tbody></table>
+<ol>
+<li><strong>Write abuse cases next to use cases.</strong> For each feature, ask &quot;how would I misuse this?&quot; — then make that your first test.</li>
+</ol>
+<p>If you can&#39;t name the trust boundaries for a feature, you&#39;re not ready to secure it. This is OWASP <strong>A04: Insecure Design</strong> — most breaches begin in design, not code.</p>
+<h4>The Three-Tier Boundary System</h4>
+<h5>Always Do (No Exceptions)</h5>
+<ul>
+<li><strong>Validate all external input</strong> at the system boundary (API routes, form handlers)</li>
+<li><strong>Parameterize all database queries</strong> — never concatenate user input into SQL</li>
+<li><strong>Encode output</strong> to prevent XSS (use framework auto-escaping, don&#39;t bypass it)</li>
+<li><strong>Use HTTPS</strong> for all external communication</li>
+<li><strong>Hash passwords</strong> with bcrypt/scrypt/argon2 (never store plaintext)</li>
+<li><strong>Set security headers</strong> (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)</li>
+<li><strong>Use httpOnly, secure, sameSite cookies</strong> for sessions</li>
+<li><strong>Run the detected package manager&#39;s native audit</strong> against the committed lockfile before every release</li>
+</ul>
+<h5>Ask First (Requires Human Approval)</h5>
+<ul>
+<li>Adding new authentication flows or changing auth logic</li>
+<li>Storing new categories of sensitive data (PII, payment info)</li>
+<li>Adding new external service integrations</li>
+<li>Changing CORS configuration</li>
+<li>Adding file upload handlers</li>
+<li>Modifying rate limiting or throttling</li>
+<li>Granting elevated permissions or roles</li>
+</ul>
+<h5>Never Do</h5>
+<ul>
+<li><strong>Never commit secrets</strong> to version control (API keys, passwords, tokens)</li>
+<li><strong>Never log sensitive data</strong> (passwords, tokens, full credit card numbers)</li>
+<li><strong>Never trust client-side validation</strong> as a security boundary</li>
+<li><strong>Never disable security headers</strong> for convenience</li>
+<li><strong>Never use <code>eval()</code> or <code>innerHTML</code></strong> with user-provided data</li>
+<li><strong>Never store sessions in client-accessible storage</strong> (localStorage for auth tokens)</li>
+<li><strong>Never expose stack traces</strong> or internal error details to users</li>
+</ul>
+<h4>OWASP Top 10 Prevention Patterns</h4>
+<p>These are prevention patterns, not a ranking. For the 2021 ordering, see the quick-reference table in <code>../../references/security-checklist.md</code>.</p>
+<h5>Injection (SQL, NoSQL, OS Command)</h5>
+<p><pre><code>// BAD: SQL injection via string concatenation
+const query = `SELECT * FROM users WHERE id = &#39;${userId}&#39;`;
+
+// GOOD: Parameterized query
+const user = await db.query(&#39;SELECT * FROM users WHERE id = $1&#39;, [userId]);
+
+// GOOD: ORM with parameterized input
+const user = await prisma.user.findUnique({ where: { id: userId } });</code></pre></p>
+<h5>Broken Authentication</h5>
+<p><pre><code>// Password hashing
+import { hash, compare } from &#39;bcrypt&#39;;
+
+const SALT_ROUNDS = 12;
+const hashedPassword = await hash(plaintext, SALT_ROUNDS);
+const isValid = await compare(plaintext, hashedPassword);
+
+// Session management
+app.use(session({
+  secret: process.env.SESSION_SECRET,  // From environment, not code
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,     // Not accessible via JavaScript
+    secure: true,       // HTTPS only
+    sameSite: &#39;lax&#39;,    // CSRF protection
+    maxAge: 24 * 60 * 60 * 1000,  // 24 hours
+  },
+}));</code></pre></p>
+<h5>Cross-Site Scripting (XSS)</h5>
+<p><pre><code>// BAD: Rendering user input as HTML
+element.innerHTML = userInput;
+
+// GOOD: Use framework auto-escaping (React does this by default)
+return &lt;div&gt;{userInput}&lt;/div&gt;;
+
+// If you MUST render HTML, sanitize first
+import DOMPurify from &#39;dompurify&#39;;
+const clean = DOMPurify.sanitize(userInput);</code></pre></p>
+<h5>Broken Access Control</h5>
+<p><pre><code>// Always check authorization, not just authentication
+app.patch(&#39;/api/tasks/:id&#39;, authenticate, async (req, res) =&gt; {
+  const task = await taskService.findById(req.params.id);
+
+  // Check that the authenticated user owns this resource
+  if (task.ownerId !== req.user.id) {
+    return res.status(403).json({
+      error: { code: &#39;FORBIDDEN&#39;, message: &#39;Not authorized to modify this task&#39; }
+    });
+  }
+
+  // Proceed with update
+  const updated = await taskService.update(req.params.id, req.body);
+  return res.json(updated);
+});</code></pre></p>
+<h5>Security Misconfiguration</h5>
+<p><pre><code>// Security headers (use helmet for Express)
+import helmet from &#39;helmet&#39;;
+app.use(helmet());
+
+// Content Security Policy
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: [&quot;&#39;self&#39;&quot;],
+    scriptSrc: [&quot;&#39;self&#39;&quot;],
+    styleSrc: [&quot;&#39;self&#39;&quot;, &quot;&#39;unsafe-inline&#39;&quot;],  // Tighten if possible
+    imgSrc: [&quot;&#39;self&#39;&quot;, &#39;data:&#39;, &#39;https:&#39;],
+    connectSrc: [&quot;&#39;self&#39;&quot;],
+  },
+}));
+
+// CORS — restrict to known origins
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(&#39;,&#39;) || &#39;http://localhost:3000&#39;,
+  credentials: true,
+}));</code></pre></p>
+<h5>Sensitive Data Exposure</h5>
+<p><pre><code>// Never return sensitive fields in API responses
+function sanitizeUser(user: UserRecord): PublicUser {
+  const { passwordHash, resetToken, ...publicFields } = user;
+  return publicFields;
+}
+
+// Use environment variables for secrets
+const API_KEY = process.env.STRIPE_API_KEY;
+if (!API_KEY) throw new Error(&#39;STRIPE_API_KEY not configured&#39;);</code></pre></p>
+<h5>Server-Side Request Forgery (SSRF)</h5>
+<p>Any time the server fetches a URL the user influenced — webhooks, &quot;import from URL&quot;, image proxies, link previews — an attacker can aim it at internal services (cloud metadata, <code>localhost</code>, private IPs).</p>
+<p><pre><code>// BAD: fetch whatever the user gives you
+await fetch(req.body.webhookUrl);
+
+// GOOD: allowlist scheme + host, reject if ANY resolved IP is private, forbid redirects
+import { lookup } from &#39;node:dns/promises&#39;;
+import ipaddr from &#39;ipaddr.js&#39;;
+
+const ALLOWED_HOSTS = new Set([&#39;hooks.example.com&#39;]);
+
+async function assertSafeUrl(raw: string): Promise&lt;URL&gt; {
+  const url = new URL(raw);
+  if (url.protocol !== &#39;https:&#39;) throw new Error(&#39;https only&#39;);
+  if (!ALLOWED_HOSTS.has(url.hostname)) throw new Error(&#39;host not allowed&#39;);
+  // Resolve ALL records; a single private/reserved address fails the check.
+  const addrs = await lookup(url.hostname, { all: true });
+  if (addrs.some((a) =&gt; ipaddr.parse(a.address).range() !== &#39;unicast&#39;)) {
+    throw new Error(&#39;private/reserved IP&#39;);
+  }
+  return url;
+}
+
+await fetch(await assertSafeUrl(req.body.webhookUrl), { redirect: &#39;error&#39; });</code></pre></p>
+<p>The <code>range() !== &#39;unicast&#39;</code> check covers loopback, link-local <code>169.254.169.254</code> (cloud metadata, the #1 SSRF target), private, and unique-local ranges across IPv4 and IPv6.</p>
+<p><strong>Caveat — this still has a TOCTOU gap.</strong> <code>fetch</code> resolves DNS again after the check, so an attacker using a short-TTL record can rebind to an internal IP between validation and connection. For high-risk surfaces, resolve once and connect to the pinned IP, or put a filtering agent in front (<code>request-filtering-agent</code> / <code>ssrf-req-filter</code>).</p>
+<h4>Input Validation Patterns</h4>
+<h5>Schema Validation at Boundaries</h5>
+<p><pre><code>import { z } from &#39;zod&#39;;
+
+const CreateTaskSchema = z.object({
+  title: z.string().min(1).max(200).trim(),
+  description: z.string().max(2000).optional(),
+  priority: z.enum([&#39;low&#39;, &#39;medium&#39;, &#39;high&#39;]).default(&#39;medium&#39;),
+  dueDate: z.string().datetime().optional(),
+});
+
+// Validate at the route handler
+app.post(&#39;/api/tasks&#39;, async (req, res) =&gt; {
+  const result = CreateTaskSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(422).json({
+      error: {
+        code: &#39;VALIDATION_ERROR&#39;,
+        message: &#39;Invalid input&#39;,
+        details: result.error.flatten(),
+      },
+    });
+  }
+  // result.data is now typed and validated
+  const task = await taskService.create(result.data);
+  return res.status(201).json(task);
+});</code></pre></p>
+<h5>File Upload Safety</h5>
+<p><pre><code>// Restrict file types and sizes
+const ALLOWED_TYPES = [&#39;image/jpeg&#39;, &#39;image/png&#39;, &#39;image/webp&#39;];
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+function validateUpload(file: UploadedFile) {
+  if (!ALLOWED_TYPES.includes(file.mimetype)) {
+    throw new ValidationError(&#39;File type not allowed&#39;);
+  }
+  if (file.size &gt; MAX_SIZE) {
+    throw new ValidationError(&#39;File too large (max 5MB)&#39;);
+  }
+  // Don&#39;t trust the file extension — check magic bytes if critical
+}</code></pre></p>
+<h4>Triaging Dependency Audit Results</h4>
+<p>Package-manager audits report known advisories; they do not prove a package is trustworthy or that vulnerable code is reachable. Use this decision tree:</p>
+<p><pre><code>The native package-manager audit reports a vulnerability
+├── Severity: critical or high
+│   ├── Is the vulnerable code reachable in runtime, build, test, or deployment paths?
+│   │   ├── YES --&gt; Fix immediately (update, patch, or replace the dependency)
+│   │   └── NO (confirmed unused across those paths) --&gt; Fix soon, but not a blocker
+│   └── Is a fix available?
+│       ├── YES --&gt; Update to the patched version
+│       └── NO --&gt; Check for workarounds, consider replacing the dependency, or add to allowlist with a review date
+├── Severity: moderate
+│   ├── Reachable in production? --&gt; Fix in the next release cycle
+│   └── Dev-only? --&gt; Fix when convenient, track in backlog
+└── Severity: low
+    └── Track and fix during regular dependency updates</code></pre></p>
+<p><strong>Key questions:</strong></p>
+<ul>
+<li>Is the vulnerable function actually called in your code path?</li>
+<li>Is the dependency a runtime dependency or dev-only?</li>
+<li>Is the vulnerability exploitable given your deployment context (e.g., a server-side vulnerability in a client-only app)?</li>
+</ul>
+<p>When you defer a fix, document the reason and set a review date.</p>
+<h5>Supply-Chain Hygiene</h5>
+<p>Do not assume npm or treat the nearest manifest as the install root. Apply this order:</p>
+<ol>
+<li><strong>Find the installation boundary and manager.</strong> Use the workspace root that owns the lockfile, or an independent nested project only when it is outside that workspace. There, corroborate <code>packageManager</code> (when present), the lockfile, and CI; stop on disagreement or competing lockfiles. Pin the manager version and use the matrix in <code>../../references/security-checklist.md</code>.</li>
+<li><strong>Block dependency scripts before first execution.</strong> Bootstrap with scripts disabled or a documented fail-closed policy, inspect the pending script source, approve only the minimum required packages, commit the policy, then verify with a clean frozen/immutable install. Never blanket-approve scripts.</li>
+</ol>
+<p>Audits only find known advisories; they do not catch a newly malicious or typosquatted package. Therefore:</p>
+<ul>
+<li><strong>Never apply forced audit remediation automatically</strong> (<code>npm audit fix --force</code> or equivalent). Preview the remediation, read changelogs, and test each resulting upgrade; forced fixes may cross declared dependency ranges.</li>
+<li><strong>Verify registry signatures and provenance where supported</strong> (<code>npm audit signatures</code>, <code>pnpm audit signatures</code>) and treat absence as a signal to investigate, not automatic proof of compromise.</li>
+<li><strong>Review new dependencies, lockfile diffs, and script-policy changes together</strong> — ownership, maintenance, release age, provenance, transitive graph, and typosquats such as <code>cross-env</code> vs <code>crossenv</code> (OWASP <strong>A06</strong>, <strong>LLM03</strong>).</li>
+</ul>
+<h4>Rate Limiting</h4>
+<p><pre><code>import rateLimit from &#39;express-rate-limit&#39;;
+
+// General API rate limit
+app.use(&#39;/api/&#39;, rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                   // 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
+
+// Stricter limit for auth endpoints
+app.use(&#39;/api/auth/&#39;, rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,  // 10 attempts per 15 minutes
+}));</code></pre></p>
+<h4>Secrets Management</h4>
+<p><pre><code>.env files:
+  ├── .env.example  → Committed (template with placeholder values)
+  ├── .env          → NOT committed (contains real secrets)
+  └── .env.local    → NOT committed (local overrides)
+
+.gitignore must include:
+  .env
+  .env.local
+  .env.*.local
+  *.pem
+  *.key</code></pre></p>
+<p><strong>Always check before committing:</strong></p>
+<p><pre><code># Check for accidentally staged secrets
+git diff --cached | grep -i &quot;password\|secret\|api_key\|token&quot;</code></pre></p>
+<p><strong>If a secret is ever committed, rotate it.</strong> Deleting the line or rewriting history is not enough — assume it&#39;s compromised the moment it reaches a remote. Revoke and reissue the key first, then purge it from history.</p>
+<h4>Data Privacy &amp; Compliance</h4>
+<p>Securing data is &quot;can an attacker read it?&quot; Privacy is &quot;should <em>we</em> even hold it, and for how long?&quot; — a separate question that hardening doesn&#39;t answer. The cheapest data to protect, breach, and comply over is the data you never collected. Treat personal data as a liability to minimize, not an asset to hoard.</p>
+<p><strong>Know what you hold.</strong> You can&#39;t protect or honor a deletion request for data you can&#39;t find. Classify fields as you add them:</p>
+<table><thead><tr><th>Class</th><th>Examples</th><th>Handling</th></tr></thead><tbody>
+<tr><td><strong>Non-personal</strong></td><td>Aggregates, anonymized counts</td><td>Normal handling</td></tr>
+<tr><td><strong>Personal (PII)</strong></td><td>Name, email, IP, device/user IDs</td><td>Minimize, access-control, include in export/delete</td></tr>
+<tr><td><strong>Sensitive</strong></td><td>Health, finance, location, biometrics, gov IDs, anything about minors</td><td>Extra basis to collect, stricter access, often encryption + audit logging</td></tr>
+</tbody></table>
+<p><strong>Operating rules:</strong></p>
+<ul>
+<li><strong>Minimize and set a purpose.</strong> Collect a field only against a stated use. &quot;It might be useful later&quot; is not a purpose — it&#39;s latent breach scope. Don&#39;t log PII into telemetry (the <code>observability-and-instrumentation</code> skill makes the same point from the ops side).</li>
+<li><strong>Set retention up front, then actually delete.</strong> Every personal-data store needs a TTL and a working deletion path — including backups, caches, search indexes, and analytics copies. Data with no expiry is a breach scheduled for later.</li>
+<li><strong>Support the data-subject rights your jurisdiction requires</strong> (GDPR/CCPA and kin): export, correct, and delete on request. These are engineering features — design the schema so a user&#39;s data is <em>findable</em> and <em>erasable</em>, not smeared irreversibly across systems.</li>
+<li><strong>Get consent before collection or third-party sharing</strong>, and make it auditable. Sending PII to an analytics/ad/LLM vendor is &quot;sharing&quot; — the user&#39;s choice gates it, and the vendor needs a data-processing agreement.</li>
+<li><strong>Localize defaults, don&#39;t hardcode one region&#39;s law.</strong> Data-residency and rules differ by user location; make the policy a configurable boundary, not an assumption.</li>
+</ul>
+<p>When data crosses a trust boundary, validate it as untrusted (see Input Validation above); when a privacy incident exposes personal data, the breach-notification clock is part of the postmortem — follow the <code>debugging-and-error-recovery</code> skill.</p>
+<h4>Securing AI / LLM Features</h4>
+<p>If your app calls an LLM — chatbots, summarizers, agents, RAG — it inherits a new attack surface. Map it to the <a href="https://genai.owasp.org/llm-top-10/" rel="noopener">OWASP Top 10 for LLM Applications (2025)</a>:</p>
+<ul>
+<li><strong>Treat all model output as untrusted input (LLM05: Improper Output Handling).</strong> Never pass LLM output straight into <code>eval</code>, SQL, a shell, <code>innerHTML</code>, or a file path. Validate and encode it exactly as you would raw user input.</li>
+<li><strong>Assume prompts can be hijacked (LLM01: Prompt Injection).</strong> Untrusted text in the context window — a user message, a fetched web page, a PDF — can carry instructions. The system prompt is not a security boundary; enforce permissions in code, not in the prompt.</li>
+<li><strong>Keep secrets and other users&#39; data out of prompts (LLM02 / LLM07).</strong> Anything in the context can be echoed back. Don&#39;t put API keys, cross-tenant data, or the full system prompt where the model can repeat it.</li>
+<li><strong>Constrain tool and agent permissions (LLM06: Excessive Agency).</strong> Scope tools to the minimum, require confirmation for destructive or irreversible actions, and validate every tool argument.</li>
+<li><strong>Bound consumption (LLM10: Unbounded Consumption).</strong> Cap tokens, request rate, and loop/recursion depth so a crafted input can&#39;t run up cost or hang the system.</li>
+<li><strong>Isolate retrieval data (LLM08: Vector and Embedding Weaknesses).</strong> In RAG, treat the vector store as a trust boundary: partition embeddings per tenant so one user can&#39;t retrieve another&#39;s data, and validate documents before indexing so poisoned content can&#39;t steer answers.</li>
+</ul>
+<p><pre><code>// BAD: trusting model output as a command or as markup
+const sql = await llm.generate(`Write SQL for: ${userQuestion}`);
+await db.query(sql);                                   // arbitrary query execution
+container.innerHTML = await llm.reply(userMessage);   // stored XSS, via the model
+
+// GOOD: model output is data — parse defensively, then validate, then encode
+let intent;
+try {
+  intent = CommandSchema.parse(JSON.parse(await llm.replyJson(userMessage)));
+} catch {
+  throw new ValidationError(&#39;unexpected model output&#39;); // JSON.parse or schema failed
+}
+await runAllowlistedAction(intent.action, intent.params);
+container.textContent = await llm.reply(userMessage);</code></pre></p>
+<h4>Security Review Checklist</h4>
+<p><pre><code>### Authentication
+- [ ] Passwords hashed with bcrypt/scrypt/argon2 (salt rounds ≥ 12)
+- [ ] Session tokens are httpOnly, secure, sameSite
+- [ ] Login has rate limiting
+- [ ] Password reset tokens expire
+
+### Authorization
+- [ ] Every endpoint checks user permissions
+- [ ] Users can only access their own resources
+- [ ] Admin actions require admin role verification
+
+### Input
+- [ ] All user input validated at the boundary
+- [ ] SQL queries are parameterized
+- [ ] HTML output is encoded/escaped
+- [ ] Server-side URL fetches are allowlisted (no SSRF to internal services)
+
+### Data
+- [ ] No secrets in code or version control
+- [ ] Sensitive fields excluded from API responses
+- [ ] PII encrypted at rest (if applicable)
+- [ ] Personal data is classified, collected against a stated purpose, and minimized
+- [ ] Personal data has a retention limit and a working deletion path (incl. backups/indexes)
+- [ ] Export/delete (data-subject) requests are supported where required; sharing with third parties has consent
+
+### Infrastructure
+- [ ] Security headers configured (CSP, HSTS, etc.)
+- [ ] CORS restricted to known origins
+- [ ] Dependencies audited for vulnerabilities
+- [ ] Error messages don&#39;t expose internals
+
+### Supply Chain
+- [ ] One authoritative lockfile committed; CI uses that manager&#39;s frozen/immutable install
+- [ ] Native audit triaged by reachability and fix risk; dependency install scripts blocked unless explicitly approved
+- [ ] New dependencies reviewed (ownership, provenance, release age, transitive graph)
+
+### AI / LLM (if used)
+- [ ] Model output treated as untrusted (no eval/SQL/innerHTML/shell)
+- [ ] Secrets and other users&#39; data kept out of prompts
+- [ ] Tool/agent permissions scoped; destructive actions require confirmation</code></pre></p>
+<h4>See Also</h4>
+<p>For detailed security checklists and pre-commit verification steps, see <code>../../references/security-checklist.md</code>.</p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;This is an internal tool, security doesn&#39;t matter&quot;</td><td>Internal tools get compromised. Attackers target the weakest link.</td></tr>
+<tr><td>&quot;We&#39;ll add security later&quot;</td><td>Security retrofitting is 10x harder than building it in. Add it now.</td></tr>
+<tr><td>&quot;No one would try to exploit this&quot;</td><td>Automated scanners will find it. Security by obscurity is not security.</td></tr>
+<tr><td>&quot;The framework handles security&quot;</td><td>Frameworks provide tools, not guarantees. You still need to use them correctly.</td></tr>
+<tr><td>&quot;It&#39;s just a prototype&quot;</td><td>Prototypes become production. Security habits from day one.</td></tr>
+<tr><td>&quot;Threat modeling is overkill here&quot;</td><td>Five minutes of &quot;how would I attack this?&quot; prevents the design flaws no control can patch later.</td></tr>
+<tr><td>&quot;It&#39;s just LLM output, it&#39;s only text&quot;</td><td>That &quot;text&quot; can be a SQL statement, a script tag, or a shell command. Treat it like any untrusted input.</td></tr>
+<tr><td>&quot;The audit passed, so the dependency is safe&quot;</td><td>Audits match known advisories. They do not detect a newly malicious package or make unreviewed install scripts safe to execute.</td></tr>
+<tr><td>&quot;Collect it now, we might need it later&quot;</td><td>Data you don&#39;t hold can&#39;t be breached, subpoenaed, or mis-deleted. &quot;Might need it&quot; is breach scope, not a purpose.</td></tr>
+<tr><td>&quot;We&#39;ll handle deletion requests manually&quot;</td><td>Manual erasure misses backups, caches, and analytics copies. If the schema can&#39;t find a user&#39;s data, you can&#39;t honor the request — design for it.</td></tr>
+<tr><td>&quot;Compliance is legal&#39;s problem, not ours&quot;</td><td>Export, deletion, retention, and consent are schema and code. Legal can&#39;t bolt them on after you&#39;ve smeared PII across ten systems.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>User input passed directly to database queries, shell commands, or HTML rendering</li>
+<li>Secrets in source code or commit history</li>
+<li>API endpoints without authentication or authorization checks</li>
+<li>Missing CORS configuration or wildcard (<code>*</code>) origins</li>
+<li>No rate limiting on authentication endpoints</li>
+<li>Stack traces or internal errors exposed to users</li>
+<li>Dependencies with known critical vulnerabilities, competing lockfiles at one installation boundary, non-reproducible installs, or blanket-approved scripts</li>
+<li>Server fetches user-supplied URLs without an allowlist (SSRF)</li>
+<li>LLM/model output passed into a query, the DOM, a shell, or <code>eval</code></li>
+<li>Secrets, PII, or the full system prompt placed inside an LLM context window</li>
+<li>Personal data collected with no stated purpose, retention limit, or deletion path</li>
+<li>PII sent to analytics/ad/LLM vendors with no consent or data-processing agreement</li>
+<li>&quot;Delete my account&quot; that only flips a flag while the personal data lingers in stores and backups</li>
+</ul>
+<h4>Verification</h4>
+<p>After implementing security-relevant code:</p>
+<ul>
+<li>[ ] The native audit has no unmitigated reachable critical/high findings; CI preserves the authoritative lockfile and blocks unreviewed dependency scripts</li>
+<li>[ ] No secrets in source code or git history</li>
+<li>[ ] All user input validated at system boundaries</li>
+<li>[ ] Authentication and authorization checked on every protected endpoint</li>
+<li>[ ] Security headers present in response (check with browser DevTools)</li>
+<li>[ ] Error responses don&#39;t expose internal details</li>
+<li>[ ] Rate limiting active on auth endpoints</li>
+<li>[ ] Server-side URL fetches validated against an allowlist (no SSRF)</li>
+<li>[ ] LLM/model output validated and encoded before use (if AI features present)</li>
+<li>[ ] Personal data is classified, minimized to a stated purpose, and has a retention limit</li>
+<li>[ ] Deletion and export requests work end-to-end (including backups, caches, and analytics copies)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/ci-cd-and-automation/index.html"
+     data-source="addyosmani"
+     data-category="devops"
+     data-search="ci-cd-and-automation automates ci/cd pipeline setup. use when setting up or modifying build and deployment pipelines. use when you need to automate quality gates, configure test runners in ci, or establish deployment strategies. devops devops addyosmani/agent-skills">
+  <span>
+    <span class="r-name">ci-cd-and-automation</span>
+    <span class="r-desc">Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/security-and-hardening</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/security-and-hardening" aria-label="Copy install security-and-hardening">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>security</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/security-and-hardening</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/security-and-hardening/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

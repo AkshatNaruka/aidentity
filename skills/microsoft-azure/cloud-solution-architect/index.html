@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-solution-architect — Aidentity</title>
+<meta name="description" content="Transform the agent into a Cloud Solution Architect following Azure Architecture Center best practices. Use when designing cloud architectures, reviewing system designs, selecting architecture styles, applying cloud design patterns, making technology choices, or conducting Well-Architected Framework reviews.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/cloud-solution-architect/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-solution-architect — Aidentity">
+<meta property="og:description" content="Transform the agent into a Cloud Solution Architect following Azure Architecture Center best practices. Use when designing cloud architectures, reviewing system designs, selecting architecture styles, applying cloud design patterns, making technology choices, or conducting Well-Architected Framework reviews.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/cloud-solution-architect/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-solution-architect","description":"Transform the agent into a Cloud Solution Architect following Azure Architecture Center best practices. Use when designing cloud architectures, reviewing system designs, selecting architecture styles, applying cloud design patterns, making technology choices, or conducting Well-Architected Framework reviews.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/cloud-solution-architect/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>cloud-solution-architect
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>cloud-solution-architect</h1>
+      <p class="summary">Transform the agent into a Cloud Solution Architect following Azure Architecture Center best practices. Use when designing cloud architectures, reviewing system designs, selecting architecture styles, applying cloud design patterns, making technology choices, or conducting Well-Architected Framework reviews.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a> <a class="tag" href="../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Cloud Solution Architect</h3>
+<h4>Overview</h4>
+<p>Design well-architected, production-grade cloud systems following Azure Architecture Center best practices. This skill provides:</p>
+<ul>
+<li><strong>10 design principles</strong> for Azure applications</li>
+<li><strong>6 architecture styles</strong> with selection guidance</li>
+<li><strong>44 cloud design patterns</strong> mapped to WAF pillars</li>
+<li><strong>Technology choice frameworks</strong> for compute, storage, data, messaging</li>
+<li><strong>Performance antipatterns</strong> to avoid</li>
+<li><strong>Architecture review workflow</strong> for systematic design validation</li>
+</ul>
+<hr>
+<h4>Ten Design Principles for Azure Applications</h4>
+<table><thead><tr><th>#</th><th>Principle</th><th>Key Tactics</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>Design for self-healing</strong></td><td>Retry with backoff, circuit breaker, bulkhead isolation, health endpoint monitoring, graceful degradation</td></tr>
+<tr><td>2</td><td><strong>Make all things redundant</strong></td><td>Eliminate single points of failure, use availability zones, deploy multi-region, replicate data</td></tr>
+<tr><td>3</td><td><strong>Minimize coordination</strong></td><td>Decouple services, use async messaging, embrace eventual consistency, use domain events</td></tr>
+<tr><td>4</td><td><strong>Design to scale out</strong></td><td>Horizontal scaling, autoscaling rules, stateless services, avoid session stickiness, partition workloads</td></tr>
+<tr><td>5</td><td><strong>Partition around limits</strong></td><td>Data partitioning (shard/hash/range), respect compute &amp; network limits, use CDNs for static content</td></tr>
+<tr><td>6</td><td><strong>Design for operations</strong></td><td>Structured logging, distributed tracing, metrics &amp; dashboards, runbook automation, infrastructure as code</td></tr>
+<tr><td>7</td><td><strong>Use managed services</strong></td><td>Prefer PaaS over IaaS, reduce operational burden, leverage built-in HA/DR/scaling</td></tr>
+<tr><td>8</td><td><strong>Use an identity service</strong></td><td>Microsoft Entra ID, managed identity, RBAC, avoid storing credentials, zero-trust principles</td></tr>
+<tr><td>9</td><td><strong>Design for evolution</strong></td><td>Loose coupling, versioned APIs, backward compatibility, async messaging for integration, feature flags</td></tr>
+<tr><td>10</td><td><strong>Build for business needs</strong></td><td>Define SLAs/SLOs, establish RTO/RPO targets, domain-driven design, cost modeling, composite SLAs</td></tr>
+</tbody></table>
+<hr>
+<h4>Architecture Styles</h4>
+<table><thead><tr><th>Style</th><th>Description</th><th>When to Use</th><th>Key Services</th></tr></thead><tbody>
+<tr><td><strong>N-tier</strong></td><td>Horizontal layers (presentation, business, data)</td><td>Traditional enterprise apps, lift-and-shift</td><td>App Service, SQL Database, VNets</td></tr>
+<tr><td><strong>Web-Queue-Worker</strong></td><td>Web frontend → message queue → backend worker</td><td>Moderate-complexity apps with long-running tasks</td><td>App Service, Service Bus, Functions</td></tr>
+<tr><td><strong>Microservices</strong></td><td>Small autonomous services, bounded contexts, independent deploy</td><td>Complex domains, independent team scaling</td><td>AKS, Container Apps, API Management</td></tr>
+<tr><td><strong>Event-driven</strong></td><td>Pub/sub model, event producers/consumers</td><td>Real-time processing, IoT, reactive systems</td><td>Event Hubs, Event Grid, Functions</td></tr>
+<tr><td><strong>Big data</strong></td><td>Batch + stream processing pipeline</td><td>Analytics, ML pipelines, large-scale data</td><td>Synapse, Data Factory, Databricks</td></tr>
+<tr><td><strong>Big compute</strong></td><td>HPC, parallel processing</td><td>Simulations, modeling, rendering, genomics</td><td>Batch, CycleCloud, HPC VMs</td></tr>
+</tbody></table>
+<h5>Selection Criteria</h5>
+<ul>
+<li><strong>Domain complexity</strong> → Microservices (high), N-tier (low-medium)</li>
+<li><strong>Team autonomy</strong> → Microservices (independent teams), N-tier (single team)</li>
+<li><strong>Data volume</strong> → Big data (TB+), others (GB)</li>
+<li><strong>Latency requirements</strong> → Event-driven (real-time), Web-Queue-Worker (tolerant)</li>
+</ul>
+<hr>
+<h4>Cloud Design Patterns</h4>
+<p>44 patterns organized by primary concern. WAF pillar mapping: <strong>R</strong>=Reliability, <strong>S</strong>=Security, <strong>CO</strong>=Cost Optimization, <strong>OE</strong>=Operational Excellence, <strong>PE</strong>=Performance Efficiency.</p>
+<h5>Messaging &amp; Communication</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Asynchronous Request-Reply</strong></td><td>Decouple request/response with polling or callbacks</td><td>R, PE</td></tr>
+<tr><td><strong>Claim Check</strong></td><td>Split large messages; store payload separately, pass reference</td><td>R, PE</td></tr>
+<tr><td><strong>Choreography</strong></td><td>Services coordinate via events without central orchestrator</td><td>R, OE</td></tr>
+<tr><td><strong>Competing Consumers</strong></td><td>Multiple consumers process messages from shared queue concurrently</td><td>R, PE</td></tr>
+<tr><td><strong>Messaging Bridge</strong></td><td>Connect incompatible messaging systems</td><td>R, OE</td></tr>
+<tr><td><strong>Pipes and Filters</strong></td><td>Decompose complex processing into reusable filter stages</td><td>R, OE</td></tr>
+<tr><td><strong>Priority Queue</strong></td><td>Prioritize requests so higher-priority work is processed first</td><td>R, PE</td></tr>
+<tr><td><strong>Publisher/Subscriber</strong></td><td>Decouple senders from receivers via topics/subscriptions</td><td>R, PE</td></tr>
+<tr><td><strong>Queue-Based Load Leveling</strong></td><td>Buffer requests with a queue to smooth intermittent loads</td><td>R, PE</td></tr>
+<tr><td><strong>Sequential Convoy</strong></td><td>Process related messages in order while allowing parallel groups</td><td>R, PE</td></tr>
+</tbody></table>
+<h5>Reliability &amp; Resilience</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Bulkhead</strong></td><td>Isolate resources per workload to prevent cascading failure</td><td>R</td></tr>
+<tr><td><strong>Circuit Breaker</strong></td><td>Stop calling a failing service; fail fast to protect resources</td><td>R</td></tr>
+<tr><td><strong>Compensating Transaction</strong></td><td>Undo previously committed steps when a later step fails</td><td>R</td></tr>
+<tr><td><strong>Health Endpoint Monitoring</strong></td><td>Expose health checks for load balancers and orchestrators</td><td>R, OE</td></tr>
+<tr><td><strong>Leader Election</strong></td><td>Coordinate distributed instances by electing a leader</td><td>R</td></tr>
+<tr><td><strong>Retry</strong></td><td>Handle transient faults by retrying with exponential backoff</td><td>R</td></tr>
+<tr><td><strong>Saga</strong></td><td>Manage data consistency across microservices with compensating transactions</td><td>R</td></tr>
+<tr><td><strong>Scheduler Agent Supervisor</strong></td><td>Coordinate distributed actions with retry and failure handling</td><td>R</td></tr>
+</tbody></table>
+<h5>Data Management</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Cache-Aside</strong></td><td>Load data on demand into cache from data store</td><td>PE</td></tr>
+<tr><td><strong>CQRS</strong></td><td>Separate read and write models for independent scaling</td><td>PE, R</td></tr>
+<tr><td><strong>Event Sourcing</strong></td><td>Store state as append-only sequence of domain events</td><td>R, OE</td></tr>
+<tr><td><strong>Index Table</strong></td><td>Create indexes over frequently queried fields in data stores</td><td>PE</td></tr>
+<tr><td><strong>Materialized View</strong></td><td>Pre-compute views over data for efficient queries</td><td>PE</td></tr>
+<tr><td><strong>Sharding</strong></td><td>Distribute data across partitions for scale and performance</td><td>PE, R</td></tr>
+<tr><td><strong>Static Content Hosting</strong></td><td>Serve static content from cloud storage/CDN directly</td><td>PE, CO</td></tr>
+<tr><td><strong>Valet Key</strong></td><td>Grant clients limited direct access to storage resources</td><td>S, PE</td></tr>
+</tbody></table>
+<h5>Design &amp; Structure</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Ambassador</strong></td><td>Offload cross-cutting concerns to a helper sidecar proxy</td><td>OE</td></tr>
+<tr><td><strong>Anti-Corruption Layer</strong></td><td>Translate between new and legacy system models</td><td>OE, R</td></tr>
+<tr><td><strong>Backends for Frontends</strong></td><td>Create separate backends per frontend type (mobile, web, etc.)</td><td>OE, PE</td></tr>
+<tr><td><strong>Compute Resource Consolidation</strong></td><td>Combine multiple workloads into fewer compute instances</td><td>CO</td></tr>
+<tr><td><strong>External Configuration Store</strong></td><td>Externalize configuration from deployment packages</td><td>OE</td></tr>
+<tr><td><strong>Sidecar</strong></td><td>Deploy helper components alongside the main service</td><td>OE</td></tr>
+<tr><td><strong>Strangler Fig</strong></td><td>Incrementally migrate legacy systems by replacing pieces</td><td>OE, R</td></tr>
+</tbody></table>
+<h5>Security &amp; Access</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Federated Identity</strong></td><td>Delegate authentication to an external identity provider</td><td>S</td></tr>
+<tr><td><strong>Gatekeeper</strong></td><td>Protect services using a dedicated broker that validates requests</td><td>S</td></tr>
+<tr><td><strong>Quarantine</strong></td><td>Isolate and validate external assets before allowing use</td><td>S</td></tr>
+<tr><td><strong>Rate Limiting</strong></td><td>Control consumption rate of resources by consumers</td><td>R, S</td></tr>
+<tr><td><strong>Throttling</strong></td><td>Control resource consumption to sustain SLAs under load</td><td>R, PE</td></tr>
+</tbody></table>
+<h5>Deployment &amp; Scaling</h5>
+<table><thead><tr><th>Pattern</th><th>Summary</th><th>Pillars</th></tr></thead><tbody>
+<tr><td><strong>Deployment Stamps</strong></td><td>Deploy multiple independent copies of application components</td><td>R, PE</td></tr>
+<tr><td><strong>Edge Workload Configuration</strong></td><td>Configure workloads differently across diverse edge devices</td><td>OE</td></tr>
+<tr><td><strong>Gateway Aggregation</strong></td><td>Aggregate multiple backend calls into a single client request</td><td>PE</td></tr>
+<tr><td><strong>Gateway Offloading</strong></td><td>Offload shared functionality (SSL, auth) to a gateway</td><td>OE, S</td></tr>
+<tr><td><strong>Gateway Routing</strong></td><td>Route requests to multiple backends using a single endpoint</td><td>OE</td></tr>
+<tr><td><strong>Geode</strong></td><td>Deploy backends to multiple regions for active-active serving</td><td>R, PE</td></tr>
+</tbody></table>
+<p>See [Design Patterns Reference](./references/design-patterns.md) for detailed implementation guidance.</p>
+<hr>
+<h4>Technology Choices</h4>
+<h5>Decision Framework</h5>
+<p>For each technology area, evaluate: <strong>requirements → constraints → tradeoffs → select</strong>.</p>
+<table><thead><tr><th>Area</th><th>Key Options</th><th>Selection Criteria</th></tr></thead><tbody>
+<tr><td><strong>Compute</strong></td><td>App Service, Functions, Container Apps, AKS, VMs, Batch</td><td>Hosting model, scaling, cost, team skills</td></tr>
+<tr><td><strong>Storage</strong></td><td>Blob Storage, Data Lake, Files, Disks, Managed Lustre</td><td>Access patterns, throughput, cost tier</td></tr>
+<tr><td><strong>Data stores</strong></td><td>SQL Database, Cosmos DB, PostgreSQL, Redis, Table Storage</td><td>Consistency model, query patterns, scale</td></tr>
+<tr><td><strong>Messaging</strong></td><td>Service Bus, Event Hubs, Event Grid, Queue Storage</td><td>Ordering, throughput, pub/sub vs queue</td></tr>
+<tr><td><strong>Networking</strong></td><td>Front Door, Application Gateway, Load Balancer, Traffic Manager</td><td>Global vs regional, L4 vs L7, WAF</td></tr>
+<tr><td><strong>AI services</strong></td><td>Azure OpenAI, AI Search, AI Foundry, Document Intelligence</td><td>Model needs, data grounding, orchestration</td></tr>
+<tr><td><strong>Containers</strong></td><td>Container Apps, AKS, Container Instances</td><td>Operational control vs simplicity</td></tr>
+</tbody></table>
+<p>See [Technology Choices Reference](./references/technology-choices.md) for detailed decision trees.</p>
+<hr>
+<h4>Best Practices</h4>
+<table><thead><tr><th>Practice</th><th>Key Guidance</th></tr></thead><tbody>
+<tr><td><strong>API design</strong></td><td>RESTful conventions, resource-oriented URIs, HATEOAS, versioning via URL path or header</td></tr>
+<tr><td><strong>API implementation</strong></td><td>Async operations, pagination, idempotent PUT/DELETE, content negotiation, ETag caching</td></tr>
+<tr><td><strong>Autoscaling</strong></td><td>Scale on metrics (CPU, queue depth, custom), cool-down periods, predictive scaling, scale-in protection</td></tr>
+<tr><td><strong>Background jobs</strong></td><td>Use queues or scheduled triggers, idempotent processing, poison message handling, graceful shutdown</td></tr>
+<tr><td><strong>Caching</strong></td><td>Cache-aside pattern, TTL policies, cache invalidation strategies, distributed cache for multi-instance</td></tr>
+<tr><td><strong>CDN</strong></td><td>Static asset offloading, cache-busting with versioned URLs, geo-distribution, HTTPS enforcement</td></tr>
+<tr><td><strong>Data partitioning</strong></td><td>Horizontal (sharding), vertical, functional partitioning; partition key selection for even distribution</td></tr>
+<tr><td><strong>Partitioning strategies</strong></td><td>Hash-based, range-based, directory-based; rebalancing approach, cross-partition query avoidance</td></tr>
+<tr><td><strong>Host name preservation</strong></td><td>Preserve original host header through proxies/gateways for cookies, redirects, auth flows</td></tr>
+<tr><td><strong>Message encoding</strong></td><td>Schema evolution (Avro/Protobuf), backward/forward compatibility, schema registry</td></tr>
+<tr><td><strong>Monitoring &amp; diagnostics</strong></td><td>Structured logging, distributed tracing (W3C Trace Context), metrics, alerts, dashboards</td></tr>
+<tr><td><strong>Transient fault handling</strong></td><td>Retry with exponential backoff + jitter, circuit breaker, idempotency keys, timeout budgets</td></tr>
+</tbody></table>
+<p>See [Best Practices Reference](./references/best-practices.md) for implementation details.</p>
+<hr>
+<h4>Performance Antipatterns</h4>
+<p>Avoid these common patterns that degrade performance under load:</p>
+<table><thead><tr><th>Antipattern</th><th>Problem</th><th>Fix</th></tr></thead><tbody>
+<tr><td><strong>Busy Database</strong></td><td>Offloading too much processing to the database</td><td>Move logic to application tier, use caching</td></tr>
+<tr><td><strong>Busy Front End</strong></td><td>Resource-intensive work on frontend request threads</td><td>Offload to background workers/queues</td></tr>
+<tr><td><strong>Chatty I/O</strong></td><td>Many small I/O requests instead of fewer large ones</td><td>Batch requests, use bulk APIs, buffer writes</td></tr>
+<tr><td><strong>Extraneous Fetching</strong></td><td>Retrieving more data than needed</td><td>Project only required fields, paginate, filter server-side</td></tr>
+<tr><td><strong>Improper Instantiation</strong></td><td>Recreating expensive objects per request</td><td>Use singletons, connection pooling, HttpClientFactory</td></tr>
+<tr><td><strong>Monolithic Persistence</strong></td><td>Single data store for all data types</td><td>Polyglot persistence — right store for each workload</td></tr>
+<tr><td><strong>No Caching</strong></td><td>Repeatedly fetching unchanged data</td><td>Cache-aside pattern, CDN, output caching, Redis</td></tr>
+<tr><td><strong>Noisy Neighbor</strong></td><td>One tenant consuming all shared resources</td><td>Bulkhead isolation, per-tenant quotas, throttling</td></tr>
+<tr><td><strong>Retry Storm</strong></td><td>Aggressive retries overwhelming a recovering service</td><td>Exponential backoff + jitter, circuit breaker, retry budgets</td></tr>
+<tr><td><strong>Synchronous I/O</strong></td><td>Blocking threads on I/O operations</td><td>Async/await, non-blocking I/O, reactive streams</td></tr>
+</tbody></table>
+<hr>
+<h4>Mission-Critical Design</h4>
+<p>For workloads targeting <strong>99.99%+ SLO</strong>, address these design areas:</p>
+<table><thead><tr><th>Design Area</th><th>Key Considerations</th></tr></thead><tbody>
+<tr><td><strong>Application platform</strong></td><td>Multi-region active-active, availability zones, Container Apps or AKS with zone redundancy</td></tr>
+<tr><td><strong>Application design</strong></td><td>Stateless services, idempotent operations, graceful degradation, bulkhead isolation</td></tr>
+<tr><td><strong>Networking</strong></td><td>Azure Front Door (global LB), DDoS Protection, private endpoints, redundant connectivity</td></tr>
+<tr><td><strong>Data platform</strong></td><td>Multi-region Cosmos DB, zone-redundant SQL, async replication, conflict resolution</td></tr>
+<tr><td><strong>Deployment &amp; testing</strong></td><td>Blue-green deployments, canary releases, chaos engineering, automated rollback</td></tr>
+<tr><td><strong>Health modeling</strong></td><td>Composite health scores, dependency health tracking, automated remediation, SLI dashboards</td></tr>
+<tr><td><strong>Security</strong></td><td>Zero-trust, managed identity everywhere, key rotation, WAF policies, threat modeling</td></tr>
+<tr><td><strong>Operational procedures</strong></td><td>Automated runbooks, incident response playbooks, game days, postmortems</td></tr>
+</tbody></table>
+<p>See [Mission-Critical Reference](./references/mission-critical.md) for detailed guidance.</p>
+<hr>
+<h4>Well-Architected Framework (WAF) Pillars</h4>
+<p>Every architecture decision should be evaluated against all five pillars:</p>
+<table><thead><tr><th>Pillar</th><th>Focus</th><th>Key Questions</th></tr></thead><tbody>
+<tr><td><strong>Reliability</strong></td><td>Resiliency, availability, disaster recovery</td><td>What is the RTO/RPO? How does it handle failures? Is there redundancy?</td></tr>
+<tr><td><strong>Security</strong></td><td>Threat protection, identity, data protection</td><td>Is identity managed? Is data encrypted? Are there network controls?</td></tr>
+<tr><td><strong>Cost Optimization</strong></td><td>Cost management, efficiency, right-sizing</td><td>Is compute right-sized? Are there reserved instances? Is there waste?</td></tr>
+<tr><td><strong>Operational Excellence</strong></td><td>Monitoring, deployment, automation</td><td>Is deployment automated? Is there observability? Are there runbooks?</td></tr>
+<tr><td><strong>Performance Efficiency</strong></td><td>Scaling, load testing, performance targets</td><td>Can it scale horizontally? Are there performance baselines? Is caching used?</td></tr>
+</tbody></table>
+<h5>WAF Tradeoff Matrix</h5>
+<table><thead><tr><th>Optimizing for...</th><th>May impact...</th></tr></thead><tbody>
+<tr><td>Reliability (redundancy)</td><td>Cost (more resources)</td></tr>
+<tr><td>Security (isolation)</td><td>Performance (added latency)</td></tr>
+<tr><td>Cost (consolidation)</td><td>Reliability (shared failure domains)</td></tr>
+<tr><td>Performance (caching)</td><td>Cost (cache infrastructure), Reliability (stale data)</td></tr>
+</tbody></table>
+<hr>
+<h4>Architecture Review Workflow</h4>
+<p>When reviewing or designing a system, follow this structured approach:</p>
+<h5>Step 1: Identify Requirements</h5>
+<p><pre><code>Functional: What must the system do?
+Non-functional:
+  - Availability target (e.g., 99.9%, 99.99%)
+  - Latency requirements (p50, p95, p99)
+  - Throughput (requests/sec, messages/sec)
+  - Data residency and compliance
+  - Recovery targets (RTO, RPO)
+  - Cost constraints</code></pre></p>
+<h5>Step 2: Select Architecture Style</h5>
+<p>Match requirements to architecture style using the selection criteria table above.</p>
+<h5>Step 3: Choose Technology Stack</h5>
+<p>Use the technology choices decision framework. Prefer managed services (PaaS) over IaaS.</p>
+<h5>Step 4: Apply Design Patterns</h5>
+<p>Select relevant patterns from the 44 cloud design patterns based on identified concerns.</p>
+<h5>Step 5: Address Cross-Cutting Concerns</h5>
+<ul>
+<li><strong>Identity &amp; access</strong> — Microsoft Entra ID, managed identity, RBAC</li>
+<li><strong>Monitoring</strong> — Application Insights, Azure Monitor, Log Analytics</li>
+<li><strong>Security</strong> — Network segmentation, encryption at rest/in transit, Key Vault</li>
+<li><strong>CI/CD</strong> — GitHub Actions, Azure DevOps Pipelines, infrastructure as code</li>
+</ul>
+<h5>Step 6: Validate Against WAF Pillars</h5>
+<p>Review each pillar systematically. Document tradeoffs explicitly.</p>
+<h5>Step 7: Document Decisions</h5>
+<p>Use Architecture Decision Records (ADRs):</p>
+<p><pre><code># ADR-NNN: [Decision Title]
+
+## Status: [Proposed | Accepted | Deprecated]
+
+## Context
+[What is the issue we&#39;re addressing?]
+
+## Decision
+[What did we decide and why?]
+
+## Consequences
+[What are the positive and negative impacts?]</code></pre></p>
+<hr>
+<h4>References</h4>
+<ul>
+<li>[Design Patterns Reference](./references/design-patterns.md) — Detailed pattern implementations</li>
+<li>[Technology Choices Reference](./references/technology-choices.md) — Decision trees for Azure services</li>
+<li>[Best Practices Reference](./references/best-practices.md) — Implementation guidance</li>
+<li>[Mission-Critical Reference](./references/mission-critical.md) — High-availability design</li>
+</ul>
+<hr>
+<h4>Source</h4>
+<p>Content derived from the <a href="https://learn.microsoft.com/en-us/azure/architecture/" rel="noopener">Azure Architecture Center</a> — Microsoft&#39;s official guidance for cloud solution architecture on Azure. Covers design principles, architecture styles, cloud design patterns, technology choices, best practices, performance antipatterns, mission-critical design, and the Well-Architected Framework.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/cloud-solution-architect</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/cloud-solution-architect" aria-label="Copy install cloud-solution-architect">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/cloud-solution-architect</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/cloud-solution-architect/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

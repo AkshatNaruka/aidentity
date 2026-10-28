@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-workload-security — Aidentity</title>
+<meta name="description" content="Audits, configures, and hardens workload-level security controls for Google Kubernetes Engine (GKE) applications and namespaces. Covers running cluster security audits (`audit_cluster.sh`), configuring Workload Identity Federation (impersonation, KSA/GSA binding, and pod setup), enforcing Network Policies (default-deny and Dataplane V2 logging), isolating high-risk pods inside GKE Sandbox (`gVisor`), enforcing Pod Security Standards (`restricted` labeling), and mounting Secret Manager secrets via CSI (`SecretProviderClass`). Use when auditing cluster security posture, isolating namespaces, applying pod security standards, setting up Workload Identity, or configuring network policies and secret volume mounts. Don&#39;t use for cluster-wide control plane security, RBAC hardening, Binary Authorization, Shielded Nodes, or enabling platform-level GKE add-ons (use gke-platform-security instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-security/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-workload-security — Aidentity">
+<meta property="og:description" content="Audits, configures, and hardens workload-level security controls for Google Kubernetes Engine (GKE) applications and namespaces. Covers running cluster security audits (`audit_cluster.sh`), configuring Workload Identity Federation (impersonation, KSA/GSA binding, and pod setup), enforcing Network Policies (default-deny and Dataplane V2 logging), isolating high-risk pods inside GKE Sandbox (`gVisor`), enforcing Pod Security Standards (`restricted` labeling), and mounting Secret Manager secrets via CSI (`SecretProviderClass`). Use when auditing cluster security posture, isolating namespaces, applying pod security standards, setting up Workload Identity, or configuring network policies and secret volume mounts. Don&#39;t use for cluster-wide control plane security, RBAC hardening, Binary Authorization, Shielded Nodes, or enabling platform-level GKE add-ons (use gke-platform-security instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-security/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-workload-security","description":"Audits, configures, and hardens workload-level security controls for Google Kubernetes Engine (GKE) applications and namespaces. Covers running cluster security audits (`audit_cluster.sh`), configuring Workload Identity Federation (impersonation, KSA/GSA binding, and pod setup), enforcing Network Policies (default-deny and Dataplane V2 logging), isolating high-risk pods inside GKE Sandbox (`gVisor`), enforcing Pod Security Standards (`restricted` labeling), and mounting Secret Manager secrets via CSI (`SecretProviderClass`). Use when auditing cluster security posture, isolating namespaces, applying pod security standards, setting up Workload Identity, or configuring network policies and secret volume mounts. Don't use for cluster-wide control plane security, RBAC hardening, Binary Authorization, Shielded Nodes, or enabling platform-level GKE add-ons (use gke-platform-security instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-security/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-workload-security
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-workload-security</h1>
+      <p class="summary">Audits, configures, and hardens workload-level security controls for Google Kubernetes Engine (GKE) applications and namespaces. Covers running cluster security audits (`audit_cluster.sh`), configuring Workload Identity Federation (impersonation, KSA/GSA binding, and pod setup), enforcing Network Policies (default-deny and Dataplane V2 logging), isolating high-risk pods inside GKE Sandbox (`gVisor`), enforcing Pod Security Standards (`restricted` labeling), and mounting Secret Manager secrets via CSI (`SecretProviderClass`). Use when auditing cluster security posture, isolating namespaces, applying pod security standards, setting up Workload Identity, or configuring network policies and secret volume mounts. Don&#39;t use for cluster-wide control plane security, RBAC hardening, Binary Authorization, Shielded Nodes, or enabling platform-level GKE add-ons (use gke-platform-security instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=security">security</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Workload Security</h3>
+<p>This skill provides workflows and best practices for securing GKE workloads. It</p>
+<p>covers security auditing, Identity and Access Management (Workload Identity),</p>
+<p>Network Security (Network Policies), and Node Security.</p>
+<h4>Workflows</h4>
+<h5>1. Security Audit</h5>
+<p>Assess the current security posture of your cluster using the provided audit</p>
+<p>script.</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li><code>gcloud</code> CLI authenticated.</li>
+<li><code>jq</code> command-line JSON processor installed.</li>
+</ul>
+<p><strong>Capabilities:</strong></p>
+<ul>
+<li>Checks for Workload Identity.</li>
+<li>Verifies Network Policy is enabled.</li>
+<li>Checks if Shielded Nodes are enabled.</li>
+<li>Checks if Binary Authorization is enabled.</li>
+<li>Checks for Private Cluster configuration.</li>
+</ul>
+<p><strong>Command:</strong></p>
+<p><pre><code>scripts/audit_cluster.sh &lt;cluster-name&gt; &lt;region&gt; &lt;project-id&gt;</code></pre></p>
+<h5>2. Configure Workload Identity</h5>
+<p>Workload Identity allows Kubernetes Service Accounts (KSAs) to impersonate</p>
+<p>Google Service Accounts (GSAs). This is the recommended method for workloads to</p>
+<p>access Google Cloud APIs.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Create Namespace and KSA:</strong></li>
+</ol>
+<p>    <pre><code>    kubectl create namespace workload-identity-test-ns
+    kubectl create serviceaccount &lt;ksa-name&gt; \
+        --namespace workload-identity-test-ns
+    </code></pre></p>
+<ol>
+<li><strong>Bind KSA to GSA:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud iam service-accounts add-iam-policy-binding &lt;gsa-name&gt;@&lt;project-id&gt;.iam.gserviceaccount.com \
+        --role roles/iam.workloadIdentityUser \
+        --member &quot;serviceAccount:&lt;project-id&gt;.svc.id.goog[workload-identity-test-ns/&lt;ksa-name&gt;]&quot;
+    </code></pre></p>
+<ol>
+<li><strong>Annotate KSA:</strong></li>
+</ol>
+<p>    <pre><code>    kubectl annotate serviceaccount &lt;ksa-name&gt; \
+        --namespace workload-identity-test-ns \
+        iam.gke.io/gcp-service-account=&lt;gsa-name&gt;@&lt;project-id&gt;.iam.gserviceaccount.com
+    </code></pre></p>
+<ol>
+<li><strong>Verify Example Pod:</strong> Use existing asset</li>
+</ol>
+<p>    <code>assets/workload-identity-pod.yaml</code> to test the configuration. Update the</p>
+<p>    <code>&lt;ksa-name&gt;</code> in the file first.</p>
+<p>    <pre><code>    kubectl apply -f assets/workload-identity-pod.yaml -n workload-identity-test-ns
+    </code></pre></p>
+<h5>3. Implement Network Policies</h5>
+<p>Control traffic flow between Pods using Network Policies. By default, all</p>
+<p>traffic is allowed.</p>
+<p><strong>Enable Network Policy Enforcement:</strong></p>
+<p><pre><code>gcloud container clusters update &lt;cluster-name&gt; \
+    --update-addons=NetworkPolicy=ENABLED \
+    --region &lt;region&gt;</code></pre></p>
+<p>&gt; [!NOTE] If your cluster uses Dataplane V2 (<code>--enable-dataplane-v2</code>), Network</p>
+<p>&gt; Policy enforcement is built-in and this step is not required (and may fail).</p>
+<p><strong>Apply Default Deny Policy:</strong> Isolate namespaces by denying all ingress and</p>
+<p>egress traffic by default.</p>
+<p><strong>Replace <code>&lt;target-namespace&gt;</code> with the namespace you want to isolate.</strong></p>
+<p><pre><code>kubectl apply -f assets/default-deny-netpol.yaml -n &lt;target-namespace&gt;</code></pre></p>
+<h5>4. GKE Sandbox (gVisor) Pod Isolation</h5>
+<p>Run untrusted workloads in a sandbox for extra kernel isolation. *(Note:</p>
+<p>Enabling Shielded Nodes (<code>--enable-shielded-nodes</code>) and GKE Sandbox</p>
+<p>(<code>--enable-gke-sandbox</code>) at the cluster control plane level are platform-level</p>
+<p>actions covered in the <code>gke-platform-security</code> skill.)*</p>
+<p><strong>Run a Sandboxed Pod:</strong> Add <code>runtimeClassName: gvisor</code> to your Pod spec:</p>
+<p><pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: sandboxed-pod
+spec:
+  runtimeClassName: gvisor
+  containers:
+  - name: app
+    image: nginx</code></pre></p>
+<h5>5. Pod Security Standards</h5>
+<p>Enforce security policies on namespaces using labels.</p>
+<p><strong>Enforce Restricted Profile:</strong></p>
+<p><pre><code>kubectl label --overwrite ns &lt;namespace&gt; \
+    pod-security.kubernetes.io/enforce=restricted \
+    pod-security.kubernetes.io/enforce-version=latest</code></pre></p>
+<p>&gt; [!NOTE] Using <code>latest</code> ensures you use the policies corresponding to the</p>
+<p>&gt; cluster&#39;s current version. You can pin it to a specific version (e.g.,</p>
+<p>&gt; <code>v1.30</code>) to lock down the namespace to policies of a specific release.</p>
+<h5>6. Secret Manager Integration (CSI Driver)</h5>
+<p>Mount secrets from Google Cloud Secret Manager directly as volumes in your pods.</p>
+<p><strong>Prerequisites</strong>: Secret Manager CSI driver must be enabled on the cluster.</p>
+<p><strong>Example SecretProviderClass:</strong></p>
+<p><pre><code>apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: my-secret-provider
+spec:
+  provider: gcp
+  parameters:
+    secrets: |
+      - resourceName: &quot;projects/&lt;project-id&gt;/secrets/my-secret/versions/latest&quot;
+        fileName: &quot;my-secret-file&quot;</code></pre></p>
+<p><strong>Example Pod Spec excerpt:</strong></p>
+<p><pre><code>spec:
+  containers:
+    - name: my-app
+      volumeMounts:
+        - name: secrets-store-inline
+          mountPath: &quot;/mnt/secrets&quot;
+          readOnly: true
+  volumes:
+    - name: secrets-store-inline
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: &quot;my-secret-provider&quot;</code></pre></p>
+<h5>7. Enable Network Policy Logging</h5>
+<p>If using GKE Dataplane V2, you can log allowed and denied connections.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Configure the <code>NetworkLogging</code> custom resource.</li>
+</ol>
+<p><strong>Example NetworkLogging Manifest:</strong></p>
+<p><pre><code>apiVersion: networking.gke.io/v1alpha1
+kind: NetworkLogging
+metadata:
+  name: default
+spec:
+  cluster:
+    allow:
+      log: true
+      delegate: true
+    deny:
+      log: true
+      delegate: true</code></pre></p>
+<p>This will log connection details to Cloud Logging.</p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Least Privilege:</strong> Always use Workload Identity with minimal IAM roles.</li>
+</ol>
+<p>    Avoid using Node default service accounts.</p>
+<ol>
+<li><strong>Network Isolation:</strong> Use Network Policies to restrict Pod-to-Pod</li>
+</ol>
+<p>    communication. Enable Network Policy Logging for visibility.</p>
+<ol>
+<li><strong>Image Security:</strong> Use Binary Authorization to ensure only trusted images</li>
+</ol>
+<p>    are deployed.</p>
+<ol>
+<li><strong>Secret Management</strong>: Use Secret Manager CSI driver instead of default</li>
+</ol>
+<p>    Kubernetes secrets for sensitive data.</p>
+<ol>
+<li><strong>Pod Security</strong>: Enforce <code>baseline</code> or <code>restricted</code> Pod Security Standards</li>
+</ol>
+<p>    on all non-system namespaces.</p>
+<ol>
+<li><strong>Policy Enforcement</strong>: Consider using <strong>Policy Controller</strong> (Gatekeeper) to</li>
+</ol>
+<p>    enforce custom security and compliance policies across the cluster.</p>
+<h4>Resources</h4>
+<ul>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity" rel="noopener">Workload Identity Federation for GKE</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy" rel="noopener">GKE Network Policies</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-standards" rel="noopener">Pod Security Standards in GKE</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/secret-manager" rel="noopener">Google Secret Manager CSI Driver</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy-logging" rel="noopener">GKE Dataplane V2 Network Logging</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-workload-security</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-workload-security" aria-label="Copy install gke-workload-security">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-workload-security</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-workload-security/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

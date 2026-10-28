@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-migrate-from-ai-studio — Aidentity</title>
+<meta name="description" content="Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-migrate-from-ai-studio — Aidentity">
+<meta property="og:description" content="Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-migrate-from-ai-studio","description":"Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-migrate-from-ai-studio
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-migrate-from-ai-studio</h1>
+      <p class="summary">Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Migrating from Gemini API in AI Studio to Agent Platform</h3>
+<p>Use this skill when you need to transition an application from the</p>
+<p>developer-centric Google AI Studio ecosystem</p>
+<p>(<code>generativelanguage.googleapis.com</code>) to the enterprise-grade Google Cloud Agent</p>
+<p>Platform (<code>aiplatform.googleapis.com</code>).</p>
+<hr>
+<h4>When to Invoke This Skill</h4>
+<ul>
+<li>You want to migrate an application from Google AI Studio to Agent Platform</li>
+</ul>
+<p>    (formerly Vertex AI).</p>
+<ul>
+<li>You have <strong>Google Cloud credits</strong> (e.g., the $300 Welcome Free Trial) that</li>
+</ul>
+<p>    you want to apply toward Gemini API inferencing costs.</p>
+<ul>
+<li>You need to unify your inferencing pipelines, IAM permissions, telemetry,</li>
+</ul>
+<p>    and billing with existing Google Cloud infrastructure (Compute Engine, Cloud</p>
+<p>    SQL, BigQuery).</p>
+<ul>
+<li>You are deploying open-source orchestration engines (like OpenClaw or ADK</li>
+</ul>
+<p>    agents) on Google Cloud VMs, and want the entire system to run under a</p>
+<p>    unified Google Cloud billing structure.</p>
+<hr>
+<h4>Gemini API Comparison</h4>
+<p>Feature / Control      | Google AI Studio (Gemini Developer API)                               | Agent Platform (Enterprise Gemini API)</p>
+<p>:--------------------- | :-------------------------------------------------------------------- | :-------------------------------------</p>
+<p><strong>API Endpoint</strong>       | <code>generativelanguage.googleapis.com</code>                                   | <code>aiplatform.googleapis.com</code></p>
+<p><strong>Target Audience</strong>    | Developers, startups, students, researchers building production apps. | Enterprise production, MLOps engineers</p>
+<p><strong>GCP Credit Support</strong> | No (GCP credits/Free Trial <strong>cannot</strong> be applied)                     | Yes (Fully covered by Welcome or custom credits)</p>
+<p><strong>Data Privacy</strong>       | Data may be reviewed to improve Google products                       | Prompts/responses are <strong>never</strong> used for training</p>
+<p><strong>Security &amp; IAM</strong>     | API key, OAuth                                                        | Google Cloud IAM (Service Accounts, OAuth 2.0, VPC-SC)</p>
+<p><strong>Compliance &amp; SLAs</strong>  | None (Best-effort availability)                                       | 24/7 Enterprise Support, SLAs, HIPAA, SOC2</p>
+<p><strong>Throughput Options</strong> | Shared / Rate-limited                                                 | Pay-as-you-go OR Provisioned Throughput</p>
+<p><strong>MLOps Ecosystem</strong>    | Basic prompt management                                               | Model Registry, Model Monitoring, Pipeline Evaluation</p>
+<p><strong>Inferencing Scope</strong>  | Global endpoints only                                                 | Both Global and strict Regional endpoints</p>
+<p>See</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/migrate/migrate-google-ai.md.txt" rel="noopener">Google Cloud Documentation</a></p>
+<p>to learn more about the differences between the two offerings.</p>
+<hr>
+<h4>Migration Guide</h4>
+<h5>Billing and Credits</h5>
+<p>Google Cloud Free Trial credits</p>
+<p><strong><a href="https://docs.cloud.google.com/free/docs/free-cloud-features.md.txt" rel="noopener">do not apply to AI Studio</a></strong>.</p>
+<p>To use your credits for Gemini models, you must route calls through the Agent</p>
+<p>Platform.</p>
+<ol>
+<li>Create a Google Cloud billing account. You must provide a valid payment</li>
+</ol>
+<p>    method during setup to verify identity.</p>
+<ol>
+<li>If you are a new customer, ensure your $300 Welcome credit is active in the</li>
+</ol>
+<p>    Billing Console.</p>
+<ol>
+<li><strong>Avoid Billing Surprises:</strong> To prevent automatic fallback to your standard</li>
+</ol>
+<p>    form of payment when credits are exhausted, you should establish a budget</p>
+<p>    alert:</p>
+<ul>
+<li>Go to <strong>Billing</strong> -&gt; <strong>Budgets &amp; Alerts</strong> -&gt; <strong>Create Budget</strong>.</li>
+<li>Set the threshold to map to your credit limit or maximum comfortable</li>
+</ul>
+<p>        spend.</p>
+<h5>Enable the Agent Platform API</h5>
+<p>You must explicitly enable the Agent Platform API on your target Google Cloud</p>
+<p>Project. Run the following command via your local shell:</p>
+<p><pre><code>gcloud services enable aiplatform.googleapis.com --project=&quot;{project_id}&quot;</code></pre></p>
+<h5>Authentication &amp; Authorization (IAM)</h5>
+<h5>User Auth</h5>
+<p>For local debugging or script execution, authenticate using</p>
+<p><a href="https://docs.cloud.google.com/docs/authentication/application-default-credentials.md.txt" rel="noopener">Application Default Credentials</a></p>
+<p>(ADC).</p>
+<p><strong>Option 1 - Automated Script</strong>:</p>
+<p><pre><code>bash &lt;(curl -sSL https://storage.googleapis.com/cloud-samples-data/adc/setup_adc.sh)</code></pre></p>
+<p><strong>Option 2 - Manual Setup</strong>:</p>
+<p><pre><code>gcloud auth login
+gcloud auth application-default login</code></pre></p>
+<p>Grant your user identity the required IAM role to perform inferencing calls:</p>
+<p><pre><code>gcloud projects add-iam-policy-binding &quot;{project_id}&quot; \
+    --member=&quot;user:YOUR_EMAIL@domain.com&quot; \
+    --role=&quot;roles/aiplatform.user&quot;</code></pre></p>
+<h5>Service Auth</h5>
+<p>When running your application on Google Cloud infrastructure such as a Compute</p>
+<p>Engine VM, authenticate using the machine&#39;s attached Service Account. For</p>
+<p>example, the</p>
+<p><a href="https://docs.cloud.google.com/compute/docs/access/service-accounts#default_service_account.md.txt" rel="noopener">Compute Engine Default Service Account</a>.</p>
+<ol>
+<li>Grant the virtual machine&#39;s underlying Service Account the user role:</li>
+</ol>
+<p><pre><code>gcloud projects add-iam-policy-binding &quot;{project_id}&quot; \
+    --member=&quot;serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com&quot; \
+    --role=&quot;roles/aiplatform.user&quot;</code></pre></p>
+<ol>
+<li><strong><a href="https://docs.cloud.google.com/compute/docs/access/service-accounts.md.txt" rel="noopener">Compute Engine Access Scopes</a>:</strong></li>
+</ol>
+<p>    Legacy access scopes can override IAM bindings. When provisioning or</p>
+<p>    modifying your Compute Engine instance, you must verify that the VM access scope is</p>
+<p>    configured to either <strong>Allow full access to all Cloud APIs</strong></p>
+<p>    (<code>https://www.googleapis.com/auth/cloud-platform</code>) or explicitly includes</p>
+<p>    the standard cloud-platform scope.</p>
+<hr>
+<h4>Use the Gemini API in Agent Platform</h4>
+<h5>SDKs (Client Libraries)</h5>
+<p>You can continue to use the unified</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview.md.txt" rel="noopener">Google GenAI SDK</a></p>
+<p>(<code>google-genai</code>). This SDK works with both AI Studio and Agent Platform. You</p>
+<p>only need to switch the routing flags via your runtime environment variables to</p>
+<p>target the Agent Platform backend.</p>
+<p>Set your target environment details:</p>
+<p><pre><code>export GOOGLE_CLOUD_PROJECT=&quot;{project_id}&quot;
+export GOOGLE_CLOUD_LOCATION=&quot;global&quot;  # Or your chosen regional endpoint
+export GOOGLE_GENAI_USE_ENTERPRISE=TRUE</code></pre></p>
+<p>Now, your standard python code shifts from using AI Studio to Agent Platform</p>
+<p>without altering the core initialization blocks:</p>
+<p><pre><code>from google import genai
+
+# The client automatically picks up the GOOGLE_GENAI_USE_ENTERPRISE=TRUE environment flag
+client = genai.Client()
+
+response = client.models.generate_content(
+    model=&#39;gemini-3-flash-preview&#39;,
+    contents=&#39;Hello world!&#39;,
+)
+print(response.text)</code></pre></p>
+<h5>Agent Development Kit (ADK)</h5>
+<p>To call Gemini models in Agent Platform from an Agent Development Kit agent,</p>
+<p>follow these steps.</p>
+<ol>
+<li>Authenticate to Google Cloud.</li>
+</ol>
+<p>If running an ADK agent in Google Cloud (e.g. Agent Platform Runtime), use the</p>
+<p>agent&#39;s assigned service account. Alternatively, if running ADK locally, run:</p>
+<p><pre><code>gcloud auth application-default login</code></pre></p>
+<ol>
+<li>Set env variables. Ensure these are set no matter if your ADK agent is</li>
+</ol>
+<p>    running in Google Cloud or locally:</p>
+<p><pre><code>export GOOGLE_CLOUD_PROJECT=&quot;{project_id}&quot;
+export GOOGLE_CLOUD_LOCATION=&quot;global&quot;
+export GOOGLE_GENAI_USE_ENTERPRISE=TRUE</code></pre></p>
+<ol>
+<li>Initialize the ADK agent. You can use the same model string you used with AI</li>
+</ol>
+<p>    Studio (e.g. <code>gemini-3-flash-preview</code>).</p>
+<p><pre><code>from google.adk.agents.llm_agent import Agent
+
+def get_current_time(city: str) -&gt; dict:
+    &quot;&quot;&quot;Returns the current time in a specified city.&quot;&quot;&quot;
+    return {&quot;status&quot;: &quot;success&quot;, &quot;city&quot;: city, &quot;time&quot;: &quot;10:30 AM&quot;}
+
+root_agent = Agent(
+    model=&#39;gemini-3-flash-preview&#39;,
+    name=&#39;root_agent&#39;,
+    description=&quot;Tells the current time in a specified city.&quot;,
+    instruction=&quot;You are a helpful assistant that tells the current time in cities. Use the &#39;get_current_time&#39; tool for this purpose.&quot;,
+    tools=[get_current_time],
+)</code></pre></p>
+<p>To learn more about integrating ADK agents with Agent Platform,</p>
+<p><a href="https://raw.githubusercontent.com/google/adk-docs/main/docs/agents/models/agent-platform.md" rel="noopener">see the ADK documentation</a>.</p>
+<h5>Antigravity CLI</h5>
+<p>Google Cloud users <a href="https://antigravity.google/pricing" rel="noopener">can now access</a></p>
+<p>Antigravity 2.0, including the Antigravity CLI, with Gemini Enterprise Agent</p>
+<p>Platform.</p>
+<ol>
+<li><a href="https://antigravity.google/docs/cli-install" rel="noopener">Install the Antigravity CLI</a></li>
+</ol>
+<p>    to your local environment.</p>
+<ol>
+<li>Start the Antigravity CLI.</li>
+</ol>
+<p>    <pre><code>    agy
+    </code></pre></p>
+<ol>
+<li>Follow the CLI setup prompts - select <strong>Use a Google Cloud Project</strong>.</li>
+</ol>
+<ol>
+<li>Complete the OAuth flow in the opened browser window using your</li>
+</ol>
+<p>    authenticated Google Cloud Workspace or user identity.</p>
+<ol>
+<li>Copy the confirmation token, and paste it directly back into your terminal.</li>
+</ol>
+<ol>
+<li>Follow the prompts to enter your Google Cloud Project ID.</li>
+</ol>
+<ol>
+<li>Select your Google Cloud location (e.g. <code>global</code>).</li>
+</ol>
+<ol>
+<li>Optionally, run the <code>/model</code> command to select a different Gemini model in</li>
+</ol>
+<p>    Agent Platform.</p>
+<h5>OpenClaw</h5>
+<p>To configure an OpenClaw agent to use Gemini models in Agent Platform, Follow</p>
+<p>these steps.</p>
+<ol>
+<li><a href="https://docs.openclaw.ai/install" rel="noopener">Install OpenClaw using OpenClaw&#39;s official instructions</a>.</li>
+</ol>
+<p>⚠️ Important: OpenClaw 2026.5.28 currently has a <code>google-vertex</code> bug. Please use</p>
+<p>2026.5.20 for now.</p>
+<ol>
+<li>Ensure that the runtime where OpenClaw is running (e.g. GCE VM with Service</li>
+</ol>
+<p>    Account) has the <code>aiplatform.user</code> IAM role - see Authentication and</p>
+<p>    Authorization section above.</p>
+<ol>
+<li>Get the project number from the user&#39;s project ID. Outside of GCE, run:</li>
+</ol>
+<p><pre><code>export PROJECT_NUMBER=$(gcloud projects describe &quot;$PROJECT_ID&quot; --format=&quot;value(projectNumber)&quot;)
+echo &quot;Project number: $PROJECT_NUMBER&quot;
+</code></pre></p>
+<p>Within a Compute Engine VM, run:</p>
+<p><pre><code>export PROJECT_NUMBER=$(curl &quot;http://metadata.google.internal/computeMetadata/v1/project/project-id&quot; -H &quot;Metadata-Flavor: Google&quot;)
+echo &quot;Project number: $PROJECT_NUMBER&quot;</code></pre></p>
+<ol>
+<li>From outside the GCE instance, generate <code>GOOGLE_APPLICATION_CREDENTIALS</code></li>
+</ol>
+<p>    using the Google Cloud project number. Then, <code>scp</code> these credentials to the</p>
+<p>    GCE VM.</p>
+<p><pre><code>mkdir -p ~/.config/gcloud
+gcloud iam service-accounts keys create ~/.config/gcloud/application_default_credentials.json --iam-account=&quot;${PROJECT_NUMBER}-compute@developer.gserviceaccount.com&quot;</code></pre></p>
+<p>&gt; ⚠️ <strong>Troubleshooting Policy Constraints on New Orgs</strong>: New Google</p>
+<p>&gt; Cloud organizations (created on or after May 4th, 2024) enforce a <a href="https://docs.cloud.google.com/organization-policy/restrict-service-accounts.md.txt" rel="noopener">legacy Organization Policy, restricting Service Account Key Creation</a>. To complete this step, this Org Policy must be temporarily disabled.</p>
+<p>&gt; An Organization Policy Admin must set this policy to Inactive.</p>
+<p>&gt; To the agent: Check if this policy is enforced, and if it is: pause, and</p>
+<p>&gt; prompt the user to disable it at this Console link:</p>
+<p>&gt; <a href="https://console.cloud.google.com/iam-admin/orgpolicies" rel="noopener">https://console.cloud.google.com/iam-admin/orgpolicies</a></p>
+<ol>
+<li>Edit the configuration file that&#39;s usually located at:</li>
+</ol>
+<p>    <code>~/.openclaw/openclaw.json</code>. Ensure you prefix the Gemini model with</p>
+<p>    <code>google-vertex/</code>.</p>
+<p>&gt; ⚠️ Important: Do not use Gemini 3.5 models, since OpenClaw&#39;s <code>google-vertex</code></p>
+<p>&gt; provider does not support it yet. Older models work. When using the</p>
+<p>&gt; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-flash" rel="noopener">Gemini 3 Flash Preview</a></p>
+<p>&gt; model in Agent Platform, always set the location to <code>global</code>, NOT a regional</p>
+<p>&gt; endpoint.</p>
+<p><pre><code>{
+  &quot;env&quot;: {
+    &quot;vars&quot;: {
+      &quot;GOOGLE_CLOUD_PROJECT&quot;: &quot;PROJECT_ID&quot;,
+      &quot;GOOGLE_CLOUD_LOCATION&quot;: &quot;global&quot;,
+      &quot;GOOGLE_APPLICATION_CREDENTIALS&quot;: &quot;~/.config/gcloud/application_default_credentials.json&quot;
+    }
+  },
+  &quot;agents&quot;: {
+    &quot;defaults&quot;: {
+      &quot;model&quot;: {
+        &quot;primary&quot;: &quot;google-vertex/gemini-3-flash-preview&quot;
+      },
+      &quot;workspace&quot;: &quot;~/.openclaw/workspace&quot;,
+      &quot;compaction&quot;: {
+        &quot;mode&quot;: &quot;safeguard&quot;
+      },
+      &quot;heartbeat&quot;: {
+        &quot;model&quot;: &quot;google-vertex/gemini-3-flash-preview&quot;
+      }
+    },
+    &quot;list&quot;: [
+      {
+        &quot;id&quot;: &quot;main&quot;,
+        &quot;workspace&quot;: &quot;~/.openclaw/workspace&quot;,
+        &quot;model&quot;: &quot;google-vertex/gemini-3-flash-preview&quot;
+      }
+    ]
+  },
+  &quot;session&quot;: {
+    &quot;dmScope&quot;: &quot;per-channel-peer&quot;
+  },
+  &quot;tools&quot;: {
+    &quot;profile&quot;: &quot;coding&quot;
+  }
+}
+</code></pre></p>
+<ol>
+<li>Restart OpenClaw.</li>
+</ol>
+<p><pre><code>openclaw gateway restart
+</code></pre></p>
+<ol>
+<li>Verify the OpenClaw connection to Agent Platform:</li>
+</ol>
+<p><pre><code>openclaw models status
+openclaw agent --agent main --message &quot;Hello world!&quot;
+</code></pre></p>
+<hr>
+<h4>Additional Resources</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/free/docs/free-cloud-features.md.txt" rel="noopener">Google Cloud Free Trial Features &amp; Limits</a></li>
+<li><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/migrate/migrate-google-ai.md.txt" rel="noopener">Migrate from Google AI Studio to Gemini Enterprise Agent Platform</a></li>
+<li><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/google-models.md.txt" rel="noopener">Gemini Enterprise Agent Platform - Models</a></li>
+<li><a href="https://adk.dev/agents/models/agent-platform/#agent-platform-setup" rel="noopener">Agent Development Kit Documentation - Connect to Models in Agent Platform</a></li>
+<li><a href="https://docs.openclaw.ai/providers/google" rel="noopener">OpenClaw Documentation - Connect to Google models</a></li>
+<li><a href="https://docs.cloud.google.com/billing/docs/how-to/budgets#steps-to-create-budget.md.txt" rel="noopener">Google Cloud Budget Alerts - Setup Guide</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-migrate-from-ai-studio</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-migrate-from-ai-studio" aria-label="Copy install agent-platform-migrate-from-ai-studio">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-migrate-from-ai-studio</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-search-documents-py — Aidentity</title>
+<meta name="description" content="Azure AI Search SDK for Python. Use for vector search, hybrid search, semantic ranking, indexing, and skillsets. Triggers: &quot;azure-search-documents&quot;, &quot;SearchClient&quot;, &quot;SearchIndexClient&quot;, &quot;vector search&quot;, &quot;hybrid search&quot;, &quot;semantic search&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-search-documents-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-search-documents-py — Aidentity">
+<meta property="og:description" content="Azure AI Search SDK for Python. Use for vector search, hybrid search, semantic ranking, indexing, and skillsets. Triggers: &quot;azure-search-documents&quot;, &quot;SearchClient&quot;, &quot;SearchIndexClient&quot;, &quot;vector search&quot;, &quot;hybrid search&quot;, &quot;semantic search&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-search-documents-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-search-documents-py","description":"Azure AI Search SDK for Python. Use for vector search, hybrid search, semantic ranking, indexing, and skillsets. Triggers: \"azure-search-documents\", \"SearchClient\", \"SearchIndexClient\", \"vector search\", \"hybrid search\", \"semantic search\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-search-documents-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-search-documents-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-search-documents-py</h1>
+      <p class="summary">Azure AI Search SDK for Python. Use for vector search, hybrid search, semantic ranking, indexing, and skillsets. Triggers: &quot;azure-search-documents&quot;, &quot;SearchClient&quot;, &quot;SearchIndexClient&quot;, &quot;vector search&quot;, &quot;hybrid search&quot;, &quot;semantic search&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure AI Search SDK for Python</h3>
+<p>Full-text, vector, and hybrid search with AI enrichment capabilities.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-search-documents</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SEARCH_ENDPOINT=https://&lt;service-name&gt;.search.windows.net  # Required for all auth methods
+AZURE_SEARCH_INDEX_NAME=&lt;your-index-name&gt;  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production
+AZURE_SEARCH_API_KEY=&lt;your-api-key&gt;  # Only required for the legacy API-key auth path below</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.search.documents import SearchClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with SearchClient(
+    endpoint=os.environ[&quot;AZURE_SEARCH_ENDPOINT&quot;],
+    index_name=os.environ[&quot;AZURE_SEARCH_INDEX_NAME&quot;],
+    credential=credential,
+) as client:
+    results = list(client.search(search_text=&quot;*&quot;, top=5))</code></pre></p>
+<h5>Legacy: API Key (existing keyed deployments)</h5>
+<p>New code should use <code>DefaultAzureCredential</code> above. Use <code>AzureKeyCredential</code> only if you have an existing keyed deployment that hasn&#39;t been migrated to Entra ID yet — for example, regulated environments still completing their Entra rollout. The same <code>AzureKeyCredential</code> works with <code>SearchIndexClient</code> and <code>SearchIndexerClient</code> for admin operations.</p>
+<p><pre><code>import os
+from azure.core.credentials import AzureKeyCredential
+from azure.search.documents import SearchClient
+
+with SearchClient(
+    endpoint=os.environ[&quot;AZURE_SEARCH_ENDPOINT&quot;],
+    index_name=os.environ[&quot;AZURE_SEARCH_INDEX_NAME&quot;],
+    credential=AzureKeyCredential(os.environ[&quot;AZURE_SEARCH_API_KEY&quot;]),
+) as client:
+    results = list(client.search(search_text=&quot;*&quot;, top=5))</code></pre></p>
+<h4>Client Types</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>SearchClient</code></td><td>Search and document operations</td></tr>
+<tr><td><code>SearchIndexClient</code></td><td>Index management, synonym maps</td></tr>
+<tr><td><code>SearchIndexerClient</code></td><td>Indexers, data sources, skillsets</td></tr>
+</tbody></table>
+<h4>Create Index with Vector Field</h4>
+<p><pre><code>from azure.search.documents.indexes import SearchIndexClient
+from azure.search.documents.indexes.models import (
+    SearchIndex,
+    SearchField,
+    SearchFieldDataType,
+    VectorSearch,
+    HnswAlgorithmConfiguration,
+    VectorSearchProfile,
+    SearchableField,
+    SimpleField
+)
+
+fields = [
+    SimpleField(name=&quot;id&quot;, type=SearchFieldDataType.String, key=True),
+    SearchableField(name=&quot;title&quot;, type=SearchFieldDataType.String),
+    SearchableField(name=&quot;content&quot;, type=SearchFieldDataType.String),
+    SearchField(
+        name=&quot;content_vector&quot;,
+        type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+        searchable=True,
+        vector_search_dimensions=1536,
+        vector_search_profile_name=&quot;my-vector-profile&quot;
+    )
+]
+
+vector_search = VectorSearch(
+    algorithms=[
+        HnswAlgorithmConfiguration(name=&quot;my-hnsw&quot;)
+    ],
+    profiles=[
+        VectorSearchProfile(
+            name=&quot;my-vector-profile&quot;,
+            algorithm_configuration_name=&quot;my-hnsw&quot;
+        )
+    ]
+)
+
+index = SearchIndex(
+    name=&quot;my-index&quot;,
+    fields=fields,
+    vector_search=vector_search
+)
+
+with SearchIndexClient(endpoint, DefaultAzureCredential()) as index_client:
+    index_client.create_or_update_index(index)</code></pre></p>
+<h4>Upload Documents</h4>
+<p><pre><code>from azure.search.documents import SearchClient
+
+documents = [
+    {
+        &quot;id&quot;: &quot;1&quot;,
+        &quot;title&quot;: &quot;Azure AI Search&quot;,
+        &quot;content&quot;: &quot;Full-text and vector search service&quot;,
+        &quot;content_vector&quot;: [0.1, 0.2, ...]  # 1536 dimensions
+    }
+]
+
+with SearchClient(endpoint, &quot;my-index&quot;, DefaultAzureCredential()) as client:
+    result = client.upload_documents(documents)
+    print(f&quot;Uploaded {len(result)} documents&quot;)</code></pre></p>
+<h4>Keyword Search</h4>
+<p><pre><code>results = client.search(
+    search_text=&quot;azure search&quot;,
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;content&quot;],
+    top=10
+)
+
+for result in results:
+    print(f&quot;{result[&#39;title&#39;]}: {result[&#39;@search.score&#39;]}&quot;)</code></pre></p>
+<h4>Vector Search</h4>
+<p><pre><code>from azure.search.documents.models import VectorizedQuery
+
+# Your query embedding (1536 dimensions)
+query_vector = get_embedding(&quot;semantic search capabilities&quot;)
+
+vector_query = VectorizedQuery(
+    vector=query_vector,
+    k_nearest_neighbors=10,
+    fields=&quot;content_vector&quot;
+)
+
+results = client.search(
+    vector_queries=[vector_query],
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;content&quot;]
+)
+
+for result in results:
+    print(f&quot;{result[&#39;title&#39;]}: {result[&#39;@search.score&#39;]}&quot;)</code></pre></p>
+<h4>Hybrid Search (Vector + Keyword)</h4>
+<p><pre><code>from azure.search.documents.models import VectorizedQuery
+
+vector_query = VectorizedQuery(
+    vector=query_vector,
+    k_nearest_neighbors=10,
+    fields=&quot;content_vector&quot;
+)
+
+results = client.search(
+    search_text=&quot;azure search&quot;,
+    vector_queries=[vector_query],
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;content&quot;],
+    top=10
+)</code></pre></p>
+<h4>Semantic Ranking</h4>
+<p><pre><code>from azure.search.documents.models import QueryType
+
+results = client.search(
+    search_text=&quot;what is azure search&quot;,
+    query_type=QueryType.SEMANTIC,
+    semantic_configuration_name=&quot;my-semantic-config&quot;,
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;content&quot;],
+    top=10
+)
+
+for result in results:
+    print(f&quot;{result[&#39;title&#39;]}&quot;)
+    if result.get(&quot;@search.captions&quot;):
+        print(f&quot;  Caption: {result[&#39;@search.captions&#39;][0].text}&quot;)</code></pre></p>
+<h4>Filters</h4>
+<p><pre><code>results = client.search(
+    search_text=&quot;*&quot;,
+    filter=&quot;category eq &#39;Technology&#39; and rating gt 4&quot;,
+    order_by=[&quot;rating desc&quot;],
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;category&quot;, &quot;rating&quot;]
+)</code></pre></p>
+<h4>Facets</h4>
+<p><pre><code>results = client.search(
+    search_text=&quot;*&quot;,
+    facets=[&quot;category,count:10&quot;, &quot;rating&quot;],
+    top=0  # Only get facets, no documents
+)
+
+for facet_name, facet_values in results.get_facets().items():
+    print(f&quot;{facet_name}:&quot;)
+    for facet in facet_values:
+        print(f&quot;  {facet[&#39;value&#39;]}: {facet[&#39;count&#39;]}&quot;)</code></pre></p>
+<h4>Autocomplete &amp; Suggest</h4>
+<p><pre><code># Autocomplete
+results = client.autocomplete(
+    search_text=&quot;sea&quot;,
+    suggester_name=&quot;my-suggester&quot;,
+    mode=&quot;twoTerms&quot;
+)
+
+# Suggest
+results = client.suggest(
+    search_text=&quot;sea&quot;,
+    suggester_name=&quot;my-suggester&quot;,
+    select=[&quot;title&quot;]
+)</code></pre></p>
+<h4>Indexer with Skillset</h4>
+<p><pre><code>from azure.search.documents.indexes import SearchIndexerClient
+from azure.search.documents.indexes.models import (
+    SearchIndexer,
+    SearchIndexerDataSourceConnection,
+    SearchIndexerSkillset,
+    EntityRecognitionSkill,
+    InputFieldMappingEntry,
+    OutputFieldMappingEntry
+)
+
+with SearchIndexerClient(endpoint, DefaultAzureCredential()) as indexer_client:
+    # Use managed identity (search service must have RBAC role on the storage account). Avoid storage connection strings with embedded keys.
+    data_source = SearchIndexerDataSourceConnection(
+        name=&quot;my-datasource&quot;,
+        type=&quot;azureblob&quot;,
+        connection_string=&quot;ResourceId=/subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Storage/storageAccounts/&lt;acct&gt;&quot;,
+        container={&quot;name&quot;: &quot;documents&quot;}
+    )
+    indexer_client.create_or_update_data_source_connection(data_source)
+
+    # Create skillset
+    skillset = SearchIndexerSkillset(
+        name=&quot;my-skillset&quot;,
+        skills=[
+            EntityRecognitionSkill(
+                inputs=[InputFieldMappingEntry(name=&quot;text&quot;, source=&quot;/document/content&quot;)],
+                outputs=[OutputFieldMappingEntry(name=&quot;organizations&quot;, target_name=&quot;organizations&quot;)]
+            )
+        ]
+    )
+    indexer_client.create_or_update_skillset(skillset)
+
+    # Create indexer
+    indexer = SearchIndexer(
+        name=&quot;my-indexer&quot;,
+        data_source_name=&quot;my-datasource&quot;,
+        target_index_name=&quot;my-index&quot;,
+        skillset_name=&quot;my-skillset&quot;
+    )
+    indexer_client.create_or_update_indexer(indexer)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use hybrid search</strong> for best relevance combining vector and keyword</li>
+<li><strong>Enable semantic ranking</strong> for natural language queries</li>
+<li><strong>Index in batches</strong> of 100-1000 documents for efficiency</li>
+<li><strong>Use filters</strong> to narrow results before ranking</li>
+<li><strong>Configure vector dimensions</strong> to match your embedding model</li>
+<li><strong>Use HNSW algorithm</strong> for large-scale vector search</li>
+<li><strong>Create suggesters</strong> at index creation time (cannot add later)</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/vector-search.md](references/vector-search.md)</td><td>HNSW configuration, integrated vectorization, multi-vector queries</td></tr>
+<tr><td>[references/semantic-ranking.md](references/semantic-ranking.md)</td><td>Semantic configuration, captions, answers, hybrid patterns</td></tr>
+<tr><td>[scripts/setup_vector_index.py](scripts/setup_vector_index.py)</td><td>CLI script to create vector-enabled search index</td></tr>
+</tbody></table>
+<hr>
+<h4>Additional Azure AI Search Patterns</h4>
+<h3>Azure AI Search Python SDK</h3>
+<p>Write clean, idiomatic Python code for Azure AI Search using <code>azure-search-documents</code>.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-search-documents azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SEARCH_ENDPOINT=https://&lt;search-service&gt;.search.windows.net  # Required for all auth methods
+AZURE_SEARCH_INDEX_NAME=&lt;index-name&gt;  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication</h4>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.search.documents import SearchClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with SearchClient(
+    endpoint=os.environ[&quot;AZURE_SEARCH_ENDPOINT&quot;],
+    index_name=os.environ[&quot;AZURE_SEARCH_INDEX_NAME&quot;],
+    credential=credential,
+) as client:
+    results = list(client.search(search_text=&quot;*&quot;, top=5))</code></pre></p>
+<h4>Client Selection</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>SearchClient</code></td><td>Query indexes, upload/update/delete documents</td></tr>
+<tr><td><code>SearchIndexClient</code></td><td>Create/manage indexes, knowledge sources, knowledge bases</td></tr>
+<tr><td><code>SearchIndexerClient</code></td><td>Manage indexers, skillsets, data sources</td></tr>
+<tr><td><code>KnowledgeBaseRetrievalClient</code></td><td>Agentic retrieval with LLM-powered Q&amp;A</td></tr>
+</tbody></table>
+<h4>Index Creation Pattern</h4>
+<p><pre><code>from azure.search.documents.indexes import SearchIndexClient
+from azure.search.documents.indexes.models import (
+    SearchIndex, SearchField, VectorSearch, VectorSearchProfile,
+    HnswAlgorithmConfiguration, AzureOpenAIVectorizer,
+    AzureOpenAIVectorizerParameters, SemanticSearch,
+    SemanticConfiguration, SemanticPrioritizedFields, SemanticField
+)
+
+index = SearchIndex(
+    name=index_name,
+    fields=[
+        SearchField(name=&quot;id&quot;, type=&quot;Edm.String&quot;, key=True),
+        SearchField(name=&quot;content&quot;, type=&quot;Edm.String&quot;, searchable=True),
+        SearchField(name=&quot;embedding&quot;, type=&quot;Collection(Edm.Single)&quot;,
+                   vector_search_dimensions=3072,
+                   vector_search_profile_name=&quot;vector-profile&quot;),
+    ],
+    vector_search=VectorSearch(
+        profiles=[VectorSearchProfile(
+            name=&quot;vector-profile&quot;,
+            algorithm_configuration_name=&quot;hnsw-algo&quot;,
+            vectorizer_name=&quot;openai-vectorizer&quot;
+        )],
+        algorithms=[HnswAlgorithmConfiguration(name=&quot;hnsw-algo&quot;)],
+        vectorizers=[AzureOpenAIVectorizer(
+            vectorizer_name=&quot;openai-vectorizer&quot;,
+            parameters=AzureOpenAIVectorizerParameters(
+                resource_url=aoai_endpoint,
+                deployment_name=embedding_deployment,
+                model_name=embedding_model
+            )
+        )]
+    ),
+    semantic_search=SemanticSearch(
+        default_configuration_name=&quot;semantic-config&quot;,
+        configurations=[SemanticConfiguration(
+            name=&quot;semantic-config&quot;,
+            prioritized_fields=SemanticPrioritizedFields(
+                content_fields=[SemanticField(field_name=&quot;content&quot;)]
+            )
+        )]
+    )
+)
+
+with SearchIndexClient(endpoint, credential) as index_client:
+    index_client.create_or_update_index(index)</code></pre></p>
+<h4>Document Operations</h4>
+<p><pre><code>from azure.search.documents import SearchIndexingBufferedSender
+
+# Batch upload with automatic batching
+with SearchIndexingBufferedSender(endpoint, index_name, credential) as sender:
+    sender.upload_documents(documents)
+
+# Direct operations via SearchClient
+with SearchClient(endpoint, index_name, credential) as search_client:
+    search_client.upload_documents(documents)      # Add new
+    search_client.merge_documents(documents)       # Update existing
+    search_client.merge_or_upload_documents(documents)  # Upsert
+    search_client.delete_documents(documents)      # Remove</code></pre></p>
+<h4>Search Patterns</h4>
+<p><pre><code># Basic search
+results = search_client.search(search_text=&quot;query&quot;)
+
+# Vector search
+from azure.search.documents.models import VectorizedQuery
+
+results = search_client.search(
+    search_text=None,
+    vector_queries=[VectorizedQuery(
+        vector=embedding,
+        k_nearest_neighbors=5,
+        fields=&quot;embedding&quot;
+    )]
+)
+
+# Hybrid search (vector + keyword)
+results = search_client.search(
+    search_text=&quot;query&quot;,
+    vector_queries=[VectorizedQuery(vector=embedding, k_nearest_neighbors=5, fields=&quot;embedding&quot;)],
+    query_type=&quot;semantic&quot;,
+    semantic_configuration_name=&quot;semantic-config&quot;
+)
+
+# With filters
+results = search_client.search(
+    search_text=&quot;query&quot;,
+    filter=&quot;category eq &#39;technology&#39;&quot;,
+    select=[&quot;id&quot;, &quot;title&quot;, &quot;content&quot;],
+    top=10
+)</code></pre></p>
+<h4>Agentic Retrieval (Knowledge Bases)</h4>
+<p>For LLM-powered Q&amp;A with answer synthesis, see [references/agentic-retrieval.md](references/agentic-retrieval.md).</p>
+<p>Key concepts:</p>
+<ul>
+<li><strong>Knowledge Source</strong>: Points to a search index</li>
+<li><strong>Knowledge Base</strong>: Wraps knowledge sources + LLM for query planning and synthesis</li>
+<li><strong>Output modes</strong>: <code>EXTRACTIVE_DATA</code> (raw chunks) or <code>ANSWER_SYNTHESIS</code> (LLM-generated answers)</li>
+</ul>
+<h4>Async Pattern</h4>
+<p><pre><code>from azure.search.documents.aio import SearchClient
+
+async with SearchClient(endpoint, index_name, credential) as client:
+    results = await client.search(search_text=&quot;query&quot;)
+    async for result in results:
+        print(result[&quot;title&quot;])</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Use environment variables</strong> for endpoints, keys, and deployment names</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for code that runs locally (instead of API keys). Use a specific token credential for code that runs in Azure.</li>
+<li><strong>Use <code>SearchIndexingBufferedSender</code></strong> for batch uploads (handles batching/retries)</li>
+<li><strong>Always define semantic configuration</strong> for agentic retrieval indexes</li>
+<li><strong>Use <code>create_or_update_index</code></strong> for idempotent index creation</li>
+<li><strong>Close clients</strong> with context managers or explicit <code>close()</code></li>
+</ol>
+<h4>Field Types Reference</h4>
+<table><thead><tr><th>EDM Type</th><th>Python</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>Edm.String</code></td><td>str</td><td>Searchable text</td></tr>
+<tr><td><code>Edm.Int32</code></td><td>int</td><td>Integer</td></tr>
+<tr><td><code>Edm.Int64</code></td><td>int</td><td>Long integer</td></tr>
+<tr><td><code>Edm.Double</code></td><td>float</td><td>Floating point</td></tr>
+<tr><td><code>Edm.Boolean</code></td><td>bool</td><td>True/False</td></tr>
+<tr><td><code>Edm.DateTimeOffset</code></td><td>datetime</td><td>ISO 8601</td></tr>
+<tr><td><code>Collection(Edm.Single)</code></td><td>List[float]</td><td>Vector embeddings</td></tr>
+<tr><td><code>Collection(Edm.String)</code></td><td>List[str]</td><td>String arrays</td></tr>
+</tbody></table>
+<h4>Error Handling</h4>
+<p><pre><code>from azure.core.exceptions import (
+    HttpResponseError,
+    ResourceNotFoundError,
+    ResourceExistsError
+)
+
+try:
+    result = search_client.get_document(key=&quot;123&quot;)
+except ResourceNotFoundError:
+    print(&quot;Document not found&quot;)
+except HttpResponseError as e:
+    print(f&quot;Search error: {e.message}&quot;)</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-search-documents-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-search-documents-py" aria-label="Copy install azure-search-documents-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-search-documents-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-search-documents-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

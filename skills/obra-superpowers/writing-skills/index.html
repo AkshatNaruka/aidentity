@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>writing-skills — Aidentity</title>
+<meta name="description" content="Use when creating new skills, editing existing skills, or verifying skills work before deployment">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-skills/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="writing-skills — Aidentity">
+<meta property="og:description" content="Use when creating new skills, editing existing skills, or verifying skills work before deployment">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-skills/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"writing-skills","description":"Use when creating new skills, editing existing skills, or verifying skills work before deployment","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-skills/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>writing-skills
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>writing-skills</h1>
+      <p class="summary">Use when creating new skills, editing existing skills, or verifying skills work before deployment</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Writing Skills</h3>
+<h4>Overview</h4>
+<p><strong>Writing skills IS Test-Driven Development applied to process documentation.</strong></p>
+<p><strong>Personal skills live in your runtime&#39;s skills directory</strong> (<code>~/.claude/skills/</code> on Claude Code) — see [codex-tools.md](../using-superpowers/references/codex-tools.md) or [gemini-tools.md](../using-superpowers/references/gemini-tools.md) for the path on those runtimes. Codex, Copilot CLI, and Gemini CLI all also recognize <code>~/.agents/skills/</code> as a cross-runtime alias.</p>
+<p>You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).</p>
+<p><strong>Core principle:</strong> If you didn&#39;t watch an agent fail without the skill, you don&#39;t know if the skill teaches the right thing.</p>
+<p><strong>REQUIRED BACKGROUND:</strong> You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.</p>
+<p><strong>Official guidance:</strong> For Anthropic&#39;s official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.</p>
+<h4>What is a Skill?</h4>
+<p>A <strong>skill</strong> is a reference guide for proven techniques, patterns, or tools. Skills help future agents find and apply effective approaches.</p>
+<p><strong>Skills are:</strong> Reusable techniques, patterns, tools, reference guides</p>
+<p><strong>Skills are NOT:</strong> Narratives about how you solved a problem once</p>
+<h4>TDD Mapping for Skills</h4>
+<table><thead><tr><th>TDD Concept</th><th>Skill Creation</th></tr></thead><tbody>
+<tr><td><strong>Test case</strong></td><td>Pressure scenario with subagent</td></tr>
+<tr><td><strong>Production code</strong></td><td>Skill document (SKILL.md)</td></tr>
+<tr><td><strong>Test fails (RED)</strong></td><td>Agent violates rule without skill (baseline)</td></tr>
+<tr><td><strong>Test passes (GREEN)</strong></td><td>Agent complies with skill present</td></tr>
+<tr><td><strong>Refactor</strong></td><td>Close loopholes while maintaining compliance</td></tr>
+<tr><td><strong>Write test first</strong></td><td>Run baseline scenario BEFORE writing skill</td></tr>
+<tr><td><strong>Watch it fail</strong></td><td>Document exact rationalizations agent uses</td></tr>
+<tr><td><strong>Minimal code</strong></td><td>Write skill addressing those specific violations</td></tr>
+<tr><td><strong>Watch it pass</strong></td><td>Verify agent now complies</td></tr>
+<tr><td><strong>Refactor cycle</strong></td><td>Find new rationalizations → plug → re-verify</td></tr>
+</tbody></table>
+<p>The entire skill creation process follows RED-GREEN-REFACTOR.</p>
+<h4>When to Create a Skill</h4>
+<p><strong>Create when:</strong></p>
+<ul>
+<li>Technique wasn&#39;t intuitively obvious to you</li>
+<li>You&#39;d reference this again across projects</li>
+<li>Pattern applies broadly (not project-specific)</li>
+<li>Others would benefit</li>
+</ul>
+<p><strong>Don&#39;t create for:</strong></p>
+<ul>
+<li>One-off solutions</li>
+<li>Standard practices well-documented elsewhere</li>
+<li>Project-specific conventions (put in your instructions file)</li>
+<li>Mechanical constraints (if it&#39;s enforceable with regex/validation, automate it—save documentation for judgment calls)</li>
+</ul>
+<h4>Skill Types</h4>
+<h5>Technique</h5>
+<p>Concrete method with steps to follow (condition-based-waiting, root-cause-tracing)</p>
+<h5>Pattern</h5>
+<p>Way of thinking about problems (flatten-with-flags, test-invariants)</p>
+<h5>Reference</h5>
+<p>API docs, syntax guides, tool documentation (office docs)</p>
+<h4>Directory Structure</h4>
+<p><pre><code>skills/
+  skill-name/
+    SKILL.md              # Main reference (required)
+    supporting-file.*     # Only if needed</code></pre></p>
+<p><strong>Flat namespace</strong> - all skills in one searchable namespace</p>
+<p><strong>Separate files for:</strong></p>
+<ol>
+<li><strong>Heavy reference</strong> (100+ lines) - API docs, comprehensive syntax</li>
+<li><strong>Reusable tools</strong> - Scripts, utilities, templates</li>
+</ol>
+<p><strong>Keep inline:</strong></p>
+<ul>
+<li>Principles and concepts</li>
+<li>Code patterns (&lt; 50 lines)</li>
+<li>Everything else</li>
+</ul>
+<h4>SKILL.md Structure</h4>
+<p><strong>Frontmatter (YAML):</strong></p>
+<ul>
+<li>Two required fields: <code>name</code> and <code>description</code> (see <a href="https://agentskills.io/specification" rel="noopener">agentskills.io/specification</a> for all supported fields)</li>
+<li>Max 1024 characters total</li>
+<li><code>name</code>: Use letters, numbers, and hyphens only (no parentheses, special chars)</li>
+<li><code>description</code>: Third-person, describes ONLY when to use (NOT what it does)</li>
+<li>Start with &quot;Use when...&quot; to focus on triggering conditions</li>
+<li>Include specific symptoms, situations, and contexts</li>
+<li><strong>NEVER summarize the skill&#39;s process or workflow</strong> (see SDO section for why)</li>
+<li>Keep under 500 characters if possible</li>
+</ul>
+<p><pre><code>---
+name: Skill-Name-With-Hyphens
+description: Use when [specific triggering conditions and symptoms]
+---
+
+# Skill Name
+
+## Overview
+What is this? Core principle in 1-2 sentences.
+
+## When to Use
+[Small inline flowchart IF decision non-obvious]
+
+Bullet list with SYMPTOMS and use cases
+When NOT to use
+
+## Core Pattern (for techniques/patterns)
+Before/after code comparison
+
+## Quick Reference
+Table or bullets for scanning common operations
+
+## Implementation
+Inline code for simple patterns
+Link to file for heavy reference or reusable tools
+
+## Common Mistakes
+What goes wrong + fixes
+
+## Real-World Impact (optional)
+Concrete results</code></pre></p>
+<h4>Skill Discovery Optimization (SDO)</h4>
+<p><strong>Critical for discovery:</strong> Future agents need to FIND your skill</p>
+<h5>1. Rich Description Field</h5>
+<p><strong>Purpose:</strong> Your agent reads the description to decide which skills to load for a given task. Make it answer: &quot;Should I read this skill right now?&quot;</p>
+<p><strong>Format:</strong> Start with &quot;Use when...&quot; to focus on triggering conditions</p>
+<p><strong>CRITICAL: Description = When to Use, NOT What the Skill Does</strong></p>
+<p>The description should ONLY describe triggering conditions. Do NOT summarize the skill&#39;s process or workflow in the description.</p>
+<p><strong>Why this matters:</strong> Testing revealed that when a description summarizes the skill&#39;s workflow, an agent may follow the description instead of reading the full skill content. A description saying &quot;code review between tasks&quot; caused an agent to do ONE review, even though the skill&#39;s flowchart clearly showed TWO reviews (spec compliance then code quality).</p>
+<p>When the description was changed to just &quot;Use when executing implementation plans with independent tasks&quot; (no workflow summary), the agent correctly read the flowchart and followed the two-stage review process.</p>
+<p><strong>The trap:</strong> Descriptions that summarize workflow create a shortcut agents will take. The skill body becomes documentation agents skip.</p>
+<p><pre><code># ❌ BAD: Summarizes workflow - agents may follow this instead of reading skill
+description: Use when executing plans - dispatches subagent per task with code review between tasks
+
+# ❌ BAD: Too much process detail
+description: Use for TDD - write test first, watch it fail, write minimal code, refactor
+
+# ✅ GOOD: Just triggering conditions, no workflow summary
+description: Use when executing implementation plans with independent tasks in the current session
+
+# ✅ GOOD: Triggering conditions only
+description: Use when implementing any feature or bugfix, before writing implementation code</code></pre></p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Use concrete triggers, symptoms, and situations that signal this skill applies</li>
+<li>Describe the <em>problem</em> (race conditions, inconsistent behavior) not <em>language-specific symptoms</em> (setTimeout, sleep)</li>
+<li>Keep triggers technology-agnostic unless the skill itself is technology-specific</li>
+<li>If skill is technology-specific, make that explicit in the trigger</li>
+<li>Write in third person (injected into system prompt)</li>
+<li><strong>NEVER summarize the skill&#39;s process or workflow</strong></li>
+</ul>
+<p><pre><code># ❌ BAD: Too abstract, vague, doesn&#39;t include when to use
+description: For async testing
+
+# ❌ BAD: First person
+description: I can help you with async tests when they&#39;re flaky
+
+# ❌ BAD: Mentions technology but skill isn&#39;t specific to it
+description: Use when tests use setTimeout/sleep and are flaky
+
+# ✅ GOOD: Starts with &quot;Use when&quot;, describes problem, no workflow
+description: Use when tests have race conditions, timing dependencies, or pass/fail inconsistently
+
+# ✅ GOOD: Technology-specific skill with explicit trigger
+description: Use when using React Router and handling authentication redirects</code></pre></p>
+<h5>2. Keyword Coverage</h5>
+<p>Use words an agent would search for:</p>
+<ul>
+<li>Error messages: &quot;Hook timed out&quot;, &quot;ENOTEMPTY&quot;, &quot;race condition&quot;</li>
+<li>Symptoms: &quot;flaky&quot;, &quot;hanging&quot;, &quot;zombie&quot;, &quot;pollution&quot;</li>
+<li>Synonyms: &quot;timeout/hang/freeze&quot;, &quot;cleanup/teardown/afterEach&quot;</li>
+<li>Tools: Actual commands, library names, file types</li>
+</ul>
+<h5>3. Descriptive Naming</h5>
+<p><strong>Use active voice, verb-first:</strong></p>
+<ul>
+<li>✅ <code>creating-skills</code> not <code>skill-creation</code></li>
+<li>✅ <code>condition-based-waiting</code> not <code>async-test-helpers</code></li>
+</ul>
+<h5>4. Token Efficiency (Critical)</h5>
+<p><strong>Problem:</strong> getting-started and frequently-referenced skills load into EVERY conversation. Every token counts.</p>
+<p><strong>Target word counts:</strong></p>
+<ul>
+<li>getting-started workflows: &lt;150 words each</li>
+<li>Frequently-loaded skills: &lt;200 words total</li>
+<li>Other skills: &lt;500 words (still be concise)</li>
+</ul>
+<p><strong>Techniques:</strong></p>
+<p><strong>Move details to tool help:</strong></p>
+<p><pre><code># ❌ BAD: Document all flags in SKILL.md
+search-conversations supports --text, --both, --after DATE, --before DATE, --limit N
+
+# ✅ GOOD: Reference --help
+search-conversations supports multiple modes and filters. Run --help for details.</code></pre></p>
+<p><strong>Use cross-references:</strong></p>
+<p><pre><code># ❌ BAD: Repeat workflow details
+When searching, dispatch subagent with template...
+[20 lines of repeated instructions]
+
+# ✅ GOOD: Reference other skill
+Always use subagents (50-100x context savings). REQUIRED: Use [other-skill-name] for workflow.</code></pre></p>
+<p><strong>Compress examples:</strong></p>
+<p><pre><code># ❌ BAD: Verbose example (42 words)
+your human partner: &quot;How did we handle authentication errors in React Router before?&quot;
+You: I&#39;ll search past conversations for React Router authentication patterns.
+[Dispatch subagent with search query: &quot;React Router authentication error handling 401&quot;]
+
+# ✅ GOOD: Minimal example (20 words)
+Partner: &quot;How did we handle auth errors in React Router?&quot;
+You: Searching...
+[Dispatch subagent → synthesis]</code></pre></p>
+<p><strong>Eliminate redundancy:</strong></p>
+<ul>
+<li>Don&#39;t repeat what&#39;s in cross-referenced skills</li>
+<li>Don&#39;t explain what&#39;s obvious from command</li>
+<li>Don&#39;t include multiple examples of same pattern</li>
+</ul>
+<p><strong>Verification:</strong></p>
+<p><pre><code>wc -w skills/path/SKILL.md
+# getting-started workflows: aim for &lt;150 each
+# Other frequently-loaded: aim for &lt;200 total</code></pre></p>
+<p><strong>Name by what you DO or core insight:</strong></p>
+<ul>
+<li>✅ <code>condition-based-waiting</code> &gt; <code>async-test-helpers</code></li>
+<li>✅ <code>using-skills</code> not <code>skill-usage</code></li>
+<li>✅ <code>flatten-with-flags</code> &gt; <code>data-structure-refactoring</code></li>
+<li>✅ <code>root-cause-tracing</code> &gt; <code>debugging-techniques</code></li>
+</ul>
+<p><strong>Gerunds (-ing) work well for processes:</strong></p>
+<ul>
+<li><code>creating-skills</code>, <code>testing-skills</code>, <code>debugging-with-logs</code></li>
+<li>Active, describes the action you&#39;re taking</li>
+</ul>
+<h5>5. Cross-Referencing Other Skills</h5>
+<p><strong>When writing documentation that references other skills:</strong></p>
+<p>Use skill name only, with explicit requirement markers:</p>
+<ul>
+<li>✅ Good: <code><strong>REQUIRED SUB-SKILL:</strong> Use superpowers:test-driven-development</code></li>
+<li>✅ Good: <code><strong>REQUIRED BACKGROUND:</strong> You MUST understand superpowers:systematic-debugging</code></li>
+<li>❌ Bad: <code>See skills/testing/test-driven-development</code> (unclear if required)</li>
+<li>❌ Bad: <code>@skills/testing/test-driven-development/SKILL.md</code> (force-loads, burns context)</li>
+</ul>
+<p><strong>Why no @ links:</strong> <code>@</code> syntax force-loads files immediately, consuming 200k+ context before you need them.</p>
+<h4>Flowchart Usage</h4>
+<p><pre><code>digraph when_flowchart {
+    &quot;Need to show information?&quot; [shape=diamond];
+    &quot;Decision where I might go wrong?&quot; [shape=diamond];
+    &quot;Use markdown&quot; [shape=box];
+    &quot;Small inline flowchart&quot; [shape=box];
+
+    &quot;Need to show information?&quot; -&gt; &quot;Decision where I might go wrong?&quot; [label=&quot;yes&quot;];
+    &quot;Decision where I might go wrong?&quot; -&gt; &quot;Small inline flowchart&quot; [label=&quot;yes&quot;];
+    &quot;Decision where I might go wrong?&quot; -&gt; &quot;Use markdown&quot; [label=&quot;no&quot;];
+}</code></pre></p>
+<p><strong>Use flowcharts ONLY for:</strong></p>
+<ul>
+<li>Non-obvious decision points</li>
+<li>Process loops where you might stop too early</li>
+<li>&quot;When to use A vs B&quot; decisions</li>
+</ul>
+<p><strong>Never use flowcharts for:</strong></p>
+<ul>
+<li>Reference material → Tables, lists</li>
+<li>Code examples → Markdown blocks</li>
+<li>Linear instructions → Numbered lists</li>
+<li>Labels without semantic meaning (step1, helper2)</li>
+</ul>
+<p>See <code>graphviz-conventions.dot</code> in this directory for graphviz style rules.</p>
+<p><strong>Visualizing for your human partner:</strong> Use <code>render-graphs.js</code> in this directory to render a skill&#39;s flowcharts to SVG:</p>
+<p><pre><code>./render-graphs.js ../some-skill           # Each diagram separately
+./render-graphs.js ../some-skill --combine # All diagrams in one SVG</code></pre></p>
+<h4>Code Examples</h4>
+<p><strong>One excellent example beats many mediocre ones</strong></p>
+<p>Choose most relevant language:</p>
+<ul>
+<li>Testing techniques → TypeScript/JavaScript</li>
+<li>System debugging → Shell/Python</li>
+<li>Data processing → Python</li>
+</ul>
+<p><strong>Good example:</strong></p>
+<ul>
+<li>Complete and runnable</li>
+<li>Well-commented explaining WHY</li>
+<li>From real scenario</li>
+<li>Shows pattern clearly</li>
+<li>Ready to adapt (not generic template)</li>
+</ul>
+<p><strong>Don&#39;t:</strong></p>
+<ul>
+<li>Implement in 5+ languages</li>
+<li>Create fill-in-the-blank templates</li>
+<li>Write contrived examples</li>
+</ul>
+<p>You&#39;re good at porting - one great example is enough.</p>
+<h4>File Organization</h4>
+<h5>Self-Contained Skill</h5>
+<p><pre><code>defense-in-depth/
+  SKILL.md    # Everything inline</code></pre></p>
+<p>When: All content fits, no heavy reference needed</p>
+<h5>Skill with Reusable Tool</h5>
+<p><pre><code>condition-based-waiting/
+  SKILL.md    # Overview + patterns
+  example.ts  # Working helpers to adapt</code></pre></p>
+<p>When: Tool is reusable code, not just narrative</p>
+<h5>Skill with Heavy Reference</h5>
+<p><pre><code>pptx/
+  SKILL.md       # Overview + workflows
+  pptxgenjs.md   # 600 lines API reference
+  ooxml.md       # 500 lines XML structure
+  scripts/       # Executable tools</code></pre></p>
+<p>When: Reference material too large for inline</p>
+<h4>The Iron Law (Same as TDD)</h4>
+<p><pre><code>NO SKILL WITHOUT A FAILING TEST FIRST</code></pre></p>
+<p>This applies to NEW skills AND EDITS to existing skills.</p>
+<p>Write skill before testing? Delete it. Start over.</p>
+<p>Edit skill without testing? Same violation.</p>
+<p><strong>No exceptions:</strong></p>
+<ul>
+<li>Not for &quot;simple additions&quot;</li>
+<li>Not for &quot;just adding a section&quot;</li>
+<li>Not for &quot;documentation updates&quot;</li>
+<li>Don&#39;t keep untested changes as &quot;reference&quot;</li>
+<li>Don&#39;t &quot;adapt&quot; while running tests</li>
+<li>Delete means delete</li>
+</ul>
+<p><strong>REQUIRED BACKGROUND:</strong> The superpowers:test-driven-development skill explains why this matters. Same principles apply to documentation.</p>
+<h4>Testing All Skill Types</h4>
+<p>Different skill types need different test approaches:</p>
+<h5>Discipline-Enforcing Skills (rules/requirements)</h5>
+<p><strong>Examples:</strong> TDD, verification-before-completion, designing-before-coding</p>
+<p><strong>Test with:</strong></p>
+<ul>
+<li>Academic questions: Do they understand the rules?</li>
+<li>Pressure scenarios: Do they comply under stress?</li>
+<li>Multiple pressures combined: time + sunk cost + exhaustion</li>
+<li>Identify rationalizations and add explicit counters</li>
+</ul>
+<p><strong>Success criteria:</strong> Agent follows rule under maximum pressure</p>
+<h5>Technique Skills (how-to guides)</h5>
+<p><strong>Examples:</strong> condition-based-waiting, root-cause-tracing, defensive-programming</p>
+<p><strong>Test with:</strong></p>
+<ul>
+<li>Application scenarios: Can they apply the technique correctly?</li>
+<li>Variation scenarios: Do they handle edge cases?</li>
+<li>Missing information tests: Do instructions have gaps?</li>
+</ul>
+<p><strong>Success criteria:</strong> Agent successfully applies technique to new scenario</p>
+<h5>Pattern Skills (mental models)</h5>
+<p><strong>Examples:</strong> reducing-complexity, information-hiding concepts</p>
+<p><strong>Test with:</strong></p>
+<ul>
+<li>Recognition scenarios: Do they recognize when pattern applies?</li>
+<li>Application scenarios: Can they use the mental model?</li>
+<li>Counter-examples: Do they know when NOT to apply?</li>
+</ul>
+<p><strong>Success criteria:</strong> Agent correctly identifies when/how to apply pattern</p>
+<h5>Reference Skills (documentation/APIs)</h5>
+<p><strong>Examples:</strong> API documentation, command references, library guides</p>
+<p><strong>Test with:</strong></p>
+<ul>
+<li>Retrieval scenarios: Can they find the right information?</li>
+<li>Application scenarios: Can they use what they found correctly?</li>
+<li>Gap testing: Are common use cases covered?</li>
+</ul>
+<p><strong>Success criteria:</strong> Agent finds and correctly applies reference information</p>
+<h4>Common Rationalizations for Skipping Testing</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;Skill is obviously clear&quot;</td><td>Clear to you ≠ clear to other agents. Test it.</td></tr>
+<tr><td>&quot;It&#39;s just a reference&quot;</td><td>References can have gaps, unclear sections. Test retrieval.</td></tr>
+<tr><td>&quot;Testing is overkill&quot;</td><td>Untested skills have issues. Always. 15 min testing saves hours.</td></tr>
+<tr><td>&quot;I&#39;ll test if problems emerge&quot;</td><td>Problems = agents can&#39;t use skill. Test BEFORE deploying.</td></tr>
+<tr><td>&quot;Too tedious to test&quot;</td><td>Testing is less tedious than debugging bad skill in production.</td></tr>
+<tr><td>&quot;I&#39;m confident it&#39;s good&quot;</td><td>Overconfidence guarantees issues. Test anyway.</td></tr>
+<tr><td>&quot;Academic review is enough&quot;</td><td>Reading ≠ using. Test application scenarios.</td></tr>
+<tr><td>&quot;No time to test&quot;</td><td>Deploying untested skill wastes more time fixing it later.</td></tr>
+</tbody></table>
+<p><strong>All of these mean: Test before deploying. No exceptions.</strong></p>
+<h4>Match the Form to the Failure</h4>
+<p>Before writing guidance, classify the baseline failure. The form that bulletproofs one failure type measurably backfires on another.</p>
+<table><thead><tr><th>Baseline failure</th><th>Right form</th><th>Wrong form</th></tr></thead><tbody>
+<tr><td>Skips/violates a rule under pressure (knows better, does it anyway)</td><td>Prohibition + rationalization table + red flags (see Bulletproofing below)</td><td>Soft guidance (&quot;prefer...&quot;, &quot;consider...&quot;)</td></tr>
+<tr><td>Complies, but output has the wrong shape (bloated prompt, buried verdict, restated spec)</td><td>Positive recipe or contract: state what the output IS — its parts, in order</td><td>Prohibition list (&quot;don&#39;t restate&quot;, &quot;never narrate&quot;)</td></tr>
+<tr><td>Omits a required element from something they already produce</td><td>Structural: REQUIRED field or slot in the template they fill in</td><td>Prose reminders near the template</td></tr>
+<tr><td>Behavior should depend on a condition</td><td>Conditional keyed to an observable predicate (&quot;if the brief exists, reference it&quot;)</td><td>Unconditional rule + exemption clauses</td></tr>
+</tbody></table>
+<p><strong>Why prohibitions backfire on shaping problems:</strong> under a competing incentive (&quot;make the prompt self-contained&quot;), agents negotiate with &quot;don&#39;t X&quot;. In head-to-head wording tests on dispatch-prompt guidance, the prohibition arm produced clearly more of the unwanted content than the recipe arm (fully separated distributions), and trended worse than even the no-guidance control — micro-test your own case rather than assuming, but never reach for the prohibition by default. A recipe leaves nothing to negotiate: the output matches the stated shape or it doesn&#39;t.</p>
+<p><strong>Rules for whichever form you pick:</strong></p>
+<ul>
+<li><strong>No nuance clauses.</strong> &quot;Don&#39;t X unless it matters&quot; reopens the negotiation — appending a single nuance clause to a winning recipe degraded it from consistent to noisy in the same wording tests. Express a real exception as its own conditional on an observable predicate.</li>
+<li><strong>Exemption clauses don&#39;t scope.</strong> &quot;This limit doesn&#39;t apply to code blocks&quot; still suppresses code blocks. If part of the output must be exempt, restructure so the rule can&#39;t reach it.</li>
+</ul>
+<h4>Bulletproofing Skills Against Rationalization</h4>
+<p>Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.</p>
+<p><strong>Scope:</strong> this toolkit is for discipline failures — an agent that knows the rule and skips it under pressure. For wrong-shaped output or omitted elements, prohibition-based bulletproofing backfires; use the forms in Match the Form to the Failure instead.</p>
+<p><strong>Psychology note:</strong> Understanding WHY persuasion techniques work helps you apply them systematically. See persuasion-principles.md for research foundation (Cialdini, 2021; Meincke et al., 2025) on authority, commitment, scarcity, social proof, and unity principles.</p>
+<h5>Close Every Loophole Explicitly</h5>
+<p>Don&#39;t just state the rule - forbid specific workarounds:</p>
+<p>&lt;Bad&gt;</p>
+<p><pre><code>Write code before test? Delete it.</code></pre></p>
+<p>&lt;/Bad&gt;</p>
+<p>&lt;Good&gt;</p>
+<p><pre><code>Write code before test? Delete it. Start over.
+
+**No exceptions:**
+- Don&#39;t keep it as &quot;reference&quot;
+- Don&#39;t &quot;adapt&quot; it while writing tests
+- Don&#39;t look at it
+- Delete means delete</code></pre></p>
+<p>&lt;/Good&gt;</p>
+<h5>Address &quot;Spirit vs Letter&quot; Arguments</h5>
+<p>Add foundational principle early:</p>
+<p><pre><code>**Violating the letter of the rules is violating the spirit of the rules.**</code></pre></p>
+<p>This cuts off entire class of &quot;I&#39;m following the spirit&quot; rationalizations.</p>
+<h5>Build Rationalization Table</h5>
+<p>Capture rationalizations from baseline testing (see Testing section below). Every excuse agents make goes in the table:</p>
+<p><pre><code>| Excuse | Reality |
+|--------|---------|
+| &quot;Too simple to test&quot; | Simple code breaks. Test takes 30 seconds. |
+| &quot;I&#39;ll test after&quot; | Tests passing immediately prove nothing. |
+| &quot;Tests after achieve same goals&quot; | Tests-after = &quot;what does this do?&quot; Tests-first = &quot;what should this do?&quot; |</code></pre></p>
+<h5>Create Red Flags List</h5>
+<p>Make it easy for agents to self-check when rationalizing:</p>
+<p><pre><code>## Red Flags - STOP and Start Over
+
+- Code before test
+- &quot;I already manually tested it&quot;
+- &quot;Tests after achieve the same purpose&quot;
+- &quot;It&#39;s about spirit not ritual&quot;
+- &quot;This is different because...&quot;
+
+**All of these mean: Delete code. Start over with TDD.**</code></pre></p>
+<h5>Update SDO for Violation Symptoms</h5>
+<p>Add to description: symptoms of when you&#39;re ABOUT to violate the rule:</p>
+<p><pre><code>description: use when implementing any feature or bugfix, before writing implementation code</code></pre></p>
+<h4>RED-GREEN-REFACTOR for Skills</h4>
+<p>Follow the TDD cycle:</p>
+<h5>RED: Write Failing Test (Baseline)</h5>
+<p>Run pressure scenario with subagent WITHOUT the skill. Document exact behavior:</p>
+<ul>
+<li>What choices did they make?</li>
+<li>What rationalizations did they use (verbatim)?</li>
+<li>Which pressures triggered violations?</li>
+</ul>
+<p>This is &quot;watch the test fail&quot; - you must see what agents naturally do before writing the skill.</p>
+<h5>GREEN: Write Minimal Skill</h5>
+<p>Write skill that addresses those specific rationalizations. Don&#39;t add extra content for hypothetical cases.</p>
+<p>Run same scenarios WITH skill. Agent should now comply.</p>
+<h5>REFACTOR: Close Loopholes</h5>
+<p>Agent found new rationalization? Add explicit counter. Re-test until bulletproof.</p>
+<h5>Micro-Test Wording Before Full Scenarios</h5>
+<p>Full pressure-scenario runs are the final gate, but they are slow and expensive per iteration. Verify the wording itself first with micro-tests:</p>
+<ol>
+<li><strong>One fresh-context sample per call</strong> — a raw API call, or a single-shot subagent if you don&#39;t have API access. System prompt = the realistic context the guidance will live in (the full skill or prompt template, not the guidance in isolation); user message = a task that tempts the failure.</li>
+<li><strong>Always include a no-guidance control.</strong> If the control doesn&#39;t exhibit the failure, there is nothing to fix — stop, don&#39;t author the guidance.</li>
+<li><strong>5+ reps per variant.</strong> Single samples lie.</li>
+<li><strong>Manually read every flagged match.</strong> Score programmatically if you like, but template echoes and quoted counter-examples masquerade as hits; automated counts alone overstate both failure and success.</li>
+<li><strong>Variance is a metric.</strong> When guidance lands, reps converge on the same shape. Five different interpretations across five reps means the wording isn&#39;t binding — tighten the form before adding words.</li>
+</ol>
+<p>Micro-tests verify wording; they do not replace pressure scenarios for discipline skills.</p>
+<p><strong>Testing methodology:</strong> See [testing-skills-with-subagents.md](testing-skills-with-subagents.md) for the complete testing methodology:</p>
+<ul>
+<li>How to write pressure scenarios</li>
+<li>Pressure types (time, sunk cost, authority, exhaustion)</li>
+<li>Plugging holes systematically</li>
+<li>Meta-testing techniques</li>
+</ul>
+<h4>Anti-Patterns</h4>
+<h5>❌ Narrative Example</h5>
+<p>&quot;In session 2025-10-03, we found empty projectDir caused...&quot;</p>
+<p><strong>Why bad:</strong> Too specific, not reusable</p>
+<h5>❌ Multi-Language Dilution</h5>
+<p>example-js.js, example-py.py, example-go.go</p>
+<p><strong>Why bad:</strong> Mediocre quality, maintenance burden</p>
+<h5>❌ Code in Flowcharts</h5>
+<p><pre><code>step1 [label=&quot;import fs&quot;];
+step2 [label=&quot;read file&quot;];</code></pre></p>
+<p><strong>Why bad:</strong> Can&#39;t copy-paste, hard to read</p>
+<h5>❌ Generic Labels</h5>
+<p>helper1, helper2, step3, pattern4</p>
+<p><strong>Why bad:</strong> Labels should have semantic meaning</p>
+<h4>STOP: Before Moving to Next Skill</h4>
+<p><strong>After writing ANY skill, you MUST STOP and complete the deployment process.</strong></p>
+<p><strong>Do NOT:</strong></p>
+<ul>
+<li>Create multiple skills in batch without testing each</li>
+<li>Move to next skill before current one is verified</li>
+<li>Skip testing because &quot;batching is more efficient&quot;</li>
+</ul>
+<p><strong>The deployment checklist below is MANDATORY for EACH skill.</strong></p>
+<p>Deploying untested skills = deploying untested code. It&#39;s a violation of quality standards.</p>
+<h4>Skill Creation Checklist (TDD Adapted)</h4>
+<p><strong>IMPORTANT: Create a todo for EACH checklist item below.</strong></p>
+<p><strong>RED Phase - Write Failing Test:</strong></p>
+<ul>
+<li>[ ] Create pressure scenarios (3+ combined pressures for discipline skills)</li>
+<li>[ ] Run scenarios WITHOUT skill - document baseline behavior verbatim</li>
+<li>[ ] Identify patterns in rationalizations/failures</li>
+</ul>
+<p><strong>GREEN Phase - Write Minimal Skill:</strong></p>
+<ul>
+<li>[ ] Name uses only letters, numbers, hyphens (no parentheses/special chars)</li>
+<li>[ ] YAML frontmatter with required <code>name</code> and <code>description</code> fields (max 1024 chars; see <a href="https://agentskills.io/specification" rel="noopener">spec</a>)</li>
+<li>[ ] Description starts with &quot;Use when...&quot; and includes specific triggers/symptoms</li>
+<li>[ ] Description written in third person</li>
+<li>[ ] Keywords throughout for search (errors, symptoms, tools)</li>
+<li>[ ] Clear overview with core principle</li>
+<li>[ ] Address specific baseline failures identified in RED</li>
+<li>[ ] Guidance form matches the failure type (see Match the Form to the Failure)</li>
+<li>[ ] For behavior-shaping guidance: wording micro-tested against a no-guidance control (5+ reps, every flagged match read manually) — N/A for pure reference skills</li>
+<li>[ ] Code inline OR link to separate file</li>
+<li>[ ] One excellent example (not multi-language)</li>
+<li>[ ] Run scenarios WITH skill - verify agents now comply</li>
+</ul>
+<p><strong>REFACTOR Phase - Close Loopholes:</strong></p>
+<ul>
+<li>[ ] Identify NEW rationalizations from testing</li>
+<li>[ ] Add explicit counters (if discipline skill)</li>
+<li>[ ] Build rationalization table from all test iterations</li>
+<li>[ ] Create red flags list</li>
+<li>[ ] Re-test until bulletproof</li>
+</ul>
+<p><strong>Quality Checks:</strong></p>
+<ul>
+<li>[ ] Small flowchart only if decision non-obvious</li>
+<li>[ ] Quick reference table</li>
+<li>[ ] Common mistakes section</li>
+<li>[ ] No narrative storytelling</li>
+<li>[ ] Supporting files only for tools or heavy reference</li>
+</ul>
+<p><strong>Deployment:</strong></p>
+<ul>
+<li>[ ] Commit skill to git and push to your fork (if configured)</li>
+<li>[ ] Consider contributing back via PR (if broadly useful)</li>
+</ul>
+<h4>Discovery Workflow</h4>
+<p>How future agents find your skill:</p>
+<ol>
+<li><strong>Encounters problem</strong> (&quot;tests are flaky&quot;)</li>
+<li><strong>Searches skills</strong> (greps descriptions, browses categories)</li>
+<li><strong>Finds SKILL</strong> (description matches)</li>
+<li><strong>Scans overview</strong> (is this relevant?)</li>
+<li><strong>Reads patterns</strong> (quick reference table)</li>
+<li><strong>Loads example</strong> (only when implementing)</li>
+</ol>
+<p><strong>Optimize for this flow</strong> - put searchable terms early and often.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/writing-skills</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/writing-skills" aria-label="Copy install writing-skills">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/writing-skills</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/writing-skills/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

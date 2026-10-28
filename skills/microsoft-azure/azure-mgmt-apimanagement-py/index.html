@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-mgmt-apimanagement-py — Aidentity</title>
+<meta name="description" content="Azure API Management SDK for Python. Use for managing APIM services, APIs, products, subscriptions, and policies. Triggers: &quot;azure-mgmt-apimanagement&quot;, &quot;ApiManagementClient&quot;, &quot;APIM&quot;, &quot;API gateway&quot;, &quot;API Management&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apimanagement-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-mgmt-apimanagement-py — Aidentity">
+<meta property="og:description" content="Azure API Management SDK for Python. Use for managing APIM services, APIs, products, subscriptions, and policies. Triggers: &quot;azure-mgmt-apimanagement&quot;, &quot;ApiManagementClient&quot;, &quot;APIM&quot;, &quot;API gateway&quot;, &quot;API Management&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apimanagement-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-mgmt-apimanagement-py","description":"Azure API Management SDK for Python. Use for managing APIM services, APIs, products, subscriptions, and policies. Triggers: \"azure-mgmt-apimanagement\", \"ApiManagementClient\", \"APIM\", \"API gateway\", \"API Management\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-apimanagement-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-mgmt-apimanagement-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-mgmt-apimanagement-py</h1>
+      <p class="summary">Azure API Management SDK for Python. Use for managing APIM services, APIs, products, subscriptions, and policies. Triggers: &quot;azure-mgmt-apimanagement&quot;, &quot;ApiManagementClient&quot;, &quot;APIM&quot;, &quot;API gateway&quot;, &quot;API Management&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure API Management SDK for Python</h3>
+<p>Manage Azure API Management services, APIs, products, and policies.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-mgmt-apimanagement
+pip install azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SUBSCRIPTION_ID=your-subscription-id  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential
+from azure.mgmt.apimanagement import ApiManagementClient
+import os
+
+with ApiManagementClient(
+    credential=DefaultAzureCredential(),
+    subscription_id=os.environ[&quot;AZURE_SUBSCRIPTION_ID&quot;]
+) as client:
+    # Use `client` for all subsequent operations (see examples below)
+    ...</code></pre></p>
+<h4>Create APIM Service</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import (
+    ApiManagementServiceResource,
+    ApiManagementServiceSkuProperties,
+    SkuType
+)
+
+service = client.api_management_service.begin_create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    parameters=ApiManagementServiceResource(
+        location=&quot;eastus&quot;,
+        publisher_email=&quot;admin@example.com&quot;,
+        publisher_name=&quot;My Organization&quot;,
+        sku=ApiManagementServiceSkuProperties(
+            name=SkuType.DEVELOPER,
+            capacity=1
+        )
+    )
+).result()
+
+print(f&quot;Created APIM: {service.name}&quot;)</code></pre></p>
+<h4>Import API from OpenAPI</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import (
+    ApiCreateOrUpdateParameter,
+    ContentFormat,
+    Protocol
+)
+
+api = client.api.begin_create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    api_id=&quot;my-api&quot;,
+    parameters=ApiCreateOrUpdateParameter(
+        display_name=&quot;My API&quot;,
+        path=&quot;myapi&quot;,
+        protocols=[Protocol.HTTPS],
+        format=ContentFormat.OPENAPI_JSON,
+        value=&#39;{&quot;openapi&quot;: &quot;3.0.0&quot;, &quot;info&quot;: {&quot;title&quot;: &quot;My API&quot;, &quot;version&quot;: &quot;1.0&quot;}, &quot;paths&quot;: {&quot;/health&quot;: {&quot;get&quot;: {&quot;responses&quot;: {&quot;200&quot;: {&quot;description&quot;: &quot;OK&quot;}}}}}}&#39;
+    )
+).result()
+
+print(f&quot;Imported API: {api.display_name}&quot;)</code></pre></p>
+<h4>Import API from URL</h4>
+<p><pre><code>api = client.api.begin_create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    api_id=&quot;petstore&quot;,
+    parameters=ApiCreateOrUpdateParameter(
+        display_name=&quot;Petstore API&quot;,
+        path=&quot;petstore&quot;,
+        protocols=[Protocol.HTTPS],
+        format=ContentFormat.OPENAPI_LINK,
+        value=&quot;https://petstore.swagger.io/v2/swagger.json&quot;
+    )
+).result()</code></pre></p>
+<h4>List APIs</h4>
+<p><pre><code>apis = client.api.list_by_service(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;
+)
+
+for api in apis:
+    print(f&quot;{api.name}: {api.display_name} - {api.path}&quot;)</code></pre></p>
+<h4>Create Product</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import ProductContract
+
+product = client.product.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    product_id=&quot;premium&quot;,
+    parameters=ProductContract(
+        display_name=&quot;Premium&quot;,
+        description=&quot;Premium tier with unlimited access&quot;,
+        subscription_required=True,
+        approval_required=False,
+        state=&quot;published&quot;
+    )
+)
+
+print(f&quot;Created product: {product.display_name}&quot;)</code></pre></p>
+<h4>Add API to Product</h4>
+<p><pre><code>client.product_api.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    product_id=&quot;premium&quot;,
+    api_id=&quot;my-api&quot;
+)</code></pre></p>
+<h4>Create Subscription</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import SubscriptionCreateParameters
+
+subscription = client.subscription.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    sid=&quot;my-subscription&quot;,
+    parameters=SubscriptionCreateParameters(
+        display_name=&quot;My Subscription&quot;,
+        scope=f&quot;/products/premium&quot;,
+        state=&quot;active&quot;
+    )
+)
+
+print(f&quot;Subscription key: {subscription.primary_key}&quot;)</code></pre></p>
+<h4>Set API Policy</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import PolicyContract
+
+policy_xml = &quot;&quot;&quot;
+&lt;policies&gt;
+    &lt;inbound&gt;
+        &lt;rate-limit calls=&quot;100&quot; renewal-period=&quot;60&quot; /&gt;
+        &lt;set-header name=&quot;X-Custom-Header&quot; exists-action=&quot;override&quot;&gt;
+            &lt;value&gt;CustomValue&lt;/value&gt;
+        &lt;/set-header&gt;
+    &lt;/inbound&gt;
+    &lt;backend&gt;
+        &lt;forward-request /&gt;
+    &lt;/backend&gt;
+    &lt;outbound /&gt;
+    &lt;on-error /&gt;
+&lt;/policies&gt;
+&quot;&quot;&quot;
+
+client.api_policy.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    api_id=&quot;my-api&quot;,
+    policy_id=&quot;policy&quot;,
+    parameters=PolicyContract(
+        value=policy_xml,
+        format=&quot;xml&quot;
+    )
+)</code></pre></p>
+<h4>Create Named Value (Secret)</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import NamedValueCreateContract
+
+named_value = client.named_value.begin_create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    named_value_id=&quot;backend-api-key&quot;,
+    parameters=NamedValueCreateContract(
+        display_name=&quot;Backend API Key&quot;,
+        value=&quot;secret-key-value&quot;,
+        secret=True
+    )
+).result()</code></pre></p>
+<h4>Create Backend</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import BackendContract
+
+backend = client.backend.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    backend_id=&quot;my-backend&quot;,
+    parameters=BackendContract(
+        url=&quot;https://api.backend.example.com&quot;,
+        protocol=&quot;http&quot;,
+        description=&quot;My backend service&quot;
+    )
+)</code></pre></p>
+<h4>Create User</h4>
+<p><pre><code>from azure.mgmt.apimanagement.models import UserCreateParameters
+
+user = client.user.create_or_update(
+    resource_group_name=&quot;my-resource-group&quot;,
+    service_name=&quot;my-apim&quot;,
+    user_id=&quot;newuser&quot;,
+    parameters=UserCreateParameters(
+        email=&quot;user@example.com&quot;,
+        first_name=&quot;John&quot;,
+        last_name=&quot;Doe&quot;
+    )
+)</code></pre></p>
+<h4>Operation Groups</h4>
+<table><thead><tr><th>Group</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>api_management_service</code></td><td>APIM instance management</td></tr>
+<tr><td><code>api</code></td><td>API operations</td></tr>
+<tr><td><code>api_operation</code></td><td>API operation details</td></tr>
+<tr><td><code>api_policy</code></td><td>API-level policies</td></tr>
+<tr><td><code>product</code></td><td>Product management</td></tr>
+<tr><td><code>product_api</code></td><td>Product-API associations</td></tr>
+<tr><td><code>subscription</code></td><td>Subscription management</td></tr>
+<tr><td><code>user</code></td><td>User management</td></tr>
+<tr><td><code>named_value</code></td><td>Named values/secrets</td></tr>
+<tr><td><code>backend</code></td><td>Backend services</td></tr>
+<tr><td><code>certificate</code></td><td>Certificates</td></tr>
+<tr><td><code>gateway</code></td><td>Self-hosted gateways</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use named values</strong> for secrets and configuration</li>
+<li><strong>Apply policies</strong> at appropriate scopes (global, product, API, operation)</li>
+<li><strong>Use products</strong> to bundle APIs and manage access</li>
+<li><strong>Enable Application Insights</strong> for monitoring</li>
+<li><strong>Use backends</strong> to abstract backend services</li>
+<li><strong>Version your APIs</strong> using APIM&#39;s versioning features</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-mgmt-apimanagement-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-mgmt-apimanagement-py" aria-label="Copy install azure-mgmt-apimanagement-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-mgmt-apimanagement-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-mgmt-apimanagement-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

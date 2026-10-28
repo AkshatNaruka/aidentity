@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mcp-builder — Aidentity</title>
+<meta name="description" content="Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP), Node/TypeScript (MCP SDK), or C#/.NET (Microsoft MCP SDK).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/mcp-builder/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mcp-builder — Aidentity">
+<meta property="og:description" content="Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP), Node/TypeScript (MCP SDK), or C#/.NET (Microsoft MCP SDK).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/mcp-builder/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"mcp-builder","description":"Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP), Node/TypeScript (MCP SDK), or C#/.NET (Microsoft MCP SDK).","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/mcp-builder/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>mcp-builder
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>mcp-builder</h1>
+      <p class="summary">Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP), Node/TypeScript (MCP SDK), or C#/.NET (Microsoft MCP SDK).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>MCP Server Development Guide</h3>
+<h4>Overview</h4>
+<p>Create MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is measured by how well it enables LLMs to accomplish real-world tasks.</p>
+<hr>
+<h4>Microsoft MCP Ecosystem</h4>
+<p>Microsoft provides extensive MCP infrastructure for Azure and Foundry services. Understanding this ecosystem helps you decide whether to build custom servers or leverage existing ones.</p>
+<h5>Server Types</h5>
+<table><thead><tr><th>Type</th><th>Transport</th><th>Use Case</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>Local</strong></td><td>stdio</td><td>Desktop apps, single-user, local dev</td><td>Azure MCP Server via NPM/Docker</td></tr>
+<tr><td><strong>Remote</strong></td><td>Streamable HTTP</td><td>Cloud services, multi-tenant, Agent Service</td><td><code>https://mcp.ai.azure.com</code> (Foundry)</td></tr>
+</tbody></table>
+<h5>Microsoft MCP Servers</h5>
+<p>Before building a custom server, check if Microsoft already provides one:</p>
+<table><thead><tr><th>Server</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Azure MCP</strong></td><td>Local</td><td>48+ Azure services (Storage, KeyVault, Cosmos, SQL, etc.)</td></tr>
+<tr><td><strong>Foundry MCP</strong></td><td>Remote</td><td><code>https://mcp.ai.azure.com</code> - Models, deployments, evals, agents</td></tr>
+<tr><td><strong>Fabric MCP</strong></td><td>Local</td><td>Microsoft Fabric APIs, OneLake, item definitions</td></tr>
+<tr><td><strong>Playwright MCP</strong></td><td>Local</td><td>Browser automation and testing</td></tr>
+<tr><td><strong>GitHub MCP</strong></td><td>Remote</td><td><code>https://api.githubcopilot.com/mcp</code></td></tr>
+</tbody></table>
+<p><strong>Full ecosystem:</strong> See [🔷 Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) for complete server catalog and patterns.</p>
+<h5>When to Use Microsoft vs Custom</h5>
+<table><thead><tr><th>Scenario</th><th>Recommendation</th></tr></thead><tbody>
+<tr><td>Azure service integration</td><td>Use <strong>Azure MCP Server</strong> (48 services covered)</td></tr>
+<tr><td>AI Foundry agents/evals</td><td>Use <strong>Foundry MCP</strong> remote server</td></tr>
+<tr><td>Custom internal APIs</td><td>Build <strong>custom server</strong> (this guide)</td></tr>
+<tr><td>Third-party SaaS integration</td><td>Build <strong>custom server</strong> (this guide)</td></tr>
+</tbody></table>
+<p>| Extending Azure MCP | Follow [Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md)</p>
+<hr>
+<h3>Process</h3>
+<h4>🚀 High-Level Workflow</h4>
+<p>Creating a high-quality MCP server involves four main phases:</p>
+<h5>Phase 1: Deep Research and Planning</h5>
+<h5>1.1 Understand Modern MCP Design</h5>
+<p><strong>API Coverage vs. Workflow Tools:</strong></p>
+<p>Balance comprehensive API endpoint coverage with specialized workflow tools. Workflow tools can be more convenient for specific tasks, while comprehensive coverage gives agents flexibility to compose operations. Performance varies by client—some clients benefit from code execution that combines basic tools, while others work better with higher-level workflows. When uncertain, prioritize comprehensive API coverage.</p>
+<p><strong>Tool Naming and Discoverability:</strong></p>
+<p>Clear, descriptive tool names help agents find the right tools quickly. Use consistent prefixes (e.g., <code>github_create_issue</code>, <code>github_list_repos</code>) and action-oriented naming.</p>
+<p><strong>Context Management:</strong></p>
+<p>Agents benefit from concise tool descriptions and the ability to filter/paginate results. Design tools that return focused, relevant data. Some clients support code execution which can help agents filter and process data efficiently.</p>
+<p><strong>Actionable Error Messages:</strong></p>
+<p>Error messages should guide agents toward solutions with specific suggestions and next steps.</p>
+<h5>1.2 Study MCP Protocol Documentation</h5>
+<p><strong>Navigate the MCP specification:</strong></p>
+<p>Start with the sitemap to find relevant pages: <code>https://modelcontextprotocol.io/sitemap.xml</code></p>
+<p>Then fetch specific pages with <code>.md</code> suffix for markdown format (e.g., <code>https://modelcontextprotocol.io/specification/draft.md</code>).</p>
+<p>Key pages to review:</p>
+<ul>
+<li>Specification overview and architecture</li>
+<li>Transport mechanisms (streamable HTTP, stdio)</li>
+<li>Tool, resource, and prompt definitions</li>
+</ul>
+<h5>1.3 Study Framework Documentation</h5>
+<p><strong>Language Selection:</strong></p>
+<table><thead><tr><th>Language</th><th>Best For</th><th>SDK</th></tr></thead><tbody>
+<tr><td><strong>TypeScript</strong> (recommended)</td><td>General MCP servers, broad compatibility</td><td><code>@modelcontextprotocol/sdk</code></td></tr>
+<tr><td><strong>Python</strong></td><td>Data/ML pipelines, FastAPI integration</td><td><code>mcp</code> (FastMCP)</td></tr>
+<tr><td><strong>C#/.NET</strong></td><td>Azure/Microsoft ecosystem, enterprise</td><td><code>Microsoft.Mcp.Core</code></td></tr>
+</tbody></table>
+<p><strong>Transport Selection:</strong></p>
+<table><thead><tr><th>Transport</th><th>Use Case</th><th>Characteristics</th></tr></thead><tbody>
+<tr><td><strong>Streamable HTTP</strong></td><td>Remote servers, multi-tenant, Agent Service</td><td>Stateless, scalable, requires auth</td></tr>
+<tr><td><strong>stdio</strong></td><td>Local servers, desktop apps</td><td>Simple, single-user, no network</td></tr>
+</tbody></table>
+<p><strong>Load framework documentation:</strong></p>
+<ul>
+<li><strong>MCP Best Practices</strong>: [📋 View Best Practices](./reference/mcp_best_practices.md) - Core guidelines</li>
+</ul>
+<p><strong>For TypeScript (recommended):</strong></p>
+<ul>
+<li><strong>TypeScript SDK</strong>: Use WebFetch to load <code>https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md</code></li>
+<li>[⚡ TypeScript Guide](./reference/node_mcp_server.md) - TypeScript patterns and examples</li>
+</ul>
+<p><strong>For Python:</strong></p>
+<ul>
+<li><strong>Python SDK</strong>: Use WebFetch to load <code>https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md</code></li>
+<li>[🐍 Python Guide](./reference/python_mcp_server.md) - Python patterns and examples</li>
+</ul>
+<p><strong>For C#/.NET (Microsoft ecosystem):</strong></p>
+<ul>
+<li>[🔷 Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) - C# patterns, Azure MCP architecture, command hierarchy</li>
+</ul>
+<h5>1.4 Plan Your Implementation</h5>
+<p><strong>Understand the API:</strong></p>
+<p>Review the service&#39;s API documentation to identify key endpoints, authentication requirements, and data models. Use web search and WebFetch as needed.</p>
+<p><strong>Tool Selection:</strong></p>
+<p>Prioritize comprehensive API coverage. List endpoints to implement, starting with the most common operations.</p>
+<hr>
+<h5>Phase 2: Implementation</h5>
+<h5>2.1 Set Up Project Structure</h5>
+<p>See language-specific guides for project setup:</p>
+<ul>
+<li>[⚡ TypeScript Guide](./reference/node_mcp_server.md) - Project structure, package.json, tsconfig.json</li>
+<li>[🐍 Python Guide](./reference/python_mcp_server.md) - Module organization, dependencies</li>
+<li>[🔷 Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) - C# project structure, command hierarchy</li>
+</ul>
+<h5>2.2 Implement Core Infrastructure</h5>
+<p>Create shared utilities:</p>
+<ul>
+<li>API client with authentication</li>
+<li>Error handling helpers</li>
+<li>Response formatting (JSON/Markdown)</li>
+<li>Pagination support</li>
+</ul>
+<h5>2.3 Implement Tools</h5>
+<p>For each tool:</p>
+<p><strong>Input Schema:</strong></p>
+<ul>
+<li>Use Zod (TypeScript) or Pydantic (Python)</li>
+<li>Include constraints and clear descriptions</li>
+<li>Add examples in field descriptions</li>
+</ul>
+<p><strong>Output Schema:</strong></p>
+<ul>
+<li>Define <code>outputSchema</code> where possible for structured data</li>
+<li>Use <code>structuredContent</code> in tool responses (TypeScript SDK feature)</li>
+<li>Helps clients understand and process tool outputs</li>
+</ul>
+<p><strong>Tool Description:</strong></p>
+<ul>
+<li>Concise summary of functionality</li>
+<li>Parameter descriptions</li>
+<li>Return type schema</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Async/await for I/O operations</li>
+<li>Proper error handling with actionable messages</li>
+<li>Support pagination where applicable</li>
+<li>Return both text content and structured data when using modern SDKs</li>
+</ul>
+<p><strong>Annotations:</strong></p>
+<ul>
+<li><code>readOnlyHint</code>: true/false</li>
+<li><code>destructiveHint</code>: true/false</li>
+<li><code>idempotentHint</code>: true/false</li>
+<li><code>openWorldHint</code>: true/false</li>
+</ul>
+<hr>
+<h5>Phase 3: Review and Test</h5>
+<h5>3.1 Code Quality</h5>
+<p>Review for:</p>
+<ul>
+<li>No duplicated code (DRY principle)</li>
+<li>Consistent error handling</li>
+<li>Full type coverage</li>
+<li>Clear tool descriptions</li>
+</ul>
+<h5>3.2 Build and Test</h5>
+<p><strong>TypeScript:</strong></p>
+<ul>
+<li>Run <code>npm run build</code> to verify compilation</li>
+<li>Test with MCP Inspector: <code>npx @modelcontextprotocol/inspector</code></li>
+</ul>
+<p><strong>Python:</strong></p>
+<ul>
+<li>Verify syntax: <code>python -m py_compile your_server.py</code></li>
+<li>Test with MCP Inspector</li>
+</ul>
+<p>See language-specific guides for detailed testing approaches and quality checklists.</p>
+<hr>
+<h5>Phase 4: Create Evaluations</h5>
+<p>After implementing your MCP server, create comprehensive evaluations to test its effectiveness.</p>
+<p><strong>Load [✅ Evaluation Guide](./reference/evaluation.md) for complete evaluation guidelines.</strong></p>
+<h5>4.1 Understand Evaluation Purpose</h5>
+<p>Use evaluations to test whether LLMs can effectively use your MCP server to answer realistic, complex questions.</p>
+<h5>4.2 Create 10 Evaluation Questions</h5>
+<p>To create effective evaluations, follow the process outlined in the evaluation guide:</p>
+<ol>
+<li><strong>Tool Inspection</strong>: List available tools and understand their capabilities</li>
+<li><strong>Content Exploration</strong>: Use READ-ONLY operations to explore available data</li>
+<li><strong>Question Generation</strong>: Create 10 complex, realistic questions</li>
+<li><strong>Answer Verification</strong>: Solve each question yourself to verify answers</li>
+</ol>
+<h5>4.3 Evaluation Requirements</h5>
+<p>Ensure each question is:</p>
+<ul>
+<li><strong>Independent</strong>: Not dependent on other questions</li>
+<li><strong>Read-only</strong>: Only non-destructive operations required</li>
+<li><strong>Complex</strong>: Requiring multiple tool calls and deep exploration</li>
+<li><strong>Realistic</strong>: Based on real use cases humans would care about</li>
+<li><strong>Verifiable</strong>: Single, clear answer that can be verified by string comparison</li>
+<li><strong>Stable</strong>: Answer won&#39;t change over time</li>
+</ul>
+<h5>4.4 Output Format</h5>
+<p>Create an XML file with this structure:</p>
+<p><pre><code>&lt;evaluation&gt;
+  &lt;qa_pair&gt;
+    &lt;question&gt;Find discussions about AI model launches with animal codenames. One model needed a specific safety designation that uses the format ASL-X. What number X was being determined for the model named after a spotted wild cat?&lt;/question&gt;
+    &lt;answer&gt;3&lt;/answer&gt;
+  &lt;/qa_pair&gt;
+&lt;!-- More qa_pairs... --&gt;
+&lt;/evaluation&gt;</code></pre></p>
+<hr>
+<h3>Reference Files</h3>
+<h4>📚 Documentation Library</h4>
+<p>Load these resources as needed during development:</p>
+<h5>Core MCP Documentation (Load First)</h5>
+<ul>
+<li><strong>MCP Protocol</strong>: Start with sitemap at <code>https://modelcontextprotocol.io/sitemap.xml</code>, then fetch specific pages with <code>.md</code> suffix</li>
+<li>[📋 MCP Best Practices](./reference/mcp_best_practices.md) - Universal MCP guidelines including:</li>
+<li>Server and tool naming conventions</li>
+<li>Response format guidelines (JSON vs Markdown)</li>
+<li>Pagination best practices</li>
+<li>Transport selection (streamable HTTP vs stdio)</li>
+<li>Security and error handling standards</li>
+</ul>
+<h5>Microsoft MCP Documentation (For Azure/Foundry)</h5>
+<ul>
+<li>[🔷 Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) - Microsoft-specific patterns including:</li>
+<li>Azure MCP Server architecture (48+ Azure services)</li>
+<li>C#/.NET command implementation patterns</li>
+<li>Remote MCP with Foundry Agent Service</li>
+<li>Authentication (Entra ID, OBO flow, Managed Identity)</li>
+<li>Testing infrastructure with Bicep templates</li>
+</ul>
+<h5>SDK Documentation (Load During Phase 1/2)</h5>
+<ul>
+<li><strong>Python SDK</strong>: Fetch from <code>https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md</code></li>
+<li><strong>TypeScript SDK</strong>: Fetch from <code>https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md</code></li>
+<li><strong>Microsoft MCP SDK</strong>: See [Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) for C#/.NET</li>
+</ul>
+<h5>Language-Specific Implementation Guides (Load During Phase 2)</h5>
+<ul>
+<li>[🐍 Python Implementation Guide](./reference/python_mcp_server.md) - Complete Python/FastMCP guide with:</li>
+<li>Server initialization patterns</li>
+<li>Pydantic model examples</li>
+<li>Tool registration with <code>@mcp.tool</code></li>
+<li>Complete working examples</li>
+<li>Quality checklist</li>
+</ul>
+<ul>
+<li>[⚡ TypeScript Implementation Guide](./reference/node_mcp_server.md) - Complete TypeScript guide with:</li>
+<li>Project structure</li>
+<li>Zod schema patterns</li>
+<li>Tool registration with <code>server.registerTool</code></li>
+<li>Complete working examples</li>
+<li>Quality checklist</li>
+</ul>
+<ul>
+<li>[🔷 Microsoft MCP Patterns](./reference/microsoft_mcp_patterns.md) - Complete C#/.NET guide with:</li>
+<li>Command hierarchy (BaseCommand → GlobalCommand → SubscriptionCommand)</li>
+<li>Naming conventions (<code>{Resource}{Operation}Command</code>)</li>
+<li>Option handling with <code>.AsRequired()</code> / <code>.AsOptional()</code></li>
+<li>Azure Functions remote MCP deployment</li>
+<li>Live test patterns with Bicep</li>
+</ul>
+<h5>Evaluation Guide (Load During Phase 4)</h5>
+<ul>
+<li>[✅ Evaluation Guide](./reference/evaluation.md) - Complete evaluation creation guide with:</li>
+<li>Question creation guidelines</li>
+<li>Answer verification strategies</li>
+<li>XML format specifications</li>
+<li>Example questions and answers</li>
+<li>Running an evaluation with the provided scripts</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/mcp-builder</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/mcp-builder" aria-label="Copy install mcp-builder">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/mcp-builder</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/mcp-builder/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

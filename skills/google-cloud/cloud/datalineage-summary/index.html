@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>datalineage-summary — Aidentity</title>
+<meta name="description" content="Summarizes Google Cloud Data Lineage graphs to help users debug data quality issues and understand data provenance for BQ/GCS. Use when summarizing upstream and downstream data flows, and presenting complex lineage data as an intuitive Markdown report. Don&#39;t use for generic BigQuery queries, editing lineage relationships, or downstream deprecation. Don&#39;t use for downstream blast-radius impact analysis (use datalineage-bigquery-asset-impact-analysis skill instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-summary/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="datalineage-summary — Aidentity">
+<meta property="og:description" content="Summarizes Google Cloud Data Lineage graphs to help users debug data quality issues and understand data provenance for BQ/GCS. Use when summarizing upstream and downstream data flows, and presenting complex lineage data as an intuitive Markdown report. Don&#39;t use for generic BigQuery queries, editing lineage relationships, or downstream deprecation. Don&#39;t use for downstream blast-radius impact analysis (use datalineage-bigquery-asset-impact-analysis skill instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-summary/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"datalineage-summary","description":"Summarizes Google Cloud Data Lineage graphs to help users debug data quality issues and understand data provenance for BQ/GCS. Use when summarizing upstream and downstream data flows, and presenting complex lineage data as an intuitive Markdown report. Don't use for generic BigQuery queries, editing lineage relationships, or downstream deprecation. Don't use for downstream blast-radius impact analysis (use datalineage-bigquery-asset-impact-analysis skill instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-summary/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>datalineage-summary
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>datalineage-summary</h1>
+      <p class="summary">Summarizes Google Cloud Data Lineage graphs to help users debug data quality issues and understand data provenance for BQ/GCS. Use when summarizing upstream and downstream data flows, and presenting complex lineage data as an intuitive Markdown report. Don&#39;t use for generic BigQuery queries, editing lineage relationships, or downstream deprecation. Don&#39;t use for downstream blast-radius impact analysis (use datalineage-bigquery-asset-impact-analysis skill instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Data Lineage Summary</h3>
+<p>This skill guides the agent in investigating and summarizing the Data Lineage</p>
+<p>graph for a specific focal asset (Table-Level Lineage) or specific fields</p>
+<p>(Column-Level Lineage). It provides an intuitive left-to-right walkthrough of</p>
+<p>how data enters and leaves the asset, abstracting away complex node and link</p>
+<p>details into plain English.</p>
+<h4>Prerequisites</h4>
+<p>This skill relies on the **Google Cloud Data Lineage (Knowledge Catalog) MCP</p>
+<p>Server** for graph traversal. Ensure you can run <code>search_lineage</code> queries in</p>
+<p>both upstream and downstream directions. For detailed connection configurations</p>
+<p>and tool schemas, refer to [MCP Usage](references/mcp-usage.md).</p>
+<h4>Workflow Logic</h4>
+<h5>1. Get Lineage</h5>
+<p>Fetch the lineage graph in both directions from the focal point (both upstream</p>
+<p>and downstream) by making <em>two separate calls</em> to the MCP tool: one with</p>
+<p><code>&quot;direction&quot;: &quot;UPSTREAM&quot;</code> and another with <code>&quot;direction&quot;: &quot;DOWNSTREAM&quot;</code>.</p>
+<ul>
+<li><strong>Location Strategy</strong>: You <strong>MUST</strong> use the <code>read_url</code> tool to fetch the</li>
+</ul>
+<p>    comprehensive list of locations dynamically from the provided</p>
+<p>    <a href="https://docs.cloud.google.com/dataplex/docs/locations.md.txt" rel="noopener">Knowledge Catalog Locations</a></p>
+<p>    link. To ensure cross-regional lineage is not missed, always verify the</p>
+<p>    current list of GCP regions using this link before populating the</p>
+<p>    <code>locations</code> array. You <strong>MUST</strong> populate the <code>locations</code> array with all</p>
+<p>    supported physical regions fetched from this link. You may optionally</p>
+<p>    additionally determine the asset&#39;s specific active region (using <code>bq show</code></p>
+<p>    or <code>gcloud storage ls</code>).</p>
+<ul>
+<li><strong>Search Parameters</strong>: Use <code>maxDepth = 10</code>, <code>maxResults = 5000</code> and</li>
+</ul>
+<p>    <code>maxProcessPerLink = 10</code> as robust defaults when calling <code>search_lineage</code>.</p>
+<p>    For example, a DOWNSTREAM call should be formatted like this (expanding the</p>
+<p>    <code>locations</code> array as needed):</p>
+<p>    <pre><code>    {
+      &quot;parent&quot;: &quot;projects/project_id/locations/us&quot;,
+      &quot;locations&quot;: [
+        &quot;us&quot;,
+        &quot;us-central1&quot;,
+        &quot;us-east1&quot;,
+        &quot;us-west1&quot;,
+        &quot;europe-west1&quot;,
+        &quot;asia-northeast1&quot;
+      ],
+      &quot;rootCriteria&quot;: {
+        &quot;entities&quot;: {
+          &quot;entities&quot;: [
+            {
+              &quot;fullyQualifiedName&quot;: &quot;bigquery:project.dataset.table&quot;
+            }
+          ]
+        }
+      },
+      &quot;direction&quot;: &quot;DOWNSTREAM&quot;,
+      &quot;limits&quot;: {
+        &quot;maxDepth&quot;: 10,
+        &quot;maxResults&quot;: 5000,
+        &quot;maxProcessPerLink&quot;: 10
+      }
+    }
+    </code></pre></p>
+<p>    Ensure you make a similar call with <code>&quot;direction&quot;: &quot;UPSTREAM&quot;</code> to fetch the</p>
+<p>    upstream lineage.</p>
+<ul>
+<li><strong>Column-Level Lineage (CLL)</strong>: The <code>search_lineage</code> tool can find all</li>
+</ul>
+<p>    Column-Level Lineage (CLL) by configuring the <code>field</code> array. If Table-Level</p>
+<p>    Lineage (TLL) is requested, configure the call to get CLL links along with</p>
+<p>    the TLL links by exploiting the <code>&quot;*&quot;</code> wildcard. For example:</p>
+<p>    <pre><code>    &quot;rootCriteria&quot;: {
+      &quot;entities&quot;: {
+        &quot;entities&quot;: [
+          {
+            &quot;fullyQualifiedName&quot;: &quot;bigquery:project.dataset.table&quot;,
+            &quot;field&quot;: [
+              &quot;*&quot;
+            ]
+          }
+        ]
+      }
+    }
+    </code></pre></p>
+<p>    If evaluating a specific column, replace <code>&quot;*&quot;</code> with the specific column name</p>
+<p>    (e.g., <code>&quot;efficiency_score&quot;</code>).</p>
+<h5>2. Summarize</h5>
+<p>Generate the summary using the prompt guidelines below.</p>
+<ul>
+<li><strong>Persona</strong>: Act as an expert Data Lineage Analyst generating a concise,</li>
+</ul>
+<p>    easy-to-understand left-to-right walkthrough of the data flow.</p>
+<ul>
+<li><strong>Structure &amp; Flow</strong>: Start immediately with the summary text, structured as</li>
+</ul>
+<p>    follows:</p>
+<ul>
+<li><strong>Overall Flow Type</strong>: State the inferred workflow type and data domain</li>
+</ul>
+<p>        (e.g., &quot;This appears to be a Feature Engineering workflow...&quot;).</p>
+<ul>
+<li><strong>Systems Overview</strong>: List the primary systems involved up front. If the</li>
+</ul>
+<p>        request is for Column-Level Lineage, you MUST explicitly declare that</p>
+<p>        the scope of the analysis is limited to the specified field up front.</p>
+<ul>
+<li><strong>Upstream Lineage</strong>: Use the exact bold header <code><strong>Upstream Lineage:</strong></code>.</li>
+</ul>
+<p>        Narrative must detail how data arrives at the focal asset, mentioning</p>
+<p>        key source systems, projects, and processing tasks (e.g., Spark on</p>
+<p>        Dataproc).</p>
+<ul>
+<li><strong>Downstream Lineage</strong>: Use the exact bold header `**Downstream</li>
+</ul>
+<p>        Lineage:**`. Detail where data goes from the focal asset to final</p>
+<p>        consumer systems.</p>
+<ul>
+<li><strong>Analysis Metadata</strong>: Display the parameters used for the API call to</li>
+</ul>
+<p>        provide transparency on the boundaries of the summary. The output must</p>
+<p>        contain:</p>
+<ul>
+<li><strong>Locations Searched</strong>: <code>{list_of_locations_queried}</code></li>
+<li><strong>Parent Location</strong>: <code>{parent_path}</code></li>
+<li><strong>Depth Limit</strong>: <code>{maxDepth}</code></li>
+<li><strong>Process per Link Limit</strong>: <code>{maxProcessPerLink}</code></li>
+<li><strong>Tip for User</strong>: A prompt suggesting they can ask to rerun with</li>
+</ul>
+<p>            expanded locations (if not all were used) or depth.</p>
+<ul>
+<li><strong>Granularity Constraints</strong>:</li>
+<li>Prioritize flows between Systems, Projects, and Datasets over individual</li>
+</ul>
+<p>        files/tables.</p>
+<ul>
+<li>You MUST explicitly list specific asset names (e.g., source tables,</li>
+</ul>
+<p>        intermediate views, consumer tables) if there are fewer than 5. Do not</p>
+<p>        just summarize counts if there are fewer than 5; name them explicitly.</p>
+<p>        Otherwise, if 5 or more, aggregate them by count (e.g., &quot;5 GCS</p>
+<p>        buckets&quot;).</p>
+<ul>
+<li>Only mention counts for <em>ultimate sources</em>, <em>final consumers</em>, and</li>
+</ul>
+<p>        <em>total assets</em>.</p>
+<ul>
+<li>Do not repeat project names redundantly for every dataset if only one</li>
+</ul>
+<p>        project is involved.</p>
+<ul>
+<li><strong>Tone</strong>: Avoid jargon and generic phrases like &quot;There are distinct factual</li>
+</ul>
+<p>    points.&quot; Be direct and clear. The final output is Markdown.</p>
+<h5>3. Return the Summary</h5>
+<p>Return the final summarized output back to the user.</p>
+<h4>External Documentation</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/dataplex/docs/about-data-lineage.md.txt" rel="noopener">Google Cloud Knowledge Catalog Data Lineage Documentation</a></li>
+<li><a href="https://docs.cloud.google.com/dataplex/docs/use-lineage-mcp.md.txt" rel="noopener">Use the Data Lineage MCP server</a></li>
+<li><a href="https://docs.cloud.google.com/dataplex/docs/reference/data-lineage/rest.md.txt" rel="noopener">Knowledge Catalog Data Lineage API Reference</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/datalineage-summary</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/datalineage-summary" aria-label="Copy install datalineage-summary">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/datalineage-summary</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/datalineage-summary/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

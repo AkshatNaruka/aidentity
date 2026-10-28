@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-keyvault-certificates-rust — Aidentity</title>
+<meta name="description" content="Azure Key Vault Certificates library for Rust. Create, manage, and use X.509 certificates including self-signed and CA-issued. Triggers: &quot;keyvault certificates rust&quot;, &quot;CertificateClient rust&quot;, &quot;create certificate rust&quot;, &quot;self-signed certificate rust&quot;, &quot;X.509 rust&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-certificates-rust/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-keyvault-certificates-rust — Aidentity">
+<meta property="og:description" content="Azure Key Vault Certificates library for Rust. Create, manage, and use X.509 certificates including self-signed and CA-issued. Triggers: &quot;keyvault certificates rust&quot;, &quot;CertificateClient rust&quot;, &quot;create certificate rust&quot;, &quot;self-signed certificate rust&quot;, &quot;X.509 rust&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-certificates-rust/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-keyvault-certificates-rust","description":"Azure Key Vault Certificates library for Rust. Create, manage, and use X.509 certificates including self-signed and CA-issued. Triggers: \"keyvault certificates rust\", \"CertificateClient rust\", \"create certificate rust\", \"self-signed certificate rust\", \"X.509 rust\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-certificates-rust/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-keyvault-certificates-rust
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-keyvault-certificates-rust</h1>
+      <p class="summary">Azure Key Vault Certificates library for Rust. Create, manage, and use X.509 certificates including self-signed and CA-issued. Triggers: &quot;keyvault certificates rust&quot;, &quot;CertificateClient rust&quot;, &quot;create certificate rust&quot;, &quot;self-signed certificate rust&quot;, &quot;X.509 rust&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Key Vault Certificates library for Rust</h3>
+<p>Manage X.509 certificates for TLS/SSL, code signing, and authentication.</p>
+<p>Use this skill when:</p>
+<ul>
+<li>An app needs to create or manage X.509 certificates in Key Vault from Rust</li>
+<li>You need self-signed or CA-issued certificates</li>
+<li>You need long-running operations (LRO) for certificate issuance</li>
+<li>You need to sign data using a certificate&#39;s key</li>
+</ul>
+<p>&gt; <strong>IMPORTANT:</strong> Only use the official <code>azure_security_keyvault_certificates</code> crate published by the <a href="https://crates.io/users/azure-sdk" rel="noopener">azure-sdk</a> crates.io user. Do NOT use unofficial or community crates. Official crates use underscores in names and none have version 0.21.0.</p>
+<h4>Installation</h4>
+<p><pre><code>cargo add azure_security_keyvault_certificates azure_identity tokio futures</code></pre></p>
+<p>&gt; If your code uses <code>azure_core</code> types directly, add <code>azure_core</code> to <code>Cargo.toml</code>. If you only use <code>azure_security_keyvault_certificates</code> re-exports, direct <code>azure_core</code> dependency is optional.</p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_KEYVAULT_URL=https://&lt;vault-name&gt;.vault.azure.net/ # Required for all operations</code></pre></p>
+<h4>Authentication</h4>
+<p>Rust Azure SDK code must not use <code>DefaultAzureCredential</code>. The Rust identity crate does not provide that type.</p>
+<p><pre><code>use azure_identity::DeveloperToolsCredential;
+use azure_security_keyvault_certificates::CertificateClient;
+
+#[tokio::main]
+async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    // Local dev: DeveloperToolsCredential. Production: use ManagedIdentityCredential.
+    let credential = DeveloperToolsCredential::new(None)?;
+    let client = CertificateClient::new(
+        &quot;https://&lt;vault-name&gt;.vault.azure.net/&quot;,
+        credential.clone(),
+        None,
+    )?;
+
+    let cert = client
+        .get_certificate(&quot;cert-name&quot;, None)
+        .await?
+        .into_model()?;
+    println!(&quot;Certificate: {:?}&quot;, cert.id);
+    Ok(())
+}</code></pre></p>
+<p>Prefer the crate README/examples when checking LRO and poller usage rather than inferring public behavior from generated internal types.</p>
+<h4>Core Workflow</h4>
+<h5>Create Self-Signed Certificate (LRO)</h5>
+<p>Creating a certificate is a long-running operation. <code>Poller&lt;T&gt;</code> implements <code>IntoFuture</code> — just <code>.await</code>:</p>
+<p><pre><code>use azure_security_keyvault_certificates::{
+    models::{
+        CertificatePolicy, CreateCertificateParameters, IssuerParameters,
+        X509CertificateProperties,
+    },
+    ResourceExt,
+};
+
+let policy = CertificatePolicy {
+    x509_certificate_properties: Some(X509CertificateProperties {
+        subject: Some(&quot;CN=example.com&quot;.into()),
+        ..Default::default()
+    }),
+    issuer_parameters: Some(IssuerParameters {
+        name: Some(&quot;Self&quot;.into()),
+        ..Default::default()
+    }),
+    ..Default::default()
+};
+let body = CreateCertificateParameters {
+    certificate_policy: Some(policy),
+    ..Default::default()
+};
+
+// Poller implements IntoFuture — await directly for completion
+let cert = client
+    .begin_create_certificate(&quot;cert-name&quot;, body.try_into()?, None)?
+    .await?
+    .into_model()?;
+
+println!(
+    &quot;Name: {:?}, Version: {:?}&quot;,
+    cert.resource_id()?.name,
+    cert.resource_id()?.version,
+);</code></pre></p>
+<h5>Update Certificate Properties</h5>
+<p><pre><code>use azure_security_keyvault_certificates::models::UpdateCertificatePropertiesParameters;
+use std::collections::HashMap;
+
+#[allow(clippy::needless_update)]
+let params = UpdateCertificatePropertiesParameters {
+    tags: Some(HashMap::from_iter(vec![(&quot;env&quot;.into(), &quot;prod&quot;.into())])),
+    ..Default::default()
+};
+
+client
+    .update_certificate_properties(&quot;cert-name&quot;, params.try_into()?, None)
+    .await?
+    .into_model()?;</code></pre></p>
+<h5>Delete Certificate</h5>
+<p><pre><code>client.delete_certificate(&quot;cert-name&quot;, None).await?;</code></pre></p>
+<h5>List Certificates (Pagination)</h5>
+<p><code>list_certificate_properties</code> returns a <code>Pager&lt;T&gt;</code> — iterate items directly:</p>
+<p><pre><code>use azure_security_keyvault_certificates::ResourceExt;
+use futures::TryStreamExt as _;
+
+let mut pager = client.list_certificate_properties(None)?;
+while let Some(cert) = pager.try_next().await? {
+    println!(&quot;Found: {}&quot;, cert.resource_id()?.name);
+}</code></pre></p>
+<h4>Signing with a Certificate&#39;s Key</h4>
+<p>Certificates in Key Vault have an associated key. Use the Key Vault Keys SDK for crypto operations:</p>
+<p><pre><code>use azure_security_keyvault_keys::{
+    models::{KeyClientSignOptions, SignParameters, SignatureAlgorithm},
+    KeyClient,
+};
+
+let key_client = KeyClient::new(
+    &quot;https://&lt;vault-name&gt;.vault.azure.net/&quot;,
+    credential.clone(),
+    None,
+)?;
+
+// Sign with the certificate&#39;s EC key
+let digest = vec![0u8; 32]; // SHA-256 digest
+let body = SignParameters {
+    algorithm: Some(SignatureAlgorithm::Es256),
+    value: Some(digest),
+};
+
+let result = key_client
+    .sign(
+        &quot;cert-name&quot;,
+        body.try_into()?,
+        Some(KeyClientSignOptions {
+            key_version: Some(&quot;&lt;certificate-version&gt;&quot;.to_string()),
+            ..Default::default()
+        }),
+    )
+    .await?
+    .into_model()?;
+println!(&quot;Signature: {:?}&quot;, result.result);</code></pre></p>
+<h4>Certificate Formats</h4>
+<table><thead><tr><th>Format</th><th>Content Type</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>PKCS#12</td><td><code>application/x-pkcs12</code></td><td>Bundled cert + private key</td></tr>
+<tr><td>PEM</td><td><code>application/x-pem-file</code></td><td>Base64-encoded, common in Linux/web</td></tr>
+</tbody></table>
+<h4>RBAC Roles</h4>
+<p>For Entra ID auth, assign one of these roles:</p>
+<table><thead><tr><th>Role</th><th>Access</th></tr></thead><tbody>
+<tr><td><code>Key Vault Certificate User</code></td><td>Use certificates</td></tr>
+<tr><td><code>Key Vault Certificates Officer</code></td><td>Full certificate management</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Use <code>cargo add</code> to manage dependencies, never edit <code>Cargo.toml</code> directly.</strong> Add and remove Rust SDK dependencies with cargo commands instead of manual manifest edits.</li>
+<li><strong>Add <code>azure_core</code> only when importing <code>azure_core</code> types directly.</strong> If your code imports <code>azure_core::http::Url</code>, <code>azure_core::http::RequestContent</code>, or <code>azure_core::error::ErrorKind</code>, include <code>azure_core</code>; otherwise a direct dependency is optional.</li>
+<li><strong>Use <code>DeveloperToolsCredential</code></strong> for local dev, <strong><code>ManagedIdentityCredential</code></strong> for production — Rust does not provide a single <code>DefaultAzureCredential</code> type</li>
+<li><strong>Never hardcode credentials</strong> — use environment variables or managed identity</li>
+<li><strong>Use <code>..Default::default()</code></strong> with <code>#[allow(clippy::needless_update)]</code> for model struct updates</li>
+<li><strong>Use <code>ResourceExt</code></strong> to extract certificate name/version from IDs</li>
+<li><strong>LROs</strong> — <code>begin_create_certificate</code> returns a <code>Poller</code>; just <code>.await</code> for completion (clients should rarely poll for status)</li>
+<li><strong>Reuse clients</strong> — <code>CertificateClient</code> is thread-safe; create once, share across tasks</li>
+<li><strong>Run <code>cargo clippy -- -D warnings</code></strong> when the prompt, eval, or CI expects lint-clean output</li>
+</ol>
+<h4>Reference Links</h4>
+<table><thead><tr><th>Resource</th><th>Link</th></tr></thead><tbody>
+<tr><td>API Reference</td><td><a href="https://docs.rs/azure_security_keyvault_certificates/latest/azure_security_keyvault_certificates" rel="noopener">https://docs.rs/azure_security_keyvault_certificates/latest/azure_security_keyvault_certificates</a></td></tr>
+<tr><td>crates.io</td><td><a href="https://crates.io/crates/azure_security_keyvault_certificates" rel="noopener">https://crates.io/crates/azure_security_keyvault_certificates</a></td></tr>
+<tr><td>Source Code</td><td><a href="https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/keyvault/azure_security_keyvault_certificates" rel="noopener">https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/keyvault/azure_security_keyvault_certificates</a></td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-keyvault-certificates-rust</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-keyvault-certificates-rust" aria-label="Copy install azure-keyvault-certificates-rust">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-keyvault-certificates-rust</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-keyvault-certificates-rust/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

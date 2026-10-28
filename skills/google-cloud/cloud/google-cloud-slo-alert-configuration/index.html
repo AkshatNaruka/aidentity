@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-slo-alert-configuration — Aidentity</title>
+<meta name="description" content="Configures PromQL-based Service Level Objective (SLO) alerting policies for Google Cloud resources registered in App Hub or individually specified. Generates Terraform output. Use when the user asks to configure an SLO or Service Level Objective. Don&#39;t use for standard alerting policies.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-slo-alert-configuration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-slo-alert-configuration — Aidentity">
+<meta property="og:description" content="Configures PromQL-based Service Level Objective (SLO) alerting policies for Google Cloud resources registered in App Hub or individually specified. Generates Terraform output. Use when the user asks to configure an SLO or Service Level Objective. Don&#39;t use for standard alerting policies.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-slo-alert-configuration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-slo-alert-configuration","description":"Configures PromQL-based Service Level Objective (SLO) alerting policies for Google Cloud resources registered in App Hub or individually specified. Generates Terraform output. Use when the user asks to configure an SLO or Service Level Objective. Don't use for standard alerting policies.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-slo-alert-configuration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-slo-alert-configuration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-slo-alert-configuration</h1>
+      <p class="summary">Configures PromQL-based Service Level Objective (SLO) alerting policies for Google Cloud resources registered in App Hub or individually specified. Generates Terraform output. Use when the user asks to configure an SLO or Service Level Objective. Don&#39;t use for standard alerting policies.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>SLO Alert Configuration Setup Wizard</h3>
+<p>This skill guides the user through a structured conversation to configure</p>
+<p>PromQL-based Service Level Objective (SLO) alerting policies in Terraform. Your</p>
+<p>role is to act as a setup wizard that conceptually models the 4 key components</p>
+<p>of an SLO API (Service Scope, Service Level, SLI, and Alert Condition), gathers</p>
+<p>the requirements, and outputs a Terraform configuration.</p>
+<h4>CRITICAL RULES</h4>
+<ul>
+<li><strong>Structured Conversation</strong>: You <strong>MUST</strong> follow the 4-step wizard workflow</li>
+</ul>
+<p>    below.</p>
+<ul>
+<li><strong>Gather Missing Information</strong>: Evaluate all 4 steps below first. Ask the</li>
+</ul>
+<p>    user for all missing information across all steps in a single response.</p>
+<ul>
+<li><strong>DO NOT</strong> stop after finding the first missing piece of information.</li>
+</ul>
+<ul>
+<li><strong>DO NOT</strong> use the <code>ask_question</code> tool. You must ask questions using</li>
+</ul>
+<p>        plain text in your response and end your turn to wait for the user to</p>
+<p>        reply.</p>
+<ul>
+<li><strong>DO NOT</strong> write the Terraform configuration if information is missing.</li>
+</ul>
+<ul>
+<li><strong>Skip What Is Known</strong>: If the user has already provided information for a</li>
+</ul>
+<p>    step in their previous messages or initial prompt <strong>DO NOT</strong> ask them for</p>
+<p>    it. Move to the next missing piece of information. If ALL information for</p>
+<p>    Steps 1-4 is provided, call <code>write_to_file</code> to generate the Terraform</p>
+<p>    configuration without asking for permission to proceed.</p>
+<ul>
+<li><strong>Provide Best Practices</strong>: Whenever you ask the user a question, you</li>
+</ul>
+<p>    <strong>MUST</strong> explicitly state the recommended &quot;Best Practice&quot;.</p>
+<ul>
+<li><strong>Best Practice Shortcut</strong>: If the user asks for &quot;best practices&quot; or</li>
+</ul>
+<p>    similar, do not overwrite their explicit inputs. <strong>SKIP</strong> all remaining data</p>
+<p>    gathering and keep any specific targets or custom metrics they provided. For</p>
+<p>    all fields left blank, apply the recommended defaults defined in the &quot;SRE</p>
+<p>    Best Practice Suggestion&quot; of each step.</p>
+<ul>
+<li><strong>User Labels</strong>: Include a <code>user_labels</code> block in all</li>
+</ul>
+<p>    <code>google_monitoring_alert_policy</code> resources to track policies created by this</p>
+<p>    skill:</p>
+<p>    <pre><code>    user_labels = {
+      created-with-google-skill = &quot;google-cloud-slo-alert-configuration&quot;
+    }
+    </code></pre></p>
+<ul>
+<li><strong>Terraform Output</strong>: Write the generated observability configuration ONLY</li>
+</ul>
+<p>    as Terraform (<code>.tf</code>) files using the <code>google_monitoring_alert_policy</code></p>
+<p>    resource and <code>condition_prometheus_query_language</code> resources.</p>
+<ul>
+<li><strong>Alert Strategy</strong>: <strong>ALWAYS</strong> include an <code>alert_strategy</code> block with an</li>
+</ul>
+<p>    <code>auto_close</code> setting. Leave <code>notification_channels</code> empty unless the user</p>
+<p>    provides one. Provide plain-English explanations of the PromQL math before</p>
+<p>    finalizing the conversation.</p>
+<hr>
+<h4>SETUP WIZARD WORKFLOW</h4>
+<h5>Step 1: Define <code>ServiceScope</code></h5>
+<ol>
+<li><strong>Check Context</strong>: Identify target resource, service, workload, or</li>
+</ol>
+<p>    application the user wants to monitor. If you already know, proceed.</p>
+<p>    Otherwise ask the user to identify it.</p>
+<ol>
+<li><strong>Autonomous Investigation</strong>: If the user specified a project or general</li>
+</ol>
+<p>    service name without providing specifics, autonomously use <code>gcloud</code> to</p>
+<p>    discover the target services in their environment. If multiple services or</p>
+<p>    workloads are discovered, list all of them and suggest applying SLO <strong>ONLY</strong></p>
+<p>    to the most critical backend services as a best practice.</p>
+<p>    If you struggle to identify potential resources, ask the user to specify.</p>
+<ol>
+<li><strong>Identify Underlying Infrastructure</strong>: To resolve the correct PromQL</li>
+</ol>
+<p>    metric, you <strong>MUST</strong> know the underlying Google Cloud resource type.</p>
+<ul>
+<li>If the user only provides a logical name or an App Hub Service/Workload</li>
+</ul>
+<p>        name such as <code>projects/.../services/frontend</code> or</p>
+<p>        <code>projects/.../workloads/backend</code>, you still need to know the underlying</p>
+<p>        infrastructure.</p>
+<ul>
+<li>If the prompt provides the underlying infrastructure, use that</li>
+</ul>
+<p>        information. Do <strong>NOT</strong> attempt to discover it.</p>
+<ul>
+<li>If you don&#39;t know the underlying infrastructure but have a resource</li>
+</ul>
+<p>        identified, you <strong>MUST</strong> proactively use <code>gcloud</code> to discover the</p>
+<p>        infrastructure. If you struggle to identify the resource type, ask the</p>
+<p>        user to specify.</p>
+<ol>
+<li><strong>Label Scoping</strong>:</li>
+</ol>
+<ul>
+<li>If the user explicitly mentions the resource is in App Hub or provides</li>
+</ul>
+<p>        an App Hub URI like <code>projects/.../locations/.../applications/...</code>, use</p>
+<p>        App Hub labels and consult <code>references/app_hub_labels.md</code> to identify</p>
+<p>        the correct group-by fields.</p>
+<ul>
+<li>Otherwise, assume it is a standard Google Cloud resource and use</li>
+</ul>
+<p>        standard grouping labels such as <code>project_id, location, service_name</code></p>
+<p>        for Cloud Run.</p>
+<p>    Example gcloud commands:</p>
+<ul>
+<li>`gcloud --quiet apphub applications services list --application=-</li>
+</ul>
+<p>        --location=-`</p>
+<ul>
+<li>`gcloud --quiet apphub applications workloads list --application=-</li>
+</ul>
+<p>        --location=-`</p>
+<ul>
+<li><code>gcloud --quiet asset search-all-resources</code></li>
+<li><code>gcloud --quiet run services list</code></li>
+<li>`gcloud --quiet apphub applications services describe &lt;service&gt;</li>
+</ul>
+<p>        --application=&lt;app&gt; --location=&lt;loc&gt;`</p>
+<ul>
+<li>`gcloud --quiet apphub applications workloads describe &lt;workload&gt;</li>
+</ul>
+<p>        --application=&lt;app&gt; --location=&lt;loc&gt;`</p>
+<ul>
+<li><code>gcloud --quiet asset search-all-resources --query=&lt;name&gt;</code></li>
+</ul>
+<p>    <strong>Graceful Fallback:</strong> If a command exits with an error such as API not</p>
+<p>    enabled or permission denied, <strong>DO NOT</strong> try to troubleshoot it and **DO</p>
+<p>    NOT** use the schedule tool to wait. Immediately fall back to asking the</p>
+<p>    user to provide the missing information.</p>
+<h5>Step 2: Define <code>ServiceLevel</code> Target</h5>
+<ol>
+<li><strong>Check Context</strong>: If the user has already provided a Service Level Target</li>
+</ol>
+<p>    percentage, an SLI condition/threshold, and a measurement period proceed to</p>
+<p>    the next step. Otherwise, if any are missing, you <strong>MUST</strong> ask for them.</p>
+<ul>
+<li>Service level target percentages include P-values such as PXX, decimals</li>
+</ul>
+<p>        such as 0.XX, and percentages like XX%.</p>
+<ul>
+<li>Example SLI conditions and thresholds include <code>latency &lt; 500ms</code> or</li>
+</ul>
+<p>        <code>non-5XX responses</code>.</p>
+<ul>
+<li><strong>Prompt</strong>: Ask the user for their target reliability, condition/threshold</li>
+</ul>
+<p>    (if applicable), measurement period, and evaluation intervals <strong>ONLY</strong> if</p>
+<p>    they are missing.</p>
+<ul>
+<li><strong>SRE Best Practice Suggestion</strong>: &quot;SRE Best Practice recommends starting</li>
+</ul>
+<p>    with a 99.9% (3 nines) <code>slo_target</code> measured over a rolling 28-day</p>
+<p>    <code>rolling_period</code>, as this aligns well with typical release cycles and</p>
+<p>    provides a reasonable error budget.&quot;</p>
+<h5>Step 3: Define <code>ServiceLevelIndicator</code> / SLI</h5>
+<ol>
+<li><strong>Check Context</strong>: Has the user specified the exact metric name such as</li>
+</ol>
+<p>    <code>run.googleapis.com/request_count</code>? If yes, proceed to the next step.</p>
+<p>    Otherwise, if the user only says &quot;availability&quot; or &quot;latency&quot; without</p>
+<p>    specifying the <strong>EXACT</strong> metric name, you may infer the name from the</p>
+<p>    service type provided a metric for that type is defined in the references.</p>
+<p>    If the user provides a custom metric and a threshold, assume it is a</p>
+<p>    Distribution metric and do not ask for further metric details.</p>
+<ul>
+<li>You <strong>MUST</strong> output valid metrics defined in</li>
+</ul>
+<p>        <code>references/service_metrics.md</code>. If the exact resource type and metric</p>
+<p>        is not listed, check the public documentation in</p>
+<p>        <code>references/service_metrics.md</code> to find the exact metric. If you still</p>
+<p>        cannot find it, you <strong>MUST</strong> stop and ask the user to provide the custom</p>
+<p>        metric.</p>
+<ol>
+<li><strong>Prompt</strong>: Ask the user what specific metric they want to use. You <strong>MUST</strong></li>
+</ol>
+<p>    suggest the inferred standard metric as the recommended best practice. When</p>
+<p>    interpreting incomplete requests, you <strong>MUST</strong> explicitly propose the</p>
+<p>    specific metric string and describe the ratio-based or window-based</p>
+<p>    definition to the user for confirmation before proceeding.</p>
+<ol>
+<li><strong>Metric Mapping</strong>: Consult <code>references/service_metrics.md</code> to find the</li>
+</ol>
+<p>    exact PromQL metric string for the Resource Type identified in Step 1</p>
+<p>    section 3. If the requested metric type does not exist for the resource in</p>
+<p>    the references or the primary public documentation, you <strong>MUST</strong> explicitly</p>
+<p>    inform the user that there is no default metric and ask them to provide the</p>
+<p>    specific custom metric name. You <strong>MUST</strong> provide guidance on how a custom</p>
+<p>    latency metric might be structured.</p>
+<ul>
+<li><strong>CRITICAL:</strong> If the primary documentation does not list a default</li>
+</ul>
+<p>        metric, you <strong>MUST NOT</strong> try to piece together advanced metrics. Ask the</p>
+<p>        user to provide the custom metric.</p>
+<ol>
+<li><strong>Evaluation Method</strong>: Default the <code>EvaluationType</code> to <code>REQUEST_BASED</code></li>
+</ol>
+<p>    unless the user specifically describes a <code>window-based</code> requirement,</p>
+<p>    typically denoted by &quot;good minutes&quot; or &quot;bad minutes&quot;.</p>
+<ul>
+<li><strong>Window-Based Lookback Period</strong>: If the user indicates a window-based</li>
+</ul>
+<p>        evaluation, you need to know the duration of the lookback windows and</p>
+<p>        the evaluation interval for each window. You <strong>MUST</strong> ask the user to</p>
+<p>        specify both the lookback duration and the evaluation interval if they</p>
+<p>        have not already provided them. You <strong>CANNOT</strong> generate an alerting</p>
+<p>        policy without this configuration.</p>
+<ol>
+<li><strong>SRE Best Practice Suggestion</strong>: SRE Best Practice recommends starting with</li>
+</ol>
+<p>    two SLIs:</p>
+<ul>
+<li><strong>Availability</strong>: a <code>Ratio SLI</code> comparing successful requests typically</li>
+</ul>
+<p>        defined as <code>non-5XX</code> responses, to total requests evaluated as</p>
+<p>        <code>REQUEST_BASED</code>.</p>
+<ul>
+<li><strong>Latency</strong>: a <code>Distribution SLI</code> evaluated as <code>WINDOW_BASED</code> such as</li>
+</ul>
+<p>        99% of 5-minute windows must meet a 300ms threshold.</p>
+<h5>Step 4: Define Alerting Policy</h5>
+<ol>
+<li><strong>Check Context</strong>: Has the user specified burn rates? If yes, proceed to the</li>
+</ol>
+<p>    next step. Otherwise, ask the user to specify a burn rate strategy and</p>
+<p>    provide a best practice suggestion.</p>
+<ol>
+<li><strong>SRE Best Practice Suggestion</strong>: SRE Best Practice recommends both a</li>
+</ol>
+<p>    multi-window fast burn and multi-window slow burn.</p>
+<ul>
+<li><strong>Multi-Window Fast Burn</strong>: Factor 14.4 over 1h and 5m windows, catching</li>
+</ul>
+<p>        severe outages quickly without false positives.</p>
+<ul>
+<li><strong>Multi-Window Slow Burn</strong>: Factor 1 over 3d and 6h windows, catching</li>
+</ul>
+<p>        system degradation.</p>
+<h5>Step 5: Generate Configuration</h5>
+<ol>
+<li>Look up the corresponding PromQL template from</li>
+</ol>
+<p>    <code>references/promql_templates.md</code> based on the user&#39;s choices. Use a</p>
+<p>    <code>Window-Based</code> template for window-based SLOs.</p>
+<ol>
+<li>Populate the template with the <code>ServiceScope</code> labels, <code>ServiceLevel</code></li>
+</ol>
+<p>    targets, and <code>ServiceLevelIndicator</code> metrics.</p>
+<ol>
+<li>Wrap it in Terraform (<code>google_monitoring_alert_policy</code>), ensuring the</li>
+</ol>
+<p>    <code>user_labels</code> block includes `created-with-google-skill =</p>
+<p>    &quot;google-cloud-slo-alert-configuration&quot;`.</p>
+<ol>
+<li>Present the <code>.tf</code> block with a plain English explanation of the math.</li>
+<li>In the final summary, inform the user that the alert policies have been</li>
+</ol>
+<p>    tagged with the `created-with-google-skill =</p>
+<p>    &quot;google-cloud-slo-alert-configuration&quot;` user label to track policies created</p>
+<p>    by this skill.</p>
+<ol>
+<li><strong>CRITICAL:</strong> Explicitly warn the user in the final summary if no</li>
+</ol>
+<p>    notification channels are configured. Inform them that you can assist with</p>
+<p>    setting those up if they would like.</p>
+<hr>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://sre.google/workbook/alerting-on-slos/" rel="noopener">Google SRE Workbook: Alerting on SLOs</a></li>
+<li><a href="https://docs.cloud.google.com/stackdriver/docs/solutions/slo-monitoring.md.txt" rel="noopener">Google Cloud Operations: SLO Monitoring</a></li>
+<li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" rel="noopener">Prometheus: PromQL Basics</a></li>
+</ul>
+<h4>Reporting Issues</h4>
+<p>Report bugs or improvements for this skill at</p>
+<p><a href="https://github.com/google/skills/issues" rel="noopener">Google Skills Issues</a>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-slo-alert-configuration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-slo-alert-configuration" aria-label="Copy install google-cloud-slo-alert-configuration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-slo-alert-configuration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-slo-alert-configuration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

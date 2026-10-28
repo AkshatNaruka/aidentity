@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-global-frontend-configuration — Aidentity</title>
+<meta name="description" content="Guides agents through a 6-step discovery process to design and deploy Google Cloud global external Application Load Balancers with Cloud CDN, Cloud Armor, and Service Extensions, mapping workload requirements to best-practice configurations. Use when: - Designing, configuring, or deploying a Google Cloud global external Application Load Balancer, Cloud CDN, Cloud Armor WAF, or Service Extensions. - Discovering existing Google Cloud resources (Cloud Storage, MIGs, GKE, Cloud Run) to use as backends. - Generating production-grade Terraform HCL or gcloud CLI scripts for global external Application Load Balancers. - Actuating deployments via Infrastructure Manager or bash scripts, including IAM pre-checks. - Detecting, analyzing, or reconciling configuration drift on deployed global external Application Load Balancers. Don&#39;t use for: - Non-Google Cloud load balancing or security configurations. - Purely regional or internal load balancing setups (unless part of a hybrid/failover global design).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-global-frontend-configuration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-global-frontend-configuration — Aidentity">
+<meta property="og:description" content="Guides agents through a 6-step discovery process to design and deploy Google Cloud global external Application Load Balancers with Cloud CDN, Cloud Armor, and Service Extensions, mapping workload requirements to best-practice configurations. Use when: - Designing, configuring, or deploying a Google Cloud global external Application Load Balancer, Cloud CDN, Cloud Armor WAF, or Service Extensions. - Discovering existing Google Cloud resources (Cloud Storage, MIGs, GKE, Cloud Run) to use as backends. - Generating production-grade Terraform HCL or gcloud CLI scripts for global external Application Load Balancers. - Actuating deployments via Infrastructure Manager or bash scripts, including IAM pre-checks. - Detecting, analyzing, or reconciling configuration drift on deployed global external Application Load Balancers. Don&#39;t use for: - Non-Google Cloud load balancing or security configurations. - Purely regional or internal load balancing setups (unless part of a hybrid/failover global design).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-global-frontend-configuration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-global-frontend-configuration","description":"Guides agents through a 6-step discovery process to design and deploy Google Cloud global external Application Load Balancers with Cloud CDN, Cloud Armor, and Service Extensions, mapping workload requirements to best-practice configurations. Use when: - Designing, configuring, or deploying a Google Cloud global external Application Load Balancer, Cloud CDN, Cloud Armor WAF, or Service Extensions. - Discovering existing Google Cloud resources (Cloud Storage, MIGs, GKE, Cloud Run) to use as backends. - Generating production-grade Terraform HCL or gcloud CLI scripts for global external Application Load Balancers. - Actuating deployments via Infrastructure Manager or bash scripts, including IAM pre-checks. - Detecting, analyzing, or reconciling configuration drift on deployed global external Application Load Balancers. Don't use for: - Non-Google Cloud load balancing or security configurations. - Purely regional or internal load balancing setups (unless part of a hybrid/failover global design).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-global-frontend-configuration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-global-frontend-configuration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-global-frontend-configuration</h1>
+      <p class="summary">Guides agents through a 6-step discovery process to design and deploy Google Cloud global external Application Load Balancers with Cloud CDN, Cloud Armor, and Service Extensions, mapping workload requirements to best-practice configurations. Use when: - Designing, configuring, or deploying a Google Cloud global external Application Load Balancer, Cloud CDN, Cloud Armor WAF, or Service Extensions. - Discovering existing Google Cloud resources (Cloud Storage, MIGs, GKE, Cloud Run) to use as backends. - Generating production-grade Terraform HCL or gcloud CLI scripts for global external Application Load Balancers. - Actuating deployments via Infrastructure Manager or bash scripts, including IAM pre-checks. - Detecting, analyzing, or reconciling configuration drift on deployed global external Application Load Balancers. Don&#39;t use for: - Non-Google Cloud load balancing or security configurations. - Purely regional or internal load balancing setups (unless part of a hybrid/failover global design).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=frontend">frontend</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud global external Application Load Balancer Configuration Skill</h3>
+<h4>Purpose &amp; Agent Guidance</h4>
+<p>This skill enables the agent to guide users through a structured, 6-step discovery process to design and deploy Google Cloud global external Application Load Balancers (incorporating Cloud CDN, Cloud Armor, and Service Extensions).</p>
+<p><strong>Assumptions &amp; Target Environments:</strong></p>
+<ul>
+<li>This skill assumes it is called from environments (such as Gemini CLI, Antigravity, etc.) where the Google Cloud CLI (<code>gcloud</code>) can be executed.</li>
+<li>If <code>gcloud</code> is not available or accessible, the skill cannot perform automated resource discovery or managed deployment actuation. In such environments, the skill will limit its support to guiding the design and generating Terraform HCL configurations.</li>
+</ul>
+<p>When executing this skill, the agent must:</p>
+<ul>
+<li>Map user workload requirements to simplified, opinionated best-practice configurations using actual Google Cloud product names.</li>
+<li>Progressively disclose details, hiding advanced complexity unless the user explicitly asks for customization.</li>
+<li>Leverage the reference documents in the <code>references/</code> directory to perform resource discovery, code generation, actuation, and drift detection.</li>
+</ul>
+<h4>The 6-Step Configuration Flow</h4>
+<h5>Step 1: Basics</h5>
+<ul>
+<li><strong>Project Discovery:</strong> Consult <code>references/resource-discovery.md</code> to auto-detect the Google Cloud project ID. Present the discovered project ID to the user.</li>
+<li>Ask the user for the foundational details of their load balancer:</li>
+<li><strong>Name &amp; Description:</strong> What should we call this load balancer?</li>
+<li><strong>Protocol Selection:</strong> Do they need HTTP, HTTPS, or both?</li>
+<li><strong>Certificate Management:</strong> Do they want to use Google-managed certificates or bring their own existing certificates?</li>
+</ul>
+<h5>Step 2: Origin Configuration</h5>
+<p>Help the user define their backend workloads through a strictly sequential, step-by-step loop. Do NOT ask everything at once. All steps are mandatory.</p>
+<ul>
+<li><strong>Sub-step A - Origin Setup:</strong> Ask if they have a single origin or need multi-origin support. Wait for response.</li>
+<li><strong>Sub-step B - Origin Types:</strong> Ask them to select the backend types from: Cloud Storage Buckets, Compute Engine Managed Instance Groups (MIGs), Google Kubernetes Engine (GKE) Clusters, Cloud Run Services, or External/Internet origins (IP/FQDN). Wait for response.</li>
+<li><strong>Sub-step C - Origin Definition Loop:</strong> Execute the following loop sequentially for EACH origin type selected in Sub-step B. Wait for the user to answer for one origin before asking about the next:</li>
+<li><strong>Resource Discovery:</strong> For Google Cloud-native origins (Cloud Storage, MIGs, GKE, Cloud Run), consult <code>references/resource-discovery.md</code> to fetch resources. Present the list starting with <strong>1. Create New</strong>, <strong>2. NA</strong>. For External/Internet origins, just ask for the FQDN/IP.</li>
+<li><strong>Workload Type (CRITICAL):</strong> Immediately after they define the resource, ask exactly what type of workload is being served:</li>
+</ul>
+<ol>
+<li><strong>Static Images / Objects</strong> (Static content, images, videos, styling assets)</li>
+<li><strong>Cacheable API</strong> (Read-only, public APIs where cached data is acceptable)</li>
+<li><strong>Uncacheable API / Transactions</strong> (Transactional endpoints, login, checkout, account changes)</li>
+<li><strong>Dynamic Web (SSR)</strong> (Dynamic pages, server-side rendered apps, custom dynamic sessions)</li>
+</ol>
+<ul>
+<li><strong>Sub-step D - Routing Rules:</strong> Once ALL origins have been fully defined one by one, ask how traffic should be routed between them (Path-based, header-based, or query-param-based). Wait for response.</li>
+<li><strong>Sub-step E - Logging:</strong> After routing is established, ask if they want to enable Cloud CDN logging, and if so, at what sampling rate (0-100%). Wait for response.</li>
+</ul>
+<h5>Step 3: Traffic Management &amp; Extensibility</h5>
+<ul>
+<li>Provide a brief summary of the origins and routing rules defined in Step 2.</li>
+<li>Ask if they need to enable Advanced Traffic Management settings (such as granular weighted load balancing, traffic mirroring, or <strong>Cloud Load Balancing Service Extensions</strong> for custom WASM plugins / callouts), or if they want to proceed with <strong>Google Cloud Best Practice Configuration</strong>.</li>
+</ul>
+<h5>Step 4: Caching (Cloud CDN)</h5>
+<p>Propose a &quot;Recommended Configuration&quot; based entirely on the Workload Type from Step 2. Do not list the advanced settings (TTL, Cache Keys, Compression) unless they reject the recommendation and want to customize.</p>
+<ul>
+<li><strong>If Workload = Static Images / Objects:</strong></li>
+<li>Cache Mode: Cache All Static</li>
+<li>TTL: Client (1 day / 86400s), Default (30 days / 2592000s), Max (365 days / 31536000s) — balances long-term cache offload for static assets with periodic re-validation.</li>
+<li>Cache Key: Protocol + Host + Path (Ignore Query Strings)</li>
+<li>Compression: Enabled (Brotli &amp; Gzip)</li>
+<li>Negative Caching: Enabled</li>
+<li>Serve while stale: Enabled</li>
+<li><strong>If Workload = Cacheable API:</strong></li>
+<li>Cache Mode: Use Origin Headers</li>
+<li>TTL: Managed by Origin (Omitted from configuration to prevent errors)</li>
+<li>Cache Key: Protocol + Host + Path + Include Query Strings</li>
+<li>Compression: Enabled (Gzip)</li>
+<li>Negative Caching: Enabled</li>
+<li>Serve while stale: Disabled</li>
+<li><strong>If Workload = Uncacheable API / Transactions:</strong></li>
+<li>Cache Mode: Disabled (CDN Bypassed)</li>
+<li><strong>If Workload = Dynamic Web (SSR):</strong></li>
+<li>Cache Mode: Use Origin Headers</li>
+<li>TTL: Managed by Origin (Omitted from configuration to prevent errors)</li>
+<li>Cache Key: Protocol + Host + Path</li>
+<li>Compression: Enabled (Brotli &amp; Gzip)</li>
+<li>Cache Bypass: Bypass cache if session cookies (e.g., SESSID, JWT) are present</li>
+</ul>
+<h5>Step 5: Security (Cloud Armor)</h5>
+<p>Propose a &quot;Recommended Configuration&quot; based entirely on the Workload Type from Step 2. Keep advanced protection (Bot Management, Threat Intel, Geo-blocking) hidden unless requested.</p>
+<ul>
+<li><strong>If Workload = Static Images / Objects:</strong></li>
+<li>Rate Limiting: None (Standard Edge behavior; rate limiting is unsupported on Cloud Armor Edge policies for Cloud Storage buckets).</li>
+<li>OWASP Protection: Disabled</li>
+<li><strong>If Workload = Cacheable API:</strong></li>
+<li>Rate Limiting: 100 requests per minute per client IP (standard baseline to prevent API abuse and DDoS while accommodating normal interactive usage).</li>
+<li>OWASP Protection: Enabled (SQLi, XSS, Local File Inclusion)</li>
+<li><strong>If Workload = Uncacheable API / Transactions:</strong></li>
+<li>Rate Limiting: Strict 30 requests per minute per client IP (tight threshold to protect sensitive transactional endpoints like login/checkout from credential stuffing and brute-force attacks).</li>
+<li>OWASP Protection: Enabled (SQLi, XSS, Remote Command Execution, Session Fixation)</li>
+<li>Bot Management &amp; Threat Intel: Enabled (Block malicious bots and known malicious IPs)</li>
+<li><strong>If Workload = Dynamic Web (SSR):</strong></li>
+<li>Rate Limiting: 120 requests per minute per client IP (generous threshold to accommodate burst requests for initial page loads and asset hydration in SSR web applications).</li>
+<li>OWASP Protection: Enabled (SQLi, XSS, CSRF, Shellshock)</li>
+<li>Geo-blocking: Optional (Restrict/allow specific country access)</li>
+</ul>
+<h5>Step 6: Review &amp; Deploy</h5>
+<ul>
+<li><strong>Configuration Summary:</strong> Generate a complete, formatted markdown table showing all finalized settings from Steps 1 through 5, using Google Cloud product names. Follow this exact template structure:</li>
+</ul>
+<table><thead><tr><th>Component</th><th>Parameter / Setting</th><th>Value &amp; Justification</th></tr></thead><tbody>
+<tr><td><strong>Load Balancer</strong></td><td>Name &amp; Protocol</td><td><code>&lt;Name&gt;</code> (HTTP/HTTPS)</td></tr>
+<tr><td><strong>Origins</strong></td><td>Backends &amp; Workloads</td><td><code>&lt;Backend 1&gt;</code> (<code>&lt;Workload Type&gt;</code>), <code>&lt;Backend 2&gt;</code>...</td></tr>
+<tr><td><strong>Traffic Management</strong></td><td>Routing Rules</td><td><code>&lt;Path / Header rules or Default&gt;</code></td></tr>
+<tr><td><strong>Cloud CDN</strong></td><td>Cache Mode &amp; TTLs</td><td><code>&lt;Cache Mode&gt;</code>, Default TTL: <code>&lt;TTL&gt;</code></td></tr>
+<tr><td><strong>Cloud Armor</strong></td><td>Rate Limiting &amp; OWASP</td><td><code>&lt;RPM Limit&gt;</code>, OWASP Rules: <code>&lt;Enabled/Disabled&gt;</code></td></tr>
+<tr><td><strong>Service Extensions</strong></td><td>WASM / Callouts</td><td><code>&lt;Enabled/Disabled or N/A&gt;</code></td></tr>
+</tbody></table>
+<ul>
+<li><strong>Next Action:</strong> Ask the user to choose their deployment/generation format (Terraform HCL or gcloud CLI Bash Script) and their next action:</li>
+</ul>
+<ol>
+<li><strong>Show Code / Script</strong> (Display the HCL code or gcloud bash script. Once displayed, offer options to <strong>Download</strong> or <strong>Deploy/Execute</strong>)</li>
+<li><strong>Download files</strong> (Save <code>main.tf</code> or <code>deploy.sh</code> to the local workspace)</li>
+<li><strong>Deploy Configuration:</strong> Initiate the deployment via Infrastructure Manager or execute the gcloud script. This should be done using the deployment instructions in <code>references/managed-deployment.md</code>.</li>
+</ol>
+<hr>
+<h4>Relevant Documentation &amp; Supportive Links</h4>
+<ul>
+<li><a href="https://cloud.google.com/load-balancing/docs/overview" rel="noopener">Cloud Load Balancing Overview</a></li>
+<li><a href="https://cloud.google.com/cdn/docs" rel="noopener">Cloud CDN Documentation</a></li>
+<li><a href="https://cloud.google.com/armor/docs" rel="noopener">Cloud Armor Documentation</a></li>
+<li><a href="https://cloud.google.com/service-extensions/docs/overview" rel="noopener">Cloud Load Balancing Service Extensions</a></li>
+<li><a href="https://cloud.google.com/infrastructure-manager/docs" rel="noopener">Infrastructure Manager Overview</a></li>
+<li><a href="https://registry.terraform.io/modules/GoogleCloudPlatform/lb-http/google/latest" rel="noopener">Official Terraform LB-HTTP Module</a></li>
+<li><a href="https://registry.terraform.io/modules/GoogleCloudPlatform/cloud-armor/google/latest" rel="noopener">Official Terraform Cloud Armor Module</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-global-frontend-configuration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-global-frontend-configuration" aria-label="Copy install google-cloud-global-frontend-configuration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-global-frontend-configuration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-global-frontend-configuration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

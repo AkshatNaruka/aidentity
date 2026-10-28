@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Aidentity</title>
+<meta name="description" content="How Aidentity indexes, verifies and licenses AI agent skills.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/about/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About — Aidentity">
+<meta property="og:description" content="How Aidentity indexes, verifies and licenses AI agent skills.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/about/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../skills/index.html">Browse</a>
+      <a href="../sources/index.html">Sources</a>
+      <a href="../about/index.html" aria-current="page">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<section style="padding-top:44px">
+  <div class="wrap" style="max-width:760px">
+    <p class="kicker">About</p>
+    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">An index, with receipts</h2>
+
+    <div class="prose" style="margin-top:24px;font-size:1rem">
+      <p>There are thousands of agent skills. They live in dozens of repositories, in at least six different
+      directory conventions, under licenses that are usually unstated. Finding one is easy. Knowing whether it
+      still works, who wrote it, and what you're allowed to do with it is not.</p>
+
+      <p>Aidentity is a registry. Each entry is one record with a stable ID, an upstream source, an author, a
+      license, a status, and the date it was last verified. The website, the CLI, and the machine-readable
+      registry all read the same file.</p>
+
+      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Verification</h2>
+      <p>Every Monday, CI requests each upstream repository. The result is written to
+      <span class="mono">registry/verified.json</span> and rendered on every page that depends on it. If a source
+      disappears, an issue is opened automatically. A stale link is a bug, not an accepted cost.</p>
+
+      <h2 id="licensing" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Licensing</h2>
+      <p>Three rules:</p>
+      <ol>
+        <li>Content is mirrored only when the upstream license permits redistribution (MIT, Apache-2.0).</li>
+        <li>When it does not, the entry is a pointer: name, description, author, license, upstream URL. No content.</li>
+        <li>Every mirrored source keeps its upstream <span class="mono">LICENSE</span> file. Notices are generated,
+        not hand-written.</li>
+      </ol>
+      <p>This repository's own code is MIT. The registry data is CC0. Original writing is CC BY 4.0. Vendored
+      skills remain under their upstream licenses.</p>
+
+      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Machine-readable</h2>
+      <p>The registry is a single JSON file, versioned and schema-validated. Agents can read it directly:
+      <a href="../registry.json">registry.json</a> · <a href="../llms.txt">llms.txt</a> ·
+      <a href="../sitemap.xml">sitemap.xml</a>.</p>
+
+      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Contributing</h2>
+      <p>One JSON record per pull request. CI validates the schema, the license, and that the source resolves.
+      Maintainers review within a day.</p>
+      <p><a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/CONTRIBUTING.md" rel="noopener">Contributing guide ↗</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../skills/index.html">Browse</a> · <a href="../sources/index.html">Sources</a> · <a href="../about/index.html">About</a> · <a href="../registry.json">registry.json</a> · <a href="../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../assets/app.js" defer></script>
+</body>
+</html>

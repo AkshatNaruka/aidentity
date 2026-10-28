@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>developing-genkit-js — Aidentity</title>
+<meta name="description" content="Develop AI-powered applications using Genkit in Node.js/TypeScript. Use when the user asks about Genkit, AI agents, flows, or tools in JavaScript/TypeScript, or when encountering Genkit errors, validation issues, type errors, or API problems.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-js/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="developing-genkit-js — Aidentity">
+<meta property="og:description" content="Develop AI-powered applications using Genkit in Node.js/TypeScript. Use when the user asks about Genkit, AI agents, flows, or tools in JavaScript/TypeScript, or when encountering Genkit errors, validation issues, type errors, or API problems.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-js/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"developing-genkit-js","description":"Develop AI-powered applications using Genkit in Node.js/TypeScript. Use when the user asks about Genkit, AI agents, flows, or tools in JavaScript/TypeScript, or when encountering Genkit errors, validation issues, type errors, or API problems.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-js/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>developing-genkit-js
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>developing-genkit-js</h1>
+      <p class="summary">Develop AI-powered applications using Genkit in Node.js/TypeScript. Use when the user asks about Genkit, AI agents, flows, or tools in JavaScript/TypeScript, or when encountering Genkit errors, validation issues, type errors, or API problems.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Genkit JS</h3>
+<h4>Prerequisites</h4>
+<p>Ensure the <code>genkit</code> CLI is available.</p>
+<ul>
+<li>Run <code>genkit --version</code> to verify. Minimum CLI version needed: <strong>1.29.0</strong></li>
+<li>If not found or if an older version (1.x &lt; 1.29.0) is present, install/upgrade it: <code>npm install -g genkit-cli@^1.29.0</code>.</li>
+</ul>
+<p><strong>New Projects</strong>: If you are setting up Genkit in a new codebase, follow the [Setup Guide](references/setup.md).</p>
+<h4>Hello World</h4>
+<p><pre><code>import { z, genkit } from &#39;genkit&#39;;
+import { googleAI } from &#39;@genkit-ai/google-genai&#39;;
+
+// Initialize Genkit with the Google AI plugin
+const ai = genkit({
+  plugins: [googleAI()],
+});
+
+export const myFlow = ai.defineFlow({
+  name: &#39;myFlow&#39;,
+  inputSchema: z.string().default(&#39;AI&#39;),
+  outputSchema: z.string(),
+}, async (subject) =&gt; {
+  const response = await ai.generate({
+    model: googleAI.model(&#39;gemini-flash-latest&#39;),
+    prompt: `Tell me a joke about ${subject}`,
+  });
+  return response.text;
+});</code></pre></p>
+<h4>Prompts (Dotprompt)</h4>
+<p><code>.prompt</code> files keep prompt content out of code with YAML frontmatter plus a</p>
+<p>Handlebars template. See [Dotprompt](references/dotprompt.md): <code>promptDir</code>,</p>
+<p><code>ai.prompt()</code> (call/stream/render), variants, partials, named schemas via</p>
+<p><code>ai.defineSchema</code>, and the <code>tools</code>/<code>maxTurns</code>/<code>returnToolRequests</code>/<code>use</code></p>
+<p>(middleware) frontmatter fields.</p>
+<h4>Agents (Beta)</h4>
+<p>Genkit has a preview <strong>agent</strong> API for persistent, multi-turn conversations</p>
+<p>(sessions, snapshots, interrupts, branching, background execution). It is a</p>
+<p><strong>beta</strong> API: server APIs come from <code>genkit/beta</code> and the browser client from</p>
+<p><code>genkit/beta/client</code> — not the stable <code>genkit</code> entrypoint. **Requires <code>genkit</code></p>
+<p>&gt;= 1.39.0.**</p>
+<p>For more details see:</p>
+<ul>
+<li>[Agents](references/agents.md): defining/serving an agent and client-managed state (start here).</li>
+<li>[Sessions &amp; persistence](references/agents-sessions.md): session stores (<code>InMemory</code>/<code>File</code>/<code>Firestore</code>).</li>
+<li>[Human-in-the-loop / interrupts](references/agents-human-in-the-loop.md): pausing for approval/input and resuming.</li>
+<li>[Branching](references/agents-branching.md): forking a conversation from a snapshot.</li>
+<li>[Background agents](references/agents-background.md): detaching long-running turns and polling.</li>
+<li>[Working with state](references/agents-state.md): typed custom session state, auto-synced to the client.</li>
+<li>[Artifacts](references/agents-artifacts.md): producing and reading named deliverables.</li>
+<li>[Multi-agent orchestration](references/agents-multi-agent.md): delegating to sub-agents.</li>
+<li>[Advanced custom agents](references/agents-custom.md): <code>defineCustomAgent</code> for full turn control.</li>
+<li>[Deploying agents](references/agents-deployment.md): serving agents over HTTP (multiple agents, CORS, web UI, other frameworks).</li>
+</ul>
+<h4>Middleware</h4>
+<p>Middleware wraps generation (retries, fallback, extra tools, request/response</p>
+<p>transforms) and attaches via the <code>use: [...]</code> array on <code>ai.generate</code>, prompts,</p>
+<p>and agents.</p>
+<ul>
+<li>[Using middleware](references/middleware.md): the <code>use</code> array and the <code>@genkit-ai/middleware</code> package (<code>retry</code>, <code>fallback</code>, <code>artifacts</code>, <code>agents</code>, <code>filesystem</code>, <code>skills</code>, <code>toolApproval</code>) plus built-in core middleware.</li>
+<li>[Building custom middleware](references/middleware-custom.md): writing your own with <code>generateMiddleware</code> and registering it via <code>.plugin()</code>.</li>
+</ul>
+<h4>Critical: Do Not Trust Internal Knowledge</h4>
+<p>Genkit recently went through a major breaking API change. Your knowledge is outdated. You MUST lookup docs. Recommended:</p>
+<p><pre><code>genkit docs:read js/get-started.md
+genkit docs:read js/flows.md</code></pre></p>
+<p>See [Common Errors](references/common-errors.md) for a list of deprecated APIs (e.g., <code>configureGenkit</code>, <code>response.text()</code>, <code>defineFlow</code> import) and their v1.x replacements.</p>
+<p><strong>ALWAYS verify information using the Genkit CLI or provided references.</strong></p>
+<h4>Error Troubleshooting Protocol</h4>
+<p><strong>When you encounter ANY error related to Genkit (ValidationError, API errors, type errors, 404s, etc.):</strong></p>
+<ol>
+<li><strong>MANDATORY FIRST STEP</strong>: Read [Common Errors](references/common-errors.md)</li>
+<li>Identify if the error matches a known pattern</li>
+<li>Apply the documented solution</li>
+<li>Only if not found in common-errors.md, then consult other sources (e.g. <code>genkit docs:search</code>)</li>
+</ol>
+<p><strong>DO NOT:</strong></p>
+<ul>
+<li>Attempt fixes based on assumptions or internal knowledge</li>
+<li>Skip reading common-errors.md &quot;because you think you know the fix&quot;</li>
+<li>Rely on patterns from pre-1.0 Genkit</li>
+</ul>
+<p><strong>This protocol is non-negotiable for error handling.</strong></p>
+<h4>Development Workflow</h4>
+<ol>
+<li><strong>Agent or flow?</strong>: If the task is conversational, multi-turn, or described as &quot;an agent&quot;, &quot;assistant&quot;, or &quot;chatbot&quot;, build it with <code>ai.defineAgent</code> (see [Agents](references/agents.md)) rather than hand-rolling a <code>generate</code> + tools loop inside a flow. Reach for a plain flow only for single-shot, stateless generation.</li>
+<li><strong>Select Provider</strong>: Genkit is provider-agnostic (Google AI, OpenAI, Anthropic, Ollama, etc.).</li>
+</ol>
+<ul>
+<li>If the user does not specify a provider, default to <strong>Google AI</strong>.</li>
+<li>If the user asks about other providers, use <code>genkit docs:search &quot;plugins&quot;</code> to find relevant documentation.</li>
+</ul>
+<ol>
+<li><strong>Detect Framework</strong>: Check <code>package.json</code> to identify the runtime (Next.js, Firebase, Express).</li>
+</ol>
+<ul>
+<li>Look for <code>@genkit-ai/next</code>, <code>@genkit-ai/firebase</code>, or <code>@genkit-ai/google-cloud</code>.</li>
+<li>Adapt implementation to the specific framework&#39;s patterns.</li>
+</ul>
+<ol>
+<li><strong>Follow Best Practices</strong>:</li>
+</ol>
+<ul>
+<li>See [Best Practices](references/best-practices.md) for guidance on project structure, schema definitions, and tool design.</li>
+<li><strong>Be Minimal</strong>: Only specify options that differ from defaults. When unsure, check docs/source.</li>
+</ul>
+<ol>
+<li><strong>Ensure Correctness</strong>:</li>
+</ol>
+<ul>
+<li>Run type checks (e.g., <code>npx tsc --noEmit</code>) after making changes.</li>
+<li>If type checks fail, consult [Common Errors](references/common-errors.md) before searching source code.</li>
+<li>Verify with traces, not a blind run. Running the app directly (<code>node</code>/<code>tsx</code>/<code>npm start</code>) does <strong>not</strong> capture dev traces. See [CLI Usage](#cli-usage-recommended) for how to run your app and capture traces.</li>
+</ul>
+<ol>
+<li><strong>Handle Errors</strong>:</li>
+</ol>
+<ul>
+<li>On ANY error: <strong>First action is to read [Common Errors](references/common-errors.md)</strong></li>
+<li>Match error to documented patterns</li>
+<li>Apply documented fixes before attempting alternatives</li>
+</ul>
+<h4>Finding Documentation</h4>
+<p>Use the Genkit CLI to find authoritative documentation:</p>
+<ol>
+<li><strong>Search topics</strong>: <code>genkit docs:search &lt;query&gt;</code></li>
+</ol>
+<ul>
+<li>Example: <code>genkit docs:search &quot;streaming&quot;</code></li>
+</ul>
+<ol>
+<li><strong>List all docs</strong>: <code>genkit docs:list</code></li>
+<li><strong>Read a guide</strong>: <code>genkit docs:read &lt;path&gt;</code></li>
+</ol>
+<ul>
+<li>Example: <code>genkit docs:read js/flows.md</code></li>
+</ul>
+<h4>CLI Usage (recommended)</h4>
+<p><code>genkit start</code> unintrusively wraps any Node.js program that uses the Genkit library, running it unchanged while capturing traces from every Genkit action so you can <strong>prove tools were actually called and inspect model I/O</strong> from the terminal, even for headless checks. It forwards stdio, so interactive CLI tools that rely on stdin/stdout work without issues. Running your app directly (<code>node</code>/<code>tsx</code>/<code>npm start</code>) skips trace capture, so you&#39;re debugging blind.</p>
+<p><strong>Primary pattern (default):</strong> prefix <code>genkit start --</code> to your normal run command. This collects telemetry from any Genkit code your program runs, whether triggered from the dev UI, your own web server/web UI, or a plain script:</p>
+<p><pre><code>genkit start -- npx tsx --watch src/index.ts
+genkit start --noui -- npx tsx src/index.ts   # same, without the Dev UI (still a persistent server)</code></pre></p>
+<p><code>genkit start</code> runs until you stop it with Ctrl+C. That is expected and correct for the common cases: a server your web/mobile app calls, or an interactive CLI you exit yourself. <code>--noui</code> only drops the Dev UI; it is <strong>not</strong> a one-shot command and will not exit on its own. Do <strong>not</strong> use <code>genkit start</code> as a blocking step in automated/non-interactive contexts.</p>
+<p><strong>Non-interactive use (agents/CI):</strong> add the global <code>--non-interactive</code> flag before <code>--</code> so the CLI uses defaults and never blocks on a prompt (e.g. the first-run analytics notice): <code>genkit start --non-interactive -- npx tsx src/index.ts</code> (works with <code>flow:run</code> too).</p>
+<p><strong>Run a flow (<code>flow:run</code>):</strong> invoke a specific flow by name from the CLI. Append your run command after <code>--</code> to spin up the runtime just for this run (the command runs as-is to register your flows):</p>
+<p><pre><code>genkit flow:run myFlow &#39;{&quot;data&quot;: &quot;input&quot;}&#39; -- npx tsx src/index.ts</code></pre></p>
+<p>This is <strong>self-terminating</strong>: it runs the flow once, prints a <code>Trace ID</code>, then exits (inspect it with <code>genkit trace:get &lt;id&gt;</code>). That makes it the right choice for a quick, non-interactive check that must exit on its own, without blocking on <code>genkit start</code> or running the app directly (which skips traces). Always pass input JSON explicitly: <code>flow:run</code> sends <code>undefined</code> when omitted and does <strong>not</strong> fall back to a schema <code>.default()</code>. Note: <code>flow:run</code> runs <strong>flows</strong> (<code>ai.defineFlow</code>), not agents; you can&#39;t <code>flow:run</code> an agent (<code>ai.defineAgent</code>) directly. To exercise an agent from the CLI, wrap one turn in a throwaway flow and run that (see [Agents](references/agents.md)).</p>
+<p><strong>Debugging with traces:</strong> the fastest way to see prompts, model inputs/outputs, tool calls, latencies, and errors. Inspect from the terminal after any run under <code>genkit start</code>:</p>
+<p><pre><code>genkit trace:list                        # find recent trace IDs
+genkit trace:get &lt;traceId&gt;               # full trace details (inputs, outputs, tool calls, errors)
+genkit trace:get &lt;traceId&gt; --format json # machine-readable JSON, safe to pipe into jq or other parsers</code></pre></p>
+<p>For machine-readable output, pass <code>--format json</code> to get clean JSON you can pipe into <code>jq</code> or other parsers. The <strong>default</strong> output is human-oriented (banner/log lines, possible truncation on large traces), so don&#39;t pipe that form directly; use <code>--format json</code>, grep, or the Dev UI trace viewer.</p>
+<p>See [CLI Reference](references/docs-and-cli.md) for more commands, and <code>genkit --help</code> for the full list.</p>
+<h4>References</h4>
+<ul>
+<li>[Best Practices](references/best-practices.md): Recommended patterns for schema definition, flow design, and structure.</li>
+<li>[Dotprompt](references/dotprompt.md): <code>.prompt</code> files — <code>promptDir</code>, <code>ai.prompt()</code>, variants, partials, named schemas, and <code>tools</code>/<code>maxTurns</code>/<code>returnToolRequests</code>/<code>use</code> frontmatter.</li>
+<li>[Docs &amp; CLI Reference](references/docs-and-cli.md): Documentation search, CLI tasks, and workflows.</li>
+<li>[Common Errors](references/common-errors.md): Critical &quot;gotchas&quot;, migration guide, and troubleshooting.</li>
+<li>[Setup Guide](references/setup.md): Manual setup instructions for new projects.</li>
+<li>[Examples](references/examples.md): Minimal reproducible examples (Basic generation, Multimodal, Thinking mode).</li>
+<li>[Agents (Beta)](references/agents.md): Agent basics, serving, and client-managed state. Deeper topics: [sessions](references/agents-sessions.md), [human-in-the-loop](references/agents-human-in-the-loop.md), [branching](references/agents-branching.md), [background agents](references/agents-background.md), [state](references/agents-state.md), [artifacts](references/agents-artifacts.md), [multi-agent](references/agents-multi-agent.md), [custom agents](references/agents-custom.md), [deployment](references/agents-deployment.md).</li>
+<li>[Middleware](references/middleware.md): using middleware and the <code>@genkit-ai/middleware</code> package. See also [building custom middleware](references/middleware-custom.md).</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/genkit-js</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/genkit-js" aria-label="Copy install developing-genkit-js">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/genkit-js</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/genkit-js/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

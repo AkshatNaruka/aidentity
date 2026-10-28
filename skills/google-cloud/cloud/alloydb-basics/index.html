@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>alloydb-basics — Aidentity</title>
+<meta name="description" content="Manages clusters, instances, and backups for AlloyDB for PostgreSQL, and integrates with AlloyDB Model Context Protocol (MCP) tools for automated database operations. Use when creating, configuring, or administering AlloyDB databases. Do NOT use for general PostgreSQL instances (e.g. Cloud SQL) or other GCP databases.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/alloydb-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="alloydb-basics — Aidentity">
+<meta property="og:description" content="Manages clusters, instances, and backups for AlloyDB for PostgreSQL, and integrates with AlloyDB Model Context Protocol (MCP) tools for automated database operations. Use when creating, configuring, or administering AlloyDB databases. Do NOT use for general PostgreSQL instances (e.g. Cloud SQL) or other GCP databases.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/alloydb-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"alloydb-basics","description":"Manages clusters, instances, and backups for AlloyDB for PostgreSQL, and integrates with AlloyDB Model Context Protocol (MCP) tools for automated database operations. Use when creating, configuring, or administering AlloyDB databases. Do NOT use for general PostgreSQL instances (e.g. Cloud SQL) or other GCP databases.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/alloydb-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>alloydb-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>alloydb-basics</h1>
+      <p class="summary">Manages clusters, instances, and backups for AlloyDB for PostgreSQL, and integrates with AlloyDB Model Context Protocol (MCP) tools for automated database operations. Use when creating, configuring, or administering AlloyDB databases. Do NOT use for general PostgreSQL instances (e.g. Cloud SQL) or other GCP databases.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>AlloyDB Basics</h3>
+<p>AlloyDB for PostgreSQL is a managed, PostgreSQL-compatible database service</p>
+<p>designed for enterprise-grade performance and availability. It utilizes a</p>
+<p>disaggregated compute and storage architecture to scale resources independently.</p>
+<p>It also provides AlloyDB AI, a collection of features that includes AI-powered</p>
+<p>search (vector, hybrid search, and AI functions), natural language capabilities,</p>
+<p>conversational analytics, and inference features like forecasting and model</p>
+<p>endpoint management to help developers build AI apps faster.</p>
+<h4>Quick Start</h4>
+<p>Before you begin, ensure you have the <a href="https://cloud.google.com/sdk/docs/install" rel="noopener">Google Cloud SDK installed</a> and authenticated (<code>gcloud auth login</code>).</p>
+<ol>
+<li><strong>Enable the AlloyDB API:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud services enable alloydb.googleapis.com --quiet
+    </code></pre></p>
+<ol>
+<li><strong>Create a Cluster:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud alloydb clusters create my-cluster --region=us-central1 \
+        --password=my-password --network=my-vpc --quiet
+    </code></pre></p>
+<p>    *For production environments, always use IAM database authentication instead</p>
+<p>    of passwords. If configuration constraint requires passwords, store them</p>
+<p>    securely using Secret Manager.*</p>
+<ol>
+<li><strong>Create a Primary Instance:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud alloydb instances create my-primary --cluster=my-cluster \
+        --region=us-central1 --instance-type=PRIMARY --cpu-count=2 --quiet
+    </code></pre></p>
+<h4>Reference Directory</h4>
+<p>Read these supplementary files when specific context or detailed steps are</p>
+<p>required for a task:</p>
+<ul>
+<li>To understand architecture, regional availability, connectivity (Private IP,</li>
+</ul>
+<p>    Public IP, PSA, PSC), backups, point-in-time recovery, scaling (vertical and</p>
+<p>    horizontal), or Quota management: read</p>
+<p>    [Core Concepts](references/core-concepts.md).</p>
+<ul>
+<li>To manage clusters, instances, scaling, or backups via the CLI: read</li>
+</ul>
+<p>    [CLI Usage](references/cli-usage.md).</p>
+<ul>
+<li>To configure AlloyDB remote MCP tools: read</li>
+</ul>
+<p>    [MCP Usage](references/mcp-usage.md).</p>
+<ul>
+<li>To deploy AlloyDB using Terraform or Kubernetes Config Connector (KCC): read</li>
+</ul>
+<p>    [Infrastructure as Code](references/iac-usage.md).</p>
+<ul>
+<li>To configure IAM roles, service usage roles, service agents, database</li>
+</ul>
+<p>    users/privileges, or network security (public IP authorization, Auth Proxy</p>
+<p>    sidecar configuration): read [IAM &amp; Security](references/iam-security.md).</p>
+<p>*If you need product information not found in these references, use the</p>
+<p><code>developer_knowledge:search_documents</code> tool (see <a href="https://developers.google.com/knowledge/mcp" rel="noopener">Developer Knowledge MCP setup</a> for installation instructions).*</p>
+<h4>Directives for Agents</h4>
+<p>Agents MUST adhere to the following directives when answering queries related to</p>
+<p>AlloyDB:</p>
+<ul>
+<li><strong>Provide Multiple Methods:</strong> When explaining how to perform administrative</li>
+</ul>
+<p>    tasks (like backups, scaling, or database user creation), always provide</p>
+<p>    both the Google Cloud Console steps and the <code>gcloud</code> CLI commands if both</p>
+<p>    are available in the reference documents.</p>
+<ul>
+<li><strong>Prioritize Private IP:</strong> Recommend Private IP (especially PSC) over Public</li>
+</ul>
+<p>    IP for connections to ensure traffic remains within the Google Cloud network</p>
+<p>    and reduces exposure.</p>
+<ul>
+<li><strong>Require Serverless Connectors:</strong> Verify and state that Serverless VPC</li>
+</ul>
+<p>    Access or Direct VPC Egress is required when connecting from Cloud Run to</p>
+<p>    Private IP.</p>
+<ul>
+<li><strong>Enforce Connectors:</strong> Always direct users to configure the AlloyDB Auth</li>
+</ul>
+<p>    Proxy (running as a sidecar or locally) or language connectors rather than</p>
+<p>    direct TCP connections.</p>
+<ul>
+<li><strong>Block Open Public Access:</strong> If Public IP is configured, warn against and</li>
+</ul>
+<p>    reject designs with <code>0.0.0.0/0</code> in Authorized Networks as this exposes the</p>
+<p>    database to the entire internet.</p>
+<ul>
+<li><strong>Default to IAM Database Authentication:</strong> Suggest IAM database</li>
+</ul>
+<p>    authentication and the <code>alloydbiamuser</code> database role instead of static</p>
+<p>    database passwords.</p>
+<ul>
+<li><strong>Enforce Least Privilege Connection:</strong> When explaining connection roles,</li>
+</ul>
+<p>    explicitly state that <code>roles/alloydb.client</code> should be used to adhere to the</p>
+<p>    principle of least privilege, and warn against using broader roles like</p>
+<p>    <code>roles/alloydb.admin</code> for connections.</p>
+<ul>
+<li><strong>Mention All Creation Methods:</strong> When describing how to create IAM database</li>
+</ul>
+<p>    users, explicitly state that they can be created using the Google Cloud</p>
+<p>    Console, the <code>gcloud</code> CLI, and the AlloyDB API.</p>
+<ul>
+<li><strong>Explain Private IP Options:</strong> When explaining Private IP connectivity,</li>
+</ul>
+<p>    always explicitly mention and describe both **Private Services Access</p>
+<p>    (PSA)<strong> and </strong>Private Service Connect (PSC)** as the supported methods,</p>
+<p>    recommending PSC for new deployments.</p>
+<ul>
+<li><strong>Compare Direct Connections:</strong> Explicitly explain that direct connections</li>
+</ul>
+<p>    (connecting directly to the private IP without connectors) are possible but</p>
+<p>    discouraged, and compare their security (lack of IAM/mTLS) to secure methods</p>
+<p>    like the AlloyDB Auth Proxy or language connectors.</p>
+<ul>
+<li><strong>Enforce SQL Alone Warning:</strong> When explaining IAM user creation, you MUST</li>
+</ul>
+<p>    explicitly state that &quot;IAM database users cannot be created using standard</p>
+<p>    SQL alone&quot; and must be registered via the control plane first.</p>
+<ul>
+<li><strong>Enforce Roles and Privileges Terminology:</strong> When explaining database</li>
+</ul>
+<p>    object access, you MUST explicitly state that &quot;standard PostgreSQL roles and</p>
+<p>    privileges&quot; apply, using both terms.</p>
+<ul>
+<li><strong>Explain Backup Lifecycle:</strong> When explaining backups, always explicitly</li>
+</ul>
+<p>    state that discrete backups exist independently of the source cluster and</p>
+<p>    remain active even if the source cluster is deleted.</p>
+<ul>
+<li><strong>Recommend Connectors for Public IP:</strong> Explicitly state that secure</li>
+</ul>
+<p>    connection methods (AlloyDB Auth Proxy, Language Connectors) are</p>
+<p>    <strong>especially recommended</strong> for connections over Public IP.</p>
+<ul>
+<li><strong>Mention Autoscaling:</strong> When explaining read pool scaling, always</li>
+</ul>
+<p>    explicitly mention the option of using <strong>read pool autoscaling</strong> and state</p>
+<p>    that it is in <strong>Preview</strong>.</p>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/alloydb/docs/overview.md.txt" rel="noopener">AlloyDB for PostgreSQL Documentation</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/alloydb-auth-proxy" rel="noopener">AlloyDB Auth Proxy GitHub Repository</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/alloydb-java-connector" rel="noopener">AlloyDB Java Connector GitHub Repository</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/alloydb-python-connector" rel="noopener">AlloyDB Python Connector GitHub Repository</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/alloydb-go-connector" rel="noopener">AlloyDB Go Connector GitHub Repository</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/alloydb-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/alloydb-basics" aria-label="Copy install alloydb-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/alloydb-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/alloydb-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>improve-codebase-architecture — Aidentity</title>
+<meta name="description" content="Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/improve-codebase-architecture/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="improve-codebase-architecture — Aidentity">
+<meta property="og:description" content="Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/improve-codebase-architecture/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"improve-codebase-architecture","description":"Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/improve-codebase-architecture/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>improve-codebase-architecture
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>improve-codebase-architecture</h1>
+      <p class="summary">Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Improve Codebase Architecture</h3>
+<p>Surface architectural friction and propose <strong>deepening opportunities</strong>: refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.</p>
+<p>This command is _informed_ by the project&#39;s domain model and built on a shared design vocabulary:</p>
+<ul>
+<li>Call the Skill tool with &quot;codebase-design&quot; for the architecture vocabulary (<strong>module</strong>, <strong>interface</strong>, <strong>depth</strong>, <strong>seam</strong>, <strong>adapter</strong>, <strong>leverage</strong>, <strong>locality</strong>) and its principles (the deletion test, &quot;the interface is the test surface&quot;, &quot;one adapter = hypothetical seam, two = real&quot;). Use these terms exactly in every suggestion, and don&#39;t drift into &quot;component,&quot; &quot;service,&quot; &quot;API,&quot; or &quot;boundary.&quot;</li>
+<li>The domain language in <code>CONTEXT.md</code> gives names to good seams; ADRs in <code>docs/adr/</code> record decisions this command should not re-litigate.</li>
+</ul>
+<h4>Process</h4>
+<h5>1. Explore</h5>
+<p><strong>Scope before you scan: YAGNI.</strong> Deepening a module pays off by making future changes to it easier, so put extra weight on the parts of the codebase that have recently changed. Decide <em>where</em> to look before you look:</p>
+<ul>
+<li>If the user named a direction (a module, a subsystem, a pain point), take it, and skip the inference below.</li>
+<li>Otherwise, walk back a good stretch of the commit history (<code>git log --oneline</code>) to find the codebase&#39;s hot spots, the files and areas that keep coming up, and let those paths pull your attention first. If the changes are scattered with no clear hot spot, widen the net.</li>
+</ul>
+<p>Read the project&#39;s domain glossary (<code>CONTEXT.md</code>) and any ADRs in the area you&#39;re touching first.</p>
+<p>Then spawn a sub-agent to walk the codebase. Don&#39;t follow rigid heuristics; explore organically and note where you experience friction:</p>
+<ul>
+<li>Where does understanding one concept require bouncing between many small modules?</li>
+<li>Where are modules <strong>shallow</strong>, with an interface nearly as complex as the implementation?</li>
+<li>Where have pure functions been extracted just for testability, but the real bugs hide in how they&#39;re called (no <strong>locality</strong>)?</li>
+<li>Where do tightly-coupled modules leak across their seams?</li>
+<li>Which parts of the codebase are untested, or hard to test through their current interface?</li>
+</ul>
+<p>Apply the <strong>deletion test</strong> to anything you suspect is shallow: would deleting it concentrate complexity, or just move it? A &quot;yes, concentrates&quot; is the signal you want.</p>
+<h5>2. Present candidates as an HTML report</h5>
+<p>Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from <code>$TMPDIR</code>, falling back to <code>/tmp</code> (or <code>%TEMP%</code> on Windows), and write to <code>&lt;tmpdir&gt;/architecture-review-&lt;timestamp&gt;.html</code> so each run gets a fresh file. Open it for the user (<code>xdg-open &lt;path&gt;</code> on Linux, <code>open &lt;path&gt;</code> on macOS, <code>start &lt;path&gt;</code> on Windows) and tell them the absolute path.</p>
+<p>The report uses <strong>Tailwind via CDN</strong> for layout and styling, and <strong>Mermaid via CDN</strong> for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals: use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections, collapse animations). Each candidate gets a <strong>before/after visualisation</strong>. Be visual.</p>
+<p>For each candidate, render a card with:</p>
+<ul>
+<li><strong>Files</strong>: which files/modules are involved</li>
+<li><strong>Problem</strong>: why the current architecture is causing friction</li>
+<li><strong>Solution</strong>: plain English description of what would change</li>
+<li><strong>Benefits</strong>: explained in terms of locality and leverage, and how tests would improve</li>
+<li><strong>Before / After diagram</strong>: side-by-side, custom-drawn, illustrating the shallowness and the deepening</li>
+<li><strong>Recommendation strength</strong>: one of <code>Strong</code>, <code>Worth exploring</code>, <code>Speculative</code>, rendered as a badge</li>
+</ul>
+<p>End the report with a <strong>Top recommendation</strong> section: which candidate you&#39;d tackle first and why.</p>
+<p><strong>Use CONTEXT.md vocabulary for the domain, and the <code>/codebase-design</code> vocabulary for the architecture.</strong> If <code>CONTEXT.md</code> defines &quot;Order,&quot; talk about &quot;the Order intake module,&quot; not &quot;the FooBarHandler,&quot; and not &quot;the Order service.&quot;</p>
+<p><strong>ADR conflicts</strong>: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _&quot;contradicts ADR-0007, but worth reopening because…&quot;_). Don&#39;t list every theoretical refactor an ADR forbids.</p>
+<p>See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.</p>
+<p>Do NOT propose interfaces yet. After the file is written, ask the user: &quot;Which of these would you like to explore?&quot;</p>
+<h5>3. Grilling loop</h5>
+<p>Once the user picks a candidate, call the Skill tool with &quot;grilling&quot; to walk the decision tree with them: constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.</p>
+<p>Side effects happen inline as decisions crystallize; call the Skill tool with &quot;domain-modeling&quot; to keep the domain model current as you go:</p>
+<ul>
+<li><strong>Naming a deepened module after a concept not in <code>CONTEXT.md</code>?</strong> Add the term to <code>CONTEXT.md</code>. Create the file lazily if it doesn&#39;t exist.</li>
+<li><strong>Sharpening a fuzzy term during the conversation?</strong> Update <code>CONTEXT.md</code> right there.</li>
+<li><strong>User rejects the candidate with a load-bearing reason?</strong> Offer an ADR, framed as: _&quot;Want me to record this as an ADR so future architecture reviews don&#39;t re-suggest it?&quot;_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing; skip ephemeral reasons (&quot;not worth it right now&quot;) and self-evident ones.</li>
+<li><strong>Want to explore alternative interfaces for the deepened module?</strong> Call the Skill tool with &quot;codebase-design&quot; and use its design-it-twice parallel sub-agent pattern.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/improve-codebase-architecture</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/improve-codebase-architecture" aria-label="Copy install improve-codebase-architecture">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/improve-codebase-architecture</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/improve-codebase-architecture/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

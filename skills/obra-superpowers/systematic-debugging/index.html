@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>systematic-debugging — Aidentity</title>
+<meta name="description" content="Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/systematic-debugging/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="systematic-debugging — Aidentity">
+<meta property="og:description" content="Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/systematic-debugging/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"systematic-debugging","description":"Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/systematic-debugging/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=debugging">debugging</a><span>/</span>systematic-debugging
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>systematic-debugging</h1>
+      <p class="summary">Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=debugging">debugging</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Systematic Debugging</h3>
+<h4>Overview</h4>
+<p><strong>Core principle:</strong> ALWAYS find root cause before attempting fixes. Symptom fixes are failure.</p>
+<p><strong>Violating the letter of this process is violating the spirit of debugging.</strong></p>
+<h4>The Iron Law</h4>
+<p><pre><code>NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST</code></pre></p>
+<p>If you haven&#39;t completed Phase 1, you cannot propose fixes.</p>
+<h4>When to Use</h4>
+<p>Use for ANY technical issue:</p>
+<ul>
+<li>Test failures</li>
+<li>Bugs in production</li>
+<li>Unexpected behavior</li>
+<li>Performance problems</li>
+<li>Build failures</li>
+<li>Integration issues</li>
+</ul>
+<p><strong>Use this ESPECIALLY when:</strong></p>
+<ul>
+<li>Under time pressure (emergencies make guessing tempting)</li>
+<li>&quot;Just one quick fix&quot; seems obvious</li>
+<li>You&#39;ve already tried multiple fixes</li>
+<li>Previous fix didn&#39;t work</li>
+<li>You don&#39;t fully understand the issue</li>
+</ul>
+<p><strong>Don&#39;t skip when:</strong></p>
+<ul>
+<li>Issue seems simple (simple bugs have root causes too)</li>
+<li>You&#39;re in a hurry (rushing guarantees rework)</li>
+<li>Manager wants it fixed NOW (systematic is faster than thrashing)</li>
+</ul>
+<h4>The Four Phases</h4>
+<p>You MUST complete each phase before proceeding to the next.</p>
+<h5>Phase 1: Root Cause Investigation</h5>
+<p><strong>BEFORE attempting ANY fix:</strong></p>
+<ol>
+<li><strong>Read Error Messages Carefully</strong></li>
+</ol>
+<ul>
+<li>Don&#39;t skip past errors or warnings</li>
+<li>They often contain the exact solution</li>
+<li>Read stack traces completely</li>
+<li>Note line numbers, file paths, error codes</li>
+</ul>
+<ol>
+<li><strong>Reproduce Consistently</strong></li>
+</ol>
+<ul>
+<li>Can you trigger it reliably?</li>
+<li>What are the exact steps?</li>
+<li>Does it happen every time?</li>
+<li>If not reproducible → gather more data, don&#39;t guess</li>
+</ul>
+<ol>
+<li><strong>Check Recent Changes</strong></li>
+</ol>
+<ul>
+<li>What changed that could cause this?</li>
+<li>Git diff, recent commits</li>
+<li>New dependencies, config changes</li>
+<li>Environmental differences</li>
+</ul>
+<ol>
+<li><strong>Gather Evidence in Multi-Component Systems</strong></li>
+</ol>
+<p>   <strong>WHEN system has multiple components (CI → build → signing, API → service → database):</strong></p>
+<p>   <strong>BEFORE proposing fixes, add diagnostic instrumentation:</strong></p>
+<p>   <pre><code>   For EACH component boundary:
+     - Log what data enters component
+     - Log what data exits component
+     - Verify environment/config propagation
+     - Check state at each layer
+
+   Run once to gather evidence showing WHERE it breaks
+   THEN analyze evidence to identify failing component
+   THEN investigate that specific component
+   </code></pre></p>
+<p>   <strong>Example (multi-layer system):</strong></p>
+<p>   <pre><code>   # Layer 1: Workflow
+   echo &quot;=== Secrets available in workflow: ===&quot;
+   echo &quot;IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}&quot;
+
+   # Layer 2: Build script
+   echo &quot;=== Env vars in build script: ===&quot;
+   env | grep IDENTITY || echo &quot;IDENTITY not in environment&quot;
+
+   # Layer 3: Signing script
+   echo &quot;=== Keychain state: ===&quot;
+   security list-keychains
+   security find-identity -v
+
+   # Layer 4: Actual signing
+   codesign --sign &quot;$IDENTITY&quot; --verbose=4 &quot;$APP&quot;
+   </code></pre></p>
+<p>   <strong>This reveals:</strong> Which layer fails (secrets → workflow ✓, workflow → build ✗)</p>
+<ol>
+<li><strong>Trace Data Flow</strong></li>
+</ol>
+<p>   <strong>WHEN error is deep in call stack:</strong></p>
+<p>   See <code>root-cause-tracing.md</code> in this directory for the complete backward tracing technique.</p>
+<p>   <strong>Quick version:</strong></p>
+<ul>
+<li>Where does bad value originate?</li>
+<li>What called this with bad value?</li>
+<li>Keep tracing up until you find the source</li>
+<li>Fix at source, not at symptom</li>
+</ul>
+<h5>Phase 2: Pattern Analysis</h5>
+<p><strong>Find the pattern before fixing:</strong></p>
+<ol>
+<li><strong>Find Working Examples</strong></li>
+</ol>
+<ul>
+<li>Locate similar working code in same codebase</li>
+<li>What works that&#39;s similar to what&#39;s broken?</li>
+</ul>
+<ol>
+<li><strong>Compare Against References</strong></li>
+</ol>
+<ul>
+<li>If implementing pattern, read reference implementation COMPLETELY</li>
+<li>Don&#39;t skim - read every line</li>
+<li>Understand the pattern fully before applying</li>
+</ul>
+<ol>
+<li><strong>Identify Differences</strong></li>
+</ol>
+<ul>
+<li>What&#39;s different between working and broken?</li>
+<li>List every difference, however small</li>
+<li>Don&#39;t assume &quot;that can&#39;t matter&quot;</li>
+</ul>
+<ol>
+<li><strong>Understand Dependencies</strong></li>
+</ol>
+<ul>
+<li>What other components does this need?</li>
+<li>What settings, config, environment?</li>
+<li>What assumptions does it make?</li>
+</ul>
+<h5>Phase 3: Hypothesis and Testing</h5>
+<p><strong>Scientific method:</strong></p>
+<ol>
+<li><strong>Form Single Hypothesis</strong></li>
+</ol>
+<ul>
+<li>State clearly: &quot;I think X is the root cause because Y&quot;</li>
+<li>Write it down</li>
+<li>Be specific, not vague</li>
+</ul>
+<ol>
+<li><strong>Test Minimally</strong></li>
+</ol>
+<ul>
+<li>Make the SMALLEST possible change to test hypothesis</li>
+<li>One variable at a time</li>
+<li>Don&#39;t fix multiple things at once</li>
+</ul>
+<ol>
+<li><strong>Verify Before Continuing</strong></li>
+</ol>
+<ul>
+<li>Did it work? Yes → Phase 4</li>
+<li>Didn&#39;t work? Form NEW hypothesis</li>
+<li>DON&#39;T add more fixes on top</li>
+</ul>
+<ol>
+<li><strong>When You Don&#39;t Know</strong></li>
+</ol>
+<ul>
+<li>Say &quot;I don&#39;t understand X&quot;</li>
+<li>Don&#39;t pretend to know</li>
+<li>Ask for help</li>
+<li>Research more</li>
+</ul>
+<h5>Phase 4: Implementation</h5>
+<p><strong>Fix the root cause, not the symptom:</strong></p>
+<ol>
+<li><strong>Create Failing Test Case</strong></li>
+</ol>
+<ul>
+<li>Simplest possible reproduction</li>
+<li>Automated test if possible</li>
+<li>One-off test script if no framework</li>
+<li>MUST have before fixing</li>
+<li>Use the <code>superpowers:test-driven-development</code> skill for writing proper failing tests</li>
+</ul>
+<ol>
+<li><strong>Implement Single Fix</strong></li>
+</ol>
+<ul>
+<li>Address the root cause identified</li>
+<li>ONE change at a time</li>
+<li>No &quot;while I&#39;m here&quot; improvements</li>
+<li>No bundled refactoring</li>
+</ul>
+<ol>
+<li><strong>Verify Fix</strong></li>
+</ol>
+<ul>
+<li>Test passes now?</li>
+<li>No other tests broken?</li>
+<li>Issue actually resolved?</li>
+<li>Use the <code>superpowers:verification-before-completion</code> skill before claiming success</li>
+</ul>
+<ol>
+<li><strong>If Fix Doesn&#39;t Work</strong></li>
+</ol>
+<ul>
+<li>STOP</li>
+<li>Count: How many fixes have you tried?</li>
+<li>If &lt; 3: Return to Phase 1, re-analyze with new information</li>
+<li><strong>If ≥ 3: STOP and question the architecture (step 5 below)</strong></li>
+<li>DON&#39;T attempt Fix #4 without architectural discussion</li>
+</ul>
+<ol>
+<li><strong>If 3+ Fixes Failed: Question Architecture</strong></li>
+</ol>
+<p>   <strong>Pattern indicating architectural problem:</strong></p>
+<ul>
+<li>Each fix reveals new shared state/coupling/problem in different place</li>
+<li>Fixes require &quot;massive refactoring&quot; to implement</li>
+<li>Each fix creates new symptoms elsewhere</li>
+</ul>
+<p>   <strong>STOP and question fundamentals:</strong></p>
+<ul>
+<li>Is this pattern fundamentally sound?</li>
+<li>Are we &quot;sticking with it through sheer inertia&quot;?</li>
+<li>Should we refactor architecture vs. continue fixing symptoms?</li>
+</ul>
+<p>   <strong>Discuss with your human partner before attempting more fixes</strong></p>
+<p>   This is NOT a failed hypothesis - this is a wrong architecture.</p>
+<h4>Red Flags - STOP and Follow Process</h4>
+<p>If you catch yourself thinking:</p>
+<ul>
+<li>&quot;Quick fix for now, investigate later&quot;</li>
+<li>&quot;Just try changing X and see if it works&quot;</li>
+<li>&quot;Add multiple changes, run tests&quot;</li>
+<li>&quot;Skip the test, I&#39;ll manually verify&quot;</li>
+<li>&quot;It&#39;s probably X, let me fix that&quot;</li>
+<li>&quot;I don&#39;t fully understand but this might work&quot;</li>
+<li>&quot;Pattern says X but I&#39;ll adapt it differently&quot;</li>
+<li>&quot;Here are the main problems: [lists fixes without investigation]&quot;</li>
+<li>Proposing solutions before tracing data flow</li>
+<li><strong>&quot;One more fix attempt&quot; (when already tried 2+)</strong></li>
+<li><strong>Each fix reveals new problem in different place</strong></li>
+</ul>
+<p><strong>ALL of these mean: STOP. Return to Phase 1.</strong></p>
+<p><strong>If 3+ fixes failed:</strong> Question the architecture (see Phase 4.5)</p>
+<h4>your human partner&#39;s Signals You&#39;re Doing It Wrong</h4>
+<p><strong>Watch for these redirections:</strong></p>
+<ul>
+<li>&quot;Is that not happening?&quot; - You assumed without verifying</li>
+<li>&quot;Will it show us...?&quot; - You should have added evidence gathering</li>
+<li>&quot;Stop guessing&quot; - You&#39;re proposing fixes without understanding</li>
+<li>&quot;Ultra-think this&quot; - Question fundamentals, not just symptoms</li>
+<li>&quot;We&#39;re stuck?&quot; (frustrated) - Your approach isn&#39;t working</li>
+</ul>
+<p><strong>When you see these:</strong> STOP. Return to Phase 1.</p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;Issue is simple, don&#39;t need process&quot;</td><td>Simple issues have root causes too. Process is fast for simple bugs.</td></tr>
+<tr><td>&quot;Emergency, no time for process&quot;</td><td>Systematic debugging is FASTER than guess-and-check thrashing.</td></tr>
+<tr><td>&quot;Just try this first, then investigate&quot;</td><td>First fix sets the pattern. Do it right from the start.</td></tr>
+<tr><td>&quot;I&#39;ll write test after confirming fix works&quot;</td><td>Untested fixes don&#39;t stick. Test first proves it.</td></tr>
+<tr><td>&quot;Multiple fixes at once saves time&quot;</td><td>Can&#39;t isolate what worked. Causes new bugs.</td></tr>
+<tr><td>&quot;Reference too long, I&#39;ll adapt the pattern&quot;</td><td>Partial understanding guarantees bugs. Read it completely.</td></tr>
+<tr><td>&quot;I see the problem, let me fix it&quot;</td><td>Seeing symptoms ≠ understanding root cause.</td></tr>
+<tr><td>&quot;One more fix attempt&quot; (after 2+ failures)</td><td>3+ failures = architectural problem. Question pattern, don&#39;t fix again.</td></tr>
+</tbody></table>
+<h4>Quick Reference</h4>
+<table><thead><tr><th>Phase</th><th>Key Activities</th><th>Success Criteria</th></tr></thead><tbody>
+<tr><td><strong>1. Root Cause</strong></td><td>Read errors, reproduce, check changes, gather evidence</td><td>Understand WHAT and WHY</td></tr>
+<tr><td><strong>2. Pattern</strong></td><td>Find working examples, compare</td><td>Identify differences</td></tr>
+<tr><td><strong>3. Hypothesis</strong></td><td>Form theory, test minimally</td><td>Confirmed or new hypothesis</td></tr>
+<tr><td><strong>4. Implementation</strong></td><td>Create test, fix, verify</td><td>Bug resolved, tests pass</td></tr>
+</tbody></table>
+<h4>When Process Reveals &quot;No Root Cause&quot;</h4>
+<p>If systematic investigation reveals issue is truly environmental, timing-dependent, or external:</p>
+<ol>
+<li>You&#39;ve completed the process</li>
+<li>Document what you investigated</li>
+<li>Implement appropriate handling (retry, timeout, error message)</li>
+<li>Add monitoring/logging for future investigation</li>
+</ol>
+<p><strong>But:</strong> 95% of &quot;no root cause&quot; cases are incomplete investigation.</p>
+<h4>Supporting Techniques</h4>
+<p>These techniques are part of systematic debugging and available in this directory:</p>
+<ul>
+<li><strong><code>root-cause-tracing.md</code></strong> - Trace bugs backward through call stack to find original trigger</li>
+<li><strong><code>defense-in-depth.md</code></strong> - Add validation at multiple layers after finding root cause</li>
+<li><strong><code>condition-based-waiting.md</code></strong> - Replace arbitrary timeouts with condition polling</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/debugging-and-error-recovery/index.html"
+     data-source="addyosmani"
+     data-category="debugging"
+     data-search="debugging-and-error-recovery guides systematic root-cause debugging. use when tests fail, builds break, behavior doesn&#39;t match expectations, or you encounter any unexpected error. use when you need a systematic approach to finding and fixing the root cause rather than guessing. debugging debugging addyosmani/agent-skills">
+  <span>
+    <span class="r-name">debugging-and-error-recovery</span>
+    <span class="r-desc">Guides systematic root-cause debugging. Use when tests fail, builds break, behavior doesn&#39;t match expectations, or you encounter any unexpected error. Use when you need a systematic approach to finding and fixing the root cause rather than guessing.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/brainstorming/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="brainstorming you must use this before any creative work - creating features, building components, adding functionality, or modifying behavior. explores user intent, requirements and design before implementation. general  obra/superpowers">
+  <span>
+    <span class="r-name">brainstorming</span>
+    <span class="r-desc">You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/executing-plans/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="executing-plans use when you have a written implementation plan to execute in a separate session with review checkpoints general  obra/superpowers">
+  <span>
+    <span class="r-name">executing-plans</span>
+    <span class="r-desc">Use when you have a written implementation plan to execute in a separate session with review checkpoints</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/finishing-a-development-branch/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="finishing-a-development-branch use when implementation is complete, all tests pass, and you need to decide how to integrate the work general  obra/superpowers">
+  <span>
+    <span class="r-name">finishing-a-development-branch</span>
+    <span class="r-desc">Use when implementation is complete, all tests pass, and you need to decide how to integrate the work</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/systematic-debugging</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/systematic-debugging" aria-label="Copy install systematic-debugging">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>debugging</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/systematic-debugging</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/systematic-debugging/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

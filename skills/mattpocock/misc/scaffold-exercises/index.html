@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scaffold-exercises — Aidentity</title>
+<meta name="description" content="Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/scaffold-exercises/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="scaffold-exercises — Aidentity">
+<meta property="og:description" content="Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/scaffold-exercises/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"scaffold-exercises","description":"Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/scaffold-exercises/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>scaffold-exercises
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>scaffold-exercises</h1>
+      <p class="summary">Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Scaffold Exercises</h3>
+<p>Create exercise directory structures that pass <code>pnpm ai-hero-cli internal lint</code>, then commit with <code>git commit</code>.</p>
+<h4>Directory naming</h4>
+<ul>
+<li><strong>Sections</strong>: <code>XX-section-name/</code> inside <code>exercises/</code> (e.g., <code>01-retrieval-skill-building</code>)</li>
+<li><strong>Exercises</strong>: <code>XX.YY-exercise-name/</code> inside a section (e.g., <code>01.03-retrieval-with-bm25</code>)</li>
+<li>Section number = <code>XX</code>, exercise number = <code>XX.YY</code></li>
+<li>Names are dash-case (lowercase, hyphens)</li>
+</ul>
+<h4>Exercise variants</h4>
+<p>Each exercise needs at least one of these subfolders:</p>
+<ul>
+<li><code>problem/</code> - student workspace with TODOs</li>
+<li><code>solution/</code> - reference implementation</li>
+<li><code>explainer/</code> - conceptual material, no TODOs</li>
+</ul>
+<p>When stubbing, default to <code>explainer/</code> unless the plan specifies otherwise.</p>
+<h4>Required files</h4>
+<p>Each subfolder (<code>problem/</code>, <code>solution/</code>, <code>explainer/</code>) needs a <code>readme.md</code> that:</p>
+<ul>
+<li>Is <strong>not empty</strong> (must have real content, even a single title line works)</li>
+<li>Has no broken links</li>
+</ul>
+<p>When stubbing, create a minimal readme with a title and a description:</p>
+<p><pre><code># Exercise Title
+
+Description here</code></pre></p>
+<p>If the subfolder has code, it also needs a <code>main.ts</code> (&gt;1 line). But for stubs, a readme-only exercise is fine.</p>
+<h4>Workflow</h4>
+<ol>
+<li><strong>Parse the plan</strong> - extract section names, exercise names, and variant types</li>
+<li><strong>Create directories</strong> - <code>mkdir -p</code> for each path</li>
+<li><strong>Create stub readmes</strong> - one <code>readme.md</code> per variant folder with a title</li>
+<li><strong>Run lint</strong> - <code>pnpm ai-hero-cli internal lint</code> to validate</li>
+<li><strong>Fix any errors</strong> - iterate until lint passes</li>
+</ol>
+<h4>Lint rules summary</h4>
+<p>The linter (<code>pnpm ai-hero-cli internal lint</code>) checks:</p>
+<ul>
+<li>Each exercise has subfolders (<code>problem/</code>, <code>solution/</code>, <code>explainer/</code>)</li>
+<li>At least one of <code>problem/</code>, <code>explainer/</code>, or <code>explainer.1/</code> exists</li>
+<li><code>readme.md</code> exists and is non-empty in the primary subfolder</li>
+<li>No <code>.gitkeep</code> files</li>
+<li>No <code>speaker-notes.md</code> files</li>
+<li>No broken links in readmes</li>
+<li>No <code>pnpm run exercise</code> commands in readmes</li>
+<li><code>main.ts</code> required per subfolder unless it&#39;s readme-only</li>
+</ul>
+<h4>Moving/renaming exercises</h4>
+<p>When renumbering or moving exercises:</p>
+<ol>
+<li>Use <code>git mv</code> (not <code>mv</code>) to rename directories - preserves git history</li>
+<li>Update the numeric prefix to maintain order</li>
+<li>Re-run lint after moves</li>
+</ol>
+<p>Example:</p>
+<p><pre><code>git mv exercises/01-retrieval/01.03-embeddings exercises/01-retrieval/01.04-embeddings</code></pre></p>
+<h4>Example: stubbing from a plan</h4>
+<p>Given a plan like:</p>
+<p><pre><code>Section 05: Memory Skill Building
+- 05.01 Introduction to Memory
+- 05.02 Short-term Memory (explainer + problem + solution)
+- 05.03 Long-term Memory</code></pre></p>
+<p>Create:</p>
+<p><pre><code>mkdir -p exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer
+mkdir -p exercises/05-memory-skill-building/05.02-short-term-memory/{explainer,problem,solution}
+mkdir -p exercises/05-memory-skill-building/05.03-long-term-memory/explainer</code></pre></p>
+<p>Then create readme stubs:</p>
+<p><pre><code>exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer/readme.md -&gt; &quot;# Introduction to Memory&quot;
+exercises/05-memory-skill-building/05.02-short-term-memory/explainer/readme.md -&gt; &quot;# Short-term Memory&quot;
+exercises/05-memory-skill-building/05.02-short-term-memory/problem/readme.md -&gt; &quot;# Short-term Memory&quot;
+exercises/05-memory-skill-building/05.02-short-term-memory/solution/readme.md -&gt; &quot;# Short-term Memory&quot;
+exercises/05-memory-skill-building/05.03-long-term-memory/explainer/readme.md -&gt; &quot;# Long-term Memory&quot;</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/misc/scaffold-exercises</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/misc/scaffold-exercises" aria-label="Copy install scaffold-exercises">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/misc/scaffold-exercises</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/misc/scaffold-exercises/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gcloud — Aidentity</title>
+<meta name="description" content="Provides safety-critical validation, guardrails, and data reduction for gcloud CLI operations across Google Cloud Platform (GCP) services and infrastructure. Use when planning, generating, constructing, proposing, describing, or executing any gcloud CLI commands - including when answering questions about gcloud syntax, or formatting flags. Don&#39;t use when writing Google Cloud client library code or raw REST/gRPC API requests.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gcloud/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gcloud — Aidentity">
+<meta property="og:description" content="Provides safety-critical validation, guardrails, and data reduction for gcloud CLI operations across Google Cloud Platform (GCP) services and infrastructure. Use when planning, generating, constructing, proposing, describing, or executing any gcloud CLI commands - including when answering questions about gcloud syntax, or formatting flags. Don&#39;t use when writing Google Cloud client library code or raw REST/gRPC API requests.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gcloud/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gcloud","description":"Provides safety-critical validation, guardrails, and data reduction for gcloud CLI operations across Google Cloud Platform (GCP) services and infrastructure. Use when planning, generating, constructing, proposing, describing, or executing any gcloud CLI commands - including when answering questions about gcloud syntax, or formatting flags. Don't use when writing Google Cloud client library code or raw REST/gRPC API requests.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gcloud/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gcloud
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gcloud</h1>
+      <p class="summary">Provides safety-critical validation, guardrails, and data reduction for gcloud CLI operations across Google Cloud Platform (GCP) services and infrastructure. Use when planning, generating, constructing, proposing, describing, or executing any gcloud CLI commands - including when answering questions about gcloud syntax, or formatting flags. Don&#39;t use when writing Google Cloud client library code or raw REST/gRPC API requests.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>gcloud CLI Skill for AI Agents</h3>
+<p>&gt; [!CAUTION]</p>
+<p>&gt;</p>
+<p>&gt; ### MANDATORY PRE-CONDITION: EXPLICIT LEAF-LEVEL SYNTAX VALIDATION</p>
+<p>&gt;</p>
+<p>&gt; All pre-existing knowledge of <code>gcloud</code> commands, flags, flag values, and</p>
+<p>&gt; positional argument syntax is <strong>stale and prone to hallucination</strong>.</p>
+<p>&gt;</p>
+<p>&gt; NEVER propose command parameters, output flag options, execute commands, OR</p>
+<p>&gt; outline step-by-step plans for any <code>gcloud</code> task before validating leaf-level</p>
+<p>&gt; syntax via <code>gcloud help &lt;command&gt;</code> (or including leaf-level help lookup as a</p>
+<p>&gt; mandatory step in the plan).</p>
+<p>&gt;</p>
+<p>&gt; <strong>Mandatory Action Rules</strong>:</p>
+<p>&gt;</p>
+<p>&gt; 1.  <strong>Direct Execution &amp; Code Generation</strong>: <strong>ALWAYS</strong> invoke `gcloud help</p>
+<p>&gt;     &lt;leaf_command&gt;<code> (e.g. </code>gcloud help compute instances create<code> or </code>gcloud</p>
+<p>&gt;     help sql instances create`) before proposing or executing the final</p>
+<p>&gt;     command syntax.</p>
+<p>&gt;</p>
+<p>&gt; 2.  <strong>Planning &amp; Strategy Queries</strong>: When asked for a plan, strategy, or next</p>
+<p>&gt;     steps to achieve a user goal (e.g., *&quot;What is your plan to accomplish</p>
+<p>&gt;     X...&quot;*), the response **MUST explicitly include running `gcloud help</p>
+<p>&gt;     &lt;leaf_command&gt;`** as Step 1 of the plan before proposing flags or</p>
+<p>&gt;     executing commands.</p>
+<p>&gt;</p>
+<p>&gt; 3.  <strong>Non-Transitive Validation</strong>: Parent command group help (e.g. `gcloud</p>
+<p>&gt;     help compute`) is not sufficient for leaf-level syntax validation.</p>
+<p>&gt;     Validation must occur at the specific leaf subcommand level.</p>
+<p>&gt;</p>
+<p>&gt; 4.  <strong>FORBIDDEN Web Search Fallback</strong>: NEVER use <code>search_web</code>, web search, or</p>
+<p>&gt;     external documentation search tools for gcloud CLI syntax. `gcloud help</p>
+<p>&gt;     &lt;leaf_command&gt;` is the <strong>EXCLUSIVE</strong> authorized authority for command</p>
+<p>&gt;     syntax.</p>
+<p>&gt;</p>
+<p>&gt; 5.  <strong>User Flag &amp; Project Preservation</strong>: When proposing intermediate command</p>
+<p>&gt;     steps, <strong>ALWAYS</strong> preserve all user-specified flags (including</p>
+<p>&gt;     <code>--project=&lt;project_id&gt;</code>) in the proposed response text.</p>
+<p>&gt;</p>
+<p>&gt; 6.  <strong>Mandatory Plan Template</strong>: When generating a plan, the response <strong>MUST</strong></p>
+<p>&gt;     copy this exact 4-step structure:</p>
+<p>&gt;</p>
+<p>&gt;     -   <strong>Step 1</strong>: Syntax Validation via <code>gcloud help &lt;leaf_command&gt;</code></p>
+<p>&gt;     -   <strong>Step 2</strong>: Parameter Verification (confirming required and optional</p>
+<p>&gt;         flags, and explicitly checking if the <code>--dry-run</code> or <code>--validate-only</code></p>
+<p>&gt;         flag is supported)</p>
+<p>&gt;     -   <strong>Step 3</strong>: Dry-Run Command Proposal (If <code>--dry-run</code> or</p>
+<p>&gt;         <code>--validate-only</code> is supported, there MUST be a <code>--dry-run</code> or</p>
+<p>&gt;         <code>--validate-only</code> invocation before the next step.)</p>
+<p>&gt;     -   <strong>Step 4</strong>: Command Proposal &amp; Authorization (If the command is on the</p>
+<p>&gt;         &quot;Prohibited Operations&quot; denylist, state that autonomous execution is</p>
+<p>&gt;         forbidden, and the user MUST be explicitly asked for authorization to</p>
+<p>&gt;         proceed. If the command is NOT on the denylist, propose or proceed</p>
+<p>&gt;         with execution, while following <em>ALL</em> &quot;Execution Constraints&quot; below.)</p>
+<p>This document provides essential guidelines and best practices for AI agents</p>
+<p>interacting with the Google Cloud SDK (<code>gcloud</code> CLI). Following these rules is</p>
+<p>critical to avoid hallucinated commands, flags, flag values, and positional</p>
+<p>argument syntax, prevent destructive actions, and minimize context window usage.</p>
+<h4>Execution Modes</h4>
+<p>AI agents can interact with Google Cloud resources in two primary ways:</p>
+<ul>
+<li><strong>Direct CLI Execution</strong>: Executing <code>gcloud</code> commands directly in a local or</li>
+</ul>
+<p>    automated shell environment. See [CLI Usage](references/cli-usage.md) for</p>
+<p>    installation, authentication flows, and configuration management.</p>
+<ul>
+<li><strong>Model Context Protocol (MCP)</strong>: Invoking structured tools via the Cloud</li>
+</ul>
+<p>    CLI remote MCP server (<code>run_gcloud_command</code>). See</p>
+<p>    [MCP Usage](references/mcp-usage.md) for tool schemas, parameter rules, and</p>
+<p>    server configuration.</p>
+<h4>Core Principles</h4>
+<h5>1. Explicit Command Validation (Mandatory)</h5>
+<ul>
+<li><strong>Action</strong>: <strong>ALWAYS</strong> call <code>gcloud help &lt;command&gt;</code> for the <em>exact</em> command</li>
+</ul>
+<p>    that is intended to be run (e.g., <code>gcloud help compute instances create</code>).</p>
+<ul>
+<li><strong>Verify</strong>: Ensure the command, flags, flag values, and positional argument</li>
+</ul>
+<p>    syntax are valid for that specific leaf command before attempting execution</p>
+<p>    or presenting plans. Validation is not transitive from parent groups.</p>
+<h5>2. Data Reduction Strategies (Mandatory)</h5>
+<p>Minimize the volume of data returned by <code>gcloud</code> to save context window space</p>
+<p>and reduce latency. DO NOT execute any <code>list</code> command without including at least</p>
+<p>one data reduction flag (<code>--limit</code>, <code>--filter</code>, or <code>--format</code>).</p>
+<ul>
+<li><strong>Projection</strong>: Use <code>--format=&quot;json(key1, key2, ...)&quot;</code> to select only the</li>
+</ul>
+<p>    specific fields needed for the task. To understand the advanced projection</p>
+<p>    and formatting syntax, refer to <code>gcloud topic projections</code> and `gcloud topic</p>
+<p>    formats`.</p>
+<ul>
+<li><strong>Limiting</strong>: Use <code>--limit=N</code> to cap the number of resources returned.</li>
+</ul>
+<ul>
+<li><strong>Filtering</strong>: Use <code>--filter</code> to narrow down results server-side. Prioritize</li>
+</ul>
+<p>    <code>:</code> for pattern matching and never quote the right side of the colon. Treat</p>
+<p>    the entire filter flag as a singular string without quoting or escaping</p>
+<p>    characters. To study the filter expression syntax, refer to `gcloud topic</p>
+<p>    filters`.</p>
+<ul>
+<li><strong>Schema Discovery</strong>: Unconstrained resource lists can quickly exhaust the</li>
+</ul>
+<p>    context window with redundant data. To prevent this, discover a resource&#39;s</p>
+<p>    schema before executing queries. If unsure of the JSON key path for</p>
+<p>    projecting fields (<code>--format</code>) or filtering (<code>--filter</code>), run the targeted</p>
+<p>    resource&#39;s list command (if supported) with a single-item limit:</p>
+<p>    <pre><code>    gcloud &lt;GROUP&gt; &lt;RESOURCE&gt; list --limit=1 --format=json
+    </code></pre></p>
+<p>    Examine this single instance&#39;s JSON structure to safely identify the correct</p>
+<p>    schema keys before requesting full or filtered datasets.</p>
+<h5>3. Execution Constraints</h5>
+<ul>
+<li><strong>Single Commands</strong>: Execute a single <code>gcloud</code> command at a time. No command</li>
+</ul>
+<p>    chaining or sequencing.</p>
+<ul>
+<li><strong>No Shell Operators</strong>: Do not use command substitution (<code>$(...)</code>), pipes</li>
+</ul>
+<p>    (<code>|</code>), or redirection (<code>&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;</code>). This is to increase command safety</p>
+<p>    and ensure commands are more easily understandable and reviewable by users.</p>
+<ul>
+<li><strong>Non-Interactive Execution (<code>--quiet</code> / <code>-q</code>)</strong>: Pass the <code>--quiet</code> (or</li>
+</ul>
+<p>    <code>-q</code>) global flag on all execution commands (e.g., `gcloud pubsub topics</p>
+<p>    delete temp-topic --quiet --project=test-project`). AI agents run in</p>
+<p>    headless, non-interactive environments without a TTY or <code>stdin</code> input</p>
+<p>    handler. Without <code>--quiet</code>, commands that prompt for user confirmation (such</p>
+<p>    as deleting resources, approving defaults, or selecting unspecified regions)</p>
+<p>    will pause execution indefinitely waiting for input, causing background task</p>
+<p>    timeouts. Including <code>--quiet</code> forces non-interactive mode, causing <code>gcloud</code></p>
+<p>    to automatically accept safe default choices or fail immediately with an</p>
+<p>    explicit error if required parameters are missing.</p>
+<ul>
+<li><strong>No Blind Lists</strong>: NEVER execute a <code>list</code> command without <code>--limit</code>,</li>
+</ul>
+<p>    <code>--filter</code>, or <code>--format</code>.</p>
+<h5>4. Project and Location Scoping (Critical)</h5>
+<p>To ensure commands are deterministic, non-interactive, and target the correct</p>
+<p>environment, they must explicitly provide project and location scoping.</p>
+<ul>
+<li><strong>Explicit Project Target</strong>: Do not rely on active configuration defaults.</li>
+</ul>
+<p>    Always append <code>--project=&lt;PROJECT_ID&gt;</code> to all resource-manipulating and</p>
+<p>    querying commands (unless running pure local config commands). This avoids</p>
+<p>    accidental execution against the wrong project.</p>
+<ul>
+<li><strong>Prevent Location Prompts</strong>: Many Google Cloud resources are regional or</li>
+</ul>
+<p>    zonal. If the location flag is omitted (e.g., <code>--region</code>, <code>--zone</code>, or</p>
+<p>    <code>--location</code>), <code>gcloud</code> will trigger an interactive prompt to select a</p>
+<p>    zone/region. This violates the <strong>No Interactivity</strong> rule. Always provide</p>
+<p>    explicit location flags if the command requires them.</p>
+<ul>
+<li><strong>Location Discovery</strong>: If the correct region, zone, or location for a</li>
+</ul>
+<p>    service is not known, run discovery commands first (remembering to limit</p>
+<p>    results if there are many):</p>
+<ul>
+<li><strong>Compute Engine (VMs, Networks)</strong>:</li>
+</ul>
+<ul>
+<li><code>gcloud compute regions list --project=&lt;PROJECT_ID&gt;</code></li>
+<li><code>gcloud compute zones list --project=&lt;PROJECT_ID&gt;</code></li>
+</ul>
+<ul>
+<li><strong>Other Services (Standard API Style)</strong>: Many GCP services utilize a</li>
+</ul>
+<p>        unified <code>locations list</code> command:</p>
+<ul>
+<li><code>gcloud &lt;GROUP&gt; locations list --project=&lt;PROJECT_ID&gt;</code></li>
+<li><em>Examples</em>: <code>gcloud artifacts locations list</code>, `gcloud kms locations</li>
+</ul>
+<p>            list<code>, </code>gcloud secrets locations list`.</p>
+<h4>Safety &amp; Guardrails</h4>
+<p>&gt; [!CAUTION] **Destructive actions (delete, update, remove) MUST be explicitly</p>
+<p>&gt; authorized by the user.** Never invoke them autonomously unless explicitly</p>
+<p>&gt; instructed to do so in the context of a safe, pre-approved workflow.</p>
+<h5>Prohibited Operations (Denylist)</h5>
+<p>NEVER execute the following commands autonomously. These require explicit</p>
+<p>human-in-the-loop authorization:</p>
+<ul>
+<li><strong>Any IAM policy, role, or binding modification</strong> (Security): Risk of</li>
+</ul>
+<p>    privilege escalation, administrative lockout, service disruption, or</p>
+<p>    unauthorized data exposure.</p>
+<ul>
+<li><strong>No Proactive API Enabling</strong>: Assume necessary APIs are enabled. To prevent</li>
+</ul>
+<p>    unexpected resource provisioning or billing charges, do not proactively try</p>
+<p>    to enable APIs. User approval is required to enable any API.</p>
+<ul>
+<li>**<code>gcloud <em> delete</code></em>* (Destructive): Irreversible resource destruction</li>
+</ul>
+<p>    (e.g., project deletion) or data wiping.</p>
+<ul>
+<li>**<code>gcloud billing <em></code></em>* (Financial): Risk of service disruption or unbounded</li>
+</ul>
+<p>    costs.</p>
+<ul>
+<li>**<code>gcloud organizations <em></code></em>* (Governance): Org-level changes affect security</li>
+</ul>
+<p>    posture for all users.</p>
+<ul>
+<li>**<code>gcloud kms <em></code></em>* (Encryption): Risk of permanently locking data.</li>
+<li><strong><code>gcloud infra-manager deployments apply</code></strong> (Destructive): Autonomous IaC</li>
+</ul>
+<p>    execution can destroy managed resources.</p>
+<h5>Execution Guidelines</h5>
+<ul>
+<li><strong>Dry Run (Mandatory)</strong>: If the <code>--dry-run</code> or <code>--validate-only</code> flag (or</li>
+</ul>
+<p>    equivalent) is listed in the command help output, ALWAYS include the flag in</p>
+<p>    the proposed command or initial execution step. ALWAYS preview changes with</p>
+<p>    <code>--dry-run</code> or <code>--validate-only</code> prior to actual execution.</p>
+<ul>
+<li><strong>Long Running Operations</strong>: For commands that support it, the <code>--async</code></li>
+</ul>
+<p>    flag is highly recommended for long-running operations to avoid blocking the</p>
+<p>    agentic flow. Note that not every command has an <code>--async</code> flag. For</p>
+<p>    commands that return an operation ID (whether via <code>--async</code> or by default),</p>
+<p>    operation status must be polled for completion, if needed for the next step.</p>
+<ul>
+<li><strong>Non-Interactive Flag (<code>--quiet</code>)</strong>: Include <code>--quiet</code> (or <code>-q</code>) on all</li>
+</ul>
+<p>    proposed or executed commands to guarantee non-interactive execution without</p>
+<p>    waiting for TTY confirmation prompts.</p>
+<h4>Structured Workflows</h4>
+<h5>Discovery Workflow</h5>
+<p>When asked to perform a task on a service that is unfamiliar:</p>
+<ol>
+<li><strong>Invoke Help</strong>: Call <code>gcloud help &lt;COMMAND&gt;</code> on the target leaf command</li>
+</ol>
+<p>    prior to execution.</p>
+<ol>
+<li><strong>Traverse Command Tree</strong>: Run help on command groups (e.g., `gcloud help</li>
+</ol>
+<p>    compute<code> or </code>gcloud help`) to discover available subgroups and commands if</p>
+<p>    the exact command is unknown.</p>
+<ol>
+<li><strong>Discover Schema</strong>: Run `gcloud &lt;GROUP&gt; &lt;RESOURCE&gt; list --limit=1</li>
+</ol>
+<p>    --format=json` to inspect JSON keys before constructing filters or</p>
+<p>    projections. DO NOT execute unconstrained <code>list</code> commands without scoping</p>
+<p>    flags (e.g., <code>--limit=1</code>) to prevent context window exhaustion.</p>
+<ol>
+<li><strong>Enforce Data Reduction</strong>: Include data reduction flags (<code>--limit</code>,</li>
+</ol>
+<p>    <code>--filter</code>, <code>--format</code>) on all command executions.</p>
+<h4>Quick Reference / Cheat Sheet</h4>
+<p>Task               | Command Template</p>
+<p>------------------ | ----------------------------------------------------------</p>
+<p>Discover Schema    | <code>gcloud &lt;GROUP&gt; &lt;RESOURCE&gt; list --limit=1 --format=json</code></p>
+<p>Filtered List      | <code>gcloud &lt;GROUP&gt; &lt;RESOURCE&gt; list --filter=&quot;status:RUNNING&quot;</code></p>
+<p>Specific Columns   | <code>gcloud &lt;GROUP&gt; &lt;RESOURCE&gt; list --format=&quot;json(name, id)&quot;</code></p>
+<p>Learn Filters      | <code>gcloud topic filters</code></p>
+<p>Learn Formats      | <code>gcloud topic formats</code></p>
+<p>Learn Projections  | <code>gcloud topic projections</code></p>
+<p>Asynchronous Op    | <code>gcloud &lt;COMMAND&gt; --async</code></p>
+<p>Check Operation    | <code>gcloud operations describe &lt;OPERATION_ID&gt;</code></p>
+<p>Common commands    | <code>gcloud cheat-sheet</code></p>
+<p>List Regions (GCE) | <code>gcloud compute regions list --project=&lt;PROJECT_ID&gt;</code></p>
+<p>List Zones (GCE)   | <code>gcloud compute zones list --project=&lt;PROJECT_ID&gt;</code></p>
+<p>List Locations     | <code>gcloud &lt;GROUP&gt; locations list --project=&lt;PROJECT_ID&gt;</code></p>
+<p>Refer to the</p>
+<p><a href="https://docs.cloud.google.com/sdk/docs/scripting-gcloud.md.txt" rel="noopener">gcloud CLI Scripting Guide</a></p>
+<p>for guidance on using the gcloud CLI in automation.</p>
+<h4>Reference Directory</h4>
+<ul>
+<li>[CLI Usage](references/cli-usage.md): Platform installation, authentication</li>
+</ul>
+<p>    methods (interactive, headless, ADC, service account keys, impersonation),</p>
+<p>    and local configuration management.</p>
+<ul>
+<li>[MCP Usage](references/mcp-usage.md): Using the Cloud CLI remote MCP</li>
+</ul>
+<p>    server (<code>run_gcloud_command</code>), project parameter scoping, input files, and</p>
+<p>    execution guidelines.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gcloud</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gcloud" aria-label="Copy install gcloud">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gcloud</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gcloud/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

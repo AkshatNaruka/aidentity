@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-identity-py — Aidentity</title>
+<meta name="description" content="Azure Identity SDK for Python authentication with Microsoft Entra ID. Use for DefaultAzureCredential, managed identity, service principals, and token caching. Triggers: &quot;azure-identity&quot;, &quot;DefaultAzureCredential&quot;, &quot;authentication&quot;, &quot;managed identity&quot;, &quot;service principal&quot;, &quot;credential&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-identity-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-identity-py — Aidentity">
+<meta property="og:description" content="Azure Identity SDK for Python authentication with Microsoft Entra ID. Use for DefaultAzureCredential, managed identity, service principals, and token caching. Triggers: &quot;azure-identity&quot;, &quot;DefaultAzureCredential&quot;, &quot;authentication&quot;, &quot;managed identity&quot;, &quot;service principal&quot;, &quot;credential&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-identity-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-identity-py","description":"Azure Identity SDK for Python authentication with Microsoft Entra ID. Use for DefaultAzureCredential, managed identity, service principals, and token caching. Triggers: \"azure-identity\", \"DefaultAzureCredential\", \"authentication\", \"managed identity\", \"service principal\", \"credential\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-identity-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-identity-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-identity-py</h1>
+      <p class="summary">Azure Identity SDK for Python authentication with Microsoft Entra ID. Use for DefaultAzureCredential, managed identity, service principals, and token caching. Triggers: &quot;azure-identity&quot;, &quot;DefaultAzureCredential&quot;, &quot;authentication&quot;, &quot;managed identity&quot;, &quot;service principal&quot;, &quot;credential&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Identity library for Python</h3>
+<p>Authentication library for Azure SDK clients using Microsoft Entra ID.</p>
+<p>Use this skill when:</p>
+<ul>
+<li>An app needs to authenticate to Azure services from Python</li>
+<li>You need <code>DefaultAzureCredential</code> for local dev + Azure deployment</li>
+<li>You need <code>ManagedIdentityCredential</code> for Azure-hosted workloads</li>
+<li>You need service principal auth with secret or certificate</li>
+<li>You need direct token acquisition with <code>get_token()</code></li>
+<li>You need to troubleshoot credential chain failures</li>
+</ul>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-identity</code></pre></p>
+<p>For VS Code or broker-based desktop auth:</p>
+<p><pre><code>pip install azure-identity-broker</code></pre></p>
+<h4>Python Version</h4>
+<p><code>azure-identity</code> supports Python 3.9+.</p>
+<h4>Environment Variables</h4>
+<p><pre><code># Service principal with client secret
+AZURE_TENANT_ID=&lt;your-tenant-id&gt;
+AZURE_CLIENT_ID=&lt;your-client-id&gt;
+AZURE_CLIENT_SECRET=&lt;your-client-secret&gt;
+
+# Service principal with certificate
+AZURE_TENANT_ID=&lt;your-tenant-id&gt;
+AZURE_CLIENT_ID=&lt;your-client-id&gt;
+AZURE_CLIENT_CERTIFICATE_PATH=/path/to/cert.pem
+AZURE_CLIENT_CERTIFICATE_PASSWORD=&lt;optional-password&gt;
+
+# Authority (sovereign clouds)
+AZURE_AUTHORITY_HOST=login.microsoftonline.com  # Default; or login.chinacloudapi.cn, login.microsoftonline.us
+
+# User-assigned managed identity
+AZURE_CLIENT_ID=&lt;managed-identity-client-id&gt;
+
+# Credential selection (new)
+AZURE_TOKEN_CREDENTIALS=dev|prod|&lt;credential-name&gt;  # Optional, restricts DAC chain</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap credentials and clients in context managers</strong> when they own token caches / transports:</p>
+<p>&gt;    - Sync: <code>with DefaultAzureCredential() as credential:</code></p>
+<p>&gt;    - Async: <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<h5>DefaultAzureCredential</h5>
+<p>The recommended credential for most scenarios. Tries multiple authentication methods in order:</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
+
+# Works in local dev AND production without code changes
+credential = DefaultAzureCredential()
+
+with BlobServiceClient(
+    account_url=&quot;https://&lt;account&gt;.blob.core.windows.net&quot;,
+    credential=credential
+) as client:
+    containers = list(client.list_containers())</code></pre></p>
+<h5>Credential Chain Order</h5>
+<p>See <a href="https://aka.ms/azsdk/python/identity/credential-chains#defaultazurecredential-overview" rel="noopener">DefaultAzureCredential overview</a> for the current credential chain order and defaults.</p>
+<h5>Customizing DefaultAzureCredential</h5>
+<p><pre><code># Exclude credentials you don&#39;t need
+credential = DefaultAzureCredential(
+    exclude_environment_credential=True,
+    exclude_shared_token_cache_credential=True,
+    managed_identity_client_id=&quot;&lt;user-assigned-mi-client-id&gt;&quot;  # For user-assigned MI (also accepts object ID or resource ID)
+)
+
+# Enable interactive browser (disabled by default)
+credential = DefaultAzureCredential(
+    exclude_interactive_browser_credential=False
+)
+
+# Set subprocess timeout for CLI-based credentials (default: 10s)
+credential = DefaultAzureCredential(process_timeout=30)
+
+# Require AZURE_TOKEN_CREDENTIALS env var to be set
+credential = DefaultAzureCredential(require_envvar=True)</code></pre></p>
+<h5>Exclude Parameters</h5>
+<table><thead><tr><th>Parameter</th><th>Default</th><th>Effect</th></tr></thead><tbody>
+<tr><td><code>exclude_environment_credential</code></td><td>False</td><td>Skip env-var-based auth</td></tr>
+<tr><td><code>exclude_workload_identity_credential</code></td><td>False</td><td>Skip Kubernetes workload identity</td></tr>
+<tr><td><code>exclude_managed_identity_credential</code></td><td>False</td><td>Skip managed identity</td></tr>
+<tr><td><code>exclude_shared_token_cache_credential</code></td><td>False</td><td>Skip shared token cache</td></tr>
+<tr><td><code>exclude_visual_studio_code_credential</code></td><td>False</td><td>Skip VS Code credential</td></tr>
+<tr><td><code>exclude_cli_credential</code></td><td>False</td><td>Skip Azure CLI</td></tr>
+<tr><td><code>exclude_powershell_credential</code></td><td>False</td><td>Skip Azure PowerShell</td></tr>
+<tr><td><code>exclude_developer_cli_credential</code></td><td>False</td><td>Skip Azure Developer CLI</td></tr>
+<tr><td><code>exclude_interactive_browser_credential</code></td><td><strong>True</strong></td><td>Skip interactive browser</td></tr>
+<tr><td><code>exclude_broker_credential</code></td><td>False</td><td>Skip WAM broker</td></tr>
+</tbody></table>
+<h4>get_bearer_token_provider</h4>
+<p>Helper that wraps a credential into a callable returning a bearer token string. Essential for OpenAI SDK and other non-Azure-SDK clients:</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+
+credential = DefaultAzureCredential()
+token_provider = get_bearer_token_provider(
+    credential, &quot;https://cognitiveservices.azure.com/.default&quot;
+)
+
+# Use with OpenAI SDK
+from openai import AzureOpenAI
+
+with AzureOpenAI(
+    azure_endpoint=&quot;https://&lt;resource&gt;.openai.azure.com/&quot;,
+    azure_ad_token_provider=token_provider,
+    api_version=&quot;2024-10-21&quot;,
+) as client:
+    # response = client.chat.completions.create(...)
+    ...</code></pre></p>
+<h4>Credential Types</h4>
+<h5>Credential Chains</h5>
+<table><thead><tr><th>Credential</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>DefaultAzureCredential</code></td><td>Most scenarios — auto-detects environment</td></tr>
+<tr><td><code>ChainedTokenCredential</code></td><td>Custom credential chain with explicit ordering</td></tr>
+</tbody></table>
+<h5>Azure-Hosted Applications</h5>
+<table><thead><tr><th>Credential</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>EnvironmentCredential</code></td><td>Auth via AZURE_CLIENT_SECRET / AZURE_CLIENT_CERTIFICATE_PATH env vars</td></tr>
+<tr><td><code>ManagedIdentityCredential</code></td><td>Azure VMs, App Service, Functions, AKS, Arc, Service Fabric</td></tr>
+<tr><td><code>WorkloadIdentityCredential</code></td><td>Kubernetes with Microsoft Entra Workload ID</td></tr>
+</tbody></table>
+<h5>Service Principals</h5>
+<table><thead><tr><th>Credential</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>ClientSecretCredential</code></td><td>Service principal with client secret</td></tr>
+<tr><td><code>CertificateCredential</code></td><td>Service principal with PEM/PKCS12 certificate</td></tr>
+<tr><td><code>ClientAssertionCredential</code></td><td>Service principal with signed JWT assertion</td></tr>
+<tr><td><code>AzurePipelinesCredential</code></td><td>Azure Pipelines with workload identity federation</td></tr>
+<tr><td><code>OnBehalfOfCredential</code></td><td>Middle-tier on-behalf-of flow (delegated user identity)</td></tr>
+</tbody></table>
+<h5>User Authentication</h5>
+<table><thead><tr><th>Credential</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>InteractiveBrowserCredential</code></td><td>Interactive browser OAuth sign-in</td></tr>
+<tr><td><code>DeviceCodeCredential</code></td><td>Headless/SSH device code flow</td></tr>
+<tr><td><code>AuthorizationCodeCredential</code></td><td>Previously obtained authorization code</td></tr>
+</tbody></table>
+<h5>Developer Tools</h5>
+<table><thead><tr><th>Credential</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>AzureCliCredential</code></td><td><code>az login</code></td></tr>
+<tr><td><code>AzureDeveloperCliCredential</code></td><td><code>azd auth login</code></td></tr>
+<tr><td><code>AzurePowerShellCredential</code></td><td><code>Connect-AzAccount</code></td></tr>
+<tr><td><code>VisualStudioCodeCredential</code></td><td>VS Code Azure Resources extension</td></tr>
+</tbody></table>
+<h4>Specific Credential Examples</h4>
+<h5>ManagedIdentityCredential</h5>
+<p>For Azure-hosted resources (VMs, App Service, Functions, AKS):</p>
+<p><pre><code>from azure.identity import ManagedIdentityCredential
+
+# System-assigned managed identity
+credential = ManagedIdentityCredential()
+
+# User-assigned managed identity (client_id, object_id, or resource_id)
+credential = ManagedIdentityCredential(
+    client_id=&quot;&lt;user-assigned-mi-client-id&gt;&quot;
+)
+# Also valid:
+# credential = ManagedIdentityCredential(object_id=&quot;&lt;object-id&gt;&quot;)
+# credential = ManagedIdentityCredential(resource_id=&quot;&lt;resource-id&gt;&quot;)</code></pre></p>
+<h5>ClientSecretCredential</h5>
+<p><pre><code>import os
+from azure.identity import ClientSecretCredential
+
+credential = ClientSecretCredential(
+    tenant_id=os.environ[&quot;AZURE_TENANT_ID&quot;],
+    client_id=os.environ[&quot;AZURE_CLIENT_ID&quot;],
+    client_secret=os.environ[&quot;AZURE_CLIENT_SECRET&quot;],
+)</code></pre></p>
+<h5>CertificateCredential</h5>
+<p>&gt; <strong>Note:</strong> The class is <code>CertificateCredential</code>, NOT <code>ClientCertificateCredential</code>.</p>
+<p><pre><code>from azure.identity import CertificateCredential
+
+# From file path
+credential = CertificateCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    certificate_path=&quot;/path/to/cert.pem&quot;,
+)
+
+# From bytes with password
+credential = CertificateCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    certificate_data=cert_bytes,
+    password=&quot;&lt;cert-password&gt;&quot;,
+    send_certificate_chain=True,  # Required for SNI auth
+)</code></pre></p>
+<h5>AzureCliCredential</h5>
+<p><pre><code>from azure.identity import AzureCliCredential
+
+credential = AzureCliCredential()
+# With tenant restriction
+credential = AzureCliCredential(tenant_id=&quot;&lt;tenant-id&gt;&quot;)</code></pre></p>
+<h5>ChainedTokenCredential</h5>
+<p>Custom credential chain:</p>
+<p><pre><code>from azure.identity import (
+    ChainedTokenCredential,
+    ManagedIdentityCredential,
+    AzureCliCredential,
+)
+
+# Try managed identity first, fall back to CLI
+credential = ChainedTokenCredential(
+    ManagedIdentityCredential(client_id=&quot;&lt;user-assigned-mi-client-id&gt;&quot;),
+    AzureCliCredential(),
+)</code></pre></p>
+<h5>WorkloadIdentityCredential</h5>
+<p>For Azure Kubernetes Service with workload identity:</p>
+<p><pre><code>from azure.identity import WorkloadIdentityCredential
+
+# Reads from AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_FEDERATED_TOKEN_FILE
+credential = WorkloadIdentityCredential()
+
+# Or explicit configuration
+credential = WorkloadIdentityCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    token_file_path=&quot;/var/run/secrets/azure/tokens/azure-identity-token&quot;,
+)</code></pre></p>
+<h5>DeviceCodeCredential</h5>
+<p>For headless devices (IoT, SSH, CLI tools):</p>
+<p><pre><code>from azure.identity import DeviceCodeCredential
+
+credential = DeviceCodeCredential()
+# Prints device code prompt to stdout by default
+
+# With custom prompt callback
+def prompt_callback(verification_uri, user_code, expires_on):
+    print(f&quot;Go to {verification_uri} and enter code {user_code}&quot;)
+
+credential = DeviceCodeCredential(
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    prompt_callback=prompt_callback,
+)</code></pre></p>
+<h5>InteractiveBrowserCredential</h5>
+<p>For interactive OAuth browser sign-in:</p>
+<p><pre><code>from azure.identity import InteractiveBrowserCredential
+
+credential = InteractiveBrowserCredential()
+
+# With specific tenant and client
+credential = InteractiveBrowserCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+)</code></pre></p>
+<h5>OnBehalfOfCredential</h5>
+<p>For middle-tier services propagating user identity:</p>
+<p><pre><code>from azure.identity import OnBehalfOfCredential
+
+credential = OnBehalfOfCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    client_secret=&quot;&lt;client-secret&gt;&quot;,
+    user_assertion=&quot;&lt;access-token-from-client&gt;&quot;,
+)</code></pre></p>
+<h5>AzurePipelinesCredential</h5>
+<p>For Azure DevOps pipelines with workload identity federation:</p>
+<p><pre><code>import os
+from azure.identity import AzurePipelinesCredential
+
+credential = AzurePipelinesCredential(
+    tenant_id=&quot;&lt;tenant-id&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    service_connection_id=&quot;&lt;service-connection-id&gt;&quot;,
+    system_access_token=os.environ[&quot;SYSTEM_ACCESSTOKEN&quot;],
+)</code></pre></p>
+<h4>Getting Tokens Directly</h4>
+<p><pre><code>from azure.identity import DefaultAzureCredential
+
+with DefaultAzureCredential() as credential:
+    # Get token for a specific scope
+    token = credential.get_token(&quot;https://management.azure.com/.default&quot;)
+    print(f&quot;Token expires: {token.expires_on}&quot;)
+
+    # For Azure Database for PostgreSQL
+    token = credential.get_token(&quot;https://ossrdbms-aad.database.windows.net/.default&quot;)</code></pre></p>
+<h4>Async Credentials</h4>
+<p>Async credentials are in <code>azure.identity.aio</code>. Always close them or use <code>async with</code>:</p>
+<p><pre><code>from azure.identity.aio import DefaultAzureCredential
+from azure.storage.blob.aio import BlobServiceClient
+
+async def main():
+    # Preferred: use async context manager for both credential and client
+    async with DefaultAzureCredential() as credential:
+        async with BlobServiceClient(
+            account_url=&quot;https://&lt;account&gt;.blob.core.windows.net&quot;,
+            credential=credential,
+        ) as client:
+            # ... async operations
+            pass</code></pre></p>
+<p>&gt; The async <code>get_bearer_token_provider</code> is at <code>azure.identity.aio.get_bearer_token_provider</code>.</p>
+<h4>Sovereign Clouds</h4>
+<p>Use <code>AzureAuthorityHosts</code> or the <code>AZURE_AUTHORITY_HOST</code> env var:</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, AzureAuthorityHosts
+
+# Azure Government
+credential = DefaultAzureCredential(authority=AzureAuthorityHosts.AZURE_GOVERNMENT)
+
+# Azure China
+credential = DefaultAzureCredential(authority=AzureAuthorityHosts.AZURE_CHINA)</code></pre></p>
+<table><thead><tr><th>Constant</th><th>Authority</th></tr></thead><tbody>
+<tr><td><code>AzureAuthorityHosts.AZURE_PUBLIC_CLOUD</code></td><td><code>login.microsoftonline.com</code> (default)</td></tr>
+<tr><td><code>AzureAuthorityHosts.AZURE_GOVERNMENT</code></td><td><code>login.microsoftonline.us</code></td></tr>
+<tr><td><code>AzureAuthorityHosts.AZURE_CHINA</code></td><td><code>login.chinacloudapi.cn</code></td></tr>
+</tbody></table>
+<h4>Persistent Token Caching</h4>
+<p>Opt-in disk-based caching with <code>TokenCachePersistenceOptions</code>:</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, TokenCachePersistenceOptions
+
+credential = DefaultAzureCredential(
+    cache_persistence_options=TokenCachePersistenceOptions()
+)
+
+# Allow unencrypted fallback (NOT recommended for production)
+credential = DefaultAzureCredential(
+    cache_persistence_options=TokenCachePersistenceOptions(allow_unencrypted_storage=True)
+)</code></pre></p>
+<p>Storage: Windows (DPAPI), macOS (Keychain), Linux (Keyring).</p>
+<h4>Multi-Tenant Support</h4>
+<p>Allow token acquisition for additional tenants beyond the configured one:</p>
+<p><pre><code>from azure.identity import ClientSecretCredential
+
+credential = ClientSecretCredential(
+    tenant_id=&quot;&lt;home-tenant&gt;&quot;,
+    client_id=&quot;&lt;client-id&gt;&quot;,
+    client_secret=&quot;&lt;secret&gt;&quot;,
+    additionally_allowed_tenants=[&quot;&lt;other-tenant&gt;&quot;, &quot;*&quot;],  # &quot;*&quot; allows any tenant
+)</code></pre></p>
+<h4>Error Handling</h4>
+<p><pre><code>from azure.identity import DefaultAzureCredential, CredentialUnavailableError
+from azure.core.exceptions import ClientAuthenticationError
+
+with DefaultAzureCredential() as credential:
+    try:
+        token = credential.get_token(&quot;https://management.azure.com/.default&quot;)
+    except CredentialUnavailableError:
+        # No credential in the chain could attempt authentication
+        pass
+    except ClientAuthenticationError as e:
+        # Authentication was attempted but failed
+        # e.message contains details from each credential in the chain
+        pass</code></pre></p>
+<h4>Logging</h4>
+<p>Enable authentication logging for debugging:</p>
+<p><pre><code>import logging
+
+# Enable verbose Azure Identity logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(&quot;azure.identity&quot;)
+logger.setLevel(logging.DEBUG)</code></pre></p>
+<p><pre><code># Or via environment variable
+AZURE_LOG_LEVEL=debug</code></pre></p>
+<h4>Credential Selection Matrix</h4>
+<table><thead><tr><th>Environment</th><th>Recommended Credential</th></tr></thead><tbody>
+<tr><td>Local Development</td><td><code>DefaultAzureCredential</code> (uses Azure CLI)</td></tr>
+<tr><td>Azure App Service</td><td><code>DefaultAzureCredential</code> (uses Managed Identity)</td></tr>
+<tr><td>Azure Functions</td><td><code>DefaultAzureCredential</code> (uses Managed Identity)</td></tr>
+<tr><td>Azure Kubernetes Service</td><td><code>WorkloadIdentityCredential</code></td></tr>
+<tr><td>Azure VMs</td><td><code>DefaultAzureCredential</code> (uses Managed Identity)</td></tr>
+<tr><td>CI/CD Pipeline</td><td><code>EnvironmentCredential</code> or <code>AzurePipelinesCredential</code></td></tr>
+<tr><td>Desktop App</td><td><code>InteractiveBrowserCredential</code></td></tr>
+<tr><td>CLI / Headless Tool</td><td><code>DeviceCodeCredential</code></td></tr>
+<tr><td>Middle-tier Service</td><td><code>OnBehalfOfCredential</code></td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Use credentials as context managers</strong> (<code>with DefaultAzureCredential() as credential:</code>) when they own token caches / HTTP transports you want cleaned up; for async, use <code>async with</code> on credentials from <code>azure.identity.aio</code>.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for code that runs locally. Use a specific token credential for code that runs in Azure.</li>
+<li><strong>Never hardcode credentials</strong> — use environment variables or managed identity</li>
+<li><strong>Prefer managed identity</strong> in production Azure deployments</li>
+<li><strong>Use <code>get_bearer_token_provider</code></strong> for non-Azure-SDK clients (OpenAI, REST APIs)</li>
+<li><strong>Use <code>ChainedTokenCredential</code></strong> when you need a custom credential order</li>
+<li><strong>Set <code>AZURE_CLIENT_ID</code></strong> for user-assigned managed identities (object ID and resource ID are also valid identifiers)</li>
+<li><strong>Exclude unused credentials</strong> to speed up <code>DefaultAzureCredential</code> authentication</li>
+<li><strong>Use <code>CertificateCredential</code></strong> (not <code>ClientCertificateCredential</code> — that name doesn&#39;t exist)</li>
+<li><strong>Enable <code>cache_persistence_options</code></strong> for long-running services to reduce token requests</li>
+<li><strong>Reuse credential instances</strong> — same credential can be shared across multiple clients</li>
+</ol>
+<h4>Reference Links</h4>
+<table><thead><tr><th>Resource</th><th>URL</th></tr></thead><tbody>
+<tr><td>PyPI Package</td><td><a href="https://pypi.org/project/azure-identity/" rel="noopener">https://pypi.org/project/azure-identity/</a></td></tr>
+<tr><td>API Reference</td><td><a href="https://learn.microsoft.com/python/api/azure-identity" rel="noopener">https://learn.microsoft.com/python/api/azure-identity</a></td></tr>
+<tr><td>GitHub Source</td><td><a href="https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/identity/azure-identity" rel="noopener">https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/identity/azure-identity</a></td></tr>
+<tr><td>Credential Chains</td><td><a href="https://aka.ms/azsdk/python/identity/credential-chains" rel="noopener">https://aka.ms/azsdk/python/identity/credential-chains</a></td></tr>
+</tbody></table>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-identity-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-identity-py" aria-label="Copy install azure-identity-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-identity-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-identity-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

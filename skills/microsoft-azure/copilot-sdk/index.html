@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>copilot-sdk — Aidentity</title>
+<meta name="description" content="Build applications powered by GitHub Copilot using the Copilot SDK. Use when creating programmatic integrations with Copilot across Node.js/TypeScript, Python, Go, or .NET. Covers session management, custom tools, streaming, hooks, MCP servers, BYOK providers, session persistence, custom agents, skills, and deployment patterns. Requires GitHub Copilot CLI installed and a GitHub Copilot subscription (unless using BYOK).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/copilot-sdk/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="copilot-sdk — Aidentity">
+<meta property="og:description" content="Build applications powered by GitHub Copilot using the Copilot SDK. Use when creating programmatic integrations with Copilot across Node.js/TypeScript, Python, Go, or .NET. Covers session management, custom tools, streaming, hooks, MCP servers, BYOK providers, session persistence, custom agents, skills, and deployment patterns. Requires GitHub Copilot CLI installed and a GitHub Copilot subscription (unless using BYOK).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/copilot-sdk/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"copilot-sdk","description":"Build applications powered by GitHub Copilot using the Copilot SDK. Use when creating programmatic integrations with Copilot across Node.js/TypeScript, Python, Go, or .NET. Covers session management, custom tools, streaming, hooks, MCP servers, BYOK providers, session persistence, custom agents, skills, and deployment patterns. Requires GitHub Copilot CLI installed and a GitHub Copilot subscription (unless using BYOK).","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/copilot-sdk/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>copilot-sdk
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>copilot-sdk</h1>
+      <p class="summary">Build applications powered by GitHub Copilot using the Copilot SDK. Use when creating programmatic integrations with Copilot across Node.js/TypeScript, Python, Go, or .NET. Covers session management, custom tools, streaming, hooks, MCP servers, BYOK providers, session persistence, custom agents, skills, and deployment patterns. Requires GitHub Copilot CLI installed and a GitHub Copilot subscription (unless using BYOK).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GitHub Copilot SDK</h3>
+<p>Build applications that programmatically interact with GitHub Copilot. The SDK wraps the Copilot CLI via JSON-RPC, providing session management, custom tools, hooks, MCP server integration, and streaming across Node.js, Python, Go, and .NET.</p>
+<h4>Prerequisites</h4>
+<ul>
+<li><strong>GitHub Copilot CLI</strong> installed and authenticated (<code>copilot --version</code>)</li>
+<li><strong>GitHub Copilot subscription</strong> (Individual, Business, or Enterprise) — not required for BYOK</li>
+<li><strong>Runtime:</strong> Node.js 18+ / Python 3.8+ / Go 1.21+ / .NET 8.0+</li>
+</ul>
+<h4>Installation</h4>
+<table><thead><tr><th>Language</th><th>Package</th><th>Install</th></tr></thead><tbody>
+<tr><td>Node.js</td><td><code>@github/copilot-sdk</code></td><td><code>npm install @github/copilot-sdk</code></td></tr>
+<tr><td>Python</td><td><code>github-copilot-sdk</code></td><td><code>pip install github-copilot-sdk</code></td></tr>
+<tr><td>Go</td><td><code>github.com/github/copilot-sdk/go</code></td><td><code>go get github.com/github/copilot-sdk/go</code></td></tr>
+<tr><td>.NET</td><td><code>GitHub.Copilot.SDK</code></td><td><code>dotnet add package GitHub.Copilot.SDK</code></td></tr>
+</tbody></table>
+<h4>Architecture</h4>
+<p>The SDK communicates with the Copilot CLI via JSON-RPC over stdio (default) or TCP. The CLI manages model calls, tool execution, session state, and MCP server lifecycle.</p>
+<p><pre><code>Your App → SDK Client → [stdio/TCP] → Copilot CLI → Model Provider
+                                          ↕
+                                     MCP Servers</code></pre></p>
+<p><strong>Transport modes:</strong></p>
+<table><thead><tr><th>Mode</th><th>Description</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><strong>Stdio</strong> (default)</td><td>CLI as subprocess via pipes</td><td>Local dev, single process</td></tr>
+<tr><td><strong>TCP</strong></td><td>CLI as network server</td><td>Multi-client, backend services</td></tr>
+</tbody></table>
+<hr>
+<h4>Core Pattern: Client → Session → Message</h4>
+<p>All SDK usage follows: create a client, create a session, send messages.</p>
+<h5>Node.js / TypeScript</h5>
+<p><pre><code>import { CopilotClient } from &quot;@github/copilot-sdk&quot;;
+
+const client = new CopilotClient();
+const session = await client.createSession({ model: &quot;gpt-4.1&quot; });
+
+const response = await session.sendAndWait({ prompt: &quot;What is 2 + 2?&quot; });
+console.log(response?.data.content);
+
+await client.stop();</code></pre></p>
+<h5>Python</h5>
+<p><pre><code>import asyncio
+from copilot import CopilotClient
+
+async def main():
+    client = CopilotClient()
+    await client.start()
+    session = await client.create_session({&quot;model&quot;: &quot;gpt-4.1&quot;})
+    response = await session.send_and_wait({&quot;prompt&quot;: &quot;What is 2 + 2?&quot;})
+    print(response.data.content)
+    await client.stop()
+
+asyncio.run(main())</code></pre></p>
+<h5>Go</h5>
+<p><pre><code>client := copilot.NewClient(nil)
+if err := client.Start(ctx); err != nil { log.Fatal(err) }
+defer client.Stop()
+
+session, _ := client.CreateSession(ctx, &amp;copilot.SessionConfig{Model: &quot;gpt-4.1&quot;})
+response, _ := session.SendAndWait(ctx, copilot.MessageOptions{Prompt: &quot;What is 2 + 2?&quot;})
+fmt.Println(*response.Data.Content)</code></pre></p>
+<h5>.NET</h5>
+<p><pre><code>await using var client = new CopilotClient();
+await using var session = await client.CreateSessionAsync(new SessionConfig { Model = &quot;gpt-4.1&quot; });
+var response = await session.SendAndWaitAsync(new MessageOptions { Prompt = &quot;What is 2 + 2?&quot; });
+Console.WriteLine(response?.Data.Content);</code></pre></p>
+<hr>
+<h4>Streaming Responses</h4>
+<p>Enable real-time output by setting <code>streaming: true</code> and subscribing to delta events.</p>
+<h5>Node.js</h5>
+<p><pre><code>const session = await client.createSession({ model: &quot;gpt-4.1&quot;, streaming: true });
+
+session.on(&quot;assistant.message_delta&quot;, (event) =&gt; {
+    process.stdout.write(event.data.deltaContent);
+});
+session.on(&quot;session.idle&quot;, () =&gt; console.log());
+
+await session.sendAndWait({ prompt: &quot;Tell me a joke&quot; });</code></pre></p>
+<h5>Python</h5>
+<p><pre><code>from copilot.generated.session_events import SessionEventType
+
+session = await client.create_session({&quot;model&quot;: &quot;gpt-4.1&quot;, &quot;streaming&quot;: True})
+
+def handle_event(event):
+    if event.type == SessionEventType.ASSISTANT_MESSAGE_DELTA:
+        sys.stdout.write(event.data.delta_content)
+        sys.stdout.flush()
+    if event.type == SessionEventType.SESSION_IDLE:
+        print()
+
+session.on(handle_event)
+await session.send_and_wait({&quot;prompt&quot;: &quot;Tell me a joke&quot;})</code></pre></p>
+<h5>Event Subscription</h5>
+<table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>on(handler)</code></td><td>Subscribe to all events; returns unsubscribe function</td></tr>
+<tr><td><code>on(eventType, handler)</code></td><td>Subscribe to specific event type (Node.js only)</td></tr>
+</tbody></table>
+<p>Call the returned function to unsubscribe. In .NET, call <code>.Dispose()</code> on the returned disposable.</p>
+<hr>
+<h4>Custom Tools</h4>
+<p>Define tools that Copilot can call to extend its capabilities.</p>
+<h5>Node.js</h5>
+<p><pre><code>import { CopilotClient, defineTool } from &quot;@github/copilot-sdk&quot;;
+
+const getWeather = defineTool(&quot;get_weather&quot;, {
+    description: &quot;Get the current weather for a city&quot;,
+    parameters: {
+        type: &quot;object&quot;,
+        properties: { city: { type: &quot;string&quot;, description: &quot;The city name&quot; } },
+        required: [&quot;city&quot;],
+    },
+    handler: async ({ city }) =&gt; ({ city, temperature: &quot;72°F&quot;, condition: &quot;sunny&quot; }),
+});
+
+const session = await client.createSession({
+    model: &quot;gpt-4.1&quot;,
+    tools: [getWeather],
+});</code></pre></p>
+<h5>Python</h5>
+<p><pre><code>from copilot.tools import define_tool
+from pydantic import BaseModel, Field
+
+class GetWeatherParams(BaseModel):
+    city: str = Field(description=&quot;The city name&quot;)
+
+@define_tool(description=&quot;Get the current weather for a city&quot;)
+async def get_weather(params: GetWeatherParams) -&gt; dict:
+    return {&quot;city&quot;: params.city, &quot;temperature&quot;: &quot;72°F&quot;, &quot;condition&quot;: &quot;sunny&quot;}
+
+session = await client.create_session({&quot;model&quot;: &quot;gpt-4.1&quot;, &quot;tools&quot;: [get_weather]})</code></pre></p>
+<h5>Go</h5>
+<p><pre><code>type WeatherParams struct {
+    City string `json:&quot;city&quot; jsonschema:&quot;The city name&quot;`
+}
+
+getWeather := copilot.DefineTool(&quot;get_weather&quot;, &quot;Get weather for a city&quot;,
+    func(params WeatherParams, inv copilot.ToolInvocation) (WeatherResult, error) {
+        return WeatherResult{City: params.City, Temperature: &quot;72°F&quot;}, nil
+    },
+)
+
+session, _ := client.CreateSession(ctx, &amp;copilot.SessionConfig{
+    Model: &quot;gpt-4.1&quot;,
+    Tools: []copilot.Tool{getWeather},
+})</code></pre></p>
+<h5>.NET</h5>
+<p><pre><code>using Microsoft.Extensions.AI;
+using System.ComponentModel;
+
+var getWeather = AIFunctionFactory.Create(
+    ([Description(&quot;The city name&quot;)] string city) =&gt; new { city, temperature = &quot;72°F&quot; },
+    &quot;get_weather&quot;, &quot;Get the current weather for a city&quot;);
+
+await using var session = await client.CreateSessionAsync(new SessionConfig {
+    Model = &quot;gpt-4.1&quot;, Tools = [getWeather],
+});</code></pre></p>
+<h5>Tool Requirements</h5>
+<ul>
+<li>Handler must return JSON-serializable data (not <code>undefined</code>)</li>
+<li>Parameters must follow JSON Schema format</li>
+<li>Tool description should clearly state when the tool should be used</li>
+</ul>
+<hr>
+<h4>Hooks</h4>
+<p>Intercept and customize session behavior at key lifecycle points.</p>
+<table><thead><tr><th>Hook</th><th>Trigger</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>onPreToolUse</code></td><td>Before tool executes</td><td>Permission control, argument modification</td></tr>
+<tr><td><code>onPostToolUse</code></td><td>After tool executes</td><td>Result transformation, logging, redaction</td></tr>
+<tr><td><code>onUserPromptSubmitted</code></td><td>User sends message</td><td>Prompt modification, filtering, context injection</td></tr>
+<tr><td><code>onSessionStart</code></td><td>Session begins (new or resumed)</td><td>Add context, configure session</td></tr>
+<tr><td><code>onSessionEnd</code></td><td>Session ends</td><td>Cleanup, analytics, metrics</td></tr>
+<tr><td><code>onErrorOccurred</code></td><td>Error happens</td><td>Custom error handling, retry logic, monitoring</td></tr>
+</tbody></table>
+<h5>Pre-Tool Use Hook</h5>
+<p>Control tool permissions, modify arguments, or inject context before tool execution.</p>
+<p><pre><code>const session = await client.createSession({
+    hooks: {
+        onPreToolUse: async (input) =&gt; {
+            if ([&quot;shell&quot;, &quot;bash&quot;].includes(input.toolName)) {
+                return { permissionDecision: &quot;deny&quot;, permissionDecisionReason: &quot;Shell access not permitted&quot; };
+            }
+            return { permissionDecision: &quot;allow&quot; };
+        },
+    },
+});</code></pre></p>
+<p><strong>Input fields:</strong> <code>timestamp</code>, <code>cwd</code>, <code>toolName</code>, <code>toolArgs</code></p>
+<p><strong>Output fields:</strong></p>
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>permissionDecision</code></td><td><code>&quot;allow&quot;</code> \</td><td><code>&quot;deny&quot;</code> \</td><td><code>&quot;ask&quot;</code></td><td>Whether to allow the tool call</td></tr>
+<tr><td><code>permissionDecisionReason</code></td><td>string</td><td>Explanation for deny/ask</td></tr>
+<tr><td><code>modifiedArgs</code></td><td>object</td><td>Modified arguments to pass</td></tr>
+<tr><td><code>additionalContext</code></td><td>string</td><td>Extra context for conversation</td></tr>
+<tr><td><code>suppressOutput</code></td><td>boolean</td><td>Hide tool output from conversation</td></tr>
+</tbody></table>
+<h5>Post-Tool Use Hook</h5>
+<p>Transform results, redact sensitive data, or log tool activity after execution.</p>
+<p><pre><code>hooks: {
+    onPostToolUse: async (input) =&gt; {
+        // Redact sensitive data from results
+        if (typeof input.toolResult === &quot;string&quot;) {
+            let redacted = input.toolResult;
+            for (const pattern of SENSITIVE_PATTERNS) {
+                redacted = redacted.replace(pattern, &quot;[REDACTED]&quot;);
+            }
+            if (redacted !== input.toolResult) {
+                return { modifiedResult: redacted };
+            }
+        }
+        return null; // Pass through unchanged
+    },
+}</code></pre></p>
+<p><strong>Output fields:</strong> <code>modifiedResult</code>, <code>additionalContext</code>, <code>suppressOutput</code></p>
+<h5>User Prompt Submitted Hook</h5>
+<p>Modify or enhance user prompts before processing. Useful for prompt templates, context injection, and input validation.</p>
+<p><pre><code>hooks: {
+    onUserPromptSubmitted: async (input) =&gt; {
+        return {
+            modifiedPrompt: `[User from engineering team] ${input.prompt}`,
+            additionalContext: &quot;Follow company coding standards.&quot;,
+        };
+    },
+}</code></pre></p>
+<p><strong>Output fields:</strong> <code>modifiedPrompt</code>, <code>additionalContext</code>, <code>suppressOutput</code></p>
+<h5>Session Lifecycle Hooks</h5>
+<p><pre><code>hooks: {
+    onSessionStart: async (input, invocation) =&gt; {
+        // input.source: &quot;startup&quot; | &quot;resume&quot; | &quot;new&quot;
+        console.log(`Session ${invocation.sessionId} started (${input.source})`);
+        return { additionalContext: &quot;Project uses TypeScript and React.&quot; };
+    },
+    onSessionEnd: async (input, invocation) =&gt; {
+        // input.reason: &quot;complete&quot; | &quot;error&quot; | &quot;abort&quot; | &quot;timeout&quot; | &quot;user_exit&quot;
+        await recordMetrics({ sessionId: invocation.sessionId, reason: input.reason });
+        return null;
+    },
+}</code></pre></p>
+<h5>Error Handling Hook</h5>
+<p><pre><code>hooks: {
+    onErrorOccurred: async (input) =&gt; {
+        // input.errorContext: &quot;model_call&quot; | &quot;tool_execution&quot; | &quot;system&quot; | &quot;user_input&quot;
+        // input.recoverable: boolean
+        if (input.errorContext === &quot;model_call&quot; &amp;&amp; input.error.includes(&quot;rate&quot;)) {
+            return { errorHandling: &quot;retry&quot;, retryCount: 3, userNotification: &quot;Rate limited. Retrying...&quot; };
+        }
+        return null; // Default error handling
+    },
+}</code></pre></p>
+<p><strong>Output fields:</strong> <code>suppressOutput</code>, <code>errorHandling</code> (<code>&quot;retry&quot;</code> | <code>&quot;skip&quot;</code> | <code>&quot;abort&quot;</code>), <code>retryCount</code>, <code>userNotification</code></p>
+<h5>Python Hook Example</h5>
+<p><pre><code>async def on_pre_tool_use(input_data, invocation):
+    if input_data[&quot;toolName&quot;] in [&quot;shell&quot;, &quot;bash&quot;]:
+        return {&quot;permissionDecision&quot;: &quot;deny&quot;, &quot;permissionDecisionReason&quot;: &quot;Not permitted&quot;}
+    return {&quot;permissionDecision&quot;: &quot;allow&quot;}
+
+session = await client.create_session({
+    &quot;hooks&quot;: {&quot;on_pre_tool_use&quot;: on_pre_tool_use}
+})</code></pre></p>
+<h5>Go Hook Example</h5>
+<p><pre><code>session, _ := client.CreateSession(ctx, &amp;copilot.SessionConfig{
+    Hooks: &amp;copilot.SessionHooks{
+        OnPreToolUse: func(input copilot.PreToolUseHookInput, inv copilot.HookInvocation) (*copilot.PreToolUseHookOutput, error) {
+            return &amp;copilot.PreToolUseHookOutput{PermissionDecision: &quot;allow&quot;}, nil
+        },
+    },
+})</code></pre></p>
+<hr>
+<h4>MCP Server Integration</h4>
+<p>Connect to MCP (Model Context Protocol) servers for pre-built tool capabilities.</p>
+<h5>Local Stdio Server</h5>
+<p><pre><code>const session = await client.createSession({
+    mcpServers: {
+        filesystem: {
+            type: &quot;local&quot;,
+            command: &quot;npx&quot;,
+            args: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem&quot;, &quot;/allowed/path&quot;],
+            tools: [&quot;*&quot;],
+            env: { DEBUG: &quot;true&quot; },
+            cwd: &quot;./servers&quot;,
+            timeout: 30000,
+        },
+    },
+});</code></pre></p>
+<h5>Remote HTTP Server</h5>
+<p><pre><code>const session = await client.createSession({
+    mcpServers: {
+        github: {
+            type: &quot;http&quot;,
+            url: &quot;https://api.githubcopilot.com/mcp/&quot;,
+            headers: { Authorization: &quot;Bearer ${TOKEN}&quot; },
+            tools: [&quot;*&quot;],
+        },
+    },
+});</code></pre></p>
+<h5>MCP Config Fields</h5>
+<p><strong>Local/Stdio:</strong></p>
+<table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>&quot;local&quot;</code></td><td>No</td><td>Defaults to local</td></tr>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Executable path</td></tr>
+<tr><td><code>args</code></td><td>string[]</td><td>Yes</td><td>Command arguments</td></tr>
+<tr><td><code>env</code></td><td>object</td><td>No</td><td>Environment variables</td></tr>
+<tr><td><code>cwd</code></td><td>string</td><td>No</td><td>Working directory</td></tr>
+<tr><td><code>tools</code></td><td>string[]</td><td>No</td><td><code>[&quot;*&quot;]</code> for all, <code>[]</code> for none</td></tr>
+<tr><td><code>timeout</code></td><td>number</td><td>No</td><td>Timeout in milliseconds</td></tr>
+</tbody></table>
+<p><strong>Remote HTTP:</strong></p>
+<table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>&quot;http&quot;</code></td><td>Yes</td><td>Server type</td></tr>
+<tr><td><code>url</code></td><td>string</td><td>Yes</td><td>Server URL</td></tr>
+<tr><td><code>headers</code></td><td>object</td><td>No</td><td>HTTP headers</td></tr>
+<tr><td><code>tools</code></td><td>string[]</td><td>No</td><td>Tool filter</td></tr>
+<tr><td><code>timeout</code></td><td>number</td><td>No</td><td>Timeout in ms</td></tr>
+</tbody></table>
+<h5>MCP Debugging</h5>
+<p>Test MCP servers independently before integrating:</p>
+<p><pre><code>echo &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;initialize&quot;,&quot;params&quot;:{&quot;protocolVersion&quot;:&quot;2024-11-05&quot;,&quot;capabilities&quot;:{},&quot;clientInfo&quot;:{&quot;name&quot;:&quot;test&quot;,&quot;version&quot;:&quot;1.0&quot;}}}&#39; | /path/to/your/mcp-server</code></pre></p>
+<p>Use the MCP Inspector for interactive debugging:</p>
+<p><pre><code>npx @modelcontextprotocol/inspector /path/to/your/mcp-server</code></pre></p>
+<p><strong>Common MCP issues:</strong></p>
+<ul>
+<li>Tools not appearing → Set <code>tools: [&quot;*&quot;]</code> and verify server responds to <code>tools/list</code></li>
+<li>Server not starting → Use absolute command paths, check <code>cwd</code></li>
+<li>Stdout pollution → Debug output must go to stderr, not stdout</li>
+</ul>
+<hr>
+<h4>Authentication</h4>
+<h5>Methods (Priority Order)</h5>
+<ol>
+<li><strong>Explicit token</strong> — <code>githubToken</code> in constructor</li>
+<li><strong>HMAC key</strong> — <code>CAPI_HMAC_KEY</code> or <code>COPILOT_HMAC_KEY</code> env vars</li>
+<li><strong>Direct API token</strong> — <code>GITHUB_COPILOT_API_TOKEN</code> with <code>COPILOT_API_URL</code></li>
+<li><strong>Environment variables</strong> — <code>COPILOT_GITHUB_TOKEN</code> → <code>GH_TOKEN</code> → <code>GITHUB_TOKEN</code></li>
+<li><strong>Stored OAuth</strong> — From <code>copilot auth login</code></li>
+<li><strong>GitHub CLI</strong> — <code>gh auth</code> credentials</li>
+</ol>
+<h5>Programmatic Token</h5>
+<p><pre><code>const client = new CopilotClient({ githubToken: process.env.GITHUB_TOKEN });</code></pre></p>
+<h5>OAuth GitHub App</h5>
+<p>For multi-user apps where users sign in with GitHub:</p>
+<p><pre><code>const client = new CopilotClient({
+    githubToken: userAccessToken,    // gho_ or ghu_ token from OAuth flow
+    useLoggedInUser: false,          // Don&#39;t use stored CLI credentials
+});</code></pre></p>
+<p><strong>Supported token types:</strong> <code>gho_</code> (OAuth), <code>ghu_</code> (GitHub App), <code>github_pat_</code> (fine-grained PAT).</p>
+<p><strong>Not supported:</strong> <code>ghp_</code> (classic PAT — deprecated).</p>
+<h5>Disable Auto-Login</h5>
+<p>Prevent the SDK from using stored credentials:</p>
+<p><pre><code>const client = new CopilotClient({ useLoggedInUser: false });</code></pre></p>
+<hr>
+<h4>BYOK (Bring Your Own Key)</h4>
+<p>Use your own API keys — no Copilot subscription required. The CLI acts as agent runtime only.</p>
+<h5>Provider Configurations</h5>
+<p><strong>OpenAI:</strong></p>
+<p><pre><code>provider: { type: &quot;openai&quot;, baseUrl: &quot;https://api.openai.com/v1&quot;, apiKey: process.env.OPENAI_API_KEY }</code></pre></p>
+<p><strong>Azure AI Foundry (OpenAI-compatible):</strong></p>
+<p><pre><code>provider: {
+    type: &quot;openai&quot;,
+    baseUrl: &quot;https://your-resource.openai.azure.com/openai/v1/&quot;,
+    apiKey: process.env.FOUNDRY_API_KEY,
+    wireApi: &quot;responses&quot;,  // Use &quot;responses&quot; for GPT-5 series, &quot;completions&quot; for others
+}</code></pre></p>
+<p><strong>Azure OpenAI (native endpoint):</strong></p>
+<p><pre><code>provider: {
+    type: &quot;azure&quot;,
+    baseUrl: &quot;https://my-resource.openai.azure.com&quot;,  // Just the host — no /openai/v1
+    apiKey: process.env.AZURE_OPENAI_KEY,
+    azure: { apiVersion: &quot;2024-10-21&quot; },
+}</code></pre></p>
+<p><strong>Anthropic:</strong></p>
+<p><pre><code>provider: { type: &quot;anthropic&quot;, baseUrl: &quot;https://api.anthropic.com&quot;, apiKey: process.env.ANTHROPIC_API_KEY }</code></pre></p>
+<p><strong>Ollama (local):</strong></p>
+<p><pre><code>provider: { type: &quot;openai&quot;, baseUrl: &quot;http://localhost:11434/v1&quot; }</code></pre></p>
+<h5>Provider Config Reference</h5>
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>&quot;openai&quot;</code> \</td><td><code>&quot;azure&quot;</code> \</td><td><code>&quot;anthropic&quot;</code></td><td>Provider type</td></tr>
+<tr><td><code>baseUrl</code></td><td>string</td><td><strong>Required.</strong> API endpoint URL</td></tr>
+<tr><td><code>apiKey</code></td><td>string</td><td>API key (optional for local providers)</td></tr>
+<tr><td><code>bearerToken</code></td><td>string</td><td>Bearer token auth (takes precedence over apiKey)</td></tr>
+<tr><td><code>wireApi</code></td><td><code>&quot;completions&quot;</code> \</td><td><code>&quot;responses&quot;</code></td><td>API format (default: <code>&quot;completions&quot;</code>)</td></tr>
+<tr><td><code>azure.apiVersion</code></td><td>string</td><td>Azure API version (default: <code>&quot;2024-10-21&quot;</code>)</td></tr>
+</tbody></table>
+<h5>Azure Managed Identity with BYOK</h5>
+<p>Use <code>DefaultAzureCredential</code> to get short-lived bearer tokens for Azure deployments:</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential
+from copilot import CopilotClient, ProviderConfig, SessionConfig
+
+credential = DefaultAzureCredential()
+token = credential.get_token(&quot;https://cognitiveservices.azure.com/.default&quot;).token
+
+session = await client.create_session(SessionConfig(
+    model=&quot;gpt-4.1&quot;,
+    provider=ProviderConfig(
+        type=&quot;openai&quot;,
+        base_url=f&quot;{foundry_url}/openai/v1/&quot;,
+        bearer_token=token,
+        wire_api=&quot;responses&quot;,
+    ),
+))</code></pre></p>
+<p>&gt; <strong>Note:</strong> Bearer tokens expire (~1 hour). For long-running apps, refresh the token before each new session. The SDK does not auto-refresh tokens.</p>
+<h5>BYOK Limitations</h5>
+<ul>
+<li><strong>Static credentials only</strong> — no native Entra ID, OIDC, or managed identity support</li>
+<li><strong>No auto-refresh</strong> — expired tokens require creating a new session</li>
+<li><strong>Keys not persisted</strong> — must re-provide <code>provider</code> config on session resume</li>
+<li><strong>Model availability</strong> — limited to what your provider offers</li>
+</ul>
+<hr>
+<h4>Session Persistence</h4>
+<p>Resume sessions across restarts by providing your own session ID.</p>
+<p><pre><code>// Create with explicit ID
+const session = await client.createSession({
+    sessionId: &quot;user-123-task-456&quot;,
+    model: &quot;gpt-4.1&quot;,
+});
+
+// Resume later (even from a different client instance)
+const resumed = await client.resumeSession(&quot;user-123-task-456&quot;);
+await resumed.sendAndWait({ prompt: &quot;What did we discuss?&quot; });</code></pre></p>
+<h5>Session Management</h5>
+<p><pre><code>const sessions = await client.listSessions();           // List all
+const lastId = await client.getLastSessionId();          // Get most recent
+await client.deleteSession(&quot;user-123-task-456&quot;);         // Delete from storage
+await session.destroy();                                 // Destroy active session</code></pre></p>
+<h5>Resume Options</h5>
+<p>When resuming, you can reconfigure: <code>model</code>, <code>systemMessage</code>, <code>availableTools</code>, <code>excludedTools</code>, <code>provider</code> (required for BYOK), <code>reasoningEffort</code>, <code>streaming</code>, <code>mcpServers</code>, <code>customAgents</code>, <code>skillDirectories</code>, <code>infiniteSessions</code>.</p>
+<h5>Session ID Best Practices</h5>
+<table><thead><tr><th>Pattern</th><th>Example</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>user-{userId}-{taskId}</code></td><td><code>user-alice-pr-review-42</code></td><td>Multi-user apps</td></tr>
+<tr><td><code>tenant-{tenantId}-{workflow}</code></td><td><code>tenant-acme-onboarding</code></td><td>Multi-tenant SaaS</td></tr>
+<tr><td><code>{userId}-{taskType}-{timestamp}</code></td><td><code>alice-deploy-1706932800</code></td><td>Time-based cleanup</td></tr>
+</tbody></table>
+<h5>What Gets Persisted</h5>
+<p>Session state is saved to <code>~/.copilot/session-state/{sessionId}/</code>:</p>
+<table><thead><tr><th>Data</th><th>Persisted?</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Conversation history</td><td>✅ Yes</td><td>Full message thread</td></tr>
+<tr><td>Tool call results</td><td>✅ Yes</td><td>Cached for context</td></tr>
+<tr><td>Agent planning state</td><td>✅ Yes</td><td><code>plan.md</code> file</td></tr>
+<tr><td>Session artifacts</td><td>✅ Yes</td><td>In <code>files/</code> directory</td></tr>
+<tr><td>Provider/API keys</td><td>❌ No</td><td>Must re-provide on resume</td></tr>
+<tr><td>In-memory tool state</td><td>❌ No</td><td>Design tools to be stateless</td></tr>
+</tbody></table>
+<h5>Infinite Sessions</h5>
+<p>For long-running workflows that may exceed context limits, enable auto-compaction:</p>
+<p><pre><code>const session = await client.createSession({
+    infiniteSessions: {
+        enabled: true,
+        backgroundCompactionThreshold: 0.80,  // Start background compaction at 80%
+        bufferExhaustionThreshold: 0.95,       // Block and compact at 95%
+    },
+});</code></pre></p>
+<p>&gt; Thresholds are context utilization ratios (0.0–1.0), not absolute token counts.</p>
+<hr>
+<h4>Custom Agents</h4>
+<p>Define specialized AI personas:</p>
+<p><pre><code>const session = await client.createSession({
+    customAgents: [{
+        name: &quot;pr-reviewer&quot;,
+        displayName: &quot;PR Reviewer&quot;,
+        description: &quot;Reviews pull requests for best practices&quot;,
+        prompt: &quot;You are an expert code reviewer. Focus on security, performance, and maintainability.&quot;,
+    }],
+});</code></pre></p>
+<hr>
+<h4>System Message</h4>
+<p>Control AI behavior and personality:</p>
+<p><pre><code>const session = await client.createSession({
+    systemMessage: { content: &quot;You are a helpful assistant. Always be concise.&quot; },
+});</code></pre></p>
+<hr>
+<h4>Skills Integration</h4>
+<p>Load skill directories to extend Copilot&#39;s capabilities:</p>
+<p><pre><code>const session = await client.createSession({
+    skillDirectories: [&quot;./skills/code-review&quot;, &quot;./skills/documentation&quot;],
+    disabledSkills: [&quot;experimental-feature&quot;],
+});</code></pre></p>
+<p>Skills can be combined with custom agents and MCP servers:</p>
+<p><pre><code>const session = await client.createSession({
+    skillDirectories: [&quot;./skills/security&quot;],
+    customAgents: [{ name: &quot;auditor&quot;, prompt: &quot;Focus on OWASP Top 10.&quot; }],
+    mcpServers: { postgres: { type: &quot;local&quot;, command: &quot;npx&quot;, args: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-postgres&quot;], tools: [&quot;*&quot;] } },
+});</code></pre></p>
+<hr>
+<h4>Permission &amp; Input Handlers</h4>
+<p>Handle tool permissions and user input requests programmatically. The SDK uses a <strong>deny-by-default</strong> permission model — all permission requests are denied unless you provide a handler.</p>
+<p><pre><code>const session = await client.createSession({
+    onPermissionRequest: async (request) =&gt; {
+        if (request.kind === &quot;shell&quot;) {
+            return { approved: request.command.startsWith(&quot;git&quot;) };
+        }
+        return { approved: true };
+    },
+    onUserInputRequest: async (request) =&gt; {
+        return { response: &quot;yes&quot; };
+    },
+});</code></pre></p>
+<h5>Token Usage Tracking</h5>
+<p>Subscribe to usage events instead of using CLI <code>/usage</code>:</p>
+<p><pre><code>session.on(&quot;assistant.usage&quot;, (event) =&gt; {
+    console.log(&quot;Tokens:&quot;, { input: event.data.inputTokens, output: event.data.outputTokens });
+});</code></pre></p>
+<hr>
+<h4>Deployment Patterns</h4>
+<h5>Local CLI (Default)</h5>
+<p>SDK auto-spawns CLI as subprocess. Simplest setup — zero configuration.</p>
+<p><pre><code>const client = new CopilotClient(); // Auto-manages CLI process</code></pre></p>
+<h5>External CLI Server (Backend Services)</h5>
+<p>Run CLI in headless mode, connect SDK over TCP:</p>
+<p><pre><code>copilot --headless --port 4321</code></pre></p>
+<p><pre><code>const client = new CopilotClient({ cliUrl: &quot;localhost:4321&quot; });</code></pre></p>
+<p><strong>Multi-client support:</strong> Multiple SDK clients can share one CLI server.</p>
+<h5>Bundled CLI (Desktop Apps)</h5>
+<p>Ship CLI binary with your app:</p>
+<p><pre><code>const client = new CopilotClient({ cliPath: path.join(__dirname, &quot;vendor&quot;, &quot;copilot&quot;) });</code></pre></p>
+<h5>Docker Compose</h5>
+<p><pre><code>services:
+  copilot-cli:
+    image: ghcr.io/github/copilot-cli:latest
+    command: [&quot;--headless&quot;, &quot;--port&quot;, &quot;4321&quot;]
+    environment:
+      - COPILOT_GITHUB_TOKEN=${COPILOT_GITHUB_TOKEN}
+    volumes:
+      - session-data:/root/.copilot/session-state
+  api:
+    build: .
+    environment:
+      - CLI_URL=copilot-cli:4321
+    depends_on: [copilot-cli]
+volumes:
+  session-data:</code></pre></p>
+<h5>Session Isolation Patterns</h5>
+<table><thead><tr><th>Pattern</th><th>Isolation</th><th>Resources</th><th>Best For</th></tr></thead><tbody>
+<tr><td><strong>CLI per user</strong></td><td>Complete</td><td>High</td><td>Multi-tenant SaaS, compliance</td></tr>
+<tr><td><strong>Shared CLI + session IDs</strong></td><td>Logical</td><td>Low</td><td>Internal tools</td></tr>
+<tr><td><strong>Shared sessions</strong></td><td>None</td><td>Low</td><td>Team collaboration (requires locking)</td></tr>
+</tbody></table>
+<h5>Production Checklist</h5>
+<ul>
+<li>Session cleanup: periodic deletion of expired sessions</li>
+<li>Health checks: ping CLI server, restart if unresponsive</li>
+<li>Persistent storage: mount <code>~/.copilot/session-state/</code> for containers</li>
+<li>Secret management: use Vault/K8s Secrets for tokens</li>
+<li>Session locking: Redis or similar for shared session access</li>
+<li>Graceful shutdown: drain active sessions before stopping CLI</li>
+</ul>
+<hr>
+<h4>Client Configuration</h4>
+<table><thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>cliPath</code></td><td>string</td><td>Auto-detected</td><td>Path to Copilot CLI executable</td></tr>
+<tr><td><code>cliUrl</code></td><td>string</td><td>—</td><td>URL of external CLI server</td></tr>
+<tr><td><code>githubToken</code></td><td>string</td><td>—</td><td>GitHub token for auth</td></tr>
+<tr><td><code>useLoggedInUser</code></td><td>boolean</td><td><code>true</code></td><td>Use stored CLI credentials</td></tr>
+<tr><td><code>logLevel</code></td><td>string</td><td><code>&quot;none&quot;</code></td><td><code>&quot;none&quot;</code> \</td><td><code>&quot;error&quot;</code> \</td><td><code>&quot;warning&quot;</code> \</td><td><code>&quot;info&quot;</code> \</td><td><code>&quot;debug&quot;</code></td></tr>
+<tr><td><code>autoRestart</code></td><td>boolean</td><td><code>true</code></td><td>Auto-restart CLI on crash</td></tr>
+<tr><td><code>useStdio</code></td><td>boolean</td><td><code>true</code></td><td>Use stdio transport</td></tr>
+</tbody></table>
+<h4>Session Configuration</h4>
+<table><thead><tr><th>Option</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>model</code></td><td>string</td><td>Model to use (e.g., <code>&quot;gpt-4.1&quot;</code>, <code>&quot;claude-sonnet-4&quot;</code>)</td></tr>
+<tr><td><code>sessionId</code></td><td>string</td><td>Custom ID for resumable sessions</td></tr>
+<tr><td><code>streaming</code></td><td>boolean</td><td>Enable streaming responses</td></tr>
+<tr><td><code>tools</code></td><td>Tool[]</td><td>Custom tools</td></tr>
+<tr><td><code>mcpServers</code></td><td>object</td><td>MCP server configurations</td></tr>
+<tr><td><code>hooks</code></td><td>object</td><td>Session hooks</td></tr>
+<tr><td><code>provider</code></td><td>object</td><td>BYOK provider config</td></tr>
+<tr><td><code>customAgents</code></td><td>object[]</td><td>Custom agent definitions</td></tr>
+<tr><td><code>systemMessage</code></td><td>object</td><td>System message override</td></tr>
+<tr><td><code>skillDirectories</code></td><td>string[]</td><td>Directories to load skills from</td></tr>
+<tr><td><code>disabledSkills</code></td><td>string[]</td><td>Skills to disable</td></tr>
+<tr><td><code>reasoningEffort</code></td><td>string</td><td>Reasoning effort level</td></tr>
+<tr><td><code>availableTools</code></td><td>string[]</td><td>Restrict available tools</td></tr>
+<tr><td><code>excludedTools</code></td><td>string[]</td><td>Exclude specific tools</td></tr>
+<tr><td><code>infiniteSessions</code></td><td>object</td><td>Auto-compaction config</td></tr>
+<tr><td><code>workingDirectory</code></td><td>string</td><td>Working directory</td></tr>
+</tbody></table>
+<hr>
+<h4>SDK vs CLI Feature Comparison</h4>
+<h5>✅ Available in SDK</h5>
+<p>Session management, messaging (<code>send</code>/<code>sendAndWait</code>/<code>abort</code>), message history (<code>getMessages</code>), custom tools, tool permission hooks, MCP servers (local + HTTP), streaming, model selection, BYOK providers, custom agents, system message, skills, infinite sessions, permission handlers, 40+ event types.</p>
+<h5>❌ CLI-Only Features</h5>
+<p>Session export (<code>--share</code>), slash commands, interactive UI, terminal rendering, YOLO mode, login/logout flows, <code>/compact</code> (use <code>infiniteSessions</code> instead), <code>/usage</code> (use usage events), <code>/review</code>, <code>/delegate</code>.</p>
+<p><strong>Workarounds:</strong></p>
+<ul>
+<li>Session export → Collect events manually with <code>session.on()</code> + <code>session.getMessages()</code></li>
+<li>Permission control → Use <code>onPermissionRequest</code> handler instead of <code>--allow-all-paths</code></li>
+<li>Context compaction → Use <code>infiniteSessions</code> config instead of <code>/compact</code></li>
+</ul>
+<hr>
+<h4>Debugging</h4>
+<p>Enable debug logging:</p>
+<p><pre><code>const client = new CopilotClient({ logLevel: &quot;debug&quot; });</code></pre></p>
+<p>Custom log directory:</p>
+<p><pre><code>const client = new CopilotClient({ cliArgs: [&quot;--log-dir&quot;, &quot;/path/to/logs&quot;] });</code></pre></p>
+<h5>Common Issues</h5>
+<table><thead><tr><th>Issue</th><th>Cause</th><th>Solution</th></tr></thead><tbody>
+<tr><td><code>CLI not found</code></td><td>CLI not installed or not in PATH</td><td>Install CLI or set <code>cliPath</code></td></tr>
+<tr><td><code>Not authenticated</code></td><td>No valid credentials</td><td>Run <code>copilot auth login</code> or provide <code>githubToken</code></td></tr>
+<tr><td><code>Session not found</code></td><td>Using session after <code>destroy()</code></td><td>Check <code>listSessions()</code> for valid IDs</td></tr>
+<tr><td><code>Connection refused</code></td><td>CLI process crashed</td><td>Enable <code>autoRestart: true</code>, check port conflicts</td></tr>
+<tr><td>MCP tools missing</td><td>Server init failure or tools not enabled</td><td>Set <code>tools: [&quot;*&quot;]</code>, test server independently</td></tr>
+</tbody></table>
+<h5>Connection State</h5>
+<p><pre><code>console.log(&quot;State:&quot;, client.getState());  // &quot;connected&quot; after start()
+client.on(&quot;stateChange&quot;, (state) =&gt; console.log(&quot;Changed to:&quot;, state));</code></pre></p>
+<hr>
+<h4>Key API Summary</h4>
+<table><thead><tr><th>Language</th><th>Client</th><th>Session Create</th><th>Send</th><th>Resume</th><th>Stop</th></tr></thead><tbody>
+<tr><td>Node.js</td><td><code>new CopilotClient()</code></td><td><code>client.createSession()</code></td><td><code>session.sendAndWait()</code></td><td><code>client.resumeSession()</code></td><td><code>client.stop()</code></td></tr>
+<tr><td>Python</td><td><code>CopilotClient()</code></td><td><code>client.create_session()</code></td><td><code>session.send_and_wait()</code></td><td><code>client.resume_session()</code></td><td><code>client.stop()</code></td></tr>
+<tr><td>Go</td><td><code>copilot.NewClient(nil)</code></td><td><code>client.CreateSession()</code></td><td><code>session.SendAndWait()</code></td><td><code>client.ResumeSession()</code></td><td><code>client.Stop()</code></td></tr>
+<tr><td>.NET</td><td><code>new CopilotClient()</code></td><td><code>client.CreateSessionAsync()</code></td><td><code>session.SendAndWaitAsync()</code></td><td><code>client.ResumeSessionAsync()</code></td><td><code>client.DisposeAsync()</code></td></tr>
+</tbody></table>
+<h4>References</h4>
+<ul>
+<li><a href="https://github.com/github/copilot-sdk" rel="noopener">GitHub Copilot SDK</a></li>
+<li><a href="https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli" rel="noopener">Copilot CLI Installation</a></li>
+<li><a href="https://modelcontextprotocol.io" rel="noopener">MCP Protocol Specification</a></li>
+<li><a href="https://github.com/modelcontextprotocol/servers" rel="noopener">MCP Servers Directory</a></li>
+<li><a href="https://github.com/github/github-mcp-server" rel="noopener">GitHub MCP Server</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/copilot-sdk</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/copilot-sdk" aria-label="Copy install copilot-sdk">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/copilot-sdk</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/copilot-sdk/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

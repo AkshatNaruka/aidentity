@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-analytics-data-api-basics — Aidentity</title>
+<meta name="description" content="Manages Google Analytics reporting data, enables the Analytics Data API via the Cloud CLI, and creates reports using the Google Analytics Data API (v1beta). Use when you need to interact with Google Analytics properties, run customized analytics reports, query metrics (like activeUsers, screenPageViews) and dimensions (like city, date), check metrics and dimensions compatibility, or verify API enablement. Don&#39;t use for Google Analytics Admin API operations (e.g., creating properties, managing users) or for front-end tracking installation.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/analytics/google-analytics-data-api-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-analytics-data-api-basics — Aidentity">
+<meta property="og:description" content="Manages Google Analytics reporting data, enables the Analytics Data API via the Cloud CLI, and creates reports using the Google Analytics Data API (v1beta). Use when you need to interact with Google Analytics properties, run customized analytics reports, query metrics (like activeUsers, screenPageViews) and dimensions (like city, date), check metrics and dimensions compatibility, or verify API enablement. Don&#39;t use for Google Analytics Admin API operations (e.g., creating properties, managing users) or for front-end tracking installation.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/analytics/google-analytics-data-api-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-analytics-data-api-basics","description":"Manages Google Analytics reporting data, enables the Analytics Data API via the Cloud CLI, and creates reports using the Google Analytics Data API (v1beta). Use when you need to interact with Google Analytics properties, run customized analytics reports, query metrics (like activeUsers, screenPageViews) and dimensions (like city, date), check metrics and dimensions compatibility, or verify API enablement. Don't use for Google Analytics Admin API operations (e.g., creating properties, managing users) or for front-end tracking installation.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/analytics/google-analytics-data-api-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=analytics">analytics</a><span>/</span>google-analytics-data-api-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-analytics-data-api-basics</h1>
+      <p class="summary">Manages Google Analytics reporting data, enables the Analytics Data API via the Cloud CLI, and creates reports using the Google Analytics Data API (v1beta). Use when you need to interact with Google Analytics properties, run customized analytics reports, query metrics (like activeUsers, screenPageViews) and dimensions (like city, date), check metrics and dimensions compatibility, or verify API enablement. Don&#39;t use for Google Analytics Admin API operations (e.g., creating properties, managing users) or for front-end tracking installation.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=analytics">analytics</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Getting Started with Google Analytics Data API</h3>
+<p>The Google Analytics Data API v1beta provides programmatic access to Google</p>
+<p>Analytics report data. It allows you to build customized dashboards,</p>
+<p>automate reporting workflows, and integrate Google Analytics data into your enterprise</p>
+<p>applications.</p>
+<h4>Enabling the API via Cloud CLI</h4>
+<p>Before making API calls, ensure the Google Analytics Data API is enabled in your</p>
+<p>Google Cloud project.</p>
+<p>If <code>gcloud</code> is not found, prompt the user to install the Google Cloud CLI before</p>
+<p>running these commands.</p>
+<ol>
+<li><strong>Enable the API:</strong> Use the Cloud CLI (<code>gcloud</code>) to enable</li>
+</ol>
+<p>    <code>analyticsdata.googleapis.com</code>.</p>
+<p>    <pre><code>    gcloud services enable analyticsdata.googleapis.com --quiet
+    </code></pre></p>
+<p>    *Why: Enabling the API ensures your Cloud project has the necessary quota</p>
+<p>    and permissions allocated for running Google Analytics reports.*</p>
+<ol>
+<li><strong>Verify API Enablement:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud services list --enabled --filter=&quot;analyticsdata.googleapis.com&quot;
+    </code></pre></p>
+<h4>Authentication</h4>
+<p>To authenticate your API requests, you must generate Application Default</p>
+<p>Credentials (ADC) and give your account the necessary scopes. Run the following</p>
+<p>command in your terminal:</p>
+<p><pre><code>gcloud auth application-default login --scopes=&quot;https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/analytics.readonly&quot;</code></pre></p>
+<p>*Why: This configures ADC in your local environment with the required Cloud</p>
+<p>Platform and Google Analytics read-only scopes, allowing the client library to</p>
+<p>automatically authenticate your requests.*</p>
+<h4>Creating a Data API Report (v1beta)</h4>
+<p>To create a report, use the official Google Analytics Data client library.</p>
+<p>Always prefer the <code>v1beta</code> version of the API for stability and access to</p>
+<p>current Google Analytics reporting capabilities.</p>
+<p>&gt; [!IMPORTANT] <strong>Mandatory Agent Directive:</strong> When the user selects or requires</p>
+<p>&gt; a specific programming language, read the corresponding client library setup</p>
+<p>&gt; reference guide in <code>references/</code> listed below.</p>
+<h5>Supported Client Libraries</h5>
+<h5>Python</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for Python, read the setup guide:</p>
+<ul>
+<li>[Python Installation Reference](references/python.md) *(Package:</li>
+</ul>
+<p>    <code>google-analytics-data</code>)*</p>
+<h5>Java</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for Java, read the setup guide:</p>
+<ul>
+<li>[Java Installation Reference](references/java.md) *(Artifact:</li>
+</ul>
+<p>    <code>com.google.cloud:google-cloud-analytics-data</code>)*</p>
+<h5>PHP</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for PHP, read the setup guide:</p>
+<ul>
+<li>[PHP Installation Reference](references/php.md) *(Package:</li>
+</ul>
+<p>    <code>google/analytics-data</code>)*</p>
+<h5>Node.js</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for Node.js, read the setup guide:</p>
+<ul>
+<li>[Node.js Installation Reference](references/nodejs.md) *(Package:</li>
+</ul>
+<p>    <code>@google-analytics/data</code>)*</p>
+<h5>Go</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for Go, read the setup guide:</p>
+<ul>
+<li>[Go Installation Reference](references/go.md) *(Package:</li>
+</ul>
+<p>    <code>cloud.google.com/go/analytics/data/apiv1beta</code>)*</p>
+<h5>.NET</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for .NET / C#, read the setup guide:</p>
+<ul>
+<li>[.NET Installation Reference](references/dotnet.md) *(Package:</li>
+</ul>
+<p>    <code>Google.Analytics.Data.V1Beta</code>)*</p>
+<h5>Ruby</h5>
+<p>If you need to install or set up the Google Analytics Data API client library</p>
+<p>for Ruby, read the setup guide:</p>
+<ul>
+<li>[Ruby Installation Reference](references/ruby.md) *(Gem:</li>
+</ul>
+<p>    <code>google-analytics-data-v1beta</code>)*</p>
+<p>&gt; [!NOTE] <strong>Additional Resources</strong>: For further examples of calling the Data API</p>
+<p>&gt; with Java, PHP, Node.js, .NET, Python and REST, as well as hints on</p>
+<p>&gt; authentication with a service account, refer to the official</p>
+<p>&gt; <a href="https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart" rel="noopener">Data API Quickstart</a>.</p>
+<h5>Python Quick Start</h5>
+<ol>
+<li><strong>Install the Client Library:</strong></li>
+</ol>
+<p>    <pre><code>    pip install google-analytics-data
+    </code></pre></p>
+<p>    If <code>pip</code> is not available, prompt the user to install <code>pip</code> before</p>
+<p>    installing the client library.</p>
+<ol>
+<li><strong>Run a Report Request:</strong> Below is a complete example demonstrating how to</li>
+</ol>
+<p>    query a Google Analytics property for active users and sessions grouped by city and date.</p>
+<p>    Replace <code>YOUR-PROPERTY-ID</code> with your actual Google Analytics property ID (e.g.,</p>
+<p>    <code>1234567</code>).</p>
+<p>    <pre><code>    from google.analytics.data_v1beta import BetaAnalyticsDataClient
+    from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
+
+    def sample_run_report(property_id: str):
+        # Initialize the client.
+        # Assumes Application Default Credentials (ADC) are configured in your environment.
+        client = BetaAnalyticsDataClient()
+
+        request = RunReportRequest(
+            property=f&quot;properties/{property_id}&quot;,
+            dimensions=[
+                Dimension(name=&quot;city&quot;),
+                Dimension(name=&quot;date&quot;)
+            ],
+            metrics=[
+                Metric(name=&quot;activeUsers&quot;),
+                Metric(name=&quot;sessions&quot;)
+            ],
+            date_ranges=[
+                DateRange(start_date=&quot;2026-05-01&quot;, end_date=&quot;today&quot;)
+            ],
+        )
+
+        response = client.run_report(request)
+
+        print(f&quot;Report result for property {property_id}:&quot;)
+        for row in response.rows:
+            print(
+                f&quot;City: {row.dimension_values[0].value}, &quot;
+                f&quot;Date: {row.dimension_values[1].value}, &quot;
+                f&quot;Active Users: {row.metric_values[0].value}, &quot;
+                f&quot;Sessions: {row.metric_values[1].value}&quot;
+            )
+
+    if __name__ == &quot;__main__&quot;:
+        sample_run_report(&quot;YOUR-PROPERTY-ID&quot;)
+    </code></pre></p>
+<p>    *Why: Using <code>BetaAnalyticsDataClient</code> and <code>RunReportRequest</code> ensures</p>
+<p>    compatibility with the v1beta endpoint and strongly typed request</p>
+<p>    validation.*</p>
+<h4>Metrics and Dimensions Schema</h4>
+<p>When constructing your <code>RunReportRequest</code>, you must use valid API names for</p>
+<p>dimensions and metrics. Refer to the official</p>
+<p><a href="https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema" rel="noopener">Data API Schema documentation</a></p>
+<p>for the complete, authoritative list of available fields.</p>
+<h5>Commonly Used Dimensions</h5>
+<p>Dimensions represent categorical attributes of your data.</p>
+<ul>
+<li><code>city</code>: The town or city of the user.</li>
+<li><code>country</code>: The country of the user.</li>
+<li><code>date</code>: The date of the event, formatted as YYYYMMDD.</li>
+<li><code>deviceCategory</code>: The category of mobile device (e.g., desktop, mobile,</li>
+</ul>
+<p>    tablet).</p>
+<ul>
+<li><code>eventName</code>: The name of the triggered event.</li>
+<li><code>pageTitle</code>: The title of the web page.</li>
+</ul>
+<h5>Commonly Used Metrics</h5>
+<p>Metrics represent quantitative measurements.</p>
+<ul>
+<li><code>activeUsers</code>: The number of active users.</li>
+<li><code>eventCount</code>: The total count of events.</li>
+<li><code>sessions</code>: The total number of sessions.</li>
+<li><code>screenPageViews</code>: The number of app screens or web pages viewed.</li>
+<li><code>totalRevenue</code>: The total revenue from purchases, subscriptions, and</li>
+</ul>
+<p>    advertising.</p>
+<h5>Metrics and Dimensions Compatibility Check</h5>
+<p>Some dimensions and metrics cannot be queried together in the same report</p>
+<p>request. If you encounter an <code>INVALID_ARGUMENT</code> error regarding incompatible</p>
+<p>fields, verify your field combinations For programmatic access to the Data API</p>
+<p>schema, use <code>getMetadata()</code>. To programmatically check the compatibility of</p>
+<p>specific dimension and metric combinations before running a report, use the</p>
+<p><code>checkCompatibility()</code> method.</p>
+<p><pre><code>from google.analytics.data_v1beta import BetaAnalyticsDataClient
+from google.analytics.data_v1beta.types import CheckCompatibilityRequest, Compatibility, Dimension, Metric
+
+def sample_check_compatibility(property_id: str):
+    client = BetaAnalyticsDataClient()
+
+    # Define the dimensions and metrics you want to query together.
+    # For example, checking if &#39;itemName&#39; (an e-commerce dimension)
+    # is compatible with &#39;activeUsers&#39; and &#39;totalRevenue&#39;.
+    request = CheckCompatibilityRequest(
+        property=f&quot;properties/{property_id}&quot;,
+        dimensions=[
+            Dimension(name=&quot;itemName&quot;),
+            Dimension(name=&quot;date&quot;)
+        ],
+        metrics=[
+            Metric(name=&quot;activeUsers&quot;),
+            Metric(name=&quot;totalRevenue&quot;)
+        ],
+    )
+    response = client.check_compatibility(request)
+
+    print(f&quot;Compatibility check for property {property_id}:&quot;)
+    for dim in response.dimension_compatibilities:
+        is_compatible = dim.compatibility == Compatibility.COMPATIBLE
+        print(f&quot;Dimension &#39;{dim.dimension_metadata.api_name}&#39; is compatible: {is_compatible}&quot;)
+
+    for metric in response.metric_compatibilities:
+        is_compatible = metric.compatibility == Compatibility.COMPATIBLE
+        print(f&quot;Metric &#39;{metric.metric_metadata.api_name}&#39; is compatible: {is_compatible}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    sample_check_compatibility(&quot;YOUR-PROPERTY-ID&quot;)</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/analytics/google-analytics-admin-api-basics/index.html"
+     data-source="google-cloud"
+     data-category="analytics"
+     data-search="google-analytics-admin-api-basics manages google analytics account and property settings, enables the analytics admin api via the cloud cli, lists accounts and properties, and manages data streams, custom dimensions, conversion events, and integrations. use when you need to programmatically configure google analytics accounts, provision properties, manage data retention, configure measurement protocol secrets, or manage firebase and google ads links. analytics analytics cloud google/skills">
+  <span>
+    <span class="r-name">google-analytics-admin-api-basics</span>
+    <span class="r-desc">Manages Google Analytics account and property settings, enables the Analytics Admin API via the Cloud CLI, lists accounts and properties, and manages data streams, custom dimensions, conversion events, and integrations. Use when you need to programmatically configure Google Analytics accounts, provision properties, manage data retention, configure Measurement Protocol secrets, or manage Firebase and Google Ads links.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/analytics/google-analytics-data-api-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/analytics/google-analytics-data-api-basics" aria-label="Copy install google-analytics-data-api-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>analytics</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/analytics/google-analytics-data-api-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/analytics/google-analytics-data-api-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

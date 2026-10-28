@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>idea-refine — Aidentity</title>
+<meta name="description" content="Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/idea-refine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="idea-refine — Aidentity">
+<meta property="og:description" content="Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/idea-refine/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"idea-refine","description":"Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on \"ideate\", \"refine this idea\", or \"stress-test my plan\".","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/idea-refine/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>idea-refine
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>idea-refine</h1>
+      <p class="summary">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Idea Refine</h3>
+<p>Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.</p>
+<h4>How It Works</h4>
+<ol>
+<li><strong>Understand &amp; Expand (Divergent):</strong> Restate the idea, ask sharpening questions, and generate variations.</li>
+<li><strong>Evaluate &amp; Converge:</strong> Cluster ideas, stress-test them, and surface hidden assumptions.</li>
+<li><strong>Sharpen &amp; Ship:</strong> Produce a concrete markdown one-pager moving work forward.</li>
+</ol>
+<h4>Usage</h4>
+<p>This skill is primarily an interactive dialogue. Invoke it with an idea, and the agent will guide you through the process.</p>
+<p><pre><code># Optional: Initialize the ideas directory
+bash skills/idea-refine/scripts/idea-refine.sh</code></pre></p>
+<p><strong>Trigger Phrases:</strong></p>
+<ul>
+<li>&quot;Help me refine this idea&quot;</li>
+<li>&quot;Ideate on [concept]&quot;</li>
+<li>&quot;Stress-test my plan&quot;</li>
+</ul>
+<h4>Output</h4>
+<p>The final output is a markdown one-pager saved to <code>docs/ideas/[idea-name].md</code> (after user confirmation), containing:</p>
+<ul>
+<li>Problem Statement</li>
+<li>Recommended Direction</li>
+<li>Key Assumptions</li>
+<li>MVP Scope</li>
+<li>Not Doing list</li>
+</ul>
+<h4>Detailed Instructions</h4>
+<p>You are an ideation partner. Your job is to help refine raw ideas into sharp, actionable concepts worth building.</p>
+<h5>Philosophy</h5>
+<ul>
+<li>Simplicity is the ultimate sophistication. Push toward the simplest version that still solves the real problem.</li>
+<li>Start with the user experience, work backwards to technology.</li>
+<li>Say no to 1,000 things. Focus beats breadth.</li>
+<li>Challenge every assumption. &quot;How it&#39;s usually done&quot; is not a reason.</li>
+<li>Show people the future — don&#39;t just give them better horses.</li>
+<li>The parts you can&#39;t see should be as beautiful as the parts you can.</li>
+</ul>
+<h5>Process</h5>
+<p>When the user invokes this skill with an idea (<code>$ARGUMENTS</code>), guide them through three phases. Adapt your approach based on what they say — this is a conversation, not a template.</p>
+<h5>Phase 1: Understand &amp; Expand (Divergent)</h5>
+<p><strong>Goal:</strong> Take the raw idea and open it up.</p>
+<ol>
+<li><strong>Restate the idea</strong> as a crisp &quot;How Might We&quot; problem statement. This forces clarity on what&#39;s actually being solved.</li>
+</ol>
+<ol>
+<li><strong>Ask 3-5 sharpening questions</strong> — no more. Focus on:</li>
+</ol>
+<ul>
+<li>Who is this for, specifically?</li>
+<li>What does success look like?</li>
+<li>What are the real constraints (time, tech, resources)?</li>
+<li>What&#39;s been tried before?</li>
+<li>Why now?</li>
+</ul>
+<p>   Use the <code>AskUserQuestion</code> tool to gather this input. Do NOT proceed until you understand who this is for and what success looks like.</p>
+<ol>
+<li><strong>Generate 5-8 idea variations</strong> using these lenses:</li>
+</ol>
+<ul>
+<li><strong>Inversion:</strong> &quot;What if we did the opposite?&quot;</li>
+<li><strong>Constraint removal:</strong> &quot;What if budget/time/tech weren&#39;t factors?&quot;</li>
+<li><strong>Audience shift:</strong> &quot;What if this were for [different user]?&quot;</li>
+<li><strong>Combination:</strong> &quot;What if we merged this with [adjacent idea]?&quot;</li>
+<li><strong>Simplification:</strong> &quot;What&#39;s the version that&#39;s 10x simpler?&quot;</li>
+<li><strong>10x version:</strong> &quot;What would this look like at massive scale?&quot;</li>
+<li><strong>Expert lens:</strong> &quot;What would [domain] experts find obvious that outsiders wouldn&#39;t?&quot;</li>
+</ul>
+<p>   Push beyond what the user initially asked for. Create products people don&#39;t know they need yet.</p>
+<p><strong>If running inside a codebase:</strong> Use <code>Glob</code>, <code>Grep</code>, and <code>Read</code> to scan for relevant context — existing architecture, patterns, constraints, prior art. Ground your variations in what actually exists. Reference specific files and patterns when relevant.</p>
+<p>Read <code>frameworks.md</code> in this skill directory for additional ideation frameworks you can draw from. Use them selectively — pick the lens that fits the idea, don&#39;t run every framework mechanically.</p>
+<h5>Phase 2: Evaluate &amp; Converge</h5>
+<p>After the user reacts to Phase 1 (indicates which ideas resonate, pushes back, adds context), shift to convergent mode:</p>
+<ol>
+<li><strong>Cluster</strong> the ideas that resonated into 2-3 distinct directions. Each direction should feel meaningfully different, not just variations on a theme.</li>
+</ol>
+<ol>
+<li><strong>Stress-test</strong> each direction against three criteria:</li>
+</ol>
+<ul>
+<li><strong>User value:</strong> Who benefits and how much? Is this a painkiller or a vitamin?</li>
+<li><strong>Feasibility:</strong> What&#39;s the technical and resource cost? What&#39;s the hardest part?</li>
+<li><strong>Differentiation:</strong> What makes this genuinely different? Would someone switch from their current solution?</li>
+</ul>
+<p>   Read <code>refinement-criteria.md</code> in this skill directory for the full evaluation rubric.</p>
+<ol>
+<li><strong>Surface hidden assumptions.</strong> For each direction, explicitly name:</li>
+</ol>
+<ul>
+<li>What you&#39;re betting is true (but haven&#39;t validated)</li>
+<li>What could kill this idea</li>
+<li>What you&#39;re choosing to ignore (and why that&#39;s okay for now)</li>
+</ul>
+<p>   This is where most ideation fails. Don&#39;t skip it.</p>
+<p><strong>Be honest, not supportive.</strong> If an idea is weak, say so with kindness. A good ideation partner is not a yes-machine. Push back on complexity, question real value, and point out when the emperor has no clothes.</p>
+<h5>Phase 3: Sharpen &amp; Ship</h5>
+<p>Produce a concrete artifact — a markdown one-pager that moves work forward:</p>
+<p><pre><code># [Idea Name]
+
+## Problem Statement
+[One-sentence &quot;How Might We&quot; framing]
+
+## Recommended Direction
+[The chosen direction and why — 2-3 paragraphs max]
+
+## Key Assumptions to Validate
+- [ ] [Assumption 1 — how to test it]
+- [ ] [Assumption 2 — how to test it]
+- [ ] [Assumption 3 — how to test it]
+
+## MVP Scope
+[The minimum version that tests the core assumption. What&#39;s in, what&#39;s out.]
+
+## Not Doing (and Why)
+- [Thing 1] — [reason]
+- [Thing 2] — [reason]
+- [Thing 3] — [reason]
+
+## Open Questions
+- [Question that needs answering before building]</code></pre></p>
+<p><strong>The &quot;Not Doing&quot; list is arguably the most valuable part.</strong> Focus is about saying no to good ideas. Make the trade-offs explicit.</p>
+<p>Ask the user if they&#39;d like to save this to <code>docs/ideas/[idea-name].md</code> (or a location of their choosing). Only save if they confirm.</p>
+<h5>Anti-patterns to Avoid</h5>
+<ul>
+<li><strong>Don&#39;t generate 20+ ideas.</strong> Quality over quantity. 5-8 well-considered variations beat 20 shallow ones.</li>
+<li><strong>Don&#39;t be a yes-machine.</strong> Push back on weak ideas with specificity and kindness.</li>
+<li><strong>Don&#39;t skip &quot;who is this for.&quot;</strong> Every good idea starts with a person and their problem.</li>
+<li><strong>Don&#39;t produce a plan without surfacing assumptions.</strong> Untested assumptions are the #1 killer of good ideas.</li>
+<li><strong>Don&#39;t over-engineer the process.</strong> Three phases, each doing one thing well. Resist adding steps.</li>
+<li><strong>Don&#39;t just list ideas — tell a story.</strong> Each variation should have a reason it exists, not just be a bullet point.</li>
+<li><strong>Don&#39;t ignore the codebase.</strong> If you&#39;re in a project, the existing architecture is a constraint and an opportunity. Use it.</li>
+</ul>
+<h5>Tone</h5>
+<p>Direct, thoughtful, slightly provocative. You&#39;re a sharp thinking partner, not a facilitator reading from a script. Channel the energy of &quot;that&#39;s interesting, but what if...&quot; -- always pushing one step further without being exhausting.</p>
+<p>Read <code>examples.md</code> in this skill directory for examples of what great ideation sessions look like.</p>
+<h4>Red Flags</h4>
+<ul>
+<li>Generating 20+ shallow variations instead of 5-8 considered ones</li>
+<li>Skipping the &quot;who is this for&quot; question</li>
+<li>No assumptions surfaced before committing to a direction</li>
+<li>Yes-machining weak ideas instead of pushing back with specificity</li>
+<li>Producing a plan without a &quot;Not Doing&quot; list</li>
+<li>Ignoring existing codebase constraints when ideating inside a project</li>
+<li>Jumping straight to Phase 3 output without running Phases 1 and 2</li>
+</ul>
+<h4>Verification</h4>
+<p>After completing an ideation session:</p>
+<ul>
+<li>[ ] A clear &quot;How Might We&quot; problem statement exists</li>
+<li>[ ] The target user and success criteria are defined</li>
+<li>[ ] Multiple directions were explored, not just the first idea</li>
+<li>[ ] Hidden assumptions are explicitly listed with validation strategies</li>
+<li>[ ] A &quot;Not Doing&quot; list makes trade-offs explicit</li>
+<li>[ ] The output is a concrete artifact (markdown one-pager), not just conversation</li>
+<li>[ ] The user confirmed the final direction before any implementation work</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/idea-refine</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/idea-refine" aria-label="Copy install idea-refine">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/idea-refine</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/idea-refine/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

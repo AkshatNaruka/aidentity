@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-recipe-foundation-builder — Aidentity</title>
+<meta name="description" content="Deploys a baseline landing zone foundation for a Google Cloud Organization, establishing security guardrails using Organization Policies, resource hierarchy folders and projects, billing association, and centralized logging and monitoring. Deploys Google Cloud&#39;s recommended security controls and architecture. Use when setting up a new Google Cloud Organization or establishing a secure, enterprise-grade landing zone foundation. Don&#39;t use for individual project onboarding (use google-cloud-recipe-onboarding or product-specific skills instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-foundation-builder/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-recipe-foundation-builder — Aidentity">
+<meta property="og:description" content="Deploys a baseline landing zone foundation for a Google Cloud Organization, establishing security guardrails using Organization Policies, resource hierarchy folders and projects, billing association, and centralized logging and monitoring. Deploys Google Cloud&#39;s recommended security controls and architecture. Use when setting up a new Google Cloud Organization or establishing a secure, enterprise-grade landing zone foundation. Don&#39;t use for individual project onboarding (use google-cloud-recipe-onboarding or product-specific skills instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-foundation-builder/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-recipe-foundation-builder","description":"Deploys a baseline landing zone foundation for a Google Cloud Organization, establishing security guardrails using Organization Policies, resource hierarchy folders and projects, billing association, and centralized logging and monitoring. Deploys Google Cloud's recommended security controls and architecture. Use when setting up a new Google Cloud Organization or establishing a secure, enterprise-grade landing zone foundation. Don't use for individual project onboarding (use google-cloud-recipe-onboarding or product-specific skills instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-foundation-builder/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-recipe-foundation-builder
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-recipe-foundation-builder</h1>
+      <p class="summary">Deploys a baseline landing zone foundation for a Google Cloud Organization, establishing security guardrails using Organization Policies, resource hierarchy folders and projects, billing association, and centralized logging and monitoring. Deploys Google Cloud&#39;s recommended security controls and architecture. Use when setting up a new Google Cloud Organization or establishing a secure, enterprise-grade landing zone foundation. Don&#39;t use for individual project onboarding (use google-cloud-recipe-onboarding or product-specific skills instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Recipe: Foundation Builder</h3>
+<p>&gt; [!WARNING] This skill is currently in a preview state. It will deploy a secure</p>
+<p>&gt; foundation, but does not have all advanced features. Users who want more</p>
+<p>&gt; options should visit</p>
+<p>&gt; <a href="https://docs.cloud.google.com/docs/enterprise/cloud-setup" rel="noopener">Google Cloud Setup</a>.</p>
+<p>This skill guides the setup of a secure, enterprise-grade Google Cloud landing</p>
+<p>zone foundation. It establishes baseline security controls, organizes the</p>
+<p>initial resource hierarchy, and configures centralized audit logging and</p>
+<p>cross-environment monitoring.</p>
+<h4>Overview</h4>
+<p>The recipe provisions the following core components at the organization root:</p>
+<ul>
+<li><strong>Security Guardrails</strong>: Enforces 17 baseline Google Cloud Organization</li>
+</ul>
+<p>    Policies to secure the environment (13 Boolean, 4 List constraints).</p>
+<ul>
+<li><strong>Resource Hierarchy</strong>: Establishes 4 folders (<code>Common</code>, <code>Production</code>,</li>
+</ul>
+<p>    <code>Non-Production</code>, <code>Development</code>) and provisions corresponding projects</p>
+<p>    sequentially with globally unique ID prefixes (<code>logging-</code>, <code>prod-</code>,</p>
+<p>    <code>non-prod-</code>, <code>dev-</code> followed by a shared suffix).</p>
+<ul>
+<li><strong>Billing &amp; API Enablement</strong>: Links all projects to your billing account and</li>
+</ul>
+<p>    activates critical logging/monitoring services.</p>
+<ul>
+<li><strong>Centralized Logging &amp; Monitoring</strong>: Deploys a global, centralized log</li>
+</ul>
+<p>    bucket with 30-day retention, configures an organization-wide audit log</p>
+<p>    sink, and sets up a cross-environment metrics scope.</p>
+<hr>
+<h4>Clarifying Questions</h4>
+<p>Before executing this recipe, the agent <strong>must</strong> gather the following details:</p>
+<ol>
+<li><strong>Organization ID</strong>: Run <code>gcloud organizations list</code> to retrieve the</li>
+</ol>
+<p>    available organizations, present them to the user, and ask them to select</p>
+<p>    the target <strong>Organization ID</strong>.</p>
+<ol>
+<li><strong>Billing Account ID</strong>: Run `gcloud billing accounts list</li>
+</ol>
+<p>    --filter=open=true` to retrieve only the active (open) billing accounts,</p>
+<p>    present them to the user, and ask them to select the active **Billing</p>
+<p>    Account ID**.</p>
+<ol>
+<li><strong>Project ID Suffix</strong>: Ask if the user has a preferred prefix or target</li>
+</ol>
+<p>    suffix for Project IDs (default uses prefix + a shared random 8-character</p>
+<p>    string, e.g., <code>prod-ab12cd34</code>).</p>
+<ol>
+<li><strong>Log Bucket Region</strong>: Ask for the target region for resources if they want</li>
+</ol>
+<p>    to override the default <code>global</code> log bucket location.</p>
+<hr>
+<h4>Prerequisites</h4>
+<p>Ensure the following prerequisites are met before beginning the deployment:</p>
+<ul>
+<li><strong>GCP Identity</strong>: You must have a Google Cloud Organization resource set up.</li>
+<li><strong>Administrative IAM Roles</strong>: The identity executing these commands must</li>
+</ul>
+<p>    hold the required administrative permissions. If any step fails with a</p>
+<p>    <code>Permission Denied</code> error, the agent will attempt to self-remediate by</p>
+<p>    granting the corresponding recommended role as detailed in **Phase 2: Error</p>
+<p>    Recovery &amp; Lazy Role Remediation Strategy**.</p>
+<ul>
+<li><strong>Tools</strong>: The <code>gcloud</code> CLI must be installed, authorized with the above</li>
+</ul>
+<p>    identity, and configured for use.</p>
+<hr>
+<h4>Steps to Complete the Recipe</h4>
+<h5>Phase 1: Pre-flight Confirmation</h5>
+<p>Identify the target organization and obtain explicit user approval before making</p>
+<p>changes.</p>
+<ol>
+<li><strong>Identify and Discover Organization</strong>: Verify the target organization. If</li>
+</ol>
+<p>    only the display name is known, list organizations to find the ID. Then,</p>
+<p>    retrieve the organization metadata to dynamically calculate the **Directory</p>
+<p>    Customer ID<strong> and </strong>Domain Name**:</p>
+<p>    <pre><code>    # List to find ID if needed
+    gcloud organizations list
+
+    # Describe the organization to retrieve metadata
+    gcloud organizations describe [ORGANIZATION_ID]
+    </code></pre></p>
+<p>    <em>Calculate values:</em></p>
+<ul>
+<li><strong>Domain Name</strong> (<code>[ORG_NAME]</code> / <code>[YOUR_DOMAIN]</code>): Use the <code>displayName</code></li>
+</ul>
+<p>        value from the output (e.g., <code>my-business.com</code>).</p>
+<ul>
+<li><strong>Customer ID</strong> (<code>[DIRECTORY_CUSTOMER_ID]</code>): Use the</li>
+</ul>
+<p>        <code>owner.directoryCustomerId</code> value from the output (e.g., <code>C01234567</code>).</p>
+<ol>
+<li><strong>Present Blueprint Summary</strong>: Present the exact details of the blueprint to</li>
+</ol>
+<p>    the user and request confirmation to proceed:</p>
+<p>    &gt; **Proposed Foundation Deployment Summary for Organization: <code>[ORG_NAME]</code></p>
+<p>    &gt; (<code>[ORGANIZATION_ID]</code>)**</p>
+<p>    &gt;</p>
+<p>    &gt; *   <strong>Security:</strong> Enforce 17 baseline Organization Policies (13 Boolean, 4</p>
+<p>    &gt;     List).</p>
+<p>    &gt; *   <strong>Folders:</strong> Create 4 folders sequentially (<code>Common</code>, <code>Production</code>,</p>
+<p>    &gt;     <code>Non-Production</code>, <code>Development</code>).</p>
+<p>    &gt; *   <strong>Projects:</strong> Create 4 projects sequentially with unique IDs</p>
+<p>    &gt;     (<code>logging-[SUFFIX]</code>, <code>prod-[SUFFIX]</code>, <code>non-prod-[SUFFIX]</code>,</p>
+<p>    &gt;     <code>dev-[SUFFIX]</code>).</p>
+<p>    &gt; *   <strong>Billing:</strong> Link all projects to Billing Account</p>
+<p>    &gt;     <code>[BILLING_ACCOUNT_ID]</code>.</p>
+<p>    &gt; *   <strong>APIs:</strong> Enable Logging and Monitoring APIs on the central project.</p>
+<p>    &gt; *   <strong>Centralized Logging:</strong> Deploy a <code>global</code> log bucket</p>
+<p>    &gt;     <code>[ORG_NAME]-logging</code> (30-day retention), configure an</p>
+<p>    &gt;     organization-level sink</p>
+<p>    &gt;     <code>[ORGANIZATION_ID]-logbucketsink-[RANDOM_HEX]</code>, and establish</p>
+<p>    &gt;     cross-project metrics scopes.</p>
+<p>    &gt;</p>
+<p>    &gt; Do you wish to proceed with this deployment? (Yes/No)</p>
+<p>&gt; [!IMPORTANT] <strong>Pause execution</strong> and wait for explicit user approval before</p>
+<p>&gt; moving to Phase 2. If the user declines, abort the operation.</p>
+<h5>Phase 2: Error Recovery &amp; Lazy Role Remediation Strategy</h5>
+<p>To ensure deployment continues smoothly on clean organizations without requiring</p>
+<p>complex upfront permission checks (which require a quota project), the agent</p>
+<p><strong>must</strong> adopt a &quot;lazy recovery&quot; approach.</p>
+<p>Instead of testing permissions in advance, the agent will attempt to execute</p>
+<p>each step in the recipe. If a step fails with a <code>Permission Denied</code> error, the</p>
+<p>agent will attempt to self-remediate by granting the corresponding recommended</p>
+<p>administrative group of roles to the deployment identity and retrying the</p>
+<p>operation.</p>
+<p>&gt; [!IMPORTANT] When asked about pre-deployment readiness, prerequisites, or</p>
+<p>&gt; checks to run, the agent <strong>must</strong> explicitly explain that the landing zone</p>
+<p>&gt; deployment adopts a lazy role remediation strategy rather than upfront</p>
+<p>&gt; testing, detailing all of the following in its response: 1. Confirm it will</p>
+<p>&gt; execute deployment commands directly, catching any Permission Denied</p>
+<p>&gt; errors. 2. Confirm it will attempt to self-remediate on failure by running the</p>
+<p>&gt; exact commands <code>gcloud organizations add-iam-policy-binding</code> or `gcloud</p>
+<p>&gt; billing accounts add-iam-policy-binding` to grant the entire administrative</p>
+<p>&gt; group of roles to the active identity, and then retry the failed deployment</p>
+<p>&gt; command. 3. List the core administrative groups that it will attempt to grant</p>
+<p>&gt; (Organization Admin Group, Billing Admin Group, and Security Admin Group)</p>
+<p>&gt; mapped to their key roles. 4. Confirm it will halt execution and request</p>
+<p>&gt; manual administrator intervention if the self-remediation grant command fails.</p>
+<h5>Remediation Protocol</h5>
+<p>For any command that fails due to missing permissions:</p>
+<ol>
+<li><strong>Identify Required Admin Group</strong>: Determine which administrative group is</li>
+</ol>
+<p>    responsible for the failed action. Refer to the</p>
+<p>    [Administrative IAM Reference](references/admin-iam.md#core-administrative-groups--roles)</p>
+<p>    for details.</p>
+<ol>
+<li><strong>Attempt Self-Remediation</strong>: Grant <strong>all</strong> roles belonging to that</li>
+</ol>
+<p>    administrative group to the active authenticated account sequentially. Refer</p>
+<p>    to the</p>
+<p>    [Administrative IAM Reference Remediation Guide](references/admin-iam.md#remediation)</p>
+<p>    for the copy-pasteable script commands:</p>
+<ul>
+<li>**For Organization/Folder level failures (Org Admin Group or Security</li>
+</ul>
+<p>        Admin Group)**: Run <code>gcloud organizations add-iam-policy-binding</code></p>
+<p>        sequentially for each role in the group.</p>
+<ul>
+<li><strong>For Billing level failures (Billing Admin Group)</strong>: Run `gcloud</li>
+</ul>
+<p>        billing accounts add-iam-policy-binding` sequentially for each role in</p>
+<p>        the group.</p>
+<ol>
+<li><strong>Halt on Remediation Failure</strong>:</li>
+</ol>
+<ul>
+<li>If the grant commands succeed, immediately retry the failed deployment</li>
+</ul>
+<p>        command.</p>
+<ul>
+<li>If any of the grant commands fail (e.g., due to lack of <code>setIamPolicy</code></li>
+</ul>
+<p>        admin rights), <strong>halt execution</strong> and instruct the user to ask their</p>
+<p>        Organization/Billing Administrator to manually grant the entire</p>
+<p>        administrative group of roles.</p>
+<h5>Phase-Specific Remediation Mapping</h5>
+<ul>
+<li><strong>Phase 3: Security Guardrails (Org Policies)</strong>:</li>
+<li>If <code>gcloud org-policies set-policy</code> fails: Attempt to grant the entire</li>
+</ul>
+<p>        <strong>Organization Admin Group</strong> (9 roles) at the organization level.</p>
+<ul>
+<li><strong>Phase 4: Resource Hierarchy (Folders &amp; Projects)</strong>:</li>
+<li>If <code>gcloud resource-manager folders create</code> or <code>gcloud projects create</code></li>
+</ul>
+<p>        fails: Attempt to grant the entire <strong>Organization Admin Group</strong> (9</p>
+<p>        roles) at the organization level.</p>
+<ul>
+<li><strong>Phase 4: Billing Link</strong>:</li>
+<li>If <code>gcloud billing projects link</code> fails: Attempt to grant the entire</li>
+</ul>
+<p>        <strong>Billing Admin Group</strong> (3 roles) at the billing account level, and</p>
+<p>        ensure the active identity is granted the <strong>Organization Admin Group</strong></p>
+<p>        (which contains <code>roles/billing.user</code>) at the organization level.</p>
+<ul>
+<li><strong>Phase 5: Centralized Logging &amp; Monitoring</strong>:</li>
+<li>If <code>gcloud logging sinks create</code> fails at org level: Attempt to grant</li>
+</ul>
+<p>        the entire <strong>Logging/Monitoring Admin Group</strong> (2 roles:</p>
+<p>        <code>roles/logging.admin</code>, <code>roles/monitoring.admin</code>) and the **Security</p>
+<p>        Admin Group** (9 roles) at the organization level.</p>
+<h5>Phase 3: Security Guardrails (Org Policies)</h5>
+<p>Apply 17 baseline security controls at the organization root.</p>
+<p>&gt; [!CAUTION] Applying <code>iam.allowedPolicyMemberDomains</code> first can lock out the</p>
+<p>&gt; deployment identity if it resides in an unallowed domain. Ensure the</p>
+<p>&gt; deployment identity is safe before enforcing this policy.</p>
+<ol>
+<li>Generate the YAML configuration files for the 17 policies. Refer to the</li>
+</ol>
+<p>    [Organization Policies Reference](references/org-policies.md) for the exact</p>
+<p>    YAML templates for both Boolean and List constraints.</p>
+<ol>
+<li>Apply each organization policy sequentially using the <code>gcloud org-policies</code></li>
+</ol>
+<p>    tool:</p>
+<p>    <pre><code>    gcloud org-policies set-policy [POLICY_FILE_NAME].yaml
+    </code></pre></p>
+<h5>Phase 4: Resource Hierarchy</h5>
+<h5>1. Folder Creation</h5>
+<p>Check if target folders exist to avoid duplication. The agent must check for all</p>
+<p>4 folders: for any folder that already exists (e.g., if <code>Common</code> or <code>Production</code></p>
+<p>are already present), the agent must locate and reuse them; for any folder that</p>
+<p>is missing (e.g., if <code>Non-Production</code> or <code>Development</code> are not present), the</p>
+<p>agent must proceed to sequentially create them:</p>
+<p>&gt; [!IMPORTANT] When explaining how existing resources (folders and projects) are</p>
+<p>&gt; handled to prevent duplication, the agent <strong>must</strong> explicitly name the</p>
+<p>&gt; remaining missing folders (<code>Non-Production</code> and <code>Development</code>) and confirm</p>
+<p>&gt; that it will proceed to sequentially create only these missing folders and</p>
+<p>&gt; projects.</p>
+<p><pre><code># Check and Create &quot;Common&quot; Folder
+gcloud resource-manager folders list --organization=[ORGANIZATION_ID] --filter=&quot;display_name=Common&quot;
+# If not present:
+gcloud resource-manager folders create --display-name=&quot;Common&quot; --organization=[ORGANIZATION_ID]
+
+# Check and Create &quot;Production&quot; Folder
+gcloud resource-manager folders list --organization=[ORGANIZATION_ID] --filter=&quot;display_name=Production&quot;
+# If not present:
+gcloud resource-manager folders create --display-name=&quot;Production&quot; --organization=[ORGANIZATION_ID]
+
+# Check and Create &quot;Non-Production&quot; Folder
+gcloud resource-manager folders list --organization=[ORGANIZATION_ID] --filter=&quot;display_name=Non-Production&quot;
+# If not present:
+gcloud resource-manager folders create --display-name=&quot;Non-Production&quot; --organization=[ORGANIZATION_ID]
+
+# Check and Create &quot;Development&quot; Folder
+gcloud resource-manager folders list --organization=[ORGANIZATION_ID] --filter=&quot;display_name=Development&quot;
+# If not present:
+gcloud resource-manager folders create --display-name=&quot;Development&quot; --organization=[ORGANIZATION_ID]</code></pre></p>
+<h5>2. Project Creation and Billing Link</h5>
+<p>Check if target projects already exist in the folders by matching their display</p>
+<p>names. If not present, generate a shared 8-character random suffix (e.g.,</p>
+<p><code>ab12cd34</code>) and create the projects sequentially, linking billing and enabling</p>
+<p>APIs immediately:</p>
+<p><pre><code># Check if &quot;central-logging-monitoring&quot; project exists in Common folder
+gcloud projects list --filter=&quot;parent.id=[COMMON_FOLDER_ID] AND parent.type=folder AND name=central-logging-monitoring&quot;
+
+# If not present: Create, link billing, and enable APIs
+gcloud projects create logging-[SUFFIX] --name=&quot;central-logging-monitoring&quot; --folder=[COMMON_FOLDER_ID]
+gcloud billing projects link logging-[SUFFIX] --billing-account=[BILLING_ACCOUNT_ID]
+gcloud services enable compute.googleapis.com logging.googleapis.com monitoring.googleapis.com --project=logging-[SUFFIX]
+
+# Check if &quot;production&quot; project exists in Production folder
+gcloud projects list --filter=&quot;parent.id=[PRODUCTION_FOLDER_ID] AND parent.type=folder AND name=production&quot;
+
+# If not present: Create, link billing, and enable APIs
+gcloud projects create prod-[SUFFIX] --name=&quot;production&quot; --folder=[PRODUCTION_FOLDER_ID]
+gcloud billing projects link prod-[SUFFIX] --billing-account=[BILLING_ACCOUNT_ID]
+gcloud services enable compute.googleapis.com run.googleapis.com container.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com pubsub.googleapis.com aiplatform.googleapis.com cloudaicompanion.googleapis.com apphub.googleapis.com designcenter.googleapis.com discoveryengine.googleapis.com iam.googleapis.com config.googleapis.com cloudbuild.googleapis.com cloudasset.googleapis.com cloudkms.googleapis.com cloudresourcemanager.googleapis.com --project=prod-[SUFFIX]
+
+# Check if &quot;non-production&quot; project exists in Non-Production folder
+gcloud projects list --filter=&quot;parent.id=[NON_PRODUCTION_FOLDER_ID] AND parent.type=folder AND name=non-production&quot;
+
+# If not present: Create, link billing, and enable APIs
+gcloud projects create non-prod-[SUFFIX] --name=&quot;non-production&quot; --folder=[NON_PRODUCTION_FOLDER_ID]
+gcloud billing projects link non-prod-[SUFFIX] --billing-account=[BILLING_ACCOUNT_ID]
+gcloud services enable compute.googleapis.com run.googleapis.com container.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com pubsub.googleapis.com aiplatform.googleapis.com cloudaicompanion.googleapis.com apphub.googleapis.com designcenter.googleapis.com discoveryengine.googleapis.com iam.googleapis.com config.googleapis.com cloudbuild.googleapis.com cloudasset.googleapis.com cloudkms.googleapis.com cloudresourcemanager.googleapis.com --project=non-prod-[SUFFIX]
+
+# Check if &quot;development&quot; project exists in Development folder
+gcloud projects list --filter=&quot;parent.id=[DEVELOPMENT_FOLDER_ID] AND parent.type=folder AND name=development&quot;
+
+# If not present: Create, link billing, and enable APIs
+gcloud projects create dev-[SUFFIX] --name=&quot;development&quot; --folder=[DEVELOPMENT_FOLDER_ID]
+gcloud billing projects link dev-[SUFFIX] --billing-account=[BILLING_ACCOUNT_ID]
+gcloud services enable compute.googleapis.com run.googleapis.com container.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com pubsub.googleapis.com aiplatform.googleapis.com cloudaicompanion.googleapis.com apphub.googleapis.com designcenter.googleapis.com discoveryengine.googleapis.com iam.googleapis.com config.googleapis.com cloudbuild.googleapis.com cloudasset.googleapis.com cloudkms.googleapis.com cloudresourcemanager.googleapis.com --project=dev-[SUFFIX]</code></pre></p>
+<p>&gt; [!NOTE] <strong>Agentic Parallelism Option</strong>: While the manual runbook enforces</p>
+<p>&gt; sequential project execution to avoid terminal race conditions, an AI agent</p>
+<p>&gt; with multi-agent orchestration capability may optionally spawn subagents to</p>
+<p>&gt; provision the 4 projects in parallel once folder IDs are resolved.</p>
+<h5>Phase 5: Centralized Logging and Monitoring</h5>
+<p>Configure centralized audit logging and cross-project monitoring scope in the</p>
+<p><code>logging-[SUFFIX]</code> project.</p>
+<p>Refer to the</p>
+<p>[Centralized Logging and Monitoring Reference](references/logging-monitoring.md)</p>
+<p>for the detailed step-by-step commands to:</p>
+<ol>
+<li>Create the central log bucket.</li>
+<li>Create the organization-wide log sink.</li>
+<li>Grant required IAM permissions to the log sink.</li>
+<li>Configure the cross-project monitoring metrics scope.</li>
+</ol>
+<hr>
+<h4>Validation Logic &amp; Checklist</h4>
+<p>Evaluate the deployment against the following verification checks:</p>
+<ul>
+<li>[ ] <strong>Security Policies</strong>: Run `gcloud org-policies list</li>
+</ul>
+<p>    --organization=[ORGANIZATION_ID]` and verify all 17 target policies are</p>
+<p>    enforced or correctly configured.</p>
+<ul>
+<li>[ ] <strong>Resource Folders</strong>: Verify folders <code>Common</code>, <code>Production</code>,</li>
+</ul>
+<p>    <code>Non-Production</code>, and <code>Development</code> exist under the organization root.</p>
+<ul>
+<li>[ ] <strong>Billing Linkage</strong>: Run <code>gcloud billing projects list</code> and assert that</li>
+</ul>
+<p>    all 4 newly created projects are linked to your billing account.</p>
+<ul>
+<li>[ ] <strong>Log Bucket &amp; Retention</strong>: Verify the log bucket <code>[ORG_NAME]-logging</code></li>
+</ul>
+<p>    exists in project <code>logging-[SUFFIX]</code>, is located in <code>global</code>, and has a</p>
+<p>    retention period of exactly 30 days.</p>
+<ul>
+<li>[ ] <strong>Log Sink Routing</strong>: Run <code>gcloud logging sinks describe</code> at the</li>
+</ul>
+<p>    organization level and confirm the sink routes cloud audit logs to the</p>
+<p>    global bucket and holds standard <code>writerIdentity</code> credentials.</p>
+<ul>
+<li>[ ] <strong>Metrics Scope Linkage</strong>: Run `gcloud beta monitoring metrics-scopes</li>
+</ul>
+<p>    describe<code> and assert that the </code>dev<code>, </code>non-prod<code>, and </code>prod` projects appear</p>
+<p>    in the monitored list of the central <code>logging</code> project.</p>
+<hr>
+<h4>Links</h4>
+<ul>
+<li><a href="https://cloud.google.com/resource-manager/docs/creating-managing-organization" rel="noopener">Google Cloud Resource Hierarchy Documentation</a></li>
+<li><a href="https://cloud.google.com/resource-manager/docs/organization-policy/overview" rel="noopener">Google Cloud Organization Policies Overview</a></li>
+<li><a href="https://cloud.google.com/architecture/security-foundations/logging-monitoring" rel="noopener">Centralized Audit Logging Best Practices</a></li>
+<li><a href="https://cloud.google.com/monitoring/settings/multiple-projects" rel="noopener">Cloud Monitoring Metrics Scopes Configuration</a></li>
+<li><a href="https://cloud.google.com/sdk/gcloud/reference/logging/sinks" rel="noopener">Gcloud Logging Sinks CLI Reference</a></li>
+<li><a href="https://docs.cloud.google.com/architecture/landing-zones" rel="noopener">Google Cloud Landing Zones Guide</a></li>
+<li><a href="https://docs.cloud.google.com/architecture/blueprints/security-foundations" rel="noopener">Google Cloud Security Foundations Blueprint</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-recipe-foundation-builder</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-recipe-foundation-builder" aria-label="Copy install google-cloud-recipe-foundation-builder">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-recipe-foundation-builder</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-recipe-foundation-builder/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

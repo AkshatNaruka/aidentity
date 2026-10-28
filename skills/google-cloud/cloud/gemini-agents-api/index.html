@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gemini-agents-api — Aidentity</title>
+<meta name="description" content="Manages custom Agent resources on Gemini Enterprise Agent Platform. Use when the user wants to programmatically create, configure, list, update, or delete stateful, server-managed Agent resources (including mounting files, skills, and tools) before executing conversations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-agents-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gemini-agents-api — Aidentity">
+<meta property="og:description" content="Manages custom Agent resources on Gemini Enterprise Agent Platform. Use when the user wants to programmatically create, configure, list, update, or delete stateful, server-managed Agent resources (including mounting files, skills, and tools) before executing conversations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-agents-api/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gemini-agents-api","description":"Manages custom Agent resources on Gemini Enterprise Agent Platform. Use when the user wants to programmatically create, configure, list, update, or delete stateful, server-managed Agent resources (including mounting files, skills, and tools) before executing conversations.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-agents-api/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gemini-agents-api
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gemini-agents-api</h1>
+      <p class="summary">Manages custom Agent resources on Gemini Enterprise Agent Platform. Use when the user wants to programmatically create, configure, list, update, or delete stateful, server-managed Agent resources (including mounting files, skills, and tools) before executing conversations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Gemini Enterprise Agent Platform - Managed Agents API Skill</h3>
+<p>This skill provides complete instructions, REST request endpoints, and JSON payload structures to programmatically manage <strong>custom Agent resources</strong> on the Gemini Enterprise Agent Platform (Agent Platform).</p>
+<p>The <strong>Managed Agents API</strong> forms the <strong>Control Plane</strong> of the platform. It allows developers to provision, retrieve, update, and delete tailored, stateful agent containers equipped with system instructions, sandboxed files, custom skill registries, and local/remote tools.</p>
+<hr>
+<h4>1. Authentication &amp; Setup</h4>
+<p>All REST requests to the Control Plane must include a Bearer token derived from Application Default Credentials (ADC), and target the production global endpoint.</p>
+<h5>1. Setup Environment Variables</h5>
+<p>Before running requests, set up the required project variables and access token:</p>
+<p><pre><code>export PROJECT_ID=&quot;your-project-id&quot;
+export LOCATION=&quot;global&quot;
+export ACCESS_TOKEN=$(gcloud auth print-access-token)</code></pre></p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>API Location Support</strong>:</p>
+<p>&gt; The <code>LOCATION</code> environment variable must be set to a regional location where the Gemini Enterprise Agent Platform&#39;s <strong>Managed Agents API</strong> is actively supported (e.g., <code>global</code>, or other available regional endpoints).</p>
+<h5>2. Endpoint URL</h5>
+<p>The production Agents Control Plane endpoint is:</p>
+<p><pre><code>https://aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{LOCATION}/agents</code></pre></p>
+<hr>
+<h4>2. Programmatic Agent Management (Control Plane CRUD)</h4>
+<h5>1. Create Agent (Long-Running Operation)</h5>
+<p>To create a new agent resource, issue a <code>POST</code> request with the custom configuration. You can mount remote files, folders, or skills directly from <strong>Google Cloud Storage</strong> buckets into the agent container&#39;s workspace. Creating an agent is a Long-Running Operation (LRO) that spawns an asynchronous job.</p>
+<ul>
+<li><strong>Method</strong>: <code>POST</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents</code></li>
+</ul>
+<h5>Request Payload</h5>
+<p><pre><code>curl -X POST &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json; charset=utf-8&quot; \
+  -d &#39;{
+    &quot;id&quot;: &quot;my-custom-agent&quot;,
+    &quot;base_agent&quot;: &quot;antigravity-preview-05-2026&quot;,
+    &quot;description&quot;: &quot;A professional agent configured with remote tools and mounted Cloud Storage directories.&quot;,
+    &quot;system_instruction&quot;: &quot;You are a helpful, domain-expert assistant.&quot;,
+    &quot;tools&quot;: [
+      {&quot;type&quot;: &quot;code_execution&quot;},
+      {&quot;type&quot;: &quot;filesystem&quot;},
+      {&quot;type&quot;: &quot;google_search&quot;},
+      {&quot;type&quot;: &quot;url_context&quot;}
+    ],
+    &quot;base_environment&quot;: {
+      &quot;type&quot;: &quot;remote&quot;,
+      &quot;sources&quot;: [
+        {
+          &quot;type&quot;: &quot;gcs&quot;,
+          &quot;source&quot;: &quot;gs://your-agent-bucket-name/skills&quot;,
+          &quot;target&quot;: &quot;/.agent/skills&quot;
+        }
+      ],
+      &quot;network&quot;: {
+        &quot;allowlist&quot;: [
+          { &quot;domain&quot;: &quot;*&quot; }
+        ]
+      }
+    }
+  }&#39;</code></pre></p>
+<h5>LRO Operations Response</h5>
+<p>Since agent provisioning takes a few moments, the endpoint immediately returns an operation tracking object:</p>
+<p><pre><code>{
+  &quot;name&quot;: &quot;projects/1234567890/locations/global/operations/operation-987654321-abcde&quot;,
+  &quot;metadata&quot;: {
+    &quot;@type&quot;: &quot;type.googleapis.com/google.cloud.aiplatform.v1beta1.CreateAgentOperationMetadata&quot;,
+    &quot;genericMetadata&quot;: {
+      &quot;createTime&quot;: &quot;2026-05-14T19:00:00.123456Z&quot;,
+      &quot;updateTime&quot;: &quot;2026-05-14T19:00:01.654321Z&quot;
+    }
+  }
+}</code></pre></p>
+<h5>[Advanced] Mount Skill Registry Resources</h5>
+<p>To mount skills directly from the Skill Registry service instead of Cloud Storage, replace the Cloud Storage source item in the payload:</p>
+<p><pre><code>&quot;sources&quot;: [
+  {
+    &quot;type&quot;: &quot;skill_registry&quot;,
+    &quot;source&quot;: &quot;projects/your-project-id/locations/global/skills/my-math-skill/revisions/123456789012&quot;,
+    &quot;target&quot;: &quot;/.agent/skills&quot;
+  }
+]</code></pre></p>
+<h5>[Advanced] Configuring Model Context Protocol (MCP) Servers</h5>
+<p>To configure Third-Party MCP servers for an agent, add the server metadata directly under the <code>&quot;tools&quot;</code> parameter array inside the creation request. The platform securely routes tool execution requests to the external MCP server.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>MCP Security Explanation</strong>: When describing MCP tool configurations, you must explain that the platform securely routes tool requests to the specified MCP server and guarantees header confidentiality by only sending custom headers/tokens to that URL.</p>
+<p><pre><code>&quot;tools&quot;: [
+  {
+    &quot;type&quot;: &quot;mcp&quot;,
+    &quot;name&quot;: &quot;my-mcp-server&quot;,
+    &quot;url&quot;: &quot;https://mcp.yourcompany.com/api&quot;,
+    &quot;headers&quot;: {
+      &quot;Authorization&quot;: &quot;Bearer YOUR_MCP_AUTH_TOKEN&quot;
+    }
+  }
+]</code></pre></p>
+<ul>
+<li><strong>name</strong>: A descriptive name for the MCP server.</li>
+<li><strong>url</strong>: The endpoint URL of the external MCP server.</li>
+<li><strong>headers</strong>: (Optional) Custom key-value pairs containing authentication tokens (e.g. API keys, bearer tokens) required to call the server. The platform guarantees that these headers are only sent to the specified MCP server URL.</li>
+</ul>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>Overriding MCP at Interaction Time (Data Plane)</strong>:</p>
+<p>&gt; You can dynamically override or supply MCP tools directly when creating a conversation interaction (Data Plane) by passing <code>&quot;type&quot;: &quot;mcp_server&quot;</code> inside the <code>&quot;tools&quot;</code> payload of <code>interactions.create</code>. Refer to the Interactions API documentation for details.</p>
+<hr>
+<h5>2. Polling the LRO Status</h5>
+<p>To track the status of agent creation and obtain the final ready resource, poll the operation URL returned in the <code>name</code> field of the creation response.</p>
+<ul>
+<li><strong>Method</strong>: <code>GET</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/{OPERATION_NAME}</code></li>
+</ul>
+<p><pre><code>curl -X GET &quot;https://aiplatform.googleapis.com/v1beta1/projects/1234567890/locations/global/operations/operation-987654321-abcde&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot;</code></pre></p>
+<h5>In-Progress Response</h5>
+<p><pre><code>{
+  &quot;name&quot;: &quot;projects/1234567890/locations/global/operations/operation-987654321-abcde&quot;,
+  &quot;metadata&quot;: { ... }
+}</code></pre></p>
+<h5>Finished Success Response</h5>
+<p>Once the container is ready, <code>&quot;done&quot;: true</code> is set, and the completed <code>Agent</code> resource description resides inside <code>&quot;response&quot;</code>:</p>
+<p><pre><code>{
+  &quot;name&quot;: &quot;projects/1234567890/locations/global/operations/operation-987654321-abcde&quot;,
+  &quot;done&quot;: true,
+  &quot;response&quot;: {
+    &quot;@type&quot;: &quot;type.googleapis.com/google.cloud.aiplatform.v1beta1.Agent&quot;,
+    &quot;name&quot;: &quot;projects/your-project-id/locations/global/agents/my-custom-agent&quot;,
+    &quot;base_agent&quot;: &quot;antigravity-preview-05-2026&quot;,
+    &quot;description&quot;: &quot;A professional agent configured with remote tools and mounted Cloud Storage directories.&quot;,
+    &quot;system_instruction&quot;: &quot;You are a helpful, domain-expert assistant.&quot;
+  }
+}</code></pre></p>
+<hr>
+<h5>3. Get Agent</h5>
+<p>Retrieve the configuration metadata, tools, and environment setup of an existing custom agent.</p>
+<ul>
+<li><strong>Method</strong>: <code>GET</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents/{AGENT_ID}</code></li>
+</ul>
+<p><pre><code>curl -X GET &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/agents/my-custom-agent&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot;</code></pre></p>
+<h5>Response Example</h5>
+<p>Returns the complete configured state of the custom Agent resource:</p>
+<p><pre><code>{
+  &quot;name&quot;: &quot;projects/your-project-id/locations/global/agents/my-custom-agent&quot;,
+  &quot;base_agent&quot;: &quot;antigravity-preview-05-2026&quot;,
+  &quot;description&quot;: &quot;A professional agent configured with remote tools and mounted Cloud Storage directories.&quot;,
+  &quot;system_instruction&quot;: &quot;You are a helpful, domain-expert assistant.&quot;,
+  &quot;tools&quot;: [
+    {&quot;type&quot;: &quot;code_execution&quot;},
+    {&quot;type&quot;: &quot;filesystem&quot;},
+    {&quot;type&quot;: &quot;google_search&quot;},
+    {&quot;type&quot;: &quot;url_context&quot;}
+  ],
+  &quot;base_environment&quot;: {
+    &quot;type&quot;: &quot;remote&quot;,
+    &quot;sources&quot;: [
+      {
+        &quot;type&quot;: &quot;gcs&quot;,
+        &quot;source&quot;: &quot;gs://your-agent-bucket-name/skills&quot;,
+        &quot;target&quot;: &quot;/.agent/skills&quot;
+      }
+    ],
+    &quot;network&quot;: {
+      &quot;allowlist&quot;: [
+        { &quot;domain&quot;: &quot;*&quot; }
+      ]
+    }
+  }
+}</code></pre></p>
+<hr>
+<h5>4. List Agents</h5>
+<p>Retrieve a list of all configured custom agents located under the target Google Cloud project.</p>
+<ul>
+<li><strong>Method</strong>: <code>GET</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents</code></li>
+</ul>
+<p><pre><code>curl -X GET &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/agents&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot;</code></pre></p>
+<h5>Response Example</h5>
+<p>Returns a JSON list of all configured custom Agents under the target project:</p>
+<p><pre><code>{
+  &quot;agents&quot;: [
+    {
+      &quot;name&quot;: &quot;projects/your-project-id/locations/global/agents/my-custom-agent&quot;,
+      &quot;base_agent&quot;: &quot;antigravity-preview-05-2026&quot;,
+      &quot;description&quot;: &quot;A professional agent configured with remote tools and mounted Cloud Storage directories.&quot;,
+      &quot;system_instruction&quot;: &quot;You are a helpful, domain-expert assistant.&quot;
+    },
+    {
+      &quot;name&quot;: &quot;projects/your-project-id/locations/global/agents/my-telecom-agent&quot;,
+      &quot;base_agent&quot;: &quot;antigravity-preview-05-2026&quot;,
+      &quot;description&quot;: &quot;A highly specialized telecom support agent.&quot;,
+      &quot;system_instruction&quot;: &quot;You are a professional telecom support agent. Follow system policies carefully.&quot;
+    }
+  ]
+}</code></pre></p>
+<hr>
+<h5>5. Update Agent (Patching Configuration)</h5>
+<p>Modify configuration fields (such as instructions, descriptions, tools, or mounts) on a custom agent resource in place. You <strong>must</strong> specify the fields being updated using the <code>update_mask</code> query parameter.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Update Mask Requirement</strong>: When demonstrating updates, you must always explicitly explain that the <code>update_mask</code> parameter is required when updating agent configurations to specify exactly which fields are being modified and avoid overwriting other configuration settings.</p>
+<ul>
+<li><strong>Method</strong>: <code>PATCH</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents/{AGENT_ID}?update_mask=system_instruction</code></li>
+</ul>
+<p><pre><code>curl -X PATCH &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/agents/my-custom-agent?update_mask=system_instruction&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;name&quot;: &quot;my-custom-agent&quot;,
+    &quot;system_instruction&quot;: &quot;You are a highly specialized telecom support agent. Follow system policies carefully.&quot;
+  }&#39;</code></pre></p>
+<hr>
+<h5>6. Delete Agent</h5>
+<p>Delete custom Agent resources when they are no longer needed to free up backend workspace containers.</p>
+<ul>
+<li><strong>Method</strong>: <code>DELETE</code></li>
+<li><strong>Endpoint</strong>: <code>https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/agents/{AGENT_ID}</code></li>
+</ul>
+<p><pre><code>curl -X DELETE &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/agents/my-custom-agent&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot;</code></pre></p>
+<h5>Response Example</h5>
+<p>A successful deletion request returns an empty JSON response body with HTTP Status <code>200 OK</code>:</p>
+<p><pre><code>{}</code></pre></p>
+<hr>
+<h4>3. Interacting with Custom Agents (Data Plane)</h4>
+<p>Once you have programmatically created and provisioned your custom stateful agent using the <strong>Control Plane</strong> (this skill), you can execute multi-turn chat, tool execution, and streaming conversations with it using the <strong>Data Plane</strong> (<strong>Interactions API</strong>).</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Interactions Reference</strong>: When explaining or showing how to start conversations with a custom agent, you must always explicitly refer the user to the <code>gemini-interactions-api</code> skill for complete conversation and streaming options.</p>
+<p>To interact with your custom agent:</p>
+<ol>
+<li>Obtain your agent&#39;s resource path name (e.g., <code>projects/{PROJECT_ID}/locations/global/agents/{AGENT_ID}</code>).</li>
+<li>Pass this resource path directly inside your data plane conversation requests under the <strong><code>agent</code></strong> parameter.</li>
+</ol>
+<h5>Python Example</h5>
+<p><pre><code>interaction = client.interactions.create(
+    agent=&quot;projects/your-project-id/locations/global/agents/my-custom-agent&quot;,
+    input=&quot;Hello! Who are you?&quot;
+)</code></pre></p>
+<h5>REST / curl Example</h5>
+<p><pre><code>{
+  &quot;agent&quot;: &quot;projects/your-project-id/locations/global/agents/my-custom-agent&quot;,
+  &quot;input&quot;: [{
+    &quot;type&quot;: &quot;user_input&quot;,
+    &quot;content&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Hello! Who are you?&quot;}]
+  }]
+}</code></pre></p>
+<p>Refer to the <strong><code>gemini-interactions-api</code></strong> skill guide (<code>../gemini-interactions-api/SKILL.md</code>) for full instructions, Python and TS/JS code blocks, and streaming setups to run conversations with your provisioned agents.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gemini-agents-api</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gemini-agents-api" aria-label="Copy install gemini-agents-api">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gemini-agents-api</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gemini-agents-api/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>subagent-driven-development — Aidentity</title>
+<meta name="description" content="Use when executing implementation plans with independent tasks in the current session">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/subagent-driven-development/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="subagent-driven-development — Aidentity">
+<meta property="og:description" content="Use when executing implementation plans with independent tasks in the current session">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/subagent-driven-development/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"subagent-driven-development","description":"Use when executing implementation plans with independent tasks in the current session","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/subagent-driven-development/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>subagent-driven-development
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>subagent-driven-development</h1>
+      <p class="summary">Use when executing implementation plans with independent tasks in the current session</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Subagent-Driven Development</h3>
+<p>Execute plan by dispatching a fresh implementer subagent per task, a task review (spec compliance + code quality) after each, and a broad whole-branch review at the end.</p>
+<p><strong>Why subagents:</strong> You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session&#39;s context or history — you construct exactly what they need. This also preserves your own context for coordination work.</p>
+<p><strong>Core principle:</strong> Fresh subagent per task + task review (spec + quality) + broad final review = high quality, fast iteration</p>
+<p><strong>Narration:</strong> between tool calls, narrate at most one short line — the</p>
+<p>ledger and the tool results carry the record.</p>
+<p><strong>Continuous execution:</strong> Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are the four named below, or all tasks complete. &quot;Should I continue?&quot; prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.</p>
+<p><strong>Rulings, not stalls.</strong> A running plan does not wait on a human. Conflicts,</p>
+<p>ambiguities, plan defects, a cap you would have asked to exceed — decide</p>
+<p>them. The spec is the binding authority, the plan is its argument, and your</p>
+<p>judgment settles what neither answers. Record every decision in the ledger as</p>
+<p><code>Ruling: &lt;what you decided&gt; — &lt;why&gt; — &lt;what it costs if wrong&gt;</code>, and keep</p>
+<p>going. A wrong ruling costs rework your human partner can see and undo; a</p>
+<p>session parked on a question costs their whole day and buys nothing.</p>
+<p>Four things stop you, and only these: an irreversible or destructive</p>
+<p>operation; a security-sensitive action; a side effect outside this worktree</p>
+<p>that norms say you ask about first (a merge, a push to a shared branch, a</p>
+<p>publish); and a plan so broken that every path forward is a guess. For those,</p>
+<p>stop and ask.</p>
+<h4>When to Use</h4>
+<p><pre><code>digraph when_to_use {
+    &quot;Have implementation plan?&quot; [shape=diamond];
+    &quot;Tasks mostly independent?&quot; [shape=diamond];
+    &quot;Stay in this session?&quot; [shape=diamond];
+    &quot;subagent-driven-development&quot; [shape=box];
+    &quot;executing-plans&quot; [shape=box];
+    &quot;Manual execution or brainstorm first&quot; [shape=box];
+
+    &quot;Have implementation plan?&quot; -&gt; &quot;Tasks mostly independent?&quot; [label=&quot;yes&quot;];
+    &quot;Have implementation plan?&quot; -&gt; &quot;Manual execution or brainstorm first&quot; [label=&quot;no&quot;];
+    &quot;Tasks mostly independent?&quot; -&gt; &quot;Stay in this session?&quot; [label=&quot;yes&quot;];
+    &quot;Tasks mostly independent?&quot; -&gt; &quot;Manual execution or brainstorm first&quot; [label=&quot;no - tightly coupled&quot;];
+    &quot;Stay in this session?&quot; -&gt; &quot;subagent-driven-development&quot; [label=&quot;yes&quot;];
+    &quot;Stay in this session?&quot; -&gt; &quot;executing-plans&quot; [label=&quot;no - parallel session&quot;];
+}</code></pre></p>
+<p><strong>vs. Executing Plans (parallel session):</strong></p>
+<ul>
+<li>Same session (no context switch)</li>
+<li>Fresh subagent per task (no context pollution)</li>
+<li>Review after each task (spec compliance + code quality), broad review at the end</li>
+<li>Faster iteration (no human-in-loop between tasks)</li>
+</ul>
+<h4>The Process</h4>
+<p><pre><code>digraph process {
+    rankdir=TB;
+
+    subgraph cluster_per_task {
+        label=&quot;Per Task&quot;;
+        &quot;Dispatch implementer subagent (./implementer-prompt.md)&quot; [shape=box];
+        &quot;Implementer asks questions?&quot; [shape=diamond];
+        &quot;Answer questions, provide context&quot; [shape=box];
+        &quot;Implementer implements, tests, commits, self-reviews&quot; [shape=box];
+        &quot;Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)&quot; [shape=box];
+        &quot;Spec ✅ and quality approved?&quot; [shape=diamond];
+        &quot;Finding conflicts with plan text?&quot; [shape=diamond];
+        &quot;Rule on the conflict, ledger the ruling&quot; [shape=box];
+        &quot;Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model&quot; [shape=box];
+        &quot;Dispatch scoped re-review (./re-review-prompt.md)&quot; [shape=box];
+        &quot;All findings addressed?&quot; [shape=diamond];
+        &quot;R = 5?&quot; [shape=diamond];
+        &quot;Adjudicate each open finding&quot; [shape=box];
+        &quot;Any load-bearing finding?&quot; [shape=diamond];
+        &quot;Rule and continue; stop only if every path forward is a guess&quot; [shape=box];
+        &quot;Park findings in ledger with rulings&quot; [shape=box];
+        &quot;Append completion to ledger, mark todo complete&quot; [shape=box];
+    }
+
+    &quot;Setup: worktree, ledger check, read plan, pre-flight review&quot; [shape=box];
+    &quot;More tasks remain?&quot; [shape=diamond];
+    &quot;Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)&quot; [shape=box];
+    &quot;Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals&quot; [shape=box];
+    &quot;Final review clean: delete this plan&#39;s workspace&quot; [shape=box];
+    &quot;Use superpowers:finishing-a-development-branch&quot; [shape=box style=filled fillcolor=lightgreen];
+
+    &quot;Setup: worktree, ledger check, read plan, pre-flight review&quot; -&gt; &quot;Dispatch implementer subagent (./implementer-prompt.md)&quot;;
+    &quot;Dispatch implementer subagent (./implementer-prompt.md)&quot; -&gt; &quot;Implementer asks questions?&quot;;
+    &quot;Implementer asks questions?&quot; -&gt; &quot;Answer questions, provide context&quot; [label=&quot;yes&quot;];
+    &quot;Answer questions, provide context&quot; -&gt; &quot;Implementer implements, tests, commits, self-reviews&quot;;
+    &quot;Implementer asks questions?&quot; -&gt; &quot;Implementer implements, tests, commits, self-reviews&quot; [label=&quot;no&quot;];
+    &quot;Implementer implements, tests, commits, self-reviews&quot; -&gt; &quot;Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)&quot;;
+    &quot;Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)&quot; -&gt; &quot;Spec ✅ and quality approved?&quot;;
+    &quot;Spec ✅ and quality approved?&quot; -&gt; &quot;Append completion to ledger, mark todo complete&quot; [label=&quot;yes&quot;];
+    &quot;Spec ✅ and quality approved?&quot; -&gt; &quot;Finding conflicts with plan text?&quot; [label=&quot;no&quot;];
+    &quot;Finding conflicts with plan text?&quot; -&gt; &quot;Rule on the conflict, ledger the ruling&quot; [label=&quot;yes&quot;];
+    &quot;Rule on the conflict, ledger the ruling&quot; -&gt; &quot;Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model&quot;;
+    &quot;Finding conflicts with plan text?&quot; -&gt; &quot;Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model&quot; [label=&quot;no&quot;];
+    &quot;Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model&quot; -&gt; &quot;Dispatch scoped re-review (./re-review-prompt.md)&quot;;
+    &quot;Dispatch scoped re-review (./re-review-prompt.md)&quot; -&gt; &quot;All findings addressed?&quot;;
+    &quot;All findings addressed?&quot; -&gt; &quot;Append completion to ledger, mark todo complete&quot; [label=&quot;yes&quot;];
+    &quot;All findings addressed?&quot; -&gt; &quot;R = 5?&quot; [label=&quot;no&quot;];
+    &quot;R = 5?&quot; -&gt; &quot;Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model&quot; [label=&quot;no - next round&quot;];
+    &quot;R = 5?&quot; -&gt; &quot;Adjudicate each open finding&quot; [label=&quot;yes - breaker trips&quot;];
+    &quot;Adjudicate each open finding&quot; -&gt; &quot;Any load-bearing finding?&quot;;
+    &quot;Any load-bearing finding?&quot; -&gt; &quot;Rule and continue; stop only if every path forward is a guess&quot; [label=&quot;yes&quot;];
+    &quot;Any load-bearing finding?&quot; -&gt; &quot;Park findings in ledger with rulings&quot; [label=&quot;no&quot;];
+    &quot;Park findings in ledger with rulings&quot; -&gt; &quot;Append completion to ledger, mark todo complete&quot;;
+    &quot;Append completion to ledger, mark todo complete&quot; -&gt; &quot;More tasks remain?&quot;;
+    &quot;More tasks remain?&quot; -&gt; &quot;Dispatch implementer subagent (./implementer-prompt.md)&quot; [label=&quot;yes&quot;];
+    &quot;More tasks remain?&quot; -&gt; &quot;Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)&quot; [label=&quot;no&quot;];
+    &quot;Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)&quot; -&gt; &quot;Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals&quot;;
+    &quot;Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals&quot; -&gt; &quot;Final review clean: delete this plan&#39;s workspace&quot;;
+    &quot;Final review clean: delete this plan&#39;s workspace&quot; -&gt; &quot;Use superpowers:finishing-a-development-branch&quot;;
+}</code></pre></p>
+<h4>Setup</h4>
+<p>Ensure the work happens in an isolated workspace: use</p>
+<p>superpowers:using-git-worktrees to create one or verify the existing one.</p>
+<p>Never start implementation on a main/master branch without your human</p>
+<p>partner&#39;s explicit consent.</p>
+<p>Conversation memory does not survive compaction. In real sessions,</p>
+<p>controllers that lost their place have re-dispatched entire completed task</p>
+<p>sequences — the single most expensive failure observed. Track progress in</p>
+<p>a ledger file, not only in todos.</p>
+<ul>
+<li>Each plan owns a workspace: at skill start, run this skill&#39;s</li>
+</ul>
+<p>  <code>scripts/sdd-workspace PLAN_FILE</code> — it prints the plan&#39;s git-ignored</p>
+<p>  directory (<code>&lt;repo-root&gt;/.superpowers/sdd/&lt;plan-basename&gt;/</code>), home to</p>
+<p>  every artifact for THIS plan: ledger, briefs, reports, review packages.</p>
+<p>  Another plan&#39;s directory is never yours to read or write.</p>
+<ul>
+<li>Check for this plan&#39;s ledger at <code>&lt;workspace&gt;/progress.md</code>. If its first</li>
+</ul>
+<p>  line names your plan file, tasks with a <code>Task &lt;N&gt;: complete</code> line are DONE</p>
+<p>  — do not re-dispatch them; resume at the first task without one. A task</p>
+<p>  whose last line is a fix round is mid-loop: resume the loop at the next</p>
+<p>  round. A ledger whose first line names a different plan file — or a stray</p>
+<p>  ledger at the old flat path <code>.superpowers/sdd/progress.md</code> — is another</p>
+<p>  plan&#39;s progress: leave it in place and start your own, fresh.</p>
+<ul>
+<li>Create the ledger with its identity as the first line:</li>
+</ul>
+<p>  <code># SDD ledger — plan: &lt;plan file path&gt;</code>.</p>
+<ul>
+<li>The ledger is your recovery map: the commits it names exist in git even</li>
+</ul>
+<p>  when your context no longer remembers creating them. After compaction,</p>
+<p>  trust the ledger and <code>git log</code> over your own recollection.</p>
+<ul>
+<li><code>git clean -fdx</code> will destroy the workspace (it&#39;s git-ignored scratch); if</li>
+</ul>
+<p>  that happens, recover from <code>git log</code>.</p>
+<p>Read the plan once, note its context and Global Constraints, and create a</p>
+<p>todo per task. If the plan names a Spec, read that too: the spec is the</p>
+<p>authority the plan argues from, and conflicts inside the plan resolve</p>
+<p>against it. A plan with no reachable spec gets a ledger note saying so —</p>
+<p>rulings made without one are provisional.</p>
+<p>Before dispatching Task 1, scan the plan once for conflicts, writing down</p>
+<p>what you checked as you check it:</p>
+<ul>
+<li>tasks that contradict each other or the plan&#39;s Global Constraints</li>
+<li>anything the plan explicitly mandates that the review rubric treats as a</li>
+</ul>
+<p>  defect (a test that asserts nothing, verbatim duplication of a logic block)</p>
+<p>The scan&#39;s output is a table, not a verdict. One row for every pair of tasks</p>
+<p>that share a file or an interface: the two tasks, what one produces against</p>
+<p>what the other consumes, and what you found. One row for every task: whether</p>
+<p>its own text agrees with itself — the tests it specifies against the code it</p>
+<p>specifies, the files it creates against the files it later touches. &quot;The scan</p>
+<p>is clean&quot; without those rows is not a scan you ran.</p>
+<p>Write the table to the ledger. Rule on everything you find before execution</p>
+<p>begins — each finding against the plan text that mandates it — and record</p>
+<p>each ruling in the ledger. If the scan is clean, proceed without comment.</p>
+<p>Rule on each conflict it surfaces — the spec is the binding authority, the</p>
+<p>plan is its argument — record the ruling beside its row, and dispatch</p>
+<p>Task 1. The review loop remains the net for conflicts that only emerge from</p>
+<p>implementation.</p>
+<h4>Model Selection</h4>
+<p>Use the least powerful model that can handle each role to conserve cost and increase speed.</p>
+<p><strong>Mechanical implementation tasks</strong> (isolated functions, clear specs, 1-2 files): use a fast, cheap model. Most implementation tasks are mechanical when the plan is well-specified.</p>
+<p><strong>Integration and judgment tasks</strong> (multi-file coordination, pattern matching, debugging): use a standard model.</p>
+<p><strong>Architecture and design tasks</strong>: use the most capable available model.</p>
+<p>The final whole-branch review is one of these — dispatch it on the most</p>
+<p>capable available model, not the session default.</p>
+<p><strong>Review tasks</strong>: choose the model with the same judgment, scaled to the</p>
+<p>diff&#39;s size, complexity, and risk. A small mechanical diff does not need the</p>
+<p>most capable model; a subtle concurrency change does. Scoped re-reviews of</p>
+<p>small fix diffs take a cheap-to-mid tier.</p>
+<p><strong>Fix-loop escalation (rounds 4-5)</strong>: use a model at least one tier above</p>
+<p>the implementer that got stuck.</p>
+<p><strong>Always specify the model explicitly when dispatching a subagent.</strong> An</p>
+<p>omitted model inherits your session&#39;s model — often the most capable and</p>
+<p>most expensive — which silently defeats this section.</p>
+<p><strong>Turn count beats token price.</strong> Wall-clock and context cost scale with how</p>
+<p>many turns a subagent takes, and the cheapest models routinely take 2-3× the</p>
+<p>turns on multi-step work — costing more overall. Use a mid-tier model as the</p>
+<p>floor for reviewers and for implementers working from prose descriptions.</p>
+<p>When the task&#39;s plan text contains the complete code to write, the</p>
+<p>implementation is transcription plus testing: use the cheapest tier for</p>
+<p>that implementer. Single-file mechanical fixes also take the cheapest tier.</p>
+<p><strong>Task complexity signals (implementation tasks):</strong></p>
+<ul>
+<li>Touches 1-2 files with a complete spec → cheap model</li>
+<li>Touches multiple files with integration concerns → standard model</li>
+<li>Requires design judgment or broad codebase understanding → most capable model</li>
+</ul>
+<h4>The Task Loop</h4>
+<p><strong>Batch small same-shape work.</strong> When the plan lists several tasks that are</p>
+<p>each a small, independent edit of the same kind — the same one-line fix,</p>
+<p>constant change, or field addition repeated across files — do not dispatch</p>
+<p>one subagent per task. Compose ONE dispatch brief listing every file and</p>
+<p>its change, send the whole batch to a single subagent, and review its diff</p>
+<p>as one unit. Reserve one-dispatch-per-task for work that needs its own</p>
+<p>judgment, its own tests, or its own review surface.</p>
+<p>Everything you paste into a dispatch prompt — and everything a subagent</p>
+<p>prints back — stays resident in your context for the rest of the session</p>
+<p>and is re-read on every later turn. Hand artifacts over as files.</p>
+<p><strong>Waiting on dispatched subagents:</strong> never poll a wait interface with</p>
+<p>short timeouts, and never sit in one silent, open-ended wait either.</p>
+<p>While you have local work — ledger updates, packaging the next review,</p>
+<p>reading reports — keep working; child results arrive on their own.</p>
+<p>When you are genuinely idle, wait in bounded stretches (five to ten</p>
+<p>minutes, where your platform allows), and between stretches post one</p>
+<p>line of status and reconcile your live children: list them, and chase</p>
+<p>any that finished without reporting. A bounded stretch keeps nearly</p>
+<p>all of a long wait&#39;s efficiency while guaranteeing a stuck or lost</p>
+<p>child is noticed within minutes, not at the end of the session.</p>
+<h5>1. Dispatch the implementer</h5>
+<p>Record BASE (<code>git rev-parse HEAD</code>) before dispatching — the review package</p>
+<p>and fix-round diffs need it.</p>
+<ul>
+<li><strong>Task brief:</strong> before dispatching an implementer, run this skill&#39;s</li>
+</ul>
+<p>  <code>scripts/task-brief PLAN_FILE N</code> — it extracts the task&#39;s full text to a</p>
+<p>  uniquely named file and prints the path. Compose the dispatch so the</p>
+<p>  brief stays the single source of</p>
+<p>  requirements. Your dispatch should contain: (1) one line on where this</p>
+<p>  task fits in the project; (2) the brief path, introduced as &quot;read this</p>
+<p>  first — it is your requirements, with the exact values to use verbatim&quot;;</p>
+<p>  (3) interfaces and decisions from earlier tasks that the brief cannot</p>
+<p>  know; (4) your resolution of any ambiguity you noticed in the brief;</p>
+<p>  (5) the report-file path and report contract. Exact values (numbers,</p>
+<p>  magic strings, signatures, test cases) appear only in the brief. Never</p>
+<p>  make a subagent read the whole plan file.</p>
+<ul>
+<li><strong>Report file:</strong> name the implementer&#39;s report file after the brief</li>
+</ul>
+<p>  (brief <code>…/task-N-brief.md</code> → report <code>…/task-N-report.md</code>) and put it in</p>
+<p>  the dispatch prompt. The implementer writes the full report there and</p>
+<p>  returns only status, commits, a one-line test summary, and concerns.</p>
+<ul>
+<li>A dispatch prompt describes one task, not the session&#39;s history. Do not</li>
+</ul>
+<p>  paste accumulated prior-task summaries (&quot;state after Tasks 1-3&quot;) into</p>
+<p>  later dispatches — a real session&#39;s dispatch hit 42k chars of which 99%</p>
+<p>  was pasted history. A fresh subagent needs its task, the interfaces it</p>
+<p>  touches, and the global constraints. Nothing else.</p>
+<ul>
+<li>The dispatch carries the no-subagents contract (it is in the</li>
+</ul>
+<p>  implementer template): the implementer never dispatches subagents —</p>
+<p>  not helpers, and never a reviewer. Review arrives from you, after the</p>
+<p>  report. In real sessions, every reviewer a worker spawned duplicated</p>
+<p>  the task review the controller dispatched anyway — a full extra</p>
+<p>  review seat per task.</p>
+<ul>
+<li>If an earlier task parked a finding in the area this task touches, carry</li>
+</ul>
+<p>  a pointer to that ledger entry in the dispatch.</p>
+<ul>
+<li>Record the implementer&#39;s agent identity from the dispatch result —</li>
+</ul>
+<p>  fix-loop rounds 1-3 resume this agent.</p>
+<ul>
+<li>Never dispatch multiple implementation subagents in parallel (conflicts).</li>
+</ul>
+<p>Template: [implementer-prompt.md](implementer-prompt.md)</p>
+<h5>2. Handle the report</h5>
+<p>Implementer subagents report one of four statuses. Handle each appropriately:</p>
+<p><strong>DONE:</strong> Generate the review package (<code>scripts/review-package PLAN_FILE BASE HEAD</code>, from this skill&#39;s directory — it prints the unique file path it wrote; BASE is the commit you recorded before dispatching the implementer — never <code>HEAD~1</code>, which silently drops all but the last commit of a multi-commit task), then dispatch the task reviewer with the printed path.</p>
+<p><strong>DONE_WITH_CONCERNS:</strong> The implementer completed the work but flagged doubts. Read the concerns before proceeding. If the concerns are about correctness or scope, address them before review. If they&#39;re observations (e.g., &quot;this file is getting large&quot;), note them and proceed to review.</p>
+<p><strong>NEEDS_CONTEXT:</strong> The implementer needs information that wasn&#39;t provided. Provide the missing context and re-dispatch.</p>
+<p><strong>BLOCKED:</strong> The implementer cannot complete the task. Assess the blocker:</p>
+<ol>
+<li>If it&#39;s a context problem, provide more context and re-dispatch with the same model</li>
+<li>If the task requires more reasoning, re-dispatch with a more capable model</li>
+<li>If the task is too large, break it into smaller pieces</li>
+<li>If the plan itself is wrong, rule on the correction, ledger it, and re-dispatch with the ruling carried in the dispatch</li>
+</ol>
+<p><strong>Never</strong> ignore an escalation or force the same model to retry without changes. If the implementer said it&#39;s stuck, something needs to change.</p>
+<p>If the implementer asks questions — before starting or mid-task — answer</p>
+<p>clearly and completely, provide additional context if needed, and don&#39;t</p>
+<p>rush it into implementation.</p>
+<h5>3. Review the task</h5>
+<p>Per-task reviews are task-scoped gates. The broad review happens once, at the</p>
+<p>final whole-branch review. Never skip the task review, and never accept a</p>
+<p>report missing either verdict — spec compliance AND task quality are both</p>
+<p>required. Implementer self-review never replaces the task review; both are</p>
+<p>needed.</p>
+<ul>
+<li>Hand the reviewer its diff as a file: run this skill&#39;s</li>
+</ul>
+<p>  <code>scripts/review-package PLAN_FILE BASE HEAD</code> and pass the reviewer the file path</p>
+<p>  it prints (or, without bash: <code>git log --oneline</code>, <code>git diff --stat</code>,</p>
+<p>  and <code>git diff -U10</code> for the range, redirected to one uniquely named</p>
+<p>  file). The output never enters your own context, and the reviewer sees</p>
+<p>  the commit list, stat summary, and full diff with context in one Read</p>
+<p>  call. Use the BASE you recorded before dispatching the implementer —</p>
+<p>  never <code>HEAD~1</code>, which silently truncates multi-commit tasks. Never</p>
+<p>  dispatch a task reviewer without a diff file.</p>
+<ul>
+<li><strong>Reviewer inputs:</strong> the task reviewer gets three paths — the same brief</li>
+</ul>
+<p>  file, the report file, and the review package — plus the global</p>
+<p>  constraints that bind the task.</p>
+<ul>
+<li>The global-constraints block you hand the reviewer is its attention</li>
+</ul>
+<p>  lens. Copy the binding requirements verbatim from the plan&#39;s Global</p>
+<p>  Constraints section or the spec: exact values, exact formats, and the</p>
+<p>  stated relationships between components (&quot;same layout as X&quot;, &quot;matches</p>
+<p>  Y&quot;). The reviewer&#39;s template already carries the process rules (YAGNI,</p>
+<p>  test hygiene, review method) — the constraints block is for what THIS</p>
+<p>  project&#39;s spec demands.</p>
+<ul>
+<li>Do not add open-ended directives like &quot;check all uses&quot; or &quot;run race tests</li>
+</ul>
+<p>  if useful&quot; without a concrete, task-specific reason</p>
+<ul>
+<li>Do not ask a reviewer to re-run tests the implementer already ran on the</li>
+</ul>
+<p>  same code — the implementer&#39;s report carries the test evidence</p>
+<ul>
+<li>Do not pre-judge findings for the reviewer — never instruct a reviewer to</li>
+</ul>
+<p>  ignore or not flag a specific issue. If you believe a finding would be a</p>
+<p>  false positive, let the reviewer raise it and adjudicate it in the review</p>
+<p>  loop. If the prompt you are writing contains &quot;do not flag,&quot; &quot;don&#39;t treat X</p>
+<p>  as a defect,&quot; &quot;at most Minor,&quot; or &quot;the plan chose&quot; — stop: you are</p>
+<p>  pre-judging, usually to spare yourself a review loop.</p>
+<p>The task reviewer may report &quot;⚠️ Cannot verify from diff&quot; items — requirements</p>
+<p>that live in unchanged code or span tasks. These do not block the rest of the</p>
+<p>review, but you must resolve each one yourself before marking the task</p>
+<p>complete: you hold the plan and cross-task context the reviewer</p>
+<p>lacks. If you confirm an item is a real gap, treat it as a failed spec</p>
+<p>review — it enters the fix loop with the other findings.</p>
+<p>Template: [task-reviewer-prompt.md](task-reviewer-prompt.md)</p>
+<h5>4. The fix loop</h5>
+<p>The loop triggers when the review reports spec ❌, any Critical or Important</p>
+<p>finding, or a ⚠️ item you confirmed as a real gap.</p>
+<p>Before the loop starts, two routes leave it immediately:</p>
+<ul>
+<li>Record Minor findings in the progress ledger as you go</li>
+</ul>
+<p>  (<code>Task &lt;N&gt;: minor (deferred): &lt;one-liner&gt;</code>), and point the final</p>
+<p>  whole-branch review at that list so it can triage which must be fixed</p>
+<p>  before merge. A roll-up nobody reads is a silent discard. Minor findings</p>
+<p>  never enter the loop.</p>
+<ul>
+<li>A finding labeled plan-mandated — or any finding that conflicts with</li>
+</ul>
+<p>  what the plan&#39;s text requires — is yours to rule on: weigh the finding</p>
+<p>  against the plan text, decide with the spec as the binding authority, and</p>
+<p>  ledger the ruling before you act on it. Do not dismiss the finding because</p>
+<p>  the plan mandates it, and do not dispatch a fix that contradicts the plan</p>
+<p>  without a recorded ruling.</p>
+<p>Everything else enters the loop. A fix round is one fix dispatch plus one</p>
+<p>scoped re-review. Five rounds maximum per task:</p>
+<p><strong>Rounds 1-3 — resume the original implementer.</strong> Send it the open findings</p>
+<p>verbatim. Its context is intact: it knows the task, the code, and its own</p>
+<p>choices. If your harness cannot send another message to a live subagent,</p>
+<p>dispatch a fresh implementer carrying the brief path, the report-file path,</p>
+<p>and the findings — the report file is the persistent memory either way.</p>
+<p><strong>Rounds 4-5 — dispatch a fresh implementer on a more capable model</strong> (per</p>
+<p>Model Selection), with the brief path, the report-file path, the open</p>
+<p>findings, and this framing: &quot;A prior implementer attempted this task</p>
+<p>[N] times; you own it now. Read the report file for what was tried.&quot; A loop</p>
+<p>that survives three resumes usually means the implementer cannot see its</p>
+<p>own problem — fresh eyes and a capability bump in one move.</p>
+<p><strong>Every round, either way:</strong> the implementer fixes, re-runs the tests</p>
+<p>covering the amended code, appends its fix report to the same report file,</p>
+<p>and returns the short contract. Before re-dispatching the reviewer, confirm</p>
+<p>the fix report contains the covering tests, the command run, and the</p>
+<p>output; dispatch the re-review once all three are present. Name the</p>
+<p>covering test files in the fix message — a one-line fix does not need the</p>
+<p>whole suite.</p>
+<p><strong>The re-review is scoped.</strong> Run <code>scripts/review-package PLAN_FILE FIX_BASE HEAD</code></p>
+<p>where FIX_BASE is the head the previous review saw, and dispatch</p>
+<p>[re-review-prompt.md](re-review-prompt.md) with the findings list, the</p>
+<p>brief, the report file, and the printed diff path. The re-reviewer verdicts</p>
+<p>each finding ADDRESSED or NOT ADDRESSED and flags new breakage in the fix</p>
+<p>diff only. New Critical/Important breakage in the fix diff joins the open</p>
+<p>findings list. Out-of-scope observations go to the ledger as deferred</p>
+<p>minors — they never extend the loop.</p>
+<p><strong>After each round,</strong> append to the ledger:</p>
+<p><code>Task &lt;N&gt;: fix round &lt;R&gt;/5 (&lt;X&gt; addressed, &lt;Y&gt; open — &lt;finding one-liners&gt;; commits &lt;a7&gt;..&lt;b7&gt;)</code></p>
+<p>Never fix findings yourself in the controller session — your context stays</p>
+<p>clean for coordination, and controller fixes skip review.</p>
+<p><strong>The breaker.</strong> When round 5&#39;s re-review still leaves findings open, stop</p>
+<p>dispatching. Adjudicate each open finding yourself — you hold the plan and</p>
+<p>the cross-task context the reviewer lacks:</p>
+<ul>
+<li><strong>The reviewer is wrong, or the point is contestable:</strong> park it —</li>
+</ul>
+<p>  <code>Task &lt;N&gt;: parked — &lt;finding&gt; — Ruling: &lt;why the code stands&gt;</code>. The final</p>
+<p>  review sees both sides.</p>
+<ul>
+<li><strong>Real, but nothing downstream builds on it:</strong> park it the same way, with</li>
+</ul>
+<p>  a ruling that says it&#39;s real and deferred.</p>
+<ul>
+<li><strong>Real and load-bearing</strong> — a later task builds on it, or it reveals a</li>
+</ul>
+<p>  plan defect: rule on the smallest change that unblocks the dependent work,</p>
+<p>  ledger it as <code>Task &lt;N&gt;: Ruling: &lt;finding&gt; — &lt;what you decided and why&gt;</code>,</p>
+<p>  and carry it into the next task&#39;s dispatch. Parking a structural failure</p>
+<p>  silently lets every dependent task build on it. Stop only when the defect</p>
+<p>  leaves every path forward a guess.</p>
+<p>Adjudicate only at the cap. Adjudicating earlier to end a loop is</p>
+<p>pre-judging with a different name. Every adjudication is a ledger entry —</p>
+<p>a silent discard is forbidden.</p>
+<h5>5. Complete the task</h5>
+<p>When the review comes back clean — or every open finding is parked with a</p>
+<p>ruling at the cap — append the completion line to the ledger in the same</p>
+<p>message as your other bookkeeping:</p>
+<ul>
+<li><code>Task &lt;N&gt;: complete (commits &lt;base7&gt;..&lt;head7&gt;, review clean)</code></li>
+<li><code>Task &lt;N&gt;: complete (commits &lt;base7&gt;..&lt;head7&gt;, &lt;K&gt; parked)</code> after a</li>
+</ul>
+<p>  tripped breaker</p>
+<p>Then mark the todo complete and move on. Never move to the next task while</p>
+<p>the review has open Critical/Important issues that are neither fixed nor</p>
+<p>parked-with-ruling at the cap.</p>
+<h4>Final Review</h4>
+<p>The final whole-branch review gets a package too: run</p>
+<p><code>scripts/review-package PLAN_FILE MERGE_BASE HEAD</code> (MERGE_BASE = the commit the</p>
+<p>branch started from, e.g. <code>git merge-base main HEAD</code>) and include the</p>
+<p>printed path in the final review dispatch, so the final reviewer reads</p>
+<p>one file instead of re-deriving the branch diff with git commands. Dispatch</p>
+<p>on the most capable available model (see Model Selection), using</p>
+<p>superpowers:requesting-code-review&#39;s</p>
+<p>[code-reviewer.md](../requesting-code-review/code-reviewer.md). Point it at</p>
+<p>the ledger&#39;s deferred-minor and parked lines so it can triage which must be</p>
+<p>fixed before merge.</p>
+<p>If the final whole-branch review returns findings, dispatch ONE fix subagent</p>
+<p>with the complete findings list — not one fixer per finding.</p>
+<p>Per-finding fixers each rebuild context and re-run suites; a real</p>
+<p>session&#39;s final-review fix wave cost more than all its tasks combined.</p>
+<p>Then run exactly one scoped re-review of the fix wave</p>
+<p>(<code>scripts/review-package PLAN_FILE FIX_BASE HEAD</code> over the fix range,</p>
+<p>[re-review-prompt.md](re-review-prompt.md)).</p>
+<p>Adjudicate any residual findings as in the task loop&#39;s breaker: park with</p>
+<p>rulings, or rule on the load-bearing ones and ledger what you decided. Only</p>
+<p>the four classes above stop you here. There is no second fix wave —</p>
+<p>residual load-bearing findings surface to your human partner when</p>
+<p>finishing-a-development-branch presents the options.</p>
+<h4>Finish</h4>
+<p>Before you delete anything, collect every ledger line containing <code>Ruling:</code> —</p>
+<p>preflight rulings, parked findings, breaker adjudications, all of them — into</p>
+<p>your final message under &quot;Rulings I made&quot;, in the order you made them, each</p>
+<p>with what it costs if wrong. The list is exhaustive: if the ledger holds a</p>
+<p>ruling, the list holds it. That list is the only place the decisions you</p>
+<p>took on your human partner&#39;s behalf reach them — they read it and rework</p>
+<p>whatever you got wrong. A ruling that dies with the workspace was a decision</p>
+<p>made in secret.</p>
+<p>When the final whole-branch review is clean and its fixes are merged,</p>
+<p>delete this plan&#39;s workspace (<code>rm -rf &lt;workspace&gt;</code>) — the git history is</p>
+<p>the record now. Sibling directories belong to other plans; leave them</p>
+<p>alone.</p>
+<p>Use superpowers:finishing-a-development-branch.</p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;Close enough on spec compliance&quot;</td><td>Reviewer found spec gaps = not done. Fix or hit the cap and adjudicate — those are the only exits.</td></tr>
+<tr><td>&quot;I&#39;ll fix it myself, dispatching is overhead&quot;</td><td>Controller fixes pollute your context and skip review. Resume the implementer.</td></tr>
+<tr><td>&quot;One more round will converge&quot;</td><td>Past the cap, rounds don&#39;t converge — the failure is structural. Adjudicate and route.</td></tr>
+<tr><td>&quot;The reviewer will just find something new anyway&quot;</td><td>Scoped re-reviews verify fixes; they cannot wander. New findings on untouched code go to the ledger, not the loop.</td></tr>
+<tr><td>&quot;This finding is obviously wrong, I&#39;ll drop it&quot;</td><td>You adjudicate only at the cap, and every ruling is a ledger entry. Silent discards are forbidden.</td></tr>
+<tr><td>&quot;The fix was small, skip the re-review&quot;</td><td>Unreviewed fixes are how regressions land. Every round ends with a scoped re-review.</td></tr>
+<tr><td>&quot;Reviews slow the loop down&quot;</td><td>The loop without reviews is just unverified churn. Reviews are the loop&#39;s brakes and steering.</td></tr>
+<tr><td>&quot;Ledger bookkeeping is overhead&quot;</td><td>The ledger is what survives compaction. Controllers without one have re-dispatched entire completed task sequences.</td></tr>
+<tr><td>&quot;The implementer spawned its own reviewer — free extra assurance&quot;</td><td>It&#39;s a duplicate seat reviewing the same diff; the task review is the gate. A worker-spawned reviewer is a defect to flag, not rigor.</td></tr>
+</tbody></table>
+<h4>Example Workflow</h4>
+<p><pre><code>You: I&#39;m using Subagent-Driven Development to execute this plan.
+
+[Setup: worktree verified]
+[Read plan file once: docs/superpowers/plans/feature-plan.md]
+[Resolve workspace: scripts/sdd-workspace docs/superpowers/plans/feature-plan.md — no ledger inside, fresh start]
+[Create todos for all tasks]
+
+Task 1: Hook installation script
+
+[Run task-brief for Task 1; dispatch implementer with brief + report paths + context]
+
+Implementer: &quot;Before I begin - should the hook be installed at user or system level?&quot;
+
+You: &quot;User level (~/.config/superpowers/hooks/)&quot;
+
+Implementer: [Later]
+  - Implemented install-hook command
+  - Added tests, 5/5 passing
+  - Self-review: Found I missed --force flag, added it
+  - Committed
+
+[Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
+Task reviewer: Spec ✅ - all requirements met, nothing extra.
+  Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
+
+[Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
+
+Task 2: Recovery modes
+
+[Run task-brief for Task 2; dispatch implementer with brief + report paths + context]
+
+Implementer: [No questions]
+  - Added verify/repair modes
+  - 8/8 tests passing
+  - Committed
+
+[Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
+Task reviewer: Spec ❌:
+  - Missing: Progress reporting (spec says &quot;report every 100 items&quot;)
+  Issues (Important): Magic number (100)
+
+[Fix round 1: resume the implementer with both findings]
+Implementer: Added progress reporting, extracted PROGRESS_INTERVAL constant.
+  Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
+
+[Run review-package PLAN_FILE FIX_BASE HEAD; dispatch scoped re-review]
+Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
+  Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
+  Verdict: all findings addressed.
+
+[Ledger: Task 2: fix round 1/5 (2 addressed, 0 open; commits d4e5f6a..b7c8d9e)]
+[Ledger: Task 2: complete (commits d4e5f6a..b7c8d9e, review clean)]
+
+...
+
+[After all tasks]
+[Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]
+Final reviewer: All requirements met. Deferred minors triaged: none block merge.
+
+[Delete this plan&#39;s workspace — the record now lives in git]
+
+Done! Using superpowers:finishing-a-development-branch.</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/subagent-driven-development</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/subagent-driven-development" aria-label="Copy install subagent-driven-development">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/subagent-driven-development</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/subagent-driven-development/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

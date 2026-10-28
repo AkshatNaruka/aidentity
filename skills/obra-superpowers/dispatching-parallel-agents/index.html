@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dispatching-parallel-agents — Aidentity</title>
+<meta name="description" content="Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/dispatching-parallel-agents/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="dispatching-parallel-agents — Aidentity">
+<meta property="og:description" content="Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/dispatching-parallel-agents/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"dispatching-parallel-agents","description":"Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/dispatching-parallel-agents/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=agents">agents</a><span>/</span>dispatching-parallel-agents
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>dispatching-parallel-agents</h1>
+      <p class="summary">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=agents">agents</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Dispatching Parallel Agents</h3>
+<h4>Overview</h4>
+<p>You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session&#39;s context or history — you construct exactly what they need. This also preserves your own context for coordination work.</p>
+<p>When you have multiple unrelated failures (different test files, different subsystems, different bugs), investigating them sequentially wastes time. Each investigation is independent and can happen in parallel.</p>
+<p><strong>Core principle:</strong> Dispatch one agent per independent problem domain. Let them work concurrently.</p>
+<h4>When to Use</h4>
+<p><pre><code>digraph when_to_use {
+    &quot;Multiple failures?&quot; [shape=diamond];
+    &quot;Are they independent?&quot; [shape=diamond];
+    &quot;Single agent investigates all&quot; [shape=box];
+    &quot;One agent per problem domain&quot; [shape=box];
+    &quot;Can they work in parallel?&quot; [shape=diamond];
+    &quot;Sequential agents&quot; [shape=box];
+    &quot;Parallel dispatch&quot; [shape=box];
+
+    &quot;Multiple failures?&quot; -&gt; &quot;Are they independent?&quot; [label=&quot;yes&quot;];
+    &quot;Are they independent?&quot; -&gt; &quot;Single agent investigates all&quot; [label=&quot;no - related&quot;];
+    &quot;Are they independent?&quot; -&gt; &quot;Can they work in parallel?&quot; [label=&quot;yes&quot;];
+    &quot;Can they work in parallel?&quot; -&gt; &quot;Parallel dispatch&quot; [label=&quot;yes&quot;];
+    &quot;Can they work in parallel?&quot; -&gt; &quot;Sequential agents&quot; [label=&quot;no - shared state&quot;];
+}</code></pre></p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>3+ test files failing with different root causes</li>
+<li>Multiple subsystems broken independently</li>
+<li>Each problem can be understood without context from others</li>
+<li>No shared state between investigations</li>
+</ul>
+<p><strong>Don&#39;t use when:</strong></p>
+<ul>
+<li>Failures are related (fix one might fix others)</li>
+<li>Need to understand full system state</li>
+<li>Agents would interfere with each other</li>
+</ul>
+<h4>The Pattern</h4>
+<h5>1. Identify Independent Domains</h5>
+<p>Group failures by what&#39;s broken:</p>
+<ul>
+<li>File A tests: Tool approval flow</li>
+<li>File B tests: Batch completion behavior</li>
+<li>File C tests: Abort functionality</li>
+</ul>
+<p>Each domain is independent - fixing tool approval doesn&#39;t affect abort tests.</p>
+<h5>2. Create Focused Agent Tasks</h5>
+<p>Each agent gets:</p>
+<ul>
+<li><strong>Specific scope:</strong> One test file or subsystem</li>
+<li><strong>Clear goal:</strong> Make these tests pass</li>
+<li><strong>Constraints:</strong> Don&#39;t change other code</li>
+<li><strong>Expected output:</strong> Summary of what you found and fixed</li>
+</ul>
+<h5>3. Dispatch in Parallel</h5>
+<p>Issue all three subagent dispatches in the same response — they run in parallel:</p>
+<p><pre><code>Subagent (general-purpose): &quot;Fix agent-tool-abort.test.ts failures&quot;
+Subagent (general-purpose): &quot;Fix batch-completion-behavior.test.ts failures&quot;
+Subagent (general-purpose): &quot;Fix tool-approval-race-conditions.test.ts failures&quot;
+# All three run concurrently.</code></pre></p>
+<p>Multiple dispatch calls in one response = parallel execution. One per response = sequential.</p>
+<h5>4. Review and Integrate</h5>
+<p>When agents return:</p>
+<ul>
+<li>Read each summary</li>
+<li>Verify fixes don&#39;t conflict</li>
+<li>Run full test suite</li>
+<li>Integrate all changes</li>
+</ul>
+<h4>Agent Prompt Structure</h4>
+<p>Good agent prompts are:</p>
+<ol>
+<li><strong>Focused</strong> - One clear problem domain</li>
+<li><strong>Self-contained</strong> - All context needed to understand the problem</li>
+<li><strong>Specific about output</strong> - What should the agent return?</li>
+</ol>
+<p><pre><code>Fix the 3 failing tests in src/agents/agent-tool-abort.test.ts:
+
+1. &quot;should abort tool with partial output capture&quot; - expects &#39;interrupted at&#39; in message
+2. &quot;should handle mixed completed and aborted tools&quot; - fast tool aborted instead of completed
+3. &quot;should properly track pendingToolCount&quot; - expects 3 results but gets 0
+
+These are timing/race condition issues. Your task:
+
+1. Read the test file and understand what each test verifies
+2. Identify root cause - timing issues or actual bugs?
+3. Fix by:
+   - Replacing arbitrary timeouts with event-based waiting
+   - Fixing bugs in abort implementation if found
+   - Adjusting test expectations if testing changed behavior
+
+Do NOT just increase timeouts - find the real issue.
+
+Return: Summary of what you found and what you fixed.</code></pre></p>
+<h4>Common Mistakes</h4>
+<p><strong>❌ Too broad:</strong> &quot;Fix all the tests&quot; - agent gets lost</p>
+<p><strong>✅ Specific:</strong> &quot;Fix agent-tool-abort.test.ts&quot; - focused scope</p>
+<p><strong>❌ No context:</strong> &quot;Fix the race condition&quot; - agent doesn&#39;t know where</p>
+<p><strong>✅ Context:</strong> Paste the error messages and test names</p>
+<p><strong>❌ No constraints:</strong> Agent might refactor everything</p>
+<p><strong>✅ Constraints:</strong> &quot;Do NOT change production code&quot; or &quot;Fix tests only&quot;</p>
+<p><strong>❌ Vague output:</strong> &quot;Fix it&quot; - you don&#39;t know what changed</p>
+<p><strong>✅ Specific:</strong> &quot;Return summary of root cause and changes&quot;</p>
+<h4>When NOT to Use</h4>
+<p><strong>Related failures:</strong> Fixing one might fix others - investigate together first</p>
+<p><strong>Need full context:</strong> Understanding requires seeing entire system</p>
+<p><strong>Exploratory debugging:</strong> You don&#39;t know what&#39;s broken yet</p>
+<p><strong>Shared state:</strong> Agents would interfere (editing same files, using same resources)</p>
+<h4>Real Example from Session</h4>
+<p><strong>Scenario:</strong> 6 test failures across 3 files after major refactoring</p>
+<p><strong>Failures:</strong></p>
+<ul>
+<li>agent-tool-abort.test.ts: 3 failures (timing issues)</li>
+<li>batch-completion-behavior.test.ts: 2 failures (tools not executing)</li>
+<li>tool-approval-race-conditions.test.ts: 1 failure (execution count = 0)</li>
+</ul>
+<p><strong>Decision:</strong> Independent domains - abort logic separate from batch completion separate from race conditions</p>
+<p><strong>Dispatch:</strong></p>
+<p><pre><code>Agent 1 → Fix agent-tool-abort.test.ts
+Agent 2 → Fix batch-completion-behavior.test.ts
+Agent 3 → Fix tool-approval-race-conditions.test.ts</code></pre></p>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Agent 1: Replaced timeouts with event-based waiting</li>
+<li>Agent 2: Fixed event structure bug (threadId in wrong place)</li>
+<li>Agent 3: Added wait for async tool execution to complete</li>
+</ul>
+<p><strong>Integration:</strong> All fixes independent, no conflicts, full suite green</p>
+<h4>Verification</h4>
+<p>After agents return:</p>
+<ol>
+<li><strong>Review each summary</strong> - Understand what changed</li>
+<li><strong>Check for conflicts</strong> - Did agents edit same code?</li>
+<li><strong>Run full suite</strong> - Verify all fixes work together</li>
+<li><strong>Spot check</strong> - Agents can make systematic errors</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/using-agent-skills/index.html"
+     data-source="addyosmani"
+     data-category="agents"
+     data-search="using-agent-skills discovers and invokes agent skills. use when starting a session or when you need to discover which skill applies to the current task. this is the meta-skill that governs how all other skills are discovered and invoked. agents agents addyosmani/agent-skills">
+  <span>
+    <span class="r-name">using-agent-skills</span>
+    <span class="r-desc">Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/productivity/writing-for-agents/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="writing-for-agents writing documents for agents. use when creating or editing skills, or modifying agents.md or claude.md. agents agents mattpocock/skills">
+  <span>
+    <span class="r-name">writing-for-agents</span>
+    <span class="r-desc">Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/agent-framework-azure-ai-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="agent-framework-azure-ai-py build azure ai foundry agents using the microsoft agent framework python sdk (agent-framework-azure-ai). use when creating persistent agents with azureaiagentsprovider, using hosted tools (code interpreter, file search, web search), integrating mcp servers, managing conversation threads, or implementing streaming responses. covers function tools, structured outputs, and multi-tool agents. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">agent-framework-azure-ai-py</span>
+    <span class="r-desc">Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/entra-agent-id/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="entra-agent-id microsoft entra agent id (preview) for creating oauth2-capable ai agent identities via microsoft graph beta api. covers agent identity blueprints, blueprintprincipals, agent identities, required permissions, sponsors, and workload identity federation. includes microsoft entra sdk for agentid (containerized sidecar) for polyglot agent authentication (docker/kubernetes), 3p agent integration, autonomous and interactive agent patterns. triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;agent identity blueprint&quot;, &quot;blueprintprincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3p agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">entra-agent-id</span>
+    <span class="r-desc">Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/m365-agents-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="m365-agents-py microsoft 365 agents sdk for python. build multichannel agents for teams/m365/copilot studio with aiohttp hosting, agentapplication routing, streaming responses, and msal-based auth. triggers: &quot;microsoft 365 agents sdk&quot;, &quot;microsoft_agents&quot;, &quot;agentapplication&quot;, &quot;start_agent_process&quot;, &quot;turncontext&quot;, &quot;copilot studio client&quot;, &quot;cloudadapter&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">m365-agents-py</span>
+    <span class="r-desc">Microsoft 365 Agents SDK for Python. Build multichannel agents for Teams/M365/Copilot Studio with aiohttp hosting, AgentApplication routing, streaming responses, and MSAL-based auth. Triggers: &quot;Microsoft 365 Agents SDK&quot;, &quot;microsoft_agents&quot;, &quot;AgentApplication&quot;, &quot;start_agent_process&quot;, &quot;TurnContext&quot;, &quot;Copilot Studio client&quot;, &quot;CloudAdapter&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/dispatching-parallel-agents</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/dispatching-parallel-agents" aria-label="Copy install dispatching-parallel-agents">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>agents</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/dispatching-parallel-agents</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/dispatching-parallel-agents/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

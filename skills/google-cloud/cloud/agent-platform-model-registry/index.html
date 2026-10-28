@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-model-registry — Aidentity</title>
+<meta name="description" content="Agent Platform Model Registry Management. Use when you need to upload, list, describe, update, or delete machine learning models (and their versions) in the Agent Platform Model Registry. Don&#39;t use for model training, model deployment to endpoints, or managing non-Agent Platform models.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-model-registry/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-model-registry — Aidentity">
+<meta property="og:description" content="Agent Platform Model Registry Management. Use when you need to upload, list, describe, update, or delete machine learning models (and their versions) in the Agent Platform Model Registry. Don&#39;t use for model training, model deployment to endpoints, or managing non-Agent Platform models.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-model-registry/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-model-registry","description":"Agent Platform Model Registry Management. Use when you need to upload, list, describe, update, or delete machine learning models (and their versions) in the Agent Platform Model Registry. Don't use for model training, model deployment to endpoints, or managing non-Agent Platform models.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-model-registry/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-model-registry
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-model-registry</h1>
+      <p class="summary">Agent Platform Model Registry Management. Use when you need to upload, list, describe, update, or delete machine learning models (and their versions) in the Agent Platform Model Registry. Don&#39;t use for model training, model deployment to endpoints, or managing non-Agent Platform models.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Platform Model Registry Management</h3>
+<h4>Overview</h4>
+<p>This skill provides instructions for managing machine learning models in the</p>
+<p>Agent Platform Model Registry. It covers listing models, describing model</p>
+<p>details, uploading new models or versions, updating metadata, and deleting</p>
+<p>models.</p>
+<h4>Safety &amp; Confirmation Tiers (CRITICAL)</h4>
+<p>Before executing any commands on behalf of the user, you MUST adhere to the</p>
+<p>following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R: Read-only (<code>list</code>, <code>describe</code>, <code>get</code>)</strong></li>
+</ol>
+<ul>
+<li>No confirmation needed. Execute immediately to gather information.</li>
+</ul>
+<ol>
+<li><strong>Tier M: Mutating &amp; Reversible (<code>upload</code>, <code>update</code>)</strong></li>
+</ol>
+<ul>
+<li>Requires <strong>interactive confirmation</strong> with &#39;Yes&#39;/&#39;No&#39; options. The</li>
+</ul>
+<p>        confirmation prompt MUST contain the exact, literal command string with</p>
+<p>        all required flags (e.g. <code>--region=us-central1</code>, <code>--display-name=&quot;...&quot;</code>)</p>
+<p>        — natural-language paraphrases are NOT sufficient.</p>
+<ul>
+<li><strong>Same-turn restriction</strong>: NEVER execute the command in the same turn as</li>
+</ul>
+<p>        presenting the confirmation prompt. Stop and wait for the user&#39;s reply;</p>
+<p>        only execute after explicit &#39;Yes&#39; / approval.</p>
+<ol>
+<li><strong>Tier D: Destructive &amp; Irreversible (<code>delete</code>)</strong></li>
+</ol>
+<ul>
+<li>Requires <strong>explicit typed confirmation</strong> (e.g. &quot;I confirm&quot; or &quot;Yes,</li>
+</ul>
+<p>        delete it&quot;). Ask for confirmation IMMEDIATELY — before any pre-flight</p>
+<p>        checks (don&#39;t check if the model is deployed to endpoints first).</p>
+<ul>
+<li><strong>Same-turn restriction</strong>: NEVER execute in the same turn as asking for</li>
+</ul>
+<p>        typed confirmation. Wait for the user to reply in a new turn.</p>
+<h4>Phase 0: Environment Setup</h4>
+<p><strong>CRITICAL</strong>: Before running any commands, you MUST ensure the environment is</p>
+<p>correctly initialized by following these steps:</p>
+<ol>
+<li><strong>Google Cloud Authentication</strong>: Authenticate with your Google Cloud</li>
+</ol>
+<p>    credentials and configure active Application Default Credentials (ADC) for</p>
+<p>    Agent Platform access:</p>
+<p>    <pre><code>    gcloud auth login
+    gcloud auth application-default login
+    </code></pre></p>
+<ol>
+<li><strong>Set Project</strong>: Configure the active project for subsequent commands:</li>
+</ol>
+<p>    <pre><code>    gcloud config set project $PROJECT_ID
+    </code></pre></p>
+<ol>
+<li><strong>Region</strong>: Always specify <code>--region=$LOCATION_ID</code> on each command below. Do</li>
+</ol>
+<p>    NOT use <code>global</code>.</p>
+<h4>1. Listing Models (Tier R)</h4>
+<p>Use this command to discover existing models in the registry and retrieve their</p>
+<p>numeric IDs. No confirmation is required.</p>
+<p><pre><code>gcloud ai models list \
+    --region=$LOCATION_ID</code></pre></p>
+<h4>2. Describing a Model (Tier R)</h4>
+<p>Retrieve the full metadata for a specific model or version. No confirmation is</p>
+<p>required.</p>
+<p><pre><code>gcloud ai models describe $MODEL_ID \
+    --region=$LOCATION_ID</code></pre></p>
+<p>To target a specific version:</p>
+<p><pre><code>gcloud ai models describe ${MODEL_ID}@${VERSION_ID} \
+    --region=$LOCATION_ID</code></pre></p>
+<h4>3. Uploading a Model (Tier M)</h4>
+<p>Register a new model or a new version of an existing model. This is a</p>
+<p>long-running operation. **Action requires an inline confirmation card before</p>
+<p>proceeding.**</p>
+<h5>Example: Uploading a Custom Model</h5>
+<p><pre><code>gcloud ai models upload \
+    --region=$LOCATION_ID \
+    --display-name=&quot;my-custom-model&quot; \
+    --container-image-uri=&quot;gcr.io/my-project/my-model:latest&quot; \
+    --artifact-uri=&quot;gs://my-bucket/path/to/artifacts&quot;</code></pre></p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt;</p>
+<p>&gt; This is a Tier M operation — see [Safety &amp; Confirmation Tiers] above.</p>
+<p>To upload a new version of an existing model, use the <code>--parent-model</code> flag or</p>
+<p>specify the parent model ID.</p>
+<h4>4. Updating a Model (Tier M)</h4>
+<p>Update metadata fields like display name, description, or labels. **Action</p>
+<p>requires an inline confirmation card before proceeding.**</p>
+<p><pre><code>gcloud ai models update $MODEL_ID \
+    --region=$LOCATION_ID \
+    --display-name=&quot;new-display-name&quot; \
+    --description=&quot;Updated description&quot;</code></pre></p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt;</p>
+<p>&gt; This is a Tier M operation — see [Safety &amp; Confirmation Tiers] above.</p>
+<h4>5. Deleting a Model (Tier D)</h4>
+<p>Permanently delete a Model and all its versions. **Action requires explicit</p>
+<p>typed confirmation before proceeding.**</p>
+<p><pre><code>gcloud ai models delete $MODEL_ID \
+    --region=$LOCATION_ID</code></pre></p>
+<p>&gt; [!WARNING]</p>
+<p>&gt;</p>
+<p>&gt; This operation is irreversible. All model versions must be undeployed from all</p>
+<p>&gt; Endpoints before deletion.</p>
+<h4>6. Searching Publisher Models (Tier R)</h4>
+<p>Before generating interactive model details, you MUST verify the <code>model_id</code> by</p>
+<p>searching Model Garden Publisher Models. No confirmation is required.</p>
+<p>Use the <code>gcloud ai</code> CLI to search for matching publisher models.</p>
+<p><pre><code>gcloud ai model-garden models list --model-filter=&quot;&lt;model_name_or_query&gt;&quot; --full-resource-name --format=json</code></pre></p>
+<p>This will return a list of matching models. Extract the exact <code>name</code> field from</p>
+<p>the result (e.g., <code>publishers/google/models/gemma2</code> or</p>
+<p><code>publishers/qwen/models/qwen3-coder</code>) to use as the verified <code>model_id</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-model-registry</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-model-registry" aria-label="Copy install agent-platform-model-registry">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-model-registry</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-model-registry/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

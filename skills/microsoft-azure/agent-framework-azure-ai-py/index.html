@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-framework-azure-ai-py — Aidentity</title>
+<meta name="description" content="Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/agent-framework-azure-ai-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-framework-azure-ai-py — Aidentity">
+<meta property="og:description" content="Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/agent-framework-azure-ai-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-framework-azure-ai-py","description":"Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/agent-framework-azure-ai-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=agents">agents</a><span>/</span>agent-framework-azure-ai-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>agent-framework-azure-ai-py</h1>
+      <p class="summary">Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Framework Azure Hosted Agents</h3>
+<p>Build persistent agents on Azure AI Foundry using the Microsoft Agent Framework Python SDK.</p>
+<h4>Architecture</h4>
+<p><pre><code>User Query → AzureAIAgentsProvider → Azure AI Agent Service (Persistent)
+                    ↓
+              Agent.run() / Agent.run_stream()
+                    ↓
+              Tools: Functions | Hosted (Code/Search/Web) | MCP
+                    ↓
+              AgentThread (conversation persistence)</code></pre></p>
+<h4>Installation</h4>
+<p><pre><code># Full framework (recommended)
+pip install agent-framework --pre
+
+# Or Azure-specific package only
+pip install agent-framework-azure-ai --pre</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>export AZURE_AI_PROJECT_ENDPOINT=&quot;https://&lt;project&gt;.services.ai.azure.com/api/projects/&lt;project-id&gt;&quot;  # Required for all auth methods
+export AZURE_AI_MODEL_DEPLOYMENT_NAME=&quot;gpt-4o-mini&quot;  # Required for all auth methods
+export BING_CONNECTION_ID=&quot;your-bing-connection-id&quot;  # For web search
+export AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity.aio import AzureCliCredential, DefaultAzureCredential, ManagedIdentityCredential
+
+# Development
+credential = AzureCliCredential()
+
+# Production
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()</code></pre></p>
+<h4>Core Workflow</h4>
+<h5>Basic Agent</h5>
+<p><pre><code>import asyncio
+from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;MyAgent&quot;,
+            instructions=&quot;You are a helpful assistant.&quot;,
+        )
+        
+        result = await agent.run(&quot;Hello!&quot;)
+        print(result.text)
+
+asyncio.run(main())</code></pre></p>
+<h5>Agent with Function Tools</h5>
+<p><pre><code>from typing import Annotated
+from pydantic import Field
+from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+def get_weather(
+    location: Annotated[str, Field(description=&quot;City name to get weather for&quot;)],
+) -&gt; str:
+    &quot;&quot;&quot;Get the current weather for a location.&quot;&quot;&quot;
+    return f&quot;Weather in {location}: 72°F, sunny&quot;
+
+def get_current_time() -&gt; str:
+    &quot;&quot;&quot;Get the current UTC time.&quot;&quot;&quot;
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).strftime(&quot;%Y-%m-%d %H:%M:%S UTC&quot;)
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;WeatherAgent&quot;,
+            instructions=&quot;You help with weather and time queries.&quot;,
+            tools=[get_weather, get_current_time],  # Pass functions directly
+        )
+        
+        result = await agent.run(&quot;What&#39;s the weather in Seattle?&quot;)
+        print(result.text)</code></pre></p>
+<h5>Agent with Hosted Tools</h5>
+<p><pre><code>from agent_framework import (
+    HostedCodeInterpreterTool,
+    HostedFileSearchTool,
+    HostedWebSearchTool,
+)
+from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;MultiToolAgent&quot;,
+            instructions=&quot;You can execute code, search files, and search the web.&quot;,
+            tools=[
+                HostedCodeInterpreterTool(),
+                HostedWebSearchTool(name=&quot;Bing&quot;),
+            ],
+        )
+        
+        result = await agent.run(&quot;Calculate the factorial of 20 in Python&quot;)
+        print(result.text)</code></pre></p>
+<h5>Streaming Responses</h5>
+<p><pre><code>async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;StreamingAgent&quot;,
+            instructions=&quot;You are a helpful assistant.&quot;,
+        )
+        
+        print(&quot;Agent: &quot;, end=&quot;&quot;, flush=True)
+        async for chunk in agent.run_stream(&quot;Tell me a short story&quot;):
+            if chunk.text:
+                print(chunk.text, end=&quot;&quot;, flush=True)
+        print()</code></pre></p>
+<h5>Conversation Threads</h5>
+<p><pre><code>from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;ChatAgent&quot;,
+            instructions=&quot;You are a helpful assistant.&quot;,
+            tools=[get_weather],
+        )
+        
+        # Create thread for conversation persistence
+        thread = agent.get_new_thread()
+        
+        # First turn
+        result1 = await agent.run(&quot;What&#39;s the weather in Seattle?&quot;, thread=thread)
+        print(f&quot;Agent: {result1.text}&quot;)
+        
+        # Second turn - context is maintained
+        result2 = await agent.run(&quot;What about Portland?&quot;, thread=thread)
+        print(f&quot;Agent: {result2.text}&quot;)
+        
+        # Save thread ID for later resumption
+        print(f&quot;Conversation ID: {thread.conversation_id}&quot;)</code></pre></p>
+<h5>Structured Outputs</h5>
+<p><pre><code>from pydantic import BaseModel, ConfigDict
+from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+class WeatherResponse(BaseModel):
+    model_config = ConfigDict(extra=&quot;forbid&quot;)
+    
+    location: str
+    temperature: float
+    unit: str
+    conditions: str
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;StructuredAgent&quot;,
+            instructions=&quot;Provide weather information in structured format.&quot;,
+            response_format=WeatherResponse,
+        )
+        
+        result = await agent.run(&quot;Weather in Seattle?&quot;)
+        weather = WeatherResponse.model_validate_json(result.text)
+        print(f&quot;{weather.location}: {weather.temperature}°{weather.unit}&quot;)</code></pre></p>
+<h4>Provider Methods</h4>
+<table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>create_agent()</code></td><td>Create new agent on Azure AI service</td></tr>
+<tr><td><code>get_agent(agent_id)</code></td><td>Retrieve existing agent by ID</td></tr>
+<tr><td><code>as_agent(sdk_agent)</code></td><td>Wrap SDK Agent object (no HTTP call)</td></tr>
+</tbody></table>
+<h4>Hosted Tools Quick Reference</h4>
+<table><thead><tr><th>Tool</th><th>Import</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>HostedCodeInterpreterTool</code></td><td><code>from agent_framework import HostedCodeInterpreterTool</code></td><td>Execute Python code</td></tr>
+<tr><td><code>HostedFileSearchTool</code></td><td><code>from agent_framework import HostedFileSearchTool</code></td><td>Search vector stores</td></tr>
+<tr><td><code>HostedWebSearchTool</code></td><td><code>from agent_framework import HostedWebSearchTool</code></td><td>Bing web search</td></tr>
+<tr><td><code>HostedMCPTool</code></td><td><code>from agent_framework import HostedMCPTool</code></td><td>Service-managed MCP</td></tr>
+<tr><td><code>MCPStreamableHTTPTool</code></td><td><code>from agent_framework import MCPStreamableHTTPTool</code></td><td>Client-managed MCP</td></tr>
+</tbody></table>
+<h4>Complete Example</h4>
+<p><pre><code>import asyncio
+from typing import Annotated
+from pydantic import BaseModel, Field
+from agent_framework import (
+    HostedCodeInterpreterTool,
+    HostedWebSearchTool,
+    MCPStreamableHTTPTool,
+)
+from agent_framework.azure import AzureAIAgentsProvider
+from azure.identity.aio import AzureCliCredential
+
+
+def get_weather(
+    location: Annotated[str, Field(description=&quot;City name&quot;)],
+) -&gt; str:
+    &quot;&quot;&quot;Get weather for a location.&quot;&quot;&quot;
+    return f&quot;Weather in {location}: 72°F, sunny&quot;
+
+
+class AnalysisResult(BaseModel):
+    summary: str
+    key_findings: list[str]
+    confidence: float
+
+
+async def main():
+    async with (
+        AzureCliCredential() as credential,
+        MCPStreamableHTTPTool(
+            name=&quot;Docs MCP&quot;,
+            url=&quot;https://learn.microsoft.com/api/mcp&quot;,
+        ) as mcp_tool,
+        AzureAIAgentsProvider(credential=credential) as provider,
+    ):
+        agent = await provider.create_agent(
+            name=&quot;ResearchAssistant&quot;,
+            instructions=&quot;You are a research assistant with multiple capabilities.&quot;,
+            tools=[
+                get_weather,
+                HostedCodeInterpreterTool(),
+                HostedWebSearchTool(name=&quot;Bing&quot;),
+                mcp_tool,
+            ],
+        )
+        
+        thread = agent.get_new_thread()
+        
+        # Non-streaming
+        result = await agent.run(
+            &quot;Search for Python best practices and summarize&quot;,
+            thread=thread,
+        )
+        print(f&quot;Response: {result.text}&quot;)
+        
+        # Streaming
+        print(&quot;\nStreaming: &quot;, end=&quot;&quot;)
+        async for chunk in agent.run_stream(&quot;Continue with examples&quot;, thread=thread):
+            if chunk.text:
+                print(chunk.text, end=&quot;&quot;, flush=True)
+        print()
+        
+        # Structured output
+        result = await agent.run(
+            &quot;Analyze findings&quot;,
+            thread=thread,
+            response_format=AnalysisResult,
+        )
+        analysis = AnalysisResult.model_validate_json(result.text)
+        print(f&quot;\nConfidence: {analysis.confidence}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())</code></pre></p>
+<h4>Conventions</h4>
+<ul>
+<li>Always use async context managers: <code>async with provider:</code></li>
+<li>Pass functions directly to <code>tools=</code> parameter (auto-converted to AIFunction)</li>
+<li>Use <code>Annotated[type, Field(description=...)]</code> for function parameters</li>
+<li>Use <code>get_new_thread()</code> for multi-turn conversations</li>
+<li>Prefer <code>HostedMCPTool</code> for service-managed MCP, <code>MCPStreamableHTTPTool</code> for client-managed</li>
+</ul>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>This SDK is async-first — use <code>async def</code> handlers and <code>async with</code> throughout.</strong></li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+</ol>
+<h4>Reference Files</h4>
+<ul>
+<li>[references/tools.md](references/tools.md): Detailed hosted tool patterns</li>
+<li>[references/mcp.md](references/mcp.md): MCP integration (hosted + local)</li>
+<li>[references/threads.md](references/threads.md): Thread and conversation management</li>
+<li>[references/advanced.md](references/advanced.md): OpenAPI, citations, structured outputs</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/using-agent-skills/index.html"
+     data-source="addyosmani"
+     data-category="agents"
+     data-search="using-agent-skills discovers and invokes agent skills. use when starting a session or when you need to discover which skill applies to the current task. this is the meta-skill that governs how all other skills are discovered and invoked. agents agents addyosmani/agent-skills">
+  <span>
+    <span class="r-name">using-agent-skills</span>
+    <span class="r-desc">Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/productivity/writing-for-agents/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="writing-for-agents writing documents for agents. use when creating or editing skills, or modifying agents.md or claude.md. agents agents mattpocock/skills">
+  <span>
+    <span class="r-name">writing-for-agents</span>
+    <span class="r-desc">Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/entra-agent-id/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="entra-agent-id microsoft entra agent id (preview) for creating oauth2-capable ai agent identities via microsoft graph beta api. covers agent identity blueprints, blueprintprincipals, agent identities, required permissions, sponsors, and workload identity federation. includes microsoft entra sdk for agentid (containerized sidecar) for polyglot agent authentication (docker/kubernetes), 3p agent integration, autonomous and interactive agent patterns. triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;agent identity blueprint&quot;, &quot;blueprintprincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3p agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">entra-agent-id</span>
+    <span class="r-desc">Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/m365-agents-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="m365-agents-py microsoft 365 agents sdk for python. build multichannel agents for teams/m365/copilot studio with aiohttp hosting, agentapplication routing, streaming responses, and msal-based auth. triggers: &quot;microsoft 365 agents sdk&quot;, &quot;microsoft_agents&quot;, &quot;agentapplication&quot;, &quot;start_agent_process&quot;, &quot;turncontext&quot;, &quot;copilot studio client&quot;, &quot;cloudadapter&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">m365-agents-py</span>
+    <span class="r-desc">Microsoft 365 Agents SDK for Python. Build multichannel agents for Teams/M365/Copilot Studio with aiohttp hosting, AgentApplication routing, streaming responses, and MSAL-based auth. Triggers: &quot;Microsoft 365 Agents SDK&quot;, &quot;microsoft_agents&quot;, &quot;AgentApplication&quot;, &quot;start_agent_process&quot;, &quot;TurnContext&quot;, &quot;Copilot Studio client&quot;, &quot;CloudAdapter&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/agent-framework-azure-ai-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/agent-framework-azure-ai-py" aria-label="Copy install agent-framework-azure-ai-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>agents</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/agent-framework-azure-ai-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/agent-framework-azure-ai-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

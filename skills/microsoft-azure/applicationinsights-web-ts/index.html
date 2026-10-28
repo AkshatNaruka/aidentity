@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>applicationinsights-web-ts — Aidentity</title>
+<meta name="description" content="Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/applicationinsights-web-ts/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="applicationinsights-web-ts — Aidentity">
+<meta property="og:description" content="Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/applicationinsights-web-ts/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"applicationinsights-web-ts","description":"Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/applicationinsights-web-ts/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>applicationinsights-web-ts
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>applicationinsights-web-ts</h1>
+      <p class="summary">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Application Insights JavaScript SDK (Web) for TypeScript</h3>
+<p>Real User Monitoring (RUM) for browser apps with <code>@microsoft/applicationinsights-web</code>. Auto-collects page views, AJAX/fetch dependencies, unhandled exceptions, and (with the Click Analytics plugin) clicks. Supports custom events, metrics, and <strong>GenAI agent traces</strong> that follow OpenTelemetry GenAI semantic conventions and correlate to backend spans via W3C Trace Context.</p>
+<p>&gt; <strong>Distinct from <code>azure-monitor-opentelemetry-ts</code></strong>, which is for Node.js server apps. This skill is for <strong>browser/web</strong> code (and React Native).</p>
+<h4>Before Implementation</h4>
+<p>Search <code>microsoft-docs</code> MCP for current API patterns:</p>
+<ul>
+<li>Query: &quot;Application Insights JavaScript SDK setup&quot;</li>
+<li>Query: &quot;Application Insights JavaScript SDK configuration&quot;</li>
+<li>Query: &quot;Application Insights JavaScript framework extensions React Angular&quot;</li>
+<li>Verify package version: <code>npm view @microsoft/applicationinsights-web version</code></li>
+</ul>
+<h4>Packages</h4>
+<table><thead><tr><th>Package</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>@microsoft/applicationinsights-web</code></td><td>Core RUM SDK (page views, AJAX, exceptions).</td></tr>
+<tr><td><code>@microsoft/applicationinsights-clickanalytics-js</code></td><td>Auto-collect click telemetry.</td></tr>
+<tr><td><code>@microsoft/applicationinsights-react-js</code></td><td>React plugin (router instrumentation, hooks, HOC, ErrorBoundary).</td></tr>
+<tr><td><code>@microsoft/applicationinsights-react-native</code></td><td>React Native plugin (native crashes, sessions).</td></tr>
+<tr><td><code>@microsoft/applicationinsights-angularplugin-js</code></td><td>Angular plugin (router events, ErrorHandler).</td></tr>
+<tr><td><code>@microsoft/applicationinsights-debugplugin-js</code></td><td>Dev-only telemetry inspector.</td></tr>
+<tr><td><code>@microsoft/applicationinsights-perfmarkmeasure-js</code></td><td>User Timing (<code>performance.mark/measure</code>) integration.</td></tr>
+</tbody></table>
+<h4>Installation</h4>
+<p><pre><code>npm i --save @microsoft/applicationinsights-web
+# Optional plugins (install only what you use):
+npm i --save @microsoft/applicationinsights-clickanalytics-js
+npm i --save @microsoft/applicationinsights-react-js @microsoft/applicationinsights-react-native @microsoft/applicationinsights-angularplugin-js</code></pre></p>
+<p>Typings ship with the package — no separate <code>@types/...</code> install needed.</p>
+<h4>Connection String</h4>
+<p>The browser SDK requires a connection string at init time. <strong>It ships in plaintext to clients</strong> — Microsoft Entra ID auth is not supported for browser telemetry. Use a separate App Insights resource with local auth enabled for browser RUM if you need to isolate it from backend telemetry.</p>
+<p><pre><code># Vite / CRA / Next.js — expose to client via the public env prefix
+VITE_APPINSIGHTS_CONNECTION_STRING=&quot;InstrumentationKey=...;IngestionEndpoint=https://...;LiveEndpoint=https://...&quot;
+NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING=&quot;InstrumentationKey=...&quot;</code></pre></p>
+<h4>Quick Start (npm)</h4>
+<p><pre><code>import { ApplicationInsights } from &quot;@microsoft/applicationinsights-web&quot;;
+
+export const appInsights = new ApplicationInsights({
+  config: {
+    connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING,
+    enableAutoRouteTracking: true,        // SPA route changes -&gt; page views
+    enableCorsCorrelation: true,          // propagate Request-Id / traceparent to cross-origin AJAX
+    enableRequestHeaderTracking: true,
+    enableResponseHeaderTracking: true,
+    distributedTracingMode: 2,            // DistributedTracingModes.AI_AND_W3C — emit traceparent for backend correlation
+    autoTrackPageVisitTime: true,
+    disableFetchTracking: false,          // fetch() is auto-instrumented by default
+    excludeRequestFromAutoTrackingPatterns: [/livemetrics\.azure\.com/i]
+  }
+});
+
+appInsights.loadAppInsights();
+appInsights.trackPageView();</code></pre></p>
+<p>Call <code>loadAppInsights()</code> exactly once, as early as possible (before user interactions you want tracked). Then <code>trackPageView()</code> for the initial load — when <code>enableAutoRouteTracking</code> is on, subsequent route changes are automatic.</p>
+<h4>Quick Start (SDK Loader Script)</h4>
+<p>Recommended when you want auto-updating SDK and zero build pipeline. Paste this as the <strong>first</strong> <code>&lt;script&gt;</code> in <code>&lt;head&gt;</code>:</p>
+<p><pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  var appInsights = window.appInsights || function (cfg) {
+    /* See: https://learn.microsoft.com/azure/azure-monitor/app/javascript-sdk
+       Use the latest snippet from the Microsoft Learn page above — it includes
+       backup-CDN failover (cr), SDK-load-failure reporting, and the queue shim
+       so calls before SDK ready are not lost. */
+  }({ src: &quot;https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js&quot;,
+      crossOrigin: &quot;anonymous&quot;,
+      cfg: { connectionString: &quot;YOUR_CONNECTION_STRING&quot; } });
+&lt;/script&gt;</code></pre></p>
+<p>Loader-only API (queued until SDK loads): <code>trackEvent</code>, <code>trackPageView</code>, <code>trackException</code>, <code>trackTrace</code>, <code>trackDependencyData</code>, <code>trackMetric</code>, <code>trackPageViewPerformance</code>, <code>startTrackPage</code>, <code>stopTrackPage</code>, <code>startTrackEvent</code>, <code>stopTrackEvent</code>, <code>addTelemetryInitializer</code>, <code>setAuthenticatedUserContext</code>, <code>clearAuthenticatedUserContext</code>, <code>flush</code>.</p>
+<h4>Core Tracking APIs</h4>
+<p><pre><code>// Page views (SPAs that disable enableAutoRouteTracking)
+appInsights.trackPageView({ name: &quot;Checkout&quot;, uri: &quot;/checkout&quot;, properties: { cartSize: 3 } });
+
+// Custom events (user actions, business events)
+appInsights.trackEvent({ name: &quot;PurchaseCompleted&quot; }, { orderId: &quot;ord_123&quot;, amountUsd: 49.95 });
+
+// Exceptions (caught errors)
+try {
+  await pay(order);
+} catch (err) {
+  appInsights.trackException({ exception: err as Error, severityLevel: 3, properties: { orderId: order.id } });
+}
+
+// Traces (logs, severity 0=Verbose, 1=Info, 2=Warning, 3=Error, 4=Critical)
+appInsights.trackTrace({ message: &quot;Cart hydrated from local storage&quot;, severityLevel: 1 });
+
+// Custom metrics (numeric)
+appInsights.trackMetric({ name: &quot;checkout.duration_ms&quot;, average: 1234 });
+
+// Dependencies (manually-tracked outbound calls — fetch/XHR are auto-tracked)
+appInsights.trackDependencyData({
+  id: crypto.randomUUID(),
+  name: &quot;GET /api/orders&quot;,
+  duration: 87, success: true, responseCode: 200,
+  data: &quot;https://api.example.com/api/orders&quot;, target: &quot;api.example.com&quot;, type: &quot;Fetch&quot;
+});
+
+// User identity (set ONCE per authenticated session — values are PII; do not pass emails)
+appInsights.setAuthenticatedUserContext(&quot;user-id-123&quot;, &quot;tenant-456&quot;, /*storeInCookie*/ true);
+appInsights.clearAuthenticatedUserContext(); // on logout
+
+// Force send before unload
+appInsights.flush();</code></pre></p>
+<h4>Telemetry Initializers (enrichment &amp; filtering)</h4>
+<p>Run for every envelope before send. Return <code>false</code> to drop.</p>
+<p><pre><code>import type { ITelemetryItem } from &quot;@microsoft/applicationinsights-web&quot;;
+
+appInsights.addTelemetryInitializer((item: ITelemetryItem) =&gt; {
+  item.tags ??= {};
+  item.tags[&quot;ai.cloud.role&quot;] = &quot;web-shop&quot;;
+  item.tags[&quot;ai.cloud.roleInstance&quot;] = window.location.hostname;
+  item.data ??= {};
+  item.data[&quot;app.version&quot;] = import.meta.env.VITE_APP_VERSION;
+  item.data[&quot;app.build&quot;] = import.meta.env.VITE_BUILD_SHA;
+
+  // Drop noisy health-check page views
+  if (item.baseType === &quot;PageviewData&quot; &amp;&amp; item.baseData?.uri?.endsWith(&quot;/healthz&quot;)) return false;
+
+  // Scrub query-string secrets
+  if (item.baseData?.uri) {
+    item.baseData.uri = item.baseData.uri.replace(/([?&amp;](token|sig|key)=)[^&amp;]+/gi, &quot;$1REDACTED&quot;);
+  }
+});</code></pre></p>
+<h4>Click Analytics</h4>
+<p><pre><code>import { ClickAnalyticsPlugin } from &quot;@microsoft/applicationinsights-clickanalytics-js&quot;;
+
+const clickPlugin = new ClickAnalyticsPlugin();
+const appInsights = new ApplicationInsights({
+  config: {
+    connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING,
+    extensions: [clickPlugin],
+    extensionConfig: {
+      [clickPlugin.identifier]: {
+        autoCapture: true,
+        dataTags: { useDefaultContentNameOrId: true, customDataPrefix: &quot;data-ai-&quot; },
+        urlCollectHash: false,
+        behaviorValidator: (b: string) =&gt; /^[a-z0-9_]+$/.test(b) ? b : &quot;&quot;
+      }
+    }
+  }
+});
+appInsights.loadAppInsights();</code></pre></p>
+<p>Mark elements with <code>data-ai-*</code> attributes; clicks are emitted as Custom Events with parent-content metadata.</p>
+<h4>SPA Route Tracking</h4>
+<ul>
+<li><strong>Built-in:</strong> set <code>enableAutoRouteTracking: true</code>. Hooks <code>history.pushState/replaceState</code> and <code>popstate</code>.</li>
+<li><strong>React Router:</strong> use <code>@microsoft/applicationinsights-react-js</code> <code>withAITracking</code> HOC (see [references/framework-extensions.md](references/framework-extensions.md)).</li>
+<li><strong>Manual:</strong> call <code>appInsights.trackPageView({ name, uri })</code> in your router&#39;s <code>useEffect</code> on route change. Disable <code>enableAutoRouteTracking</code> to avoid double counting.</li>
+</ul>
+<h4>Distributed Tracing (correlate to backend)</h4>
+<p>Set <code>distributedTracingMode: 2</code> (<code>DistributedTracingModes.AI_AND_W3C</code>). The SDK adds <code>traceparent</code> (and legacy <code>Request-Id</code>) to outbound <code>fetch</code>/<code>XHR</code>. Backends instrumented with <strong>OpenTelemetry</strong> (e.g. <code>@azure/monitor-opentelemetry</code>) auto-link to the browser&#39;s operation_Id.</p>
+<p>For cross-origin calls, also set <code>enableCorsCorrelation: true</code> and add the calling origin to the <strong>CORS exposed headers</strong> on the API.</p>
+<h4>GenAI Agent Traces (OTel semantic conventions)</h4>
+<p>When the browser invokes an AI agent (function-calling, tool-use, model calls direct from the client), emit App Insights <strong>Dependency</strong> telemetry whose attributes follow the OpenTelemetry <strong>GenAI semantic conventions</strong> so they are queryable alongside backend agent spans in App Insights / Log Analytics.</p>
+<p><strong>Set the opt-in env first</strong> so backend instrumentations agree on the same schema version:</p>
+<p><pre><code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code></pre></p>
+<h5>Required attribute keys (use the OTel names verbatim)</h5>
+<table><thead><tr><th>Span / op</th><th>Required attributes</th></tr></thead><tbody>
+<tr><td><code>invoke_agent {agent.name}</code></td><td><code>gen_ai.operation.name=invoke_agent</code>, <code>gen_ai.provider.name</code>, <code>gen_ai.agent.name</code>, <code>gen_ai.agent.id</code> (when known)</td></tr>
+<tr><td><code>create_agent {agent.name}</code></td><td><code>gen_ai.operation.name=create_agent</code>, <code>gen_ai.provider.name</code>, <code>gen_ai.agent.name</code>, <code>gen_ai.request.model</code></td></tr>
+<tr><td><code>chat {model}</code></td><td><code>gen_ai.operation.name=chat</code>, <code>gen_ai.provider.name</code>, <code>gen_ai.request.model</code>, <code>gen_ai.response.model</code>, <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.usage.output_tokens</code></td></tr>
+<tr><td><code>execute_tool {tool.name}</code></td><td><code>gen_ai.operation.name=execute_tool</code>, <code>gen_ai.tool.name</code>, <code>gen_ai.tool.type</code> (<code>function</code> \</td><td><code>extension</code> \</td><td><code>datastore</code>), <code>gen_ai.tool.call.id</code></td></tr>
+</tbody></table>
+<p><code>gen_ai.provider.name</code> well-known values: <code>openai</code>, <code>azure.ai.openai</code>, <code>azure.ai.inference</code>, <code>anthropic</code>, <code>aws.bedrock</code>, <code>gcp.gemini</code>, <code>gcp.vertex_ai</code>, <code>cohere</code>, <code>mistral_ai</code>, <code>groq</code>, <code>deepseek</code>, <code>perplexity</code>, <code>x_ai</code>, <code>ibm.watsonx.ai</code>.</p>
+<p>&gt; <strong>Sensitive content opt-in.</strong> <code>gen_ai.system_instructions</code>, <code>gen_ai.input.messages</code>, <code>gen_ai.output.messages</code>, <code>gen_ai.tool.call.arguments</code>, <code>gen_ai.tool.call.result</code> are <strong>Opt-In</strong> by default. Gate them behind a runtime flag and avoid them in production unless you have approved data handling.</p>
+<h5>Pattern: invoke_agent + nested tool/model spans</h5>
+<p><pre><code>import { ApplicationInsights, SeverityLevel } from &quot;@microsoft/applicationinsights-web&quot;;
+
+type GenAiAttrs = Record&lt;string, string | number | boolean | undefined&gt;;
+
+function startGenAiSpan(name: string, attrs: GenAiAttrs) {
+  const id = crypto.randomUUID();
+  const start = performance.now();
+  const baseProps: GenAiAttrs = { &quot;gen_ai.span.id&quot;: id, ...attrs };
+  return {
+    end(success: boolean, extra: GenAiAttrs = {}, error?: Error) {
+      const duration = Math.round(performance.now() - start);
+      const properties = { ...baseProps, ...extra };
+      appInsights.trackDependencyData({
+        id, name, duration, success,
+        responseCode: error ? 500 : 200,
+        type: &quot;GenAI&quot;,
+        target: String(attrs[&quot;gen_ai.provider.name&quot;] ?? &quot;genai&quot;),
+        properties: properties as Record&lt;string, string&gt;
+      });
+      if (error) {
+        appInsights.trackException({
+          exception: error,
+          severityLevel: SeverityLevel.Error,
+          properties: { ...properties, &quot;error.type&quot;: error.name } as Record&lt;string, string&gt;
+        });
+      }
+    }
+  };
+}
+
+// Agent invocation
+const agentSpan = startGenAiSpan(&quot;invoke_agent ResearchAssistant&quot;, {
+  &quot;gen_ai.operation.name&quot;: &quot;invoke_agent&quot;,
+  &quot;gen_ai.provider.name&quot;: &quot;azure.ai.openai&quot;,
+  &quot;gen_ai.agent.name&quot;: &quot;ResearchAssistant&quot;,
+  &quot;gen_ai.agent.id&quot;: &quot;asst_5j66UpCpwteGg4YSxUnt7lPY&quot;,
+  &quot;gen_ai.request.model&quot;: &quot;gpt-4o-mini&quot;,
+  &quot;server.address&quot;: &quot;myresource.openai.azure.com&quot;
+});
+
+try {
+  // Nested chat completion span
+  const chat = startGenAiSpan(&quot;chat gpt-4o-mini&quot;, {
+    &quot;gen_ai.operation.name&quot;: &quot;chat&quot;,
+    &quot;gen_ai.provider.name&quot;: &quot;azure.ai.openai&quot;,
+    &quot;gen_ai.request.model&quot;: &quot;gpt-4o-mini&quot;
+  });
+  const res = await callAzureOpenAi(/* ... */);
+  chat.end(true, {
+    &quot;gen_ai.response.model&quot;: res.model,
+    &quot;gen_ai.response.id&quot;: res.id,
+    &quot;gen_ai.response.finish_reasons&quot;: JSON.stringify(res.choices.map(c =&gt; c.finish_reason)),
+    &quot;gen_ai.usage.input_tokens&quot;: res.usage.prompt_tokens,
+    &quot;gen_ai.usage.output_tokens&quot;: res.usage.completion_tokens,
+    &quot;gen_ai.output.type&quot;: &quot;text&quot;
+  });
+
+  // Nested tool execution span
+  const tool = startGenAiSpan(&quot;execute_tool getWeather&quot;, {
+    &quot;gen_ai.operation.name&quot;: &quot;execute_tool&quot;,
+    &quot;gen_ai.tool.name&quot;: &quot;getWeather&quot;,
+    &quot;gen_ai.tool.type&quot;: &quot;function&quot;,
+    &quot;gen_ai.tool.call.id&quot;: &quot;call_abc123&quot;
+  });
+  const toolResult = await runGetWeather({ location: &quot;SF&quot; });
+  tool.end(true);
+
+  agentSpan.end(true, {
+    &quot;gen_ai.usage.input_tokens&quot;: res.usage.prompt_tokens,
+    &quot;gen_ai.usage.output_tokens&quot;: res.usage.completion_tokens
+  });
+} catch (err) {
+  agentSpan.end(false, { &quot;error.type&quot;: (err as Error).name }, err as Error);
+}</code></pre></p>
+<p>The browser&#39;s <code>traceparent</code> is automatically attached to outbound <code>fetch</code> (when <code>distributedTracingMode: 2</code>), so downstream Azure OpenAI / agent backend spans hang under the same operation_Id in App Insights.</p>
+<p>For the full attribute reference, well-known values, and content-capture guidance, see [references/agent-traces.md](references/agent-traces.md).</p>
+<h5>KQL: query GenAI traces in App Insights</h5>
+<p><pre><code>dependencies
+| where type == &quot;GenAI&quot;
+| extend op   = tostring(customDimensions[&quot;gen_ai.operation.name&quot;]),
+         agent = tostring(customDimensions[&quot;gen_ai.agent.name&quot;]),
+         model = tostring(customDimensions[&quot;gen_ai.request.model&quot;]),
+         tin   = toint(customDimensions[&quot;gen_ai.usage.input_tokens&quot;]),
+         tout  = toint(customDimensions[&quot;gen_ai.usage.output_tokens&quot;])
+| summarize calls=count(), p95_ms=percentile(duration, 95),
+            avg_in=avg(tin), avg_out=avg(tout) by op, agent, model, bin(timestamp, 5m)</code></pre></p>
+<h4>React (TypeScript)</h4>
+<p>See [references/framework-extensions.md](references/framework-extensions.md) for full React, React Native, Angular, Next.js, and Vite recipes.</p>
+<p><pre><code>import { ApplicationInsights } from &quot;@microsoft/applicationinsights-web&quot;;
+import { ReactPlugin, withAITracking } from &quot;@microsoft/applicationinsights-react-js&quot;;
+import { createBrowserHistory } from &quot;history&quot;;
+
+const reactPlugin = new ReactPlugin();
+const browserHistory = createBrowserHistory();
+
+export const appInsights = new ApplicationInsights({
+  config: {
+    connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING,
+    extensions: [reactPlugin],
+    extensionConfig: { [reactPlugin.identifier]: { history: browserHistory } }
+  }
+});
+appInsights.loadAppInsights();
+
+export const TrackedCheckout = withAITracking(reactPlugin, Checkout, &quot;Checkout&quot;);</code></pre></p>
+<h4>React Native</h4>
+<p><pre><code>import { ApplicationInsights } from &quot;@microsoft/applicationinsights-web&quot;;
+import { ReactNativePlugin } from &quot;@microsoft/applicationinsights-react-native&quot;;
+
+const rnPlugin = new ReactNativePlugin();
+const appInsights = new ApplicationInsights({
+  config: {
+    connectionString: process.env.EXPO_PUBLIC_APPINSIGHTS_CONNECTION_STRING,
+    extensions: [rnPlugin],
+    disableFetchTracking: false
+  }
+});
+appInsights.loadAppInsights();</code></pre></p>
+<h4>Performance — Web Vitals</h4>
+<p>Auto-collected: page-load timings via <code>PerformanceTiming</code> / <code>PerformanceNavigationTiming</code>. To add Core Web Vitals:</p>
+<p><pre><code>import { onCLS, onLCP, onINP, type Metric } from &quot;web-vitals&quot;;
+
+function send(m: Metric) {
+  appInsights.trackMetric(
+    { name: `web_vitals.${m.name.toLowerCase()}`, average: m.value },
+    { rating: m.rating, navigationType: m.navigationType, id: m.id }
+  );
+}
+onCLS(send); onLCP(send); onINP(send);</code></pre></p>
+<h4>Cookies &amp; Privacy</h4>
+<p><pre><code>new ApplicationInsights({ config: {
+  connectionString,
+  isCookieUseDisabled: true,         // hard-disable all cookies
+  cookieCfg: { enabled: true, domain: &quot;.example.com&quot;, path: &quot;/&quot;, expiry: 365 }
+}});</code></pre></p>
+<p>To honor consent dynamically:</p>
+<p><pre><code>appInsights.getCookieMgr().setEnabled(userGaveConsent);
+appInsights.config.disableTelemetry = !userGaveConsent;</code></pre></p>
+<h4>Sampling</h4>
+<p>Server-side ingestion sampling (recommended) is configured on the App Insights resource. SDK-side sampling reduces network use:</p>
+<p><pre><code>new ApplicationInsights({ config: { connectionString, samplingPercentage: 50 } });</code></pre></p>
+<p>Per-type sampling via telemetry initializer: drop with <code>return false</code> based on <code>item.baseType</code>.</p>
+<h4>Offline / Send-on-Unload</h4>
+<p>The SDK uses <code>sendBeacon</code> (default <code>onunloadDisableBeacon: false</code>) to flush on <code>pagehide</code> / <code>unload</code>. For SPAs, also call <code>appInsights.flush()</code> before destructive transitions (logout, hard reload).</p>
+<h4>Common Pitfalls</h4>
+<ol>
+<li><strong>Do not initialize twice.</strong> Re-importing the module under different bundles produces duplicate page views. Use a single shared module export.</li>
+<li><strong>Initialize before first user input</strong> to avoid losing early clicks/exceptions.</li>
+<li><strong>Connection string is public</strong> — never reuse the same App Insights resource for backend secrets.</li>
+<li><strong><code>enableAutoRouteTracking</code> + manual <code>trackPageView</code></strong> = duplicates. Pick one.</li>
+<li><strong>CORS distributed tracing</strong> requires the API to allow <code>Request-Id</code>, <code>Request-Context</code>, <code>traceparent</code>, <code>tracestate</code> request headers and expose <code>Request-Context</code> response header.</li>
+<li><strong>GenAI sensitive content</strong> (<code>gen_ai.input.messages</code> etc.) is Opt-In — never log without an explicit runtime flag and approved data handling.</li>
+<li><strong>Agent token usage is on <code>chat</code> spans, not <code>invoke_agent</code></strong> — copy aggregated usage to the parent agent span only if you know it.</li>
+<li><strong>React StrictMode</strong> double-invokes effects in dev — guard <code>loadAppInsights()</code> with a module-level singleton.</li>
+</ol>
+<h4>Bundle Size</h4>
+<p>The full web SDK is ~110 KB minified (~36 KB gzipped). For aggressive budgets, use the <strong>Loader Script</strong> path so the SDK loads asynchronously off the critical path, or tree-shake unused plugins.</p>
+<h4>Key Types</h4>
+<p><pre><code>import {
+  ApplicationInsights,
+  SeverityLevel,
+  DistributedTracingModes,
+  type IConfiguration,
+  type IConfig,
+  type ITelemetryItem,
+  type ITelemetryPlugin,
+  type ICustomProperties,
+  type IPageViewTelemetry,
+  type IEventTelemetry,
+  type IExceptionTelemetry,
+  type ITraceTelemetry,
+  type IMetricTelemetry,
+  type IDependencyTelemetry
+} from &quot;@microsoft/applicationinsights-web&quot;;</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>One singleton instance</strong> exported from a single module.</li>
+<li><strong>Initialize early</strong> in the app entrypoint, before router setup.</li>
+<li><strong>Use telemetry initializers</strong> to attach <code>app.version</code>, <code>tenantId</code>, and to scrub PII / query-string secrets.</li>
+<li><strong>Set <code>distributedTracingMode: 2</code></strong> and ensure your APIs accept/expose W3C trace context headers.</li>
+<li><strong>For GenAI</strong>, follow OTel <code>gen_ai.*</code> attribute names verbatim — they are queryable across browser and backend telemetry uniformly.</li>
+<li><strong>Gate sensitive content capture</strong> (<code>gen_ai.input.messages</code> / <code>gen_ai.output.messages</code>) behind a build-time or runtime opt-in.</li>
+<li><strong>Flush on logout / sensitive navigation</strong> so in-flight telemetry isn&#39;t dropped.</li>
+</ol>
+<h4>References</h4>
+<ul>
+<li>[references/agent-traces.md](references/agent-traces.md) — Full OTel GenAI semconv distilled (agent / model / tool spans, attributes, content capture).</li>
+<li>[references/framework-extensions.md](references/framework-extensions.md) — React, React Native, Angular, Next.js, Vite recipes.</li>
+<li>[references/configuration.md](references/configuration.md) — Full <code>IConfiguration</code> reference and tuning guide.</li>
+<li>Microsoft Learn: &lt;https://learn.microsoft.com/azure/azure-monitor/app/javascript-sdk&gt;</li>
+<li>ApplicationInsights-JS source: &lt;https://github.com/microsoft/ApplicationInsights-JS&gt;</li>
+<li>OTel GenAI semantic conventions: &lt;https://opentelemetry.io/docs/specs/semconv/gen-ai/&gt;</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-projects-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-projects-py build ai applications using the azure ai projects python sdk (azure-ai-projects). use when working with foundry project clients, creating versioned agents with promptagentdefinition, running evaluations, managing connections/deployments/datasets/indexes, or using openai-compatible clients. this is the high-level foundry sdk - for low-level agent operations, use azure-ai-agents-python skill. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-projects-py</span>
+    <span class="r-desc">Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/applicationinsights-web-ts</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/applicationinsights-web-ts" aria-label="Copy install applicationinsights-web-ts">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/applicationinsights-web-ts</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/applicationinsights-web-ts/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

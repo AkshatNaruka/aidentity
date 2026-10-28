@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-ai-vision-imageanalysis-py — Aidentity</title>
+<meta name="description" content="Azure AI Vision Image Analysis SDK for captions, tags, objects, OCR, people detection, and smart cropping. Use for computer vision and image understanding tasks. Triggers: &quot;image analysis&quot;, &quot;computer vision&quot;, &quot;OCR&quot;, &quot;object detection&quot;, &quot;ImageAnalysisClient&quot;, &quot;image caption&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-vision-imageanalysis-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-ai-vision-imageanalysis-py — Aidentity">
+<meta property="og:description" content="Azure AI Vision Image Analysis SDK for captions, tags, objects, OCR, people detection, and smart cropping. Use for computer vision and image understanding tasks. Triggers: &quot;image analysis&quot;, &quot;computer vision&quot;, &quot;OCR&quot;, &quot;object detection&quot;, &quot;ImageAnalysisClient&quot;, &quot;image caption&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-vision-imageanalysis-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-ai-vision-imageanalysis-py","description":"Azure AI Vision Image Analysis SDK for captions, tags, objects, OCR, people detection, and smart cropping. Use for computer vision and image understanding tasks. Triggers: \"image analysis\", \"computer vision\", \"OCR\", \"object detection\", \"ImageAnalysisClient\", \"image caption\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-vision-imageanalysis-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-ai-vision-imageanalysis-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-ai-vision-imageanalysis-py</h1>
+      <p class="summary">Azure AI Vision Image Analysis SDK for captions, tags, objects, OCR, people detection, and smart cropping. Use for computer vision and image understanding tasks. Triggers: &quot;image analysis&quot;, &quot;computer vision&quot;, &quot;OCR&quot;, &quot;object detection&quot;, &quot;ImageAnalysisClient&quot;, &quot;image caption&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure AI Vision Image Analysis SDK for Python</h3>
+<p>Client library for Azure AI Vision 4.0 image analysis including captions, tags, objects, OCR, and more.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-ai-vision-imageanalysis</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>VISION_ENDPOINT=https://&lt;resource&gt;.cognitiveservices.azure.com  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production
+VISION_KEY=&lt;your-api-key&gt;  # Only required for the legacy API-key auth path below</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.ai.vision.imageanalysis import ImageAnalysisClient
+from azure.ai.vision.imageanalysis.models import VisualFeatures
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with ImageAnalysisClient(
+    endpoint=os.environ[&quot;VISION_ENDPOINT&quot;],
+    credential=credential,
+) as client:
+    result = client.analyze_from_url(
+        image_url=&quot;https://aka.ms/azsdk/image-analysis/sample.jpg&quot;,
+        visual_features=[VisualFeatures.CAPTION],
+    )</code></pre></p>
+<h5>Legacy: API Key (existing keyed deployments)</h5>
+<p>New code should use <code>DefaultAzureCredential</code> above. Use <code>AzureKeyCredential</code> only if you have an existing keyed deployment that hasn&#39;t been migrated to Entra ID yet — for example, regulated environments still completing their Entra rollout.</p>
+<p><pre><code>import os
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.vision.imageanalysis import ImageAnalysisClient
+from azure.ai.vision.imageanalysis.models import VisualFeatures
+
+with ImageAnalysisClient(
+    endpoint=os.environ[&quot;VISION_ENDPOINT&quot;],
+    credential=AzureKeyCredential(os.environ[&quot;VISION_KEY&quot;]),
+) as client:
+    result = client.analyze_from_url(
+        image_url=&quot;https://aka.ms/azsdk/image-analysis/sample.jpg&quot;,
+        visual_features=[VisualFeatures.CAPTION],
+    )</code></pre></p>
+<h4>Analyze Image from URL</h4>
+<p><pre><code>from azure.ai.vision.imageanalysis.models import VisualFeatures
+
+image_url = &quot;https://example.com/image.jpg&quot;
+
+result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[
+        VisualFeatures.CAPTION,
+        VisualFeatures.TAGS,
+        VisualFeatures.OBJECTS,
+        VisualFeatures.READ,
+        VisualFeatures.PEOPLE,
+        VisualFeatures.SMART_CROPS,
+        VisualFeatures.DENSE_CAPTIONS
+    ],
+    gender_neutral_caption=True,
+    language=&quot;en&quot;
+)</code></pre></p>
+<h4>Analyze Image from File</h4>
+<p><pre><code>with open(&quot;image.jpg&quot;, &quot;rb&quot;) as f:
+    image_data = f.read()
+
+result = client.analyze(
+    image_data=image_data,
+    visual_features=[VisualFeatures.CAPTION, VisualFeatures.TAGS]
+)</code></pre></p>
+<h4>Image Caption</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.CAPTION],
+    gender_neutral_caption=True
+)
+
+if result.caption:
+    print(f&quot;Caption: {result.caption.text}&quot;)
+    print(f&quot;Confidence: {result.caption.confidence:.2f}&quot;)</code></pre></p>
+<h4>Dense Captions (Multiple Regions)</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.DENSE_CAPTIONS]
+)
+
+if result.dense_captions:
+    for caption in result.dense_captions.list:
+        print(f&quot;Caption: {caption.text}&quot;)
+        print(f&quot;  Confidence: {caption.confidence:.2f}&quot;)
+        print(f&quot;  Bounding box: {caption.bounding_box}&quot;)</code></pre></p>
+<h4>Tags</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.TAGS]
+)
+
+if result.tags:
+    for tag in result.tags.list:
+        print(f&quot;Tag: {tag.name} (confidence: {tag.confidence:.2f})&quot;)</code></pre></p>
+<h4>Object Detection</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.OBJECTS]
+)
+
+if result.objects:
+    for obj in result.objects.list:
+        print(f&quot;Object: {obj.tags[0].name}&quot;)
+        print(f&quot;  Confidence: {obj.tags[0].confidence:.2f}&quot;)
+        box = obj.bounding_box
+        print(f&quot;  Bounding box: x={box.x}, y={box.y}, w={box.width}, h={box.height}&quot;)</code></pre></p>
+<h4>OCR (Text Extraction)</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.READ]
+)
+
+if result.read:
+    for block in result.read.blocks:
+        for line in block.lines:
+            print(f&quot;Line: {line.text}&quot;)
+            print(f&quot;  Bounding polygon: {line.bounding_polygon}&quot;)
+            
+            # Word-level details
+            for word in line.words:
+                print(f&quot;  Word: {word.text} (confidence: {word.confidence:.2f})&quot;)</code></pre></p>
+<h4>People Detection</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.PEOPLE]
+)
+
+if result.people:
+    for person in result.people.list:
+        print(f&quot;Person detected:&quot;)
+        print(f&quot;  Confidence: {person.confidence:.2f}&quot;)
+        box = person.bounding_box
+        print(f&quot;  Bounding box: x={box.x}, y={box.y}, w={box.width}, h={box.height}&quot;)</code></pre></p>
+<h4>Smart Cropping</h4>
+<p><pre><code>result = client.analyze_from_url(
+    image_url=image_url,
+    visual_features=[VisualFeatures.SMART_CROPS],
+    smart_crops_aspect_ratios=[0.9, 1.33, 1.78]  # Portrait, 4:3, 16:9
+)
+
+if result.smart_crops:
+    for crop in result.smart_crops.list:
+        print(f&quot;Aspect ratio: {crop.aspect_ratio}&quot;)
+        box = crop.bounding_box
+        print(f&quot;  Crop region: x={box.x}, y={box.y}, w={box.width}, h={box.height}&quot;)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.ai.vision.imageanalysis.aio import ImageAnalysisClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def analyze_image():
+    async with DefaultAzureCredential() as credential:
+        async with ImageAnalysisClient(
+            endpoint=endpoint,
+            credential=credential
+        ) as client:
+            result = await client.analyze_from_url(
+                image_url=image_url,
+                visual_features=[VisualFeatures.CAPTION]
+            )
+            print(result.caption.text)</code></pre></p>
+<h4>Visual Features</h4>
+<table><thead><tr><th>Feature</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>CAPTION</code></td><td>Single sentence describing the image</td></tr>
+<tr><td><code>DENSE_CAPTIONS</code></td><td>Captions for multiple regions</td></tr>
+<tr><td><code>TAGS</code></td><td>Content tags (objects, scenes, actions)</td></tr>
+<tr><td><code>OBJECTS</code></td><td>Object detection with bounding boxes</td></tr>
+<tr><td><code>READ</code></td><td>OCR text extraction</td></tr>
+<tr><td><code>PEOPLE</code></td><td>People detection with bounding boxes</td></tr>
+<tr><td><code>SMART_CROPS</code></td><td>Suggested crop regions for thumbnails</td></tr>
+</tbody></table>
+<h4>Error Handling</h4>
+<p><pre><code>from azure.core.exceptions import HttpResponseError
+
+try:
+    result = client.analyze_from_url(
+        image_url=image_url,
+        visual_features=[VisualFeatures.CAPTION]
+    )
+except HttpResponseError as e:
+    print(f&quot;Status code: {e.status_code}&quot;)
+    print(f&quot;Reason: {e.reason}&quot;)
+    print(f&quot;Message: {e.error.message}&quot;)</code></pre></p>
+<h4>Image Requirements</h4>
+<ul>
+<li>Formats: JPEG, PNG, GIF, BMP, WEBP, ICO, TIFF, MPO</li>
+<li>Max size: 20 MB</li>
+<li>Dimensions: 50x50 to 16000x16000 pixels</li>
+</ul>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.ai.vision.imageanalysis</code> sync clients with <code>azure.ai.vision.imageanalysis.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with ImageAnalysisClient(...) as client:</code> (sync) or <code>async with ImageAnalysisClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Select only needed features</strong> to optimize latency and cost</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+<li><strong>Handle HttpResponseError</strong> for invalid images or auth issues</li>
+<li><strong>Enable gender_neutral_caption</strong> for inclusive descriptions</li>
+<li><strong>Specify language</strong> for localized captions</li>
+<li><strong>Use smart_crops_aspect_ratios</strong> matching your thumbnail requirements</li>
+<li><strong>Cache results</strong> when analyzing the same image multiple times</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-ai-vision-imageanalysis-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-ai-vision-imageanalysis-py" aria-label="Copy install azure-ai-vision-imageanalysis-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-ai-vision-imageanalysis-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-ai-vision-imageanalysis-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

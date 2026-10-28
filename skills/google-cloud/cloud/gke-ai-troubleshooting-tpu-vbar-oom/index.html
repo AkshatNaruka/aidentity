@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-ai-troubleshooting-tpu-vbar-oom — Aidentity</title>
+<meta name="description" content="Diagnoses and prevents vbar_control_agent segfaults, out-of-memory (OOM) errors, and TPU device initialization failures on TPU v6e nodes in GKE caused by race conditions during TPU device resets or high-frequency metrics polling. Use when troubleshooting vbar_control_agent crashes, memory cgroup OOMs in serial console logs, tpu-device-plugin metrics checksum corruption errors, or custom TPU metrics collection conflicts on GKE TPU v6e nodes. Don&#39;t use for general non-TPU container OOM troubleshooting or standard GKE node lifecycle operations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-ai-troubleshooting-tpu-vbar-oom — Aidentity">
+<meta property="og:description" content="Diagnoses and prevents vbar_control_agent segfaults, out-of-memory (OOM) errors, and TPU device initialization failures on TPU v6e nodes in GKE caused by race conditions during TPU device resets or high-frequency metrics polling. Use when troubleshooting vbar_control_agent crashes, memory cgroup OOMs in serial console logs, tpu-device-plugin metrics checksum corruption errors, or custom TPU metrics collection conflicts on GKE TPU v6e nodes. Don&#39;t use for general non-TPU container OOM troubleshooting or standard GKE node lifecycle operations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-ai-troubleshooting-tpu-vbar-oom","description":"Diagnoses and prevents vbar_control_agent segfaults, out-of-memory (OOM) errors, and TPU device initialization failures on TPU v6e nodes in GKE caused by race conditions during TPU device resets or high-frequency metrics polling. Use when troubleshooting vbar_control_agent crashes, memory cgroup OOMs in serial console logs, tpu-device-plugin metrics checksum corruption errors, or custom TPU metrics collection conflicts on GKE TPU v6e nodes. Don't use for general non-TPU container OOM troubleshooting or standard GKE node lifecycle operations.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-ai-troubleshooting-tpu-vbar-oom
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-ai-troubleshooting-tpu-vbar-oom</h1>
+      <p class="summary">Diagnoses and prevents vbar_control_agent segfaults, out-of-memory (OOM) errors, and TPU device initialization failures on TPU v6e nodes in GKE caused by race conditions during TPU device resets or high-frequency metrics polling. Use when troubleshooting vbar_control_agent crashes, memory cgroup OOMs in serial console logs, tpu-device-plugin metrics checksum corruption errors, or custom TPU metrics collection conflicts on GKE TPU v6e nodes. Don&#39;t use for general non-TPU container OOM troubleshooting or standard GKE node lifecycle operations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>TPU Connection Failure and VBAR OOM Troubleshooting</h3>
+<p>Use this skill to systematically diagnose and prevent <code>vbar_control_agent</code></p>
+<p>segfaults and Out-Of-Memory (OOM) errors on TPU v6e nodes.</p>
+<h4>⚠️ Prerequisites</h4>
+<ul>
+<li>Cloud Logging must be enabled for the project.</li>
+<li>Access to the project and cluster via <code>gcloud</code> or equivalent tool.</li>
+</ul>
+<h4>🔍 Diagnostic Workflow</h4>
+<h5>Step 0: Context Acquisition &amp; Time Window Definition</h5>
+<p>Independently gather required context using available GCP/GKE tools or use the</p>
+<p>provided <code>{variable}</code> placeholders:</p>
+<ul>
+<li><code>{project_id}</code>: The GCP Project ID (e.g., <code>customer-ai-project-123</code>).</li>
+<li><code>{cluster_name}</code>: The GKE Cluster Name (e.g., <code>tpu-cluster-prod</code>).</li>
+<li><code>{node_name}</code>: The Node Name or Instance ID (e.g., <code>tpu-node-1</code>).</li>
+<li><code>{workload_name}</code>: The Workload Name / JobSet Name (e.g.,</li>
+</ul>
+<p>    <code>my-training-job-456</code>).</p>
+<ul>
+<li><code>{namespace}</code>: The Workload Namespace.</li>
+<li><code>{issue_time}</code>: The timestamp of the issue (e.g., <code>2026-04-14T20:00:00Z</code>).</li>
+</ul>
+<h5>Time Handling &amp; Execution Rules</h5>
+<ol>
+<li><strong>Window Calculation</strong>: If an issue timestamp <code>{issue_time}</code> is provided,</li>
+</ol>
+<p>    calculate the query time window as <code>[{issue_time} - 30m]</code> to</p>
+<p>    <code>[{issue_time} + 30m]</code>.</p>
+<ul>
+<li>Let <code>{start_time}</code> = <code>{issue_time} - 30m</code></li>
+<li>Let <code>{end_time}</code> = <code>{issue_time} + 30m</code></li>
+</ul>
+<ol>
+<li><strong>Informational vs. Live Execution</strong>: If the user request is informational</li>
+</ol>
+<p>    or query-formulation (e.g. &quot;How can I check...&quot;, &quot;How do I determine...&quot;),</p>
+<p>    or if live GCP project resources are not actively targetable, directly</p>
+<p>    output the calculated time window, log names, and Cloud Logging filter</p>
+<p>    templates without attempting live log execution commands.</p>
+<h5>Step 1: Check for <code>vbar_control_agent</code> OOMs</h5>
+<p>Look for specific <code>out of memory</code> messages from <code>vbar_control_agent</code> in serial</p>
+<p>console logs (<code>serialconsole.googleapis.com%2fserial_port_1_output</code>).</p>
+<ul>
+<li><strong>Tool to use</strong>: <code>query_logs</code> (for live diagnostics)</li>
+<li><strong>Filter Templates</strong>:</li>
+</ul>
+<p><strong>Serial Console Logs (OOMs):</strong></p>
+<p><pre><code>logName=&quot;projects/{project_id}/logs/serialconsole.googleapis.com%2fserial_port_1_output&quot;
+AND labels.&quot;compute.googleapis.com/resource_name&quot;=&quot;{node_name}&quot;
+AND SEARCH(text_payload, &quot;Memory cgroup out of memory: Killed process .* (vbar_control_ag)&quot;)
+AND timestamp &gt;= &quot;{start_time}&quot;
+AND timestamp &lt;= &quot;{end_time}&quot;</code></pre></p>
+<ul>
+<li><strong>Logic</strong>: Presence of <code>Memory cgroup out of memory</code> messages related to</li>
+</ul>
+<p>    <code>vbar_control_agent</code>. Stack traces pointing to</p>
+<p>    <code>libtpu::tpunetd::VBARControlHelper::MetricsReadFromVBAR</code> are a strong</p>
+<p>    indicator.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to next step automatically after reporting findings.</li>
+<li><strong>Reference</strong>: See <code>references/failure_signatures.md</code> for example log</li>
+</ul>
+<p>    patterns.</p>
+<h5>Step 2: Investigate <code>tpu-device-plugin</code> Metrics Fetch Failures [Low Risk]</h5>
+<p>Check if <code>tpu-device-plugin</code> is reporting metric fetch failures.</p>
+<ul>
+<li><strong>Tool to use</strong>: <code>query_logs</code></li>
+<li><strong>Filter Template</strong>:</li>
+</ul>
+<p><pre><code>resource.type=&quot;k8s_container&quot;
+AND resource.labels.project_id=&quot;{project_id}&quot;
+AND resource.labels.cluster_name=&quot;{cluster_name}&quot;
+AND resource.labels.container_name=&quot;tpu-device-plugin&quot;
+AND severity=ERROR
+AND textPayload:&quot;metrics fetch failed for .* deviceID and .* device path with error: checksum didn&#39;t match with the metrics data. Corrupt data found&quot;
+AND timestamp &gt;= &quot;{start_time}&quot;
+AND timestamp &lt;= &quot;{end_time}&quot;</code></pre></p>
+<ul>
+<li><strong>Logic</strong>: Errors indicating &quot;metrics fetch failed&quot; with &quot;checksum didn&#39;t</li>
+</ul>
+<p>    match&quot; suggest vBAR memory corruption.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to next step automatically after reporting findings.</li>
+</ul>
+<h5>Step 3: Check for Custom Metrics Collection Usage [Low Risk]</h5>
+<p>Inspect cluster configurations, workloads, or container specs to determine if</p>
+<p>custom TPU metrics collection mechanisms are deployed.</p>
+<ul>
+<li><strong>Action</strong>: Check if custom scripts or agents (e.g., using</li>
+</ul>
+<p>    <code>libtpu.sdk.tpumonitoring</code>) are deployed that frequently query</p>
+<p>    <code>GetHostMetrics</code> from <code>vBAR Control Agent</code>.</p>
+<ul>
+<li><strong>Verification Commands</strong>:</li>
+</ul>
+<ul>
+<li><strong>Kubectl Search (Inspect workload env/specs)</strong>:</li>
+</ul>
+<p>    <pre><code>    kubectl get pods -A -o jsonpath=&#39;{range .items[*]}{.metadata.namespace}{&quot;/&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.containers[*].image}{&quot;\n&quot;}{end}&#39;
+    </code></pre></p>
+<ul>
+<li><strong>Log Search Filter (<code>query_logs</code>)</strong>:</li>
+</ul>
+<p>    <pre><code>    resource.type=&quot;k8s_container&quot;
+    AND resource.labels.project_id=&quot;{project_id}&quot;
+    AND resource.labels.cluster_name=&quot;{cluster_name}&quot;
+    AND textPayload:&quot;libtpu.sdk.tpumonitoring&quot;
+    AND timestamp &gt;= &quot;{start_time}&quot;
+    AND timestamp &lt;= &quot;{end_time}&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Logic</strong>: Confirmation of custom metrics collection helps confirm the race</li>
+</ul>
+<p>    condition hypothesis.</p>
+<h4>🛠️ Resolution Workflow</h4>
+<h5>Resolution 1: Temporarily Disable Custom Metrics Collection [High Risk]</h5>
+<p>If a custom metrics collection agent is identified, recommend disabling it.</p>
+<ul>
+<li><strong>Action</strong>: Recommend disabling the custom metrics collector.</li>
+<li><strong>Justification</strong>: Prevents reads from vBAR during device resets, stopping</li>
+</ul>
+<p>    crashes and OOMs.</p>
+<h5>Resolution 2: Await <code>vbar_control_agent</code> Resiliency Update [Low Risk]</h5>
+<p>Advise that a permanent fix will be available in a future GKE version.</p>
+<ul>
+<li><strong>Action</strong>: Recommend upgrading GKE when the fix is available.</li>
+<li><strong>Justification</strong>: The updated agent will be resilient to memory corruption</li>
+</ul>
+<p>    and gracefully handle reads from unbound vBARs.</p>
+<h4>📋 copypaste checklist</h4>
+<ul>
+<li>[ ] Acquire context and compute <code>[{start_time}, {end_time}]</code> window.</li>
+<li>[ ] Check for <code>vbar_control_agent</code> segfaults and OOMs using <code>query_logs</code>.</li>
+<li>[ ] Investigate <code>tpu-device-plugin</code> failures using <code>query_logs</code>.</li>
+<li>[ ] Inspect for custom metrics collection usage.</li>
+<li>[ ] Advise disabling custom metrics collection if applicable.</li>
+<li>[ ] Advise awaiting resiliency update.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom" aria-label="Copy install gke-ai-troubleshooting-tpu-vbar-oom">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-ai-troubleshooting-tpu-vbar-oom/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

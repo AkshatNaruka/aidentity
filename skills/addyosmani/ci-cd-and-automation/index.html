@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ci-cd-and-automation — Aidentity</title>
+<meta name="description" content="Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/ci-cd-and-automation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ci-cd-and-automation — Aidentity">
+<meta property="og:description" content="Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/ci-cd-and-automation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"ci-cd-and-automation","description":"Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/ci-cd-and-automation/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=devops">devops</a><span>/</span>ci-cd-and-automation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>ci-cd-and-automation</h1>
+      <p class="summary">Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=devops">devops</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>CI/CD and Automation</h3>
+<h4>Overview</h4>
+<p>Automate quality gates so that no change reaches production without passing tests, lint, type checking, and build. CI/CD is the enforcement mechanism for every other skill — it catches what humans and agents miss, and it does so consistently on every single change.</p>
+<p><strong>Shift Left:</strong> Catch problems as early in the pipeline as possible. A bug caught in linting costs minutes; the same bug caught in production costs hours. Move checks upstream — static analysis before tests, tests before staging, staging before production.</p>
+<p><strong>Faster is Safer:</strong> Smaller batches and more frequent releases reduce risk, not increase it. A deployment with 3 changes is easier to debug than one with 30. Frequent releases build confidence in the release process itself.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Setting up a new project&#39;s CI pipeline</li>
+<li>Adding or modifying automated checks</li>
+<li>Configuring deployment pipelines</li>
+<li>When a change should trigger automated verification</li>
+<li>Debugging CI failures</li>
+</ul>
+<h4>The Quality Gate Pipeline</h4>
+<p>Every change goes through these gates before merge:</p>
+<p><pre><code>Pull Request Opened
+    │
+    ▼
+┌─────────────────┐
+│   LINT CHECK     │  eslint, prettier
+│   ↓ pass         │
+│   TYPE CHECK     │  tsc --noEmit
+│   ↓ pass         │
+│   UNIT TESTS     │  jest/vitest
+│   ↓ pass         │
+│   BUILD          │  npm run build
+│   ↓ pass         │
+│   INTEGRATION    │  API/DB tests
+│   ↓ pass         │
+│   E2E (optional) │  Playwright/Cypress
+│   ↓ pass         │
+│   SECURITY AUDIT │  npm audit
+│   ↓ pass         │
+│   BUNDLE SIZE    │  bundlesize check
+└─────────────────┘
+    │
+    ▼
+  Ready for review</code></pre></p>
+<p><strong>No gate can be skipped.</strong> If lint fails, fix lint — don&#39;t disable the rule. If a test fails, fix the code — don&#39;t skip the test.</p>
+<h4>GitHub Actions Configuration</h4>
+<h5>Basic CI Pipeline</h5>
+<p><pre><code># .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: &#39;22&#39;
+          cache: &#39;npm&#39;
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: npm test -- --coverage
+
+      - name: Build
+        run: npm run build
+
+      - name: Security audit
+        run: npm audit --audit-level=high</code></pre></p>
+<h5>With Database Integration Tests</h5>
+<p><pre><code>  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: &gt;-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: &#39;22&#39;
+          cache: &#39;npm&#39;
+      - run: npm ci
+      - name: Run migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://ci_user:${{ secrets.CI_DB_PASSWORD }}@localhost:5432/testdb
+      - name: Integration tests
+        run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://ci_user:${{ secrets.CI_DB_PASSWORD }}@localhost:5432/testdb</code></pre></p>
+<p>&gt; <strong>Note:</strong> Even for CI-only test databases, use GitHub Secrets for credentials rather than hardcoding values. This builds good habits and prevents accidental reuse of test credentials in other contexts.</p>
+<h5>E2E Tests</h5>
+<p><pre><code>  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: &#39;22&#39;
+          cache: &#39;npm&#39;
+      - run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Build
+        run: npm run build
+      - name: Run E2E tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/</code></pre></p>
+<h4>Feeding CI Failures Back to Agents</h4>
+<p>The power of CI with AI agents is the feedback loop. When CI fails:</p>
+<p><pre><code>CI fails
+    │
+    ▼
+Copy the failure output
+    │
+    ▼
+Feed it to the agent:
+&quot;The CI pipeline failed with this error:
+[paste specific error]
+Fix the issue and verify locally before pushing again.&quot;
+    │
+    ▼
+Agent fixes → pushes → CI runs again</code></pre></p>
+<p><strong>Key patterns:</strong></p>
+<p><pre><code>Lint failure → Agent runs `npm run lint --fix` and commits
+Type error  → Agent reads the error location and fixes the type
+Test failure → Agent follows debugging-and-error-recovery skill
+Build error → Agent checks config and dependencies</code></pre></p>
+<h4>Deployment Strategies</h4>
+<h5>Preview Deployments</h5>
+<p>Every PR gets a preview deployment for manual testing:</p>
+<p><pre><code># Deploy preview on PR (Vercel/Netlify/etc.)
+deploy-preview:
+  runs-on: ubuntu-latest
+  if: github.event_name == &#39;pull_request&#39;
+  steps:
+    - uses: actions/checkout@v4
+    - name: Deploy preview
+      run: npx vercel --token=${{ secrets.VERCEL_TOKEN }}</code></pre></p>
+<h5>Feature Flags</h5>
+<p>Feature flags decouple deployment from release. Deploy incomplete or risky features behind flags so you can:</p>
+<ul>
+<li><strong>Ship code without enabling it.</strong> Merge to main early, enable when ready.</li>
+<li><strong>Roll back without redeploying.</strong> Disable the flag instead of reverting code.</li>
+<li><strong>Canary new features.</strong> Enable for 1% of users, then 10%, then 100%.</li>
+<li><strong>Run A/B tests.</strong> Compare behavior with and without the feature.</li>
+</ul>
+<p><pre><code>// Simple feature flag pattern
+if (featureFlags.isEnabled(&#39;new-checkout-flow&#39;, { userId })) {
+  return renderNewCheckout();
+}
+return renderLegacyCheckout();</code></pre></p>
+<p><strong>Flag lifecycle:</strong> Create → Enable for testing → Canary → Full rollout → Remove the flag and dead code. Flags that live forever become technical debt — set a cleanup date when you create them.</p>
+<h5>Staged Rollouts</h5>
+<p><pre><code>PR merged to main
+    │
+    ▼
+  Staging deployment (auto)
+    │ Manual verification
+    ▼
+  Production deployment (manual trigger or auto after staging)
+    │
+    ▼
+  Monitor for errors (15-minute window)
+    │
+    ├── Errors detected → Rollback
+    └── Clean → Done</code></pre></p>
+<h5>Rollback Plan</h5>
+<p>Every deployment should be reversible:</p>
+<p><pre><code># Manual rollback workflow
+name: Rollback
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: &#39;Version to rollback to&#39;
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rollback deployment
+        run: |
+          # Deploy the specified previous version
+          npx vercel rollback ${{ inputs.version }}</code></pre></p>
+<h4>Environment Management</h4>
+<p><pre><code>.env.example       → Committed (template for developers)
+.env                → NOT committed (local development)
+.env.test           → Committed (test environment, no real secrets)
+CI secrets          → Stored in GitHub Secrets / vault
+Production secrets  → Stored in deployment platform / vault</code></pre></p>
+<p>CI should never have production secrets. Use separate secrets for CI testing.</p>
+<h4>Automation Beyond CI</h4>
+<h5>Dependabot / Renovate</h5>
+<p><pre><code># .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5</code></pre></p>
+<h5>Build Cop Role</h5>
+<p>Designate someone responsible for keeping CI green. When the build breaks, the Build Cop&#39;s job is to fix or revert — not the person whose change caused the break. This prevents broken builds from accumulating while everyone assumes someone else will fix it.</p>
+<h5>PR Checks</h5>
+<ul>
+<li><strong>Required reviews:</strong> At least 1 approval before merge</li>
+<li><strong>Required status checks:</strong> CI must pass before merge</li>
+<li><strong>Branch protection:</strong> No force-pushes to main</li>
+<li><strong>Auto-merge:</strong> If all checks pass and approved, merge automatically</li>
+</ul>
+<h4>CI Optimization</h4>
+<p>When the pipeline exceeds 10 minutes, apply these strategies in order of impact:</p>
+<p><pre><code>Slow CI pipeline?
+├── Cache dependencies
+│   └── Use actions/cache or setup-node cache option for node_modules
+├── Run jobs in parallel
+│   └── Split lint, typecheck, test, build into separate parallel jobs
+├── Only run what changed
+│   └── Use path filters to skip unrelated jobs (e.g., skip e2e for docs-only PRs)
+├── Use matrix builds
+│   └── Shard test suites across multiple runners
+├── Optimize the test suite
+│   └── Remove slow tests from the critical path, run them on a schedule instead
+└── Use larger runners
+    └── GitHub-hosted larger runners or self-hosted for CPU-heavy builds</code></pre></p>
+<p><strong>Example: caching and parallelism</strong></p>
+<p><pre><code>jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: &#39;22&#39;, cache: &#39;npm&#39; }
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: &#39;22&#39;, cache: &#39;npm&#39; }
+      - run: npm ci
+      - run: npx tsc --noEmit
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: &#39;22&#39;, cache: &#39;npm&#39; }
+      - run: npm ci
+      - run: npm test -- --coverage</code></pre></p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;CI is too slow&quot;</td><td>Optimize the pipeline (see CI Optimization below), don&#39;t skip it. A 5-minute pipeline prevents hours of debugging.</td></tr>
+<tr><td>&quot;This change is trivial, skip CI&quot;</td><td>Trivial changes break builds. CI is fast for trivial changes anyway.</td></tr>
+<tr><td>&quot;The test is flaky, just re-run&quot;</td><td>Flaky tests mask real bugs and waste everyone&#39;s time. Fix the flakiness.</td></tr>
+<tr><td>&quot;We&#39;ll add CI later&quot;</td><td>Projects without CI accumulate broken states. Set it up on day one.</td></tr>
+<tr><td>&quot;Manual testing is enough&quot;</td><td>Manual testing doesn&#39;t scale and isn&#39;t repeatable. Automate what you can.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>No CI pipeline in the project</li>
+<li>CI failures ignored or silenced</li>
+<li>Tests disabled in CI to make the pipeline pass</li>
+<li>Production deploys without staging verification</li>
+<li>No rollback mechanism</li>
+<li>Secrets stored in code or CI config files (not secrets manager)</li>
+<li>Long CI times with no optimization effort</li>
+</ul>
+<h4>Verification</h4>
+<p>After setting up or modifying CI:</p>
+<ul>
+<li>[ ] All quality gates are present (lint, types, tests, build, audit)</li>
+<li>[ ] Pipeline runs on every PR and push to main</li>
+<li>[ ] Failures block merge (branch protection configured)</li>
+<li>[ ] CI results feed back into the development loop</li>
+<li>[ ] Secrets are stored in the secrets manager, not in code</li>
+<li>[ ] Deployment has a rollback mechanism</li>
+<li>[ ] Pipeline runs in under 10 minutes for the test suite</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/observability-and-instrumentation/index.html"
+     data-source="addyosmani"
+     data-category="devops"
+     data-search="observability-and-instrumentation instruments code so production behavior is visible and diagnosable. use when adding logging, metrics, tracing, or alerting. use when shipping any feature that runs in production and you need evidence it works. use when production issues are reported but you can&#39;t tell what happened from the available data. devops devops addyosmani/agent-skills">
+  <span>
+    <span class="r-name">observability-and-instrumentation</span>
+    <span class="r-desc">Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can&#39;t tell what happened from the available data.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/ci-cd-and-automation</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/ci-cd-and-automation" aria-label="Copy install ci-cd-and-automation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>devops</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/ci-cd-and-automation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/ci-cd-and-automation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-cosmos-py — Aidentity</title>
+<meta name="description" content="Azure Cosmos DB SDK for Python (NoSQL API). Use for document CRUD, queries, containers, and globally distributed data. Triggers: &quot;cosmos db&quot;, &quot;CosmosClient&quot;, &quot;container&quot;, &quot;document&quot;, &quot;NoSQL&quot;, &quot;partition key&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-cosmos-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-cosmos-py — Aidentity">
+<meta property="og:description" content="Azure Cosmos DB SDK for Python (NoSQL API). Use for document CRUD, queries, containers, and globally distributed data. Triggers: &quot;cosmos db&quot;, &quot;CosmosClient&quot;, &quot;container&quot;, &quot;document&quot;, &quot;NoSQL&quot;, &quot;partition key&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-cosmos-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-cosmos-py","description":"Azure Cosmos DB SDK for Python (NoSQL API). Use for document CRUD, queries, containers, and globally distributed data. Triggers: \"cosmos db\", \"CosmosClient\", \"container\", \"document\", \"NoSQL\", \"partition key\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-cosmos-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-cosmos-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-cosmos-py</h1>
+      <p class="summary">Azure Cosmos DB SDK for Python (NoSQL API). Use for document CRUD, queries, containers, and globally distributed data. Triggers: &quot;cosmos db&quot;, &quot;CosmosClient&quot;, &quot;container&quot;, &quot;document&quot;, &quot;NoSQL&quot;, &quot;partition key&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Cosmos DB SDK for Python</h3>
+<p>Client library for Azure Cosmos DB NoSQL API — globally distributed, multi-model database.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-cosmos azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>COSMOS_ENDPOINT=https://&lt;account&gt;.documents.azure.com:443/  # Required for all auth methods
+COSMOS_DATABASE=mydb  # Required for all auth methods
+COSMOS_CONTAINER=mycontainer  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.cosmos import CosmosClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+endpoint = &quot;https://&lt;account&gt;.documents.azure.com:443/&quot;
+
+with CosmosClient(url=endpoint, credential=credential) as client:
+    # Use client here (see following sections for operations)
+    ...</code></pre></p>
+<h4>Client Hierarchy</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th><th>Get From</th></tr></thead><tbody>
+<tr><td><code>CosmosClient</code></td><td>Account-level operations</td><td>Direct instantiation</td></tr>
+<tr><td><code>DatabaseProxy</code></td><td>Database operations</td><td><code>client.get_database_client()</code></td></tr>
+<tr><td><code>ContainerProxy</code></td><td>Container/item operations</td><td><code>database.get_container_client()</code></td></tr>
+</tbody></table>
+<h4>Core Workflow</h4>
+<h5>Setup Database and Container</h5>
+<p><pre><code># Get or create database
+database = client.create_database_if_not_exists(id=&quot;mydb&quot;)
+
+# Get or create container with partition key
+container = database.create_container_if_not_exists(
+    id=&quot;mycontainer&quot;,
+    partition_key=PartitionKey(path=&quot;/category&quot;)
+)
+
+# Get existing
+database = client.get_database_client(&quot;mydb&quot;)
+container = database.get_container_client(&quot;mycontainer&quot;)</code></pre></p>
+<h5>Create Item</h5>
+<p><pre><code>item = {
+    &quot;id&quot;: &quot;item-001&quot;,           # Required: unique within partition
+    &quot;category&quot;: &quot;electronics&quot;,   # Partition key value
+    &quot;name&quot;: &quot;Laptop&quot;,
+    &quot;price&quot;: 999.99,
+    &quot;tags&quot;: [&quot;computer&quot;, &quot;portable&quot;]
+}
+
+created = container.create_item(body=item)
+print(f&quot;Created: {created[&#39;id&#39;]}&quot;)</code></pre></p>
+<h5>Read Item</h5>
+<p><pre><code># Read requires id AND partition key
+item = container.read_item(
+    item=&quot;item-001&quot;,
+    partition_key=&quot;electronics&quot;
+)
+print(f&quot;Name: {item[&#39;name&#39;]}&quot;)</code></pre></p>
+<h5>Update Item (Replace)</h5>
+<p><pre><code>item = container.read_item(item=&quot;item-001&quot;, partition_key=&quot;electronics&quot;)
+item[&quot;price&quot;] = 899.99
+item[&quot;on_sale&quot;] = True
+
+updated = container.replace_item(item=item[&quot;id&quot;], body=item)</code></pre></p>
+<h5>Upsert Item</h5>
+<p><pre><code># Create if not exists, replace if exists
+item = {
+    &quot;id&quot;: &quot;item-002&quot;,
+    &quot;category&quot;: &quot;electronics&quot;,
+    &quot;name&quot;: &quot;Tablet&quot;,
+    &quot;price&quot;: 499.99
+}
+
+result = container.upsert_item(body=item)</code></pre></p>
+<h5>Delete Item</h5>
+<p><pre><code>container.delete_item(
+    item=&quot;item-001&quot;,
+    partition_key=&quot;electronics&quot;
+)</code></pre></p>
+<h4>Queries</h4>
+<h5>Basic Query</h5>
+<p><pre><code># Query within a partition (efficient)
+query = &quot;SELECT * FROM c WHERE c.price &lt; @max_price&quot;
+items = container.query_items(
+    query=query,
+    parameters=[{&quot;name&quot;: &quot;@max_price&quot;, &quot;value&quot;: 500}],
+    partition_key=&quot;electronics&quot;
+)
+
+for item in items:
+    print(f&quot;{item[&#39;name&#39;]}: ${item[&#39;price&#39;]}&quot;)</code></pre></p>
+<h5>Cross-Partition Query</h5>
+<p><pre><code># Cross-partition (more expensive, use sparingly)
+query = &quot;SELECT * FROM c WHERE c.price &lt; @max_price&quot;
+items = container.query_items(
+    query=query,
+    parameters=[{&quot;name&quot;: &quot;@max_price&quot;, &quot;value&quot;: 500}],
+    enable_cross_partition_query=True
+)
+
+for item in items:
+    print(item)</code></pre></p>
+<h5>Query with Projection</h5>
+<p><pre><code>query = &quot;SELECT c.id, c.name, c.price FROM c WHERE c.category = @category&quot;
+items = container.query_items(
+    query=query,
+    parameters=[{&quot;name&quot;: &quot;@category&quot;, &quot;value&quot;: &quot;electronics&quot;}],
+    partition_key=&quot;electronics&quot;
+)</code></pre></p>
+<h5>Read All Items</h5>
+<p><pre><code># Read all in a partition
+items = container.read_all_items()  # Cross-partition
+# Or with partition key
+items = container.query_items(
+    query=&quot;SELECT * FROM c&quot;,
+    partition_key=&quot;electronics&quot;
+)</code></pre></p>
+<h4>Partition Keys</h4>
+<p><strong>Critical</strong>: Always include partition key for efficient operations.</p>
+<p><pre><code>from azure.cosmos import PartitionKey
+
+# Single partition key
+container = database.create_container_if_not_exists(
+    id=&quot;orders&quot;,
+    partition_key=PartitionKey(path=&quot;/customer_id&quot;)
+)
+
+# Hierarchical partition key (preview)
+container = database.create_container_if_not_exists(
+    id=&quot;events&quot;,
+    partition_key=PartitionKey(path=[&quot;/tenant_id&quot;, &quot;/user_id&quot;])
+)</code></pre></p>
+<h4>Throughput</h4>
+<p><pre><code># Create container with provisioned throughput
+container = database.create_container_if_not_exists(
+    id=&quot;mycontainer&quot;,
+    partition_key=PartitionKey(path=&quot;/pk&quot;),
+    offer_throughput=400  # RU/s
+)
+
+# Read current throughput
+offer = container.read_offer()
+print(f&quot;Throughput: {offer.offer_throughput} RU/s&quot;)
+
+# Update throughput
+container.replace_throughput(throughput=1000)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.cosmos.aio import CosmosClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def cosmos_operations():
+    async with DefaultAzureCredential() as credential:
+        async with CosmosClient(endpoint, credential=credential) as client:
+            database = client.get_database_client(&quot;mydb&quot;)
+            container = database.get_container_client(&quot;mycontainer&quot;)
+            
+            # Create
+            await container.create_item(body={&quot;id&quot;: &quot;1&quot;, &quot;pk&quot;: &quot;test&quot;})
+            
+            # Read
+            item = await container.read_item(item=&quot;1&quot;, partition_key=&quot;test&quot;)
+            
+            # Query
+            async for item in container.query_items(
+                query=&quot;SELECT * FROM c&quot;,
+                partition_key=&quot;test&quot;
+            ):
+                print(item)
+
+import asyncio
+asyncio.run(cosmos_operations())</code></pre></p>
+<h4>Error Handling</h4>
+<p><pre><code>from azure.cosmos.exceptions import CosmosHttpResponseError
+
+try:
+    item = container.read_item(item=&quot;nonexistent&quot;, partition_key=&quot;pk&quot;)
+except CosmosHttpResponseError as e:
+    if e.status_code == 404:
+        print(&quot;Item not found&quot;)
+    elif e.status_code == 429:
+        print(f&quot;Rate limited. Retry after: {e.headers.get(&#39;x-ms-retry-after-ms&#39;)}ms&quot;)
+    else:
+        raise</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.cosmos</code> sync clients with <code>azure.cosmos.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with CosmosClient(...) as client:</code> (sync) or <code>async with CosmosClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / API keys when possible).</li>
+<li><strong>Always specify partition key</strong> for point reads and queries</li>
+<li><strong>Use parameterized queries</strong> to prevent injection and improve caching</li>
+<li><strong>Avoid cross-partition queries</strong> when possible</li>
+<li><strong>Use <code>upsert_item</code></strong> for idempotent writes</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+<li><strong>Design partition key</strong> for even data distribution</li>
+<li><strong>Use <code>read_item</code></strong> instead of query for single document retrieval</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/partitioning.md](references/partitioning.md)</td><td>Partition key strategies, hierarchical keys, hot partition detection and mitigation</td></tr>
+<tr><td>[references/query-patterns.md](references/query-patterns.md)</td><td>Query optimization, aggregations, pagination, transactions, change feed</td></tr>
+<tr><td>[scripts/setup_cosmos_container.py](scripts/setup_cosmos_container.py)</td><td>CLI tool for creating containers with partitioning, throughput, and indexing</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-cosmos-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-cosmos-py" aria-label="Copy install azure-cosmos-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-cosmos-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-cosmos-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

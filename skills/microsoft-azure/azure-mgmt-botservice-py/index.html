@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-mgmt-botservice-py — Aidentity</title>
+<meta name="description" content="Azure Bot Service Management SDK for Python. Use for creating, managing, and configuring Azure Bot Service resources. Triggers: &quot;azure-mgmt-botservice&quot;, &quot;AzureBotService&quot;, &quot;bot management&quot;, &quot;conversational AI&quot;, &quot;bot channels&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-botservice-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-mgmt-botservice-py — Aidentity">
+<meta property="og:description" content="Azure Bot Service Management SDK for Python. Use for creating, managing, and configuring Azure Bot Service resources. Triggers: &quot;azure-mgmt-botservice&quot;, &quot;AzureBotService&quot;, &quot;bot management&quot;, &quot;conversational AI&quot;, &quot;bot channels&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-botservice-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-mgmt-botservice-py","description":"Azure Bot Service Management SDK for Python. Use for creating, managing, and configuring Azure Bot Service resources. Triggers: \"azure-mgmt-botservice\", \"AzureBotService\", \"bot management\", \"conversational AI\", \"bot channels\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-mgmt-botservice-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-mgmt-botservice-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-mgmt-botservice-py</h1>
+      <p class="summary">Azure Bot Service Management SDK for Python. Use for creating, managing, and configuring Azure Bot Service resources. Triggers: &quot;azure-mgmt-botservice&quot;, &quot;AzureBotService&quot;, &quot;bot management&quot;, &quot;conversational AI&quot;, &quot;bot channels&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Bot Service Management SDK for Python</h3>
+<p>Manage Azure Bot Service resources including bots, channels, and connections.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-mgmt-botservice
+pip install azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SUBSCRIPTION_ID=&lt;your-subscription-id&gt;  # Required for all auth methods
+AZURE_RESOURCE_GROUP=&lt;your-resource-group&gt;  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.mgmt.botservice import AzureBotService
+import os
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with AzureBotService(
+    credential=credential,
+    subscription_id=os.environ[&quot;AZURE_SUBSCRIPTION_ID&quot;]
+) as client:
+    # Use `client` for all subsequent operations (see examples below)
+    ...</code></pre></p>
+<h4>Create a Bot</h4>
+<p><pre><code>from azure.mgmt.botservice import AzureBotService
+from azure.mgmt.botservice.models import Bot, BotProperties, Sku
+from azure.identity import DefaultAzureCredential
+import os
+
+resource_group = os.environ[&quot;AZURE_RESOURCE_GROUP&quot;]
+bot_name = &quot;my-chat-bot&quot;
+
+credential = DefaultAzureCredential()
+with AzureBotService(
+    credential=credential,
+    subscription_id=os.environ[&quot;AZURE_SUBSCRIPTION_ID&quot;]
+) as client:
+    bot = client.bots.create(
+        resource_group_name=resource_group,
+        resource_name=bot_name,
+        parameters=Bot(
+            location=&quot;global&quot;,
+            sku=Sku(name=&quot;F0&quot;),  # Free tier
+            kind=&quot;azurebot&quot;,
+            properties=BotProperties(
+                display_name=&quot;My Chat Bot&quot;,
+                description=&quot;A conversational AI bot&quot;,
+                endpoint=&quot;https://my-bot-app.azurewebsites.net/api/messages&quot;,
+                msa_app_id=&quot;&lt;your-app-id&gt;&quot;,
+                msa_app_type=&quot;MultiTenant&quot;
+            )
+        )
+    )
+
+print(f&quot;Bot created: {bot.name}&quot;)</code></pre></p>
+<h4>Get Bot Details</h4>
+<p><pre><code>bot = client.bots.get(
+    resource_group_name=resource_group,
+    resource_name=bot_name
+)
+
+print(f&quot;Bot: {bot.properties.display_name}&quot;)
+print(f&quot;Endpoint: {bot.properties.endpoint}&quot;)
+print(f&quot;SKU: {bot.sku.name}&quot;)</code></pre></p>
+<h4>List Bots in Resource Group</h4>
+<p><pre><code>bots = client.bots.list_by_resource_group(resource_group_name=resource_group)
+
+for bot in bots:
+    print(f&quot;Bot: {bot.name} - {bot.properties.display_name}&quot;)</code></pre></p>
+<h4>List All Bots in Subscription</h4>
+<p><pre><code>all_bots = client.bots.list()
+
+for bot in all_bots:
+    print(f&quot;Bot: {bot.name} in {bot.id.split(&#39;/&#39;)[4]}&quot;)</code></pre></p>
+<h4>Update Bot</h4>
+<p><pre><code>bot = client.bots.update(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    properties=BotProperties(
+        display_name=&quot;Updated Bot Name&quot;,
+        description=&quot;Updated description&quot;
+    )
+)</code></pre></p>
+<h4>Delete Bot</h4>
+<p><pre><code>client.bots.delete(
+    resource_group_name=resource_group,
+    resource_name=bot_name
+)</code></pre></p>
+<h4>Configure Channels</h4>
+<h5>Add Teams Channel</h5>
+<p><pre><code>from azure.mgmt.botservice.models import (
+    BotChannel,
+    MsTeamsChannel,
+    MsTeamsChannelProperties
+)
+
+channel = client.channels.create(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    channel_name=&quot;MsTeamsChannel&quot;,
+    parameters=BotChannel(
+        location=&quot;global&quot;,
+        properties=MsTeamsChannel(
+            properties=MsTeamsChannelProperties(
+                is_enabled=True
+            )
+        )
+    )
+)</code></pre></p>
+<h5>Add Direct Line Channel</h5>
+<p><pre><code>from azure.mgmt.botservice.models import (
+    BotChannel,
+    DirectLineChannel,
+    DirectLineChannelProperties,
+    DirectLineSite
+)
+
+channel = client.channels.create(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    channel_name=&quot;DirectLineChannel&quot;,
+    parameters=BotChannel(
+        location=&quot;global&quot;,
+        properties=DirectLineChannel(
+            properties=DirectLineChannelProperties(
+                sites=[
+                    DirectLineSite(
+                        site_name=&quot;Default Site&quot;,
+                        is_enabled=True,
+                        is_v1_enabled=False,
+                        is_v3_enabled=True
+                    )
+                ]
+            )
+        )
+    )
+)</code></pre></p>
+<h5>Add Web Chat Channel</h5>
+<p><pre><code>from azure.mgmt.botservice.models import (
+    BotChannel,
+    WebChatChannel,
+    WebChatChannelProperties,
+    WebChatSite
+)
+
+channel = client.channels.create(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    channel_name=&quot;WebChatChannel&quot;,
+    parameters=BotChannel(
+        location=&quot;global&quot;,
+        properties=WebChatChannel(
+            properties=WebChatChannelProperties(
+                sites=[
+                    WebChatSite(
+                        site_name=&quot;Default Site&quot;,
+                        is_enabled=True
+                    )
+                ]
+            )
+        )
+    )
+)</code></pre></p>
+<h4>Get Channel Details</h4>
+<p><pre><code>channel = client.channels.get(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    channel_name=&quot;DirectLineChannel&quot;
+)</code></pre></p>
+<h4>List Channel Keys</h4>
+<p><pre><code>keys = client.channels.list_with_keys(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    channel_name=&quot;DirectLineChannel&quot;
+)
+
+# Access Direct Line keys
+if hasattr(keys.properties, &#39;properties&#39;):
+    for site in keys.properties.properties.sites:
+        print(f&quot;Site: {site.site_name}&quot;)
+        print(f&quot;Key: {site.key}&quot;)</code></pre></p>
+<h4>Bot Connections (OAuth)</h4>
+<h5>Create Connection Setting</h5>
+<p><pre><code>from azure.mgmt.botservice.models import (
+    ConnectionSetting,
+    ConnectionSettingProperties
+)
+
+connection = client.bot_connection.create(
+    resource_group_name=resource_group,
+    resource_name=bot_name,
+    connection_name=&quot;graph-connection&quot;,
+    parameters=ConnectionSetting(
+        location=&quot;global&quot;,
+        properties=ConnectionSettingProperties(
+            client_id=&quot;&lt;oauth-client-id&gt;&quot;,
+            client_secret=&quot;&lt;oauth-client-secret&gt;&quot;,
+            scopes=&quot;User.Read&quot;,
+            service_provider_id=&quot;&lt;service-provider-id&gt;&quot;
+        )
+    )
+)</code></pre></p>
+<h5>List Connections</h5>
+<p><pre><code>connections = client.bot_connection.list_by_bot_service(
+    resource_group_name=resource_group,
+    resource_name=bot_name
+)
+
+for conn in connections:
+    print(f&quot;Connection: {conn.name}&quot;)</code></pre></p>
+<h4>Client Operations</h4>
+<table><thead><tr><th>Operation</th><th>Method</th></tr></thead><tbody>
+<tr><td><code>client.bots</code></td><td>Bot CRUD operations</td></tr>
+<tr><td><code>client.channels</code></td><td>Channel configuration</td></tr>
+<tr><td><code>client.bot_connection</code></td><td>OAuth connection settings</td></tr>
+<tr><td><code>client.direct_line</code></td><td>Direct Line channel operations</td></tr>
+<tr><td><code>client.email</code></td><td>Email channel operations</td></tr>
+<tr><td><code>client.operations</code></td><td>Available operations</td></tr>
+<tr><td><code>client.host_settings</code></td><td>Host settings operations</td></tr>
+</tbody></table>
+<h4>SKU Options</h4>
+<table><thead><tr><th>SKU</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>F0</code></td><td>Free tier (limited messages)</td></tr>
+<tr><td><code>S1</code></td><td>Standard tier (unlimited messages)</td></tr>
+</tbody></table>
+<h4>Channel Types</h4>
+<table><thead><tr><th>Channel</th><th>Class</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>MsTeamsChannel</code></td><td>Microsoft Teams</td><td>Teams integration</td></tr>
+<tr><td><code>DirectLineChannel</code></td><td>Direct Line</td><td>Custom client integration</td></tr>
+<tr><td><code>WebChatChannel</code></td><td>Web Chat</td><td>Embeddable web widget</td></tr>
+<tr><td><code>SlackChannel</code></td><td>Slack</td><td>Slack workspace integration</td></tr>
+<tr><td><code>FacebookChannel</code></td><td>Facebook</td><td>Messenger integration</td></tr>
+<tr><td><code>EmailChannel</code></td><td>Email</td><td>Email communication</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for code that runs locally. Use a specific token credential for code that runs in Azure.</li>
+<li><strong>Start with F0 SKU</strong> for development, upgrade to S1 for production</li>
+<li><strong>Store MSA App ID/Secret securely</strong> — use Key Vault</li>
+<li><strong>Enable only needed channels</strong> — reduces attack surface</li>
+<li><strong>Rotate Direct Line keys</strong> periodically</li>
+<li><strong>Use managed identity</strong> when possible for bot connections</li>
+<li><strong>Configure proper CORS</strong> for Web Chat channel</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-mgmt-botservice-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-mgmt-botservice-py" aria-label="Copy install azure-mgmt-botservice-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-mgmt-botservice-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-mgmt-botservice-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

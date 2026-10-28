@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>incremental-implementation — Aidentity</title>
+<meta name="description" content="Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/incremental-implementation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="incremental-implementation — Aidentity">
+<meta property="og:description" content="Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/incremental-implementation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"incremental-implementation","description":"Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you're about to write a large amount of code at once, or when a task feels too big to land in one step.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/incremental-implementation/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>incremental-implementation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>incremental-implementation</h1>
+      <p class="summary">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Incremental Implementation</h3>
+<h4>Overview</h4>
+<p>Build in thin vertical slices — implement one piece, test it, verify it, then expand. Avoid implementing an entire feature in one pass. Each increment should leave the system in a working, testable state. This is the execution discipline that makes large features manageable.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Implementing any multi-file change</li>
+<li>Building a new feature from a task breakdown</li>
+<li>Refactoring existing code</li>
+<li>Any time you&#39;re tempted to write more than ~100 lines before testing</li>
+</ul>
+<p><strong>When NOT to use:</strong> Single-file, single-function changes where the scope is already minimal.</p>
+<h4>The Increment Cycle</h4>
+<p><pre><code>┌──────────────────────────────────────┐
+│                                      │
+│   Implement ──→ Test ──→ Verify ──┐  │
+│       ▲                           │  │
+│       └───── Commit ◄─────────────┘  │
+│              │                       │
+│              ▼                       │
+│          Next slice                  │
+│                                      │
+└──────────────────────────────────────┘</code></pre></p>
+<p>For each slice:</p>
+<ol>
+<li><strong>Implement</strong> the smallest complete piece of functionality</li>
+<li><strong>Test</strong> — run the test suite (or write a test if none exists)</li>
+<li><strong>Verify</strong> — confirm the slice works as expected (tests pass, build succeeds, manual check)</li>
+<li><strong>Commit</strong> -- save your progress with a descriptive message (see <code>git-workflow-and-versioning</code> for atomic commit guidance)</li>
+<li><strong>Move to the next slice</strong> — carry forward, don&#39;t restart</li>
+</ol>
+<h4>Slicing Strategies</h4>
+<h5>Vertical Slices (Preferred)</h5>
+<p>Build one complete path through the stack:</p>
+<p><pre><code>Slice 1: Create a task (DB + API + basic UI)
+    → Tests pass, user can create a task via the UI
+
+Slice 2: List tasks (query + API + UI)
+    → Tests pass, user can see their tasks
+
+Slice 3: Edit a task (update + API + UI)
+    → Tests pass, user can modify tasks
+
+Slice 4: Delete a task (delete + API + UI + confirmation)
+    → Tests pass, full CRUD complete</code></pre></p>
+<p>Each slice delivers working end-to-end functionality.</p>
+<h5>Contract-First Slicing</h5>
+<p>When backend and frontend need to develop in parallel:</p>
+<p><pre><code>Slice 0: Define the API contract (types, interfaces, OpenAPI spec)
+Slice 1a: Implement backend against the contract + API tests
+Slice 1b: Implement frontend against mock data matching the contract
+Slice 2: Integrate and test end-to-end</code></pre></p>
+<h5>Risk-First Slicing</h5>
+<p>Tackle the riskiest or most uncertain piece first:</p>
+<p><pre><code>Slice 1: Prove the WebSocket connection works (highest risk)
+Slice 2: Build real-time task updates on the proven connection
+Slice 3: Add offline support and reconnection</code></pre></p>
+<p>If Slice 1 fails, you discover it before investing in Slices 2 and 3.</p>
+<h4>Implementation Rules</h4>
+<h5>Rule 0: Simplicity First</h5>
+<p>Before writing any code, ask: &quot;What is the simplest thing that could work?&quot;</p>
+<p>After writing code, review it against these checks:</p>
+<ul>
+<li>Can this be done in fewer lines?</li>
+<li>Are these abstractions earning their complexity?</li>
+<li>Would a staff engineer look at this and say &quot;why didn&#39;t you just...&quot;?</li>
+<li>Am I building for hypothetical future requirements, or the current task?</li>
+</ul>
+<p><pre><code>SIMPLICITY CHECK:
+✗ Generic EventBus with middleware pipeline for one notification
+✓ Simple function call
+
+✗ Abstract factory pattern for two similar components
+✓ Two straightforward components with shared utilities
+
+✗ Config-driven form builder for three forms
+✓ Three form components</code></pre></p>
+<p>Three similar lines of code is better than a premature abstraction. Implement the naive, obviously-correct version first. Optimize only after correctness is proven with tests.</p>
+<h5>Rule 0.5: Scope Discipline</h5>
+<p>Touch only what the task requires.</p>
+<p>Do NOT:</p>
+<ul>
+<li>&quot;Clean up&quot; code adjacent to your change</li>
+<li>Refactor imports in files you&#39;re not modifying</li>
+<li>Remove comments you don&#39;t fully understand</li>
+<li>Add features not in the spec because they &quot;seem useful&quot;</li>
+<li>Modernize syntax in files you&#39;re only reading</li>
+</ul>
+<p>If you notice something worth improving outside your task scope, note it — don&#39;t fix it:</p>
+<p><pre><code>NOTICED BUT NOT TOUCHING:
+- src/utils/format.ts has an unused import (unrelated to this task)
+- The auth middleware could use better error messages (separate task)
+→ Want me to create tasks for these?</code></pre></p>
+<h5>Rule 1: One Thing at a Time</h5>
+<p>Each increment changes one logical thing. Don&#39;t mix concerns:</p>
+<p><strong>Bad:</strong> One commit that adds a new component, refactors an existing one, and updates the build config.</p>
+<p><strong>Good:</strong> Three separate commits — one for each change.</p>
+<h5>Rule 2: Keep It Compilable</h5>
+<p>After each increment, the project must build and existing tests must pass. Don&#39;t leave the codebase in a broken state between slices.</p>
+<h5>Rule 3: Feature Flags for Incomplete Features</h5>
+<p>If a feature isn&#39;t ready for users but you need to merge increments:</p>
+<p><pre><code>// Feature flag for work-in-progress
+const ENABLE_TASK_SHARING = process.env.FEATURE_TASK_SHARING === &#39;true&#39;;
+
+if (ENABLE_TASK_SHARING) {
+  // New sharing UI
+}</code></pre></p>
+<p>This lets you merge small increments to the main branch without exposing incomplete work.</p>
+<h5>Rule 4: Safe Defaults</h5>
+<p>New code should default to safe, conservative behavior:</p>
+<p><pre><code>// Safe: disabled by default, opt-in
+export function createTask(data: TaskInput, options?: { notify?: boolean }) {
+  const shouldNotify = options?.notify ?? false;
+  // ...
+}</code></pre></p>
+<h5>Rule 5: Rollback-Friendly</h5>
+<p>Each increment should be independently revertable:</p>
+<ul>
+<li>Additive changes (new files, new functions) are easy to revert</li>
+<li>Modifications to existing code should be minimal and focused</li>
+<li>Database migrations should have corresponding rollback migrations</li>
+<li>Avoid deleting something in one commit and replacing it in the same commit — separate them</li>
+</ul>
+<h4>Working with Agents</h4>
+<p>When directing an agent to implement incrementally:</p>
+<p><pre><code>&quot;Let&#39;s implement Task 3 from the plan.
+
+Start with just the database schema change and the API endpoint.
+Don&#39;t touch the UI yet — we&#39;ll do that in the next increment.
+
+After implementing, run the repository&#39;s test and build commands to
+verify nothing is broken.&quot;</code></pre></p>
+<p>Be explicit about what&#39;s in scope and what&#39;s NOT in scope for each increment.</p>
+<h4>Increment Checklist</h4>
+<p>After each increment, verify with the repository&#39;s own commands (see the test-driven-development skill&#39;s Discover the Stack First section):</p>
+<ul>
+<li>[ ] The change does one thing and does it completely</li>
+<li>[ ] All existing tests still pass (the repository&#39;s test command: <code>npm test</code>, <code>./gradlew test</code>, <code>pytest</code>, ...)</li>
+<li>[ ] The build succeeds (the repository&#39;s build command)</li>
+<li>[ ] Type checking passes, where the stack has one (<code>npx tsc --noEmit</code>, <code>mypy</code>, ...)</li>
+<li>[ ] Linting passes (the repository&#39;s lint command)</li>
+<li>[ ] The new functionality works as expected</li>
+<li>[ ] The change is committed with a descriptive message</li>
+</ul>
+<p><strong>Note:</strong> Run each verification command after a change that could affect it. After a successful run, don&#39;t repeat the same command unless the code has changed since — re-running on unchanged code adds no information.</p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;ll test it all at the end&quot;</td><td>Bugs compound. A bug in Slice 1 makes Slices 2-5 wrong. Test each slice.</td></tr>
+<tr><td>&quot;It&#39;s faster to do it all at once&quot;</td><td>It <em>feels</em> faster until something breaks and you can&#39;t find which of 500 changed lines caused it.</td></tr>
+<tr><td>&quot;These changes are too small to commit separately&quot;</td><td>Small commits are free. Large commits hide bugs and make rollbacks painful.</td></tr>
+<tr><td>&quot;I&#39;ll add the feature flag later&quot;</td><td>If the feature isn&#39;t complete, it shouldn&#39;t be user-visible. Add the flag now.</td></tr>
+<tr><td>&quot;This refactor is small enough to include&quot;</td><td>Refactors mixed with features make both harder to review and debug. Separate them.</td></tr>
+<tr><td>&quot;Let me run the build command again just to be sure&quot;</td><td>After a successful run, repeating the same command adds nothing unless the code has changed since. Run it again after subsequent edits, not as reassurance.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>More than 100 lines of code written without running tests</li>
+<li>Multiple unrelated changes in a single increment</li>
+<li>&quot;Let me just quickly add this too&quot; scope expansion</li>
+<li>Skipping the test/verify step to move faster</li>
+<li>Build or tests broken between increments</li>
+<li>Large uncommitted changes accumulating</li>
+<li>Building abstractions before the third use case demands it</li>
+<li>Touching files outside the task scope &quot;while I&#39;m here&quot;</li>
+<li>Creating new utility files for one-time operations</li>
+<li>Running the same build/test command twice in a row without any intervening code change</li>
+</ul>
+<h4>Verification</h4>
+<p>After completing all increments for a task:</p>
+<ul>
+<li>[ ] Each increment was individually tested and committed</li>
+<li>[ ] The full test suite passes</li>
+<li>[ ] The build is clean</li>
+<li>[ ] The feature works end-to-end as specified</li>
+<li>[ ] No uncommitted changes remain</li>
+</ul>
+<h4>See Also</h4>
+<p>Per-increment verification is the local check. Before declaring a task done, apply the project-wide Definition of Done as the final gate, the standing bar every increment clears regardless of the task. See <code>../../references/definition-of-done.md</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/incremental-implementation</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/incremental-implementation" aria-label="Copy install incremental-implementation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/incremental-implementation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/incremental-implementation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

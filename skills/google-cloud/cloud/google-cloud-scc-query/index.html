@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-scc-query — Aidentity</title>
+<meta name="description" content="Queries and retrieves active security findings, external exposures, toxic combinations, vulnerabilities, threats, and sensitive data risks from Google Cloud Security Command Center. Use when retrieving details for a security finding by its name, validating finding scope (e.g., verifying findingClass is TOXIC_COMBINATION, VULNERABILITY, EXTERNAL_EXPOSURE, or THREAT), or fetching finding details for triage. Don&#39;t use to draft remediations, apply patches, or execute configurations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-scc-query/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-scc-query — Aidentity">
+<meta property="og:description" content="Queries and retrieves active security findings, external exposures, toxic combinations, vulnerabilities, threats, and sensitive data risks from Google Cloud Security Command Center. Use when retrieving details for a security finding by its name, validating finding scope (e.g., verifying findingClass is TOXIC_COMBINATION, VULNERABILITY, EXTERNAL_EXPOSURE, or THREAT), or fetching finding details for triage. Don&#39;t use to draft remediations, apply patches, or execute configurations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-scc-query/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-scc-query","description":"Queries and retrieves active security findings, external exposures, toxic combinations, vulnerabilities, threats, and sensitive data risks from Google Cloud Security Command Center. Use when retrieving details for a security finding by its name, validating finding scope (e.g., verifying findingClass is TOXIC_COMBINATION, VULNERABILITY, EXTERNAL_EXPOSURE, or THREAT), or fetching finding details for triage. Don't use to draft remediations, apply patches, or execute configurations.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-scc-query/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-scc-query
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-scc-query</h1>
+      <p class="summary">Queries and retrieves active security findings, external exposures, toxic combinations, vulnerabilities, threats, and sensitive data risks from Google Cloud Security Command Center. Use when retrieving details for a security finding by its name, validating finding scope (e.g., verifying findingClass is TOXIC_COMBINATION, VULNERABILITY, EXTERNAL_EXPOSURE, or THREAT), or fetching finding details for triage. Don&#39;t use to draft remediations, apply patches, or execute configurations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Security Command Center Query Skill</h3>
+<p>Provides guidelines and read-only <code>gcloud</code> CLI command patterns for querying and</p>
+<p>retrieving security findings, external exposures, toxic combinations,</p>
+<p>vulnerabilities, threats, and sensitive data risks from Google Cloud Security</p>
+<p>Command Center.</p>
+<p>&gt; [!IMPORTANT] There is NO <code>gcloud scc findings describe</code> command (`Invalid</p>
+<p>&gt; choice: &#39;describe&#39;`). To retrieve details for a specific finding by its name,</p>
+<p>&gt; always use <code>gcloud scc findings list</code> with a filter on <code>name</code>.</p>
+<hr>
+<h4>Core Execution Rules</h4>
+<ol>
+<li><strong>Read-Only &amp; Zero-Speculation (Parent Scope Required)</strong>: Keep all</li>
+</ol>
+<p>    executions strictly read-only. Every <code>gcloud scc findings list</code> or <code>group</code></p>
+<p>    command strictly requires an explicit <code>{parent}</code> scope</p>
+<p>    (<code>organizations/{id}</code>, <code>projects/{id}</code>, or <code>folders/{id}</code>). If the parent</p>
+<p>    scope is missing from the prompt and cannot be inferred from a full finding</p>
+<p>    name, <strong>DO NOT run any <code>gcloud</code> commands</strong> (do not execute queries without</p>
+<p>    parent, and never inspect <code>gcloud config</code>). Halt immediately before</p>
+<p>    executing commands and ask the user for the parent resource scope.</p>
+<ol>
+<li><strong>Bounded Execution &amp; No Runaway Loops</strong>:</li>
+</ol>
+<ul>
+<li>Limit tool calls to what is strictly necessary to complete the query</li>
+</ul>
+<p>        (typically 1 call for direct queries, or 2 calls for List → Deep Dive</p>
+<p>        workflows).</p>
+<ul>
+<li>If a command fails due to permission/auth errors, or if a specific</li>
+</ul>
+<p>        finding query returns <code>[]</code>, halt immediately. Do not attempt blind</p>
+<p>        brute-force retries with different flags, and never search the local</p>
+<p>        workspace for credentials.</p>
+<ol>
+<li><strong>Immediate Halt on Errors</strong>: If any command fails with <code>PERMISSION_DENIED</code>,</li>
+</ol>
+<p>    <code>IAM_PERMISSION_DENIED</code>, credential expiration, or network timeouts, halt</p>
+<p>    immediately and report the verbatim error message. Do not search the</p>
+<p>    workspace for credentials or run diagnostic loops.</p>
+<ol>
+<li><strong>Ambiguous or Multiple Findings</strong>: If multiple finding names are provided</li>
+</ol>
+<p>    when a single finding report is requested, or if listing returns multiple</p>
+<p>    findings, do not investigate all of them or unilaterally pick one. Halt</p>
+<p>    immediately without running queries and ask the user to clarify which</p>
+<p>    specific finding name they want details for. If zero findings are returned</p>
+<p>    from a query, report that no active findings exist and halt immediately.</p>
+<ol>
+<li><strong>Do Not Query Attack Path Resources</strong>: Analyze only the data present in the</li>
+</ol>
+<p>    Security Command Center finding JSON payload. Do not run commands to</p>
+<p>    describe, verify, or query underlying Google Cloud resources (such as VMs,</p>
+<p>    Cloud Storage buckets, service accounts, or IAM policies).</p>
+<ol>
+<li><strong>Parent Scope Resolution</strong>:</li>
+</ol>
+<ul>
+<li>For listing and grouping, format the parent resource path as</li>
+</ul>
+<p>        <code>organizations/{org_id}</code>, <code>projects/{project_id}</code>, or</p>
+<p>        <code>folders/{folder_id}</code>.</p>
+<ul>
+<li>For deep dive queries on a specific finding name, extract the <code>{parent}</code></li>
+</ul>
+<p>        resource prefix before <code>/sources/...</code>:</p>
+<ul>
+<li><code>organizations/{org_id}/sources/...</code> → <code>{parent}</code> is</li>
+</ul>
+<p>            <code>organizations/{org_id}</code></p>
+<ul>
+<li><code>folders/{folder_id}/sources/...</code> → <code>{parent}</code> is</li>
+</ul>
+<p>            <code>folders/{folder_id}</code></p>
+<ul>
+<li><code>projects/{project_id}/sources/...</code> → <code>{parent}</code> is</li>
+</ul>
+<p>            <code>projects/{project_id}</code> Extract the parent prefix regardless of</p>
+<p>            whether the finding resource name is global (4-segment) or</p>
+<p>            location-qualified (5-segment with <code>/locations/{location}/</code>).</p>
+<p>            Execute the deep dive query using the extracted <code>{parent}</code>. Do not</p>
+<p>            reject or halt on project- or folder-level findings.</p>
+<hr>
+<h4>Data Residency &amp; Regional Endpoints</h4>
+<p>When Data Residency (DRZ) is enabled, findings are stored and accessible only</p>
+<p>within their designated regional location (<code>us</code>, <code>eu</code>, or <code>me-central2</code>).</p>
+<p>Queries across different locations do not return findings from other regions.</p>
+<h5>1. Location Parameterization</h5>
+<p>All <code>gcloud scc findings</code> commands require specifying the target location via</p>
+<p><code>--location={location}</code>:</p>
+<ul>
+<li><strong>Default</strong>: <code>global</code> (used when data residency is not enabled or for global</li>
+</ul>
+<p>    findings).</p>
+<ul>
+<li><strong>Supported Regional Locations</strong>:</li>
+<li><code>us</code> (United States multi-region)</li>
+<li><code>eu</code> (European Union multi-region)</li>
+<li><code>me-central2</code> (Kingdom of Saudi Arabia regional location)</li>
+</ul>
+<h5>2. API Endpoint Overrides</h5>
+<p>When data residency (DRZ) is enabled for an organization in a regional location</p>
+<p>(<code>us</code>, <code>eu</code>, or <code>me-central2</code>), configure the regional API endpoint override</p>
+<p>before executing finding queries:</p>
+<p><pre><code>gcloud config set api_endpoint_overrides/securitycenter https://securitycenter.{LOCATION}.rep.googleapis.com/</code></pre></p>
+<p>Example for the European Union (<code>eu</code>) region:</p>
+<p><pre><code>gcloud config set api_endpoint_overrides/securitycenter https://securitycenter.eu.rep.googleapis.com/</code></pre></p>
+<p>To reset the endpoint back to default global routing:</p>
+<p><pre><code>gcloud config unset api_endpoint_overrides/securitycenter</code></pre></p>
+<h5>3. Location-Qualified Finding Resource Names</h5>
+<p>Regional finding resource names include the <code>/locations/{location}/</code> path</p>
+<p>segment:</p>
+<ul>
+<li>Organization-level:</li>
+</ul>
+<p>    <code>organizations/{org_id}/sources/{source_id}/locations/{location}/findings/{finding_id}</code></p>
+<ul>
+<li>Folder-level:</li>
+</ul>
+<p>    <code>folders/{folder_id}/sources/{source_id}/locations/{location}/findings/{finding_id}</code></p>
+<ul>
+<li>Project-level:</li>
+</ul>
+<p>    <code>projects/{project_id}/sources/{source_id}/locations/{location}/findings/{finding_id}</code></p>
+<p>When performing a Deep Dive on a location-qualified finding name:</p>
+<ol>
+<li>Extract the <code>{parent}</code> scope (the prefix before <code>/sources/...</code>, e.g.,</li>
+</ol>
+<p>    <code>organizations/{org_id}</code>).</p>
+<ol>
+<li>Extract the <code>{location}</code> from <code>/locations/{location}/</code> (e.g., <code>eu</code>, <code>us</code>,</li>
+</ol>
+<p>    <code>me-central2</code>). If not present in the finding name, default to <code>global</code> (or</p>
+<p>    the user-specified location).</p>
+<ol>
+<li>Execute the query with <code>--location={location}</code> and</li>
+</ol>
+<p>    <code>--filter=&quot;name=\&quot;{finding_name}\&quot;&quot;</code>.</p>
+<hr>
+<h4>Intent-Based Query Strategies</h4>
+<h5>1. Deep Dive (Specific Finding Details)</h5>
+<p><strong>Intent</strong>: User provides a specific finding name or explicitly asks to retrieve</p>
+<p>all details for one finding. \</p>
+<p><strong>Action</strong>: Execute <code>gcloud scc findings list</code> with a strict filter on <code>name</code></p>
+<p>and NO <code>--field-mask</code> to retrieve the complete JSON payload. Specify</p>
+<p><code>--location={location}</code> (default <code>global</code> unless a regional location is</p>
+<p>indicated or present in the finding name).</p>
+<p><pre><code>gcloud scc findings list {parent} \
+  --location={location} \
+  --filter=&quot;name=\&quot;{finding_name}\&quot;&quot; \
+  --format=&quot;json&quot; --limit=1</code></pre></p>
+<h5>2. Listing (Filtered Projection)</h5>
+<p><strong>Intent</strong>: User wants to list active findings matching criteria without pulling</p>
+<p>full nested payloads. \</p>
+<p><strong>Action</strong>: Use <code>--field-mask</code> projection to restrict output size. Specify</p>
+<p><code>--location={location}</code> (default <code>global</code> unless querying a specific region).</p>
+<p><pre><code>gcloud scc findings list {parent} \
+  --location={location} \
+  --filter=&quot;{filter_expression}&quot; \
+  --field-mask=&quot;finding.name,finding.parentDisplayName,finding.findingClass,finding.category,finding.state,finding.eventTime,finding.severity,finding.resourceName&quot; \
+  --format=&quot;json&quot; --order-by=&quot;severity,event_time desc&quot; --limit=100</code></pre></p>
+<table><thead><tr><th>Intent / Target Finding Class</th><th><code>--filter</code> Expression</th></tr></thead><tbody>
+<tr><td><strong>All Active Findings</strong></td><td><code>state=&quot;ACTIVE&quot;</code></td></tr>
+<tr><td><strong>Vulnerabilities</strong></td><td>`state=&quot;ACTIVE&quot; AND</td></tr>
+</tbody></table>
+<p>:                               : findingClass=&quot;VULNERABILITY&quot;`              :</p>
+<table><thead><tr><th><strong>Misconfigurations</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;MISCONFIGURATION&quot;`           :</p>
+<table><thead><tr><th><strong>Toxic Combinations</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;TOXIC_COMBINATION&quot;`          :</p>
+<table><thead><tr><th><strong>External Exposures</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;EXTERNAL_EXPOSURE&quot;`          :</p>
+<table><thead><tr><th><strong>Threats</strong></th><th><code>state=&quot;ACTIVE&quot; AND findingClass=&quot;THREAT&quot;</code></th></tr></thead><tbody>
+<tr><td><strong>Observations</strong></td><td>`state=&quot;ACTIVE&quot; AND</td></tr>
+</tbody></table>
+<p>:                               : findingClass=&quot;OBSERVATION&quot;`                :</p>
+<table><thead><tr><th><strong>Sensitive Data Risks</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;SENSITIVE_DATA_RISK&quot;`        :</p>
+<table><thead><tr><th><strong>Chokepoints</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;CHOKEPOINT&quot;`                 :</p>
+<table><thead><tr><th><strong>Posture Violations</strong></th><th>`state=&quot;ACTIVE&quot; AND</th></tr></thead><tbody>
+</tbody></table>
+<p>:                               : findingClass=&quot;POSTURE_VIOLATION&quot;`          :</p>
+<table><thead><tr><th><strong>Secrets</strong></th><th><code>state=&quot;ACTIVE&quot; AND findingClass=&quot;SECRET&quot;</code></th></tr></thead><tbody>
+<tr><td><strong>SCC Errors</strong></td><td>`state=&quot;ACTIVE&quot; AND</td></tr>
+</tbody></table>
+<p>:                               : findingClass=&quot;SCC_ERROR&quot;`                  :</p>
+<table><thead><tr><th><strong>Specific Category</strong></th><th><code>state=&quot;ACTIVE&quot; AND category=&quot;{category}&quot;</code></th></tr></thead><tbody>
+</tbody></table>
+<h5>3. Discovery &amp; Aggregation (Grouping)</h5>
+<p><strong>Intent</strong>: User wants high-level counts or landscape overview (e.g., &quot;What are</p>
+<p>the most common findings?&quot;, &quot;Show me a summary by category&quot;). \</p>
+<p><strong>Action</strong>: Use <code>gcloud scc findings group</code>. Specify <code>--location={location}</code></p>
+<p>(default <code>global</code> unless querying a specific region). Allowed fields for</p>
+<p><code>--group-by</code> are strictly: <code>resource_name</code>, <code>category</code>, <code>state</code>, <code>parent</code>.</p>
+<p><pre><code>gcloud scc findings group {parent} \
+  --location={location} \
+  --group-by=&quot;{group_by_field}&quot; \
+  --filter=&quot;state=\&quot;ACTIVE\&quot;&quot; \
+  --format=&quot;json&quot;</code></pre></p>
+<hr>
+<h4>Payload Analysis &amp; Handoff</h4>
+<p>Once the finding JSON payload is retrieved:</p>
+<ul>
+<li><strong>For <code>TOXIC_COMBINATION</code> Findings</strong>:</li>
+</ul>
+<ol>
+<li>Verify the <code>attackExposure</code> field is present and has a <code>score &gt; 0</code>.</li>
+<li>Inspect the attack path nodes, edges, or referenced</li>
+</ol>
+<p>        <code>attackExposureResult</code> to identify exposed resources and attack</p>
+<p>        trajectories.</p>
+<ul>
+<li><strong>For <code>VULNERABILITY</code> Findings</strong>:</li>
+</ul>
+<ol>
+<li>Extract CVSS scores, exploit signals (<code>exploitationActivity</code>,</li>
+</ol>
+<p>        <code>observedInTheWild</code>, <code>zeroDay</code>), upstream fix status</p>
+<p>        (<code>upstreamFixAvailable</code>), and affected package details from the</p>
+<p>        <code>vulnerability</code> object to evaluate risk:</p>
+<ul>
+<li><code>vulnerability.cve.id</code></li>
+<li><code>vulnerability.cve.cvssv3.baseScore</code></li>
+<li><code>vulnerability.cve.cvssv3.attackVector</code></li>
+<li><code>vulnerability.cve.exploitationActivity</code></li>
+<li><code>vulnerability.cve.observedInTheWild</code></li>
+<li><code>vulnerability.cve.zeroDay</code></li>
+<li><code>vulnerability.cve.upstreamFixAvailable</code></li>
+<li><code>vulnerability.offendingPackage.packageName</code></li>
+<li><code>vulnerability.offendingPackage.packageVersion</code></li>
+<li><code>vulnerability.fixedPackage.packageVersion</code></li>
+<li><code>vulnerability.securityBulletin.suggestedUpgradeVersion</code></li>
+<li><strong>Handoff</strong>: Do not draft remediation plans, patch resources, or execute</li>
+</ul>
+<p>    configuration commands. Pass the extracted finding payload to the</p>
+<p>    appropriate remediation or IAM analyzer skill to manage the remediation</p>
+<p>    action loop.</p>
+<hr>
+<h4>Reference Schema</h4>
+<p>See [finding_schema.md](references/finding_schema.md) for the JSON structure of</p>
+<p>a Security Command Center finding.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-scc-query</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-scc-query" aria-label="Copy install google-cloud-scc-query">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-scc-query</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-scc-query/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

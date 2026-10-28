@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-solution-architecture — Aidentity</title>
+<meta name="description" content="Interactively discovers requirements for a specific cloud workload and generates design recommendations and architectural guidance to build a multi-product solution in Google Cloud. Use this skill to generate holistic, end-to-end design recommendations and architectural guidance for complex, multi-product workloads on Google Cloud for specific use cases. Don&#39;t use this skill when other specialized skills (e.g., product-specific or google-cloud-recipe-*) directly address the user&#39;s workload or use case.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-architecture/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-solution-architecture — Aidentity">
+<meta property="og:description" content="Interactively discovers requirements for a specific cloud workload and generates design recommendations and architectural guidance to build a multi-product solution in Google Cloud. Use this skill to generate holistic, end-to-end design recommendations and architectural guidance for complex, multi-product workloads on Google Cloud for specific use cases. Don&#39;t use this skill when other specialized skills (e.g., product-specific or google-cloud-recipe-*) directly address the user&#39;s workload or use case.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-architecture/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-solution-architecture","description":"Interactively discovers requirements for a specific cloud workload and generates design recommendations and architectural guidance to build a multi-product solution in Google Cloud. Use this skill to generate holistic, end-to-end design recommendations and architectural guidance for complex, multi-product workloads on Google Cloud for specific use cases. Don't use this skill when other specialized skills (e.g., product-specific or google-cloud-recipe-*) directly address the user's workload or use case.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-architecture/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-solution-architecture
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-solution-architecture</h1>
+      <p class="summary">Interactively discovers requirements for a specific cloud workload and generates design recommendations and architectural guidance to build a multi-product solution in Google Cloud. Use this skill to generate holistic, end-to-end design recommendations and architectural guidance for complex, multi-product workloads on Google Cloud for specific use cases. Don&#39;t use this skill when other specialized skills (e.g., product-specific or google-cloud-recipe-*) directly address the user&#39;s workload or use case.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud solution-architecture workflow</h3>
+<h4>Overview of the workflow</h4>
+<p>The workflow consists of the following phases:</p>
+<ul>
+<li><strong>Phase 1: Requirements discovery</strong>. Gather detailed requirements related to</li>
+</ul>
+<p>    the cloud workload or use case that the user needs assistance for.</p>
+<ul>
+<li><strong>Phase 2: Solution architecture</strong>. Use the requirements that were gathered</li>
+</ul>
+<p>    in Phase 1 to generate a detailed solution architecture for the cloud</p>
+<p>    workload or use case.</p>
+<ul>
+<li><strong>Phase 3: Solution validation</strong>. Create a plan to validate the generated</li>
+</ul>
+<p>    solution, generate validation instructions and scripts, and provide them to</p>
+<p>    the user to execute (or perform a dry-run validation with explicit</p>
+<p>    permission from the user).</p>
+<ul>
+<li><strong>Phase 4: Solution packing and presentation</strong>. Consolidate the generated</li>
+</ul>
+<p>    content and present the solution.</p>
+<p><strong>Important notes about the workflow</strong>:</p>
+<ul>
+<li><strong>Strict phase separation</strong>: During Phase 1 (Requirements discovery), when</li>
+</ul>
+<p>    you ask the user clarifying questions, don&#39;t recommend, propose, or outline</p>
+<p>    any architectural designs, technical decompositions, cloud services, or</p>
+<p>    component mappings. Proposing solutions before functional and non-functional</p>
+<p>    requirements are thoroughly assessed causes confirmation bias and risks</p>
+<p>    anchoring the solution on specific products, features, or tools prematurely.</p>
+<ul>
+<li><strong>Iterative approval &amp; task transitions</strong>: For each deliverable in this</li>
+</ul>
+<p>    workflow (technical decompositions, product recommendations, diagrams,</p>
+<p>    architectural descriptions, and deployment scripts), explicitly present your</p>
+<p>    output to the user for approval. If the user requests modifications,</p>
+<p>    iteratively revise the content until approved before progressing to the</p>
+<p>    subsequent task or phase.</p>
+<ul>
+<li><strong>No autonomous execution of code and scripts</strong>: Don&#39;t run any scripts or</li>
+</ul>
+<p>    code that you generate without explicit, unambiguous permission from the</p>
+<p>    user. Executing scripts autonomously can provision unintended cloud</p>
+<p>    resources (incurring unexpected costs), mutate live infrastructure, or pose</p>
+<p>    security and safety risks. Always offer the option for the user to execute</p>
+<p>    the commands manually.</p>
+<ul>
+<li><strong>When you can skip certain phases</strong>: If the user&#39;s prompt indicates that a</li>
+</ul>
+<p>    specific phase or task in this workflow is already completed or approved</p>
+<p>    (e.g., &quot;requirements discovery stage is completed&quot;, &quot;product selection is</p>
+<p>    approved&quot;, or &quot;architecture is confirmed&quot;), don&#39;t repeat that phase or task.</p>
+<p>    Instead, skip directly to the requested task (such as generating the</p>
+<p>    technical decomposition, recommending products, or compiling the solution</p>
+<p>    guide).</p>
+<h4>Phase 1: Requirements discovery</h4>
+<ol>
+<li>Gather the following requirements related to the workload or use case for</li>
+</ol>
+<p>    which the user needs assistance.</p>
+<p>    <strong>CRITICAL</strong>: You MUST NOT generate any architecture designs, product</p>
+<p>    recommendations, or technical decompositions until the user provides these</p>
+<p>    requirements.</p>
+<ul>
+<li><strong>Functional requirements</strong>: Ask the user to describe the business</li>
+</ul>
+<p>        processes, activities, and use cases of their workload.</p>
+<ul>
+<li><strong>Non-functional requirements</strong>: Ask the user to describe requirements</li>
+</ul>
+<p>        for security, privacy, compliance, reliability, disaster recovery, cost,</p>
+<p>        operations, performance, and sustainability.</p>
+<ul>
+<li><strong>CRITICAL</strong>: If non-functional requirements are missing or</li>
+</ul>
+<p>            incomplete, you MUST ask the user to describe the requirements and</p>
+<p>            explicitly explain why they are important (e.g., because they</p>
+<p>            directly dictate operational SLAs, availability tiers, scaling</p>
+<p>            configuration, cost budgets, resource types, and the security</p>
+<p>            posture) when asking the user to supply them.</p>
+<ul>
+<li><strong>Current state</strong>: Ask whether the workload currently runs on other</li>
+</ul>
+<p>        cloud providers or on-premises (if yes, prompt for the architecture of</p>
+<p>        the existing deployment).</p>
+<ul>
+<li><strong>System dependencies</strong>: Ask the user to describe any dependencies</li>
+</ul>
+<p>        between their application and other workloads, products, systems, or</p>
+<p>        tools.</p>
+<ol>
+<li>Review the input that the user has provided so far, and check whether there</li>
+</ol>
+<p>    are any ambiguities or contradictions (e.g., conflicting goals like complete</p>
+<p>    network isolation with zero internet exposure vs. real-time ingestion from</p>
+<p>    public APIs).</p>
+<p>    If you identify any ambiguities or contradictions in the user&#39;s</p>
+<p>    requirements, you must:</p>
+<ul>
+<li>Clearly describe the ambiguities and contradictions.</li>
+<li>Explain why the contradictory requirements cannot be simultaneously</li>
+</ul>
+<p>        satisfied.</p>
+<ul>
+<li>Request the user to clarify their trade-off preferences and choices to</li>
+</ul>
+<p>        resolve the ambiguities and contradictions.</p>
+<ul>
+<li>If the user delegates the choice to you (e.g., the user replies with</li>
+</ul>
+<p>            &quot;do what you think is best&quot; or &quot;you decide&quot;), then provide a clear</p>
+<p>            suggestion to resolve the ambiguity or contradiction, explain your</p>
+<p>            reasoning, and ask the user to approve your suggestion.</p>
+<p>    <strong>CRITICAL</strong>: Until all the ambiguities and contradictions that you identify</p>
+<p>    are resolved, don&#39;t recommend or generate any architecture design, technical</p>
+<p>    decomposition, or Google Cloud product recommendations. Ambiguous or</p>
+<p>    contradictory requirements lead to invalid architectural assumptions.</p>
+<ol>
+<li>Generate a technical decomposition of the components of the workload that</li>
+</ol>
+<p>    breaks down the solution into logical components. Present it to the user and</p>
+<p>    obtain approval before proceeding to Phase 2.</p>
+<p>    <strong>CRITICAL</strong>: Before proceeding to Phase 2, ensure that the user has</p>
+<p>    approved the technical decomposition. Misalignment of the technical</p>
+<p>    decomposition with the user&#39;s requirements will invalidate the outputs of</p>
+<p>    the subsequent phases in this workflow.</p>
+<h4>Phase 2: Solution architecture</h4>
+<p>Use the approved requirements from Phase 1 to generate a comprehensive solution</p>
+<p>architecture.</p>
+<h5>Ground all generated content</h5>
+<p>For each task in this phase, to ensure that the generated content aligns with</p>
+<p>the latest and official Google Cloud guidance, you must ground the generated</p>
+<p>content by using the following resources:</p>
+<ul>
+<li>Google Developer Knowledge MCP server</li>
+<li>Server: <a href="https://developerknowledge.googleapis.com/mcp" rel="noopener">https://developerknowledge.googleapis.com/mcp</a></li>
+<li>Tools:</li>
+<li><code>developerknowledge:search_documents</code></li>
+<li><code>developerknowledge:get_documents</code></li>
+<li><code>developerknowledge:answer_query</code></li>
+<li>Relevant skills from <a href="https://github.com/google/skills" rel="noopener">https://github.com/google/skills</a></li>
+<li>Official Google Cloud documentation, including the following:</li>
+<li>Reference architectures and design guides that are relevant to the</li>
+</ul>
+<p>        technology category of the workload: <code>references/architecture-guides.md</code></p>
+<ul>
+<li>Decision-making guides for the products and topics that are relevant to</li>
+</ul>
+<p>        the workload: <code>references/decision-making-guides.md</code></p>
+<ul>
+<li>Best-practices guides for the products and topics that are relevant to</li>
+</ul>
+<p>        the workload: <code>references/best-practices-guides.md</code></p>
+<p>For each item in the generated guidance, you must include citations to the</p>
+<p>relevant official Google Cloud documentation pages.</p>
+<h5>Task 2.1: Identify Google Cloud products and features required for the workload.</h5>
+<ol>
+<li>Recommend the products and features that are appropriate for each component</li>
+</ol>
+<p>    of the user&#39;s workload.</p>
+<p>    <strong>CRITICAL</strong>:</p>
+<ul>
+<li>Don&#39;t recommend any products or features that are deprecated, retired,</li>
+</ul>
+<p>        decommissioned, or unsupported. To check the status of a product or</p>
+<p>        feature, call <code>developerknowledge:answer_query</code> or</p>
+<p>        <code>developerknowledge:search_documents</code> with query strings like:</p>
+<p>        &quot;{product_name} release status&quot;.</p>
+<ul>
+<li>If multiple products or features can be used for a component of the</li>
+</ul>
+<p>        workload, then do the following:</p>
+<ul>
+<li>Recommend the most appropriate product or feature. When alternative</li>
+</ul>
+<p>            products exist, the relevant product documentation might provide</p>
+<p>            guidance on when to choose each product. Follow that guidance.</p>
+<ul>
+<li>Mention the available alternative products or features.</li>
+<li>Explain the pros and cons of each alternative product or feature.</li>
+</ul>
+<ol>
+<li>Present the generated product recommendations to the user and ask whether</li>
+</ol>
+<p>    any changes are needed.</p>
+<p>    <strong>CRITICAL</strong>: Don&#39;t generate anything further (architecture diagrams,</p>
+<p>    descriptions, or deployment configurations) in the same turn. Halt execution</p>
+<p>    immediately after listing the product choices until the user approves the</p>
+<p>    product selections.</p>
+<ol>
+<li>After the user approves the product selections, proceed to Task 2.2.</li>
+</ol>
+<h5>Task 2.2: Generate an architecture diagram.</h5>
+<ol>
+<li>Generate an architecture diagram in Mermaid format:</li>
+</ol>
+<p>    <a href="https://github.com/mermaid-js/mermaid." rel="noopener">https://github.com/mermaid-js/mermaid.</a></p>
+<ol>
+<li>Present the generated diagram to the user and obtain approval before</li>
+</ol>
+<p>    proceeding to Task 2.3.</p>
+<h5>Task 2.3: Generate an architecture description.</h5>
+<ol>
+<li>Generate a description that explains the purpose of each component, the</li>
+</ol>
+<p>    relationships between the components, and the task flow or data flow.</p>
+<ol>
+<li>Present the generated architecture description to the user and obtain</li>
+</ol>
+<p>    approval before proceeding to Task 2.4.</p>
+<h5>Task 2.4: Generate design recommendations.</h5>
+<ol>
+<li>Generate design recommendations and best practices to optimally configure</li>
+</ol>
+<p>    each component in the architecture based on the workload&#39;s requirements.</p>
+<p>    <strong>Important</strong>:</p>
+<ul>
+<li>When generating design recommendations, incorporate the following:</li>
+<li>Functional requirements that were gathered in Phase 1.</li>
+<li>Non-functional requirements that were gathered in Phase 1.</li>
+<li>To generate guidance for non-functional requirements, use the following</li>
+</ul>
+<p>        skills, as appropriate:</p>
+<ul>
+<li><code>google-cloud-waf-security</code></li>
+<li><code>google-cloud-waf-reliability</code></li>
+<li><code>google-cloud-waf-cost-optimization</code></li>
+<li><code>google-cloud-waf-operational-excellence</code></li>
+<li><code>google-cloud-waf-performance-optimization</code></li>
+<li><code>google-cloud-waf-sustainability</code></li>
+</ul>
+<p>    If any of the specialized <code>google-cloud-waf-*</code> skills are not available in</p>
+<p>    your current workspace, derive design guidance directly from the</p>
+<p>    documentation references in <code>references/best-practices-guides.md</code>.</p>
+<ol>
+<li>Present the generated recommendations to the user and obtain approval before</li>
+</ol>
+<p>    proceeding to Task 2.5.</p>
+<h5>Task 2.5: Generate deployment guidance.</h5>
+<ol>
+<li>Generate deployment guidance, including infrastructure-as-code and</li>
+</ol>
+<p>    instructions to enable the user to deploy the solution.</p>
+<ol>
+<li>Present the generated deployment guidance to the user and obtain approval</li>
+</ol>
+<p>    before proceeding to Phase 3.</p>
+<h4>Phase 3: Solution validation</h4>
+<h5>Task 3.1: Pre-deployment validation</h5>
+<ol>
+<li>Create a pre-deployment plan to statically validate the generated solution</li>
+</ol>
+<p>    and verify that it meets the workload&#39;s requirements without provisioning</p>
+<p>    live resources:</p>
+<ul>
+<li><strong>Deployment dry-run</strong>: Validate infrastructure syntax and preview the</li>
+</ul>
+<p>        resources that will be provisioned using dry-run commands (e.g.,</p>
+<p>        <code>terraform plan</code> or (where supported) <code>gcloud ... --dry-run</code>).</p>
+<ul>
+<li><strong>Architecture &amp; policy analysis</strong>: Perform static verification of</li>
+</ul>
+<p>        network routing topologies, firewall rules, and IAM enforcement against</p>
+<p>        best practices.</p>
+<ol>
+<li>Present the static validation plan to the user and obtain explicit</li>
+</ol>
+<p>    permission from the user to execute the dry-run commands. If the user gives</p>
+<p>    permission, then run the commands; otherwise, or if the user prefers,</p>
+<p>    provide the exact commands that the user can run manually.</p>
+<ol>
+<li>Troubleshoot and fix any errors or policy discrepancies identified during</li>
+</ol>
+<p>    dry-run checks until validation succeeds.</p>
+<ol>
+<li>Proceed to Task 3.2</li>
+</ol>
+<h5>Task 3.2: Runtime validation (Post-deployment)</h5>
+<ol>
+<li>Ask the user whether they choose to deploy the infrastructure now to perform</li>
+</ol>
+<p>    live runtime verification, or skip directly to Phase 4.</p>
+<ol>
+<li><strong>If the user chooses to deploy the infrastructure</strong>:</li>
+</ol>
+<ul>
+<li>After the user deploys the infrastructure, generate runtime verification</li>
+</ul>
+<p>        commands (using tools like <code>curl</code>, <code>ping</code>, or <code>gcloud</code>) and provide them</p>
+<p>        to the user to execute, to test live endpoint reachability, networking</p>
+<p>        paths, and load balancer routing.</p>
+<ul>
+<li>Troubleshoot any deployment or runtime routing issues until checks pass.</li>
+</ul>
+<ol>
+<li>Proceed to Phase 4.</li>
+</ol>
+<h4>Phase 4: Solution packaging and presentation</h4>
+<p>Package all the generated text and code artifacts for final presentation.</p>
+<ol>
+<li>Consolidate the text artifacts that were generated in Phase 2 and Phase 3</li>
+</ol>
+<p>    into a single Markdown file named <code>solution-architecture-guide.md</code>, based on</p>
+<p>    the template in <code>assets/output-template.md</code>.</p>
+<ol>
+<li>Request the user&#39;s permission to write the code files in the user&#39;s</li>
+</ol>
+<p>    workspace.</p>
+<ol>
+<li>After the user gives permission, write the code files in the user&#39;s</li>
+</ol>
+<p>    workspace.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-solution-architecture</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-solution-architecture" aria-label="Copy install google-cloud-solution-architecture">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-solution-architecture</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-solution-architecture/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

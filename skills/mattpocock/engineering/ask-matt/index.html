@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ask-matt — Aidentity</title>
+<meta name="description" content="Ask which skill or flow fits your situation. A router over the skills in this repo.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/ask-matt/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ask-matt — Aidentity">
+<meta property="og:description" content="Ask which skill or flow fits your situation. A router over the skills in this repo.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/ask-matt/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"ask-matt","description":"Ask which skill or flow fits your situation. A router over the skills in this repo.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/ask-matt/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>ask-matt
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>ask-matt</h1>
+      <p class="summary">Ask which skill or flow fits your situation. A router over the skills in this repo.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Ask Matt</h3>
+<p>You don&#39;t remember every skill, so ask.</p>
+<p>A <strong>flow</strong> is a path through the skills. Most paths run along one <strong>main flow</strong>, and two <strong>on-ramps</strong> merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.</p>
+<h4>The main flow: idea → ship</h4>
+<p>The route most work travels. You have an idea and want it built.</p>
+<ol>
+<li><strong><code>/grill-with-docs</code></strong> sharpens the idea by interview. Start here whenever you are <strong>working in a working directory</strong>: it&#39;s stateful, retaining what it learns in <code>CONTEXT.md</code> and ADRs. (No working directory? Use <code>/grill-me</code> instead, covered under Standalone. Both run the same <code>/grilling</code> primitive; <code>grill-with-docs</code> is the one that leaves a paper trail, which makes it the better of the two whenever a repo is there to leave it in.)</li>
+<li><strong>Branch: can you settle every question in conversation?</strong> If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by <strong><code>/handoff</code></strong> in both directions (a prototype lives in its own directory, which is exactly what <code>/handoff</code> is for; see Phase boundaries):</li>
+</ol>
+<ul>
+<li><strong><code>/handoff</code></strong> out, then open a fresh session against that file,</li>
+<li><strong><code>/prototype</code></strong> to answer the question with throwaway code,</li>
+<li><strong><code>/handoff</code></strong> back what you learned, and reference it from the original idea thread.</li>
+</ul>
+<ol>
+<li><strong>Branch: is this a multi-session build?</strong></li>
+</ol>
+<ul>
+<li><strong>Yes</strong> → <strong><code>/to-spec</code></strong> (turn the thread into a spec), then <strong><code>/to-tickets</code></strong> to split it into tracer-bullet tickets, each declaring its <strong>blocking edges</strong>. On a local tracker that&#39;s one file per ticket under <code>.scratch/&lt;feature&gt;/issues/</code>, worked blockers-first by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed: kick off <strong><code>/implement</code></strong> per ticket, <strong><code>/clear</code>ing context between each one</strong>. Each ticket is self-contained, so the last one&#39;s context is disposable.</li>
+<li><strong>No</strong> → <strong><code>/implement</code></strong> right here, in the same context window.</li>
+</ul>
+<p>   Either way, <strong><code>/implement</code></strong> builds each issue by driving <strong><code>/tdd</code></strong> internally (one red-green slice at a time), then closes out by running <strong><code>/code-review</code></strong>, a two-axis review (Standards + Spec) of the diff, before committing. Reach for <strong><code>/tdd</code></strong> on its own when you just want to build a concrete behaviour test-first without a full spec, and <strong><code>/code-review</code></strong> on its own whenever you want to review a branch or PR against a fixed point.</p>
+<h5>Context hygiene</h5>
+<p>Keep steps 1–3 in <strong>one unbroken context window</strong> (don&#39;t compact or clear until after <code>/to-tickets</code>) so the grilling, spec, and tickets all build on the same thinking. Each <code>/implement</code> then starts fresh, working from the ticket.</p>
+<p>The limit on this is the <strong><a href="https://www.aihero.dev/ai-coding-dictionary/smart-zone" rel="noopener">smart zone</a></strong>: the window (~150k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before <code>/to-tickets</code>, don&#39;t push on degraded; <code>/compact</code> at the nearest phase boundary and carry on (see Phase boundaries).</p>
+<h4>On-ramps</h4>
+<p>A starting situation that generates work, then merges onto the main flow.</p>
+<ul>
+<li><strong>Bugs and requests piling up</strong> → <strong><code>/triage</code></strong>. It moves issues through triage roles and produces agent-ready issues, which <strong><code>/implement</code></strong> later picks up.</li>
+</ul>
+<p>  Triage is only for issues <strong>you didn&#39;t create</strong>: bug reports, incoming feature requests, anything that arrives raw. Tickets that <code>/to-tickets</code> produced are already agent-ready, so <strong>don&#39;t triage them</strong>.</p>
+<ul>
+<li><strong>Something&#39;s broken</strong> → <strong><code>/diagnosing-bugs</code></strong>. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression that crept in between two known-good states. It refuses to theorise until it has a <strong>tight feedback loop</strong> (one command that already goes red on <em>this</em> bug), then fixes with a regression test. Its post-mortem hands off to <strong><code>/improve-codebase-architecture</code></strong> when the real finding is that there&#39;s no good seam to lock the bug down.</li>
+</ul>
+<ul>
+<li><strong>A huge, foggy effort: a greenfield project or a huge feature build, too big for one session</strong> → <strong><code>/wayfinder</code></strong>, the most cognitively demanding flow here. When the way from here to the destination isn&#39;t visible yet, it charts a <strong>shared map</strong> of <strong>decision tickets</strong> on the issue tracker and resolves them one at a time, producing <strong>decisions, not deliverables</strong>, until the fog is pushed back and the way is clear. Where <strong><code>/grill-with-docs</code></strong> sharpens an idea you can hold in one session, wayfinder is for the idea you can&#39;t, and it&#39;s slower and denser, so save it for exactly that, never a well-scoped feature.</li>
+</ul>
+<p>  When the map clears, <strong>it hands off, it doesn&#39;t build</strong>: merge onto the main flow at <strong><code>/to-spec</code></strong>, which collapses the map&#39;s linked decisions into a buildable plan, then <code>/to-tickets</code> and <code>/implement</code> as usual. Looping the map straight into <code>/implement</code> skips that collapse and throws the linked detail away, so go straight to <code>/implement</code> only when the effort turned out genuinely small.</p>
+<h4>Codebase health</h4>
+<p>Not feature work, just upkeep.</p>
+<ul>
+<li><strong><code>/improve-codebase-architecture</code></strong> runs whenever you have a spare moment to keep the codebase good for agents to operate in. It surfaces <strong>deepening opportunities</strong>; picking one _generates an idea_ you can take into the main flow at <code>/grill-with-docs</code>. It&#39;s the survey that finds the candidates; <strong><code>/codebase-design</code></strong> (below) is the bench you design the chosen one on.</li>
+</ul>
+<h4>Vocabulary underneath</h4>
+<p>Two model-invoked references that run <em>beneath</em> the other skills, each the single source of truth for its vocabulary. Reach for them directly when the <strong>words</strong>, not the process, are the problem; or let the skills above pull them in.</p>
+<ul>
+<li><strong><code>/domain-modeling</code></strong>: sharpen the project&#39;s <em>domain</em> language: challenge a fuzzy term, resolve an overloaded word (&quot;account&quot; doing three jobs), record a hard-to-reverse decision as an ADR. It&#39;s the active discipline <code>/grill-with-docs</code> drives to keep <code>CONTEXT.md</code> a clean glossary.</li>
+<li><strong><code>/codebase-design</code></strong> is the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module&#39;s <em>shape</em>: a lot of behaviour behind a small interface at a clean seam. <code>/tdd</code> and <code>/improve-codebase-architecture</code> both speak it.</li>
+</ul>
+<h4>Phase boundaries</h4>
+<p>A <strong>phase</strong> is a chunk of work inside a session: the grilling, the implementation, the QA. At the <strong>boundary</strong> between two of them you have five options, and picking between them is the fuzziest decision in this whole map:</p>
+<ul>
+<li><strong>Continue</strong>: stay put. Costs nothing, loses nothing.</li>
+<li><strong><code>/clear</code></strong>: empty the window, when nothing here matters to what&#39;s next.</li>
+<li><strong><code>/handoff</code></strong> writes a portable markdown file. Narrow: only for a <strong>new harness</strong>, a <strong>new directory</strong>, a <strong>colleague</strong>, or forking a side task <strong>mid-phase</strong>. What it buys is portability.</li>
+<li><strong>Subagent</strong>: send a tightly-scoped task to its own window and get a report back.</li>
+<li><strong><code>/compact</code></strong> compresses this context and seeds a fresh session with it. The <strong>default</strong>, at the bottom of the tree rather than the first reach.</li>
+</ul>
+<p>Read [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) for the ordered tree: the five questions, the reasoning behind each branch, and why the primary-source cost makes <strong>Continue</strong> the one to rule out first. Make the decision <strong>at</strong> a boundary; mid-phase, continue or split the rest into subagents.</p>
+<h4>Standalone</h4>
+<p>Off the main flow entirely.</p>
+<ul>
+<li><strong><code>/grill-me</code></strong>: the same relentless interview as <code>/grill-with-docs</code>, but <strong>stateless</strong>: it saves nothing locally and builds no <code>CONTEXT.md</code>. Reach for it when you are <strong>not working in a working directory</strong> (sharpening a plan, a design, a piece of writing, anything with no repo under it). If you are in a working directory, use <code>/grill-with-docs</code> instead: it runs the same interview and leaves a paper trail, so it is strictly the better one.</li>
+<li><strong><code>/grilling</code></strong> is the interview primitive itself: rounds, the frontier, facts are the agent&#39;s job and decisions are yours. <code>/grill-me</code> and <code>/grill-with-docs</code> are the two named ways in, and <code>/triage</code>, <code>/wayfinder</code> and <code>/improve-codebase-architecture</code> all run it internally. Reach for it directly only when you want the interview with no wrapper around it.</li>
+<li><strong><code>/resolving-merge-conflicts</code></strong> works an in-progress merge or rebase conflict hunk by hunk, resolving by <strong>intent</strong> traced to each side&#39;s primary source rather than by picking lines, then finishes the operation. It never runs <code>--abort</code>. Standalone and off every flow: reach for it when you are already mid-conflict.</li>
+<li><strong><code>/prototype</code></strong> is a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway is a constraint on how the code is written, not a promise to destroy it: the answer folds into the real code, and the prototype itself is kept as a <strong>primary source</strong> on a <code>prototype/&lt;name&gt;</code> branch out of main, pointed at from the implementation issue. It&#39;s the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.</li>
+<li><strong><code>/research</code></strong>: delegate reading legwork to a <strong>background agent</strong>: it investigates a question against <strong>primary sources</strong>, then leaves a cited Markdown file in the repo. Keep working while it reads. The file it produces is something to take <em>into</em> the main flow at <code>/grill-with-docs</code>, since research feeds the thinking rather than replacing it.</li>
+<li><strong><code>/to-questionnaire</code></strong> comes in when the thing blocking you isn&#39;t in your head or the codebase but in <strong>someone else&#39;s</strong>, and it writes them a questionnaire to fill in. It&#39;s the inverse of <code>/grill-me</code>: instead of interviewing you about the subject, it interviews you about the <strong>send</strong> (who it&#39;s going to, what you need back) and aims the questions at the gap. What comes back is material for <code>/grill-with-docs</code> or <code>/to-spec</code>.</li>
+<li><strong><code>/wizard</code></strong> is for the steps only a <strong>human</strong> can take: provisioning infrastructure, setting up credentials or CI secrets, clicking through an unfamiliar third-party dashboard, running a one-off migration or cutover. It generates an interactive bash script that opens each URL, captures each value, and writes it into <code>.env</code> and GitHub secrets, so the procedure stops being something you re-explain to an agent every time. Model-invoked, so the agent reaches for it the moment it hits a wall only you can pass. If the agent could just do it itself, it should; this is for where a human is genuinely in the loop.</li>
+<li><strong><code>/wait-what</code></strong> is the corrective for a message that didn&#39;t land. Use it mid-conversation, inside any other skill, and the agent re-pitches what it just said with the context you were missing, in plain English, using the <code>CONTEXT.md</code> vocabulary. It works after the fact; <code>/grill-with-docs</code> is the upfront cure, because a shared language agreed early is what stops the jargon arriving at all.</li>
+<li><strong><code>/teach</code></strong>: learn a concept over multiple sessions, using the current directory as a stateful workspace.</li>
+<li><strong><code>/writing-for-agents</code></strong> is the reference for writing documents agents consume: skills, AGENTS.md, pointed-at docs.</li>
+</ul>
+<h4>Precondition</h4>
+<p><strong><code>/setup-matt-pocock-skills</code></strong>: run before your first engineering flow to configure the issue tracker, triage labels, and doc layout the other skills assume. Custom issue trackers also work.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/ask-matt</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/ask-matt" aria-label="Copy install ask-matt">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/ask-matt</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/ask-matt/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

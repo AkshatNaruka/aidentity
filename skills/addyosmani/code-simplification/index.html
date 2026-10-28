@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>code-simplification — Aidentity</title>
+<meta name="description" content="Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/code-simplification/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="code-simplification — Aidentity">
+<meta property="og:description" content="Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/code-simplification/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"code-simplification","description":"Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/code-simplification/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>code-simplification
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>code-simplification</h1>
+      <p class="summary">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Code Simplification</h3>
+<p>&gt; Inspired by the <a href="https://github.com/anthropics/claude-plugins-official/blob/main/plugins/code-simplifier/agents/code-simplifier.md" rel="noopener">Claude Code Simplifier plugin</a>. Adapted here as a model-agnostic, process-driven skill for any AI coding agent.</p>
+<h4>Overview</h4>
+<p>Simplify code by reducing complexity while preserving exact behavior. The goal is not fewer lines — it&#39;s code that is easier to read, understand, modify, and debug. Every simplification must pass a simple test: &quot;Would a new team member understand this faster than the original?&quot;</p>
+<h4>When to Use</h4>
+<ul>
+<li>After a feature is working and tests pass, but the implementation feels heavier than it needs to be</li>
+<li>During code review when readability or complexity issues are flagged</li>
+<li>When you encounter deeply nested logic, long functions, or unclear names</li>
+<li>When refactoring code written under time pressure</li>
+<li>When consolidating related logic scattered across files</li>
+<li>After merging changes that introduced duplication or inconsistency</li>
+</ul>
+<p><strong>When NOT to use:</strong></p>
+<ul>
+<li>Code is already clean and readable — don&#39;t simplify for the sake of it</li>
+<li>You don&#39;t understand what the code does yet — comprehend before you simplify</li>
+<li>The code is performance-critical and the &quot;simpler&quot; version would be measurably slower</li>
+<li>You&#39;re about to rewrite the module entirely — simplifying throwaway code wastes effort</li>
+</ul>
+<h4>The Five Principles</h4>
+<h5>1. Preserve Behavior Exactly</h5>
+<p>Don&#39;t change what the code does — only how it expresses it. All inputs, outputs, side effects, error behavior, and edge cases must remain identical. If you&#39;re not sure a simplification preserves behavior, don&#39;t make it.</p>
+<p><pre><code>ASK BEFORE EVERY CHANGE:
+→ Does this produce the same output for every input?
+→ Does this maintain the same error behavior?
+→ Does this preserve the same side effects and ordering?
+→ Do all existing tests still pass without modification?</code></pre></p>
+<h5>2. Follow Project Conventions</h5>
+<p>Simplification means making code more consistent with the codebase, not imposing external preferences. Before simplifying:</p>
+<p><pre><code>1. Read CLAUDE.md / project conventions
+2. Study how neighboring code handles similar patterns
+3. Match the project&#39;s style for:
+   - Import ordering and module system
+   - Function declaration style
+   - Naming conventions
+   - Error handling patterns
+   - Type annotation depth</code></pre></p>
+<p>Simplification that breaks project consistency is not simplification — it&#39;s churn.</p>
+<h5>3. Prefer Clarity Over Cleverness</h5>
+<p>Explicit code is better than compact code when the compact version requires a mental pause to parse.</p>
+<p><pre><code>// UNCLEAR: Dense ternary chain
+const label = isNew ? &#39;New&#39; : isUpdated ? &#39;Updated&#39; : isArchived ? &#39;Archived&#39; : &#39;Active&#39;;
+
+// CLEAR: Readable mapping
+function getStatusLabel(item: Item): string {
+  if (item.isNew) return &#39;New&#39;;
+  if (item.isUpdated) return &#39;Updated&#39;;
+  if (item.isArchived) return &#39;Archived&#39;;
+  return &#39;Active&#39;;
+}</code></pre></p>
+<p><pre><code>// UNCLEAR: Chained reduces with inline logic
+const result = items.reduce((acc, item) =&gt; ({
+  ...acc,
+  [item.id]: { ...acc[item.id], count: (acc[item.id]?.count ?? 0) + 1 }
+}), {});
+
+// CLEAR: Named intermediate step
+const countById = new Map&lt;string, number&gt;();
+for (const item of items) {
+  countById.set(item.id, (countById.get(item.id) ?? 0) + 1);
+}</code></pre></p>
+<h5>4. Maintain Balance</h5>
+<p>Simplification has a failure mode: over-simplification. Watch for these traps:</p>
+<ul>
+<li><strong>Inlining too aggressively</strong> — removing a helper that gave a concept a name makes the call site harder to read</li>
+<li><strong>Combining unrelated logic</strong> — two simple functions merged into one complex function is not simpler</li>
+<li><strong>Removing &quot;unnecessary&quot; abstraction</strong> — some abstractions exist for extensibility or testability, not complexity</li>
+<li><strong>Optimizing for line count</strong> — fewer lines is not the goal; easier comprehension is</li>
+</ul>
+<h5>5. Scope to What Changed</h5>
+<p>Default to simplifying recently modified code. Avoid drive-by refactors of unrelated code unless explicitly asked to broaden scope. Unscoped simplification creates noise in diffs and risks unintended regressions.</p>
+<h4>The Simplification Process</h4>
+<h5>Step 1: Understand Before Touching (Chesterton&#39;s Fence)</h5>
+<p>Before changing or removing anything, understand why it exists. This is Chesterton&#39;s Fence: if you see a fence across a road and don&#39;t understand why it&#39;s there, don&#39;t tear it down. First understand the reason, then decide if the reason still applies.</p>
+<p><pre><code>BEFORE SIMPLIFYING, ANSWER:
+- What is this code&#39;s responsibility?
+- What calls it? What does it call?
+- What are the edge cases and error paths?
+- Are there tests that define the expected behavior?
+- Why might it have been written this way? (Performance? Platform constraint? Historical reason?)
+- Check git blame: what was the original context for this code?</code></pre></p>
+<p>If you can&#39;t answer these, you&#39;re not ready to simplify. Read more context first.</p>
+<h5>Step 2: Identify Simplification Opportunities</h5>
+<p>Scan for these patterns — each one is a concrete signal, not a vague smell:</p>
+<p><strong>Structural complexity:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Signal</th><th>Simplification</th></tr></thead><tbody>
+<tr><td>Deep nesting (3+ levels)</td><td>Hard to follow control flow</td><td>Extract conditions into guard clauses or helper functions</td></tr>
+<tr><td>Long functions (50+ lines)</td><td>Multiple responsibilities</td><td>Split into focused functions with descriptive names</td></tr>
+<tr><td>Nested ternaries</td><td>Requires mental stack to parse</td><td>Replace with if/else chains, switch, or lookup objects</td></tr>
+<tr><td>Boolean parameter flags</td><td><code>doThing(true, false, true)</code></td><td>Replace with options objects or separate functions</td></tr>
+<tr><td>Repeated conditionals</td><td>Same <code>if</code> check in multiple places</td><td>Extract to a well-named predicate function</td></tr>
+</tbody></table>
+<p><strong>Naming and readability:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Signal</th><th>Simplification</th></tr></thead><tbody>
+<tr><td>Generic names</td><td><code>data</code>, <code>result</code>, <code>temp</code>, <code>val</code>, <code>item</code></td><td>Rename to describe the content: <code>userProfile</code>, <code>validationErrors</code></td></tr>
+<tr><td>Abbreviated names</td><td><code>usr</code>, <code>cfg</code>, <code>btn</code>, <code>evt</code></td><td>Use full words unless the abbreviation is universal (<code>id</code>, <code>url</code>, <code>api</code>)</td></tr>
+<tr><td>Misleading names</td><td>Function named <code>get</code> that also mutates state</td><td>Rename to reflect actual behavior</td></tr>
+<tr><td>Comments explaining &quot;what&quot;</td><td><code>// increment counter</code> above <code>count++</code></td><td>Delete the comment — the code is clear enough</td></tr>
+<tr><td>Comments explaining &quot;why&quot;</td><td><code>// Retry because the API is flaky under load</code></td><td>Keep these — they carry intent the code can&#39;t express</td></tr>
+</tbody></table>
+<p><strong>Redundancy:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Signal</th><th>Simplification</th></tr></thead><tbody>
+<tr><td>Duplicated logic</td><td>Same 5+ lines in multiple places</td><td>Extract to a shared function</td></tr>
+<tr><td>Dead code</td><td>Unreachable branches, unused variables, commented-out blocks</td><td>Remove (after confirming it&#39;s truly dead)</td></tr>
+<tr><td>Unnecessary abstractions</td><td>Wrapper that adds no value</td><td>Inline the wrapper, call the underlying function directly</td></tr>
+<tr><td>Over-engineered patterns</td><td>Factory-for-a-factory, strategy-with-one-strategy</td><td>Replace with the simple direct approach</td></tr>
+<tr><td>Redundant type assertions</td><td>Casting to a type that&#39;s already inferred</td><td>Remove the assertion</td></tr>
+</tbody></table>
+<h5>Step 3: Apply Changes Incrementally</h5>
+<p>Make one simplification at a time. Run tests after each change. <strong>Submit refactoring changes separately from feature or bug fix changes.</strong> A PR that refactors and adds a feature is two PRs — split them.</p>
+<p><pre><code>FOR EACH SIMPLIFICATION:
+1. Make the change
+2. Run the test suite
+3. If tests pass → commit (or continue to next simplification)
+4. If tests fail → revert and reconsider</code></pre></p>
+<p>Avoid batching multiple simplifications into a single untested change. If something breaks, you need to know which simplification caused it.</p>
+<p><strong>The Rule of 500:</strong> If a refactoring would touch more than 500 lines, invest in automation (codemods, sed scripts, AST transforms) rather than making the changes by hand. Manual edits at that scale are error-prone and exhausting to review.</p>
+<h5>Step 4: Verify the Result</h5>
+<p>After all simplifications, step back and evaluate the whole:</p>
+<p><pre><code>COMPARE BEFORE AND AFTER:
+- Is the simplified version genuinely easier to understand?
+- Did you introduce any new patterns inconsistent with the codebase?
+- Is the diff clean and reviewable?
+- Would a teammate approve this change?</code></pre></p>
+<p>If the &quot;simplified&quot; version is harder to understand or review, revert. Not every simplification attempt succeeds.</p>
+<h4>Language-Specific Guidance</h4>
+<h5>TypeScript / JavaScript</h5>
+<p><pre><code>// SIMPLIFY: Unnecessary async wrapper
+// Before
+async function getUser(id: string): Promise&lt;User&gt; {
+  return await userService.findById(id);
+}
+// After
+function getUser(id: string): Promise&lt;User&gt; {
+  return userService.findById(id);
+}
+
+// SIMPLIFY: Verbose conditional assignment
+// Before
+let displayName: string;
+if (user.nickname) {
+  displayName = user.nickname;
+} else {
+  displayName = user.fullName;
+}
+// After
+const displayName = user.nickname || user.fullName;
+
+// SIMPLIFY: Manual array building
+// Before
+const activeUsers: User[] = [];
+for (const user of users) {
+  if (user.isActive) {
+    activeUsers.push(user);
+  }
+}
+// After
+const activeUsers = users.filter((user) =&gt; user.isActive);
+
+// SIMPLIFY: Redundant boolean return
+// Before
+function isValid(input: string): boolean {
+  if (input.length &gt; 0 &amp;&amp; input.length &lt; 100) {
+    return true;
+  }
+  return false;
+}
+// After
+function isValid(input: string): boolean {
+  return input.length &gt; 0 &amp;&amp; input.length &lt; 100;
+}</code></pre></p>
+<h5>Python</h5>
+<p><pre><code># SIMPLIFY: Verbose dictionary building
+# Before
+result = {}
+for item in items:
+    result[item.id] = item.name
+# After
+result = {item.id: item.name for item in items}
+
+# SIMPLIFY: Nested conditionals with early return
+# Before
+def process(data):
+    if data is not None:
+        if data.is_valid():
+            if data.has_permission():
+                return do_work(data)
+            else:
+                raise PermissionError(&quot;No permission&quot;)
+        else:
+            raise ValueError(&quot;Invalid data&quot;)
+    else:
+        raise TypeError(&quot;Data is None&quot;)
+# After
+def process(data):
+    if data is None:
+        raise TypeError(&quot;Data is None&quot;)
+    if not data.is_valid():
+        raise ValueError(&quot;Invalid data&quot;)
+    if not data.has_permission():
+        raise PermissionError(&quot;No permission&quot;)
+    return do_work(data)</code></pre></p>
+<h5>React / JSX</h5>
+<p><pre><code>// SIMPLIFY: Verbose conditional rendering
+// Before
+function UserBadge({ user }: Props) {
+  if (user.isAdmin) {
+    return &lt;Badge variant=&quot;admin&quot;&gt;Admin&lt;/Badge&gt;;
+  } else {
+    return &lt;Badge variant=&quot;default&quot;&gt;User&lt;/Badge&gt;;
+  }
+}
+// After
+function UserBadge({ user }: Props) {
+  const variant = user.isAdmin ? &#39;admin&#39; : &#39;default&#39;;
+  const label = user.isAdmin ? &#39;Admin&#39; : &#39;User&#39;;
+  return &lt;Badge variant={variant}&gt;{label}&lt;/Badge&gt;;
+}
+
+// SIMPLIFY: Prop drilling through intermediate components
+// Before — consider whether context or composition solves this better.
+// This is a judgment call — flag it, don&#39;t auto-refactor.</code></pre></p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;It&#39;s working, no need to touch it&quot;</td><td>Working code that&#39;s hard to read will be hard to fix when it breaks. Simplifying now saves time on every future change.</td></tr>
+<tr><td>&quot;Fewer lines is always simpler&quot;</td><td>A 1-line nested ternary is not simpler than a 5-line if/else. Simplicity is about comprehension speed, not line count.</td></tr>
+<tr><td>&quot;I&#39;ll just quickly simplify this unrelated code too&quot;</td><td>Unscoped simplification creates noisy diffs and risks regressions in code you didn&#39;t intend to change. Stay focused.</td></tr>
+<tr><td>&quot;The types make it self-documenting&quot;</td><td>Types document structure, not intent. A well-named function explains <em>why</em> better than a type signature explains <em>what</em>.</td></tr>
+<tr><td>&quot;This abstraction might be useful later&quot;</td><td>Don&#39;t preserve speculative abstractions. If it&#39;s not used now, it&#39;s complexity without value. Remove it and re-add when needed.</td></tr>
+<tr><td>&quot;The original author must have had a reason&quot;</td><td>Maybe. Check git blame — apply Chesterton&#39;s Fence. But accumulated complexity often has no reason; it&#39;s just the residue of iteration under pressure.</td></tr>
+<tr><td>&quot;I&#39;ll refactor while adding this feature&quot;</td><td>Separate refactoring from feature work. Mixed changes are harder to review, revert, and understand in history.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Simplification that requires modifying tests to pass (you likely changed behavior)</li>
+<li>&quot;Simplified&quot; code that is longer and harder to follow than the original</li>
+<li>Renaming things to match your preferences rather than project conventions</li>
+<li>Removing error handling because &quot;it makes the code cleaner&quot;</li>
+<li>Simplifying code you don&#39;t fully understand</li>
+<li>Batching many simplifications into one large, hard-to-review commit</li>
+<li>Refactoring code outside the scope of the current task without being asked</li>
+</ul>
+<h4>Verification</h4>
+<p>After completing a simplification pass:</p>
+<ul>
+<li>[ ] All existing tests pass without modification</li>
+<li>[ ] Build succeeds with no new warnings</li>
+<li>[ ] Linter/formatter passes (no style regressions)</li>
+<li>[ ] Each simplification is a reviewable, incremental change</li>
+<li>[ ] The diff is clean — no unrelated changes mixed in</li>
+<li>[ ] Simplified code follows project conventions (checked against CLAUDE.md or equivalent)</li>
+<li>[ ] No error handling was removed or weakened</li>
+<li>[ ] No dead code was left behind (unused imports, unreachable branches)</li>
+<li>[ ] A teammate or review agent would approve the change as a net improvement</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/code-simplification</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/code-simplification" aria-label="Copy install code-simplification">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/code-simplification</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/code-simplification/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

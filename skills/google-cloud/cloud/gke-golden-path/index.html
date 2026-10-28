@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-golden-path — Aidentity</title>
+<meta name="description" content="Provides GKE golden path configuration defaults, production readiness checklists, and cluster default patterns. Use when designing GKE clusters, verifying GKE production readiness, or checking configurations against GKE defaults. Don&#39;t use for setting up workload autoscaling specifically (use gke-workload-scaling instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-golden-path/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-golden-path — Aidentity">
+<meta property="og:description" content="Provides GKE golden path configuration defaults, production readiness checklists, and cluster default patterns. Use when designing GKE clusters, verifying GKE production readiness, or checking configurations against GKE defaults. Don&#39;t use for setting up workload autoscaling specifically (use gke-workload-scaling instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-golden-path/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-golden-path","description":"Provides GKE golden path configuration defaults, production readiness checklists, and cluster default patterns. Use when designing GKE clusters, verifying GKE production readiness, or checking configurations against GKE defaults. Don't use for setting up workload autoscaling specifically (use gke-workload-scaling instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-golden-path/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-golden-path
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-golden-path</h1>
+      <p class="summary">Provides GKE golden path configuration defaults, production readiness checklists, and cluster default patterns. Use when designing GKE clusters, verifying GKE production readiness, or checking configurations against GKE defaults. Don&#39;t use for setting up workload autoscaling specifically (use gke-workload-scaling instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Golden Path Configuration</h3>
+<p>The golden path is the recommended Autopilot configuration for production</p>
+<p>clusters. It defines sensible defaults — when the user requests different</p>
+<p>settings, apply them and note relevant trade-offs.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>get_cluster</code>, <code>create_cluster</code>, <code>update_cluster</code></p>
+<h4>Rules</h4>
+<ol>
+<li><strong>Default to the golden path.</strong> Use golden path values unless the user</li>
+</ol>
+<p>    requests otherwise. When deviating, note trade-offs but respect the user&#39;s</p>
+<p>    choice.</p>
+<ol>
+<li><strong>Day-0 vs Day-1.</strong> Flag Day-0 decisions (networking, private nodes,</li>
+</ol>
+<p>    subnets, IP allocation) prominently — they are hard/impossible to change</p>
+<p>    after creation.</p>
+<ol>
+<li><strong>Tool preference: MCP &gt; gcloud &gt; kubectl.</strong> MCP is preferred as it directly</li>
+</ol>
+<p>    interfaces with GKE APIs with structured data, reducing shell syntax errors</p>
+<p>    and parsing ambiguities. See the <code>gke-basics</code> skill&#39;s CLI reference for full</p>
+<p>    coverage matrix and override options. If the user</p>
+<p>    says &quot;use gcloud&quot; or &quot;use kubectl&quot;, respect that for the session.</p>
+<ol>
+<li><strong>Document decisions and rationale</strong>, especially for Day-0 choices and</li>
+</ol>
+<p>    golden path deviations.</p>
+<h4>Required Inputs</h4>
+<p>If the user is unsure, use golden path defaults.</p>
+<ul>
+<li><strong>Project ID</strong> (required)</li>
+<li><strong>Region</strong> (required, e.g., <code>us-central1</code>)</li>
+<li><strong>Cluster name</strong> (required)</li>
+<li><strong>Environment type</strong>: dev/test or production (defaults to production)</li>
+<li><strong>Networking</strong>: bring-your-own VPC/subnet or auto-create (default:</li>
+</ul>
+<p>    auto-create)</p>
+<ul>
+<li><strong>Scale expectations</strong>: expected node/pod count, workload types</li>
+<li><strong>Cost constraints</strong>: Spot VM tolerance, budget considerations</li>
+</ul>
+<h4>Always-Apply Defaults</h4>
+<p>Recommended best practices applied by default. If the user requests a different</p>
+<p>setting, apply it and briefly note the security or operational trade-off.</p>
+<p>Setting                                                            | Golden Path Value</p>
+<p>------------------------------------------------------------------ | -----------------</p>
+<p><code>autopilot.enabled</code>                                                | <code>true</code></p>
+<p><code>privateClusterConfig.enablePrivateNodes</code>                          | <code>true</code></p>
+<p><code>masterAuthorizedNetworksConfig.privateEndpointEnforcementEnabled</code> | <code>true</code></p>
+<p><code>secretManagerConfig.enabled</code> + <code>rotationInterval: 120s</code>           | <code>true</code></p>
+<p><code>rbacBindingConfig.enableInsecureBinding*</code>                         | <code>false</code> (both)</p>
+<p><code>workloadIdentityConfig.workloadPool</code>                              | enabled</p>
+<p><code>networkConfig.datapathProvider</code>                                   | <code>ADVANCED_DATAPATH</code></p>
+<p><code>networkConfig.dnsConfig.clusterDns</code>                               | <code>CLOUD_DNS</code></p>
+<p><code>autoscaling.autoscalingProfile</code>                                   | <code>OPTIMIZE_UTILIZATION</code></p>
+<p><code>verticalPodAutoscaling.enabled</code>                                   | <code>true</code></p>
+<p><code>monitoringConfig</code> components                                      | SYSTEM_COMPONENTS, STORAGE, POD, DEPLOYMENT, STATEFULSET, DAEMONSET, HPA, JOBSET, CADVISOR, KUBELET, DCGM, APISERVER, SCHEDULER, CONTROLLER_MANAGER</p>
+<p><code>loggingConfig</code> components                                         | SYSTEM_COMPONENTS, WORKLOADS (enabled by default)</p>
+<p><code>advancedDatapathObservabilityConfig.enableMetrics</code>                | <code>true</code></p>
+<p><code>nodeConfig.shieldedInstanceConfig.enableSecureBoot</code>               | <code>true</code></p>
+<p><code>nodeConfig.workloadMetadataConfig.mode</code>                           | <code>GKE_METADATA</code></p>
+<p><code>nodeConfig.gcfsConfig.enabled</code> / <code>gvnic.enabled</code>                  | <code>true</code> / <code>true</code></p>
+<p><code>addonsConfig.statefulHaConfig.enabled</code>                            | <code>true</code></p>
+<p>Storage CSI drivers (Filestore, GCS FUSE, Parallelstore)           | enabled</p>
+<p>Pod Security Standards                                             | <code>restricted</code> on production namespaces</p>
+<h4>Customer-Configurable Settings</h4>
+<p>These have golden path defaults but customers may deviate with valid</p>
+<p>justification. <strong>Ask before changing.</strong></p>
+<p>Setting                                  | Default                             | Why Deviate</p>
+<p>---------------------------------------- | ----------------------------------- | -----------</p>
+<p><code>dnsEndpointConfig.allowExternalTraffic</code> | <code>true</code>                              | Restrict if cluster only accessed from within VPC</p>
+<p><code>autoIpamConfig</code> / <code>createSubnetwork</code>    | <code>true</code> / <code>true</code>                     | Customer has pre-existing VPC/subnets</p>
+<p><code>maxPodsPerNode</code>                         | <code>48</code>                                | <code>110</code> for high pod-density (costs more CIDR space)</p>
+<p><code>subnetwork</code>                             | auto-created                        | Customer brings existing subnets</p>
+<p>Maintenance exclusion windows            | configured (NO_MINOR_UPGRADES, 1yr) | Customer-specific scheduling</p>
+<p><code>nodeConfig.bootDisk.diskType</code>           | <code>pd-balanced</code>                       | <code>pd-ssd</code> for I/O-intensive, <code>pd-standard</code> for cost</p>
+<p><code>nodeConfig.machineType</code>                 | <code>ek-standard-8</code> (Autopilot)         | Varies by workload; use ComputeClasses</p>
+<h4>Guardrails</h4>
+<ul>
+<li>Do not request or output secrets (tokens, keys, service account JSON).</li>
+<li>Discover project/cluster context via MCP tools or `gcloud config get-value</li>
+</ul>
+<p>    project` — don&#39;t ask users to paste project IDs.</p>
+<ul>
+<li>For Day-0 decisions, always ask clarifying questions before proceeding.</li>
+<li>For Day-1 features, propose golden path defaults with trade-offs and let the</li>
+</ul>
+<p>    customer confirm.</p>
+<ul>
+<li>Do not promise zero downtime; advise PDBs, health probes, replicas, and</li>
+</ul>
+<p>    staged upgrades.</p>
+<ul>
+<li>When auditing existing clusters, compare against golden path and report</li>
+</ul>
+<p>    deviations with severity and remediation.</p>
+<h4>Golden Path Config</h4>
+<p>See [golden-path-autopilot.yaml](./assets/golden-path-autopilot.yaml) for the</p>
+<p>full cluster-level policy settings.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-golden-path</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-golden-path" aria-label="Copy install gke-golden-path">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-golden-path</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-golden-path/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

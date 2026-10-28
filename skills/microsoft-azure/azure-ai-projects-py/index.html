@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-ai-projects-py — Aidentity</title>
+<meta name="description" content="Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-projects-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-ai-projects-py — Aidentity">
+<meta property="og:description" content="Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-projects-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-ai-projects-py","description":"Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-projects-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-ai-projects-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-ai-projects-py</h1>
+      <p class="summary">Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure AI Projects Python SDK (Foundry SDK)</h3>
+<p>Build AI applications on Microsoft Foundry using the <code>azure-ai-projects</code> SDK.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-ai-projects azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_AI_PROJECT_ENDPOINT=&quot;https://&lt;resource&gt;.services.ai.azure.com/api/projects/&lt;project&gt;&quot;  # Required for all auth methods
+AZURE_AI_MODEL_DEPLOYMENT_NAME=&quot;gpt-4o-mini&quot;  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.ai.projects import AIProjectClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential()
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+with AIProjectClient(
+    endpoint=os.environ[&quot;AZURE_AI_PROJECT_ENDPOINT&quot;],
+    credential=credential,
+) as client:
+    deployments = list(client.deployments.list())</code></pre></p>
+<h4>Client Operations Overview</h4>
+<table><thead><tr><th>Operation</th><th>Access</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>client.agents</code></td><td><code>.agents.*</code></td><td>Agent CRUD, versions, threads, runs</td></tr>
+<tr><td><code>client.connections</code></td><td><code>.connections.*</code></td><td>List/get project connections</td></tr>
+<tr><td><code>client.deployments</code></td><td><code>.deployments.*</code></td><td>List model deployments</td></tr>
+<tr><td><code>client.datasets</code></td><td><code>.datasets.*</code></td><td>Dataset management</td></tr>
+<tr><td><code>client.indexes</code></td><td><code>.indexes.*</code></td><td>Index management</td></tr>
+<tr><td><code>client.evaluations</code></td><td><code>.evaluations.*</code></td><td>Run evaluations</td></tr>
+<tr><td><code>client.red_teams</code></td><td><code>.red_teams.*</code></td><td>Red team operations</td></tr>
+</tbody></table>
+<h4>Two Client Approaches</h4>
+<h5>1. AIProjectClient (Native Foundry)</h5>
+<p><pre><code>from azure.ai.projects import AIProjectClient
+
+with AIProjectClient(
+    endpoint=os.environ[&quot;AZURE_AI_PROJECT_ENDPOINT&quot;],
+    credential=DefaultAzureCredential(),
+) as client:
+    # Use Foundry-native operations
+    agent = client.agents.create_agent(
+        model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+        name=&quot;my-agent&quot;,
+        instructions=&quot;You are helpful.&quot;,
+    )</code></pre></p>
+<h5>2. OpenAI-Compatible Client</h5>
+<p><pre><code># Get OpenAI-compatible client from project
+openai_client = client.get_openai_client()
+
+# Use standard OpenAI API
+response = openai_client.chat.completions.create(
+    model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}],
+)</code></pre></p>
+<h4>Agent Operations</h4>
+<h5>Create Agent (Basic)</h5>
+<p><pre><code>agent = client.agents.create_agent(
+    model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+    name=&quot;my-agent&quot;,
+    instructions=&quot;You are a helpful assistant.&quot;,
+)</code></pre></p>
+<h5>Create Agent with Tools</h5>
+<p><pre><code>from azure.ai.agents.models import CodeInterpreterTool, FileSearchTool
+
+agent = client.agents.create_agent(
+    model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+    name=&quot;tool-agent&quot;,
+    instructions=&quot;You can execute code and search files.&quot;,
+    tools=[CodeInterpreterTool(), FileSearchTool()],
+)</code></pre></p>
+<h5>Versioned Agents with PromptAgentDefinition</h5>
+<p><pre><code>from azure.ai.projects.models import PromptAgentDefinition
+
+# Create a versioned agent
+agent_version = client.agents.create_version(
+    agent_name=&quot;customer-support-agent&quot;,
+    definition=PromptAgentDefinition(
+        model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+        instructions=&quot;You are a customer support specialist.&quot;,
+        tools=[],  # Add tools as needed
+    ),
+    version_label=&quot;v1.0&quot;,
+)</code></pre></p>
+<p>See [references/agents.md](references/agents.md) for detailed agent patterns.</p>
+<h4>Tools Overview</h4>
+<table><thead><tr><th>Tool</th><th>Class</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>Code Interpreter</td><td><code>CodeInterpreterTool</code></td><td>Execute Python, generate files</td></tr>
+<tr><td>File Search</td><td><code>FileSearchTool</code></td><td>RAG over uploaded documents</td></tr>
+<tr><td>Bing Grounding</td><td><code>BingGroundingTool</code></td><td>Web search (requires connection)</td></tr>
+<tr><td>Azure AI Search</td><td><code>AzureAISearchTool</code></td><td>Search your indexes</td></tr>
+<tr><td>Function Calling</td><td><code>FunctionTool</code></td><td>Call your Python functions</td></tr>
+<tr><td>OpenAPI</td><td><code>OpenApiTool</code></td><td>Call REST APIs</td></tr>
+<tr><td>MCP</td><td><code>McpTool</code></td><td>Model Context Protocol servers</td></tr>
+<tr><td>Memory Search</td><td><code>MemorySearchTool</code></td><td>Search agent memory stores</td></tr>
+<tr><td>SharePoint</td><td><code>SharepointGroundingTool</code></td><td>Search SharePoint content</td></tr>
+</tbody></table>
+<p>See [references/tools.md](references/tools.md) for all tool patterns.</p>
+<h4>Thread and Message Flow</h4>
+<p><pre><code># 1. Create thread
+thread = client.agents.threads.create()
+
+# 2. Add message
+client.agents.messages.create(
+    thread_id=thread.id,
+    role=&quot;user&quot;,
+    content=&quot;What&#39;s the weather like?&quot;,
+)
+
+# 3. Create and process run
+run = client.agents.runs.create_and_process(
+    thread_id=thread.id,
+    agent_id=agent.id,
+)
+
+# 4. Get response
+if run.status == &quot;completed&quot;:
+    messages = client.agents.messages.list(thread_id=thread.id)
+    for msg in messages:
+        if msg.role == &quot;assistant&quot;:
+            print(msg.content[0].text.value)</code></pre></p>
+<h4>Connections</h4>
+<p><pre><code># List all connections
+connections = client.connections.list()
+for conn in connections:
+    print(f&quot;{conn.name}: {conn.connection_type}&quot;)
+
+# Get specific connection
+connection = client.connections.get(connection_name=&quot;my-search-connection&quot;)</code></pre></p>
+<p>See [references/connections.md](references/connections.md) for connection patterns.</p>
+<h4>Deployments</h4>
+<p><pre><code># List available model deployments
+deployments = client.deployments.list()
+for deployment in deployments:
+    print(f&quot;{deployment.name}: {deployment.model}&quot;)</code></pre></p>
+<p>See [references/deployments.md](references/deployments.md) for deployment patterns.</p>
+<h4>Datasets and Indexes</h4>
+<p><pre><code># List datasets
+datasets = client.datasets.list()
+
+# List indexes
+indexes = client.indexes.list()</code></pre></p>
+<p>See [references/datasets-indexes.md](references/datasets-indexes.md) for data operations.</p>
+<h4>Evaluation</h4>
+<p><pre><code># Using OpenAI client for evals
+openai_client = client.get_openai_client()
+
+# Create evaluation with built-in evaluators
+eval_run = openai_client.evals.runs.create(
+    eval_id=&quot;my-eval&quot;,
+    name=&quot;quality-check&quot;,
+    data_source={
+        &quot;type&quot;: &quot;custom&quot;,
+        &quot;item_references&quot;: [{&quot;item_id&quot;: &quot;test-1&quot;}],
+    },
+    testing_criteria=[
+        {&quot;type&quot;: &quot;fluency&quot;},
+        {&quot;type&quot;: &quot;task_adherence&quot;},
+    ],
+)</code></pre></p>
+<p>See [references/evaluation.md](references/evaluation.md) for evaluation patterns.</p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.ai.projects.aio import AIProjectClient
+
+async with AIProjectClient(
+    endpoint=os.environ[&quot;AZURE_AI_PROJECT_ENDPOINT&quot;],
+    credential=DefaultAzureCredential(),
+) as client:
+    agent = await client.agents.create_agent(...)
+    # ... async operations</code></pre></p>
+<p>See [references/async-patterns.md](references/async-patterns.md) for async patterns.</p>
+<h4>Memory Stores</h4>
+<p><pre><code># Create memory store for agent
+memory_store = client.agents.create_memory_store(
+    name=&quot;conversation-memory&quot;,
+)
+
+# Attach to agent for persistent memory
+agent = client.agents.create_agent(
+    model=os.environ[&quot;AZURE_AI_MODEL_DEPLOYMENT_NAME&quot;],
+    name=&quot;memory-agent&quot;,
+    tools=[MemorySearchTool()],
+    tool_resources={&quot;memory&quot;: {&quot;store_ids&quot;: [memory_store.id]}},
+)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.ai.projects</code> sync clients with <code>azure.ai.projects.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with AIProjectClient(...) as client:</code> (sync) or <code>async with AIProjectClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Clean up agents</strong> when done: <code>client.agents.delete_agent(agent.id)</code></li>
+<li><strong>Use <code>create_and_process</code></strong> for simple runs, <strong>streaming</strong> for real-time UX</li>
+<li><strong>Use versioned agents</strong> for production deployments</li>
+<li><strong>Prefer connections</strong> for external service integration (AI Search, Bing, etc.)</li>
+</ol>
+<h4>SDK Comparison</h4>
+<table><thead><tr><th>Feature</th><th><code>azure-ai-projects</code></th><th><code>azure-ai-agents</code></th></tr></thead><tbody>
+<tr><td>Level</td><td>High-level (Foundry)</td><td>Low-level (Agents)</td></tr>
+<tr><td>Client</td><td><code>AIProjectClient</code></td><td><code>AgentsClient</code></td></tr>
+<tr><td>Versioning</td><td><code>create_version()</code></td><td>Not available</td></tr>
+<tr><td>Connections</td><td>Yes</td><td>No</td></tr>
+<tr><td>Deployments</td><td>Yes</td><td>No</td></tr>
+<tr><td>Datasets/Indexes</td><td>Yes</td><td>No</td></tr>
+<tr><td>Evaluation</td><td>Via OpenAI client</td><td>No</td></tr>
+<tr><td>When to use</td><td>Full Foundry integration</td><td>Standalone agent apps</td></tr>
+</tbody></table>
+<h4>Reference Files</h4>
+<ul>
+<li>[references/agents.md](references/agents.md): Agent operations with PromptAgentDefinition</li>
+<li>[references/tools.md](references/tools.md): All agent tools with examples</li>
+<li>[references/evaluation.md](references/evaluation.md): Evaluation operations overview</li>
+<li>[references/built-in-evaluators.md](references/built-in-evaluators.md): Complete built-in evaluator reference</li>
+<li>[references/custom-evaluators.md](references/custom-evaluators.md): Code and prompt-based evaluator patterns</li>
+<li>[references/connections.md](references/connections.md): Connection operations</li>
+<li>[references/deployments.md](references/deployments.md): Deployment enumeration</li>
+<li>[references/datasets-indexes.md](references/datasets-indexes.md): Dataset and index operations</li>
+<li>[references/async-patterns.md](references/async-patterns.md): Async client usage</li>
+<li>[references/api-reference.md](references/api-reference.md): Complete API reference for all 373 SDK exports (v2.0.0b4)</li>
+<li>[scripts/run_batch_evaluation.py](scripts/run_batch_evaluation.py): CLI tool for batch evaluations</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-ai-projects-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-ai-projects-py" aria-label="Copy install azure-ai-projects-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-ai-projects-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-ai-projects-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-ai-voicelive-py — Aidentity</title>
+<meta name="description" content="Build real-time voice AI applications using Azure AI Voice Live SDK (azure-ai-voicelive). Use this skill when creating Python applications that need real-time bidirectional audio communication with Azure AI, including voice assistants, voice-enabled chatbots, real-time speech-to-speech translation, voice-driven avatars, or any WebSocket-based audio streaming with AI models. Supports Server VAD (Voice Activity Detection), turn-based conversation, function calling, MCP tools, avatar integration, and transcription.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-voicelive-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-ai-voicelive-py — Aidentity">
+<meta property="og:description" content="Build real-time voice AI applications using Azure AI Voice Live SDK (azure-ai-voicelive). Use this skill when creating Python applications that need real-time bidirectional audio communication with Azure AI, including voice assistants, voice-enabled chatbots, real-time speech-to-speech translation, voice-driven avatars, or any WebSocket-based audio streaming with AI models. Supports Server VAD (Voice Activity Detection), turn-based conversation, function calling, MCP tools, avatar integration, and transcription.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-voicelive-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-ai-voicelive-py","description":"Build real-time voice AI applications using Azure AI Voice Live SDK (azure-ai-voicelive). Use this skill when creating Python applications that need real-time bidirectional audio communication with Azure AI, including voice assistants, voice-enabled chatbots, real-time speech-to-speech translation, voice-driven avatars, or any WebSocket-based audio streaming with AI models. Supports Server VAD (Voice Activity Detection), turn-based conversation, function calling, MCP tools, avatar integration, and transcription.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-voicelive-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-ai-voicelive-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-ai-voicelive-py</h1>
+      <p class="summary">Build real-time voice AI applications using Azure AI Voice Live SDK (azure-ai-voicelive). Use this skill when creating Python applications that need real-time bidirectional audio communication with Azure AI, including voice assistants, voice-enabled chatbots, real-time speech-to-speech translation, voice-driven avatars, or any WebSocket-based audio streaming with AI models. Supports Server VAD (Voice Activity Detection), turn-based conversation, function calling, MCP tools, avatar integration, and transcription.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure AI Voice Live SDK</h3>
+<p>Build real-time voice AI applications with bidirectional WebSocket communication.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-ai-voicelive aiohttp azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_COGNITIVE_SERVICES_ENDPOINT=https://&lt;region&gt;.api.cognitive.microsoft.com  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production
+AZURE_COGNITIVE_SERVICES_KEY=&lt;api-key&gt;  # Only required for the legacy API-key auth path below</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.ai.voicelive.aio import connect
+from azure.identity.aio import DefaultAzureCredential, ManagedIdentityCredential
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+async with DefaultAzureCredential(require_envvar=True) as credential:
+    async with connect(
+        endpoint=os.environ[&quot;AZURE_COGNITIVE_SERVICES_ENDPOINT&quot;],
+        credential=credential,
+        model=&quot;gpt-4o-realtime-preview&quot;,
+        credential_scopes=[&quot;https://cognitiveservices.azure.com/.default&quot;]
+    ) as conn:
+        ...</code></pre></p>
+<h5>Legacy: API Key (existing keyed deployments)</h5>
+<p>New code should use <code>DefaultAzureCredential</code> above. Use <code>AzureKeyCredential</code> only if you have an existing keyed deployment that hasn&#39;t been migrated to Entra ID yet — for example, regulated environments still completing their Entra rollout.</p>
+<p><pre><code>import os
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.voicelive.aio import connect
+
+async with connect(
+    endpoint=os.environ[&quot;AZURE_COGNITIVE_SERVICES_ENDPOINT&quot;],
+    credential=AzureKeyCredential(os.environ[&quot;AZURE_COGNITIVE_SERVICES_KEY&quot;]),
+    model=&quot;gpt-4o-realtime-preview&quot;,
+) as conn:
+    ...</code></pre></p>
+<h4>Quick Start</h4>
+<p><pre><code>import asyncio
+import os
+from azure.ai.voicelive.aio import connect
+from azure.identity.aio import DefaultAzureCredential
+
+async def main():
+    async with connect(
+        endpoint=os.environ[&quot;AZURE_COGNITIVE_SERVICES_ENDPOINT&quot;],
+        credential=DefaultAzureCredential(),
+        model=&quot;gpt-4o-realtime-preview&quot;,
+        credential_scopes=[&quot;https://cognitiveservices.azure.com/.default&quot;]
+    ) as conn:
+        # Update session with instructions
+        await conn.session.update(session={
+            &quot;instructions&quot;: &quot;You are a helpful assistant.&quot;,
+            &quot;modalities&quot;: [&quot;text&quot;, &quot;audio&quot;],
+            &quot;voice&quot;: &quot;alloy&quot;
+        })
+        
+        # Listen for events
+        async for event in conn:
+            print(f&quot;Event: {event.type}&quot;)
+            if event.type == &quot;response.audio_transcript.done&quot;:
+                print(f&quot;Transcript: {event.transcript}&quot;)
+            elif event.type == &quot;response.done&quot;:
+                break
+
+asyncio.run(main())</code></pre></p>
+<h4>Core Architecture</h4>
+<h5>Connection Resources</h5>
+<p>The <code>VoiceLiveConnection</code> exposes these resources:</p>
+<table><thead><tr><th>Resource</th><th>Purpose</th><th>Key Methods</th></tr></thead><tbody>
+<tr><td><code>conn.session</code></td><td>Session configuration</td><td><code>update(session=...)</code></td></tr>
+<tr><td><code>conn.response</code></td><td>Model responses</td><td><code>create()</code>, <code>cancel()</code></td></tr>
+<tr><td><code>conn.input_audio_buffer</code></td><td>Audio input</td><td><code>append()</code>, <code>commit()</code>, <code>clear()</code></td></tr>
+<tr><td><code>conn.output_audio_buffer</code></td><td>Audio output</td><td><code>clear()</code></td></tr>
+<tr><td><code>conn.conversation</code></td><td>Conversation state</td><td><code>item.create()</code>, <code>item.delete()</code>, <code>item.truncate()</code></td></tr>
+<tr><td><code>conn.transcription_session</code></td><td>Transcription config</td><td><code>update(session=...)</code></td></tr>
+</tbody></table>
+<h4>Session Configuration</h4>
+<p><pre><code>from azure.ai.voicelive.models import RequestSession, FunctionTool
+
+await conn.session.update(session=RequestSession(
+    instructions=&quot;You are a helpful voice assistant.&quot;,
+    modalities=[&quot;text&quot;, &quot;audio&quot;],
+    voice=&quot;alloy&quot;,  # or &quot;echo&quot;, &quot;shimmer&quot;, &quot;sage&quot;, etc.
+    input_audio_format=&quot;pcm16&quot;,
+    output_audio_format=&quot;pcm16&quot;,
+    turn_detection={
+        &quot;type&quot;: &quot;server_vad&quot;,
+        &quot;threshold&quot;: 0.5,
+        &quot;prefix_padding_ms&quot;: 300,
+        &quot;silence_duration_ms&quot;: 500
+    },
+    tools=[
+        FunctionTool(
+            type=&quot;function&quot;,
+            name=&quot;get_weather&quot;,
+            description=&quot;Get current weather&quot;,
+            parameters={
+                &quot;type&quot;: &quot;object&quot;,
+                &quot;properties&quot;: {
+                    &quot;location&quot;: {&quot;type&quot;: &quot;string&quot;}
+                },
+                &quot;required&quot;: [&quot;location&quot;]
+            }
+        )
+    ]
+))</code></pre></p>
+<h4>Audio Streaming</h4>
+<h5>Send Audio (Base64 PCM16)</h5>
+<p><pre><code>import base64
+
+# Read audio chunk (16-bit PCM, 24kHz mono)
+audio_chunk = await read_audio_from_microphone()
+b64_audio = base64.b64encode(audio_chunk).decode()
+
+await conn.input_audio_buffer.append(audio=b64_audio)</code></pre></p>
+<h5>Receive Audio</h5>
+<p><pre><code>async for event in conn:
+    if event.type == &quot;response.audio.delta&quot;:
+        audio_bytes = base64.b64decode(event.delta)
+        await play_audio(audio_bytes)
+    elif event.type == &quot;response.audio.done&quot;:
+        print(&quot;Audio complete&quot;)</code></pre></p>
+<h4>Event Handling</h4>
+<p><pre><code>async for event in conn:
+    match event.type:
+        # Session events
+        case &quot;session.created&quot;:
+            print(f&quot;Session: {event.session}&quot;)
+        case &quot;session.updated&quot;:
+            print(&quot;Session updated&quot;)
+        
+        # Audio input events
+        case &quot;input_audio_buffer.speech_started&quot;:
+            print(f&quot;Speech started at {event.audio_start_ms}ms&quot;)
+        case &quot;input_audio_buffer.speech_stopped&quot;:
+            print(f&quot;Speech stopped at {event.audio_end_ms}ms&quot;)
+        
+        # Transcription events
+        case &quot;conversation.item.input_audio_transcription.completed&quot;:
+            print(f&quot;User said: {event.transcript}&quot;)
+        case &quot;conversation.item.input_audio_transcription.delta&quot;:
+            print(f&quot;Partial: {event.delta}&quot;)
+        
+        # Response events
+        case &quot;response.created&quot;:
+            print(f&quot;Response started: {event.response.id}&quot;)
+        case &quot;response.audio_transcript.delta&quot;:
+            print(event.delta, end=&quot;&quot;, flush=True)
+        case &quot;response.audio.delta&quot;:
+            audio = base64.b64decode(event.delta)
+        case &quot;response.done&quot;:
+            print(f&quot;Response complete: {event.response.status}&quot;)
+        
+        # Function calls
+        case &quot;response.function_call_arguments.done&quot;:
+            result = handle_function(event.name, event.arguments)
+            await conn.conversation.item.create(item={
+                &quot;type&quot;: &quot;function_call_output&quot;,
+                &quot;call_id&quot;: event.call_id,
+                &quot;output&quot;: json.dumps(result)
+            })
+            await conn.response.create()
+        
+        # Errors
+        case &quot;error&quot;:
+            print(f&quot;Error: {event.error.message}&quot;)</code></pre></p>
+<h4>Common Patterns</h4>
+<h5>Manual Turn Mode (No VAD)</h5>
+<p><pre><code>await conn.session.update(session={&quot;turn_detection&quot;: None})
+
+# Manually control turns
+await conn.input_audio_buffer.append(audio=b64_audio)
+await conn.input_audio_buffer.commit()  # End of user turn
+await conn.response.create()  # Trigger response</code></pre></p>
+<h5>Interrupt Handling</h5>
+<p><pre><code>async for event in conn:
+    if event.type == &quot;input_audio_buffer.speech_started&quot;:
+        # User interrupted - cancel current response
+        await conn.response.cancel()
+        await conn.output_audio_buffer.clear()</code></pre></p>
+<h5>Conversation History</h5>
+<p><pre><code># Add system message
+await conn.conversation.item.create(item={
+    &quot;type&quot;: &quot;message&quot;,
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: [{&quot;type&quot;: &quot;input_text&quot;, &quot;text&quot;: &quot;Be concise.&quot;}]
+})
+
+# Add user message
+await conn.conversation.item.create(item={
+    &quot;type&quot;: &quot;message&quot;,
+    &quot;role&quot;: &quot;user&quot;, 
+    &quot;content&quot;: [{&quot;type&quot;: &quot;input_text&quot;, &quot;text&quot;: &quot;Hello!&quot;}]
+})
+
+await conn.response.create()</code></pre></p>
+<h4>Voice Options</h4>
+<table><thead><tr><th>Voice</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>alloy</code></td><td>Neutral, balanced</td></tr>
+<tr><td><code>echo</code></td><td>Warm, conversational</td></tr>
+<tr><td><code>shimmer</code></td><td>Clear, professional</td></tr>
+<tr><td><code>sage</code></td><td>Calm, authoritative</td></tr>
+<tr><td><code>coral</code></td><td>Friendly, upbeat</td></tr>
+<tr><td><code>ash</code></td><td>Deep, measured</td></tr>
+<tr><td><code>ballad</code></td><td>Expressive</td></tr>
+<tr><td><code>verse</code></td><td>Storytelling</td></tr>
+</tbody></table>
+<p>Azure voices: Use <code>AzureStandardVoice</code>, <code>AzureCustomVoice</code>, or <code>AzurePersonalVoice</code> models.</p>
+<h4>Audio Formats</h4>
+<table><thead><tr><th>Format</th><th>Sample Rate</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>pcm16</code></td><td>24kHz</td><td>Default, high quality</td></tr>
+<tr><td><code>pcm16-8000hz</code></td><td>8kHz</td><td>Telephony</td></tr>
+<tr><td><code>pcm16-16000hz</code></td><td>16kHz</td><td>Voice assistants</td></tr>
+<tr><td><code>g711_ulaw</code></td><td>8kHz</td><td>Telephony (US)</td></tr>
+<tr><td><code>g711_alaw</code></td><td>8kHz</td><td>Telephony (EU)</td></tr>
+</tbody></table>
+<h4>Turn Detection Options</h4>
+<p><pre><code># Server VAD (default)
+{&quot;type&quot;: &quot;server_vad&quot;, &quot;threshold&quot;: 0.5, &quot;silence_duration_ms&quot;: 500}
+
+# Azure Semantic VAD (smarter detection)
+{&quot;type&quot;: &quot;azure_semantic_vad&quot;}
+{&quot;type&quot;: &quot;azure_semantic_vad_en&quot;}  # English optimized
+{&quot;type&quot;: &quot;azure_semantic_vad_multilingual&quot;}</code></pre></p>
+<h4>Error Handling</h4>
+<p><pre><code>from azure.ai.voicelive.aio import ConnectionError, ConnectionClosed
+
+try:
+    async with connect(...) as conn:
+        async for event in conn:
+            if event.type == &quot;error&quot;:
+                print(f&quot;API Error: {event.error.code} - {event.error.message}&quot;)
+except ConnectionClosed as e:
+    print(f&quot;Connection closed: {e.code} - {e.reason}&quot;)
+except ConnectionError as e:
+    print(f&quot;Connection error: {e}&quot;)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>This SDK is async-only; use the <code>.aio</code> namespace throughout.</strong> Do not try to pair it with sync clients from other Azure SDKs in the same call path — keep the whole request path async.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every connection in <code>async with connect(...) as conn:</code>. For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+</ol>
+<h4>References</h4>
+<ul>
+<li><strong>Detailed API Reference</strong>: See [references/api-reference.md](references/api-reference.md)</li>
+<li><strong>Complete Examples</strong>: See [references/examples.md](references/examples.md)</li>
+<li><strong>All Models &amp; Types</strong>: See [references/models.md](references/models.md)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-ai-voicelive-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-ai-voicelive-py" aria-label="Copy install azure-ai-voicelive-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-ai-voicelive-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-ai-voicelive-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shipping-and-launch — Aidentity</title>
+<meta name="description" content="Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/shipping-and-launch/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="shipping-and-launch — Aidentity">
+<meta property="og:description" content="Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/shipping-and-launch/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shipping-and-launch","description":"Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/shipping-and-launch/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>shipping-and-launch
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>shipping-and-launch</h1>
+      <p class="summary">Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Shipping and Launch</h3>
+<h4>Overview</h4>
+<p>Ship with confidence. The goal is not just to deploy — it&#39;s to deploy safely, with monitoring in place, a rollback plan ready, and a clear understanding of what success looks like. Every launch should be reversible, observable, and incremental.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Deploying a feature to production for the first time</li>
+<li>Releasing a significant change to users</li>
+<li>Migrating data or infrastructure</li>
+<li>Opening a beta or early access program</li>
+<li>Any deployment that carries risk (all of them)</li>
+</ul>
+<h4>The Pre-Launch Checklist</h4>
+<h5>Code Quality</h5>
+<ul>
+<li>[ ] All tests pass (unit, integration, e2e)</li>
+<li>[ ] Build succeeds with no warnings</li>
+<li>[ ] Lint and type checking pass</li>
+<li>[ ] Code reviewed and approved</li>
+<li>[ ] No TODO comments that should be resolved before launch</li>
+<li>[ ] No <code>console.log</code> debugging statements in production code</li>
+<li>[ ] Error handling covers expected failure modes</li>
+</ul>
+<h5>Security</h5>
+<ul>
+<li>[ ] No secrets in code or version control</li>
+<li>[ ] The ecosystem&#39;s dependency audit (<code>npm audit</code>, <code>pip-audit</code>, <code>cargo audit</code>, ...) shows no critical or high vulnerabilities</li>
+<li>[ ] Input validation on all user-facing endpoints</li>
+<li>[ ] Authentication and authorization checks in place</li>
+<li>[ ] Security headers configured (CSP, HSTS, etc.)</li>
+<li>[ ] Rate limiting on authentication endpoints</li>
+<li>[ ] CORS configured to specific origins (not wildcard)</li>
+</ul>
+<h5>Performance</h5>
+<ul>
+<li>[ ] Core Web Vitals within &quot;Good&quot; thresholds</li>
+<li>[ ] No N+1 queries in critical paths</li>
+<li>[ ] Images optimized (compression, responsive sizes, lazy loading)</li>
+<li>[ ] Bundle size within budget</li>
+<li>[ ] Database queries have appropriate indexes</li>
+<li>[ ] Caching configured for static assets and repeated queries</li>
+</ul>
+<h5>Accessibility</h5>
+<ul>
+<li>[ ] Keyboard navigation works for all interactive elements</li>
+<li>[ ] Screen reader can convey page content and structure</li>
+<li>[ ] Color contrast meets WCAG 2.1 AA (4.5:1 for text)</li>
+<li>[ ] Focus management correct for modals and dynamic content</li>
+<li>[ ] Error messages are descriptive and associated with form fields</li>
+<li>[ ] No accessibility warnings in axe-core or Lighthouse</li>
+</ul>
+<h5>Infrastructure</h5>
+<ul>
+<li>[ ] Environment variables set in production</li>
+<li>[ ] Database migrations applied (or ready to apply)</li>
+<li>[ ] DNS and SSL configured</li>
+<li>[ ] CDN configured for static assets</li>
+<li>[ ] Logging and error reporting configured</li>
+<li>[ ] Health check endpoint exists and responds</li>
+</ul>
+<h5>Documentation</h5>
+<ul>
+<li>[ ] README updated with any new setup requirements</li>
+<li>[ ] API documentation current</li>
+<li>[ ] ADRs written for any architectural decisions</li>
+<li>[ ] Changelog updated</li>
+<li>[ ] User-facing documentation updated (if applicable)</li>
+</ul>
+<h4>Feature Flag Strategy</h4>
+<p>Ship behind feature flags to decouple deployment from release:</p>
+<p><pre><code>// Feature flag check
+const flags = await getFeatureFlags(userId);
+
+if (flags.taskSharing) {
+  // New feature: task sharing
+  return &lt;TaskSharingPanel task={task} /&gt;;
+}
+
+// Default: existing behavior
+return null;</code></pre></p>
+<p><strong>Feature flag lifecycle:</strong></p>
+<p><pre><code>1. DEPLOY with flag OFF     → Code is in production but inactive
+2. ENABLE for team/beta     → Internal testing in production environment
+3. GRADUAL ROLLOUT          → 5% → 25% → 50% → 100% of users
+4. MONITOR at each stage    → Watch error rates, performance, user feedback
+5. CLEAN UP                 → Remove flag and dead code path after full rollout</code></pre></p>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>Every feature flag has an owner and an expiration date</li>
+<li>Clean up flags within 2 weeks of full rollout</li>
+<li>Don&#39;t nest feature flags (creates exponential combinations)</li>
+<li>Test both flag states (on and off) in CI</li>
+</ul>
+<h4>Staged Rollout</h4>
+<h5>The Rollout Sequence</h5>
+<p><pre><code>1. DEPLOY to staging
+   └── Full test suite in staging environment
+   └── Manual smoke test of critical flows
+
+2. DEPLOY to production (feature flag OFF)
+   └── Verify deployment succeeded (health check)
+   └── Check error monitoring (no new errors)
+
+3. ENABLE for team (flag ON for internal users)
+   └── Team uses the feature in production
+   └── 24-hour monitoring window
+
+4. CANARY rollout (flag ON for 5% of users)
+   └── Monitor error rates, latency, user behavior
+   └── Compare metrics: canary vs. baseline
+   └── 24-48 hour monitoring window
+   └── Advance only if all thresholds pass (see table below)
+
+5. GRADUAL increase (25% -&gt; 50% -&gt; 100%)
+   └── Same monitoring at each step
+   └── Ability to roll back to previous percentage at any point
+
+6. FULL rollout (flag ON for all users)
+   └── Monitor for 1 week
+   └── Clean up feature flag</code></pre></p>
+<h5>Rollout Decision Thresholds</h5>
+<p>Use these thresholds to decide whether to advance, hold, or roll back at each stage:</p>
+<table><thead><tr><th>Metric</th><th>Advance (green)</th><th>Hold and investigate (yellow)</th><th>Roll back (red)</th></tr></thead><tbody>
+<tr><td>Error rate</td><td>Within 10% of baseline</td><td>10-100% above baseline</td><td>&gt;2x baseline</td></tr>
+<tr><td>P95 latency</td><td>Within 20% of baseline</td><td>20-50% above baseline</td><td>&gt;50% above baseline</td></tr>
+<tr><td>Client JS errors</td><td>No new error types</td><td>New errors at &lt;0.1% of sessions</td><td>New errors at &gt;0.1% of sessions</td></tr>
+<tr><td>Business metrics</td><td>Neutral or positive</td><td>Decline &lt;5% (may be noise)</td><td>Decline &gt;5%</td></tr>
+</tbody></table>
+<h5>When to Roll Back</h5>
+<p>Roll back immediately if:</p>
+<ul>
+<li>Error rate increases by more than 2x baseline</li>
+<li>P95 latency increases by more than 50%</li>
+<li>User-reported issues spike</li>
+<li>Data integrity issues detected</li>
+<li>Security vulnerability discovered</li>
+</ul>
+<h4>Monitoring and Observability</h4>
+<h5>What to Monitor</h5>
+<p><pre><code>Application metrics:
+├── Error rate (total and by endpoint)
+├── Response time (p50, p95, p99)
+├── Request volume
+├── Active users
+└── Key business metrics (conversion, engagement)
+
+Infrastructure metrics:
+├── CPU and memory utilization
+├── Database connection pool usage
+├── Disk space
+├── Network latency
+└── Queue depth (if applicable)
+
+Client metrics:
+├── Core Web Vitals (LCP, INP, CLS)
+├── JavaScript errors
+├── API error rates from client perspective
+└── Page load time</code></pre></p>
+<h5>Error Reporting</h5>
+<p><pre><code>// Set up error boundary with reporting
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    // Report to error tracking service
+    reportError(error, {
+      componentStack: info.componentStack,
+      userId: getCurrentUser()?.id,
+      page: window.location.pathname,
+    });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return &lt;ErrorFallback onRetry={() =&gt; this.setState({ hasError: false })} /&gt;;
+    }
+    return this.props.children;
+  }
+}
+
+// Server-side error reporting
+app.use((err: Error, req: Request, res: Response, next: NextFunction) =&gt; {
+  reportError(err, {
+    method: req.method,
+    url: req.url,
+    userId: req.user?.id,
+  });
+
+  // Don&#39;t expose internals to users
+  res.status(500).json({
+    error: { code: &#39;INTERNAL_ERROR&#39;, message: &#39;Something went wrong&#39; },
+  });
+});</code></pre></p>
+<h5>Post-Launch Verification</h5>
+<p>In the first hour after launch:</p>
+<p><pre><code>1. Check health endpoint returns 200
+2. Check error monitoring dashboard (no new error types)
+3. Check latency dashboard (no regression)
+4. Test the critical user flow manually
+5. Verify logs are flowing and readable
+6. Confirm rollback mechanism works (dry run if possible)</code></pre></p>
+<h4>Rollback Strategy</h4>
+<p>Every deployment needs a rollback plan before it happens:</p>
+<p><pre><code>## Rollback Plan for [Feature/Release]
+
+### Trigger Conditions
+- Error rate &gt; 2x baseline
+- P95 latency &gt; [X]ms
+- User reports of [specific issue]
+
+### Rollback Steps
+1. Disable feature flag (if applicable)
+   OR
+1. Deploy previous version: `git revert &lt;commit&gt; &amp;&amp; git push`
+2. Verify rollback: health check, error monitoring
+3. Communicate: notify team of rollback
+
+### Database Considerations
+- Migration [X] has a rollback: `npx prisma migrate rollback`
+- Data inserted by new feature: [preserved / cleaned up]
+
+### Time to Rollback
+- Feature flag: &lt; 1 minute
+- Redeploy previous version: &lt; 5 minutes
+- Database rollback: &lt; 15 minutes</code></pre></p>
+<h4>See Also</h4>
+<ul>
+<li>For the project-wide Definition of Done that every change must clear before this checklist, see <code>../../references/definition-of-done.md</code></li>
+<li>For security pre-launch checks, see <code>../../references/security-checklist.md</code></li>
+<li>For performance pre-launch checklist, see <code>../../references/performance-checklist.md</code></li>
+<li>For accessibility verification before launch, see <code>../../references/accessibility-checklist.md</code></li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;It works in staging, it&#39;ll work in production&quot;</td><td>Production has different data, traffic patterns, and edge cases. Monitor after deploy.</td></tr>
+<tr><td>&quot;We don&#39;t need feature flags for this&quot;</td><td>Every feature benefits from a kill switch. Even &quot;simple&quot; changes can break things.</td></tr>
+<tr><td>&quot;Monitoring is overhead&quot;</td><td>Not having monitoring means you discover problems from user complaints instead of dashboards.</td></tr>
+<tr><td>&quot;We&#39;ll add monitoring later&quot;</td><td>Add it before launch. You can&#39;t debug what you can&#39;t see.</td></tr>
+<tr><td>&quot;Rolling back is admitting failure&quot;</td><td>Rolling back is responsible engineering. Shipping a broken feature is the failure.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Deploying without a rollback plan</li>
+<li>No monitoring or error reporting in production</li>
+<li>Big-bang releases (everything at once, no staging)</li>
+<li>Feature flags with no expiration or owner</li>
+<li>No one monitoring the deploy for the first hour</li>
+<li>Production environment configuration done by memory, not code</li>
+<li>&quot;It&#39;s Friday afternoon, let&#39;s ship it&quot;</li>
+</ul>
+<h4>Verification</h4>
+<p>Before deploying:</p>
+<ul>
+<li>[ ] Pre-launch checklist completed (all sections green)</li>
+<li>[ ] Feature flag configured (if applicable)</li>
+<li>[ ] Rollback plan documented</li>
+<li>[ ] Monitoring dashboards set up</li>
+<li>[ ] Team notified of deployment</li>
+</ul>
+<p>After deploying:</p>
+<ul>
+<li>[ ] Health check returns 200</li>
+<li>[ ] Error rate is normal</li>
+<li>[ ] Latency is normal</li>
+<li>[ ] Critical user flow works</li>
+<li>[ ] Logs are flowing</li>
+<li>[ ] Rollback tested or verified ready</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/shipping-and-launch</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/shipping-and-launch" aria-label="Copy install shipping-and-launch">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/shipping-and-launch</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/shipping-and-launch/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

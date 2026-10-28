@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>retrieving-developer-knowledge — Aidentity</title>
+<meta name="description" content="Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don&#39;t use for local filesystem lookups or non-Google documentation.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/retrieving-developer-knowledge/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="retrieving-developer-knowledge — Aidentity">
+<meta property="og:description" content="Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don&#39;t use for local filesystem lookups or non-Google documentation.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/retrieving-developer-knowledge/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"retrieving-developer-knowledge","description":"Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don't use for local filesystem lookups or non-Google documentation.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/retrieving-developer-knowledge/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=developers">developers</a><span>/</span>retrieving-developer-knowledge
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>retrieving-developer-knowledge</h1>
+      <p class="summary">Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don&#39;t use for local filesystem lookups or non-Google documentation.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Developer Knowledge</h3>
+<p>The Developer Knowledge skill provides access to official Google developer documentation across Google Cloud, AI/ML (ai.google.dev, ADK, TensorFlow), Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms via the Developer Knowledge MCP server or REST API fallback.</p>
+<h4>Workflow</h4>
+<ol>
+<li><strong>Direct Retrieval</strong>: When answering a technical question, execute a single documentation lookup directly within your current conversation context (do not delegate retrieval to subagents):</li>
+</ol>
+<ul>
+<li><strong>If MCP tools are present in your environment</strong>: Call <code>answer_query</code> (for conceptual guides/workflows) or <code>search_documents</code> (for CLI flags/syntax).</li>
+<li><strong>If MCP tools are not present</strong>: Execute a REST API request via <code>curl</code> against <code>https://developerknowledge.googleapis.com/v1</code>.</li>
+</ul>
+<ol>
+<li><strong>Immediate &amp; Complete Solution Output</strong>: Immediately upon receiving the documentation response, output the complete, self-contained, and executable technical solution (commands with all required flags and placeholders, YAML/JSON configurations, or code snippets) directly in your response text.</li>
+</ol>
+<h4>Tool Selection &amp; Usage</h4>
+<p>Choose the appropriate tool based on availability in your runtime environment:</p>
+<h5>1. Developer Knowledge MCP Tools (Preferred)</h5>
+<p>When MCP tools are present in your active tool definitions:</p>
+<ul>
+<li><strong><code>answer_query(query=&quot;...&quot;)</code></strong>: Use for conceptual guides, architectural comparisons, product choice overviews, and multi-step workflows.</li>
+<li><strong><code>search_documents(query=&quot;...&quot;, page_size=5)</code></strong>: Use for granular CLI flags, exact syntax, parameter names, and IAM permissions (<code>service.resource.verb</code>). Use 2–5 focused keywords (e.g., <code>cloud run filestore nfs mount gcloud</code>) rather than full conversational sentences.</li>
+<li><strong><code>get_documents(names=[&quot;documents/{uri_without_scheme}&quot;])</code></strong>: Fetch full documentation pages by resource name (e.g. <code>names: [&quot;documents/docs.cloud.google.com/run/docs/overview/what-is-cloud-run&quot;]</code>).</li>
+</ul>
+<h5>2. REST API Fallback</h5>
+<p>When MCP tools are not declared in your environment, use HTTP requests (<code>curl</code>) against the Developer Knowledge REST API (<code>https://developerknowledge.googleapis.com/v1</code>) with the environment API key (<code>DEVELOPERKNOWLEDGE_API_KEY</code>):</p>
+<ul>
+<li><strong>Answer Query</strong>:</li>
+</ul>
+<p>  <pre><code>  curl -s -X POST &quot;https://developerknowledge.googleapis.com/v1:answerQuery?key=${DEVELOPERKNOWLEDGE_API_KEY}&quot; \
+    -H &quot;Content-Type: application/json&quot; \
+    -d &#39;{&quot;query&quot;: &quot;How do I configure public read access on Cloud Storage?&quot;}&#39;
+  </code></pre></p>
+<ul>
+<li><strong>Search Document Chunks</strong> (use 2–5 focused keywords):</li>
+</ul>
+<p>  <pre><code>  curl -s &quot;https://developerknowledge.googleapis.com/v1/documents:searchDocumentChunks?query=gcloud+logging+metrics+create&amp;key=${DEVELOPERKNOWLEDGE_API_KEY}&quot;
+  </code></pre></p>
+<ul>
+<li><strong>Get Document</strong>:</li>
+</ul>
+<p>  <pre><code>  curl -s &quot;https://developerknowledge.googleapis.com/v1/documents/docs.cloud.google.com/run/docs/overview/what-is-cloud-run?key=${DEVELOPERKNOWLEDGE_API_KEY}&quot;
+  </code></pre></p>
+<ul>
+<li><strong>Batch Get Documents</strong>:</li>
+</ul>
+<p>  <pre><code>  curl -s -X POST &quot;https://developerknowledge.googleapis.com/v1/documents:batchGet?key=${DEVELOPERKNOWLEDGE_API_KEY}&quot; \
+    -H &quot;Content-Type: application/json&quot; \
+    -d &#39;{&quot;names&quot;: [&quot;documents/docs.cloud.google.com/run/docs/overview/what-is-cloud-run&quot;]}&#39;
+  </code></pre></p>
+<h4>Synthesis &amp; Output Guidelines</h4>
+<ol>
+<li><strong>Grounding in Official Documentation</strong>: Ground all solutions directly in retrieved documentation. Official documentation conventions have absolute precedence over memorized defaults.</li>
+<li><strong>Exact Parameter Formatting</strong>: Format CLI flags, composite keys (e.g. <code>location=IP:PATH</code>), and IAM permission strings according to official Google specifications.</li>
+<li><strong>Complete Solutions in Final Response</strong>: Always output the full, self-contained, executable technical solution (commands, configurations, or code snippets) with clear standard placeholders (e.g. <code>PROJECT_ID</code>, <code>SERVICE_NAME</code>, <code>REGION</code>) directly in your final message, even if previously referenced during internal planning.</li>
+</ol>
+<h4>References</h4>
+<ul>
+<li>[MCP Usage &amp; Tool Details](references/mcp-usage.md)</li>
+<li>[REST API Fallback Guide](references/api-fallback.md)</li>
+<li>[Supported Domains &amp; Scoping](references/supported-domains.md)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/developers/finding-google-skills/index.html"
+     data-source="google-cloud"
+     data-category="developers"
+     data-search="finding-google-skills locates and loads the right google product skill on demand from a remote catalog index, instead of preloading every skill. use at the start of any request touching a google product, api, or developer platform - including google cloud (gke, cloud run, iam, bigquery, vertex ai, spanner), google ads, google analytics, google workspace (gmail, drive, admin sdk), chrome and chrome extensions, android, firebase, youtube, google maps, gemini and the gemini api, google play, and flutter. consult the index before answering from memory or searching the web. don&#39;t use for non-google products. developers cloud google/skills">
+  <span>
+    <span class="r-name">finding-google-skills</span>
+    <span class="r-desc">Locates and loads the right Google product skill on demand from a remote catalog index, instead of preloading every skill. Use at the START of any request touching a Google product, API, or developer platform - including Google Cloud (GKE, Cloud Run, IAM, BigQuery, Vertex AI, Spanner), Google Ads, Google Analytics, Google Workspace (Gmail, Drive, Admin SDK), Chrome and Chrome extensions, Android, Firebase, YouTube, Google Maps, Gemini and the Gemini API, Google Play, and Flutter. Consult the index before answering from memory or searching the web. Don&#39;t use for non-Google products.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/developers/retrieving-developer-knowledge</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/developers/retrieving-developer-knowledge" aria-label="Copy install retrieving-developer-knowledge">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>developers</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/developers/retrieving-developer-knowledge</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/developers/retrieving-developer-knowledge/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tdd — Aidentity</title>
+<meta name="description" content="Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/tdd/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="tdd — Aidentity">
+<meta property="og:description" content="Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/tdd/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"tdd","description":"Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/tdd/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=testing">testing</a><span>/</span>tdd
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>tdd</h1>
+      <p class="summary">Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=testing">testing</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Test-Driven Development</h3>
+<p>TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.</p>
+<p>When exploring the codebase, read <code>CONTEXT.md</code> (if it exists) so test names and interface vocabulary match the project&#39;s domain language, and respect ADRs in the area you&#39;re touching.</p>
+<h4>What a good test is</h4>
+<p>Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn&#39;t. A good test reads like a specification: &quot;user can checkout with valid cart&quot; tells you exactly what capability exists, and it survives refactors because it doesn&#39;t care about internal structure.</p>
+<p>See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.</p>
+<h4>Seams: where tests go</h4>
+<p>A <strong>seam</strong> is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.</p>
+<p><strong>Test only at pre-agreed seams.</strong> Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can&#39;t test everything, so agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.</p>
+<p>Ask: &quot;What&#39;s the public interface, and which seams should we test?&quot;</p>
+<p>When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with &quot;codebase-design&quot; for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.</p>
+<h4>Anti-patterns</h4>
+<ul>
+<li><strong>Implementation-coupled</strong>: mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn&#39;t changed.</li>
+<li><strong>Tautological</strong>: the assertion recomputes the expected value the way the code does (<code>expect(add(a, b)).toBe(a + b)</code>, a snapshot derived by hand the same way, a constant asserted equal to itself), so it passes by construction and can never disagree with the code. Expected values must come from an independent source of truth: a known-good literal, a worked example, the spec.</li>
+<li><strong>Horizontal slicing</strong>: writing all tests first, then all implementation. Bulk tests verify _imagined_ behavior: you test the _shape_ of things rather than user-facing behavior, the tests go insensitive to real changes, and you commit to test structure before understanding the implementation. Work in <strong>vertical slices</strong> instead: one test → one implementation → repeat, each test a <strong>tracer bullet</strong> that responds to what the last cycle taught you.</li>
+</ul>
+<h4>Rules of the loop</h4>
+<ul>
+<li><strong>Red before green.</strong> Write the failing test first, then only enough code to pass it. Don&#39;t anticipate future tests or add speculative features.</li>
+<li><strong>One slice at a time.</strong> One seam, one test, one minimal implementation per cycle.</li>
+<li><strong>Refactoring is not part of the loop.</strong> It belongs to the review stage (see the <code>code-review</code> skill), not the red → green implementation cycle.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/test-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="test-driven-development drives development with tests. use when implementing any logic, fixing any bug, or changing any behavior. use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">test-driven-development</span>
+    <span class="r-desc">Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/anthropic-official/webapp-testing/index.html"
+     data-source="anthropic-official"
+     data-category="testing"
+     data-search="webapp-testing toolkit for interacting with and testing local web applications using playwright. supports verifying frontend functionality, debugging ui behavior, capturing browser screenshots, and viewing browser logs. testing testing anthropics/skills">
+  <span>
+    <span class="r-name">webapp-testing</span>
+    <span class="r-desc">Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../../skills/obra-superpowers/test-driven-development/index.html"
+     data-source="obra-superpowers"
+     data-category="testing"
+     data-search="test-driven-development use when implementing any feature or bugfix, before writing implementation code testing testing obra/superpowers">
+  <span>
+    <span class="r-name">test-driven-development</span>
+    <span class="r-desc">Use when implementing any feature or bugfix, before writing implementation code</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/tdd</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/tdd" aria-label="Copy install tdd">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>testing</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/tdd</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/tdd/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

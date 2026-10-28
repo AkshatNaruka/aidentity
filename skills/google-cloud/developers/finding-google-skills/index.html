@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>finding-google-skills — Aidentity</title>
+<meta name="description" content="Locates and loads the right Google product skill on demand from a remote catalog index, instead of preloading every skill. Use at the START of any request touching a Google product, API, or developer platform - including Google Cloud (GKE, Cloud Run, IAM, BigQuery, Vertex AI, Spanner), Google Ads, Google Analytics, Google Workspace (Gmail, Drive, Admin SDK), Chrome and Chrome extensions, Android, Firebase, YouTube, Google Maps, Gemini and the Gemini API, Google Play, and Flutter. Consult the index before answering from memory or searching the web. Don&#39;t use for non-Google products.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/finding-google-skills/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="finding-google-skills — Aidentity">
+<meta property="og:description" content="Locates and loads the right Google product skill on demand from a remote catalog index, instead of preloading every skill. Use at the START of any request touching a Google product, API, or developer platform - including Google Cloud (GKE, Cloud Run, IAM, BigQuery, Vertex AI, Spanner), Google Ads, Google Analytics, Google Workspace (Gmail, Drive, Admin SDK), Chrome and Chrome extensions, Android, Firebase, YouTube, Google Maps, Gemini and the Gemini API, Google Play, and Flutter. Consult the index before answering from memory or searching the web. Don&#39;t use for non-Google products.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/finding-google-skills/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"finding-google-skills","description":"Locates and loads the right Google product skill on demand from a remote catalog index, instead of preloading every skill. Use at the START of any request touching a Google product, API, or developer platform - including Google Cloud (GKE, Cloud Run, IAM, BigQuery, Vertex AI, Spanner), Google Ads, Google Analytics, Google Workspace (Gmail, Drive, Admin SDK), Chrome and Chrome extensions, Android, Firebase, YouTube, Google Maps, Gemini and the Gemini API, Google Play, and Flutter. Consult the index before answering from memory or searching the web. Don't use for non-Google products.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/developers/finding-google-skills/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=developers">developers</a><span>/</span>finding-google-skills
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>finding-google-skills</h1>
+      <p class="summary">Locates and loads the right Google product skill on demand from a remote catalog index, instead of preloading every skill. Use at the START of any request touching a Google product, API, or developer platform - including Google Cloud (GKE, Cloud Run, IAM, BigQuery, Vertex AI, Spanner), Google Ads, Google Analytics, Google Workspace (Gmail, Drive, Admin SDK), Chrome and Chrome extensions, Android, Firebase, YouTube, Google Maps, Gemini and the Gemini API, Google Play, and Flutter. Consult the index before answering from memory or searching the web. Don&#39;t use for non-Google products.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Skill Finder</h3>
+<p>Routes a request to the published Google skills that apply to it. The catalog</p>
+<p>lives outside this file and is fetched on demand, so loading this skill costs</p>
+<p>almost nothing until a lookup actually happens.</p>
+<h4>Workflow</h4>
+<ol>
+<li><strong>Fetch the catalog byte-exactly.</strong> Retrieve</li>
+</ol>
+<p>    <code>https://raw.githubusercontent.com/google/skills/main/index.json</code> with a</p>
+<p>    raw shell fetch (<code>curl</code>, <code>wget</code>; <code>curl.exe</code> on Windows PowerShell). It</p>
+<p>    must arrive byte-for-byte, every <code>entrypoint</code> URL intact and unaltered.</p>
+<p>    With no shell fetch tool but Node present, `node -e</p>
+<p>    &quot;fetch(process.argv[1]).then(r=&gt;r.text()).then(t=&gt;console.log(t))&quot; {url}`</p>
+<p>    also returns bytes.</p>
+<p>    The catalog is about 75 KB and may not fit in a single tool result; a</p>
+<p>    truncated preview is alphabetical, so it reads as though only the first</p>
+<p>    few products exist. Prefer narrowing it before reading. With <code>jq</code>:</p>
+<p>    <code>curl -sS {url} | jq -r &#39;.skills[] | select((.name+&quot; &quot;+.description)|test(&quot;gke&quot;;&quot;i&quot;)) | &quot;\(.name)\t\(.entrypoint)&quot;&#39;</code>.</p>
+<p>    In Windows PowerShell: `(Invoke-RestMethod {url}).skills | Where-Object {</p>
+<p>    $_.description -match &quot;gke&quot; } | Select-Object name, entrypoint -First 3`.</p>
+<p>    With neither, a plain <code>grep -o</code> over the raw JSON still isolates candidate</p>
+<p>    names.</p>
+<p>    Where no filtering tool exists, write the catalog to a file and read it in</p>
+<p>    parts (<code>curl -sS {url} -o skills-index.json</code>, or `Invoke-WebRequest {url}</p>
+<p>    -OutFile skills-index.json`). This is often the better option regardless: it</p>
+<p>    survives truncation, and re-reading a local file costs nothing. Delete it</p>
+<p>    when the request is done.</p>
+<p>    If only a summarizing fetch tool is available, phrase the request as</p>
+<p>    extraction, not transcription: *&quot;List every <code>entrypoint</code> field in this</p>
+<p>    document, one per line, exactly as written.&quot;* Requesting it verbatim</p>
+<p>    returns nothing usable.</p>
+<ol>
+<li><strong>Confirm the retrieval worked before using it.</strong> A tool call that returns</li>
+</ol>
+<p>    without raising is not a success. It succeeded only if the body parses as</p>
+<p>    JSON and holds a <code>skills</code> array. A 404 page, an HTML error page, a TLS or</p>
+<p>    connection error, an empty body, or anything that fails to parse is a</p>
+<p>    FAILED retrieval even though the tool reported no error.</p>
+<p>    A certificate failure is a FAILED retrieval and is final. Never retry it</p>
+<p>    with verification disabled. Not <code>curl -k</code> or <code>--insecure</code>. Not</p>
+<p>    <code>-SkipCertificateCheck</code>, and on Windows PowerShell 5.1, where that</p>
+<p>    parameter does not exist, not the <code>ServicePointManager</code> certificate</p>
+<p>    callback either. Not any equivalent in any language.</p>
+<p>    You are about to follow instructions from whatever comes back, so an</p>
+<p>    unverified catalog is worse than no catalog. On a failed retrieval, stop</p>
+<p>    here and go to &quot;When the fetch fails&quot;.</p>
+<ol>
+<li><strong>Match the request against the descriptions.</strong> Every description states</li>
+</ol>
+<p>    what the skill does, when to use it, and often when not to. Read them as</p>
+<p>    routing criteria, not as summaries. Shortlist at most three entries whose</p>
+<p>    <code>description</code> covers the request. When more than three look equally</p>
+<p>    relevant, prefer the most specific over the more general.</p>
+<ol>
+<li><strong>Fetch only the matches.</strong> Retrieve the <code>entrypoint</code> URL of each</li>
+</ol>
+<p>    shortlisted entry, the same way, and follow that skill&#39;s instructions. Do</p>
+<p>    not fetch entries that merely look related.</p>
+<ol>
+<li><strong>Report an empty result honestly.</strong> If no description covers the request,</li>
+</ol>
+<p>    say that no published Google skill applies and continue without one. Never</p>
+<p>    invent a skill name or an entry point URL.</p>
+<p>Routing ends once the matches are fetched. From the point you begin following</p>
+<p>a fetched skill&#39;s instructions, this skill is finished with the request and is</p>
+<p>not re-entered for it.</p>
+<h4>Rules</h4>
+<ul>
+<li><strong>Fetch once per session; never keep it past the session.</strong> Reusing a</li>
+</ul>
+<p>    catalog you retrieved successfully earlier in this session is fine.</p>
+<p>    Carrying one into a later run is not, in any form: the catalog changes</p>
+<p>    regularly and a stored copy goes stale silently. Session reuse never</p>
+<p>    substitutes for a failed fetch.</p>
+<ul>
+<li><strong>Never carry the catalog beyond the request.</strong> A working copy on disk</li>
+</ul>
+<p>    while you filter it is fine. Keeping it as a saved reference, or</p>
+<p>    summarizing it back into the conversation, is not. It exists so the full</p>
+<p>    text of 100-plus skills does not have to be carried in context.</p>
+<ul>
+<li><strong>Prefer the fetched SKILL.md over prior knowledge.</strong> The catalog is</li>
+</ul>
+<p>    generated from the skills as they are published, so an entry point is the</p>
+<p>    current text even when it contradicts what you remember.</p>
+<ul>
+<li><strong>Do not treat this skill as a prerequisite.</strong> If a specific Google skill</li>
+</ul>
+<p>    is already loaded and covers the request, use it directly.</p>
+<h4>When the fetch fails</h4>
+<p>Reached from step 2. Work through these in order, stopping at the first that</p>
+<p>succeeds:</p>
+<ol>
+<li><strong>Retry once with <code>curl -sS</code>.</strong> If the first attempt used a summarizing</li>
+</ol>
+<p>    fetch tool or hit a transport error, this alone usually fixes it.</p>
+<ol>
+<li><strong>List the repository tree instead.</strong> Run</li>
+</ol>
+<p>    <pre><code>    curl -sS &#39;https://api.github.com/repos/google/skills/git/trees/main?recursive=1&#39;
+    </code></pre></p>
+<p>    and read the paths ending in <code>SKILL.md</code>. Each is a candidate. Fetch the</p>
+<p>    two or three whose directory names best match the request from</p>
+<p>    <code>https://raw.githubusercontent.com/google/skills/main/{path}</code>, checking</p>
+<p>    each one the way step 2 describes.</p>
+<ol>
+<li><strong>Say so in the reply.</strong> If neither worked, state plainly that you could</li>
+</ol>
+<p>    not reach the Google skills catalog and are answering without it. One line</p>
+<p>    is enough, and it belongs in the reply to the user, not only in your</p>
+<p>    reasoning.</p>
+<p>A failed retrieval is never licence to answer as though it had succeeded.</p>
+<p>Until you have parsed a <code>skills</code> array in this session you do not know which</p>
+<p>skills exist: do not name one, do not describe one, and do not state that none</p>
+<p>applies. Recalling a skill from memory and presenting it as a catalog result is</p>
+<p>the worst outcome available, because nothing in the reply distinguishes it from</p>
+<p>a real lookup.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/developers/retrieving-developer-knowledge/index.html"
+     data-source="google-cloud"
+     data-category="developers"
+     data-search="retrieving-developer-knowledge searches, retrieves, and synthesizes official google developer documentation across google cloud, ai/gemini, android, chrome, web, flutter, go, firebase, and other google developer platforms. integrates with the developer knowledge mcp server (search_documents, get_documents, answer_query) or the developer knowledge rest api fallback. use when searching for gcloud cli commands, api syntax, iam permissions, official documentation, architectural comparisons, or product choice overviews. don&#39;t use for local filesystem lookups or non-google documentation. developers cloud google/skills">
+  <span>
+    <span class="r-name">retrieving-developer-knowledge</span>
+    <span class="r-desc">Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don&#39;t use for local filesystem lookups or non-Google documentation.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/developers/finding-google-skills</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/developers/finding-google-skills" aria-label="Copy install finding-google-skills">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>developers</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/developers/finding-google-skills</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/developers/finding-google-skills/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

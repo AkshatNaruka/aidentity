@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-solution-rag-enterprise-search-gke-sqldb — Aidentity</title>
+<meta name="description" content="Discovers requirements, and generates architectural, design, and deployment guidance for a retrieval-augmented generation (RAG)-capable enterprise search system in Google Cloud. Use when users need a vector-enabled SQL database as the store and index for the embedding vectors, an open model and open-source inferencing framework, and Kubernetes containers to host all the application components. DON&#39;T use this skill for fully-managed RAG, or SaaS search services, or when a non-SQL vector database is required.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-solution-rag-enterprise-search-gke-sqldb — Aidentity">
+<meta property="og:description" content="Discovers requirements, and generates architectural, design, and deployment guidance for a retrieval-augmented generation (RAG)-capable enterprise search system in Google Cloud. Use when users need a vector-enabled SQL database as the store and index for the embedding vectors, an open model and open-source inferencing framework, and Kubernetes containers to host all the application components. DON&#39;T use this skill for fully-managed RAG, or SaaS search services, or when a non-SQL vector database is required.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-solution-rag-enterprise-search-gke-sqldb","description":"Discovers requirements, and generates architectural, design, and deployment guidance for a retrieval-augmented generation (RAG)-capable enterprise search system in Google Cloud. Use when users need a vector-enabled SQL database as the store and index for the embedding vectors, an open model and open-source inferencing framework, and Kubernetes containers to host all the application components. DON'T use this skill for fully-managed RAG, or SaaS search services, or when a non-SQL vector database is required.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-solution-rag-enterprise-search-gke-sqldb
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-solution-rag-enterprise-search-gke-sqldb</h1>
+      <p class="summary">Discovers requirements, and generates architectural, design, and deployment guidance for a retrieval-augmented generation (RAG)-capable enterprise search system in Google Cloud. Use when users need a vector-enabled SQL database as the store and index for the embedding vectors, an open model and open-source inferencing framework, and Kubernetes containers to host all the application components. DON&#39;T use this skill for fully-managed RAG, or SaaS search services, or when a non-SQL vector database is required.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>RAG for enterprise search using GKE and AlloyDB</h3>
+<p>This skill provides a workflow to design and implement a secure, low-latency,</p>
+<p>and high-accuracy RAG-enabled conversational search solution for private</p>
+<p>enterprise content by using an AlloyDB database, Cloud Storage, and a Google</p>
+<p>Kubernetes Engine (GKE) cluster to host all the application components,</p>
+<p>including an open model and an open-source inference framework.</p>
+<h4>Overview of the workflow</h4>
+<p>The workflow consists of the following phases:</p>
+<ul>
+<li><strong>Phase 1: Requirements discovery</strong>. Gather detailed requirements related to</li>
+</ul>
+<p>    the cloud workload or use case that the user needs assistance for.</p>
+<ul>
+<li><strong>Phase 2: Solution architecture</strong>. Use the requirements that were gathered</li>
+</ul>
+<p>    in Phase 1 to generate a detailed solution architecture for the cloud</p>
+<p>    workload or use case.</p>
+<ul>
+<li><strong>Phase 3: Solution validation</strong>. Create a plan to validate the generated</li>
+</ul>
+<p>    solution, generate validation instructions and scripts, and run the</p>
+<p>    validation.</p>
+<ul>
+<li><strong>Phase 4: Solution packing and presentation</strong>. Consolidate the generated</li>
+</ul>
+<p>    content and present the solution.</p>
+<p><strong>Important notes about the workflow</strong>:</p>
+<ul>
+<li><strong>Strict phase separation</strong>: During Phase 1 (Requirements discovery), when</li>
+</ul>
+<p>    you ask the user clarifying questions, DON&#39;T recommend, propose, or outline</p>
+<p>    any architectural designs, technical decompositions, cloud services, or</p>
+<p>    component mappings.</p>
+<ul>
+<li><strong>When you can skip certain phases</strong>: If the user&#39;s prompt indicates that a</li>
+</ul>
+<p>    specific phase or task in this workflow is already completed or approved</p>
+<p>    (e.g., &quot;requirements discovery stage is completed&quot;, &quot;product selection is</p>
+<p>    approved&quot;, or &quot;architecture is confirmed&quot;), DON&#39;T repeat that phase or task.</p>
+<p>    Instead, skip directly to the requested task (such as generating the</p>
+<p>    technical decomposition, recommending products, or compiling the solution</p>
+<p>    guide).</p>
+<h4>Phase 1: Requirements discovery</h4>
+<p>In this phase, you must gather detailed requirements related to the RAG workload</p>
+<p>that the user wants to design and deploy in Google Cloud.</p>
+<p>Complete the following steps strictly in the specified order:</p>
+<ol>
+<li>Ask the user to describe the functional requirements of the workload,</li>
+</ol>
+<p>    including data types (structured, unstructured), ingestion frequency, and</p>
+<p>    conversational features (e.g., multi-turn chat, citation requirements).</p>
+<ol>
+<li>Ask the user to describe the following non-functional requirements:</li>
+</ol>
+<ul>
+<li><strong>Security, privacy, and compliance</strong>: E.g., network isolation, private</li>
+</ul>
+<p>        endpoints, data residency, and requirements for compliance.</p>
+<ul>
+<li><strong>Reliability</strong>: E.g., scaling, high availability, resilience against</li>
+</ul>
+<p>        zone or regional outages, disaster recovery goals for RTO and RPO.</p>
+<ul>
+<li><strong>Cost</strong>: E.g., cost of compute, storage, and database resources.</li>
+<li><strong>Operational excellence</strong>: E.g., monitoring, alerts, and logging.</li>
+<li><strong>Performance</strong>: E.g., data upload speed, performance expectations for</li>
+</ul>
+<p>        generating embedding vectors, and latency requirements for model</p>
+<p>        responses and data retrieval queries (including vector and hybrid</p>
+<p>        search).</p>
+<ul>
+<li><strong>Sustainability</strong>: E.g., carbon footprint, low-carbon regions.</li>
+</ul>
+<ol>
+<li>Ask the user whether the workload currently runs on other cloud providers or</li>
+</ol>
+<p>    on-premises.</p>
+<ul>
+<li>If the user&#39;s answer is &quot;yes&quot;, then ask the user to describe the</li>
+</ul>
+<p>        architecture of the current deployment.</p>
+<ul>
+<li>If the user&#39;s answer is &quot;no&quot;, then proceed to the next step.</li>
+</ul>
+<ol>
+<li>Ask the user to describe dependencies, if any, on other workloads, products,</li>
+</ol>
+<p>    or tools (e.g., identity providers, external sources, CRM/ERP database</p>
+<p>    integrations).</p>
+<ol>
+<li>Review the input that the user has provided so far, and check whether there</li>
+</ol>
+<p>    are any ambiguities or contradictions.</p>
+<p>    If you identify any ambiguities or contradictions in the requirements that</p>
+<p>    the user has provided, then</p>
+<p>    do the following for each ambiguity or contradiction that you identify:</p>
+<ul>
+<li>Describe the ambiguity or contradiction.</li>
+<li>Ask the user how they wish to resolve the ambiguity or contradiction.</li>
+<li>If the user delegates the choice to you (e.g., the user replies with</li>
+</ul>
+<p>            &quot;do what you think is best&quot; or &quot;you decide&quot;), then provide a clear</p>
+<p>            suggestion to resolve the ambiguity or contradiction, explain your</p>
+<p>            reasoning, and ask the user to approve your suggestion.</p>
+<p>    <strong>Critical</strong>: Until all the ambiguities and contradictions that you identify</p>
+<p>    are resolved according to the preceding guidance, you must NOT recommend or</p>
+<p>    generate any architecture design, technical decomposition, or Google Cloud</p>
+<p>    product recommendations.</p>
+<ol>
+<li><strong>Important</strong>: DON&#39;T start this step if there are unresolved contradictions</li>
+</ol>
+<p>    or ambiguities from Step 5.</p>
+<p>    Generate a technical decomposition of the components of the workload. The</p>
+<p>    technical decomposition must break down the solution into logical</p>
+<p>    components, as follows:</p>
+<ul>
+<li><strong>Data ingestion</strong>: Blob storage for raw corporate documents.</li>
+<li><strong>Data processing and chunking</strong>: Containerized pipeline to extract</li>
+</ul>
+<p>        data, clean it, and chunk it.</p>
+<ul>
+<li><strong>Embedding vectors generation</strong>: Containerized service to convert data</li>
+</ul>
+<p>        chunks to embedding vectors.</p>
+<ul>
+<li><strong>Storing and indexing the embedding vectors</strong>: Vector-enabled SQL</li>
+</ul>
+<p>        database for storing embedding vectors.</p>
+<ul>
+<li><strong>Handling non-vector data</strong>: Preparing non-vector data, like tables,</li>
+</ul>
+<p>        views, and aggregations for data retrieval. Analyzing whether any</p>
+<p>        indexing, partitioning, or other performance techniques can be applied</p>
+<p>        on the original data schema.</p>
+<ul>
+<li><strong>Query and retrieval</strong>: Accepting client queries, identifying intent,</li>
+</ul>
+<p>        and routing to a retrieval workflow, which might include conversion of</p>
+<p>        the request to an embedding for semantic search, extracting and applying</p>
+<p>        filters for filtered search or supplying all to the hybrid search.</p>
+<ul>
+<li><strong>Prompt augmentation</strong>: Augmenting the prompts with the retrieved</li>
+</ul>
+<p>        context.</p>
+<ul>
+<li><strong>Response generation</strong>: Requesting and generating responses from the</li>
+</ul>
+<p>        model.</p>
+<ul>
+<li><strong>Response sanity checks</strong>: Evaluating responses using an AI model and</li>
+</ul>
+<p>        performing procedural checks according to defined criteria.</p>
+<ol>
+<li>Ask the user to approve the generated technical decomposition.</li>
+</ol>
+<p>    <strong>Critical</strong>: You MUST stop execution immediately, call no more tools (such</p>
+<p>    as file editors, searches, or code tools), and wait for the user to respond</p>
+<p>    with their feedback or approval in the chat. Do NOT compile the</p>
+<p>    architecture, recommend products, construct maps, or write any files/drafts</p>
+<p>    for Phase 2 until the user&#39;s explicit approval is received.</p>
+<ol>
+<li>If the user requests changes, then generate an updated technical</li>
+</ol>
+<p>    decomposition.</p>
+<ol>
+<li>Repeat steps 5 through 8 until the user approves the generated technical</li>
+</ol>
+<p>    decomposition.</p>
+<ol>
+<li>Only after the user has explicitly approved the technical decomposition,</li>
+</ol>
+<p>    proceed to Phase 2.</p>
+<p>    <strong>Important</strong>: You are strictly prohibited from recommending product</p>
+<p>    choices, generating the architecture diagram, or drafting design</p>
+<p>    recommendations until the technical decomposition is approved.</p>
+<h4>Phase 2: Solution architecture</h4>
+<h5>Ground all generated content</h5>
+<p>For each task in this phase, to ensure that the generated content aligns with</p>
+<p>the latest and official Google Cloud guidance, you must ground the generated</p>
+<p>content by using the following resources:</p>
+<ul>
+<li>Google Developer Knowledge MCP server:</li>
+</ul>
+<p>    <a href="https://developers.google.com/knowledge/mcp.md.txt" rel="noopener">https://developers.google.com/knowledge/mcp.md.txt</a></p>
+<ul>
+<li>Server: <a href="https://developerknowledge.googleapis.com/mcp" rel="noopener">https://developerknowledge.googleapis.com/mcp</a></li>
+<li>Tools:</li>
+<li><code>developerknowledge:search_documents</code></li>
+<li><code>developerknowledge:get_documents</code></li>
+<li><code>developerknowledge:answer_query</code></li>
+<li>Relevant skills from <a href="https://github.com/google/skills" rel="noopener">https://github.com/google/skills</a></li>
+<li>Official Google Cloud documentation, including the following:</li>
+<li><strong>Primary architecture reference</strong>:</li>
+</ul>
+<p>        <a href="https://docs.cloud.google.com/architecture/rag-capable-gen-ai-app-using-gke.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/rag-capable-gen-ai-app-using-gke.md.txt</a></p>
+<ul>
+<li><strong>Architecture guidance and decision-making guides</strong>:</li>
+<li><code>references/product-selection-recommendations.md</code></li>
+<li><code>references/design-recommendations.md</code></li>
+<li><code>references/related-documentation.md</code></li>
+</ul>
+<p>For each item in the generated guidance, you must include citations to the</p>
+<p>relevant official Google Cloud documentation pages.</p>
+<h5>Task 2.1: Identify Google Cloud products and features required for the workload.</h5>
+<ol>
+<li>Recommend the products and features that are appropriate for each component</li>
+</ol>
+<p>    of the user&#39;s workload.</p>
+<p>    <strong>Important</strong>: The Google Cloud products and features that you recommend</p>
+<p>    MUST be consistent with the guidance in</p>
+<p>    <code>references/product-selection-recommendations.md</code>.</p>
+<ol>
+<li>Present the generated product recommendations and ask the user to approve</li>
+</ol>
+<p>    the recommendations.</p>
+<ol>
+<li>If the user requests changes, then make the required changes.</li>
+<li>Repeat steps 2 and 3 until the user approves the product recommendations.</li>
+<li>After the user approves the product recommendations, proceed to Task 2.2.</li>
+</ol>
+<h5>Task 2.2: Generate an architecture diagram.</h5>
+<ol>
+<li>Generate an architecture diagram in the Mermaid format:</li>
+</ol>
+<p>    <a href="https://github.com/mermaid-js/mermaid." rel="noopener">https://github.com/mermaid-js/mermaid.</a></p>
+<p>    The diagram must show the data flows and request flows across the components</p>
+<p>    of the architecture, based on the technical composition that you generated.</p>
+<p>    The following is an <strong>example</strong> of the data flows and request flows that the</p>
+<p>    architecture diagram should show:</p>
+<ul>
+<li><strong>Embedding pipeline (batch/streaming)</strong>: Data source -&gt; Cloud Storage</li>
+</ul>
+<p>        -&gt; Cloud Storage FUSE -&gt; GKE Ray Worker (Chunking) --&gt; Embedding</p>
+<p>        generation using GemmaEmbedding -&gt; AlloyDB.</p>
+<ul>
+<li><strong>Serving pipeline (real-time)</strong>: User client -&gt; GKE Frontend (LangChain</li>
+</ul>
+<p>        Orchestration) -&gt; Database Query (semantic or hybrid search on the</p>
+<p>        vector store) -&gt; Retrieve matching data -&gt; Augment prompt -&gt; Gemma vLLM</p>
+<p>        endpoint API -&gt; Output (Responsible AI filtering) -&gt; User client.</p>
+<ol>
+<li>Present the generated diagram to the user and ask the user to approve the</li>
+</ol>
+<p>    architecture diagram.</p>
+<ol>
+<li>If the user requests changes, then make the required changes.</li>
+<li>Repeat steps 2 and 3 until the user approves the architecture diagram.</li>
+<li>After the user approves the architecture diagram, proceed to Task 2.3.</li>
+</ol>
+<h5>Task 2.3: Generate an architecture description.</h5>
+<ol>
+<li>Generate a description that explains the purpose of each component, the</li>
+</ol>
+<p>    relationships between the components, and the task flow or data flow.</p>
+<ol>
+<li>Present the generated architecture description to the user and ask the user</li>
+</ol>
+<p>    to approve the description.</p>
+<ol>
+<li>If the user requests any changes, then make the required changes.</li>
+<li>Repeat steps 2 and 3 until the user approves the architecture description.</li>
+<li>After the user approves the architecture description, proceed to Task 2.4.</li>
+</ol>
+<h5>Task 2.4: Generate design recommendations.</h5>
+<ol>
+<li>Generate design recommendations and best practices to optimally configure</li>
+</ol>
+<p>    each component in the architecture based on the workload&#39;s requirements.</p>
+<p>    <strong>Important</strong>: The design recommendations and best practices that you</p>
+<p>    generate MUST be consistent with the guidance in the resources that are</p>
+<p>    listed in the following files:</p>
+<ul>
+<li><code>references/related-documentation.md</code></li>
+<li><code>references/design-recommendations.md</code></li>
+</ul>
+<ol>
+<li>Present the generated recommendations to the user and ask whether the user</li>
+</ol>
+<p>    needs any changes.</p>
+<ol>
+<li>If the user needs changes, then make the required changes.</li>
+<li>Repeat steps 2 and 3 until the user confirms that the generated design</li>
+</ol>
+<p>    recommendations meet their requirements.</p>
+<ol>
+<li>Proceed to Task 2.5.</li>
+</ol>
+<h5>Task 2.5: Generate deployment guidance.</h5>
+<ol>
+<li>Generate guidance to deploy the solution, including the following:</li>
+</ol>
+<ul>
+<li>Terraform code to create the required infrastructure resources.</li>
+<li>Steps or scripts to deploy workloads, such as Ray-on-GKE (KubeRay</li>
+</ul>
+<p>        coordinator and worker nodes) and the LangChain frontend deployment.</p>
+<p>    <strong>Important</strong>: The deployment guidance that you generate MUST be consistent</p>
+<p>    with the guidance in the resources that are listed in the following</p>
+<p>    resources:</p>
+<ul>
+<li><code>references/related-documentation.md</code></li>
+<li><code>references/design-recommendations.md</code></li>
+<li>Relevant skills in</li>
+</ul>
+<p>        <a href="https://github.com/google/skills/tree/main/skills/cloud" rel="noopener">https://github.com/google/skills/tree/main/skills/cloud</a></p>
+<ol>
+<li>Present the generated deployment guidance to the user and ask whether the</li>
+</ol>
+<p>    user needs any changes.</p>
+<ol>
+<li>If the user requests changes, then make the required changes.</li>
+<li>Repeat steps 2 and 3 until the user confirms that the generated deployment</li>
+</ol>
+<p>    guidance meets their requirements.</p>
+<ol>
+<li>Proceed to Phase 3.</li>
+</ol>
+<h4>Phase 3: Solution validation</h4>
+<ol>
+<li>Create a plan to validate the generated solution. The plan must outline the</li>
+</ol>
+<p>    steps that are necessary to verify that the generated solution meets the</p>
+<p>    workload&#39;s requirements. The following are examples of validation steps:</p>
+<ul>
+<li><strong>Deployment dry-run</strong>: Run commands like <code>terraform plan</code> to preview</li>
+</ul>
+<p>        the infrastructure resources that will be provisioned.</p>
+<ul>
+<li><strong>Connectivity and routing</strong>: Verify network paths, load balancer</li>
+</ul>
+<p>        routing, and service endpoints.</p>
+<ul>
+<li><strong>Vector index</strong>: Verify that vector indexes are correctly created and</li>
+</ul>
+<p>        populated in the AlloyDB database. This can involve querying the</p>
+<p>        database to check index status and content.</p>
+<ul>
+<li><strong>Embedding pipeline</strong>: Test the end-to-end embedding pipeline from data</li>
+</ul>
+<p>        ingestion to vector storage, ensuring documents are chunked, embedded,</p>
+<p>        and stored correctly.</p>
+<ul>
+<li><strong>Retrieval latency</strong>: Measure the latency of vector and hybrid search</li>
+</ul>
+<p>        queries against the AlloyDB vector store to ensure performance meets</p>
+<p>        requirements.</p>
+<ul>
+<li><strong>Retrieval accuracy</strong>: Perform sample queries and evaluate the</li>
+</ul>
+<p>        relevance of retrieved documents or chunks.</p>
+<ul>
+<li><strong>Security policies</strong>: Verify restricted access, firewall rules, and IAM</li>
+</ul>
+<p>        enforcement.</p>
+<ol>
+<li>Present the validation plan to the user and request feedback or approval.</li>
+<li>If the user requests changes, update the plan as required.</li>
+<li>Repeat steps 2 and 3 until the user approves the validation plan.</li>
+<li>Generate scripts or commands using tools like <code>curl</code> or <code>gcloud</code> to perform</li>
+</ol>
+<p>    the steps in the approved validation plan.</p>
+<ol>
+<li>Request permission from the user to perform the validation checks.</li>
+<li>If the user gives permission, run the validation checks and troubleshoot any</li>
+</ol>
+<p>    deployment issues.</p>
+<ol>
+<li>When all the validation checks pass, proceed to Phase 4.</li>
+</ol>
+<h4>Phase 4: Solution packaging and presentation</h4>
+<ol>
+<li>Consolidate the final text artifacts that were generated in Phase 2 into a</li>
+</ol>
+<p>    single Markdown file named <code>solution-architecture-guide.md</code>, based on the</p>
+<p>    template in <code>assets/output-template.md</code>.</p>
+<ol>
+<li>Request the user&#39;s permission to write the code files in the user&#39;s</li>
+</ol>
+<p>    workspace.</p>
+<ol>
+<li>After the user gives permission, write the final code files in the user&#39;s</li>
+</ol>
+<p>    workspace.</p>
+<h4>Supporting references</h4>
+<ul>
+<li><code>references/product-selection-recommendations.md</code></li>
+<li><code>references/design-recommendations.md</code></li>
+<li><code>references/related-documentation.md</code></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb" aria-label="Copy install google-cloud-solution-rag-enterprise-search-gke-sqldb">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-solution-rag-enterprise-search-gke-sqldb/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

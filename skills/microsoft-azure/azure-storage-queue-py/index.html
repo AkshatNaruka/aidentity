@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-storage-queue-py — Aidentity</title>
+<meta name="description" content="Azure Queue Storage SDK for Python. Use for reliable message queuing, task distribution, and asynchronous processing. Triggers: &quot;queue storage&quot;, &quot;QueueServiceClient&quot;, &quot;QueueClient&quot;, &quot;message queue&quot;, &quot;dequeue&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-queue-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-storage-queue-py — Aidentity">
+<meta property="og:description" content="Azure Queue Storage SDK for Python. Use for reliable message queuing, task distribution, and asynchronous processing. Triggers: &quot;queue storage&quot;, &quot;QueueServiceClient&quot;, &quot;QueueClient&quot;, &quot;message queue&quot;, &quot;dequeue&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-queue-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-storage-queue-py","description":"Azure Queue Storage SDK for Python. Use for reliable message queuing, task distribution, and asynchronous processing. Triggers: \"queue storage\", \"QueueServiceClient\", \"QueueClient\", \"message queue\", \"dequeue\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-queue-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-storage-queue-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-storage-queue-py</h1>
+      <p class="summary">Azure Queue Storage SDK for Python. Use for reliable message queuing, task distribution, and asynchronous processing. Triggers: &quot;queue storage&quot;, &quot;QueueServiceClient&quot;, &quot;QueueClient&quot;, &quot;message queue&quot;, &quot;dequeue&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Queue Storage SDK for Python</h3>
+<p>Simple, cost-effective message queuing for asynchronous communication.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-storage-queue azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_STORAGE_ACCOUNT_URL=https://&lt;account&gt;.queue.core.windows.net  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.storage.queue import QueueServiceClient, QueueClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+account_url = &quot;https://&lt;account&gt;.queue.core.windows.net&quot;
+
+# Service client
+with QueueServiceClient(account_url=account_url, credential=credential) as service_client:
+    # Use service_client here (see following sections for operations)
+    ...
+
+# Queue client
+with QueueClient(account_url=account_url, queue_name=&quot;myqueue&quot;, credential=credential) as queue_client:
+    # Use queue_client here (see following sections for operations)
+    ...</code></pre></p>
+<h4>Queue Operations</h4>
+<p><pre><code># Create queue
+service_client.create_queue(&quot;myqueue&quot;)
+
+# Get queue client
+queue_client = service_client.get_queue_client(&quot;myqueue&quot;)
+
+# Delete queue
+service_client.delete_queue(&quot;myqueue&quot;)
+
+# List queues
+for queue in service_client.list_queues():
+    print(queue.name)</code></pre></p>
+<h4>Send Messages</h4>
+<p><pre><code># Send message (string)
+queue_client.send_message(&quot;Hello, Queue!&quot;)
+
+# Send with options
+queue_client.send_message(
+    content=&quot;Delayed message&quot;,
+    visibility_timeout=60,  # Hidden for 60 seconds
+    time_to_live=3600       # Expires in 1 hour
+)
+
+# Send JSON
+import json
+data = {&quot;task&quot;: &quot;process&quot;, &quot;id&quot;: 123}
+queue_client.send_message(json.dumps(data))</code></pre></p>
+<h4>Receive Messages</h4>
+<p><pre><code># Receive messages (makes them invisible temporarily)
+messages = queue_client.receive_messages(
+    messages_per_page=10,
+    visibility_timeout=30  # 30 seconds to process
+)
+
+for message in messages:
+    print(f&quot;ID: {message.id}&quot;)
+    print(f&quot;Content: {message.content}&quot;)
+    print(f&quot;Dequeue count: {message.dequeue_count}&quot;)
+    
+    # Process message...
+    
+    # Delete after processing
+    queue_client.delete_message(message)</code></pre></p>
+<h4>Peek Messages</h4>
+<p><pre><code># Peek without hiding (doesn&#39;t affect visibility)
+messages = queue_client.peek_messages(max_messages=5)
+
+for message in messages:
+    print(message.content)</code></pre></p>
+<h4>Update Message</h4>
+<p><pre><code># Extend visibility or update content
+messages = queue_client.receive_messages()
+for message in messages:
+    # Extend timeout (need more time)
+    queue_client.update_message(
+        message,
+        visibility_timeout=60
+    )
+    
+    # Update content and timeout
+    queue_client.update_message(
+        message,
+        content=&quot;Updated content&quot;,
+        visibility_timeout=60
+    )</code></pre></p>
+<h4>Delete Message</h4>
+<p><pre><code># Delete after successful processing
+messages = queue_client.receive_messages()
+for message in messages:
+    try:
+        # Process...
+        queue_client.delete_message(message)
+    except Exception:
+        # Message becomes visible again after timeout
+        pass</code></pre></p>
+<h4>Clear Queue</h4>
+<p><pre><code># Delete all messages
+queue_client.clear_messages()</code></pre></p>
+<h4>Queue Properties</h4>
+<p><pre><code># Get queue properties
+properties = queue_client.get_queue_properties()
+print(f&quot;Approximate message count: {properties.approximate_message_count}&quot;)
+
+# Set/get metadata
+queue_client.set_queue_metadata(metadata={&quot;environment&quot;: &quot;production&quot;})
+properties = queue_client.get_queue_properties()
+print(properties.metadata)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.storage.queue.aio import QueueServiceClient, QueueClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def queue_operations():
+    credential = DefaultAzureCredential()
+    
+    async with QueueClient(
+        account_url=&quot;https://&lt;account&gt;.queue.core.windows.net&quot;,
+        queue_name=&quot;myqueue&quot;,
+        credential=credential
+    ) as client:
+        # Send
+        await client.send_message(&quot;Async message&quot;)
+        
+        # Receive
+        async for message in client.receive_messages():
+            print(message.content)
+            await client.delete_message(message)
+
+import asyncio
+asyncio.run(queue_operations())</code></pre></p>
+<h4>Base64 Encoding</h4>
+<p><pre><code>from azure.storage.queue import QueueClient, BinaryBase64EncodePolicy, BinaryBase64DecodePolicy
+
+# For binary data
+with QueueClient(
+    account_url=account_url,
+    queue_name=&quot;myqueue&quot;,
+    credential=credential,
+    message_encode_policy=BinaryBase64EncodePolicy(),
+    message_decode_policy=BinaryBase64DecodePolicy()
+) as queue_client:
+    # Send bytes
+    queue_client.send_message(b&quot;Binary content&quot;)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / API keys when possible).</li>
+<li><strong>Delete messages after processing</strong> to prevent reprocessing</li>
+<li><strong>Set appropriate visibility timeout</strong> based on processing time</li>
+<li><strong>Handle <code>dequeue_count</code></strong> for poison message detection</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+<li><strong>Use <code>peek_messages</code></strong> for monitoring without affecting queue</li>
+<li><strong>Set <code>time_to_live</code></strong> to prevent stale messages</li>
+<li><strong>Consider Service Bus</strong> for advanced features (sessions, topics)</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-storage-queue-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-storage-queue-py" aria-label="Copy install azure-storage-queue-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-storage-queue-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-storage-queue-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

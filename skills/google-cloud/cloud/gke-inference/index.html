@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-inference — Aidentity</title>
+<meta name="description" content="Deploys and optimizes AI/ML inference workloads on GKE, using GPUs, TPUs, and model servers. Use when deploying GKE inference servers, configuring GKE GPU resources for inference, or deploying LLMs on GKE. Don&#39;t use for generic batch jobs or HPC task queues (use gke-batch-hpc instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-inference/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-inference — Aidentity">
+<meta property="og:description" content="Deploys and optimizes AI/ML inference workloads on GKE, using GPUs, TPUs, and model servers. Use when deploying GKE inference servers, configuring GKE GPU resources for inference, or deploying LLMs on GKE. Don&#39;t use for generic batch jobs or HPC task queues (use gke-batch-hpc instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-inference/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-inference","description":"Deploys and optimizes AI/ML inference workloads on GKE, using GPUs, TPUs, and model servers. Use when deploying GKE inference servers, configuring GKE GPU resources for inference, or deploying LLMs on GKE. Don't use for generic batch jobs or HPC task queues (use gke-batch-hpc instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-inference/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-inference
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-inference</h1>
+      <p class="summary">Deploys and optimizes AI/ML inference workloads on GKE, using GPUs, TPUs, and model servers. Use when deploying GKE inference servers, configuring GKE GPU resources for inference, or deploying LLMs on GKE. Don&#39;t use for generic batch jobs or HPC task queues (use gke-batch-hpc instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE AI/ML Inference</h3>
+<p>This reference covers deploying AI/ML inference workloads on GKE using Google&#39;s</p>
+<p>Inference Quickstart (GIQ) and best practices for LLM serving.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>apply_k8s_manifest</code>, <code>get_k8s_resource</code>, <code>get_k8s_logs</code>,</p>
+<p>&gt; <code>get_k8s_rollout_status</code>, <code>describe_k8s_resource</code>, <code>list_k8s_events</code>.</p>
+<p>&gt; <strong>CLI-only:</strong> <code>gcloud container ai profiles *</code></p>
+<h4>When to Use</h4>
+<ul>
+<li>Deploy an AI model (Llama, Gemma, Mistral, etc.) to GKE</li>
+<li>Generate optimized Kubernetes manifests for inference</li>
+<li>Select GPU/TPU accelerators for model serving</li>
+<li>Configure autoscaling for LLM inference</li>
+</ul>
+<h4>Prerequisites</h4>
+<ul>
+<li>A golden path GKE Autopilot cluster (GPU workloads are supported via</li>
+</ul>
+<p>    ComputeClasses and NAP)</p>
+<ul>
+<li><code>gcloud</code> CLI authenticated</li>
+<li>Sufficient GPU/TPU quota in the target region</li>
+</ul>
+<h4>Workflow</h4>
+<h5>1. Discovery: Find Models and Hardware</h5>
+<p><pre><code># List all supported models
+gcloud container ai profiles models list --quiet
+
+# Find valid accelerator/server combinations for a model
+gcloud container ai profiles list --model=&lt;MODEL_NAME&gt; --quiet
+
+# Example: what can run Gemma 2 9B?
+gcloud container ai profiles list --model=gemma-2-9b-it --quiet</code></pre></p>
+<h5>2. Generate Manifest</h5>
+<p><pre><code>gcloud container ai profiles manifests create \
+  --model=&lt;MODEL_NAME&gt; \
+  --model-server=&lt;SERVER&gt; \
+  --accelerator-type=&lt;ACCELERATOR&gt; \
+  --target-ntpot-milliseconds=&lt;NTPOT&gt; --quiet &gt; inference.yaml</code></pre></p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>--model</code>: Model ID (e.g., <code>gemma-2-9b-it</code>, <code>llama-3-8b</code>)</li>
+<li><code>--model-server</code>: Inference server (<code>vllm</code>, <code>tgi</code>, <code>triton</code>, <code>tensorrt-llm</code>)</li>
+<li><code>--accelerator-type</code>: GPU/TPU type (<code>nvidia-l4</code>, <code>nvidia-tesla-a100</code>,</li>
+</ul>
+<p>    <code>nvidia-h100-80gb</code>)</p>
+<ul>
+<li><code>--target-ntpot-milliseconds</code>: Target Normalized Time Per Output Token</li>
+</ul>
+<p>    (optional, for latency optimization)</p>
+<p><strong>Example:</strong></p>
+<p><pre><code>gcloud container ai profiles manifests create \
+  --model=gemma-2-9b-it \
+  --model-server=vllm \
+  --accelerator-type=nvidia-l4 \
+  --target-ntpot-milliseconds=50 --quiet &gt; inference.yaml</code></pre></p>
+<h5>3. Review and Deploy</h5>
+<p><pre><code># Review for placeholders (HF tokens, PVCs)
+cat inference.yaml
+
+# Deploy
+kubectl apply -f inference.yaml
+
+# Monitor
+kubectl get pods -w
+kubectl logs -f &lt;POD_NAME&gt;</code></pre></p>
+<p>&gt; Some models require Hugging Face tokens. Create a Kubernetes Secret and</p>
+<p>&gt; reference it in the manifest.</p>
+<h4>GPU ComputeClass for Inference</h4>
+<p>For Autopilot clusters, create a ComputeClass to target GPU nodes:</p>
+<p><pre><code>apiVersion: cloud.google.com/v1
+kind: ComputeClass
+metadata:
+  name: l4-inference
+spec:
+  priorities:
+  - machineFamily: g2
+    gpu:
+      type: nvidia-l4
+      count: 1
+    minCores: 4
+    minMemoryGb: 16</code></pre></p>
+<h4>Accelerator Selection Guide</h4>
+<table><thead><tr><th>Accelerator</th><th>Best For</th><th>Memory</th><th>Relative Cost</th></tr></thead><tbody>
+<tr><td>NVIDIA T4</td><td>Budget inference,</td><td>16 GB</td><td>Lowest</td></tr>
+</tbody></table>
+<p>:                     : lightweight legacy       :             :               :</p>
+<p>:                     : models                   :             :               :</p>
+<table><thead><tr><th>NVIDIA L4 (G2)</th><th>Small-medium model</th><th>24 GB</th><th>Low</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : inference, video,        :             :               :</p>
+<p>:                     : graphics                 :             :               :</p>
+<table><thead><tr><th>NVIDIA RTX PRO 6000</th><th>Multimodal AI,</th><th>96 GB</th><th>Medium</th></tr></thead><tbody>
+</tbody></table>
+<p>: (G4)                : high-fidelity 3D,        :             :               :</p>
+<p>:                     : fine-tuning              :             :               :</p>
+<table><thead><tr><th>Cloud TPU v5e</th><th>Cost-effective</th><th>Varies</th><th>Medium</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : transformer inference    :             :               :</p>
+<table><thead><tr><th>Cloud TPU v5p</th><th>High-performance</th><th>Varies</th><th>High</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : training                 :             :               :</p>
+<table><thead><tr><th>Cloud TPU v6e</th><th>High-efficiency next-gen</th><th>32 GB/chip</th><th>Medium-High</th></tr></thead><tbody>
+</tbody></table>
+<p>: (Trillium)          : training &amp; serving       :             :               :</p>
+<table><thead><tr><th>Cloud TPU v7x</th><th>Ultra-scale inference &amp;</th><th>192 GB/chip</th><th>High</th></tr></thead><tbody>
+</tbody></table>
+<p>: (Ironwood)          : agentic workflows        :             :               :</p>
+<table><thead><tr><th>NVIDIA A100</th><th>Large model inference,</th><th>40/80 GB</th><th>High</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : enterprise ML            :             :               :</p>
+<table><thead><tr><th>NVIDIA H100 / H200</th><th>Frontier model training,</th><th>80/141 GB</th><th>Highest</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : high throughput          :             :               :</p>
+<table><thead><tr><th>NVIDIA B200 (A4)</th><th>Blackwell-scale</th><th>192 GB</th><th>Highest</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : training, FP4 precision  :             :               :</p>
+<table><thead><tr><th>NVIDIA GB200 (A4X)</th><th>Rack-scale AI (Grace</th><th>Massive</th><th>Highest</th></tr></thead><tbody>
+</tbody></table>
+<p>:                     : Blackwell Superchip)     :             :               :</p>
+<h4>Autoscaling LLM Inference</h4>
+<h5>GPU-based autoscaling</h5>
+<p>Use custom metrics for GPU utilization:</p>
+<p><pre><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: llm-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: llm-server
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: gpu_duty_cycle
+      target:
+        type: AverageValue
+        averageValue: &quot;80&quot;</code></pre></p>
+<h5>Best practices for inference autoscaling</h5>
+<ol>
+<li><strong>Use DCGM metrics</strong>: Golden path enables DCGM monitoring for GPU</li>
+</ol>
+<p>    utilization metrics</p>
+<ol>
+<li><strong>Set appropriate minReplicas</strong>: At least 1 for always-on serving; 0 for</li>
+</ol>
+<p>    batch/on-demand</p>
+<ol>
+<li><strong>Tune scale-down delay</strong>: LLM model loading is slow; use longer</li>
+</ol>
+<p>    stabilization windows</p>
+<ol>
+<li><strong>Consider queue depth</strong>: Scale on pending requests rather than pure GPU</li>
+</ol>
+<p>    utilization for latency-sensitive workloads</p>
+<h4>Optimization Tips</h4>
+<ul>
+<li><strong>Quantization</strong>: Use quantized models (GPTQ, AWQ) to reduce GPU memory and</li>
+</ul>
+<p>    increase throughput</p>
+<ul>
+<li><strong>Batching</strong>: Configure model server batch size for throughput vs latency</li>
+</ul>
+<p>    trade-off</p>
+<ul>
+<li><strong>Tensor parallelism</strong>: Split large models across multiple GPUs within a</li>
+</ul>
+<p>    node</p>
+<ul>
+<li><strong>KV cache optimization</strong>: Tune <code>--gpu-memory-utilization</code> in vLLM for KV</li>
+</ul>
+<p>    cache allocation</p>
+<h4>Troubleshooting</h4>
+<table><thead><tr><th>Issue</th><th>Cause</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Invalid</td><td>Unsupported tuple</td><td>Re-run `gcloud container ai</td></tr>
+</tbody></table>
+<p>: model/accelerator  :                          : profiles list               :</p>
+<p>: combination        :                          : --model=&lt;MODEL&gt;`            :</p>
+<table><thead><tr><th>GPU quota exceeded</th><th>Regional quota limit</th><th>Request quota increase or</th></tr></thead><tbody>
+</tbody></table>
+<p>:                    :                          : try a different region      :</p>
+<table><thead><tr><th>OOM on GPU</th><th>Model too large for</th><th>Use larger GPU, enable</th></tr></thead><tbody>
+</tbody></table>
+<p>:                    : accelerator              : quantization, or use tensor :</p>
+<p>:                    :                          : parallelism                 :</p>
+<table><thead><tr><th>Slow cold start</th><th>Large model loading from</th><th>Use local SSD for model</th></tr></thead><tbody>
+</tbody></table>
+<p>:                    : registry                 : caching; pre-pull images    :</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-inference</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-inference" aria-label="Copy install gke-inference">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-inference</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-inference/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

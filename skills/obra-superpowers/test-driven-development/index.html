@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>test-driven-development — Aidentity</title>
+<meta name="description" content="Use when implementing any feature or bugfix, before writing implementation code">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/test-driven-development/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="test-driven-development — Aidentity">
+<meta property="og:description" content="Use when implementing any feature or bugfix, before writing implementation code">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/test-driven-development/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"test-driven-development","description":"Use when implementing any feature or bugfix, before writing implementation code","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/test-driven-development/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=testing">testing</a><span>/</span>test-driven-development
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>test-driven-development</h1>
+      <p class="summary">Use when implementing any feature or bugfix, before writing implementation code</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=testing">testing</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Test-Driven Development (TDD)</h3>
+<h4>Overview</h4>
+<p>Write the test first. Watch it fail. Write minimal code to pass.</p>
+<p><strong>Core principle:</strong> If you didn&#39;t watch the test fail, you don&#39;t know if it tests the right thing.</p>
+<p><strong>Violating the letter of the rules is violating the spirit of the rules.</strong></p>
+<h4>When to Use</h4>
+<p><strong>Always:</strong></p>
+<ul>
+<li>New features</li>
+<li>Bug fixes</li>
+<li>Refactoring</li>
+<li>Behavior changes</li>
+</ul>
+<p><strong>Exceptions (ask your human partner):</strong></p>
+<ul>
+<li>Throwaway prototypes</li>
+<li>Generated code</li>
+<li>Configuration files</li>
+</ul>
+<p>Thinking &quot;skip TDD just this once&quot;? Stop. That&#39;s rationalization.</p>
+<h4>The Iron Law</h4>
+<p><pre><code>NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST</code></pre></p>
+<p>Write code before the test? Delete it. Start over.</p>
+<p><strong>No exceptions:</strong></p>
+<ul>
+<li>Don&#39;t keep it as &quot;reference&quot;</li>
+<li>Don&#39;t &quot;adapt&quot; it while writing tests</li>
+<li>Don&#39;t look at it</li>
+<li>Delete means delete</li>
+</ul>
+<p>Implement fresh from tests. Period.</p>
+<h4>Red-Green-Refactor</h4>
+<p><pre><code>digraph tdd_cycle {
+    rankdir=LR;
+    red [label=&quot;RED\nWrite failing test&quot;, shape=box, style=filled, fillcolor=&quot;#ffcccc&quot;];
+    verify_red [label=&quot;Verify fails\ncorrectly&quot;, shape=diamond];
+    green [label=&quot;GREEN\nMinimal code&quot;, shape=box, style=filled, fillcolor=&quot;#ccffcc&quot;];
+    verify_green [label=&quot;Verify passes\nAll green&quot;, shape=diamond];
+    refactor [label=&quot;REFACTOR\nClean up&quot;, shape=box, style=filled, fillcolor=&quot;#ccccff&quot;];
+    next [label=&quot;Next&quot;, shape=ellipse];
+
+    red -&gt; verify_red;
+    verify_red -&gt; green [label=&quot;yes&quot;];
+    verify_red -&gt; red [label=&quot;wrong\nfailure&quot;];
+    green -&gt; verify_green;
+    verify_green -&gt; refactor [label=&quot;yes&quot;];
+    verify_green -&gt; green [label=&quot;no&quot;];
+    refactor -&gt; verify_green [label=&quot;stay\ngreen&quot;];
+    verify_green -&gt; next;
+    next -&gt; red;
+}</code></pre></p>
+<h5>RED - Write Failing Test</h5>
+<p>Write one minimal test showing what should happen.</p>
+<p>&lt;Good&gt;</p>
+<p><pre><code>test(&#39;retries failed operations 3 times&#39;, async () =&gt; {
+  let attempts = 0;
+  const operation = () =&gt; {
+    attempts++;
+    if (attempts &lt; 3) throw new Error(&#39;fail&#39;);
+    return &#39;success&#39;;
+  };
+
+  const result = await retryOperation(operation);
+
+  expect(result).toBe(&#39;success&#39;);
+  expect(attempts).toBe(3);
+});</code></pre></p>
+<p>Clear name, tests real behavior, one thing</p>
+<p>&lt;/Good&gt;</p>
+<p>&lt;Bad&gt;</p>
+<p><pre><code>test(&#39;retry works&#39;, async () =&gt; {
+  const mock = jest.fn()
+    .mockRejectedValueOnce(new Error())
+    .mockRejectedValueOnce(new Error())
+    .mockResolvedValueOnce(&#39;success&#39;);
+  await retryOperation(mock);
+  expect(mock).toHaveBeenCalledTimes(3);
+});</code></pre></p>
+<p>Vague name, tests mock not code</p>
+<p>&lt;/Bad&gt;</p>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>One behavior</li>
+<li>Clear name</li>
+<li>Real code (no mocks unless unavoidable)</li>
+</ul>
+<h5>Verify RED - Watch It Fail</h5>
+<p><strong>MANDATORY. Never skip.</strong></p>
+<p><pre><code>npm test path/to/test.test.ts</code></pre></p>
+<p>Confirm:</p>
+<ul>
+<li>Test fails (not errors)</li>
+<li>Failure message is expected</li>
+<li>Fails because feature missing (not typos)</li>
+</ul>
+<p><strong>Test passes?</strong> You&#39;re testing existing behavior. Fix test.</p>
+<p><strong>Test errors?</strong> Fix error, re-run until it fails correctly.</p>
+<h5>GREEN - Minimal Code</h5>
+<p>Write simplest code to pass the test.</p>
+<p>&lt;Good&gt;</p>
+<p><pre><code>async function retryOperation&lt;T&gt;(fn: () =&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
+  for (let i = 0; i &lt; 3; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i === 2) throw e;
+    }
+  }
+  throw new Error(&#39;unreachable&#39;);
+}</code></pre></p>
+<p>Just enough to pass</p>
+<p>&lt;/Good&gt;</p>
+<p>&lt;Bad&gt;</p>
+<p><pre><code>async function retryOperation&lt;T&gt;(
+  fn: () =&gt; Promise&lt;T&gt;,
+  options?: {
+    maxRetries?: number;
+    backoff?: &#39;linear&#39; | &#39;exponential&#39;;
+    onRetry?: (attempt: number) =&gt; void;
+  }
+): Promise&lt;T&gt; {
+  // YAGNI
+}</code></pre></p>
+<p>Over-engineered</p>
+<p>&lt;/Bad&gt;</p>
+<p>Don&#39;t add features, refactor other code, or &quot;improve&quot; beyond the test.</p>
+<h5>Verify GREEN - Watch It Pass</h5>
+<p><strong>MANDATORY.</strong></p>
+<p><pre><code>npm test path/to/test.test.ts</code></pre></p>
+<p>Confirm:</p>
+<ul>
+<li>Test passes</li>
+<li>Other tests still pass</li>
+<li>Output pristine (no errors, warnings)</li>
+</ul>
+<p><strong>Test fails?</strong> Fix code, not test.</p>
+<p><strong>Other tests fail?</strong> Fix now.</p>
+<h5>REFACTOR - Clean Up</h5>
+<p>After green only:</p>
+<ul>
+<li>Remove duplication</li>
+<li>Improve names</li>
+<li>Extract helpers</li>
+</ul>
+<p>Keep tests green. Don&#39;t add behavior.</p>
+<h5>Repeat</h5>
+<p>Next failing test for next feature.</p>
+<h4>Good Tests</h4>
+<table><thead><tr><th>Quality</th><th>Good</th><th>Bad</th></tr></thead><tbody>
+<tr><td><strong>Minimal</strong></td><td>One thing. &quot;and&quot; in name? Split it.</td><td><code>test(&#39;validates email and domain and whitespace&#39;)</code></td></tr>
+<tr><td><strong>Clear</strong></td><td>Name describes behavior</td><td><code>test(&#39;test1&#39;)</code></td></tr>
+<tr><td><strong>Shows intent</strong></td><td>Demonstrates desired API</td><td>Obscures what code should do</td></tr>
+</tbody></table>
+<p>When writing or changing any test, read [writing-good-tests.md](writing-good-tests.md) for the rules that keep tests honest:</p>
+<ul>
+<li>Name the production change that would make the test fail — before writing it</li>
+<li>Assert on real behavior, never on mock behavior</li>
+<li>Keep test-only code in test utilities, out of production classes</li>
+<li>Understand a dependency&#39;s side effects before mocking it</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;Too simple to test&quot;</td><td>Simple code breaks. Test takes 30 seconds.</td></tr>
+<tr><td>&quot;I&#39;ll test after&quot;</td><td>Tests written after pass immediately — which proves nothing. They may test the wrong thing, test the implementation instead of the behavior, or miss the edge case you forgot. You never watched it fail, so you never proved it can catch the bug. Test-first forces that failure.</td></tr>
+<tr><td>&quot;Tests after achieve same goals (spirit not ritual)&quot;</td><td>Tests-after answer &quot;what does this do?&quot;; tests-first answer &quot;what should this do?&quot; Tests written after are biased by the code you already wrote — you verify the cases you remembered, not the ones you&#39;d have discovered. Coverage without proof the tests work.</td></tr>
+<tr><td>&quot;Already manually tested&quot;</td><td>Manual testing is ad-hoc: no record of what you covered, no way to re-run it when the code changes, easy to forget cases under pressure. &quot;Worked when I tried it&quot; ≠ comprehensive. Automated tests run the same way every time.</td></tr>
+<tr><td>&quot;Deleting X hours is wasteful&quot;</td><td>Sunk cost fallacy — that time is already spent either way. The real choice: rewrite with TDD (high confidence) vs. keep it and bolt tests on after (low confidence, likely bugs). Keeping code you can&#39;t trust is the waste.</td></tr>
+<tr><td>&quot;Keep as reference, write tests first&quot;</td><td>You&#39;ll adapt it. That&#39;s testing after. Delete means delete.</td></tr>
+<tr><td>&quot;Need to explore first&quot;</td><td>Fine. Throw away exploration, start with TDD.</td></tr>
+<tr><td>&quot;Test hard = design unclear&quot;</td><td>Listen to test. Hard to test = hard to use.</td></tr>
+<tr><td>&quot;TDD will slow me down&quot;</td><td>TDD IS the pragmatic path: catches bugs before commit, prevents regressions, lets you refactor without fear. &quot;Pragmatic&quot; shortcuts mean debugging in production — slower, not faster.</td></tr>
+<tr><td>&quot;Manual test faster&quot;</td><td>Manual doesn&#39;t prove edge cases. You&#39;ll re-test every change.</td></tr>
+<tr><td>&quot;Existing code has no tests&quot;</td><td>You&#39;re improving it. Add tests for existing code.</td></tr>
+</tbody></table>
+<h4>Red Flags - STOP and Start Over</h4>
+<ul>
+<li>Code before test</li>
+<li>Test after implementation</li>
+<li>Test passes immediately</li>
+<li>Can&#39;t explain why test failed</li>
+<li>Tests added &quot;later&quot;</li>
+<li>Rationalizing &quot;just this once&quot;</li>
+<li>&quot;I already manually tested it&quot;</li>
+<li>&quot;Tests after achieve the same purpose&quot;</li>
+<li>&quot;It&#39;s about spirit not ritual&quot;</li>
+<li>&quot;Keep as reference&quot; or &quot;adapt existing code&quot;</li>
+<li>&quot;Already spent X hours, deleting is wasteful&quot;</li>
+<li>&quot;TDD is dogmatic, I&#39;m being pragmatic&quot;</li>
+<li>&quot;This is different because...&quot;</li>
+</ul>
+<p><strong>All of these mean: Delete code. Start over with TDD.</strong></p>
+<h4>Example: Bug Fix</h4>
+<p><strong>Bug:</strong> Empty email accepted</p>
+<p><strong>RED</strong></p>
+<p><pre><code>test(&#39;rejects empty email&#39;, async () =&gt; {
+  const result = await submitForm({ email: &#39;&#39; });
+  expect(result.error).toBe(&#39;Email required&#39;);
+});</code></pre></p>
+<p><strong>Verify RED</strong></p>
+<p><pre><code>$ npm test
+FAIL: expected &#39;Email required&#39;, got undefined</code></pre></p>
+<p><strong>GREEN</strong></p>
+<p><pre><code>function submitForm(data: FormData) {
+  if (!data.email?.trim()) {
+    return { error: &#39;Email required&#39; };
+  }
+  // ...
+}</code></pre></p>
+<p><strong>Verify GREEN</strong></p>
+<p><pre><code>$ npm test
+PASS</code></pre></p>
+<p><strong>REFACTOR</strong></p>
+<p>Extract validation for multiple fields if needed.</p>
+<h4>Verification Checklist</h4>
+<p>Before marking work complete:</p>
+<ul>
+<li>[ ] Every new function/method has a test</li>
+<li>[ ] Watched each test fail before implementing</li>
+<li>[ ] Each test failed for expected reason (feature missing, not typo)</li>
+<li>[ ] Wrote minimal code to pass each test</li>
+<li>[ ] All tests pass</li>
+<li>[ ] Output pristine (no errors, warnings)</li>
+<li>[ ] Tests use real code (mocks only if unavoidable)</li>
+<li>[ ] Edge cases and errors covered</li>
+</ul>
+<p>Can&#39;t check all boxes? You skipped TDD. Start over.</p>
+<h4>When Stuck</h4>
+<table><thead><tr><th>Problem</th><th>Solution</th></tr></thead><tbody>
+<tr><td>Don&#39;t know how to test</td><td>Write wished-for API. Write assertion first. Ask your human partner.</td></tr>
+<tr><td>Test too complicated</td><td>Design too complicated. Simplify interface.</td></tr>
+<tr><td>Must mock everything</td><td>Code too coupled. Use dependency injection.</td></tr>
+<tr><td>Test setup huge</td><td>Extract helpers. Still complex? Simplify design.</td></tr>
+</tbody></table>
+<h4>Debugging Integration</h4>
+<p>Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression.</p>
+<p>Never fix bugs without a test.</p>
+<h4>Final Rule</h4>
+<p><pre><code>Production code → test exists and failed first
+Otherwise → not TDD</code></pre></p>
+<p>No exceptions without your human partner&#39;s permission.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/test-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="test-driven-development drives development with tests. use when implementing any logic, fixing any bug, or changing any behavior. use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">test-driven-development</span>
+    <span class="r-desc">Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/webapp-testing/index.html"
+     data-source="anthropic-official"
+     data-category="testing"
+     data-search="webapp-testing toolkit for interacting with and testing local web applications using playwright. supports verifying frontend functionality, debugging ui behavior, capturing browser screenshots, and viewing browser logs. testing testing anthropics/skills">
+  <span>
+    <span class="r-name">webapp-testing</span>
+    <span class="r-desc">Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/tdd/index.html"
+     data-source="mattpocock"
+     data-category="testing"
+     data-search="tdd test-driven development. use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests. testing testing mattpocock/skills">
+  <span>
+    <span class="r-name">tdd</span>
+    <span class="r-desc">Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/brainstorming/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="brainstorming you must use this before any creative work - creating features, building components, adding functionality, or modifying behavior. explores user intent, requirements and design before implementation. general  obra/superpowers">
+  <span>
+    <span class="r-name">brainstorming</span>
+    <span class="r-desc">You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/test-driven-development</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/test-driven-development" aria-label="Copy install test-driven-development">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>testing</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/test-driven-development</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/test-driven-development/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

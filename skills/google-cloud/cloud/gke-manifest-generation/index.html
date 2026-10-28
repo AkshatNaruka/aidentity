@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-manifest-generation — Aidentity</title>
+<meta name="description" content="Generates and updates secure, production-ready Kubernetes YAML manifests optimized for GKE Autopilot and GKE Standard clusters. Use when creating or modifying GKE deployment manifests, configuring container security contexts, setting CPU/memory resource limits, defining readiness/liveness/startup probes, mounting secrets and volumes, configuring GKE Gateway API routes, targeting Spot VMs, or deploying AI model inference workloads (vLLM, TGI, Gemma). Don&#39;t use for live cluster operations, pod troubleshooting (use gke-workload-troubleshooting), or cluster infrastructure provisioning (use gke-cluster-creation).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-manifest-generation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-manifest-generation — Aidentity">
+<meta property="og:description" content="Generates and updates secure, production-ready Kubernetes YAML manifests optimized for GKE Autopilot and GKE Standard clusters. Use when creating or modifying GKE deployment manifests, configuring container security contexts, setting CPU/memory resource limits, defining readiness/liveness/startup probes, mounting secrets and volumes, configuring GKE Gateway API routes, targeting Spot VMs, or deploying AI model inference workloads (vLLM, TGI, Gemma). Don&#39;t use for live cluster operations, pod troubleshooting (use gke-workload-troubleshooting), or cluster infrastructure provisioning (use gke-cluster-creation).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-manifest-generation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-manifest-generation","description":"Generates and updates secure, production-ready Kubernetes YAML manifests optimized for GKE Autopilot and GKE Standard clusters. Use when creating or modifying GKE deployment manifests, configuring container security contexts, setting CPU/memory resource limits, defining readiness/liveness/startup probes, mounting secrets and volumes, configuring GKE Gateway API routes, targeting Spot VMs, or deploying AI model inference workloads (vLLM, TGI, Gemma). Don't use for live cluster operations, pod troubleshooting (use gke-workload-troubleshooting), or cluster infrastructure provisioning (use gke-cluster-creation).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-manifest-generation/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-manifest-generation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-manifest-generation</h1>
+      <p class="summary">Generates and updates secure, production-ready Kubernetes YAML manifests optimized for GKE Autopilot and GKE Standard clusters. Use when creating or modifying GKE deployment manifests, configuring container security contexts, setting CPU/memory resource limits, defining readiness/liveness/startup probes, mounting secrets and volumes, configuring GKE Gateway API routes, targeting Spot VMs, or deploying AI model inference workloads (vLLM, TGI, Gemma). Don&#39;t use for live cluster operations, pod troubleshooting (use gke-workload-troubleshooting), or cluster infrastructure provisioning (use gke-cluster-creation).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Manifest Generation Skill</h3>
+<p>This skill provides guidelines, tooling integration, and templates to translate</p>
+<p>natural language descriptions or application code changes into secure,</p>
+<p>compliant, and cost-effective Kubernetes YAML manifests optimized for both GKE</p>
+<p>Autopilot and GKE Standard clusters.</p>
+<h4>Core Rules &amp; Verification</h4>
+<p>When generating or updating YAML manifests, you <strong>must</strong> strictly adhere to the</p>
+<p>following rules:</p>
+<h5>1. Namespace &amp; Resource Isolation</h5>
+<ul>
+<li><strong>Explicit Namespace</strong>: Always declare <code>namespace: {namespace}</code> explicitly</li>
+</ul>
+<p>    in the metadata of every resource (Deployments, Services, ConfigMaps,</p>
+<p>    Secrets, PVCs, Roles, bindings). Map it to the namespace configured in your</p>
+<p>    active <code>SETTINGS.md</code>. Never omit the namespace.</p>
+<ul>
+<li><strong>Dedicated ServiceAccount</strong>: Avoid using the namespace&#39;s <code>default</code></li>
+</ul>
+<p>    ServiceAccount. Always create and reference a dedicated <code>ServiceAccount</code></p>
+<p>    (e.g., <code>devteam-agent-sa</code>) for each microservice.</p>
+<h5>2. GKE Resource Tuning (Autopilot &amp; Standard)</h5>
+<ul>
+<li><strong>Resources Requests &amp; Limits</strong>: Always specify CPU and Memory requests and</li>
+</ul>
+<p>    limits for all containers.</p>
+<ul>
+<li><em>GKE Autopilot</em>: Requests determine pod billing directly; requests and</li>
+</ul>
+<p>        limits must be equal. If they differ, Autopilot will automatically scale</p>
+<p>        requests up to match limits, which can significantly increase costs.</p>
+<ul>
+<li><em>GKE Standard</em>: Requests ensure stable scheduling and bin-packing;</li>
+</ul>
+<p>        limits prevent resource starvation/noisy-neighbor issues.</p>
+<ul>
+<li><strong>Density Defaults</strong>: For stateless apps or sidecars on GKE Standard,</li>
+</ul>
+<p>    default to conservative requests (e.g., <code>requests.cpu: &quot;100m&quot;</code> or <code>&quot;200m&quot;</code>,</p>
+<p>    <code>requests.memory: &quot;256Mi&quot;</code> or <code>&quot;512Mi&quot;</code>) with burstable limits. Use a</p>
+<p>    reasonable overcommit ratio for limits (e.g., 2x to 4x requests, like</p>
+<p>    <code>limits.cpu: &quot;400m&quot;</code> to <code>&quot;800m&quot;</code>, and <code>limits.memory: &quot;512Mi&quot;</code> to <code>&quot;1Gi&quot;</code>).</p>
+<p>    Avoid excessive overcommit limits (like <code>limits.cpu: &quot;4&quot;</code> for a <code>100m</code></p>
+<p>    request) to prevent severe CPU throttling and latency degradation under</p>
+<p>    heavy scheduling load, particularly in environments without guaranteed node</p>
+<p>    shares.</p>
+<ul>
+<li><strong>Spot VMs for Staging/Dev</strong>: For non-production workloads (e.g., namespaces</li>
+</ul>
+<p>    containing <code>-test</code>, <code>-dev</code>, or <code>-staging</code>), or if the user requests cost</p>
+<p>    optimization, automatically target GKE Spot VMs. This requires injecting</p>
+<p>    both the <code>nodeSelector</code> targeting Spot VMs AND the corresponding toleration</p>
+<p>    to tolerate the Spot VM taint:</p>
+<p>    <pre><code>    nodeSelector:
+      cloud.google.com/gke-spot: &quot;true&quot;
+    tolerations:
+      - key: &quot;cloud.google.com/gke-spot&quot;
+        operator: &quot;Equal&quot;
+        value: &quot;true&quot;
+        effect: &quot;NoSchedule&quot;
+    </code></pre></p>
+<p>    (On GKE Standard, this assumes a Spot node pool is configured).</p>
+<h5>3. Container Security Hardening (Pod Security Standards)</h5>
+<ul>
+<li><strong>Non-Root Execution</strong>: Always configure <code>securityContext</code> at the Pod level</li>
+</ul>
+<p>    (and container level if overriding) to run as a non-root user (e.g.,</p>
+<p>    <code>runAsNonRoot: true</code>, <code>runAsUser: 10000</code>, <code>runAsGroup: 10000</code>, `fsGroup:</p>
+<p>    10000`). This is strictly enforced on GKE Autopilot and is a critical</p>
+<p>    security baseline for GKE Standard.</p>
+<ul>
+<li><strong>Minimal Privileges</strong>: Always set <code>allowPrivilegeEscalation: false</code> and</li>
+</ul>
+<p>    <code>seccompProfile: {type: RuntimeDefault}</code>.</p>
+<ul>
+<li><strong>Read-Only Root Filesystem</strong>: Set <code>readOnlyRootFilesystem: true</code> to prevent</li>
+</ul>
+<p>    modifications to the container image filesystem.</p>
+<ul>
+<li><em>Writable Directory Fallback</em>: If <code>readOnlyRootFilesystem</code> is enabled,</li>
+</ul>
+<p>        mount a local <code>emptyDir</code> volume to <code>/tmp</code> or <code>/var/run/</code> to allow</p>
+<p>        applications (like Java/Nginx) to write temp files without crashing.</p>
+<ul>
+<li><strong>Secret Volume Mounting</strong>: Prefer mounting Secrets as read-only files</li>
+</ul>
+<p>    (configured in the <code>volumes</code> spec with <code>defaultMode: 0400</code>) instead of</p>
+<p>    mapping them as environment variables, unless the application framework</p>
+<p>    exclusively supports env-var based configuration. This prevents secrets</p>
+<p>    leaking into application logs.</p>
+<h5>4. Health Checking (Mandatory Probes)</h5>
+<ul>
+<li><strong>Liveness &amp; Readiness Probes</strong>: Every Deployment container must define both</li>
+</ul>
+<p>    <code>livenessProbe</code> and <code>readinessProbe</code>.</p>
+<ul>
+<li><strong>Web/API</strong>: Use <code>httpGet</code> probes.</li>
+<li><strong>TCP Services</strong>: Use <code>tcpSocket</code> probes.</li>
+<li><strong>Databases/Caches</strong>: Use command-based <code>exec</code> probes (e.g.,</li>
+</ul>
+<p>        <code>exec.command: [&quot;redis-cli&quot;, &quot;ping&quot;]</code>).</p>
+<ul>
+<li><strong>Startup Probes for Slow-Starting Apps</strong>: For applications with slow boot</li>
+</ul>
+<p>    times (e.g., Java spring boot, complex Python scripts, LLM model servers),</p>
+<p>    you <strong>must</strong> also define a <code>startupProbe</code>. When a <code>startupProbe</code> is defined,</p>
+<p>    the liveness and readiness probes are disabled until it succeeds, preventing</p>
+<p>    Kubernetes from prematurely killing the pod during startup:</p>
+<p>    <pre><code>    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      failureThreshold: 30
+      periodSeconds: 10
+    </code></pre></p>
+<ul>
+<li><strong>Sensible Defaults</strong>: Set <code>initialDelaySeconds: 5</code> to <code>15</code> depending on</li>
+</ul>
+<p>    startup time (e.g., Java requires a longer delay than Go/Nginx).</p>
+<h5>5. Services &amp; Ingress Routing</h5>
+<ul>
+<li><strong>Internal ClusterIP</strong>: Default all internal microservices to `type:</li>
+</ul>
+<p>    ClusterIP<code>. Never use </code>type: LoadBalancer<code> or </code>NodePort` unless the workload</p>
+<p>    is explicitly intended to be publicly accessible from the internet.</p>
+<ul>
+<li><strong>Port Naming</strong>: Always assign clear, standard names to service and</li>
+</ul>
+<p>    container ports (e.g., <code>name: http-web</code> or <code>name: grpc-api</code>) to enable</p>
+<p>    automatic protocol discovery, tracing, and Web App routing.</p>
+<ul>
+<li><strong>Prefer Gateway API</strong>: When exposing APIs externally, prioritize using GKE</li>
+</ul>
+<p>    Gateway API (<code>Gateway</code> and <code>HTTPRoute</code> resources) over legacy <code>Ingress</code></p>
+<p>    objects to enable advanced L7 routing and security features (e.g., Cloud</p>
+<p>    Armor).</p>
+<h5>6. Volume Mounts, StorageClasses &amp; subPath Safety</h5>
+<ul>
+<li><strong>Avoid Directory Overwrites</strong>: When mounting a <code>ConfigMap</code> or <code>Secret</code> to</li>
+</ul>
+<p>    an application directory containing other files (like Nginx public</p>
+<p>    directories), always use <code>subPath</code> to overlay only the specific file.</p>
+<p>    <em>Caveat</em>: Note that containers using <code>subPath</code> volume mounts do not receive</p>
+<p>    automatic configuration updates if the underlying ConfigMap or Secret is</p>
+<p>    modified; pods must be restarted manually to pick up changes.</p>
+<ul>
+<li><strong>StorageClass Selection</strong>: Use the correct GKE storage class in</li>
+</ul>
+<p>    PersistentVolumeClaims:</p>
+<ul>
+<li><em>CSI Driver Clusters (Autopilot &amp; Modern Standard)</em>: Use <code>standard-rwo</code></li>
+</ul>
+<p>        (default balanced PD) or <code>premium-rwo</code> (SSD PD).</p>
+<ul>
+<li><em>Legacy Standard Clusters</em>: Use <code>standard</code> (default PD) or <code>premium</code></li>
+</ul>
+<p>        (SSD PD) if <code>standard-rwo</code>/<code>premium-rwo</code> are not configured.</p>
+<ul>
+<li><em>Database rule</em>: Use SSD storage classes (<code>premium-rwo</code> or <code>premium</code>)</li>
+</ul>
+<p>        only when the prompt explicitly requests high IOPS, low latency, or</p>
+<p>        database storage.</p>
+<h5>7. High Availability on GKE</h5>
+<ul>
+<li><strong>Topology Spread</strong>: For deployments with &gt;1 replica, use <code>podAntiAffinity</code></li>
+</ul>
+<p>    or <code>topologySpreadConstraints</code> with <code>topologyKey: &quot;kubernetes.io/hostname&quot;</code></p>
+<p>    to distribute pods across GKE nodes and availability zones.</p>
+<ul>
+<li><strong>PodDisruptionBudget</strong>: For deployments with &gt;1 replica, declare a</li>
+</ul>
+<p>    <code>PodDisruptionBudget</code> to guarantee minimum replica availability during</p>
+<p>    voluntary GKE node upgrades and maintenance cycles.</p>
+<h5>8. Updates &amp; Server-Side Apply Reconciliations</h5>
+<ul>
+<li><strong>Stable List Keys</strong>: Under Kubernetes Server-Side Apply (SSA), elements in</li>
+</ul>
+<p>    associative lists (like volumes, volume mounts, ports, and container</p>
+<p>    definitions) are matched and merged by their unique identifier keys</p>
+<p>    (typically <code>name</code>). You <strong>must</strong> keep the <code>name</code> key stable when modifying</p>
+<p>    properties of an existing list item. Renaming the <code>name</code> key will cause SSA</p>
+<p>    to create a brand new entry and leave the old entry intact (orphaned) rather</p>
+<p>    than modifying it.</p>
+<ul>
+<li><strong>Minimal Diff</strong>: Make only the changes requested. Adhere closely to</li>
+</ul>
+<p>    existing labels, annotations, and conventions.</p>
+<hr>
+<h4>Specialty Workloads: GKE AI/Inference Serving (vLLM, TGI, etc.)</h4>
+<p>For model serving workloads, prioritize using optimized tooling like GKE</p>
+<p>Inference Quickstart if available. If generating manually:</p>
+<ol>
+<li><strong>GPU Request &amp; Allocation</strong>:</li>
+</ol>
+<ul>
+<li>Always request <code>nvidia.com/gpu</code> in both <code>requests</code> and <code>limits</code>.</li>
+<li>Add a <code>nodeSelector</code> or node affinity targeting the desired GKE</li>
+</ul>
+<p>        accelerator tag (e.g., <code>cloud.google.com/gke-accelerator: nvidia-l4</code>).</p>
+<ol>
+<li><strong>Shared Memory Boost</strong>:</li>
+</ol>
+<ul>
+<li>Model servers require high shared memory (<code>/dev/shm</code>) for inter-process</li>
+</ul>
+<p>        communications. Always declare and mount an <code>emptyDir</code> volume with</p>
+<p>        <code>medium: Memory</code> to <code>/dev/shm</code>.</p>
+<ol>
+<li><strong>Weight Loading Optimization</strong>:</li>
+</ol>
+<ul>
+<li>Mount model weight directories (like GCS buckets) using the GKE GCS Fuse</li>
+</ul>
+<p>        CSI driver (<code>csi.storage.gke.io</code>) as <code>readOnly: true</code> for efficient</p>
+<p>        cold-starts.</p>
+<hr>
+<h4>Tooling &amp; Grounding Guidelines</h4>
+<p>When generating manifests, you should leverage the following tooling to reduce</p>
+<p>hallucinations and optimize configurations:</p>
+<ol>
+<li><strong>Inference Workloads (GKE Inference Quickstart CLI)</strong>:</li>
+</ol>
+<ul>
+<li>Make sure you have the</li>
+</ul>
+<p>        <a href="https://cloud.google.com/sdk/docs/install" rel="noopener">Google Cloud SDK</a> installed.</p>
+<ul>
+<li>For all AI/LLM inference workloads (e.g. model serving), you <strong>must</strong></li>
+</ul>
+<p>        prioritize using the <code>gcloud</code> CLI GKE Inference Quickstart command to</p>
+<p>        generate the optimized manifests instead of writing them manually:</p>
+<p>        <pre><code>        gcloud container ai profiles manifests create \
+          --model={model_name} \
+          --model-server={server_name} \
+          --accelerator-type={accelerator_type} \
+          --output=manifest \
+          --output-path={output_file_path}
+        </code></pre></p>
+<ul>
+<li><em>Constraint</em>: You must include all resources returned by this command</li>
+</ul>
+<p>        (Deployments, Services, PodMonitoring, etc.) without filtering.</p>
+<ol>
+<li><strong>Grounding in Official Documentation (Developer Knowledge API)</strong>:</li>
+</ol>
+<ul>
+<li>For GKE-specific features, API defaults, manifest examples, or security</li>
+</ul>
+<p>        contexts, you <strong>must</strong> query Google&#39;s developer knowledge base to</p>
+<p>        retrieve official GKE documentation:</p>
+<ul>
+<li><strong><code>answer_query</code></strong>: Use this to ask direct questions (e.g., *&quot;How to</li>
+</ul>
+<p>            configure GCS Fuse CSI driver in GKE&quot;*). This is the preferred tool</p>
+<p>            for general queries.</p>
+<ul>
+<li><strong><code>search_documents</code></strong>: Use this to search for relevant GKE guides</li>
+</ul>
+<p>            or examples when you don&#39;t have a specific question.</p>
+<ul>
+<li><strong><code>get_document</code></strong>: Use this to fetch full document contents when</li>
+</ul>
+<p>            you have a specific document ID.</p>
+<hr>
+<h4>Reference Examples</h4>
+<p>For detailed, production-ready manifest templates, consult the following</p>
+<p>reference guides:</p>
+<ul>
+<li><strong>[Basic Hardened Nginx Workload](references/basic-workload.md)</strong>:</li>
+</ul>
+<p>    Production-ready deployment with dedicated service account, security</p>
+<p>    contexts, probes, anti-affinity, and PodDisruptionBudget.</p>
+<ul>
+<li><strong>[Network Policy](references/network-policy.md)</strong>: Default-deny ingress</li>
+</ul>
+<p>    network policy and selective ingress allowance for specific apps.</p>
+<ul>
+<li><strong>[AI/LLM Inference Workload](references/ai-inference.md)</strong>: GPU resource</li>
+</ul>
+<p>    allocation, Workload Identity, GCS FUSE CSI driver mounting, <code>/dev/shm</code></p>
+<p>    shared memory boost, and startup probes.</p>
+<ul>
+<li><strong>[GKE Gateway API Routing](references/gateway-api.md)</strong>: Exposing workloads</li>
+</ul>
+<p>    using GKE L7 Gateway API (<code>Gateway</code> and <code>HTTPRoute</code> resources).</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-manifest-generation</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-manifest-generation" aria-label="Copy install gke-manifest-generation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-manifest-generation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-manifest-generation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

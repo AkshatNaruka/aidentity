@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-cluster-creation — Aidentity</title>
+<meta name="description" content="Plans and executes GKE cluster creation, provisioning, and production readiness audits using pre-defined templates (Autopilot, Standard Regional, GPU/AI Inference, AI Hypercompute). Use when creating GKE clusters, provisioning GKE environments, selecting cluster modes, or auditing GKE clusters. Don&#39;t use for application onboarding or deployment configuration (use gke-app-onboarding instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-cluster-creation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-cluster-creation — Aidentity">
+<meta property="og:description" content="Plans and executes GKE cluster creation, provisioning, and production readiness audits using pre-defined templates (Autopilot, Standard Regional, GPU/AI Inference, AI Hypercompute). Use when creating GKE clusters, provisioning GKE environments, selecting cluster modes, or auditing GKE clusters. Don&#39;t use for application onboarding or deployment configuration (use gke-app-onboarding instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-cluster-creation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-cluster-creation","description":"Plans and executes GKE cluster creation, provisioning, and production readiness audits using pre-defined templates (Autopilot, Standard Regional, GPU/AI Inference, AI Hypercompute). Use when creating GKE clusters, provisioning GKE environments, selecting cluster modes, or auditing GKE clusters. Don't use for application onboarding or deployment configuration (use gke-app-onboarding instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-cluster-creation/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-cluster-creation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-cluster-creation</h1>
+      <p class="summary">Plans and executes GKE cluster creation, provisioning, and production readiness audits using pre-defined templates (Autopilot, Standard Regional, GPU/AI Inference, AI Hypercompute). Use when creating GKE clusters, provisioning GKE environments, selecting cluster modes, or auditing GKE clusters. Don&#39;t use for application onboarding or deployment configuration (use gke-app-onboarding instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Cluster Creation</h3>
+<p>This reference guides creating Google Kubernetes Engine (GKE) clusters by</p>
+<p>providing a set of best-practice templates and guiding through mode selection</p>
+<p>and customization. The <strong>golden path Autopilot</strong> configuration is the default</p>
+<p>for all new clusters.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>list_clusters</code>, <code>create_cluster</code>, <code>get_cluster</code>,</p>
+<p>&gt; <code>list_operations</code>, <code>get_operation</code></p>
+<h4>Workflow</h4>
+<ol>
+<li><strong>Discover context</strong>: Use <code>list_clusters</code> to see existing clusters. Use</li>
+</ol>
+<p>    <code>gcloud config get-value project</code> if project unknown.</p>
+<ol>
+<li><strong>Gather inputs</strong>: <code>project_id</code>, <code>location</code> (region or zone),</li>
+</ol>
+<p>    <code>cluster_name</code>, environment type. If missing essential details, ask the user</p>
+<p>    before taking action.</p>
+<ol>
+<li><strong>Select mode &amp; explain trade-offs</strong>: If the user hasn&#39;t specified a</li>
+</ol>
+<p>    template or mode, present the available templates (e.g., Autopilot, Standard</p>
+<p>    Regional, GPU Inference, AI Hypercompute) and explain key trade-offs (Cost</p>
+<p>    vs. Availability, Autopilot vs. Standard node management).</p>
+<ol>
+<li><strong>Configure networking</strong>: auto-create subnet (default) or bring-your-own.</li>
+<li><strong>Review golden path settings</strong>: present the default configuration block</li>
+</ol>
+<p>    (<code>gcloud</code> command or <code>create_cluster</code> JSON payload) and confirm with the</p>
+<p>    user before creation.</p>
+<ol>
+<li><strong>Create</strong>: Use MCP <code>create_cluster</code> tool or <code>gcloud</code> CLI.</li>
+<li><strong>Track</strong>: Use <code>get_operation</code> to monitor creation progress.</li>
+<li><strong>Verify</strong>: Use <code>get_cluster</code> with <code>readMask=&quot;*&quot;</code> to confirm golden path</li>
+</ol>
+<p>    settings applied.</p>
+<h4>Mode Selection</h4>
+<table><thead><tr><th>Criteria</th><th>Autopilot (Golden Path)</th><th>Standard</th></tr></thead><tbody>
+<tr><td>Node management</td><td>Google-managed</td><td>Self-managed</td></tr>
+<tr><td>Pricing</td><td>Pay per pod resource</td><td>Pay per node (VM)</td></tr>
+</tbody></table>
+<p>:                    : request                   :                           :</p>
+<table><thead><tr><th>Node customization</th><th>Via ComputeClasses</th><th>Full control</th></tr></thead><tbody>
+<tr><td>DaemonSets</td><td>Allowed (with</td><td>Full control</td></tr>
+</tbody></table>
+<p>:                    : restrictions)             :                           :</p>
+<table><thead><tr><th>GPU/TPU</th><th>Supported via</th><th>Supported via node pools</th></tr></thead><tbody>
+</tbody></table>
+<p>:                    : ComputeClasses            :                           :</p>
+<table><thead><tr><th>Best for</th><th>Most production workloads</th><th>Kernel tuning, custom OS,</th></tr></thead><tbody>
+</tbody></table>
+<p>:                    :                           : privileged workloads      :</p>
+<p>&gt; <strong>Rule</strong>: Default to Autopilot unless the customer has a specific requirement</p>
+<p>&gt; that Autopilot cannot satisfy.</p>
+<h4>Best Practices</h4>
+<p>When guiding the user or generating configurations, adhere to these GKE best</p>
+<p>practices:</p>
+<h5>Security &amp; Networking</h5>
+<ol>
+<li><strong>Private Clusters</strong>: Default to private clusters (`enablePrivateNodes:</li>
+</ol>
+<p>    true`) with a private control plane and restricted public endpoints</p>
+<p>    (<code>enable-master-authorized-networks</code>) to minimize attack surface.</p>
+<ol>
+<li><strong>VPC-Native Networking</strong>: Use VPC-native clusters (<code>useIpAliases: true</code> /</li>
+</ol>
+<p>    <code>--enable-ip-alias</code>) to enable alias IP ranges and pod-level firewall rules.</p>
+<ol>
+<li><strong>Workload Identity</strong>: Prefer Workload Identity (`workloadPool:</li>
+</ol>
+<p>    &lt;PROJECT_ID&gt;.svc.id.goog`) for securely granting GKE workloads access to</p>
+<p>    Google Cloud services instead of static service account keys.</p>
+<ol>
+<li><strong>Shielded GKE Nodes</strong>: Enable Shielded GKE Nodes</li>
+</ol>
+<p>    (<code>--enable-shielded-nodes</code>, <code>--enable-secure-boot</code>) against rootkits and</p>
+<p>    bootkits.</p>
+<ol>
+<li><strong>Least Privilege (RBAC)</strong>: Institute strict Role-Based Access Control</li>
+</ol>
+<p>    limits (<code>scoped-rbs-bindings</code>).</p>
+<h5>Cost Optimization</h5>
+<ol>
+<li><strong>Autoscaling</strong>: Enable Cluster Autoscaler and Horizontal/Vertical Pod</li>
+</ol>
+<p>    Autoscaler (<code>--enable-autoscaling</code>, <code>--enable-vertical-pod-autoscaling</code>) to</p>
+<p>    adjust resources based on demand.</p>
+<ol>
+<li><strong>Right-Sizing &amp; Spot VMs</strong>: Choose appropriate machine types and node</li>
+</ol>
+<p>    counts. Consider Spot VMs (<code>--spot</code>) for fault-tolerant, non-critical batch</p>
+<p>    or inference workloads.</p>
+<h5>High Availability &amp; Reliability</h5>
+<ol>
+<li><strong>Regional Clusters</strong>: Use Regional Clusters for production environments to</li>
+</ol>
+<p>    ensure control plane replication across multiple zones (<code>--region</code> instead</p>
+<p>    of <code>--zone</code>). *Note: Standard regional creates nodes across 3 zones by</p>
+<p>    default.*</p>
+<ol>
+<li><strong>Pod Disruption Budgets</strong>: Recommend setting Pod Disruption Budgets for</li>
+</ol>
+<p>    application stability during node maintenance.</p>
+<ol>
+<li><strong>Release Channels</strong>: Subscribe to a release channel (<code>REGULAR</code> or <code>STABLE</code>)</li>
+</ol>
+<p>    for automated, safer cluster upgrades.</p>
+<h4>Templates</h4>
+<h5>1. Golden Path Autopilot (Production)</h5>
+<p>This is the default. All settings match</p>
+<p><code>../gke-golden-path/assets/golden-path-autopilot.yaml</code>.</p>
+<p><strong>Via gcloud:</strong></p>
+<p><pre><code>gcloud container clusters create-auto &lt;CLUSTER_NAME&gt; \
+  --region &lt;REGION&gt; \
+  --project &lt;PROJECT_ID&gt; \
+  --release-channel regular \
+  --enable-private-nodes \
+  --enable-master-authorized-networks \
+  --enable-dns-access \
+  --enable-secret-manager \
+  --secret-manager-rotation-interval=120s \
+  --scoped-rbs-bindings \
+  --monitoring=SYSTEM,API_SERVER,SCHEDULER,CONTROLLER_MANAGER,STORAGE,POD,DEPLOYMENT,STATEFULSET,DAEMONSET,HPA,CADVISOR,KUBELET,DCGM \
+  --quiet</code></pre></p>
+<p><strong>Via MCP (<code>create_cluster</code>):</strong></p>
+<p><pre><code>{
+  &quot;parent&quot;: &quot;projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;&quot;,
+  &quot;cluster&quot;: {
+    &quot;name&quot;: &quot;&lt;CLUSTER_NAME&gt;&quot;,
+    &quot;autopilot&quot;: { &quot;enabled&quot;: true },
+    &quot;privateClusterConfig&quot;: { &quot;enablePrivateNodes&quot;: true },
+    &quot;masterAuthorizedNetworksConfig&quot;: {
+      &quot;privateEndpointEnforcementEnabled&quot;: true
+    },
+    &quot;releaseChannel&quot;: { &quot;channel&quot;: &quot;REGULAR&quot; },
+    &quot;secretManagerConfig&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;rotationConfig&quot;: { &quot;enabled&quot;: true, &quot;rotationInterval&quot;: &quot;120s&quot; }
+    },
+    &quot;rbacBindingConfig&quot;: {
+      &quot;enableInsecureBindingSystemAuthenticated&quot;: false,
+      &quot;enableInsecureBindingSystemUnauthenticated&quot;: false
+    }
+  }
+}</code></pre></p>
+<h5>2. Autopilot Dev/Test</h5>
+<p>Relaxes some golden path defaults for cost savings and easier access in</p>
+<p>non-production.</p>
+<p><strong>Via gcloud:</strong></p>
+<p><pre><code>gcloud container clusters create-auto &lt;CLUSTER_NAME&gt; \
+  --region &lt;REGION&gt; \
+  --project &lt;PROJECT_ID&gt; \
+  --release-channel rapid \
+  --quiet</code></pre></p>
+<p><strong>Via MCP (<code>create_cluster</code>):</strong></p>
+<p><pre><code>{
+  &quot;parent&quot;: &quot;projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;&quot;,
+  &quot;cluster&quot;: {
+    &quot;name&quot;: &quot;&lt;CLUSTER_NAME&gt;&quot;,
+    &quot;autopilot&quot;: { &quot;enabled&quot;: true },
+    &quot;releaseChannel&quot;: { &quot;channel&quot;: &quot;RAPID&quot; }
+  }
+}</code></pre></p>
+<p>&gt; <strong>Warning</strong>: This does not apply golden path security hardening. Suitable for</p>
+<p>&gt; dev/test only.</p>
+<h5>3. Standard Regional (High Availability / Custom Requirements)</h5>
+<p>Best when Autopilot cannot be used (e.g., custom kernel tuning, specific node OS</p>
+<p>requirements). Creates 3 nodes across zones by default.</p>
+<p><strong>Via gcloud:</strong></p>
+<p><pre><code>gcloud container clusters create &lt;CLUSTER_NAME&gt; \
+  --region &lt;REGION&gt; \
+  --project &lt;PROJECT_ID&gt; \
+  --num-nodes 3 \
+  --machine-type e2-standard-4 \
+  --disk-type pd-balanced \
+  --enable-autoscaling --min-nodes 1 --max-nodes 10 \
+  --enable-shielded-nodes --enable-secure-boot \
+  --workload-pool=&lt;PROJECT_ID&gt;.svc.id.goog \
+  --enable-private-nodes \
+  --enable-master-authorized-networks \
+  --enable-vertical-pod-autoscaling \
+  --enable-dataplane-v2 \
+  --release-channel regular \
+  --quiet</code></pre></p>
+<p><strong>Via MCP (<code>create_cluster</code>):</strong></p>
+<p><pre><code>{
+  &quot;parent&quot;: &quot;projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;&quot;,
+  &quot;cluster&quot;: {
+    &quot;name&quot;: &quot;&lt;CLUSTER_NAME&gt;&quot;,
+    &quot;initialNodeCount&quot;: 3,
+    &quot;nodeConfig&quot;: {
+      &quot;machineType&quot;: &quot;e2-standard-4&quot;,
+      &quot;diskType&quot;: &quot;pd-balanced&quot;,
+      &quot;diskSizeGb&quot;: 100,
+      &quot;oauthScopes&quot;: [&quot;https://www.googleapis.com/auth/cloud-platform&quot;],
+      &quot;shieldedInstanceConfig&quot;: {
+        &quot;enableSecureBoot&quot;: true,
+        &quot;enableIntegrityMonitoring&quot;: true
+      },
+      &quot;workloadMetadataConfig&quot;: {
+        &quot;mode&quot;: &quot;GKE_METADATA&quot;
+      }
+    },
+    &quot;privateClusterConfig&quot;: { &quot;enablePrivateNodes&quot;: true },
+    &quot;releaseChannel&quot;: { &quot;channel&quot;: &quot;REGULAR&quot; },
+    &quot;workloadIdentityConfig&quot;: {
+      &quot;workloadPool&quot;: &quot;&lt;PROJECT_ID&gt;.svc.id.goog&quot;
+    }
+  }
+}</code></pre></p>
+<h5>4. GPU Inference &amp; AI Workloads (L4 / ComputeClass)</h5>
+<p>Best for: AI/ML Inference, small model serving. Can be provisioned via</p>
+<p>Autopilot + ComputeClass or via Standard node pool with <code>g2-standard-4</code></p>
+<p>(<code>nvidia-l4</code>). <em>Note: Requires <code>g2-standard-4</code> quota.</em></p>
+<p><strong>Autopilot ComputeClass / GIQ approach:</strong></p>
+<p><pre><code># 1. Create golden path cluster (same as template 1)
+gcloud container clusters create-auto &lt;CLUSTER_NAME&gt; \
+  --region &lt;REGION&gt; --project &lt;PROJECT_ID&gt; \
+  --enable-private-nodes --enable-master-authorized-networks \
+  --enable-dns-access --enable-secret-manager --scoped-rbs-bindings \
+  --quiet
+
+# 2. Apply GPU ComputeClass (see gke-compute-classes.md)
+kubectl apply -f gpu-compute-class.yaml
+
+# 3. Or use GIQ for inference (see gke-inference.md)
+gcloud container ai profiles manifests create \
+  --model=gemma-2-9b-it --model-server=vllm --accelerator-type=nvidia-l4 --quiet &gt; inference.yaml
+kubectl apply -f inference.yaml</code></pre></p>
+<p><strong>Standard Node Pool approach via MCP (<code>create_cluster</code>):</strong></p>
+<p><pre><code>{
+  &quot;parent&quot;: &quot;projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;&quot;,
+  &quot;cluster&quot;: {
+    &quot;name&quot;: &quot;&lt;CLUSTER_NAME&gt;&quot;,
+    &quot;initialNodeCount&quot;: 1,
+    &quot;nodeConfig&quot;: {
+      &quot;machineType&quot;: &quot;g2-standard-4&quot;,
+      &quot;accelerators&quot;: [
+        {
+          &quot;acceleratorCount&quot;: &quot;1&quot;,
+          &quot;acceleratorType&quot;: &quot;nvidia-l4&quot;
+        }
+      ],
+      &quot;diskSizeGb&quot;: 100,
+      &quot;oauthScopes&quot;: [&quot;https://www.googleapis.com/auth/cloud-platform&quot;]
+    }
+  }
+}</code></pre></p>
+<h5>5. AI Hypercompute (A3 HighGPU / Large Model Serving)</h5>
+<p>Best for: Large-scale LLM / AI model training and hypercompute inference. *Note:</p>
+<p>High hourly cost and strict quota requirements (<code>a3-highgpu-8g</code> /</p>
+<p><code>nvidia-h100-80gb-hbm3</code>).*</p>
+<p><strong>Via gcloud:</strong></p>
+<p><pre><code>gcloud container clusters create &lt;CLUSTER_NAME&gt; \
+  --region &lt;REGION&gt; \
+  --project &lt;PROJECT_ID&gt; \
+  --num-nodes 1 \
+  --machine-type a3-highgpu-8g \
+  --accelerator type=nvidia-h100-80gb-hbm3,count=8 \
+  --disk-size 200 \
+  --scopes https://www.googleapis.com/auth/cloud-platform \
+  --workload-pool=&lt;PROJECT_ID&gt;.svc.id.goog \
+  --release-channel regular \
+  --quiet</code></pre></p>
+<p><strong>Via MCP (<code>create_cluster</code>):</strong></p>
+<p><pre><code>{
+  &quot;parent&quot;: &quot;projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;&quot;,
+  &quot;cluster&quot;: {
+    &quot;name&quot;: &quot;&lt;CLUSTER_NAME&gt;&quot;,
+    &quot;initialNodeCount&quot;: 1,
+    &quot;nodeConfig&quot;: {
+      &quot;machineType&quot;: &quot;a3-highgpu-8g&quot;,
+      &quot;accelerators&quot;: [
+        {
+          &quot;acceleratorCount&quot;: &quot;8&quot;,
+          &quot;acceleratorType&quot;: &quot;nvidia-h100-80gb-hbm3&quot;
+        }
+      ],
+      &quot;diskSizeGb&quot;: 200,
+      &quot;oauthScopes&quot;: [&quot;https://www.googleapis.com/auth/cloud-platform&quot;]
+    }
+  }
+}</code></pre></p>
+<h4>Instructions</h4>
+<ul>
+<li><strong>ALWAYS</strong> ask for <code>project_id</code> if not in context.</li>
+<li><strong>ALWAYS</strong> ask for <code>region</code> (or location).</li>
+<li><strong>ALWAYS</strong> ask for a unique <code>cluster_name</code>.</li>
+<li><strong>DEFAULT</strong> to golden path Autopilot unless customer specifies otherwise or</li>
+</ul>
+<p>    has custom node/kernel/hypercompute requirements.</p>
+<ul>
+<li><strong>ALWAYS WARN</strong> when deviating to GKE Standard, highlighting that it</li>
+</ul>
+<p>    deviates from the golden path and explaining the added</p>
+<p>    operational/management overhead (manually managing node pools, upgrades, and</p>
+<p>    autoscaling).</p>
+<ul>
+<li><strong>EXPLAIN TRADE-OFFS</strong> when presenting templates or mode choices to the user</li>
+</ul>
+<p>    if they haven&#39;t specified one (e.g., Autopilot vs Standard, Cost vs</p>
+<p>    Availability).</p>
+<ul>
+<li><strong>PRESENT THE CONFIGURATION</strong> block (<code>gcloud</code> command or JSON payload) and</li>
+</ul>
+<p>    ask for confirmation before calling any creation tool.</p>
+<ul>
+<li><strong>WARN</strong> about Day-0 decisions (networking, private nodes) that are hard to</li>
+</ul>
+<p>    change later.</p>
+<ul>
+<li><strong>WARN</strong> explicitly about cost and quota requirements when the user selects</li>
+</ul>
+<p>    GPU (<code>g2-standard-4</code>, <code>a3-highgpu-8g</code>), TPU, or multi-region/regional</p>
+<p>    clusters (<code>--region</code> defaults to 3 zones).</p>
+<ul>
+<li>When using MCP <code>create_cluster</code>, the <code>cluster.name</code> parameter should be the</li>
+</ul>
+<p>    <strong>short name</strong> (e.g., <code>my-cluster</code>), not the full resource path</p>
+<p>    (<code>projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;/clusters/&lt;CLUSTER_NAME&gt;</code>). The</p>
+<p>    <code>parent</code> parameter defines the scope</p>
+<p>    (<code>projects/&lt;PROJECT_ID&gt;/locations/&lt;REGION&gt;</code>).</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-cluster-creation</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-cluster-creation" aria-label="Copy install gke-cluster-creation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-cluster-creation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-cluster-creation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

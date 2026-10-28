@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-logging-configuration-basics — Aidentity</title>
+<meta name="description" content="Configure single-project Google Cloud Logging: regional log buckets, log sinks, log views, restricting or hiding sensitive logs in the default view (_Default) filter, IAM permissions for views (Logs View Accessor, IAM conditions), logs-based metrics, log exclusions, and sampling. Don&#39;t use for cross-project logging or multi-project setups.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-configuration-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-logging-configuration-basics — Aidentity">
+<meta property="og:description" content="Configure single-project Google Cloud Logging: regional log buckets, log sinks, log views, restricting or hiding sensitive logs in the default view (_Default) filter, IAM permissions for views (Logs View Accessor, IAM conditions), logs-based metrics, log exclusions, and sampling. Don&#39;t use for cross-project logging or multi-project setups.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-configuration-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-logging-configuration-basics","description":"Configure single-project Google Cloud Logging: regional log buckets, log sinks, log views, restricting or hiding sensitive logs in the default view (_Default) filter, IAM permissions for views (Logs View Accessor, IAM conditions), logs-based metrics, log exclusions, and sampling. Don't use for cross-project logging or multi-project setups.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-configuration-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-logging-configuration-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-logging-configuration-basics</h1>
+      <p class="summary">Configure single-project Google Cloud Logging: regional log buckets, log sinks, log views, restricting or hiding sensitive logs in the default view (_Default) filter, IAM permissions for views (Logs View Accessor, IAM conditions), logs-based metrics, log exclusions, and sampling. Don&#39;t use for cross-project logging or multi-project setups.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Configuring Cloud Logging</h3>
+<p>Use this skill to configure Cloud Logging resources such as log buckets, log</p>
+<p>views, or log sinks.</p>
+<p>&gt; [!IMPORTANT] <strong>Sandbox Network Limitation (CRITICAL for Agent Testing):</strong></p>
+<p>&gt; During evaluation or in restricted sandboxed environments, network traffic to</p>
+<p>&gt; Google Cloud APIs is blocked. Do <strong>NOT</strong> run network discovery commands to</p>
+<p>&gt; find resource names, project IDs, or organization IDs. Always use the exact</p>
+<p>&gt; project IDs or placeholders provided in the user prompt or instructions for</p>
+<p>&gt; example, <code>{project_id}</code>. Assume these resources exist and proceed directly</p>
+<p>&gt; with configuration commands. Running these discovery commands will cause the</p>
+<p>&gt; execution to hang and timeout.</p>
+<h4>Safety and Confirmation Tiers (CRITICAL)</h4>
+<p>Before executing any commands on behalf of the user, you MUST adhere to the</p>
+<p>following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R: Read-Only</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Commands that only read state or query logs.</li>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging read</code></li>
+<li><code>gcloud logging buckets list</code></li>
+<li><strong>Rule:</strong> No confirmation needed. You may execute these commands</li>
+</ul>
+<p>        immediately to gather information.</p>
+<ol>
+<li><strong>Tier M: Mutation (Non-Billing)</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Configuration modifications or free metadata creations</li>
+</ul>
+<p>        that do not incur direct storage or billing costs and do not affect</p>
+<p>        resource security/access policies.</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging views create</code></li>
+<li><code>gcloud logging views update</code></li>
+<li><code>gcloud logging scopes create</code></li>
+<li><code>gcloud logging buckets create</code></li>
+<li><strong>Rule:</strong> No confirmation needed. You may execute these commands</li>
+</ul>
+<p>        immediately to apply configurations.</p>
+<ol>
+<li><strong>Tier B: Billing and Security-Sensitive Mutations (High-Risk)</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Operations that create billing-inducing resources or</li>
+</ul>
+<p>        integrations, or modify security and IAM access control policies</p>
+<p>        (presenting a risk of privilege escalation).</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging metrics create</code></li>
+<li><code>gcloud logging links create</code></li>
+<li><code>gcloud projects add-iam-policy-binding</code></li>
+<li><strong>Rule:</strong> <strong>Interactive confirmation required.</strong> These commands create</li>
+</ul>
+<p>        resources that incur billing costs or alter security access. You MUST</p>
+<p>        present the exact, literal command and receive user confirmation before</p>
+<p>        executing. NEVER execute in the same turn as asking.</p>
+<ol>
+<li><strong>Tier D: Causes irreversible data loss</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Actions that permanently discard or delete logs, for</li>
+</ul>
+<p>        example sink exclusions.</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging buckets delete</code></li>
+<li><code>gcloud logging sinks update --add-exclusion</code></li>
+<li><strong>Rule:</strong> <strong>Explicit typed confirmation required.</strong> These commands</li>
+</ul>
+<p>        discard or delete logs immediately and irreversibly, or they may result</p>
+<p>        in log data not being stored. You MUST ask for explicit typed</p>
+<p>        confirmation, for example, &quot;Yes, discard logs&quot;, and halt execution until</p>
+<p>        the user replies.</p>
+<h4>Getting Started</h4>
+<p>If the <code>gcloud</code> executable is missing, refer to the</p>
+<p><a href="https://docs.cloud.google.com/sdk/docs/install-sdk.md.txt" rel="noopener">Google Cloud CLI Installation Guide</a></p>
+<p>to install it.</p>
+<h4>Creating Log Buckets (Compliance and Analytics) (Tier M)</h4>
+<p>To create a regional log bucket with a specific retention policy for regulatory</p>
+<p>compliance, and with Observability Analytics enabled:</p>
+<p>&gt; [!WARNING] <strong>Mandatory Observability Analytics Downgrade Warning:</strong> Whenever</p>
+<p>&gt; providing guidance, writing a guide, or drafting commands on Cloud Logging</p>
+<p>&gt; cost optimization or exclusions, you <strong>must</strong> explicitly include the following</p>
+<p>&gt; warning in your final text response and any generated guides: &quot;After a log</p>
+<p>&gt; bucket has been upgraded to use Observability Analytics, it **cannot be</p>
+<p>&gt; downgraded** to remove the analytics capability.&quot;</p>
+<p><pre><code>gcloud logging buckets create {bucket_id} \
+    --project={project_id} \
+    --location={region} \
+    --retention-days={retention_days} \
+    --enable-analytics</code></pre></p>
+<ul>
+<li><code>{bucket_id}</code>: for example, <code>my-custom-bucket</code></li>
+<li><code>{region}</code>: for example, <code>us-central1</code>. You must use a regional log bucket</li>
+</ul>
+<p>    to also use Observability Analytics.</p>
+<ul>
+<li><code>{retention_days}</code>: for example, <code>365</code></li>
+</ul>
+<p>A log bucket incurs no storage or ingestion charges until logs are routed to it</p>
+<p>with a log sink.</p>
+<h5>Verify the Log Bucket (Tier R)</h5>
+<p>Check the log bucket&#39;s configuration to verify its compliance:</p>
+<p><pre><code>gcloud logging buckets describe {bucket_id} \
+    --location={region} \
+    --project={project_id}</code></pre></p>
+<h5>Route logs to the Log Bucket (Tier B)</h5>
+<p>&gt; [!IMPORTANT] <strong>Billing Action (Tier B):</strong> Routing log entries to a bucket</p>
+<p>&gt; incurs ongoing charges based on the volume of data stored. You MUST get</p>
+<p>&gt; interactive user confirmation before running this command.</p>
+<p>Log entries are stored in the log bucket only if a log sink filter matches the</p>
+<p>entries and targets that bucket.</p>
+<p>To route log entries to the log bucket:</p>
+<p><pre><code>gcloud logging sinks create {sink_id} \
+    projects/{project_id}/locations/{region}/buckets/{bucket_id} \
+    --log-filter=&#39;{filter_expression}&#39; \
+    --project={project_id}</code></pre></p>
+<hr>
+<h4>Logs-Based Metrics</h4>
+<p>Logs-based metrics count the number of log entries that match a filter, allowing</p>
+<p>you to track error rates and set up alerting policies.</p>
+<h5>1. Create a logs-based counter metric (Tier B)</h5>
+<p>&gt; [!IMPORTANT] <strong>Billing Action (Tier B):</strong> Creating logs-based metrics incurs</p>
+<p>&gt; ongoing charges based on the volume of data points reported. You MUST get</p>
+<p>&gt; interactive user confirmation before running this command.</p>
+<p>To count the occurrences of a specific log pattern, for example, &quot;OutOfMemory&quot;</p>
+<p>errors:</p>
+<p><pre><code>gcloud logging metrics create {metric_name} \
+    --log-filter=&#39;{filter_expression}&#39; \
+    --description=&#39;{description}&#39; \
+    --project={project_id}</code></pre></p>
+<ul>
+<li><code>{metric_name}</code>: for example, <code>oom_error_count</code></li>
+<li><code>{filter_expression}</code>: for example, <code>textPayload:&quot;OutOfMemory&quot;</code></li>
+<li><code>{description}</code>: for example, &quot;Count of log entries about OOMs&quot;</li>
+</ul>
+<p>Refer to</p>
+<p><a href="https://docs.cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics.md.txt#LogMetric" rel="noopener">REST Resource: projects.metric</a></p>
+<p>for restrictions on the metric fields.</p>
+<h5>2. Verify the logs-based metric (Tier R)</h5>
+<p>To verify that the metric exists and inspect its configuration, use the</p>
+<p><code>describe</code> command:</p>
+<p><pre><code>gcloud logging metrics describe {metric_name} \
+    --project={project_id}</code></pre></p>
+<hr>
+<h4>Restricting Access to Sensitive Logs (Security)</h4>
+<p>Anyone with <code>roles/logging.viewer</code> on that project can see logs in a project&#39;s</p>
+<p><code>_Default</code> log bucket via <code>_Default</code> log view. To restrict visibility of the</p>
+<p>logs:</p>
+<p>&gt; [!IMPORTANT] <strong>Ambiguity Handling (Guidance for Agents):</strong> If the user asks to</p>
+<p>&gt; &quot;exclude&quot;, &quot;hide&quot;, or &quot;remove&quot; sensitive logs without explicitly specifying</p>
+<p>&gt; whether they want to stop storing them, you <strong>MUST</strong> default to **excluding</p>
+<p>&gt; them from the default view (Step 1)**. This is a safe, non-destructive Tier M</p>
+<p>&gt; action. Only configure a storage exclusion (under the &quot;Discarding Sensitive</p>
+<p>&gt; Logs from Storage&quot; section) if the user explicitly uses destructive terms like</p>
+<p>&gt; <em>&quot;stop storing&quot;</em>, <em>&quot;permanently discard&quot;</em>, or <em>&quot;sink exclusion&quot;</em>.</p>
+<h5>1. Exclude sensitive logs from default view (Tier M)</h5>
+<p>To explicitly exclude sensitive logs from general access, update the filter for</p>
+<p>the <code>_Default</code> log view:</p>
+<p><pre><code>gcloud logging views update _Default \
+    --bucket=_Default \
+    --location=global \
+    --project={project_id} \
+    --log-filter=&#39;NOT LOG_ID(&quot;cloudaudit.googleapis.com/data_access&quot;) AND NOT LOG_ID(&quot;externalaudit.googleapis.com/data_access&quot;) AND NOT LOG_ID(&quot;{sensitive_log_id}&quot;)&#39;</code></pre></p>
+<h5>2. Create a log view (Tier M)</h5>
+<p>Create a new log view that includes the sensitive logs in the project&#39;s</p>
+<p><code>_Default</code> log bucket. For example, a &quot;security-logs-view&quot; with access to the</p>
+<p><code>{sensitive_log_id}</code></p>
+<p><pre><code>gcloud logging views create security-logs-view \
+    --bucket=_Default \
+    --location=global \
+    --project={project_id} \
+    --log-filter=&#39;LOG_ID(&quot;{sensitive_log_id}&quot;)&#39; \
+    --description=&quot;Sensitive logs&quot;</code></pre></p>
+<h5>3. Grant access to log view using IAM conditions (Tier B)</h5>
+<p>&gt; [!IMPORTANT] <strong>Security Action (Tier B):</strong> Granting IAM permissions changes</p>
+<p>&gt; access control policy and must be explicitly confirmed by the user before</p>
+<p>&gt; execution.</p>
+<p>To restrict access to log view use IAM. When granting the Logs Viewer Accessor</p>
+<p>role, always attach an IAM condition that restricts the grant to a specific log</p>
+<p>view. For example, to grant <code>{security_group_email}</code> access ONLY to the</p>
+<p><code>security-logs-view</code> in the <code>_Default</code> bucket:</p>
+<p><pre><code>gcloud projects add-iam-policy-binding {project_id} \
+--member=&#39;group:{security_group_email}&#39; \
+--role=&#39;roles/logging.viewAccessor&#39; \
+--condition=&quot;expression=resource.name==&#39;projects/{project_id}/locations/global/buckets/_Default/views/security-logs-view&#39;,title=Restricted to Specific Log View,description=Only allows access to the specified log view&quot;</code></pre></p>
+<p>Replace <code>{location}</code> with the location of the log bucket, for example <code>global</code></p>
+<p>or a regional location like <code>us-central1</code>.</p>
+<h5>4. Verify Sensitive Log Restrictions (Tier R)</h5>
+<p>To verify that your Log View for sensitive logs is configured correctly:</p>
+<p><pre><code>gcloud logging views describe {view_id} \
+    --bucket={bucket_id} \
+    --location={region} \
+    --project={project_id}</code></pre></p>
+<p>Ensure that the <code>filter</code> block contains the appropriate restriction expression.</p>
+<hr>
+<h4>Discarding Sensitive Logs from Storage (Tier D)</h4>
+<p>If your organization&#39;s compliance policies prohibit storing sensitive logs at</p>
+<p>all, you can configure an exclusion to discard them before they are written to</p>
+<p>disk.</p>
+<p>&gt; [!CAUTION] <strong>Destructive Action (Tier D):</strong> Excluding logs from all log sinks</p>
+<p>&gt; deletes the log entries immediately and irreversibly.</p>
+<p>&gt;</p>
+<p>&gt; <strong>Safety Rule:</strong> You MUST ask the user for explicit typed confirmation, for</p>
+<p>&gt; example, &quot;I confirm I want to exclude <code>{sensitive_log_id}</code> logs from storage&quot;,</p>
+<p>&gt; before running this command. <strong>Same-Turn Restriction:</strong> Do NOT execute the</p>
+<p>&gt; <code>gcloud logging sinks update</code> command in the same turn as asking for</p>
+<p>&gt; confirmation. Stop tool execution immediately and wait for the user to reply.</p>
+<p><strong>Exclude sensitive logs from storage using sink exclusions</strong></p>
+<p><pre><code>gcloud logging sinks update _Default \
+    --project={project_id} \
+    --add-exclusion=name=exclude-sensitive,filter=&#39;LOG_ID(&quot;{sensitive_log_id}&quot;)&#39;</code></pre></p>
+<hr>
+<h4>Cost Optimization (Reducing Logging Costs)</h4>
+<p>Cloud Logging costs are based on the volume of data ingested and stored. You can</p>
+<p>reduce costs by excluding high-volume, low-value logs or by sampling them. Each</p>
+<p>log sink that routes logs to a distinct log bucket contributes to cost and is a</p>
+<p>candidate for optimization.</p>
+<p>&gt; [!CAUTION] <strong>Destructive Actions (Tier D):</strong> Exclusions in this section may</p>
+<p>&gt; immediately halt storage of log entries.</p>
+<p>&gt;</p>
+<p>&gt; <strong>Safety Rule:</strong> You MUST ask for explicit typed confirmation (for example, &quot;I</p>
+<p>&gt; confirm I want to exclude load balancer logs&quot;) before executing exclusions or</p>
+<p>&gt; sampling updates.</p>
+<h5>Exclude all high-volume logs (Tier D)</h5>
+<p>To completely stop ingesting a specific type of log into a log bucket, add an</p>
+<p>exclusion to the log sinks that route logs into that bucket.</p>
+<p><pre><code>gcloud logging sinks update {sink_id} \
+    --project={project_id} \
+    --add-exclusion=name={exclusion_name},filter={exclusion_filter}</code></pre></p>
+<ul>
+<li><code>{sink_id}</code>: for example &#39;_Default&#39;</li>
+<li><code>{exclusion_name}</code>: for example &#39;exclude-lb-logs&#39;</li>
+<li><code>{exclusion_filter}</code>: for example &#39;resource.type=&quot;http_load_balancer&quot;&#39;</li>
+</ul>
+<h5>Sample high-volume logs (Tier D)</h5>
+<p>If you need some logs for analysis but want to reduce volume, use the <code>sample()</code></p>
+<p>function in the exclusion filter.</p>
+<p>&gt; [!IMPORTANT] The <code>sample(field, fraction)</code> function matches a <code>fraction</code> of</p>
+<p>&gt; logs. When used in an <strong>exclusion filter</strong>, the matched logs are</p>
+<p>&gt; <strong>discarded</strong>. If you exclude 90% of log entries, then only 10% are retained.</p>
+<p>&gt; To exclude 90%, use <code>sample(insertId, 0.9)</code> in the exclusion filter.</p>
+<p>To exclude 90% of <code>DEBUG</code> severity logs:</p>
+<p><pre><code>gcloud logging sinks update _Default \
+    --project={project_id} \
+    --add-exclusion=name=sample-debug-logs,filter=&#39;severity=DEBUG AND sample(insertId, 0.9)&#39;</code></pre></p>
+<h5>Verify Log Exclusions and Cost Optimization (Tier R)</h5>
+<p>To verify that log exclusions are correct, list the details of the sink and</p>
+<p>check the <code>exclusions</code> to ensure your filter is present. For example, for the</p>
+<p><code>_Default</code> sink:</p>
+<p><pre><code>gcloud logging sinks describe _Default --project={project_id}</code></pre></p>
+<hr>
+<h4>References and Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/logging/docs/logs-based-metrics/counter-metrics.md.txt" rel="noopener">Google Cloud Logging - Counter Metrics</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/logs-views.md.txt" rel="noopener">Google Cloud Logging - Custom Log Views</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/routing/overview.md.txt" rel="noopener">Google Cloud Logging - Exclusions</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-logging-configuration-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-logging-configuration-basics" aria-label="Copy install cloud-logging-configuration-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-logging-configuration-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-logging-configuration-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

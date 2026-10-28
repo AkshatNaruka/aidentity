@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>firebase-basics — Aidentity</title>
+<meta name="description" content="Provides foundational Firebase CLI setup, CLI installation, version checks (`firebase-tools@latest --version`), CLI login (including --no-localhost), project creation, project selection (`firebase use`), and app config file downloads (`google-services.json`, `GoogleService-Info.plist`). Use ONLY for CLI login, project creation/switching, or downloading app config files. Don&#39;t use for Firebase Hosting deploy, Firestore, Auth, App Hosting, Data Connect, Crashlytics, or Remote Config.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/firebase-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="firebase-basics — Aidentity">
+<meta property="og:description" content="Provides foundational Firebase CLI setup, CLI installation, version checks (`firebase-tools@latest --version`), CLI login (including --no-localhost), project creation, project selection (`firebase use`), and app config file downloads (`google-services.json`, `GoogleService-Info.plist`). Use ONLY for CLI login, project creation/switching, or downloading app config files. Don&#39;t use for Firebase Hosting deploy, Firestore, Auth, App Hosting, Data Connect, Crashlytics, or Remote Config.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/firebase-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"firebase-basics","description":"Provides foundational Firebase CLI setup, CLI installation, version checks (`firebase-tools@latest --version`), CLI login (including --no-localhost), project creation, project selection (`firebase use`), and app config file downloads (`google-services.json`, `GoogleService-Info.plist`). Use ONLY for CLI login, project creation/switching, or downloading app config files. Don't use for Firebase Hosting deploy, Firestore, Auth, App Hosting, Data Connect, Crashlytics, or Remote Config.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/firebase-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>firebase-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>firebase-basics</h1>
+      <p class="summary">Provides foundational Firebase CLI setup, CLI installation, version checks (`firebase-tools@latest --version`), CLI login (including --no-localhost), project creation, project selection (`firebase use`), and app config file downloads (`google-services.json`, `GoogleService-Info.plist`). Use ONLY for CLI login, project creation/switching, or downloading app config files. Don&#39;t use for Firebase Hosting deploy, Firestore, Auth, App Hosting, Data Connect, Crashlytics, or Remote Config.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Firebase Basics</h3>
+<h4>Prerequisites</h4>
+<p>Complete these setup steps before proceeding:</p>
+<ol>
+<li><strong>Local Environment Setup:</strong> Verify the environment is properly set up so we</li>
+</ol>
+<p>    can use Firebase tools:</p>
+<ul>
+<li>Run <code>npx -y firebase-tools@latest --version</code> to check if the Firebase</li>
+</ul>
+<p>        CLI is installed.</p>
+<ul>
+<li>Verify if the Firebase MCP server is installed using your existing</li>
+</ul>
+<p>        tools.</p>
+<ul>
+<li><strong>CRITICAL</strong>: Before configuring any extensions or agent environments</li>
+</ul>
+<p>        below, you MUST read</p>
+<p>        [references/local-env-setup.md](references/local-env-setup.md).</p>
+<ul>
+<li><strong>DO NOT SKIP</strong> this step: if &#39;firebase-basics&#39; is the only Firebase</li>
+</ul>
+<p>        skill available to you, you must follow the reference for your agent</p>
+<p>        environment to set up the full suite of Firebase skills:</p>
+<ul>
+<li><strong>Gemini CLI</strong>: Review</li>
+</ul>
+<p>            [references/setup/gemini_cli.md](references/setup/gemini_cli.md)</p>
+<ul>
+<li><strong>Antigravity</strong>: Review</li>
+</ul>
+<p>            [references/setup/antigravity.md](references/setup/antigravity.md)</p>
+<ul>
+<li><strong>Android Studio</strong>: Review</li>
+</ul>
+<p>            [references/setup/android_studio.md](references/setup/android_studio.md)</p>
+<ul>
+<li><strong>Claude Code</strong>: Review</li>
+</ul>
+<p>            [references/setup/claude_code.md](references/setup/claude_code.md)</p>
+<ul>
+<li><strong>Cursor</strong>: Review</li>
+</ul>
+<p>            [references/setup/cursor.md](references/setup/cursor.md)</p>
+<ul>
+<li><strong>GitHub Copilot</strong>: Review</li>
+</ul>
+<p>            [references/setup/github_copilot.md](references/setup/github_copilot.md)</p>
+<ul>
+<li><strong>Other Agents</strong>: Review</li>
+</ul>
+<p>            [references/setup/other_agents.md](references/setup/other_agents.md)</p>
+<ol>
+<li><strong>Authentication:</strong> Ensure you are logged in to Firebase so that commands</li>
+</ol>
+<p>    have the correct permissions. Run <code>npx -y firebase-tools@latest login</code>. For</p>
+<p>    environments without a browser (e.g., remote shells), use `npx -y</p>
+<p>    firebase-tools@latest login --no-localhost`.</p>
+<ul>
+<li>The command should output the current user.</li>
+<li>If you are not logged in, follow the interactive instructions from this</li>
+</ul>
+<p>        command to authenticate.</p>
+<ol>
+<li><strong>Active Project:</strong> Most Firebase tasks require an active project context.</li>
+</ol>
+<p>    &gt; [!IMPORTANT] <strong>For Agents:</strong> Before proceeding with project configuration,</p>
+<p>    &gt; you MUST pause and ask the developer if they prefer to:</p>
+<p>    &gt;</p>
+<p>    &gt; 1.  <strong>Provide an existing Firebase Project ID</strong>, or</p>
+<p>    &gt; 1.  <strong>Create a new Firebase project</strong>.</p>
+<ul>
+<li><strong>If using an existing Project ID:</strong></li>
+</ul>
+<ol>
+<li>Check the current project by running `npx -y firebase-tools@latest</li>
+</ol>
+<p>            use`.</p>
+<ol>
+<li>If the command outputs <code>Active Project: &lt;project-id&gt;</code>, confirm with</li>
+</ol>
+<p>            the user if this is the intended project.</p>
+<ol>
+<li>If not, or if no project is active, set the project provided by the</li>
+</ol>
+<p>            user:</p>
+<p>        <pre><code>        npx -y firebase-tools@latest use &lt;PROJECT_ID&gt;
+        </code></pre></p>
+<ul>
+<li><strong>If creating a new project:</strong> Run the following command to create it:</li>
+</ul>
+<p>        <pre><code>        npx -y firebase-tools@latest projects:create &lt;project-id&gt; --display-name &quot;&lt;display-name&gt;&quot;
+        </code></pre></p>
+<p>        *Note: The <code>&lt;project-id&gt;</code> must be 6-30 characters, lowercase, and can</p>
+<p>        contain digits and hyphens. It must be globally unique.*</p>
+<h4>Firebase Usage Principles</h4>
+<p>Adhere to these principles:</p>
+<ol>
+<li><strong>Use npx for CLI commands:</strong> To ensure you always use the latest version of</li>
+</ol>
+<p>    the Firebase CLI, always prepend commands with `npx -y</p>
+<p>    firebase-tools@latest<code> instead of just </code>firebase<code>. For example, use </code>npx -y</p>
+<p>    firebase-tools@latest --version<code>. NEVER suggest the naked </code>firebase` command</p>
+<p>    as an alternative.</p>
+<ol>
+<li><strong>Prioritize official knowledge:</strong> For any Firebase-related knowledge,</li>
+</ol>
+<p>    consult the <code>developerknowledge_search_documents</code> MCP tool before falling</p>
+<p>    back to Google Search or your internal knowledge base. Including &quot;Firebase&quot;</p>
+<p>    in your search query significantly improves relevance.</p>
+<ol>
+<li><strong>Follow Agent Skills for implementation guidance:</strong> Skills provide</li>
+</ol>
+<p>    opinionated workflows (CUJs), security rules, and best practices. Always</p>
+<p>    consult them to understand <em>how</em> to implement Firebase features correctly</p>
+<p>    instead of relying on general knowledge.</p>
+<ol>
+<li><strong>Use Firebase MCP Server tools instead of direct API calls:</strong> Whenever you</li>
+</ol>
+<p>    need to interact with remote Firebase APIs (such as fetching Crashlytics</p>
+<p>    logs or executing Data Connect queries), use the tools provided by the</p>
+<p>    Firebase MCP Server instead of attempting manual API calls.</p>
+<ol>
+<li><strong>Keep Plugin / Agent Skills updated:</strong> Since Firebase best practices evolve</li>
+</ol>
+<p>    quickly, regularly check for and install updates to their Firebase plugin or</p>
+<p>    Agent Skills. Similarly, if you encounter issues with outdated tools or</p>
+<p>    commands, follow the steps below based on your agent environment:</p>
+<ul>
+<li><strong>Antigravity</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/antigravity.md](references/refresh/antigravity.md)</p>
+<ul>
+<li><strong>Gemini CLI</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/gemini-cli.md](references/refresh/gemini-cli.md)</p>
+<ul>
+<li><strong>Claude Code</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/claude.md](references/refresh/claude.md)</p>
+<ul>
+<li><strong>Cursor</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/other-agents.md](references/refresh/other-agents.md)</p>
+<ul>
+<li><strong>Android Studio</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/android_studio.md](references/refresh/android_studio.md)</p>
+<ul>
+<li><strong>Others</strong>: Follow</li>
+</ul>
+<p>        [references/refresh/other-agents.md](references/refresh/other-agents.md)</p>
+<ol>
+<li><strong>Automate Config File Retrieval:</strong> When setting up iOS or Android apps, do</li>
+</ol>
+<p>    NOT direct users to the Firebase Console to download <code>google-services.json</code></p>
+<p>    or <code>GoogleService-Info.plist</code>. Instead, use the Firebase CLI to fetch the</p>
+<p>    config programmatically:</p>
+<ul>
+<li>For Android: `npx -y firebase-tools@latest apps:sdkconfig ANDROID</li>
+</ul>
+<p>        &lt;APP_ID&gt; --project &lt;PROJECT_ID&gt;`</p>
+<ul>
+<li>For iOS: `npx -y firebase-tools@latest apps:sdkconfig IOS &lt;APP_ID&gt;</li>
+</ul>
+<p>        --project &lt;PROJECT_ID&gt;` Save the output to the appropriate location</p>
+<p>        (e.g., <code>app/google-services.json</code> for Android, or a path to be linked by</p>
+<p>        <code>xcode-project-setup</code> for iOS).</p>
+<h4>References</h4>
+<ul>
+<li><strong>Initialize Firebase:</strong> See</li>
+</ul>
+<p>    [references/firebase-service-init.md](references/firebase-service-init.md)</p>
+<p>    when you need to initialize new Firebase services using the CLI.</p>
+<ul>
+<li><strong>Exploring Commands:</strong> See</li>
+</ul>
+<p>    [references/firebase-cli-guide.md](references/firebase-cli-guide.md) to</p>
+<p>    discover and understand CLI functionality.</p>
+<ul>
+<li><strong>SDK Setup:</strong> For detailed guides on adding Firebase to your app:</li>
+<li><strong>Web</strong>: See [references/web_setup.md](references/web_setup.md)</li>
+<li><strong>Android</strong>: See</li>
+</ul>
+<p>        [references/android_setup.md](references/android_setup.md)</p>
+<ul>
+<li><strong>iOS</strong>: See [references/ios_setup.md](references/ios_setup.md)</li>
+</ul>
+<h4>Common Issues</h4>
+<ul>
+<li><strong>Login Issues:</strong> If the browser fails to open during the login step, use</li>
+</ul>
+<p>    <code>npx -y firebase-tools@latest login --no-localhost</code> instead.</p>
+<ul>
+<li><strong>Genkit:</strong> If using Genkit, install the skills:</li>
+</ul>
+<p>    <pre><code>    npx skills add genkit-ai/skills
+    </code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/firebase-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/firebase-basics" aria-label="Copy install firebase-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/firebase-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/firebase-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

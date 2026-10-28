@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>spec-driven-development — Aidentity</title>
+<meta name="description" content="Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/spec-driven-development/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="spec-driven-development — Aidentity">
+<meta property="og:description" content="Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/spec-driven-development/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"spec-driven-development","description":"Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/spec-driven-development/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=planning">planning</a><span>/</span>spec-driven-development
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>spec-driven-development</h1>
+      <p class="summary">Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=planning">planning</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Spec-Driven Development</h3>
+<h4>Overview</h4>
+<p>Write a structured specification before writing any code. The spec is the shared source of truth between you and the human engineer — it defines what we&#39;re building, why, and how we&#39;ll know it&#39;s done. Code without a spec is guessing.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Starting a new project or feature</li>
+<li>Requirements are ambiguous or incomplete</li>
+<li>The change touches multiple files or modules</li>
+<li>You&#39;re about to make an architectural decision</li>
+<li>The task would take more than 30 minutes to implement</li>
+</ul>
+<p><strong>When NOT to use:</strong> Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.</p>
+<h4>The Gated Workflow</h4>
+<p>Spec-driven development has four phases, preceded by a scope check (Phase 0) that activates only when one request bundles several independently testable capabilities. Do not advance to the next phase until the current one is validated.</p>
+<p><pre><code>SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
+   │          │        │          │
+   ▼          ▼        ▼          ▼
+ Human      Human    Human      Human
+ reviews    reviews  reviews    reviews</code></pre></p>
+<h5>Phase 0: Scope Check</h5>
+<p>Most requests describe one capability. If this one does, skip this phase and go straight to Specify — Phase 0 exists for the exception, not the rule, and it puts no hierarchy on single-capability features.</p>
+<p><strong>Detection.</strong> Decompose before specifying when a single requirement bundles several independently testable capabilities:</p>
+<ul>
+<li>The requirement names distinct capabilities with their own consumers or data (e.g. identity, billing, notifications, reporting)</li>
+<li>Acceptance criteria cluster into groups that could ship and be verified separately</li>
+<li>One capability could be cut or replaced without rewriting the others&#39; requirements</li>
+</ul>
+<p><strong>Propose a capability map before writing any spec.</strong> Small and reviewable — a module table plus a build order, not a project plan:</p>
+<p><pre><code># Capability Map: [Initiative Name]
+
+| Module id | Responsibility | Depends on |
+|---|---|---|
+| identity | Accounts, sessions, SSO | — |
+| billing | Plans, invoices, payments | identity |
+| notifications | Email and webhook fan-out | identity |
+| reporting | Usage dashboards | billing, notifications |
+
+Build order: identity → billing, notifications → reporting</code></pre></p>
+<ul>
+<li><strong>Stable module ids.</strong> Kebab-case, chosen once, never renamed mid-initiative. Specs, plans, and downstream commands select work by these ids instead of guessing which spec is active.</li>
+<li><strong>Dependency direction, no cycles.</strong> Arrows point one way. If two modules each need the other, they are one module.</li>
+<li><strong>Interfaces live at the boundary.</strong> The map records that <code>billing</code> depends on <code>identity</code>; the contract between them belongs in the provider module&#39;s spec (see <code>api-and-interface-design</code> for designing it).</li>
+</ul>
+<p><strong>The map is gated like every phase.</strong> The human reviews module boundaries, dependency direction, and build order before any module spec is written. Getting the map wrong is expensive; reviewing ten lines is not.</p>
+<p><strong>Then recurse per module.</strong> Run Specify → Plan → Tasks → Implement for each module in dependency order. Each module gets its own spec, scoped to that module&#39;s objective, boundaries, and success criteria. Save the approved map at the project root and each module&#39;s spec alongside it, named by module id (<code>SPEC-identity.md</code>, <code>SPEC-billing.md</code>) — the map, not filename guessing, is the index of what exists.</p>
+<h5>Phase 1: Specify</h5>
+<p>Start with a high-level vision. Ask the human clarifying questions until requirements are concrete.</p>
+<p><strong>Surface assumptions immediately.</strong> Before writing any spec content, list what you&#39;re assuming:</p>
+<p><pre><code>ASSUMPTIONS I&#39;M MAKING:
+1. This is a web application (not native mobile)
+2. Authentication uses session-based cookies (not JWT)
+3. The database is PostgreSQL (based on existing Prisma schema)
+4. We&#39;re targeting modern browsers only (no IE11)
+→ Correct me now or I&#39;ll proceed with these.</code></pre></p>
+<p>Don&#39;t silently fill in ambiguous requirements. The spec&#39;s entire purpose is to surface misunderstandings <em>before</em> code gets written — assumptions are the most dangerous form of misunderstanding.</p>
+<p><strong>Write a spec document covering these six core areas:</strong></p>
+<ol>
+<li><strong>Objective</strong> — What are we building and why? Who is the user? What does success look like?</li>
+</ol>
+<ol>
+<li><strong>Commands</strong> — Full executable commands with flags, not just tool names.</li>
+</ol>
+<p>   <pre><code>   Build: npm run build
+   Test: npm test -- --coverage
+   Lint: npm run lint --fix
+   Dev: npm run dev
+   </code></pre></p>
+<ol>
+<li><strong>Project Structure</strong> — Where source code lives, where tests go, where docs belong.</li>
+</ol>
+<p>   <pre><code>   src/           → Application source code
+   src/components → React components
+   src/lib        → Shared utilities
+   tests/         → Unit and integration tests
+   e2e/           → End-to-end tests
+   docs/          → Documentation
+   </code></pre></p>
+<ol>
+<li><strong>Code Style</strong> — One real code snippet showing your style beats three paragraphs describing it. Include naming conventions, formatting rules, and examples of good output.</li>
+</ol>
+<ol>
+<li><strong>Testing Strategy</strong> — What framework, where tests live, coverage expectations, which test levels for which concerns.</li>
+</ol>
+<ol>
+<li><strong>Boundaries</strong> — Three-tier system:</li>
+</ol>
+<ul>
+<li><strong>Always do:</strong> Run tests before commits, follow naming conventions, validate inputs</li>
+<li><strong>Ask first:</strong> Database schema changes, adding dependencies, changing CI config</li>
+<li><strong>Never do:</strong> Commit secrets, edit vendor directories, remove failing tests without approval</li>
+</ul>
+<p><strong>Spec template:</strong></p>
+<p><pre><code># Spec: [Project/Feature Name]
+
+## Objective
+[What we&#39;re building and why. User stories or acceptance criteria.]
+
+## Tech Stack
+[Framework, language, key dependencies with versions]
+
+## Commands
+[Build, test, lint, dev — full commands]
+
+## Project Structure
+[Directory layout with descriptions]
+
+## Code Style
+[Example snippet + key conventions]
+
+## Testing Strategy
+[Framework, test locations, coverage requirements, test levels]
+
+## Boundaries
+- Always: [...]
+- Ask first: [...]
+- Never: [...]
+
+## Success Criteria
+[How we&#39;ll know this is done — specific, testable conditions]
+
+## Open Questions
+[Anything unresolved that needs human input]</code></pre></p>
+<p><strong>Reframe instructions as success criteria.</strong> When receiving vague requirements, translate them into concrete conditions:</p>
+<p><pre><code>REQUIREMENT: &quot;Make the dashboard faster&quot;
+
+REFRAMED SUCCESS CRITERIA:
+- Dashboard LCP &lt; 2.5s on 4G connection
+- Initial data load completes in &lt; 500ms
+- No layout shift during load (CLS &lt; 0.1)
+→ Are these the right targets?</code></pre></p>
+<p>This lets you loop, retry, and problem-solve toward a clear goal rather than guessing what &quot;faster&quot; means.</p>
+<h5>Phase 2: Plan</h5>
+<p>With the validated spec, generate a technical implementation plan:</p>
+<ol>
+<li>Identify the major components and their dependencies</li>
+<li>Determine the implementation order (what must be built first)</li>
+<li>Note risks and mitigation strategies</li>
+<li>Identify what can be built in parallel vs. what must be sequential</li>
+<li>Define verification checkpoints between phases</li>
+</ol>
+<p>&gt; Follow <code>planning-and-task-breakdown</code> for the dependency-graph mapping and vertical-slicing mechanics behind these steps; it is the canonical source. The bullets above are a lightweight summary; if they ever diverge, <code>planning-and-task-breakdown</code> takes precedence.</p>
+<p>&gt;</p>
+<p>&gt; <strong>Output convention:</strong> Save the plan to <code>tasks/plan.md</code> and record the task list in the task list target defined by <code>planning-and-task-breakdown</code> (default <code>tasks/todo.md</code>; projects may designate an external tracker instead). Create <code>tasks/</code> if it does not exist. Downstream commands (<code>/build</code>, etc.) expect these defaults.</p>
+<p>The plan should be reviewable: the human should be able to read it and say &quot;yes, that&#39;s the right approach&quot; or &quot;no, change X.&quot;</p>
+<h5>Phase 3: Tasks</h5>
+<p>Break the plan into discrete, implementable tasks:</p>
+<ul>
+<li>Each task should be completable in a single focused session</li>
+<li>Each task has explicit acceptance criteria</li>
+<li>Each task includes a verification step (test, build, manual check)</li>
+<li>Tasks are ordered by dependency, not by perceived importance</li>
+<li>No task should require changing more than ~5 files</li>
+</ul>
+<p>&gt; Follow <code>planning-and-task-breakdown</code> for the full task-sizing and dependency-ordering mechanics; it is the canonical source. The template below is a lightweight inline form; if they ever diverge, <code>planning-and-task-breakdown</code> takes precedence.</p>
+<p><strong>Task template:</strong></p>
+<p><pre><code>- [ ] Task: [Description]
+  - Acceptance: [What must be true when done]
+  - Verify: [How to confirm — test command, build, manual check]
+  - Files: [Which files will be touched]</code></pre></p>
+<h5>Phase 4: Implement</h5>
+<p>Execute tasks one at a time following <code>skills/incremental-implementation/SKILL.md</code> (<code>incremental-implementation</code>) and <code>skills/test-driven-development/SKILL.md</code> (<code>test-driven-development</code>). Use <code>skills/context-engineering/SKILL.md</code> (<code>context-engineering</code>) to load the right spec sections and source files at each step rather than flooding the agent with the entire spec.</p>
+<h4>Keeping the Spec Alive</h4>
+<p>The spec is a living document, not a one-time artifact:</p>
+<ul>
+<li><strong>Update when decisions change</strong> — If you discover the data model needs to change, update the spec first, then implement.</li>
+<li><strong>Update when scope changes</strong> — Features added or cut should be reflected in the spec.</li>
+<li><strong>Commit the spec</strong> — The spec belongs in version control alongside the code.</li>
+<li><strong>Reference the spec in PRs</strong> — Link back to the spec section that each PR implements.</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;This is simple, I don&#39;t need a spec&quot;</td><td>Simple tasks don&#39;t need <em>long</em> specs, but they still need acceptance criteria. A two-line spec is fine.</td></tr>
+<tr><td>&quot;I&#39;ll write the spec after I code it&quot;</td><td>That&#39;s documentation, not specification. The spec&#39;s value is in forcing clarity <em>before</em> code.</td></tr>
+<tr><td>&quot;The spec will slow us down&quot;</td><td>A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours.</td></tr>
+<tr><td>&quot;Requirements will change anyway&quot;</td><td>That&#39;s why the spec is a living document. An outdated spec is still better than no spec.</td></tr>
+<tr><td>&quot;The user knows what they want&quot;</td><td>Even clear requests have implicit assumptions. The spec surfaces those assumptions.</td></tr>
+<tr><td>&quot;It&#39;s one big feature; splitting it is overhead&quot;</td><td>If acceptance criteria cluster into independently testable groups, a monolithic spec forces every downstream task to reason over the whole contract. A ten-line capability map is the cheap alternative.</td></tr>
+<tr><td>&quot;I&#39;ll decompose during planning&quot;</td><td>Planning slices tasks within a spec. By then the oversized artifact already exists — module boundaries and dependency direction must be decided before the spec is written, not after.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Starting to write code without any written requirements</li>
+<li>Asking &quot;should I just start building?&quot; before clarifying what &quot;done&quot; means</li>
+<li>Implementing features not mentioned in any spec or task list</li>
+<li>Making architectural decisions without documenting them</li>
+<li>Skipping the spec because &quot;it&#39;s obvious what to build&quot;</li>
+<li>One spec whose requirements span several independently testable capabilities</li>
+<li>Module boundaries or build order decided implicitly during implementation because no capability map was approved up front</li>
+</ul>
+<h4>Verification</h4>
+<p>Before proceeding to implementation, confirm:</p>
+<ul>
+<li>[ ] The spec covers all six core areas</li>
+<li>[ ] The human has reviewed and approved the spec</li>
+<li>[ ] Success criteria are specific and testable</li>
+<li>[ ] Boundaries (Always/Ask First/Never) are defined</li>
+<li>[ ] The spec is saved to a file in the repository</li>
+<li>[ ] If the request bundles several independently testable capabilities, a capability map (module ids, dependency direction, build order) was approved before any module spec was written</li>
+<li>[ ] Every module spec traces to a module id in the approved map</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/planning-and-task-breakdown/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="planning-and-task-breakdown breaks work into ordered tasks. use when you have a spec or clear requirements and need to break work into implementable tasks. use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">planning-and-task-breakdown</span>
+    <span class="r-desc">Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/to-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-spec turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-spec</span>
+    <span class="r-desc">Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/to-tickets/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-tickets break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker). planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-tickets</span>
+    <span class="r-desc">Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/in-progress/implement-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="implement-spec implement a specification in code. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">implement-spec</span>
+    <span class="r-desc">Implement a specification in code.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/spec-driven-development</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/spec-driven-development" aria-label="Copy install spec-driven-development">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>planning</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/spec-driven-development</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/spec-driven-development/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-recipe-auth — Aidentity</title>
+<meta name="description" content="Provides expert guidance on authenticating and authorizing to Google Cloud services and APIs, covering human users, service identities, Application Default Credentials (ADC), and best practices for secure access.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-auth/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-recipe-auth — Aidentity">
+<meta property="og:description" content="Provides expert guidance on authenticating and authorizing to Google Cloud services and APIs, covering human users, service identities, Application Default Credentials (ADC), and best practices for secure access.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-auth/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-recipe-auth","description":"Provides expert guidance on authenticating and authorizing to Google Cloud services and APIs, covering human users, service identities, Application Default Credentials (ADC), and best practices for secure access.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-auth/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-recipe-auth
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-recipe-auth</h1>
+      <p class="summary">Provides expert guidance on authenticating and authorizing to Google Cloud services and APIs, covering human users, service identities, Application Default Credentials (ADC), and best practices for secure access.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Authenticating to Google Cloud</h3>
+<p><a href="https://docs.cloud.google.com/docs/authentication.md.txt" rel="noopener">Authentication</a> is the</p>
+<p>process of proving <strong>who you are</strong>. In Google Cloud, you represent a</p>
+<p><strong>Principal</strong> (an identity like a user or a service). This is the first step</p>
+<p>before <a href="https://docs.cloud.google.com/iam/docs/overview.md.txt" rel="noopener">Authorization</a></p>
+<p>(determining <strong>what you can do</strong>).</p>
+<h4>Authentication</h4>
+<h5>Clarifying Questions for the Agent</h5>
+<p>Before providing a specific solution, clarify the following with the user:</p>
+<ol>
+<li><strong>Who or what is authenticating?</strong> (A human developer, a local script, or an</li>
+</ol>
+<p>    application running in production?)</p>
+<ol>
+<li><strong>Where is the code running?</strong> (Local laptop, [Compute</li>
+</ol>
+<p>    Engine](<a href="https://docs.cloud.google.com/compute/docs.md.txt" rel="noopener">https://docs.cloud.google.com/compute/docs.md.txt</a>),</p>
+<p>    <a href="https://docs.cloud.google.com/kubernetes-engine/docs.md.txt" rel="noopener">GKE</a>, [Cloud</p>
+<p>    Run](<a href="https://docs.cloud.google.com/run/docs.md.txt" rel="noopener">https://docs.cloud.google.com/run/docs.md.txt</a>), or another cloud like</p>
+<p>    AWS/Azure?)</p>
+<ol>
+<li><strong>What is the target?</strong> (A Google Cloud API like Storage/BigQuery, or a</li>
+</ol>
+<p>    custom application you built?)</p>
+<ol>
+<li><strong>Are you using a high-level client library?</strong> (e.g., Python, Go, Node.js</li>
+</ol>
+<p>    libraries usually handle ADC automatically.)</p>
+<hr>
+<h4>Human Authentication</h4>
+<p>For users to access Google Cloud, they need an identity that Google Cloud can</p>
+<p>recognize.</p>
+<h5>Types of User Identities</h5>
+<p>Google Cloud supports several ways to configure identities for your internal</p>
+<p>workforce (developers, administrators, employees):</p>
+<ul>
+<li>**[Google-Managed</li>
+</ul>
+<p>    Accounts](<a href="https://docs.cloud.google.com/iam/docs/user-identities.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/user-identities.md.txt</a>)**:</p>
+<p>    You can use Cloud Identity or Google Workspace to create managed user</p>
+<p>    accounts. These are called managed accounts because your organization</p>
+<p>    controls their lifecycle and configuration.</p>
+<ul>
+<li>**[Federation using Cloud Identity or Google</li>
+</ul>
+<p>    Workspace](<a href="https://docs.cloud.google.com/iam/docs/user-identities.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/user-identities.md.txt</a>)**:</p>
+<p>    You can federate identities to allow users to use their existing identity</p>
+<p>    and credentials to sign in to Google services. Users authenticate against an</p>
+<p>    external identity provider (IdP), but you must keep accounts synchronized</p>
+<p>    into Google Cloud using tools like Google Cloud Directory Sync (GCDS) or an</p>
+<p>    external authoritative source like Active Directory or Microsoft Entra ID.</p>
+<ul>
+<li>**[Workforce Identity</li>
+</ul>
+<p>    Federation](<a href="https://docs.cloud.google.com/iam/docs/user-identities.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/user-identities.md.txt</a>)**:</p>
+<p>    This lets you use an external IdP to authenticate and authorize a workforce</p>
+<p>    using IAM directly. Unlike standard federation, you do not need to</p>
+<p>    synchronize user identities from your existing IdP to Google Cloud</p>
+<p>    identities. It supports syncless, attribute-based single sign-on.</p>
+<h5>Methods of Access for Developers and Administrators</h5>
+<p>Used for interacting with Google Cloud resources and APIs during development and</p>
+<p>management.</p>
+<ul>
+<li><strong><a href="https://console.cloud.google.com/" rel="noopener">Google Cloud Console</a></strong>: The primary</li>
+</ul>
+<p>    web interface. You authenticate using your Google Account (Gmail or [Google</p>
+<p>    Workspace](<a href="https://workspace.google.com/" rel="noopener">https://workspace.google.com/</a>)).</p>
+<ul>
+<li>**<a href="https://docs.cloud.google.com/sdk/docs/install-sdk.md.txt" rel="noopener">gcloud CLI</a> (`gcloud</li>
+</ul>
+<p>    auth login`)**: Used to authenticate the CLI itself so you can run</p>
+<p>    management commands (e.g., <code>gcloud compute instances list</code>). It uses a</p>
+<p>    <strong>Credential</strong> (like an OAuth 2.0 refresh token) stored locally.</p>
+<ul>
+<li>**Local Development with [App Default Credentials</li>
+</ul>
+<p>    (ADC)](<a href="https://docs.cloud.google.com/docs/authentication/application-default-credentials.md.txt" rel="noopener">https://docs.cloud.google.com/docs/authentication/application-default-credentials.md.txt</a>)</p>
+<p>    (<code>gcloud auth application-default login</code>)**: This is different from CLI</p>
+<p>    auth. It creates a local JSON file that Google Cloud <strong>Client Libraries</strong></p>
+<p>    (Python, Java, etc.) use to act as &quot;you&quot; when you run code on your laptop.</p>
+<ul>
+<li>**[Service Account</li>
+</ul>
+<p>    Impersonation](<a href="https://docs.cloud.google.com/docs/authentication/use-service-account-impersonation.md.txt" rel="noopener">https://docs.cloud.google.com/docs/authentication/use-service-account-impersonation.md.txt</a>)**:</p>
+<p>    For security reasons, developers should avoid downloading Service Account</p>
+<p>    keys entirely. Instead, they should authenticate as humans (`gcloud auth</p>
+<p>    login`) and use Service Account Impersonation to run CLI commands or</p>
+<p>    generate short-lived credentials. This is a critical best practice for local</p>
+<p>    development and troubleshooting.</p>
+<h5>For End-Users and Customers</h5>
+<p>Used when a human (who is not a developer) needs to access a web application</p>
+<p>you&#39;ve deployed on Google Cloud. Note: These are distinct from workforce</p>
+<p>identities.</p>
+<ul>
+<li><strong><a href="https://docs.cloud.google.com/iap/docs.md.txt" rel="noopener">Identity-Aware Proxy (IAP)</a></strong>:</li>
+</ul>
+<p>    Acts as a central authorization layer for web applications. It intercepts</p>
+<p>    web requests and verifies the user&#39;s identity (via Google Workspace, Cloud</p>
+<p>    Identity, or external providers) before letting them reach the application.</p>
+<p>    It&#39;s often used to protect internal apps without a VPN, or secure customer</p>
+<p>    portals.</p>
+<ul>
+<li>**[Identity</li>
+</ul>
+<p>    Platform](<a href="https://docs.cloud.google.com/identity-platform/docs.md.txt" rel="noopener">https://docs.cloud.google.com/identity-platform/docs.md.txt</a>)**: A</p>
+<p>    Customer Identity and Access Management (CIAM) solution for adding consumer</p>
+<p>    sign-in (email/password, phone, social) directly into the code of your</p>
+<p>    custom-built applications.</p>
+<hr>
+<h4>Service-to-Service Authentication</h4>
+<p>When code runs in production, it should use a <strong>Service Account</strong> rather than a</p>
+<p>human user account.</p>
+<h5>Service Accounts and Service Agents</h5>
+<ul>
+<li>**[Service</li>
+</ul>
+<p>    Account](<a href="https://docs.cloud.google.com/iam/docs/service-account-overview.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/service-account-overview.md.txt</a>)**:</p>
+<p>    A special identity intended for non-human users. It&#39;s like a &quot;robot</p>
+<p>    identity&quot; with its own email address.</p>
+<ul>
+<li><strong><a href="https://docs.cloud.google.com/iam/docs/service-agents.md.txt" rel="noopener">Service Agent</a></strong>:</li>
+</ul>
+<p>    A service account managed by Google that allows a service (like Pub/Sub) to</p>
+<p>    access your resources on your behalf.</p>
+<h5>Best Practice: Attaching Service Accounts</h5>
+<p>Instead of using <strong>Service Account Keys</strong> (dangerous JSON files), you should</p>
+<p><strong>attach</strong> a custom service account to the Google Cloud resource. The resource&#39;s</p>
+<p>environment then provides a <strong>Token</strong> (a short-lived digital object) via a local</p>
+<p>metadata server.</p>
+<ul>
+<li>**[Compute</li>
+</ul>
+<p>    Engine](<a href="https://docs.cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances.md.txt" rel="noopener">https://docs.cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances.md.txt</a>)**:</p>
+<p>    Assign a service account during VM creation.</p>
+<ul>
+<li>**[Cloud</li>
+</ul>
+<p>    Run](<a href="https://docs.cloud.google.com/run/docs/securing/service-identity.md.txt" rel="noopener">https://docs.cloud.google.com/run/docs/securing/service-identity.md.txt</a>)**:</p>
+<p>    Assign a service account in the service configuration.</p>
+<h5>Special Cases &amp; Advanced Topics</h5>
+<h5>Kubernetes Engine (GKE)</h5>
+<p>Use **[Workload Identity Federation for</p>
+<p>GKE](<a href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity.md.txt" rel="noopener">https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity.md.txt</a>)**</p>
+<p>to map Kubernetes identities to IAM principal identifiers. This grants specific</p>
+<p>Kubernetes workloads access to specific Google Cloud APIs. [Learn more</p>
+<p>here.](<a href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity.md.txt" rel="noopener">https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity.md.txt</a>)</p>
+<h5>External Workloads (<a href="https://docs.cloud.google.com/iam/docs/workload-identity-federation.md.txt" rel="noopener">Workload Identity Federation</a>)</h5>
+<p>For code running <strong>outside</strong> Google Cloud (e.g., AWS, Azure, or on-prem), do not</p>
+<p>use keys. Instead, use Workload Identity Federation to exchange an external</p>
+<p>token (like an AWS IAM role) for a short-lived Google Cloud access token.</p>
+<h5><a href="https://docs.cloud.google.com/docs/authentication/api-keys.md.txt" rel="noopener">API Keys</a></h5>
+<p>API keys are encrypted strings used for public data (e.g., Google Maps) or</p>
+<p>simplified access like **[Vertex AI Express</p>
+<p>Mode](<a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview.md.txt" rel="noopener">https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview.md.txt</a>)**,</p>
+<p>which allows fast testing of Gemini models without complex setup. Both humans</p>
+<p>and services (e.g., Cloud Run-based AI agent) can use API keys, for the services</p>
+<p>that support it.</p>
+<p>Note: API keys should be</p>
+<p><a href="https://docs.cloud.google.com/api-keys/docs/add-restrictions-api-keys.md.txt" rel="noopener">restricted</a></p>
+<p>to specific APIs and projects to minimize security risks. Store API keys in a</p>
+<p>secrets manager like [Secret</p>
+<p>Manager](<a href="https://docs.cloud.google.com/secret-manager/docs.md.txt" rel="noopener">https://docs.cloud.google.com/secret-manager/docs.md.txt</a>) to prevent</p>
+<p>accidental exposure.</p>
+<h5>OAuth 2.0 Access Scopes</h5>
+<p>While IAM is the modern way to handle authorization, legacy Compute Engine VMs</p>
+<p>and GKE node pools still rely on <strong>Access Scopes</strong> alongside IAM. If a VM&#39;s</p>
+<p>scope is restricted, the attached service account will fail to make API calls</p>
+<p>even if it has the correct IAM permissions. Check this first if attached service</p>
+<p>accounts are failing unexpectedly.</p>
+<h5>Short-Lived Credentials</h5>
+<p>The underlying mechanism for impersonation and secure service-to-service</p>
+<p>communication is the <strong>IAM Service Account Credentials API</strong>. This API generates</p>
+<p>short-lived access tokens, OpenID Connect (OIDC) ID tokens, or self-signed JSON</p>
+<p>Web Tokens (JWTs) dynamically, removing the need for static credentials.</p>
+<hr>
+<h4>Authorization</h4>
+<p>After Authentication, Google Cloud uses **[Identity and Access Management</p>
+<p>(IAM)](<a href="https://docs.cloud.google.com/iam/docs/overview.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/overview.md.txt</a>)** to determine what the</p>
+<p>authenticated principal can do.</p>
+<ul>
+<li><strong>Allow Policy</strong>: A record that binds a <strong>Principal</strong> to a <strong>Role</strong> on a</li>
+</ul>
+<p>    <strong>Resource</strong>.</p>
+<ul>
+<li>**[Predefined</li>
+</ul>
+<p>    Roles](<a href="https://docs.cloud.google.com/iam/docs/roles-permissions" rel="noopener">https://docs.cloud.google.com/iam/docs/roles-permissions</a>)**:</p>
+<p>    Prebuilt roles like <code>roles/storage.objectViewer</code> or</p>
+<p>    <code>roles/bigquery.dataEditor</code>. <strong>Always try to use these first.</strong></p>
+<ul>
+<li>**[Custom</li>
+</ul>
+<p>    Roles](<a href="https://docs.cloud.google.com/iam/docs/creating-custom-roles.md.txt" rel="noopener">https://docs.cloud.google.com/iam/docs/creating-custom-roles.md.txt</a>)**:</p>
+<p>    User-defined collections of specific permissions if predefined roles are too</p>
+<p>    broad.</p>
+<hr>
+<h4>Examples</h4>
+<h5>Human-to-Service (Local Python Development)</h5>
+<ol>
+<li><strong>Authn</strong>: Run <code>gcloud auth application-default login</code> to create local</li>
+</ol>
+<p>    credentials (ADC).</p>
+<ol>
+<li><strong>Authz</strong>: Grant your email the <code>roles/storage.objectViewer</code> role on a</li>
+</ol>
+<p>    bucket.</p>
+<ol>
+<li><strong>Code</strong>: Use the Python <code>storage.Client()</code>. It automatically finds your</li>
+</ol>
+<p>    local credentials via ADC. *Note: ADC searches in a specific order—first</p>
+<p>    checking the <code>GOOGLE_APPLICATION_CREDENTIALS</code> environment variable, then the</p>
+<p>    local gcloud JSON file, and finally the attached service account metadata</p>
+<p>    server.*</p>
+<h5>Service-to-Service (Cloud Run to Cloud SQL)</h5>
+<ol>
+<li><strong>Authn</strong>: Attach a custom Service Account to your Cloud Run service.</li>
+<li><strong>Authz</strong>: Grant that Service Account the <code>roles/cloudsql.client</code> role on</li>
+</ol>
+<p>    the project.</p>
+<ol>
+<li><strong>Code</strong>: The Cloud Run environment provides the token automatically to the</li>
+</ol>
+<p>    connection driver.</p>
+<h5>Calling a Custom Application (<a href="https://docs.cloud.google.com/docs/authentication/get-id-token.md.txt" rel="noopener">OIDC</a>)</h5>
+<p>When calling a private Cloud Run service from another service, the caller</p>
+<p>generates a Google-signed <strong>OpenID Connect (OIDC) ID Token</strong> and passes it in</p>
+<p>the <code>Authorization: Bearer &lt;TOKEN&gt;</code> header.</p>
+<hr>
+<h4>Validation Checklist</h4>
+<ul>
+<li>[ ] Is the user running code locally? Suggest `gcloud auth</li>
+</ul>
+<p>    application-default login` or <strong>Service Account Impersonation</strong>.</p>
+<ul>
+<li>[ ] Is the user attempting to use Service Account keys locally? Strongly</li>
+</ul>
+<p>    discourage this and recommend impersonation.</p>
+<ul>
+<li>[ ] Is the user running in production? Recommend attaching a custom,</li>
+</ul>
+<p>    least-privilege service account, NOT using keys.</p>
+<ul>
+<li>[ ] Is the user relying on the Compute Engine Default Service Account?</li>
+</ul>
+<p>    Recommend creating a custom service account instead.</p>
+<ul>
+<li>[ ] Is the user running on another cloud? Recommend Workload Identity</li>
+</ul>
+<p>    Federation.</p>
+<ul>
+<li>[ ] Is the user calling a custom app? Recommend OIDC ID Tokens.</li>
+<li>[ ] Has the user restricted their API Keys? Check for appropriate [API Key</li>
+</ul>
+<p>    Restrictions](<a href="https://docs.cloud.google.com/docs/authentication/api-keys.md.txt" rel="noopener">https://docs.cloud.google.com/docs/authentication/api-keys.md.txt</a>).</p>
+<h4>References</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/docs/authentication.md.txt" rel="noopener">Authentication Overview</a></li>
+<li><a href="https://docs.cloud.google.com/iam/docs/user-identities.md.txt" rel="noopener">User Identities</a></li>
+<li><a href="https://docs.cloud.google.com/docs/authentication/provide-credentials-adc.md.txt" rel="noopener">Application Default Credentials</a></li>
+<li><a href="https://docs.cloud.google.com/iam/docs/best-practices-service-accounts.md.txt" rel="noopener">Service Account Best Practices</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-recipe-auth</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-recipe-auth" aria-label="Copy install google-cloud-recipe-auth">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-recipe-auth</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-recipe-auth/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>documentation-and-adrs — Aidentity</title>
+<meta name="description" content="Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="documentation-and-adrs — Aidentity">
+<meta property="og:description" content="Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"documentation-and-adrs","description":"Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=documentation">documentation</a><span>/</span>documentation-and-adrs
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>documentation-and-adrs</h1>
+      <p class="summary">Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=documentation">documentation</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Documentation and ADRs</h3>
+<h4>Overview</h4>
+<p>Document decisions, not just code. The most valuable documentation captures the <em>why</em> — the context, constraints, and trade-offs that led to a decision. Code shows <em>what</em> was built; documentation explains <em>why it was built this way</em> and <em>what alternatives were considered</em>. This context is essential for future humans and agents working in the codebase.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Making a significant architectural decision</li>
+<li>Choosing between competing approaches</li>
+<li>Adding or changing a public API</li>
+<li>Shipping a feature that changes user-facing behavior</li>
+<li>Onboarding new team members (or agents) to the project</li>
+<li>When you find yourself explaining the same thing repeatedly</li>
+</ul>
+<p><strong>When NOT to use:</strong> Don&#39;t document obvious code. Don&#39;t add comments that restate what the code already says. Don&#39;t write docs for throwaway prototypes.</p>
+<h4>Architecture Decision Records (ADRs)</h4>
+<p>ADRs capture the reasoning behind significant technical decisions. They&#39;re the highest-value documentation you can write.</p>
+<h5>When to Write an ADR</h5>
+<ul>
+<li>Choosing a framework, library, or major dependency</li>
+<li>Designing a data model or database schema</li>
+<li>Selecting an authentication strategy</li>
+<li>Deciding on an API architecture (REST vs. GraphQL vs. tRPC)</li>
+<li>Choosing between build tools, hosting platforms, or infrastructure</li>
+<li>Any decision that would be expensive to reverse</li>
+</ul>
+<h5>Match the existing convention first</h5>
+<p>Before creating an ADR, inspect the available repository context for an established convention — existing ADRs, project instructions, and ADR-related configuration or tooling (e.g. an <code>.adr-dir</code> file). An established convention overrides the defaults below. Match:</p>
+<ul>
+<li><strong>Location and format</strong> — e.g. <code>docs/adr/*.md</code>, <code>Documentation/Decisions/*.rst</code>, a MADR layout, or an <code>adr-tools</code> setup. Match the existing directory, file extension, and markup (Markdown vs reStructuredText).</li>
+<li><strong>Numbering and naming</strong> — continue the existing sequence and filename pattern (<code>ADR-004-Title.rst</code>, <code>0004-title.md</code>, …); don&#39;t restart at 001 or introduce a second scheme.</li>
+<li><strong>Section headings</strong> — reuse the project&#39;s heading set rather than imposing this template&#39;s.</li>
+</ul>
+<p>If the available evidence conflicts, surface the conflict rather than silently introducing another scheme. Only when no convention can be established do you apply the default below.</p>
+<h5>ADR Template</h5>
+<p>Store ADRs in <code>docs/decisions/</code> with sequential numbering (unless the project already uses another location — see above):</p>
+<p><pre><code># ADR-001: Use PostgreSQL for primary database
+
+## Status
+Accepted | Superseded by ADR-XXX | Deprecated
+
+## Date
+2025-01-15
+
+## Context
+We need a primary database for the task management application. Key requirements:
+- Relational data model (users, tasks, teams with relationships)
+- ACID transactions for task state changes
+- Support for full-text search on task content
+- Managed hosting available (for small team, limited ops capacity)
+
+## Decision
+Use PostgreSQL with Prisma ORM.
+
+## Alternatives Considered
+
+### MongoDB
+- Pros: Flexible schema, easy to start with
+- Cons: Our data is inherently relational; would need to manage relationships manually
+- Rejected: Relational data in a document store leads to complex joins or data duplication
+
+### SQLite
+- Pros: Zero configuration, embedded, fast for reads
+- Cons: Limited concurrent write support, no managed hosting for production
+- Rejected: Not suitable for multi-user web application in production
+
+### MySQL
+- Pros: Mature, widely supported
+- Cons: PostgreSQL has better JSON support, full-text search, and ecosystem tooling
+- Rejected: PostgreSQL is the better fit for our feature requirements
+
+## Consequences
+- Prisma provides type-safe database access and migration management
+- We can use PostgreSQL&#39;s full-text search instead of adding Elasticsearch
+- Team needs PostgreSQL knowledge (standard skill, low risk)
+- Hosting on managed service (Supabase, Neon, or RDS)</code></pre></p>
+<h5>ADR Lifecycle</h5>
+<p><pre><code>PROPOSED → ACCEPTED → (SUPERSEDED or DEPRECATED)</code></pre></p>
+<ul>
+<li><strong>Don&#39;t delete old ADRs.</strong> They capture historical context.</li>
+<li>When a decision changes, write a new ADR that references and supersedes the old one.</li>
+</ul>
+<h4>Inline Documentation</h4>
+<h5>When to Comment</h5>
+<p>Comment the <em>why</em>, not the <em>what</em>:</p>
+<p><pre><code>// BAD: Restates the code
+// Increment counter by 1
+counter += 1;
+
+// GOOD: Explains non-obvious intent
+// Rate limit uses a sliding window — reset counter at window boundary,
+// not on a fixed schedule, to prevent burst attacks at window edges
+if (now - windowStart &gt; WINDOW_SIZE_MS) {
+  counter = 0;
+  windowStart = now;
+}</code></pre></p>
+<h5>When NOT to Comment</h5>
+<p><pre><code>// Don&#39;t comment self-explanatory code
+function calculateTotal(items: CartItem[]): number {
+  return items.reduce((sum, item) =&gt; sum + item.price * item.quantity, 0);
+}
+
+// Don&#39;t leave TODO comments for things you should just do now
+// TODO: add error handling  ← Just add it
+
+// Don&#39;t leave commented-out code
+// const oldImplementation = () =&gt; { ... }  ← Delete it, git has history</code></pre></p>
+<h5>Document Known Gotchas</h5>
+<p><pre><code>/**
+ * IMPORTANT: This function must be called before the first render.
+ * If called after hydration, it causes a flash of unstyled content
+ * because the theme context isn&#39;t available during SSR.
+ *
+ * See ADR-003 for the full design rationale.
+ */
+export function initializeTheme(theme: Theme): void {
+  // ...
+}</code></pre></p>
+<h4>API Documentation</h4>
+<p>For public APIs (REST, GraphQL, library interfaces):</p>
+<h5>Inline with Types (Preferred for TypeScript)</h5>
+<p><pre><code>/**
+ * Creates a new task.
+ *
+ * @param input - Task creation data (title required, description optional)
+ * @returns The created task with server-generated ID and timestamps
+ * @throws {ValidationError} If title is empty or exceeds 200 characters
+ * @throws {AuthenticationError} If the user is not authenticated
+ *
+ * @example
+ * const task = await createTask({ title: &#39;Buy groceries&#39; });
+ * console.log(task.id); // &quot;task_abc123&quot;
+ */
+export async function createTask(input: CreateTaskInput): Promise&lt;Task&gt; {
+  // ...
+}</code></pre></p>
+<h5>OpenAPI / Swagger for REST APIs</h5>
+<p><pre><code>paths:
+  /api/tasks:
+    post:
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: &#39;#/components/schemas/CreateTaskInput&#39;
+      responses:
+        &#39;201&#39;:
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: &#39;#/components/schemas/Task&#39;
+        &#39;422&#39;:
+          description: Validation error</code></pre></p>
+<h4>README Structure</h4>
+<p>Every project should have a README that covers:</p>
+<p><pre><code># Project Name
+
+One-paragraph description of what this project does.
+
+## Quick Start
+1. Clone the repo
+2. Install dependencies: `npm install`
+3. Set up environment: `cp .env.example .env`
+4. Run the dev server: `npm run dev`
+
+## Commands
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm test` | Run tests |
+| `npm run build` | Production build |
+| `npm run lint` | Run linter |
+
+## Architecture
+Brief overview of the project structure and key design decisions.
+Link to ADRs for details.
+
+## Contributing
+How to contribute, coding standards, PR process.</code></pre></p>
+<h4>Changelog Maintenance</h4>
+<p>For shipped features:</p>
+<p><pre><code># Changelog
+
+## [1.2.0] - 2025-01-20
+### Added
+- Task sharing: users can share tasks with team members (#123)
+- Email notifications for task assignments (#124)
+
+### Fixed
+- Duplicate tasks appearing when rapidly clicking create button (#125)
+
+### Changed
+- Task list now loads 50 items per page (was 20) for better UX (#126)</code></pre></p>
+<h4>Documentation for Agents</h4>
+<p>Special consideration for AI agent context:</p>
+<ul>
+<li><strong>CLAUDE.md / rules files</strong> — Document project conventions so agents follow them</li>
+<li><strong>Spec files</strong> — Keep specs updated so agents build the right thing</li>
+<li><strong>ADRs</strong> — Help agents understand why past decisions were made (prevents re-deciding)</li>
+<li><strong>Inline gotchas</strong> — Prevent agents from falling into known traps</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;The code is self-documenting&quot;</td><td>Code shows what. It doesn&#39;t show why, what alternatives were rejected, or what constraints apply.</td></tr>
+<tr><td>&quot;We&#39;ll write docs when the API stabilizes&quot;</td><td>APIs stabilize faster when you document them. The doc is the first test of the design.</td></tr>
+<tr><td>&quot;Nobody reads docs&quot;</td><td>Agents do. Future engineers do. Your 3-months-later self does.</td></tr>
+<tr><td>&quot;ADRs are overhead&quot;</td><td>A 10-minute ADR prevents a 2-hour debate about the same decision six months later.</td></tr>
+<tr><td>&quot;Comments get outdated&quot;</td><td>Comments on <em>why</em> are stable. Comments on <em>what</em> get outdated — that&#39;s why you only write the former.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Architectural decisions with no written rationale</li>
+<li>Public APIs with no documentation or types</li>
+<li>README that doesn&#39;t explain how to run the project</li>
+<li>Commented-out code instead of deletion</li>
+<li>TODO comments that have been there for weeks</li>
+<li>No ADRs in a project with significant architectural choices</li>
+<li>Documentation that restates the code instead of explaining intent</li>
+</ul>
+<h4>Verification</h4>
+<p>After documenting:</p>
+<ul>
+<li>[ ] ADRs exist for all significant architectural decisions</li>
+<li>[ ] README covers quick start, commands, and architecture overview</li>
+<li>[ ] API functions have parameter and return type documentation</li>
+<li>[ ] Known gotchas are documented inline where they matter</li>
+<li>[ ] No commented-out code remains</li>
+<li>[ ] Rules files (CLAUDE.md etc.) are current and accurate</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/mattpocock/engineering/grill-with-docs/index.html"
+     data-source="mattpocock"
+     data-category="documentation"
+     data-search="grill-with-docs a relentless interview to sharpen a plan or design, which also creates docs (adr&#39;s and glossary) as we go. documentation documentation mattpocock/skills">
+  <span>
+    <span class="r-name">grill-with-docs</span>
+    <span class="r-desc">A relentless interview to sharpen a plan or design, which also creates docs (ADR&#39;s and glossary) as we go.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/ci-cd-and-automation/index.html"
+     data-source="addyosmani"
+     data-category="devops"
+     data-search="ci-cd-and-automation automates ci/cd pipeline setup. use when setting up or modifying build and deployment pipelines. use when you need to automate quality gates, configure test runners in ci, or establish deployment strategies. devops devops addyosmani/agent-skills">
+  <span>
+    <span class="r-name">ci-cd-and-automation</span>
+    <span class="r-desc">Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/documentation-and-adrs</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/documentation-and-adrs" aria-label="Copy install documentation-and-adrs">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>documentation</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/documentation-and-adrs</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/documentation-and-adrs/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

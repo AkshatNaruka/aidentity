@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-app-onboarding — Aidentity</title>
+<meta name="description" content="Manages GKE application onboarding, covering containerization, deployment manifests, and migration. Use when onboarding or deploying an application to GKE for the first time, or containerizing an app for GKE. Don&#39;t use for general GKE cluster administration or upgrades (use gke-basics or gke-upgrades instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-app-onboarding/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-app-onboarding — Aidentity">
+<meta property="og:description" content="Manages GKE application onboarding, covering containerization, deployment manifests, and migration. Use when onboarding or deploying an application to GKE for the first time, or containerizing an app for GKE. Don&#39;t use for general GKE cluster administration or upgrades (use gke-basics or gke-upgrades instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-app-onboarding/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-app-onboarding","description":"Manages GKE application onboarding, covering containerization, deployment manifests, and migration. Use when onboarding or deploying an application to GKE for the first time, or containerizing an app for GKE. Don't use for general GKE cluster administration or upgrades (use gke-basics or gke-upgrades instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-app-onboarding/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-app-onboarding
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-app-onboarding</h1>
+      <p class="summary">Manages GKE application onboarding, covering containerization, deployment manifests, and migration. Use when onboarding or deploying an application to GKE for the first time, or containerizing an app for GKE. Don&#39;t use for general GKE cluster administration or upgrades (use gke-basics or gke-upgrades instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE App Onboarding</h3>
+<p>This reference provides workflows for containerizing and deploying applications</p>
+<p>to GKE for the first time.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>apply_k8s_manifest</code>, <code>get_k8s_resource</code>,</p>
+<p>&gt; <code>get_k8s_rollout_status</code>, <code>get_k8s_logs</code>, <code>describe_k8s_resource</code></p>
+<h4>Workflow</h4>
+<h5>1. App Assessment</h5>
+<p>Before containerizing, assess the application:</p>
+<ul>
+<li><strong>Language &amp; Framework</strong>: Identify the tech stack</li>
+<li><strong>Dependencies</strong>: List required libraries and external services</li>
+<li><strong>Configuration</strong>: How is the app configured? (env vars, config files,</li>
+</ul>
+<p>    secrets)</p>
+<ul>
+<li><strong>Statefulness</strong>: Does it need persistent storage? (databases, file storage)</li>
+<li><strong>Networking</strong>: Port mapping and protocol (HTTP, gRPC, TCP)</li>
+<li><strong>Health endpoints</strong>: Does the app expose health check endpoints?</li>
+</ul>
+<h5>2. Containerization</h5>
+<p>Create a container image. A Dockerfile with a multi-stage build is recommended</p>
+<p>for most apps — see the Go Dockerfile in</p>
+<p>[<code>references/go-example.md</code>](./references/go-example.md) for a worked example.</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Use multi-stage builds to keep production images small</li>
+<li>Use distroless or minimal base images to reduce attack surface</li>
+<li>Run as non-root user</li>
+<li>Log to <code>stdout</code> and <code>stderr</code> for Cloud Logging collection</li>
+</ul>
+<p>A complete worked Node.js example is provided in [<code>assets/</code>](./assets/):</p>
+<p>[<code>Dockerfile</code>](./assets/Dockerfile) (non-root <code>node</code> user),</p>
+<p>[<code>index.js</code>](./assets/index.js) (implements distinct <code>/healthz</code> and <code>/readyz</code></p>
+<p>endpoints), [<code>package.json</code>](./assets/package.json), and</p>
+<p>[<code>deployment.yaml</code>](./assets/deployment.yaml) (hardened Deployment plus</p>
+<p>ClusterIP Service, probes wired to <code>/healthz</code> and <code>/readyz</code>).</p>
+<p>For applications where writing a Dockerfile is not preferred, you can use</p>
+<p><a href="https://buildpacks.io/" rel="noopener"><strong>Cloud Native Buildpacks</strong></a> to automatically detect</p>
+<p>the language and build a container image:</p>
+<p><pre><code>pack build &lt;image&gt; --builder gcr.io/buildpacks/builder:latest</code></pre></p>
+<h5>3. Image Management</h5>
+<p>Build and store the container image:</p>
+<p><pre><code># Configure Docker for Artifact Registry
+gcloud auth configure-docker &lt;REGION&gt;-docker.pkg.dev --quiet
+
+# Build and push
+docker build -t &lt;REGION&gt;-docker.pkg.dev/&lt;PROJECT&gt;/&lt;REPO&gt;/&lt;IMAGE&gt;:&lt;TAG&gt; .
+docker push &lt;REGION&gt;-docker.pkg.dev/&lt;PROJECT&gt;/&lt;REPO&gt;/&lt;IMAGE&gt;:&lt;TAG&gt;</code></pre></p>
+<p><strong>Vulnerability scanning</strong>: Enable automatic scanning in Artifact Registry to</p>
+<p>detect issues in base images and dependencies.</p>
+<p><pre><code># Check scan results
+gcloud artifacts docker images describe \
+  &lt;REGION&gt;-docker.pkg.dev/&lt;PROJECT&gt;/&lt;REPO&gt;/&lt;IMAGE&gt;:&lt;TAG&gt; \
+  --show-package-vulnerability \
+  --quiet</code></pre></p>
+<h5>4. Manifest Generation</h5>
+<p>Generate Kubernetes manifests for the application. A baseline Deployment +</p>
+<p>ClusterIP Service manifest (probes, resource requests/limits, 2 replicas) is in</p>
+<p>[<code>references/go-example.md</code>](./references/go-example.md).</p>
+<p><strong>Checklist for manifests:</strong></p>
+<ul>
+<li>Resource requests and limits set</li>
+<li>Liveness and readiness probes configured</li>
+<li>At least 2 replicas for production</li>
+<li>Service type appropriate (ClusterIP for internal, use Gateway API for</li>
+</ul>
+<p>    external)</p>
+<p>See [<code>assets/deployment.yaml</code>](./assets/deployment.yaml) for a hardened worked</p>
+<p>example. A production-hardened pod spec must include ALL of: `runAsNonRoot:</p>
+<p>true<code>, </code>readOnlyRootFilesystem: true<code>, </code>allowPrivilegeEscalation: false`,</p>
+<p><code>capabilities.drop: [&quot;ALL&quot;]</code>, <code>seccompProfile: {type: RuntimeDefault}</code>,</p>
+<p><code>automountServiceAccountToken: false</code> (unless the pod needs the token — then say</p>
+<p>why), resource requests, digest-pinned image, and a ClusterIP Service.</p>
+<p>That checklist is the baseline for any pod spec produced here. For manifest work</p>
+<p>beyond it — Gateway API routes, GCS FUSE and secret volume mounting, <code>subPath</code></p>
+<p>overlays, Spot VM targeting, or AI/inference serving specs — see</p>
+<p><code>gke-manifest-generation</code>.</p>
+<h5>5. Deploy</h5>
+<p><pre><code># MCP (preferred)
+apply_k8s_manifest(parent=&quot;projects/&lt;PROJECT&gt;/locations/&lt;REGION&gt;/clusters/&lt;CLUSTER&gt;&quot;, yamlManifest=&quot;&lt;manifest&gt;&quot;)
+
+# Verify
+get_k8s_rollout_status(parent=&quot;...&quot;, resourceType=&quot;deployment&quot;, name=&quot;my-app&quot;)
+get_k8s_resource(parent=&quot;...&quot;, resourceType=&quot;pod&quot;, labelSelector=&quot;app=my-app&quot;)</code></pre></p>
+<p><strong>kubectl fallback:</strong></p>
+<p><pre><code>kubectl apply -f manifests/
+kubectl rollout status deployment/my-app
+kubectl get pods -l app=my-app</code></pre></p>
+<h4>Golden Path Onboarding Checklist</h4>
+<p>For every production application onboarding to GKE:</p>
+<ol>
+<li><strong>Container Security</strong>: Non-root user (<code>runAsNonRoot: true</code>), lockfile</li>
+</ol>
+<p>    install, minimal/distroless base image.</p>
+<ol>
+<li><strong>Resource Requests</strong>: Explicit CPU and memory requests (mandatory for GKE</li>
+</ol>
+<p>    Autopilot).</p>
+<ol>
+<li><strong>Health Probes</strong>: Both liveness (<code>livenessProbe</code>) and readiness</li>
+</ol>
+<p>    (<code>readinessProbe</code>) probes configured.</p>
+<ol>
+<li><strong>Reliability &amp; Availability</strong>: At least 2 replicas and a</li>
+</ol>
+<p>    <code>PodDisruptionBudget</code> (<code>minAvailable: 1</code> or <code>2</code>).</p>
+<ol>
+<li><strong>IAM &amp; Workload Identity</strong>: Workload Identity</li>
+</ol>
+<p>    (<code>iam.gke.io/gcp-service-account</code>) instead of static service account keys.</p>
+<h4>Next Steps</h4>
+<p>Once the application is running on GKE:</p>
+<ul>
+<li>Configure autoscaling — see the <code>gke-workload-scaling</code> skill</li>
+<li>Set up observability — see the <code>gke-observability</code> skill</li>
+<li>Harden security — see the <code>gke-workload-security</code> skill</li>
+<li>Configure reliability (PDBs, topology spread) — see the <code>gke-reliability</code></li>
+</ul>
+<p>    skill</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-app-onboarding</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-app-onboarding" aria-label="Copy install gke-app-onboarding">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-app-onboarding</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-app-onboarding/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

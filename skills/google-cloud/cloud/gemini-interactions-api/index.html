@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gemini-interactions-api — Aidentity</title>
+<meta name="description" content="Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API for multi-turn conversations, background execution, streaming, structured output, and function calling on the Agent Platform.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-interactions-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gemini-interactions-api — Aidentity">
+<meta property="og:description" content="Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API for multi-turn conversations, background execution, streaming, structured output, and function calling on the Agent Platform.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-interactions-api/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gemini-interactions-api","description":"Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API for multi-turn conversations, background execution, streaming, structured output, and function calling on the Agent Platform.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-interactions-api/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gemini-interactions-api
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gemini-interactions-api</h1>
+      <p class="summary">Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API for multi-turn conversations, background execution, streaming, structured output, and function calling on the Agent Platform.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Gemini Interactions API Skill</h3>
+<p>This skill provides instructions for authenticating, connecting to, and utilizing the stateful, server-managed <strong>Gemini Interactions API</strong> on Gemini Enterprise Agent Platform.</p>
+<p>The Interactions API is the modern, recommended way to execute Generative AI agent conversations, background research tasks, multi-turn chats, and structured, multi-step workflows.</p>
+<p>&gt; [!IMPORTANT] <strong>CRITICAL: Unified SDK, Latest Models &amp; GEAP Targeting</strong> *</p>
+<p>&gt; <strong>Unified SDK</strong>: Use the Google Gen AI SDK (<strong><code>google-genai &gt;= 2.3.0</code></strong> for</p>
+<p>&gt; Python, <strong><code>@google/genai &gt;= 2.3.0</code></strong> for JS/TS). SDK versions <code>&gt;= 2.0.0</code> are</p>
+<p>&gt; the minimum floor at which the steps schema activates, but <code>&gt;= 2.3.0</code> is the</p>
+<p>&gt; supported/recommended floor. Legacy SDKs like <code>google-cloud-aiplatform</code>,</p>
+<p>&gt; <code>@google-cloud/vertexai</code>, and <code>google-generativeai</code> are strictly unsupported</p>
+<p>&gt; for Interactions. <em> </em>Mandatory Instruction*: When explaining client</p>
+<p>&gt; initialization or writing import code, you <strong>must</strong> explicitly state/warn the</p>
+<p>&gt; user that legacy packages like <code>google-cloud-aiplatform</code> or</p>
+<p>&gt; <code>google-generativeai</code> are strictly unsupported for interactions. <em> </em>*Latest</p>
+<p>&gt; Models Only**: Use <code>gemini-3.5-flash</code> (fast, balanced, multimodal — the</p>
+<p>&gt; recommended default), <code>gemini-3.1-pro-preview</code> (complex reasoning, coding,</p>
+<p>&gt; research), or <code>gemini-3.1-flash-lite</code> (cost-efficient, high-frequency</p>
+<p>&gt; lightweight tasks). Refer to the</p>
+<p>&gt; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/migrate" rel="noopener">latest model versions</a></p>
+<p>&gt; to check for new updates. Legacy models (<code>gemini-3-flash-preview</code>,</p>
+<p>&gt; <code>gemini-2.5-*</code>, <code>gemini-2.0-*</code>, <code>gemini-1.5-*</code>) are deprecated and do not</p>
+<p>&gt; support interactions. <em> </em>Mandatory Instruction*: In any interaction response,</p>
+<p>&gt; you <strong>must</strong> warn the user that legacy models like <code>gemini-2.5-*</code>,</p>
+<p>&gt; <code>gemini-2.0-*</code>, or <code>gemini-1.5-*</code> are deprecated and unsupported for the</p>
+<p>&gt; Interactions API. <em> </em>*GEAP requires a provisioned agent (no direct base-model</p>
+<p>&gt; calls yet)**: On Gemini Enterprise Agent Platform (GEAP), direct/base-model</p>
+<p>&gt; calls (<code>model=&quot;...&quot;</code>) via the Interactions API are <strong>not supported yet</strong>. You</p>
+<p>&gt; <strong>must</strong> target a provisioned agent or endpoint with the <code>agent=&quot;&lt;AGENT_ID&gt;&quot;</code></p>
+<p>&gt; parameter instead of <code>model=&quot;...&quot;</code>. The code examples in this skill use</p>
+<p>&gt; <code>agent=...</code> for this reason. (This is the primary difference from the</p>
+<p>&gt; <a href="https://ai.google.dev/gemini-api/docs/interactions" rel="noopener">ai.google.dev</a></p>
+<p>&gt; documentation for Interactions, which uses <code>model=...</code> — while <code>model=...</code> is</p>
+<p>&gt; valid for other Gemini API contexts, it is **not supported on the Agent</p>
+<p>&gt; Platform**.) Provision an agent per the</p>
+<p>&gt; <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform" rel="noopener">Agent Platform docs</a></p>
+<p>&gt; and pass its ID as <code>agent</code>. * <strong>Turn-Scoped Parameters</strong>: Parameters like</p>
+<p>&gt; <code>tools</code>, <code>system_instruction</code>, and <code>generation_config</code> are turn-scoped. They</p>
+<p>&gt; <strong>MUST</strong> be passed with each interaction request.</p>
+<h4>1. Authentication</h4>
+<p>Before running any code, ensure you are authenticated with Application Default Credentials (ADC) and have the necessary API enabled.</p>
+<ol>
+<li><strong>Login</strong>:</li>
+</ol>
+<p>    <pre><code>    gcloud auth application-default login
+    </code></pre></p>
+<ol>
+<li><strong>Enable API</strong> (if not already enabled):</li>
+</ol>
+<p>    <pre><code>    gcloud services enable aiplatform.googleapis.com
+    </code></pre></p>
+<hr>
+<h4>2. Client Initialization</h4>
+<p>You can initialize the client using environment variables (recommended) or by passing explicit configuration parameters.</p>
+<h5>Option A: Environment Variables (Recommended)</h5>
+<p>Configure environment variables to let the SDK automatically resolve settings:</p>
+<p><pre><code>export GOOGLE_GENAI_USE_ENTERPRISE=true
+export GOOGLE_CLOUD_PROJECT=&quot;your-project-id&quot;
+export GOOGLE_CLOUD_LOCATION=&quot;global&quot;</code></pre></p>
+<h5>Python</h5>
+<p><pre><code>from google import genai
+
+# The SDK automatically picks up the environment variables
+client = genai.Client()</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>import { GoogleGenAI } from &quot;@google/genai&quot;;
+
+// The SDK automatically picks up the environment variables
+const ai = new GoogleGenAI();</code></pre></p>
+<h5>Option B: Explicit Inline Parameters</h5>
+<p>Alternatively, pass configuration values directly inside your code:</p>
+<h5>Python</h5>
+<p><pre><code>from google import genai
+import google.auth
+
+_, project_id = google.auth.default()
+client = genai.Client(enterprise=True, project=project_id, location=&quot;global&quot;)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>import { GoogleGenAI } from &quot;@google/genai&quot;;
+
+const ai = new GoogleGenAI({
+    enterprise: {
+        project: &quot;your-project-id&quot;,
+        location: &quot;global&quot;
+    }
+});</code></pre></p>
+<hr>
+<h4>3. Core Interactions API Usage</h4>
+<h5>Quick Start (Single-Turn)</h5>
+<p>Submit a single prompt and read the final text response. Under the modern schema, output content is retrieved from the <code>steps</code> list.</p>
+<h5>Python</h5>
+<p><pre><code>interaction = client.interactions.create(
+    agent=&quot;your-agent-id&quot;,  # GEAP: target a provisioned agent, not a base model
+    input=&quot;Explain serverless computing in one sentence.&quot;
+)
+# Use the output_text convenience accessor (combined text from the trailing model_output steps)
+print(interaction.output_text)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>const interaction = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;, // GEAP: target a provisioned agent, not a base model
+    input: &quot;Explain serverless computing in one sentence.&quot;
+});
+console.log(interaction.output_text);</code></pre></p>
+<hr>
+<h5>Stateful Conversation (Multi-Turn)</h5>
+<p>Interactions are stateful by default. Store the conversation state in the cloud and reference it in the subsequent turn using <code>previous_interaction_id</code>.</p>
+<h5>Python</h5>
+<p><pre><code># Turn 1: Introduce ourselves
+# Interactions are stored by default (store=True); pass store=False to disable
+# server-side retention (which also disables previous_interaction_id and background).
+turn1 = client.interactions.create(
+    agent=&quot;your-agent-id&quot;,
+    input=&quot;Hi! My name is John. I am working on AI agents.&quot;,
+    store=True
+)
+print(f&quot;Turn 1: {turn1.output_text}&quot;)
+
+# Turn 2: Refer back to the stored turn state
+turn2 = client.interactions.create(
+    agent=&quot;your-agent-id&quot;,
+    input=&quot;What is my name?&quot;,
+    previous_interaction_id=turn1.id
+)
+print(f&quot;Turn 2: {turn2.output_text}&quot;)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>// Turn 1 (interactions are stored by default; pass store: false to disable)
+const turn1 = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;,
+    input: &quot;Hi! My name is John. I am working on AI agents.&quot;,
+    store: true
+});
+
+// Turn 2
+const turn2 = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;,
+    input: &quot;What is my name?&quot;,
+    previousInteractionId: turn1.id
+});
+console.log(turn2.output_text);</code></pre></p>
+<hr>
+<h5>Real-Time Streaming</h5>
+<p>Stream responses in real-time. Passing <code>stream=True</code> returns an iterable chunk generator.</p>
+<h5>Python</h5>
+<p><pre><code># The stream yields typed events, not full interaction snapshots. The sequence is:
+# interaction.created -&gt; (step.start -&gt; step.delta(s) -&gt; step.stop)+ -&gt; interaction.completed
+for event in client.interactions.create(
+    agent=&quot;your-agent-id&quot;,
+    input=&quot;Write a short poem about debugging.&quot;,
+    stream=True
+):
+    if event.event_type == &quot;step.delta&quot;:
+        if event.delta.type == &quot;text&quot;:
+            print(event.delta.text, end=&quot;&quot;, flush=True)
+    elif event.event_type == &quot;interaction.completed&quot;:
+        print()</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>// The stream yields typed events, not full interaction snapshots. The sequence is:
+// interaction.created -&gt; (step.start -&gt; step.delta(s) -&gt; step.stop)+ -&gt; interaction.completed
+const responseStream = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;,
+    input: &quot;Write a short poem about debugging.&quot;,
+    stream: true
+});
+
+for await (const event of responseStream) {
+    if (event.event_type === &quot;step.delta&quot;) {
+        if (event.delta.type === &quot;text&quot;) {
+            process.stdout.write(event.delta.text);
+        }
+    } else if (event.event_type === &quot;interaction.completed&quot;) {
+        console.log();
+    }
+}</code></pre></p>
+<hr>
+<h5>Structured Output (Pydantic / Polymorphic <code>response_format</code>)</h5>
+<p>Retrieve structured, type-safe JSON matching a schema. Under the modern Interactions API, a polymorphic <code>response_format</code> argument directly takes the target schema structure.</p>
+<h5>Python</h5>
+<p><pre><code>from pydantic import BaseModel, Field
+
+class Book(BaseModel):
+    title: str = Field(description=&quot;The title of the book&quot;)
+    author: str = Field(description=&quot;The book&#39;s author&quot;)
+    year_published: int
+
+interaction = client.interactions.create(
+    agent=&quot;your-agent-id&quot;,
+    input=&quot;Recommend one famous sci-fi book.&quot;,
+    response_format=Book
+)
+
+# The text will be a valid JSON matching the Book schema
+print(interaction.output_text)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>import { Type } from &quot;@google/genai&quot;;
+
+const BookSchema = {
+    type: Type.OBJECT,
+    properties: {
+        title: { type: Type.STRING, description: &quot;The title of the book&quot; },
+        author: { type: Type.STRING, description: &quot;The book&#39;s author&quot; },
+        yearPublished: { type: Type.INTEGER }
+    },
+    required: [&quot;title&quot;, &quot;author&quot;, &quot;yearPublished&quot;]
+};
+
+const interaction = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;,
+    input: &quot;Recommend one famous sci-fi book.&quot;,
+    responseFormat: BookSchema
+});
+
+console.log(interaction.output_text);</code></pre></p>
+<hr>
+<h5>Function Calling (Agent Tool Use)</h5>
+<p>Define local tools (functions) and submit execution results to the stateful interaction history.</p>
+<h5>Python</h5>
+<p><pre><code>import json
+
+def get_stock_price(ticker: str) -&gt; float:
+    &quot;&quot;&quot;Gets the stock price for a given ticker symbol.&quot;&quot;&quot;
+    if ticker.upper() == &quot;GOOG&quot;:
+        return 175.50
+    return 100.0
+
+# Turn 1: Pass tools to the model
+interaction = client.interactions.create(
+    agent=&quot;your-agent-id&quot;,
+    input=&quot;What is the stock price of GOOG?&quot;,
+    tools=[get_stock_price]
+)
+
+# In the flat steps schema, a tool request is a top-level step of type
+# &quot;function_call&quot; with flat `name` and `arguments` fields (no nested tool_calls).
+for step in interaction.steps:
+    if step.type == &quot;function_call&quot; and step.name == &quot;get_stock_price&quot;:
+        ticker_arg = step.arguments.get(&quot;ticker&quot;)
+        price = get_stock_price(ticker_arg)
+
+        # Turn 2: Submit the result back as a function_result step. Reference the
+        # originating call via call_id=step.id, and pass tools again (turn-scoped).
+        final_turn = client.interactions.create(
+            agent=&quot;your-agent-id&quot;,
+            input=[
+                {
+                    &quot;type&quot;: &quot;function_result&quot;,
+                    &quot;name&quot;: step.name,
+                    &quot;call_id&quot;: step.id,
+                    &quot;result&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: json.dumps(price)}],
+                }
+            ],
+            tools=[get_stock_price],
+            previous_interaction_id=interaction.id
+        )
+        print(final_turn.output_text)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>import { Type } from &quot;@google/genai&quot;;
+
+// Define local tool
+function getStockPrice({ ticker }: { ticker: string }): number {
+    if (ticker.toUpperCase() === &quot;GOOG&quot;) {
+        return 175.50;
+    }
+    return 100.00;
+}
+
+// Turn 1: Pass tools to the model
+const toolDeclaration = {
+    functionDeclarations: [{
+        name: &quot;getStockPrice&quot;,
+        description: &quot;Gets the stock price for a given ticker symbol.&quot;,
+        parameters: {
+            type: Type.OBJECT,
+            properties: {
+                ticker: { type: Type.STRING, description: &quot;The stock ticker symbol&quot; }
+            },
+            required: [&quot;ticker&quot;]
+        }
+    }]
+};
+
+const interaction = await ai.interactions.create({
+    agent: &quot;your-agent-id&quot;,
+    input: &quot;What is the stock price of GOOG?&quot;,
+    tools: [toolDeclaration]
+});
+
+// In the flat steps schema, a tool request is a top-level step of type
+// &quot;function_call&quot; with flat `name` and `arguments` fields (no nested toolCalls).
+const fcStep = interaction.steps.find(s =&gt; s.type === &quot;function_call&quot;);
+if (fcStep &amp;&amp; fcStep.name === &quot;getStockPrice&quot;) {
+    const tickerArg = fcStep.arguments.ticker as string;
+    const price = getStockPrice({ ticker: tickerArg });
+
+    // Turn 2: Submit the result back as a function_result step. Reference the
+    // originating call via call_id=fcStep.id, and pass tools again (turn-scoped).
+    const finalTurn = await ai.interactions.create({
+        agent: &quot;your-agent-id&quot;,
+        input: [{
+            type: &quot;function_result&quot;,
+            name: fcStep.name,
+            call_id: fcStep.id,
+            result: [{ type: &quot;text&quot;, text: JSON.stringify(price) }]
+        }],
+        tools: [toolDeclaration],
+        previousInteractionId: interaction.id
+    });
+    console.log(finalTurn.output_text);
+}</code></pre></p>
+<hr>
+<h4>4. Accessing the Interactions API via REST</h4>
+<p>For shell-based scripts, debugging, or non-Python/JS environments, you can communicate with the stateful Interactions API directly using raw HTTP/REST requests via <code>curl</code>.</p>
+<h5>1. REST Endpoint</h5>
+<p>The REST API endpoint for interactions is:</p>
+<p><pre><code>POST https://aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{LOCATION}/interactions</code></pre></p>
+<ul>
+<li><strong>LOCATION</strong>: Use <code>global</code> (or custom region if required).</li>
+<li><strong>PROJECT_ID</strong>: Your Google Cloud Project ID.</li>
+</ul>
+<h5>2. Set up Variables &amp; Authentication Header</h5>
+<p>Set your target agent ID (e.g., model or custom agent path) and access token generated from Application Default Credentials:</p>
+<p><pre><code>AGENT_ID=&quot;your-agent-id&quot;
+ACCESS_TOKEN=$(gcloud auth print-access-token)</code></pre></p>
+<h5>3. Single-Turn Interaction Payload</h5>
+<p>Send a request to start an interaction using the agent variable:</p>
+<p><pre><code>curl -X POST &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/interactions&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;agent&quot;: &quot;&#39;&quot;${AGENT_ID}&quot;&#39;&quot;,
+    &quot;input&quot;: [{
+      &quot;type&quot;: &quot;user_input&quot;,
+      &quot;content&quot;: [{
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;Explain serverless computing in one sentence.&quot;
+      }]
+    }]
+  }&#39;</code></pre></p>
+<h5>Response Example</h5>
+<p>A synchronous POST request returns a JSON object containing the conversation step details and unique identifiers:</p>
+<p><pre><code>{
+  &quot;id&quot;: &quot;your-interaction-id&quot;,
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;steps&quot;: [
+    {
+      &quot;type&quot;: &quot;model_output&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Serverless computing is a cloud execution model where the cloud provider dynamically manages the allocation and provisioning of servers, charging customers based on actual usage rather than pre-purchased capacity.&quot;
+        }
+      ]
+    }
+  ],
+  &quot;usage&quot;: {
+    &quot;total_tokens&quot;: 24751,
+    &quot;total_input_tokens&quot;: 23894,
+    &quot;total_output_tokens&quot;: 857
+  },
+  &quot;created&quot;: &quot;2026-05-08T10:44:43Z&quot;,
+  &quot;updated&quot;: &quot;2026-05-08T10:44:43Z&quot;,
+  &quot;environment_id&quot;: &quot;your-environment-id&quot;,
+  &quot;object&quot;: &quot;interaction&quot;
+}</code></pre></p>
+<h5>4. Multi-Turn Stateful Interaction Payload</h5>
+<p>To continue an existing conversation statefully, specify the <code>previous_interaction_id</code> in the JSON payload:</p>
+<p><pre><code>curl -X POST &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/interactions&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;agent&quot;: &quot;&#39;&quot;${AGENT_ID}&quot;&#39;&quot;,
+    &quot;store&quot;: true,
+    &quot;previous_interaction_id&quot;: &quot;YOUR_PREVIOUS_INTERACTION_ID&quot;,
+    &quot;input&quot;: [{
+      &quot;type&quot;: &quot;user_input&quot;,
+      &quot;content&quot;: [{
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;Can you elaborate on that?&quot;
+      }]
+    }]
+  }&#39;</code></pre></p>
+<h5>5. Streaming Output Payload</h5>
+<p>To stream updates in real time (Server-Sent Events format), pass <code>&quot;stream&quot;: true</code> in the payload:</p>
+<p><pre><code>curl -X POST &quot;https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/global/interactions&quot; \
+  -H &quot;Authorization: Bearer ${ACCESS_TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;agent&quot;: &quot;&#39;&quot;${AGENT_ID}&quot;&#39;&quot;,
+    &quot;stream&quot;: true,
+    &quot;input&quot;: [{
+      &quot;type&quot;: &quot;user_input&quot;,
+      &quot;content&quot;: [{
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;Write a long story about space travel.&quot;
+      }]
+    }]
+  }&#39;</code></pre></p>
+<p>The endpoint will return a chunked stream where each event begins with <code>data: </code> containing JSON updates with the <code>event_type</code> and step contents.</p>
+<p>&gt; <strong>How <code>curl</code> handles streaming:</strong></p>
+<p>&gt; By default, when <code>&quot;stream&quot;: true</code> is passed, the server responds with <code>Transfer-Encoding: chunked</code> and <code>Content-Type: text/event-stream</code> (Server-Sent Events). <code>curl</code> will automatically keep the connection open and print the incoming data chunks to <code>stdout</code> in real time as they are pushed by the server. The user does not need to poll or pull further; the complete sequence of events streams continuously until completion.</p>
+<hr>
+<h4>5. Data Model &amp; Step Types Reference</h4>
+<p>An <code>Interaction</code> response contains <code>steps</code>, an array of typed step objects</p>
+<p>representing a structured timeline of the interaction turn. Read the current</p>
+<p>step <code>type</code> rather than assuming the last step is text — the trailing step may</p>
+<p>be a <code>function_call</code> or a <code>thought</code>.</p>
+<h5>Step Types</h5>
+<p><strong>User steps:</strong></p>
+<ul>
+<li><code>user_input</code>: User input (text, audio, multimodal). Contains a <code>content</code></li>
+</ul>
+<p>    array. (This is why REST input payloads use <code>&quot;type&quot;: &quot;user_input&quot;</code>, <strong>not</strong></p>
+<p>    <code>&quot;role&quot;: &quot;user&quot;</code>.)</p>
+<p><strong>Model/server steps:</strong></p>
+<ul>
+<li><code>model_output</code>: Final model generation. Contains a <code>content</code> array with</li>
+</ul>
+<p>    <code>text</code>, <code>image</code>, <code>audio</code>, etc. (REST responses use <code>&quot;type&quot;: &quot;model_output&quot;</code>,</p>
+<p>    <strong>not</strong> <code>&quot;role&quot;: &quot;model&quot;</code>.)</p>
+<ul>
+<li><code>thought</code>: Model reasoning / chain of thought. Has a <code>signature</code> field and</li>
+</ul>
+<p>    optional <code>summary</code>.</p>
+<ul>
+<li><code>function_call</code>: Tool call request, with flat <code>id</code>, <code>name</code>, and <code>arguments</code></li>
+</ul>
+<p>    fields (there is <strong>no</strong> nested <code>tool_calls</code> list).</p>
+<ul>
+<li><code>function_result</code>: Tool result you send back, with <code>call_id</code>, <code>name</code>, and</li>
+</ul>
+<p>    <code>result</code> fields.</p>
+<ul>
+<li><code>google_search_call</code> / <code>google_search_result</code>, <code>code_execution_call</code> /</li>
+</ul>
+<p>    <code>code_execution_result</code>, <code>url_context_call</code> / <code>url_context_result</code>,</p>
+<p>    <code>mcp_server_tool_call</code> / <code>mcp_server_tool_result</code>, <code>file_search_call</code> /</p>
+<p>    <code>file_search_result</code>: built-in and remote tool steps.</p>
+<h5>Content types (inside the <code>content</code> array on <code>model_output</code> and <code>user_input</code> steps)</h5>
+<ul>
+<li><code>text</code>: Text content (<code>text</code> field).</li>
+<li><code>image</code> / <code>audio</code> / <code>document</code> / <code>video</code>: Content with <code>data</code>, <code>mime_type</code>,</li>
+</ul>
+<p>    or <code>uri</code>.</p>
+<h5>Convenience accessor</h5>
+<ul>
+<li><code>output_text</code>: The combined text from the trailing <code>model_output</code> steps.</li>
+</ul>
+<p>    Prefer this over hand-walking <code>steps[-1].content[0].text</code>, which breaks when</p>
+<p>    the last step is a tool call or a thought.</p>
+<h5>Streaming Event Types</h5>
+<table><thead><tr><th>Event</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>interaction.created</code></td><td>Interaction created; includes metadata.</td></tr>
+<tr><td><code>step.start</code></td><td>A new step begins. Contains the step <code>type</code> and</td></tr>
+</tbody></table>
+<p>:                         : initial metadata.                                 :</p>
+<table><thead><tr><th><code>step.delta</code></th><th>Incremental data for the current step. Contains a</th></tr></thead><tbody>
+</tbody></table>
+<p>:                         : typed <code>delta</code> object (e.g. <code>delta.type == &quot;text&quot;</code> :</p>
+<p>:                         : with <code>delta.text</code>).                               :</p>
+<table><thead><tr><th><code>step.stop</code></th><th>The step is complete. Contains <code>index</code>.</th></tr></thead><tbody>
+<tr><td><code>interaction.completed</code></td><td>Interaction finished. Contains final <code>usage</code>.</td></tr>
+</tbody></table>
+<h5>Storage &amp; retention</h5>
+<p>Interactions are stored by default (<code>store=True</code>), which enables stateful</p>
+<p>features like <code>previous_interaction_id</code> and background execution. Passing</p>
+<p><code>store=False</code> disables server-side retention and therefore also disables</p>
+<p><code>previous_interaction_id</code> and <code>background</code> — in that mode you must pass the full</p>
+<p>conversation history in <code>input</code> on each turn.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gemini-interactions-api</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gemini-interactions-api" aria-label="Copy install gemini-interactions-api">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gemini-interactions-api</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gemini-interactions-api/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-workload-scaling — Aidentity</title>
+<meta name="description" content="Manages scaling for GKE workloads using HPA and VPA. Use when configuring Horizontal Pod Autoscaler (HPA), configuring Vertical Pod Autoscaler (VPA), or applying best practices for GKE workload autoscaling. Do not use for cluster-level autoscaling (Cluster Autoscaler), static cluster sizing, or configuring node-level machine styles directly.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-scaling/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-workload-scaling — Aidentity">
+<meta property="og:description" content="Manages scaling for GKE workloads using HPA and VPA. Use when configuring Horizontal Pod Autoscaler (HPA), configuring Vertical Pod Autoscaler (VPA), or applying best practices for GKE workload autoscaling. Do not use for cluster-level autoscaling (Cluster Autoscaler), static cluster sizing, or configuring node-level machine styles directly.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-scaling/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-workload-scaling","description":"Manages scaling for GKE workloads using HPA and VPA. Use when configuring Horizontal Pod Autoscaler (HPA), configuring Vertical Pod Autoscaler (VPA), or applying best practices for GKE workload autoscaling. Do not use for cluster-level autoscaling (Cluster Autoscaler), static cluster sizing, or configuring node-level machine styles directly.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-workload-scaling/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-workload-scaling
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-workload-scaling</h1>
+      <p class="summary">Manages scaling for GKE workloads using HPA and VPA. Use when configuring Horizontal Pod Autoscaler (HPA), configuring Vertical Pod Autoscaler (VPA), or applying best practices for GKE workload autoscaling. Do not use for cluster-level autoscaling (Cluster Autoscaler), static cluster sizing, or configuring node-level machine styles directly.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Workload Scaling</h3>
+<p>This skill provides workflows and best practices for scaling applications on</p>
+<p>Google Kubernetes Engine (GKE). It covers manual scaling, Horizontal Pod</p>
+<p>Autoscaling (HPA), and Vertical Pod Autoscaling (VPA).</p>
+<h4>Workflows</h4>
+<h5>1. Manual Scaling</h5>
+<p>Scale a deployment to a fixed number of replicas. Useful for immediate manual</p>
+<p>intervention or testing.</p>
+<p><strong>Command:</strong></p>
+<p><pre><code>kubectl scale deployment {deployment_name} --replicas={number} -n {namespace}
+
+# Verify the scale event
+kubectl get deployment {deployment_name} -n {namespace}</code></pre></p>
+<h5>2. Horizontal Pod Autoscaling (HPA)</h5>
+<p>Automatically scale the number of pods based on observed CPU utilization, memory</p>
+<p>utilization, or custom metrics.</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>Metrics Server must be running (enabled by default on GKE).</li>
+<li>Containers clearly define resource requests/limits.</li>
+</ul>
+<p><strong>Quick Command:</strong></p>
+<p><pre><code>kubectl autoscale deployment {deployment_name} --cpu-percent=50 --min=1 --max=10</code></pre></p>
+<p><strong>Manifest Approach (Recommended):</strong> Use a YAML manifest for version-controlled</p>
+<p>configuration. See [assets/hpa-example.yaml](assets/hpa-example.yaml) for a</p>
+<p>template.</p>
+<p><pre><code>kubectl apply -f assets/hpa-example.yaml
+
+# Verify HPA is created and fetching metrics
+kubectl get hpa</code></pre></p>
+<p><strong>Custom Metrics &amp; External Metrics:</strong> For GKE, the modern and recommended</p>
+<p>approach for scaling based on Cloud Monitoring metrics (e.g., Pub/Sub queue</p>
+<p>length) is to use the <strong>External</strong> metric type, which is natively supported by</p>
+<p>the GKE control plane without requiring the Custom Metrics Adapter. For</p>
+<p>application-specific metrics exposed via Prometheus, you can use **Google Cloud</p>
+<p>Managed Service for Prometheus** or the Prometheus Adapter.</p>
+<h5>3. Vertical Pod Autoscaling (VPA)</h5>
+<p>Automatically adjust the CPU and memory reservations for your pods to match</p>
+<p>actual usage. This is critical for right-sizing workloads.</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>VPA must be enabled on the cluster.</li>
+<li><strong>Autopilot:</strong> Enabled by default.</li>
+<li><strong>Standard:</strong> Must be enabled manually.</li>
+</ul>
+<p><strong>Enable VPA on Standard Cluster:</strong></p>
+<p><pre><code>gcloud container clusters update {cluster_name} --enable-vertical-pod-autoscaling --zone {zone}</code></pre></p>
+<p><strong>Update Modes:</strong></p>
+<ul>
+<li><code>Off</code>: Calculates recommendations but does not apply them. Good for &quot;dry</li>
+</ul>
+<p>    run&quot; analysis.</p>
+<ul>
+<li><code>Initial</code>: Assigns resources only at pod creation time.</li>
+<li><code>Auto</code>: Updates running pods by restarting them if recommendations differ</li>
+</ul>
+<p>    significantly from requests.</p>
+<ul>
+<li><code>InPlaceOrRecreate</code>: Attempts to update Pod resources without recreating the</li>
+</ul>
+<p>    Pod. If in-place update is not possible, it reverts to <code>Auto</code> mode (requires</p>
+<p>    GKE 1.34+).</p>
+<p><strong>Example:</strong> See [assets/vpa-example.yaml](assets/vpa-example.yaml) for a</p>
+<p>configuration template.</p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Define Resource Requests:</strong> HPA and VPA rely on accurate resource</li>
+</ol>
+<p>    requests. Always define them in your container specs.</p>
+<ol>
+<li><strong>Avoid Metric Conflicts:</strong> Do not configure HPA and VPA to use the same</li>
+</ol>
+<p>    metric (e.g., both CPU). This causes thrashing.</p>
+<ul>
+<li><em>Typical Pattern:</em> HPA on CPU, VPA on Memory.</li>
+</ul>
+<ol>
+<li><strong>Pod Disruption Budgets (PDBs):</strong> Define PDBs to ensure application</li>
+</ol>
+<p>    availability during scaling events or node upgrades.</p>
+<ol>
+<li><strong>HPA Lag:</strong> HPA has a stabilization window (default 5 mins) to prevent</li>
+</ol>
+<p>    rapid fluctuation.</p>
+<ol>
+<li><strong>VPA &quot;Auto&quot; Mode Risks:</strong> In &quot;Auto&quot; mode, VPA restarts pods to change</li>
+</ol>
+<p>    resources. Ensure your application handles restarts gracefully (e.g.,</p>
+<p>    handles SIGTERM).</p>
+<ul>
+<li><em>Note:</em> By default, VPA requires at least 2 replicas to perform</li>
+</ul>
+<p>        evictions (to prevent a situation where the only running replica is</p>
+<p>        evicted, causing downtime). In GKE 1.22+, you can override this by</p>
+<p>        setting <code>minReplicas</code> in <code>PodUpdatePolicy</code>.</p>
+<h4>Rightsizing Workflow</h4>
+<ol>
+<li>Deploy VPA in <code>Off</code> mode for 24+ hours</li>
+<li>Read recommendations: `kubectl describe vpa {deployment_name}-vpa -n</li>
+</ol>
+<p>    {namespace}`</p>
+<ol>
+<li>Compare <code>target</code> values against current <code>requests</code></li>
+<li>Apply with 20% buffer: <code>new_request = target * 1.2</code></li>
+<li>Use patch format or update deployment manifest to apply new resource</li>
+</ol>
+<p>    requests</p>
+<p>Condition                     | Recommendation                       | Risk</p>
+<p>----------------------------- | ------------------------------------ | ------</p>
+<p>CPU request &gt;5x P95 actual    | Reduce to <code>P95 * 1.2</code>                | Medium</p>
+<p>Memory request &gt;3x P95 actual | Reduce to <code>P95 * 1.2</code>                | Medium</p>
+<p>CPU request &gt;2x P95 actual    | Rightsizing with 20% buffer          | Low</p>
+<p>No resource limits set        | Add limits to prevent noisy-neighbor | Low</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-workload-scaling</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-workload-scaling" aria-label="Copy install gke-workload-scaling">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-workload-scaling</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-workload-scaling/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

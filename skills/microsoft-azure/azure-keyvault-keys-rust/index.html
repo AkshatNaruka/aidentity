@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-keyvault-keys-rust — Aidentity</title>
+<meta name="description" content="Azure Key Vault Keys library for Rust. Create, manage, and use cryptographic keys including RSA, EC, and HSM-protected keys. Triggers: &quot;keyvault keys rust&quot;, &quot;KeyClient rust&quot;, &quot;create key rust&quot;, &quot;encrypt rust&quot;, &quot;wrap key rust&quot;, &quot;sign rust&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-keys-rust/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-keyvault-keys-rust — Aidentity">
+<meta property="og:description" content="Azure Key Vault Keys library for Rust. Create, manage, and use cryptographic keys including RSA, EC, and HSM-protected keys. Triggers: &quot;keyvault keys rust&quot;, &quot;KeyClient rust&quot;, &quot;create key rust&quot;, &quot;encrypt rust&quot;, &quot;wrap key rust&quot;, &quot;sign rust&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-keys-rust/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-keyvault-keys-rust","description":"Azure Key Vault Keys library for Rust. Create, manage, and use cryptographic keys including RSA, EC, and HSM-protected keys. Triggers: \"keyvault keys rust\", \"KeyClient rust\", \"create key rust\", \"encrypt rust\", \"wrap key rust\", \"sign rust\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-keyvault-keys-rust/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-keyvault-keys-rust
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-keyvault-keys-rust</h1>
+      <p class="summary">Azure Key Vault Keys library for Rust. Create, manage, and use cryptographic keys including RSA, EC, and HSM-protected keys. Triggers: &quot;keyvault keys rust&quot;, &quot;KeyClient rust&quot;, &quot;create key rust&quot;, &quot;encrypt rust&quot;, &quot;wrap key rust&quot;, &quot;sign rust&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Key Vault Keys library for Rust</h3>
+<p>Secure storage and management of cryptographic keys — RSA, EC, and HSM-protected.</p>
+<p>Use this skill when:</p>
+<ul>
+<li>An app needs to create or manage cryptographic keys in Key Vault from Rust</li>
+<li>You need to wrap/unwrap data encryption keys (envelope encryption)</li>
+<li>You need to sign or verify data with Key Vault keys</li>
+<li>You need HSM-protected keys</li>
+</ul>
+<p>&gt; <strong>IMPORTANT:</strong> Only use the official <code>azure_security_keyvault_keys</code> crate published by the <a href="https://crates.io/users/azure-sdk" rel="noopener">azure-sdk</a> crates.io user. Do NOT use unofficial or community crates. Official crates use underscores in names and none have version 0.21.0.</p>
+<h4>Installation</h4>
+<p><pre><code>cargo add azure_security_keyvault_keys azure_identity tokio futures</code></pre></p>
+<p>&gt; If your code uses <code>azure_core</code> types directly, add <code>azure_core</code> to <code>Cargo.toml</code>. If you only use <code>azure_security_keyvault_keys</code> re-exports, direct <code>azure_core</code> dependency is optional.</p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_KEYVAULT_URL=https://&lt;vault-name&gt;.vault.azure.net/ # Required for all operations</code></pre></p>
+<h4>Authentication</h4>
+<p>Rust Azure SDK code must not use <code>DefaultAzureCredential</code>. The Rust identity crate does not provide that type.</p>
+<p><pre><code>use azure_identity::DeveloperToolsCredential;
+use azure_security_keyvault_keys::KeyClient;
+
+#[tokio::main]
+async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    // Local dev: DeveloperToolsCredential. Production: use ManagedIdentityCredential.
+    let credential = DeveloperToolsCredential::new(None)?;
+    let client = KeyClient::new(
+        &quot;https://&lt;vault-name&gt;.vault.azure.net/&quot;,
+        credential.clone(),
+        None,
+    )?;
+
+    let key = client.get_key(&quot;key-name&quot;, None).await?.into_model()?;
+    println!(&quot;Key: {:?}&quot;, key.key);
+    Ok(())
+}</code></pre></p>
+<p>Prefer the crate README/examples when checking public operation shapes such as key creation, wrapping, and version-aware unwrap flows.</p>
+<h4>Core Workflow</h4>
+<h5>Create Key</h5>
+<p><pre><code>use azure_security_keyvault_keys::{
+    models::{CreateKeyParameters, CurveName, KeyType},
+    ResourceExt,
+};
+
+// Create an EC key
+let body = CreateKeyParameters {
+    kty: Some(KeyType::Ec),
+    curve: Some(CurveName::P256),
+    ..Default::default()
+};
+
+let key = client
+    .create_key(&quot;key-name&quot;, body.try_into()?, None)
+    .await?
+    .into_model()?;
+
+println!(
+    &quot;Name: {:?}, Type: {:?}, Version: {:?}&quot;,
+    key.resource_id()?.name,
+    key.key.as_ref().map(|k| k.kty.as_ref()),
+    key.resource_id()?.version,
+);</code></pre></p>
+<h5>Update Key Properties</h5>
+<p><pre><code>use azure_security_keyvault_keys::models::UpdateKeyPropertiesParameters;
+use std::collections::HashMap;
+
+#[allow(clippy::needless_update)]
+let params = UpdateKeyPropertiesParameters {
+    tags: Some(HashMap::from_iter(vec![(&quot;env&quot;.into(), &quot;prod&quot;.into())])),
+    ..Default::default()
+};
+
+client
+    .update_key_properties(&quot;key-name&quot;, params.try_into()?, None)
+    .await?
+    .into_model()?;</code></pre></p>
+<h5>Delete Key</h5>
+<p><pre><code>client.delete_key(&quot;key-name&quot;, None).await?;</code></pre></p>
+<h5>List Keys (Pagination)</h5>
+<p><code>list_key_properties</code> returns a <code>Pager&lt;T&gt;</code> — iterate items directly:</p>
+<p><pre><code>use azure_security_keyvault_keys::ResourceExt;
+use futures::TryStreamExt as _;
+
+let mut pager = client.list_key_properties(None)?;
+while let Some(key) = pager.try_next().await? {
+    println!(&quot;Found: {}&quot;, key.resource_id()?.name);
+}</code></pre></p>
+<h4>Wrap / Unwrap (Envelope Encryption)</h4>
+<p>Key Vault performs crypto operations server-side — the private key never leaves the HSM:</p>
+<p><pre><code>use azure_security_keyvault_keys::{
+    models::{
+        CreateKeyParameters, EncryptionAlgorithm, KeyOperationParameters, KeyType,
+    },
+    ResourceExt, ResourceId,
+};
+use rand::random;
+
+// Create a key encryption key (KEK)
+let body = CreateKeyParameters {
+    kty: Some(KeyType::Rsa),
+    key_size: Some(2048),
+    ..Default::default()
+};
+
+let key = client
+    .create_key(&quot;kek-name&quot;, body.try_into()?, None)
+    .await?
+    .into_model()?;
+
+// Generate a symmetric data encryption key (DEK)
+let dek = random::&lt;u32&gt;().to_le_bytes().to_vec();
+
+// Wrap the DEK with the KEK
+let mut params = KeyOperationParameters {
+    algorithm: Some(EncryptionAlgorithm::RsaOaep256),
+    value: Some(dek.clone()),
+    ..Default::default()
+};
+let wrapped = client
+    .wrap_key(&quot;kek-name&quot;, params.clone().try_into()?, None)
+    .await?
+    .into_model()?;
+
+// Retain the key version used to wrap so you can unwrap with the same version later
+let ResourceId { version, .. } = wrapped.resource_id()?;
+let key_version = version.as_deref().unwrap_or_default();
+
+// Unwrap to recover the DEK
+params.value = wrapped.result;
+let unwrapped = client
+    .unwrap_key(&quot;kek-name&quot;, key_version, params.try_into()?, None)
+    .await?
+    .into_model()?;
+
+assert!(matches!(unwrapped.result, Some(ref result) if result.eq(&amp;dek)));</code></pre></p>
+<h4>Key Types</h4>
+<table><thead><tr><th>Type</th><th>Use Case</th><th>Parameter</th></tr></thead><tbody>
+<tr><td>EC</td><td>Signing, key agreement</td><td><code>KeyType::Ec</code></td></tr>
+<tr><td>RSA</td><td>Encryption, signing, wrapping</td><td><code>KeyType::Rsa</code></td></tr>
+<tr><td>Oct</td><td>Symmetric operations (HSM)</td><td><code>KeyType::Oct</code></td></tr>
+<tr><td>EC-HSM</td><td>HSM-protected EC keys</td><td><code>KeyType::EcHsm</code></td></tr>
+<tr><td>RSA-HSM</td><td>HSM-protected RSA keys</td><td><code>KeyType::RsaHsm</code></td></tr>
+</tbody></table>
+<h4>RBAC Roles</h4>
+<p>For Entra ID auth, assign one of these roles:</p>
+<table><thead><tr><th>Role</th><th>Access</th></tr></thead><tbody>
+<tr><td><code>Key Vault Crypto User</code></td><td>Use keys for crypto ops</td></tr>
+<tr><td><code>Key Vault Crypto Officer</code></td><td>Full key management</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Use <code>cargo add</code> to manage dependencies, never edit <code>Cargo.toml</code> directly.</strong> Add and remove Rust SDK dependencies with cargo commands instead of manual manifest edits.</li>
+<li><strong>Add <code>azure_core</code> only when importing <code>azure_core</code> types directly.</strong> If your code imports <code>azure_core::http::Url</code>, <code>azure_core::http::RequestContent</code>, or <code>azure_core::error::ErrorKind</code>, include <code>azure_core</code>; otherwise a direct dependency is optional.</li>
+<li><strong>Use <code>DeveloperToolsCredential</code></strong> for local dev, <strong><code>ManagedIdentityCredential</code></strong> for production — Rust does not provide a single <code>DefaultAzureCredential</code> type</li>
+<li><strong>Never hardcode credentials</strong> — use environment variables or managed identity</li>
+<li><strong>Use <code>..Default::default()</code></strong> with <code>#[allow(clippy::needless_update)]</code> for model struct updates</li>
+<li><strong>Use <code>ResourceExt</code></strong> to extract key name/version from key IDs</li>
+<li><strong>Reuse clients</strong> — <code>KeyClient</code> is thread-safe; create once, share across tasks</li>
+<li><strong>Run <code>cargo clippy -- -D warnings</code></strong> when the prompt, eval, or CI expects lint-clean output</li>
+</ol>
+<h4>Reference Links</h4>
+<table><thead><tr><th>Resource</th><th>Link</th></tr></thead><tbody>
+<tr><td>API Reference</td><td><a href="https://docs.rs/azure_security_keyvault_keys/latest/azure_security_keyvault_keys" rel="noopener">https://docs.rs/azure_security_keyvault_keys/latest/azure_security_keyvault_keys</a></td></tr>
+<tr><td>crates.io</td><td><a href="https://crates.io/crates/azure_security_keyvault_keys" rel="noopener">https://crates.io/crates/azure_security_keyvault_keys</a></td></tr>
+<tr><td>Source Code</td><td><a href="https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/keyvault/azure_security_keyvault_keys" rel="noopener">https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/keyvault/azure_security_keyvault_keys</a></td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-keyvault-keys-rust</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-keyvault-keys-rust" aria-label="Copy install azure-keyvault-keys-rust">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-keyvault-keys-rust</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-keyvault-keys-rust/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

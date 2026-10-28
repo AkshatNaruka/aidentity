@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-logging-query-generation — Aidentity</title>
+<meta name="description" content="Generates Logging Query Language (LQL) queries for Google Cloud Logging from natural language. Use this skill when you need to query log data or when you are debugging issues. You can filter log data by Google Cloud service. Don&#39;t use this skill to query other databases, such as SQL or Cloud Spanner.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-query-generation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-logging-query-generation — Aidentity">
+<meta property="og:description" content="Generates Logging Query Language (LQL) queries for Google Cloud Logging from natural language. Use this skill when you need to query log data or when you are debugging issues. You can filter log data by Google Cloud service. Don&#39;t use this skill to query other databases, such as SQL or Cloud Spanner.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-query-generation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-logging-query-generation","description":"Generates Logging Query Language (LQL) queries for Google Cloud Logging from natural language. Use this skill when you need to query log data or when you are debugging issues. You can filter log data by Google Cloud service. Don't use this skill to query other databases, such as SQL or Cloud Spanner.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-query-generation/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-logging-query-generation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-logging-query-generation</h1>
+      <p class="summary">Generates Logging Query Language (LQL) queries for Google Cloud Logging from natural language. Use this skill when you need to query log data or when you are debugging issues. You can filter log data by Google Cloud service. Don&#39;t use this skill to query other databases, such as SQL or Cloud Spanner.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Generate Logging Query Language queries</h3>
+<p>Use this skill to generate correct Logging Query Language (LQL) queries for</p>
+<p>Cloud Logging.</p>
+<h4>Core rules</h4>
+<ol>
+<li><strong>Strict syntax requirements:</strong></li>
+</ol>
+<ul>
+<li><strong>Always use double quotes (<code>&quot;</code>)</strong> for string literals. Do not use</li>
+</ul>
+<p>        single quotes (<code>&#39;</code>).</p>
+<ul>
+<li>Write boolean operators in all capitals: <code>AND</code>, <code>OR</code>, <code>NOT</code>.</li>
+<li>Always use parentheses to group terms and explicitly enforce precedence.</li>
+</ul>
+<ol>
+<li><strong>Common pitfalls:</strong></li>
+</ol>
+<ul>
+<li><strong>Instance ID vs. Instance Name:</strong> For the <code>gce_instance</code> resource type,</li>
+</ul>
+<p>        do NOT compare instance names to instance IDs. Instance names are</p>
+<p>        strings (for example, <code>my-instance</code>). Instance IDs are numeric. If you</p>
+<p>        only have the name, then search by instance name,</p>
+<p>        <code>SEARCH(&quot;my-instance&quot;)</code>, or use <code>resource.labels.instance_name</code> if that</p>
+<p>        label is available for the resource.</p>
+<ul>
+<li><strong>Resource Type Accuracy:</strong> Do not guess resource types. You must look</li>
+</ul>
+<p>        up the correct <code>resource.type</code> value in the service-specific reference</p>
+<p>        files. For example, use <code>internal_http_lb_rule</code> for Internal HTTP(S)</p>
+<p>        Load Balancer rules when filtering by forwarding rule name or region</p>
+<p>        (instead of <code>http_load_balancer</code>).</p>
+<ol>
+<li><strong>Output format and placeholders:</strong></li>
+</ol>
+<ul>
+<li>Output <strong>only</strong> the raw LQL query text. Do not include conversational</li>
+</ul>
+<p>        filler. Do not wrap the query in markdown code blocks unless explicitly</p>
+<p>        requested by the user. Valid LQL comments (using <code>--</code>) are allowed, and</p>
+<p>        are the ONLY acceptable way to include explanations or warnings.</p>
+<ul>
+<li><strong>Never block on missing variables.</strong> If the user&#39;s request lacks</li>
+</ul>
+<p>        specific identifiers (like a project ID, instance name, or IP address),</p>
+<p>        do not ask them for clarification. If the variable is required for a</p>
+<p>        functional query (like a log bucket name for a regional log), insert an</p>
+<p>        uppercase placeholder string wrapped in angle brackets (for example,</p>
+<p>        <code>&quot;&lt;PROJECT_ID&gt;&quot;</code>). <strong>CRITICALLY</strong>: If you include a placeholder for a</p>
+<p>        variable the user omitted, it will act as an explicit filter that causes</p>
+<p>        logs to be missed. Therefore, you MUST omit the entire filter/line</p>
+<p>        containing the placeholder if the field is not strictly required. For</p>
+<p>        example, completely omit <code>resource.labels.instance_id=&quot;...&quot;</code> if the user</p>
+<p>        didn&#39;t specify an instance, but you MUST include</p>
+<p>        <code>logName=&quot;.../projects/&lt;PROJECT_ID&gt;/...&quot;</code> with a placeholder if</p>
+<p>        constructing a regional log bucket query where a project ID is strictly</p>
+<p>        required.</p>
+<ol>
+<li><strong>Preferred fields:</strong></li>
+</ol>
+<ul>
+<li>Include <code>resource.type</code> and <code>log_id</code> restrictions when the query targets</li>
+</ul>
+<p>        specific Google Cloud services or resources. Global queries (for</p>
+<p>        example, &quot;latest error logs&quot;) do not require these restrictions.</p>
+<h4>Detailed reference</h4>
+<p>Refer to <code>references/api_reference.md</code> for LQL syntax rules, including</p>
+<p>Operators, NULL handling, SEARCH, and Regex.</p>
+<h4>Service reference files</h4>
+<p>Before generating a query, you MUST read the examples for the specific service.</p>
+<p>LQL schemas and <code>resource.type</code> values are service-specific. **Do not stop</p>
+<p>reading after finding the Base Schema in the file. You must verify if there are</p>
+<p>specific requirements for state tracking (like <code>previousState</code>) or</p>
+<p>resource-specific log IDs detailed in the paragraphs or specific query examples</p>
+<p>below the schema block.**</p>
+<p><strong>For the following services, read the exact file listed:</strong></p>
+<ul>
+<li>[App Engine](references/query_app_engine.md)</li>
+<li>[BigQuery](references/query_bigquery.md)</li>
+<li>[Cloud Deployment Manager](references/query_deployment_manager.md)</li>
+<li>[Cloud Functions](references/query_cloud_functions.md)</li>
+<li>[Cloud Observability (Monitoring, Logging, Trace)](references/query_cloud_observability.md)</li>
+<li>[Cloud Run](references/query_cloud_run.md)</li>
+<li>[Cloud Source Repositories](references/query_cloud_source_repositories.md)</li>
+<li>[Cloud Spanner](references/query_spanner.md)</li>
+<li>[Cloud SQL](references/query_cloud_sql.md)</li>
+<li>[Cloud Storage](references/query_cloud_storage.md)</li>
+<li>[Cloud Tasks](references/query_cloud_tasks.md)</li>
+<li>[Compute Engine (GCE)](references/query_compute_engine.md)</li>
+<li>[Dataflow](references/query_dataflow.md)</li>
+<li>[Dataproc](references/query_dataproc.md)</li>
+<li>[Kubernetes Engine (GKE)](references/query_gke.md)</li>
+<li>[IAM &amp; Service Accounts](references/query_iam.md)</li>
+<li>[Networking (VPC, Load Balancing, and others)](references/query_networking.md)</li>
+<li>[Security (Audit logging)](references/query_security.md)</li>
+<li>[Service Usage (Enable/Disable API, Quotas)](references/query_service_usage.md)</li>
+<li>[Third Party (for example, Nginx, Apache)](references/query_third_party.md)</li>
+</ul>
+<p><strong>For Google Cloud services that aren&#39;t listed:</strong> If the service is not listed</p>
+<p>above, write the LQL query based on your general knowledge.</p>
+<h4>Query generation rules</h4>
+<ol>
+<li><strong>Resource Types:</strong> Explicitly define the <code>resource.type</code> in your queries</li>
+</ol>
+<p>    when focusing on specific services. For some queries, you may need to search</p>
+<p>    across multiple types (for example, `resource.type=(&quot;bigquery_project&quot; OR</p>
+<p>    &quot;bigquery_dataset&quot;)`).</p>
+<ol>
+<li><strong>Audit and Admin Logs:</strong> If the user asks for audit logs, admin logs, API</li>
+</ol>
+<p>    logs, or logs about who created, updated, deleted, read, or accessed a</p>
+<p>    resource:</p>
+<ul>
+<li>You MUST read</li>
+</ul>
+<p>        [references/query_audit_logs.md](references/query_audit_logs.md) for the</p>
+<p>        correct <code>protoPayload</code> schema paths and common examples.</p>
+<ul>
+<li>If a specific example is not listed, guess the <code>protoPayload.methodName</code></li>
+</ul>
+<p>        by combining the service and verb. When guessing, you MUST use the</p>
+<p>        scoped <code>SEARCH()</code> function (e.g., `SEARCH(protoPayload.methodName,</p>
+<p>        &quot;compute.instances.insert&quot;)<code>) instead of the exact match operator (</code>=`)</p>
+<p>        to avoid version prefix mismatches. Do NOT use the colon operator (<code>:</code>)</p>
+<p>        as it may cause substring false positives.</p>
+<ul>
+<li>For generic API enable/disable events (e.g., a service was disabled),</li>
+</ul>
+<p>        always use <code>resource.type=&quot;audited_resource&quot;</code>.</p>
+<ol>
+<li><strong>Handling Unknown Schemas (Crucial):</strong> If the user asks to filter by a</li>
+</ol>
+<p>    specific field or condition, and if you cannot find a matching example or</p>
+<p>    schema in the reference files, **then you must generate a query using global</p>
+<p>    search.**</p>
+<ul>
+<li>Only specify <code>jsonPayload.*</code> or <code>protoPayload.*</code> field structures when</li>
+</ul>
+<p>        you are certain of their exact name.</p>
+<ul>
+<li>Use the <code>SEARCH()</code> function to find the keyword globally within the</li>
+</ul>
+<p>        correct <code>resource.type</code>.</p>
+<ul>
+<li><strong>Mandatory LQL Comment:</strong> When delivering a query that uses <code>SEARCH</code>,</li>
+</ul>
+<p>        you MUST add an LQL comment (using <code>--</code>) at the top of the query</p>
+<p>        indicating you used a global keyword search because the exact schema</p>
+<p>        wasn&#39;t in your references. Do NOT output conversational text, strictly</p>
+<p>        adhere to the Output Format rule.</p>
+<h4>Supporting links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/logging/docs/view/logging-query-language" rel="noopener">Cloud Logging query language documentation</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/api/v2/resource-list" rel="noopener">Monitored resource types catalog</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/view/query-library" rel="noopener">Cloud Logging query library</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-logging-query-generation</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-logging-query-generation" aria-label="Copy install cloud-logging-query-generation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-logging-query-generation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-logging-query-generation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

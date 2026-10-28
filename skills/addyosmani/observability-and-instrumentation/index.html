@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>observability-and-instrumentation — Aidentity</title>
+<meta name="description" content="Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can&#39;t tell what happened from the available data.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/observability-and-instrumentation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="observability-and-instrumentation — Aidentity">
+<meta property="og:description" content="Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can&#39;t tell what happened from the available data.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/observability-and-instrumentation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"observability-and-instrumentation","description":"Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can't tell what happened from the available data.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/observability-and-instrumentation/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=devops">devops</a><span>/</span>observability-and-instrumentation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>observability-and-instrumentation</h1>
+      <p class="summary">Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can&#39;t tell what happened from the available data.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=devops">devops</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Observability and Instrumentation</h3>
+<h4>Overview</h4>
+<p>Code you can&#39;t observe is code you can&#39;t operate. Observability is the ability to answer &quot;what is the system doing and why?&quot; from the outside, using the telemetry the code emits. Instrumentation is not a post-launch add-on — it&#39;s written alongside the feature, the same way tests are. If a feature ships without telemetry, the first user-reported bug becomes archaeology instead of a query.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Building any feature that will run in production</li>
+<li>Adding a new service, endpoint, background job, or external integration</li>
+<li>A production incident took too long to diagnose (&quot;we couldn&#39;t tell what happened&quot;)</li>
+<li>Setting up or reviewing alerting rules</li>
+<li>Reviewing a PR that adds I/O, retries, queues, or cross-service calls</li>
+</ul>
+<p><strong>NOT for:</strong></p>
+<ul>
+<li>Diagnosing a failure happening right now — use the <code>debugging-and-error-recovery</code> skill (observability is what makes that skill fast next time)</li>
+<li>Profiling and optimizing measured slowness — use the <code>performance-optimization</code> skill</li>
+<li>Launch-day monitoring checklists and rollback triggers — see the <code>shipping-and-launch</code> skill; this skill covers the instrumentation that feeds them</li>
+</ul>
+<h4>Process</h4>
+<h5>1. Define &quot;working&quot; before instrumenting</h5>
+<p>Telemetry without a question is noise. Before adding any instrumentation, write down 2–4 questions an on-call engineer will ask about this feature:</p>
+<p><pre><code>FEATURE: checkout payment retry
+QUESTIONS ON-CALL WILL ASK:
+1. What fraction of payments succeed on first attempt vs after retry?
+2. When a payment fails permanently, why? (provider error? timeout? validation?)
+3. Is the payment provider slower than usual?
+→ Every signal below must help answer one of these.</code></pre></p>
+<p>If you can&#39;t name the questions, you&#39;re not ready to instrument — you&#39;ll log everything and learn nothing.</p>
+<h5>2. Pick the right signal for each question</h5>
+<table><thead><tr><th>Signal</th><th>Answers</th><th>Cost profile</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>Structured log</strong></td><td>&quot;What happened in this specific case?&quot;</td><td>Per-event; grows with traffic</td><td><code>payment_failed</code> with provider error code</td></tr>
+<tr><td><strong>Metric</strong></td><td>&quot;How often / how fast, in aggregate?&quot;</td><td>Fixed per series; cheap to query</td><td>p99 latency of provider calls</td></tr>
+<tr><td><strong>Trace</strong></td><td>&quot;Where did time go across services?&quot;</td><td>Per-request; usually sampled</td><td>One slow checkout, broken down by hop</td></tr>
+</tbody></table>
+<p>Rule of thumb: metrics tell you <strong>that</strong> something is wrong, traces tell you <strong>where</strong>, logs tell you <strong>why</strong>.</p>
+<h5>3. Structured logging</h5>
+<p>Log events, not prose. Every log line is a JSON object with a stable event name and machine-readable fields:</p>
+<p><pre><code>// BAD: string interpolation — unqueryable, inconsistent
+logger.info(`Payment ${id} failed for user ${userId} after ${n} retries`);
+
+// GOOD: stable event name + structured fields
+logger.warn({
+  event: &#39;payment_failed&#39;,
+  paymentId: id,
+  provider: &#39;stripe&#39;,
+  errorCode: err.code,
+  attempt: n,
+}, &#39;payment failed&#39;);</code></pre></p>
+<p><strong>Log levels — use them consistently:</strong></p>
+<table><thead><tr><th>Level</th><th>Meaning</th><th>On-call action</th></tr></thead><tbody>
+<tr><td><code>error</code></td><td>Invariant broken; someone may need to act</td><td>Investigate</td></tr>
+<tr><td><code>warn</code></td><td>Degraded but handled (retry succeeded, fallback used)</td><td>Watch for trends</td></tr>
+<tr><td><code>info</code></td><td>Significant business event (order placed, job finished)</td><td>None</td></tr>
+<tr><td><code>debug</code></td><td>Diagnostic detail</td><td>Off in production by default</td></tr>
+</tbody></table>
+<p><strong>Correlation IDs are mandatory.</strong> Generate (or accept) a request ID at the system boundary and attach it to every log line, span, and outbound call. Without it, you cannot reconstruct a single request from interleaved logs:</p>
+<p><pre><code>// Express: child logger per request, ID propagated downstream
+app.use((req, res, next) =&gt; {
+  req.id = req.headers[&#39;x-request-id&#39;] ?? crypto.randomUUID();
+  req.log = logger.child({ requestId: req.id });
+  res.setHeader(&#39;x-request-id&#39;, req.id);
+  next();
+});</code></pre></p>
+<p><strong>Never log secrets, tokens, passwords, or full PII.</strong> This is a hard rule from the <code>security-and-hardening</code> skill — telemetry pipelines are a classic data-leak path. Allowlist fields; don&#39;t log whole request bodies.</p>
+<h5>4. Metrics</h5>
+<p>For request-driven services, instrument <strong>RED</strong> on every endpoint and every external dependency: <strong>R</strong>ate (requests/sec), <strong>E</strong>rrors (failure rate), <strong>D</strong>uration (latency histogram, not average). For resources (queues, pools, hosts), use <strong>USE</strong>: <strong>U</strong>tilization, <strong>S</strong>aturation, <strong>E</strong>rrors.</p>
+<p>As with tracing, the vendor-neutral path is the OpenTelemetry metrics API (same SDK and context as step 5). The example below uses Prometheus&#39; <code>prom-client</code> — one common backend choice, not the only one; the RED/USE and cardinality rules are identical either way.</p>
+<p><pre><code>import { Histogram } from &#39;prom-client&#39;;
+
+const httpDuration = new Histogram({
+  name: &#39;http_request_duration_seconds&#39;,
+  help: &#39;HTTP request duration&#39;,
+  labelNames: [&#39;method&#39;, &#39;route&#39;, &#39;status_class&#39;],  // &#39;2xx&#39;, not &#39;200&#39;
+  buckets: [0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
+});</code></pre></p>
+<p><strong>Cardinality is the failure mode.</strong> Every unique label combination is a separate time series. Labels must come from small, fixed sets (route template, status class, provider name). Never use user IDs, raw URLs, error messages, or other unbounded values as labels — that belongs in logs and traces.</p>
+<p><pre><code>OK as label:    route=&quot;/api/tasks/:id&quot;   status_class=&quot;5xx&quot;   provider=&quot;stripe&quot;
+NEVER a label:  user_id, email, request_id, full URL, error message text</code></pre></p>
+<p>Track averages never, percentiles always: an average hides the 1% of users having a terrible time. Use histograms and read p50/p95/p99.</p>
+<h5>5. Distributed tracing</h5>
+<p>Use OpenTelemetry — it&#39;s the vendor-neutral standard, and auto-instrumentation covers HTTP, gRPC, and common DB clients with near-zero code:</p>
+<p><pre><code>// tracing.ts — must be imported before anything else
+import { NodeSDK } from &#39;@opentelemetry/sdk-node&#39;;
+import { getNodeAutoInstrumentations } from &#39;@opentelemetry/auto-instrumentations-node&#39;;
+
+const sdk = new NodeSDK({
+  serviceName: &#39;checkout-service&#39;,
+  instrumentations: [getNodeAutoInstrumentations()],
+});
+sdk.start();</code></pre></p>
+<p>Add manual spans only around meaningful internal units of work (e.g., <code>applyDiscounts</code>, <code>chargeProvider</code>) and attach the attributes on-call will filter by. Propagate context across every async boundary — HTTP headers, queue message metadata — or the trace dies at the gap. Sample head-based at a low rate by default; keep 100% of errors if your backend supports tail sampling.</p>
+<h5>6. Alerting</h5>
+<p>Alert on <strong>symptoms users feel</strong>, not on causes:</p>
+<p><pre><code>SYMPTOM (page-worthy):           CAUSE (dashboard, not a page):
+error rate &gt; 1% for 5 min        CPU at 85%
+p99 latency &gt; 2s                 one pod restarted
+queue age &gt; 10 min               disk at 70%</code></pre></p>
+<p>Cause-based alerts fire when nothing is wrong and miss failures you didn&#39;t predict. Symptom-based alerts fire exactly when users are hurt, regardless of the cause.</p>
+<p>Rules for every alert you create:</p>
+<ol>
+<li><strong>It must be actionable.</strong> If the response is &quot;ignore it, it self-heals&quot;, delete the alert.</li>
+<li><strong>It links to a runbook</strong> — even three lines: what it means, first query to run, escalation path.</li>
+<li><strong>It has a threshold and duration</strong> justified by the SLO or by historical data, not by a guess.</li>
+<li>Use two severities only: <strong>page</strong> (user-facing, act now) and <strong>ticket</strong> (degradation, act this week). A third tier becomes noise that trains people to ignore everything.</li>
+</ol>
+<h5>7. Verify the telemetry itself</h5>
+<p>Instrumentation is code; it can be wrong. Before calling the work done, trigger the paths and look at the actual output:</p>
+<ul>
+<li>Force an error in staging → find it in the logs by <code>requestId</code>, confirm fields are structured (not <code>[object Object]</code>)</li>
+<li>Send test traffic → confirm metric series appear with the expected labels and sane values</li>
+<li>Follow one request across services in the tracing UI → no broken spans</li>
+<li>Fire each new alert once (lower the threshold temporarily) → confirm it reaches the right channel and the runbook link works</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;ll add logging after it works&quot;</td><td>&quot;After&quot; becomes &quot;after the first incident&quot;, which is the most expensive moment to discover you&#39;re blind. Instrument as you build.</td></tr>
+<tr><td>&quot;More logs = more observability&quot;</td><td>Unstructured noise makes incidents slower, not faster. Three queryable events beat three hundred prose lines.</td></tr>
+<tr><td>&quot;console.log is fine for now&quot;</td><td>Unstructured output can&#39;t be filtered, correlated, or alerted on. The structured logger costs five extra minutes once.</td></tr>
+<tr><td>&quot;We can just look at the dashboards when something breaks&quot;</td><td>Dashboards built without defined questions show you everything except the answer. Start from on-call questions.</td></tr>
+<tr><td>&quot;Alert on everything important, we&#39;ll tune later&quot;</td><td>A noisy pager trains people to ignore it. The tuning never happens; the missed real page does.</td></tr>
+<tr><td>&quot;User ID as a metric label makes debugging easier&quot;</td><td>It also makes your metrics backend fall over. High-cardinality lookups belong in logs and traces.</td></tr>
+<tr><td>&quot;Tracing is overkill for our two services&quot;</td><td>Two services already means cross-service latency questions logs can&#39;t answer. Auto-instrumentation makes the cost trivial.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>A feature PR with retries, queues, or external calls and zero new telemetry</li>
+<li>Log lines built by string interpolation instead of structured fields</li>
+<li>No correlation/request ID — each log line is an orphan</li>
+<li>Metrics labeled with user IDs, raw URLs, or error message text (cardinality bomb)</li>
+<li>Latency tracked as an average with no percentiles</li>
+<li>Alerts that fire daily and get acknowledged without action</li>
+<li>Alerts on causes (CPU, memory) paging humans while user-facing error rate is unmonitored</li>
+<li>Secrets, tokens, or full request bodies appearing in logs</li>
+<li>&quot;It works on my machine&quot; as the only evidence a production feature is healthy</li>
+</ul>
+<h4>Verification</h4>
+<p>After instrumenting a feature, confirm:</p>
+<ul>
+<li>[ ] The on-call questions for this feature are written down, and each signal maps to one</li>
+<li>[ ] All log output is structured (JSON), with stable event names and a correlation ID on every line</li>
+<li>[ ] No secrets, tokens, or unredacted PII in any log line (spot-check actual output)</li>
+<li>[ ] RED metrics exist for every new endpoint and every external dependency, with bounded label sets</li>
+<li>[ ] Latency is a histogram; p95/p99 are queryable</li>
+<li>[ ] A single request can be followed end-to-end in the tracing UI without broken spans</li>
+<li>[ ] Every new alert is symptom-based, has a runbook link, and was test-fired once</li>
+<li>[ ] An induced failure in staging was located via telemetry alone, without reading the source</li>
+</ul>
+<p>For the at-a-glance version of this list, including the pre-launch instrumentation gate, see <code>../../references/observability-checklist.md</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/ci-cd-and-automation/index.html"
+     data-source="addyosmani"
+     data-category="devops"
+     data-search="ci-cd-and-automation automates ci/cd pipeline setup. use when setting up or modifying build and deployment pipelines. use when you need to automate quality gates, configure test runners in ci, or establish deployment strategies. devops devops addyosmani/agent-skills">
+  <span>
+    <span class="r-name">ci-cd-and-automation</span>
+    <span class="r-desc">Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/observability-and-instrumentation</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/observability-and-instrumentation" aria-label="Copy install observability-and-instrumentation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>devops</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/observability-and-instrumentation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/observability-and-instrumentation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

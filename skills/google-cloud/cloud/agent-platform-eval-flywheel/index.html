@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-eval-flywheel — Aidentity</title>
+<meta name="description" content="Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-eval-flywheel/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-eval-flywheel — Aidentity">
+<meta property="og:description" content="Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-eval-flywheel/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-eval-flywheel","description":"Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-eval-flywheel/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-eval-flywheel
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-eval-flywheel</h1>
+      <p class="summary">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Platform Eval Flywheel Skill</h3>
+<p>Help users evaluate and iteratively improve GenAI models and agents using the</p>
+<p>Agent Platform GenAI Evaluation SDK (<code>google.genai</code> / <code>agentplatform</code>).</p>
+<h4>When to use this skill</h4>
+<ul>
+<li>Evaluating GenAI agents or models with the Agent Platform GenAI Evaluation</li>
+</ul>
+<p>    SDK (<code>client.evals.evaluate()</code>).</p>
+<ul>
+<li>Creating evaluation datasets from session traces, pandas DataFrames, or</li>
+</ul>
+<p>    synthetic generation.</p>
+<ul>
+<li>Selecting, configuring, or writing custom evaluation metrics.</li>
+<li>Analyzing rubric verdicts, loss patterns, and clustering failures.</li>
+<li>Suggesting concrete code/prompt improvements based on eval results.</li>
+<li>Evaluating a model served on an Agent Platform <strong>endpoint</strong> (BYOM) or a</li>
+</ul>
+<p>    <strong>Model-as-a-Service (MaaS)</strong> model by ID — including deploying the model</p>
+<p>    first if needed. For this case, follow</p>
+<p>    [references/deployment.md](references/deployment.md) and use the</p>
+<p>    <code>endpoint_evaluation.py</code> / <code>maas_evaluation.py</code> scripts.</p>
+<h4>Safety &amp; Confirmation Tiers (CRITICAL)</h4>
+<p>Before executing any commands or scripts on behalf of the user, you MUST adhere</p>
+<p>to the following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R</strong>: Read-only (<code>inspect_results.py</code>, <code>compare_results.py</code>,</li>
+</ol>
+<p>    <code>validate_dataset.py</code>, <code>parse_adk_traces.py</code>, <code>render_html_report.py</code>)</p>
+<ul>
+<li><strong>Rule</strong>: No confirmation needed. You may execute these helper scripts</li>
+</ul>
+<p>        immediately to inspect data, validate schemas, parse traces, or compare</p>
+<p>        evaluation results.</p>
+<ol>
+<li>**Tier M: Read-only with Compute Costs (<code>client.evals.run_inference</code>,</li>
+</ol>
+<p>    <code>client.evals.evaluate</code>, <code>client.evals.generate_conversation_scenarios</code>,</p>
+<p>    <code>client.evals.generate_loss_clusters</code>)**</p>
+<ul>
+<li><strong>Rule</strong>: These operations invoke LLMs or remote evaluation services</li>
+</ul>
+<p>        that consume compute resources and incur costs. This requires</p>
+<p>        <strong>interactive confirmation</strong> with &#39;Yes&#39;/&#39;No&#39; options. Once granted once,</p>
+<p>        you do not have to prompt for future evaluation.</p>
+<ul>
+<li><strong>Same-turn restriction</strong>: Do not run the evaluation in the same turn as</li>
+</ul>
+<p>        presenting the confirmation prompt. End your turn after asking and wait</p>
+<p>        for the user&#39;s reply; only execute after explicit &#39;Yes&#39; / approval.</p>
+<p>        Printing a preview and then calling the tool before the user can answer</p>
+<p>        does not count as obtaining confirmation.</p>
+<h4>Setup</h4>
+<p>The scripts need <code>vertexai</code> (from <code>google-cloud-aiplatform[evaluation]</code>),</p>
+<p><code>google-genai</code>, <code>pandas</code>, and <code>requests</code>. Do <strong>not</strong> create a virtual</p>
+<p>environment — it starts empty and hides packages the environment already</p>
+<p>provides, forcing a redundant install. Probe, and install only what is missing:</p>
+<p><pre><code>python3 -c &quot;import vertexai, google.genai, pandas, requests&quot; \
+  || pip install &#39;google-cloud-aiplatform[evaluation]&gt;=1.163.0&#39; &#39;google-genai&gt;=1.0.0&#39;</code></pre></p>
+<p>The version specifiers must stay quoted: unquoted, bash reads <code>&gt;=1.154.0</code> as a</p>
+<p>redirect and silently writes an empty file instead of constraining the install.</p>
+<p>Need <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code>. Check env vars first;</p>
+<p>if missing, ask the user. Newer Gemini models often need <code>location=&quot;global&quot;</code>.</p>
+<h5>Correct SDK entrypoints</h5>
+<p><pre><code>import agentplatform
+client = agentplatform.Client(project=PROJECT, location=LOCATION)
+
+client.evals.run_inference(model=..., src=...)
+client.evals.evaluate(dataset=..., metrics=...)
+client.evals.generate_conversation_scenarios(...)</code></pre></p>
+<p>Two imports that look plausible and are not:</p>
+<ul>
+<li><code>from agentplatform.types import evals</code> -- <code>ModuleNotFoundError</code>. <code>types</code> is</li>
+</ul>
+<p>    a module, not a package; use <code>from agentplatform import types</code>.</p>
+<ul>
+<li><code>from vertexai.evaluation import PointwiseMetric, EvalTask</code> -- the</li>
+</ul>
+<p>    superseded SDK. Its classes take different arguments (<code>PointwiseMetric</code> has</p>
+<p>    no <code>system_instruction</code>), so code written against it fails with <code>TypeError</code></p>
+<p>    rather than an import error. Use <code>agentplatform</code> throughout.</p>
+<h4>The Quality Flywheel</h4>
+<p>Five stages, run in order on the first pass, then loop 2 → 5 until quality</p>
+<p>targets are met.</p>
+<h5>Shortcuts that waste time</h5>
+<table><thead><tr><th>Shortcut</th><th>Why it fails</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;ll tune the metric threshold down</td><td>Hides real failures. Fix the agent,</td></tr>
+</tbody></table>
+<p>: so it passes.&quot;                       : not the bar.                         :</p>
+<table><thead><tr><th>&quot;This case is flaky, I&#39;ll skip it.&quot;</th><th>Flakiness reveals non-determinism in</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                      : the agent. Fix with <code>temperature=0</code>  :</p>
+<p>:                                      : or stricter instructions.            :</p>
+<table><thead><tr><th>&quot;I just need to fix the eval</th><th>If expected outputs keep moving, the</th></tr></thead><tbody>
+</tbody></table>
+<p>: dataset, not the agent.&quot;             : agent has a behavior problem.        :</p>
+<table><thead><tr><th>&quot;I can tell from the trace it works</th><th>Self-grading doesn&#39;t generalize.</th></tr></thead><tbody>
+</tbody></table>
+<p>: — skip Stage 3.&quot;                     : Always run <code>evaluate()</code> and read     :</p>
+<p>:                                      : scores.                              :</p>
+<table><thead><tr><th>&quot;One iteration is enough.&quot;</th><th>Expect 5–10+ iterations. Stopping</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                      : early leaves regressions on other    :</p>
+<p>:                                      : metrics undetected.                  :</p>
+<h5>1. Prepare Data</h5>
+<p>Produce an <code>EvaluationDataset</code>. There are three input shapes, pick the one that</p>
+<p>matches the data the user already has:</p>
+<ul>
+<li><strong><code>EvalCase</code> list (single-turn or multi-turn):</strong></li>
+</ul>
+<p>    <pre><code>    from agentplatform import types
+    from google.genai import types as genai_types
+
+    # prompt/reference/response values are Content, not str. UserContent and
+    # ModelContent wrap a plain string and set the right role.
+    dataset = types.EvaluationDataset(eval_cases=[
+        types.EvalCase(
+            prompt=genai_types.UserContent(&quot;What is 2+2?&quot;),
+            responses=[types.ResponseCandidate(
+                response=genai_types.ModelContent(&quot;4&quot;))],
+            reference=types.ResponseCandidate(
+                response=genai_types.ModelContent(&quot;4&quot;)),
+        ),
+        # For multi-turn agent traces, set agent_data instead of prompt/responses.
+    ])
+    </code></pre></p>
+<p>    Multi-turn agent traces wrap each conversation in <code>AgentData</code> →</p>
+<p>    <code>ConversationTurn</code> → <code>AgentEvent</code>. See</p>
+<p>    [references/dataset_schema.md](references/dataset_schema.md) for the full</p>
+<p>    type hierarchy.</p>
+<ul>
+<li><strong>Pandas DataFrame (tabular sources — CSV, BigQuery, Sheets):</strong></li>
+</ul>
+<p>    <pre><code>    import pandas as pd
+    from agentplatform import types
+
+    df = pd.DataFrame({
+        &quot;prompt&quot;:    [&quot;What is 2+2?&quot;, &quot;Capital of France?&quot;],
+        &quot;response&quot;:  [&quot;4&quot;,            &quot;Paris&quot;],
+        &quot;reference&quot;: [&quot;4&quot;,            &quot;Paris&quot;],
+    })
+    dataset = types.EvaluationDataset(eval_dataset_df=df)
+    </code></pre></p>
+<p>    Column names must match the fields the chosen metrics expect (see</p>
+<p>    [references/dataset_schema.md](references/dataset_schema.md) for the</p>
+<p>    per-metric requirements table).</p>
+<ul>
+<li><strong>Cold start (no data at all):</strong> synthesize scenarios server-side with</li>
+</ul>
+<p>    <code>client.evals.generate_conversation_scenarios(agent=..., config=...)</code> -- the</p>
+<p>    parameter is <code>agent</code> or <code>agent_info</code>, not <code>agents</code>, and <code>config</code> is</p>
+<p>    required. The config class is <code>types.evals.UserScenarioGenerationConfig</code>,</p>
+<p>    not <code>types.UserScenarioGenerationConfig</code>. Set its <code>user_scenario_count</code></p>
+<p>    (1-100): it defaults to None, the client accepts that, and the server</p>
+<p>    rejects the call with <code>400 INVALID_ARGUMENT</code>. <code>count</code> is a separate field</p>
+<p>    and does not substitute for it. Stage 2 plays the scenarios out.</p>
+<ul>
+<li><strong>Managed Agents (Gemini Agents API):</strong> evaluate agents created with the</li>
+</ul>
+<p>    <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/managed-agents" rel="noopener">Managed Agents API</a>.</p>
+<p>    Use <code>generate_conversation_scenarios</code> to create test scenarios from the</p>
+<p>    agent&#39;s configuration, <code>run_inference</code> to execute the agent, and <code>evaluate</code></p>
+<p>    to score the traces. These functions now accept managed agents and</p>
+<p>    interaction ids as input. You can also evaluate existing interactions</p>
+<p>    recorded via the Interactions API using <code>InteractionsDataSource</code>. See</p>
+<p>    [references/sdk_patterns.md](references/sdk_patterns.md) Pattern 8 for the</p>
+<p>    full code pattern.</p>
+<p>For ADK session dumps, use <code>scripts/parse_adk_traces.py</code> instead of writing the</p>
+<p>conversion by hand.</p>
+<h5>2. Run Inference</h5>
+<p>Populate responses/traces on the dataset. <strong>Skip this stage</strong> if traces are</p>
+<p>already complete (e.g., production logs or replay).</p>
+<p><pre><code># Agent eval — pass a callable wrapping the user&#39;s ADK Agent/App.
+client.evals.run_inference(model=agent_callable, src=dataset)
+
+# Model eval — pass a model ID directly.
+client.evals.run_inference(model=&quot;gemini-2.5-flash&quot;, src=dataset)
+
+# Synthesized scenarios — let the simulator drive.
+client.evals.run_inference(
+    model=agent_callable,
+    src=dataset,
+    user_simulator_config=UserSimulatorConfig(max_turn=10),
+)
+
+# DataFrame also works as src= — no EvalCase wrapping needed.
+client.evals.run_inference(model=&quot;gemini-2.5-flash&quot;, src=df)
+
+# Managed Agent — pass an agent resource name.
+AGENT_RESOURCE = f&quot;projects/{PROJECT_ID}/locations/global/agents/{AGENT_ID}&quot;
+client.evals.run_inference(
+    agent=AGENT_RESOURCE,
+    src=scenarios,
+    config={&quot;user_simulator_config&quot;: {&quot;max_turn&quot;: 3}},
+)</code></pre></p>
+<h5>3. Grade (always run)</h5>
+<p><pre><code>result = client.evals.evaluate(dataset=dataset, metrics=[...])
+result.show()  # Interactive HTML report with scores, rubrics, and traces.</code></pre></p>
+<p><strong>Pick metrics by what you want to measure.</strong> Full catalog in</p>
+<p>[references/metric_registry.md](references/metric_registry.md).</p>
+<p><strong>Agent metrics (multi-turn, adaptive rubrics)</strong> — start here for agent eval.</p>
+<p>Goal                                          | Metric</p>
+<p>--------------------------------------------- | -------------------------------</p>
+<p>Did the agent achieve the user&#39;s goal?        | <code>multi_turn_task_success</code></p>
+<p>Was the reasoning path logical and efficient? | <code>multi_turn_trajectory_quality</code></p>
+<p>Tool/function calling quality across turns    | <code>multi_turn_tool_use_quality</code></p>
+<p>Overall conversational quality                | <code>multi_turn_general_quality</code></p>
+<p>Final response quality (no reference needed)  | <code>final_response_quality</code></p>
+<p>Final response vs. a golden reference         | <code>final_response_match</code></p>
+<p>Single-turn tool use                          | <code>tool_use_quality</code></p>
+<p><strong>General quality metrics (single-turn, adaptive rubrics)</strong> — for model eval.</p>
+<p>Goal                                                  | Metric</p>
+<p>----------------------------------------------------- | -----------------------</p>
+<p>Overall response quality (recommended starting point) | <code>general_quality</code></p>
+<p>Linguistic quality (fluency, coherence, grammar)      | <code>text_quality</code></p>
+<p>Adherence to specific constraints / instructions      | <code>instruction_following</code></p>
+<p><strong>Static rubric metrics (fixed criteria)</strong> — apply alongside the above.</p>
+<p>Goal                                              | Metric</p>
+<p>------------------------------------------------- | ---------------</p>
+<p>Catch hallucinated claims (RAG, factual answers)  | <code>hallucination</code></p>
+<p>Factuality / consistency against provided context | <code>grounding</code></p>
+<p>Safety policy compliance                          | <code>safety</code></p>
+<p><strong>Domain-specific check no built-in covers:</strong> write a custom metric.</p>
+<ul>
+<li><strong>Predefined:</strong> <code>types.RubricMetric.&lt;NAME&gt;</code> — server-side AutoRater, no</li>
+</ul>
+<p>    judge model needed.</p>
+<ul>
+<li><strong>Custom LLM-as-a-judge:</strong> <code>types.LLMMetric</code> with <code>prompt_template</code> or</li>
+</ul>
+<p>    <code>types.MetricPromptBuilder</code> for structured rubrics. Always set</p>
+<p>    <code>judge_model</code>; it defaults to <code>None</code> and every case then fails with `400</p>
+<p>    INVALID_ARGUMENT: Error parsing JSON`.</p>
+<ul>
+<li><strong>Custom code:</strong> <code>types.CodeExecutionMetric</code> with a <code>custom_function</code> string</li>
+</ul>
+<p>    containing <code>def evaluate(instance: dict)</code> for remote sandboxed execution; or</p>
+<p>    <code>types.Metric</code> with <code>custom_function=&lt;callable&gt;</code> for local execution.</p>
+<p><strong>Always persist the result</strong> so Stage 4 and 5 can read it. Save both JSON</p>
+<p>(machine-readable, diffable) and HTML (human-readable, linkable):</p>
+<p><pre><code>import datetime
+from pathlib import Path
+
+from agentplatform._genai import _evals_visualization
+
+out_dir = Path(&quot;artifacts/grade_results&quot;)
+out_dir.mkdir(parents=True, exist_ok=True)
+ts = datetime.datetime.now().strftime(&quot;%Y%m%d_%H%M%S&quot;)
+
+# fallback=str, or a DataFrame-backed dataset raises PydanticSerializationError.
+result_json = result.model_dump_json(fallback=str)
+(out_dir / f&quot;results_{ts}.json&quot;).write_text(result_json)
+
+html = _evals_visualization.get_evaluation_html(result_json)
+(out_dir / f&quot;results_{ts}.html&quot;).write_text(str(html))</code></pre></p>
+<p>Or after the fact: <code>scripts/render_html_report.py --type evaluation</code> or</p>
+<p><code>scripts/inspect_results.py --save-html</code>.</p>
+<h5>4. Analyze Failures</h5>
+<p>Read <code>summary_metrics</code> and <code>eval_case_results</code> — never fabricate scores. Use</p>
+<p><code>scripts/inspect_results.py --failing-only</code> to filter to failures.</p>
+<p>For each failed metric, see</p>
+<p>[references/failure_patterns.md](references/failure_patterns.md) for deeper</p>
+<p>diagnoses. The compact mapping:</p>
+<table><thead><tr><th>Failing metric</th><th>What to change</th></tr></thead><tbody>
+<tr><td><code>multi_turn_task_success</code> low</td><td>The agent isn&#39;t completing the goal —</td></tr>
+</tbody></table>
+<p>:                                     : fix orchestration, missing tool calls, :</p>
+<p>:                                     : premature termination, wrong tool      :</p>
+<p>:                                     : selection.                             :</p>
+<table><thead><tr><th><code>multi_turn_trajectory_quality</code> low</th><th>The agent reaches the goal</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : inefficiently — refine planning        :</p>
+<p>:                                     : prompts, remove redundant tool calls.  :</p>
+<table><thead><tr><th><code>multi_turn_tool_use_quality</code> low</th><th>Fix tool descriptions, parameter</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : docstrings, or agent instructions for  :</p>
+<p>:                                     : tool selection.                        :</p>
+<table><thead><tr><th><code>final_response_quality</code> low</th><th>Read auto-generated rubric verdicts;</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : refine instructions to address the     :</p>
+<p>:                                     : worst-scoring criterion.               :</p>
+<table><thead><tr><th><code>final_response_match</code> low</th><th>The agent&#39;s final answer doesn&#39;t match</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : the golden reference — adjust response :</p>
+<p>:                                     : format or update the reference.        :</p>
+<table><thead><tr><th><code>hallucination</code> low</th><th>Tighten instructions to stay grounded</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : in tool output; verify the tool        :</p>
+<p>:                                     : actually returned the claimed data.    :</p>
+<table><thead><tr><th><code>grounding</code> low</th><th>The response contradicts the provided</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : context — add explicit &quot;cite only from :</p>
+<p>:                                     : context&quot; instructions.                 :</p>
+<table><thead><tr><th><code>safety</code> low</th><th>Add safety guardrails; review the</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : violating content category in the      :</p>
+<p>:                                     : rubric verdict.                        :</p>
+<table><thead><tr><th><code>general_quality</code> / <code>text_quality</code></th><th>Adjust system instruction wording; the</th></tr></thead><tbody>
+</tbody></table>
+<p>: low                                 : model&#39;s default phrasing is too        :</p>
+<p>:                                     : generic for the task.                  :</p>
+<table><thead><tr><th><code>instruction_following</code> low</th><th>The agent is ignoring constraints —</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : restate them in the system instruction :</p>
+<p>:                                     : or use stricter wording.               :</p>
+<table><thead><tr><th>Agent calls wrong tools</th><th>Fix tool descriptions, agent</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : instructions, or <code>tool_config</code>.        :</p>
+<table><thead><tr><th>Agent calls extra tools</th><th>Add explicit stop instructions, or</th></tr></thead><tbody>
+</tbody></table>
+<p>:                                     : switch to                              :</p>
+<p>:                                     : <code>multi_turn_tool_use_quality</code> to       :</p>
+<p>:                                     : surface the extra calls in the rubric. :</p>
+<p><strong>For 10+ failures on the same metric</strong>, use the <strong>Error Analysis service</strong> to</p>
+<p>cluster failures into themes (L1/L2 taxonomy categories) instead of reading</p>
+<p>every trace:</p>
+<p><pre><code># Only supports multi_turn_task_success and multi_turn_tool_use_quality.
+# Service runs in the global region.
+analysis_client = agentplatform.Client(project=&quot;PROJECT_ID&quot;, location=&quot;global&quot;)
+response = analysis_client.evals.generate_loss_clusters(
+    eval_result=result,
+    metric=&quot;multi_turn_task_success&quot;,
+    config={&quot;max_top_cluster_count&quot;: 5},
+)
+for r in response.results:
+    for cluster in r.clusters:
+        print(
+            f&quot;[{cluster.taxonomy_entry.l1_category}/&quot;
+            f&quot;{cluster.taxonomy_entry.l2_category}] &quot;
+            f&quot;{cluster.item_count} cases — {cluster.taxonomy_entry.description}&quot;
+        )</code></pre></p>
+<p>Save <code>response.model_dump_json()</code> and render with `scripts/render_html_report.py</p>
+<p>--type loss-analysis`.</p>
+<h5>5. Optimize &amp; Iterate</h5>
+<p>Apply a fix targeting the failing metric. Re-run Stage 3. Compare with</p>
+<p><code>scripts/compare_results.py --baseline &lt;prev&gt; --candidate &lt;new&gt;</code> to confirm the</p>
+<p>target improved AND no other metric regressed.</p>
+<p>Track progress across iterations:</p>
+<p>Iteration | Metric A | Metric B | Change made</p>
+<p>--------- | -------- | -------- | ----------------------</p>
+<p>Baseline  | 0.62     | 0.55     | —</p>
+<p>v2        | 0.78     | 0.68     | Added grounding prompt</p>
+<p>v3        | 0.81     | 0.72     | Fixed tool selection</p>
+<p>Expect 5–10+ iterations per failing case. Only after a case passes should you</p>
+<p>expand coverage with more eval cases.</p>
+<h4>Proving your work</h4>
+<p>Never claim eval results you didn&#39;t read from an actual <code>result</code> object.</p>
+<ul>
+<li>After running eval, print the <code>summary_metrics</code> table</li>
+</ul>
+<p>    (<code>scripts/inspect_results.py</code>).</p>
+<ul>
+<li>After a fix, show before/after via <code>scripts/compare_results.py</code>.</li>
+<li>Before declaring success, confirm ALL cases pass — not just the one you were</li>
+</ul>
+<p>    working on.</p>
+<p>If you can&#39;t produce the evidence (SDK call failed, result truncated, metric</p>
+<p>unsupported), say so explicitly. Don&#39;t paper over gaps.</p>
+<h4>Rules of Engagement</h4>
+<ol>
+<li><strong>Always Plan First:</strong> Before writing a script, output a <code>&lt;plan&gt;</code> block</li>
+</ol>
+<p>    detailing the steps you are about to take.</p>
+<ol>
+<li><strong>Step-by-Step Execution:</strong> Write the script, execute it, wait for output,</li>
+</ol>
+<p>    then analyze. Don&#39;t do everything in one response.</p>
+<ol>
+<li><strong>Standard Python:</strong> Use standard Python imports (<code>import agentplatform</code>,</li>
+</ol>
+<p>    <code>from google.genai import types</code>). Don&#39;t use internal import paths.</p>
+<ol>
+<li><strong>Verify Before Guessing:</strong> When unsure about SDK types or metrics, check</li>
+</ol>
+<p>    the SDK source code rather than guessing or hallucinating.</p>
+<h4>SDK Quick Reference</h4>
+<p><pre><code>import agentplatform
+from agentplatform import types
+from google.genai import types as genai_types
+import pandas as pd
+
+# Initialize client
+client = agentplatform.Client(project=&quot;PROJECT_ID&quot;, location=&quot;LOCATION&quot;)
+
+# --- SINGLE-TURN EVAL (pandas DataFrame) -- RECOMMENDED ---
+# The converter wraps plain strings for you.
+df = pd.DataFrame({
+    &quot;prompt&quot;:   [&quot;Q1&quot;, &quot;Q2&quot;],
+    &quot;response&quot;: [&quot;A1&quot;, &quot;A2&quot;],
+})
+dataset = types.EvaluationDataset(eval_dataset_df=df)
+
+# --- SINGLE-TURN EVAL (direct EvalCase) ---
+# Verbose and easy to get wrong; see references/dataset_schema.md for the
+# exact types before using this form.
+dataset = types.EvaluationDataset(eval_cases=[
+    types.EvalCase(
+        prompt=genai_types.UserContent(&quot;Query here&quot;),
+        responses=[types.ResponseCandidate(
+            response=genai_types.ModelContent(&quot;Model response here&quot;))],
+        reference=types.ResponseCandidate(
+            response=genai_types.ModelContent(&quot;Ground truth here&quot;)),
+    ),
+])
+
+# --- MULTI-TURN AGENT EVAL ---
+agent_data = types.evals.AgentData(
+    agents={&quot;my_agent&quot;: types.evals.AgentConfig(
+        agent_id=&quot;my_agent&quot;, instruction=&quot;You are helpful.&quot;)},
+    turns=[types.evals.ConversationTurn(turn_index=0, events=[
+        types.evals.AgentEvent(author=&quot;user&quot;,
+            content=genai_types.Content(role=&quot;user&quot;,
+                parts=[genai_types.Part(text=&quot;Hello&quot;)])),
+        types.evals.AgentEvent(author=&quot;my_agent&quot;,
+            content=genai_types.Content(role=&quot;model&quot;,
+                parts=[genai_types.Part(text=&quot;Hi! How can I help?&quot;)])),
+    ])],
+)
+dataset = types.EvaluationDataset(
+    eval_cases=[types.EvalCase(agent_data=agent_data)])
+
+# --- METRICS ---
+predefined = types.RubricMetric.MULTI_TURN_TRAJECTORY_QUALITY
+custom_llm = types.LLMMetric(name=&quot;tone&quot;,
+    prompt_template=&quot;Is this polite? Response: {response}&quot;)
+custom_code = types.CodeExecutionMetric(name=&quot;check&quot;,
+    custom_function=&#39;def evaluate(instance): return {&quot;score&quot;: 1.0}&#39;)
+
+# --- EVALUATE ---
+result = client.evals.evaluate(dataset=dataset, metrics=[predefined])
+
+# --- RESULTS ---
+for s in result.summary_metrics:
+    print(f&quot;{s.metric_name}: mean={s.mean_score}, pass_rate={s.pass_rate}&quot;)
+for case in result.eval_case_results:
+    for cand in case.response_candidate_results:
+        for name, r in cand.metric_results.items():
+            print(f&quot;  {name}: score={r.score}, explanation={r.explanation}&quot;)</code></pre></p>
+<p>See [references/sdk_patterns.md](references/sdk_patterns.md) for advanced</p>
+<p>patterns: synthetic data generation, pairwise comparison, <code>MetricPromptBuilder</code>,</p>
+<p>multi-agent evaluation.</p>
+<h4>Bundled scripts</h4>
+<p>Script                   | When to use</p>
+<p>------------------------ | -----------</p>
+<p><code>validate_dataset.py</code>    | Before Stage 3 — catch malformed <code>EvaluationDataset</code> JSON.</p>
+<p><code>parse_adk_traces.py</code>    | Stage 1 — convert ADK session dumps to the canonical dataset shape.</p>
+<p><code>inspect_results.py</code>     | Stages 3/4 — render summary + per-case scores. <code>--save-html</code> for a browsable report.</p>
+<p><code>compare_results.py</code>     | Stage 5 — diff baseline vs. candidate, detect regressions.</p>
+<p><code>render_html_report.py</code>  | Render HTML from a saved result JSON or loss-clusters JSON.</p>
+<p><code>endpoint_evaluation.py</code> | Stages 2/3 against a deployed Agent Platform endpoint (BYOM). See [references/deployment.md](references/deployment.md).</p>
+<p><code>maas_evaluation.py</code>     | Stages 2/3 against a Model-as-a-Service model by ID. See [references/deployment.md](references/deployment.md).</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-migrate-from-ai-studio guides agents and users through migrating from gemini api in google ai studio to gemini enterprise agent platform (formerly vertex ai). use this skill when moving applications to google cloud, to leverage cloud credits, or to unify inferencing with other cloud infrastructure (iam, billing, telemetry). cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-migrate-from-ai-studio</span>
+    <span class="r-desc">Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-eval-flywheel</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-eval-flywheel" aria-label="Copy install agent-platform-eval-flywheel">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-eval-flywheel</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-eval-flywheel/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

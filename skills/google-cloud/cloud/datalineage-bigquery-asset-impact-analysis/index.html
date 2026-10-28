@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>datalineage-bigquery-asset-impact-analysis — Aidentity</title>
+<meta name="description" content="Analyzes the downstream impact (blast radius) when a BigQuery table or view is broken, stale, or modified. Identifies all downstream tables, dashboards, and processes that will be affected. Use when: - Performing a blast radius or impact analysis for a BigQuery table or view. - Assessing the consequences of modifying, deleting, or pausing updates to a BigQuery asset. - Identifying downstream dependencies (tables, dashboards, processes) of a BigQuery asset. Don&#39;t use for: - General BigQuery querying or data analysis (use BigQuery-related tools instead). - Non-BigQuery assets (e.g., Cloud Storage files) unless they are part of the BigQuery lineage. - Creating or modifying lineage links directly.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-bigquery-asset-impact-analysis/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="datalineage-bigquery-asset-impact-analysis — Aidentity">
+<meta property="og:description" content="Analyzes the downstream impact (blast radius) when a BigQuery table or view is broken, stale, or modified. Identifies all downstream tables, dashboards, and processes that will be affected. Use when: - Performing a blast radius or impact analysis for a BigQuery table or view. - Assessing the consequences of modifying, deleting, or pausing updates to a BigQuery asset. - Identifying downstream dependencies (tables, dashboards, processes) of a BigQuery asset. Don&#39;t use for: - General BigQuery querying or data analysis (use BigQuery-related tools instead). - Non-BigQuery assets (e.g., Cloud Storage files) unless they are part of the BigQuery lineage. - Creating or modifying lineage links directly.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-bigquery-asset-impact-analysis/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"datalineage-bigquery-asset-impact-analysis","description":"Analyzes the downstream impact (blast radius) when a BigQuery table or view is broken, stale, or modified. Identifies all downstream tables, dashboards, and processes that will be affected. Use when: - Performing a blast radius or impact analysis for a BigQuery table or view. - Assessing the consequences of modifying, deleting, or pausing updates to a BigQuery asset. - Identifying downstream dependencies (tables, dashboards, processes) of a BigQuery asset. Don't use for: - General BigQuery querying or data analysis (use BigQuery-related tools instead). - Non-BigQuery assets (e.g., Cloud Storage files) unless they are part of the BigQuery lineage. - Creating or modifying lineage links directly.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/datalineage-bigquery-asset-impact-analysis/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>datalineage-bigquery-asset-impact-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>datalineage-bigquery-asset-impact-analysis</h1>
+      <p class="summary">Analyzes the downstream impact (blast radius) when a BigQuery table or view is broken, stale, or modified. Identifies all downstream tables, dashboards, and processes that will be affected. Use when: - Performing a blast radius or impact analysis for a BigQuery table or view. - Assessing the consequences of modifying, deleting, or pausing updates to a BigQuery asset. - Identifying downstream dependencies (tables, dashboards, processes) of a BigQuery asset. Don&#39;t use for: - General BigQuery querying or data analysis (use BigQuery-related tools instead). - Non-BigQuery assets (e.g., Cloud Storage files) unless they are part of the BigQuery lineage. - Creating or modifying lineage links directly.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>BigQuery Asset Impact Analysis</h3>
+<p>This skill guides the agent in performing a downstream impact analysis (blast</p>
+<p>radius assessment) when a BigQuery table or view is reported as broken, stale,</p>
+<p>missing, or when a user is planning maintenance and wants to know the</p>
+<p>consequences of modifying or pausing updates to an asset.</p>
+<p>It relies primarily on the <strong>Google Cloud Data Lineage (Knowledge Catalog) MCP Server</strong></p>
+<p>to discover relationships between assets.</p>
+<h4>Prerequisites</h4>
+<p>This skill requires access to the Google Cloud Data Lineage API and an active</p>
+<p>client connection to the Data Lineage MCP Server. For detailed connection</p>
+<p>configurations and tool schemas, refer to [MCP Usage](references/mcp-usage.md).</p>
+<h4>Analysis Workflow</h4>
+<h5>1. Resolve the Asset&#39;s Fully Qualified Name (FQN)</h5>
+<ul>
+<li>Ensure you have the correct FQN format for the BigQuery asset:</li>
+<li><em>Format:</em> <code>bigquery:{project_id}.{dataset_id}.{table_or_view_id}</code></li>
+<li><em>Example:</em> <code>bigquery:my-prod-project.analytics.orders</code></li>
+</ul>
+<h5>2. Determine Locations and Parent Path</h5>
+<p>Identify the locations to search and construct the Data Lineage API request:</p>
+<ul>
+<li><strong>Discover Asset Location</strong>: Run the command `bq show --format=json</li>
+</ul>
+<p>    {project_id}:{dataset_id}<code> and extract the </code>location` field (e.g.,</p>
+<p>    <code>us-central1</code> or <code>us</code>). If location discovery fails due to permissions or</p>
+<p>    missing tools, prompt the user for the dataset&#39;s location.</p>
+<ul>
+<li><strong>Set Parent Path</strong>: Set the <code>parent</code> path using the project ID and the</li>
+</ul>
+<p>    MCP server&#39;s location. Consult the <code>DataLineageServer</code> tool definition</p>
+<p>    to find the configured region or location (e.g., <code>us</code>). The format is:</p>
+<p>    <code>projects/{project_id}/locations/{mcp_server_location}</code>.</p>
+<ul>
+<li><strong>Configure Search Scope</strong>: Include the discovered asset location in the</li>
+</ul>
+<p>    <code>locations</code> array of the payload (e.g., <code>[&quot;us-central1&quot;]</code> or `[&quot;us&quot;,</p>
+<p>    &quot;us-central1&quot;]`).</p>
+<h5>3. Retrieve the Downstream Lineage Graph</h5>
+<p>Call the <code>DataLineageServer:search_lineage</code> tool to fetch downstream</p>
+<p>relationships.</p>
+<ul>
+<li><strong>Direction</strong>: Set to <code>DOWNSTREAM</code>.</li>
+<li><strong>Search Parameters</strong>: Use <code>max_depth = 10</code> and <code>max_process_per_link = 5</code></li>
+</ul>
+<p>    as robust defaults.</p>
+<h5>4. Identify the Blast Radius</h5>
+<p>Traverse the returned lineage links to build the impact graph:</p>
+<ul>
+<li><strong>Affected Assets</strong>: The <code>target</code> of each link represents a downstream asset</li>
+</ul>
+<p>    that depends on your source asset.</p>
+<ul>
+<li><strong>Transform Processes</strong>: Inspect the <code>processes</code> field on each link. This</li>
+</ul>
+<p>    identifies the ETL pipelines, BigQuery Views, or Scheduled Queries that</p>
+<p>    propagate the data.</p>
+<ul>
+<li><strong>Direct vs. Indirect Impact</strong>:</li>
+<li><strong>Direct Impact (Depth 1)</strong>: Assets directly consuming the source asset.</li>
+</ul>
+<p>        If a link has <code>dependency_type: EXACT_COPY</code>, mark the target as</p>
+<p>        &quot;Directly Stale / Identical Copy&quot;.</p>
+<ul>
+<li><strong>Indirect Impact (Depth &gt; 1)</strong>: Assets further down the stream that</li>
+</ul>
+<p>        will experience cascading stale data or failures.</p>
+<h5>5. Summarize and Format the Output</h5>
+<p>Present your findings clearly to the user using the following structure:</p>
+<ol>
+<li><strong>Executive Summary</strong>: State the total number of downstream assets affected</li>
+</ol>
+<p>    and the maximum depth of the impact.</p>
+<ol>
+<li><strong>Critical Path</strong>: Highlight high-priority downstream assets (e.g., assets</li>
+</ol>
+<p>    containing &quot;prod&quot;, &quot;dashboard&quot;, &quot;reporting&quot;, or &quot;master&quot; in their names).</p>
+<ol>
+<li><strong>Blast Radius Table</strong>: A clean Markdown table listing the dependencies. You</li>
+</ol>
+<p>    MUST include all columns:</p>
+<table><thead><tr><th>Downstream Asset</th><th>Transform Process</th><th>Depth</th><th>Impact Type</th></tr></thead><tbody>
+<tr><td><code>bigquery:project.dataset.table</code></td><td><code>projects/p/locations/l/processes/proc</code></td><td>1</td><td>Direct</td></tr>
+<tr><td><code>bigquery:project.dataset.view</code></td><td><code>projects/p/locations/l/processes/view</code></td><td>2</td><td>Indirect</td></tr>
+</tbody></table>
+<ol>
+<li><strong>Analysis Metadata</strong>: Provide transparency on the parameters and boundaries</li>
+</ol>
+<p>    of your search so the user can choose to expand them:</p>
+<ul>
+<li><strong>Locations Searched</strong>: <code>{list_of_locations_queried}</code></li>
+<li><strong>Parent Location</strong>: <code>{parent_path}</code></li>
+<li><strong>Depth Limit</strong>: <code>{max_depth}</code></li>
+<li><strong>Process per Link Limit</strong>: <code>{max_process_per_link}</code></li>
+<li><em>Tip for User</em>: Let the user know they can request to rerun the analysis</li>
+</ul>
+<p>        with expanded locations or larger depth limits.</p>
+<h4>Crucial Constraints &amp; Guardrails</h4>
+<ol>
+<li><strong>Interpret Empty Responses Correctly</strong>:</li>
+</ol>
+<ul>
+<li>If the lineage response is empty, immediately assume that no</li>
+</ul>
+<p>        dependencies exist in the queried locations and report this to the</p>
+<p>        user.</p>
+<ol>
+<li><strong>Strictly Banned Bypasses</strong>:</li>
+</ol>
+<ul>
+<li>Exclusively retrieve downstream relationships using the</li>
+</ul>
+<p>        <code>DataLineageServer:search_lineage</code> tool.</p>
+<ol>
+<li><strong>Verify Asset Existence First</strong>:</li>
+</ol>
+<ul>
+<li>If <code>bq show</code> indicates the source table does not exist, stop and report</li>
+</ul>
+<p>        this directly to the user. Do not attempt to guess alternative table</p>
+<p>        names unless the user explicitly instructs you to do so.</p>
+<ol>
+<li><strong>No Output Shortcutting or Hallucinated Artifacts</strong>:</li>
+</ol>
+<ul>
+<li>Present the complete downstream blast radius table directly in your</li>
+</ul>
+<p>        final response. Avoid telling the user you have created a separate</p>
+<p>        Markdown file or artifact containing the details unless you have</p>
+<p>        explicitly executed file-writing tools to create it.</p>
+<h4>Reference Directory</h4>
+<ul>
+<li>[MCP Usage](references/mcp-usage.md): Using the Google Cloud Data Lineage</li>
+</ul>
+<p>    remote MCP server and tool preferences.</p>
+<h4>External Documentation</h4>
+<ul>
+<li><a href="https://cloud.google.com/dataplex/docs/about-data-lineage" rel="noopener">Google Cloud Knowledge Catalog Data Lineage Documentation</a></li>
+<li><a href="https://docs.cloud.google.com/dataplex/docs/use-lineage-mcp" rel="noopener">Use the Data Lineage MCP server</a></li>
+<li><a href="https://cloud.google.com/dataplex/docs/reference/data-lineage/rest" rel="noopener">Knowledge Catalog Data Lineage API Reference</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/datalineage-bigquery-asset-impact-analysis</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/datalineage-bigquery-asset-impact-analysis" aria-label="Copy install datalineage-bigquery-asset-impact-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/datalineage-bigquery-asset-impact-analysis</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/datalineage-bigquery-asset-impact-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

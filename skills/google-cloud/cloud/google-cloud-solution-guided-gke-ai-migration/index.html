@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-solution-guided-gke-ai-migration — Aidentity</title>
+<meta name="description" content="Guides the migration of existing AI workloads (Cloud Run, Gemini API, Gemini Enterprise Agent Platform) to self-hosted GKE inference using gcloud and kubectl. Use when the user has an existing AI inference workload (on Cloud Run, the Gemini API, Gemini Enterprise Agent Platform, or a custom VM) and wants to move it to self-hosted inference on GKE, or asks follow-up questions during such a migration (hardware sizing, model staging, manifest generation, validation, traffic cutover). DO NOT use for brand new GKE inference deployments with no existing workload to migrate (use gke-inference instead). DO NOT use if the user intends to automate the migration via the Gemini Cloud Assist MCP server.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-solution-guided-gke-ai-migration — Aidentity">
+<meta property="og:description" content="Guides the migration of existing AI workloads (Cloud Run, Gemini API, Gemini Enterprise Agent Platform) to self-hosted GKE inference using gcloud and kubectl. Use when the user has an existing AI inference workload (on Cloud Run, the Gemini API, Gemini Enterprise Agent Platform, or a custom VM) and wants to move it to self-hosted inference on GKE, or asks follow-up questions during such a migration (hardware sizing, model staging, manifest generation, validation, traffic cutover). DO NOT use for brand new GKE inference deployments with no existing workload to migrate (use gke-inference instead). DO NOT use if the user intends to automate the migration via the Gemini Cloud Assist MCP server.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-solution-guided-gke-ai-migration","description":"Guides the migration of existing AI workloads (Cloud Run, Gemini API, Gemini Enterprise Agent Platform) to self-hosted GKE inference using gcloud and kubectl. Use when the user has an existing AI inference workload (on Cloud Run, the Gemini API, Gemini Enterprise Agent Platform, or a custom VM) and wants to move it to self-hosted inference on GKE, or asks follow-up questions during such a migration (hardware sizing, model staging, manifest generation, validation, traffic cutover). DO NOT use for brand new GKE inference deployments with no existing workload to migrate (use gke-inference instead). DO NOT use if the user intends to automate the migration via the Gemini Cloud Assist MCP server.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-solution-guided-gke-ai-migration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-solution-guided-gke-ai-migration</h1>
+      <p class="summary">Guides the migration of existing AI workloads (Cloud Run, Gemini API, Gemini Enterprise Agent Platform) to self-hosted GKE inference using gcloud and kubectl. Use when the user has an existing AI inference workload (on Cloud Run, the Gemini API, Gemini Enterprise Agent Platform, or a custom VM) and wants to move it to self-hosted inference on GKE, or asks follow-up questions during such a migration (hardware sizing, model staging, manifest generation, validation, traffic cutover). DO NOT use for brand new GKE inference deployments with no existing workload to migrate (use gke-inference instead). DO NOT use if the user intends to automate the migration via the Gemini Cloud Assist MCP server.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=migration">migration</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Migrate AI Workloads to GKE Inference</h3>
+<p>This skill guides agents through the end-to-end process of migrating existing AI inference workloads (e.g., from Cloud Run, Gemini API, Gemini Enterprise Agent Platform) to self-hosted inference on Google Kubernetes Engine (GKE). The agent will act as an interactive architect, using a structured 4-phase workflow to discover requirements, design a Google Cloud-native solution, execute the implementation using <code>gcloud</code> and <code>kubectl</code>, and validate the deployment.</p>
+<h4>Gemini Cloud Assist MCP off-ramp</h4>
+<p>This skill covers manual, architect-guided migration only. Automated migration is the job of the Gemini Cloud Assist MCP server. Route between them as follows:</p>
+<ul>
+<li><strong>The user asks to USE Gemini Cloud Assist or MCP automation for this migration</strong> (e.g., &quot;use the Cloud Assist MCP server to do this&quot;): stop the manual workflow and respond with the 4 required points below.</li>
+<li><strong>The user mentions MCP only in passing, or explicitly declines it</strong> (e.g., &quot;no MCP, let&#39;s do this manually&quot;): proceed with the manual workflow. Do not stop and do not ask about MCP.</li>
+<li><strong>The user does not mention MCP at all:</strong> proceed directly to the active phase. In your first discovery response only, add one sentence noting that an automated alternative exists via the Gemini Cloud Assist MCP server and the user can switch to it at any time. Do not wait for an answer before beginning discovery.</li>
+</ul>
+<p><strong>When stopping for an MCP request, your response MUST include these 4 points:</strong></p>
+<ol>
+<li><strong>STOP the manual workflow &amp; clarify scope:</strong> State that <code>google-cloud-solution-guided-gke-ai-migration</code> is strictly intended for manual, architect-guided migration using native CLIs (<code>gcloud</code> and <code>kubectl</code>), and that this manual skill workflow is being stopped.</li>
+<li><strong>Explain MCP capabilities:</strong> Explain that the Gemini Cloud Assist MCP server assists in automated infrastructure analysis (<code>gemini_cloud_assist:ask_cloud_assist</code>) or direct Google Cloud resource mutation (<code>gemini_cloud_assist:invoke_operation</code>).</li>
+<li><strong>Link to MCP Documentation:</strong> Provide a valid hyperlink to the <a href="https://docs.cloud.google.com/cloud-assist/configure-mcp" rel="noopener">Gemini Cloud Assist MCP Documentation</a>.</li>
+<li><strong>Link to Intent to Infrastructure Codelab:</strong> Provide a valid hyperlink to the <a href="https://github.com/GoogleCloudPlatform/next-26-keynotes/tree/main/devkey/intent-to-infrastructure" rel="noopener">Intent to Infrastructure Codelab</a> for guidance on setting up the MCP server.</li>
+</ol>
+<h4>Scope Check: New Deployments vs. Migrations</h4>
+<p><strong>This skill is specifically intended for migrating existing AI workloads (from Cloud Run, Gemini API, Agent Platform, or other platforms) to GKE.</strong></p>
+<p>If the user wants to deploy a new AI model server from scratch on GKE (and does NOT have an existing deployment to migrate), <strong>STOP</strong> and recommend using the <strong><code>gke-inference</code></strong> skill instead. Explain that <code>google-cloud-solution-guided-gke-ai-migration</code> focuses on migration workflows (discovering existing Cloud Run/Agent Platform configurations, traffic cutover, etc.), while <code>gke-inference</code> is optimized for fresh GKE AI model server deployments using AI Profiles and golden path manifests.</p>
+<h4>Core Architectural Principles (The &quot;Golden Path&quot;)</h4>
+<p>When designing the solution, always default to the latest GKE AI best practices:</p>
+<ul>
+<li><strong>Execution:</strong></li>
+<li><strong>Execution policy (who runs commands):</strong></li>
+<li><strong>Phase 1 (Discovery):</strong> after the user grants permission, execute read-only <code>gcloud</code> inspection commands (<code>list</code>, <code>describe</code>) directly and summarize the results.</li>
+<li><strong>Phases 2-4:</strong> write manifests to disk, then present the exact <code>gcloud</code> and <code>kubectl</code> commands for the user to run. Do not execute mutating commands (<code>apply</code>, <code>create</code>, <code>delete</code>, cluster or IAM changes) unless the user explicitly asks you to run them, in which case execute them and report each command&#39;s actual output.</li>
+<li><strong>Informational and troubleshooting questions:</strong> answer with markdown guidance, manifests, and recommended commands only; execute nothing.</li>
+<li>Favor raw Kubernetes manifests, native CLIs (<code>gcloud</code> for infrastructure, <code>kubectl</code> for workloads), and opinionated templates.</li>
+<li>Save YAML files to the user&#39;s current directory and apply them using <code>kubectl</code>.</li>
+<li>Write ad-hoc scripts (e.g., for VRAM calculation) only if absolutely necessary.</li>
+<li><strong>Node Provisioning:</strong></li>
+<li>Utilize <strong>Custom Compute Classes (CCC)</strong> to maximize accelerator obtainability (e.g., dynamically choosing spot vs. on-demand or specific GPU profiles).</li>
+<li>Use GKE&#39;s managed GPU driver installations.</li>
+<li>Select appropriate node topologies: use a single node in a static pool for a simple job, or multiple nodes with LWS/CCC for larger jobs.</li>
+<li><strong>Inference Stack &amp; Versioning:</strong></li>
+<li>Default to <strong>vLLM</strong> (<code>vllm/vllm-openai</code>) as the standard LLM serving engine. If migrating from Vertex AI, the user may opt to retain the Vertex AI Model Garden image (e.g., <code>pytorch-vllm-serve</code>), which is permissible.</li>
+<li><strong>Explicit Entrypoint Override:</strong> Regardless of the chosen image, the vLLM Deployment MUST explicitly set <code>command: [&quot;python&quot;, &quot;-m&quot;, &quot;vllm.entrypoints.openai.api_server&quot;]</code> to bypass potentially problematic entrypoint scripts (like <code>gcs_download_launcher.sh</code> in Vertex AI images) that crash when passed standard vLLM arguments.</li>
+<li>Always pin an explicit, stable vLLM image tag, never <code>:latest</code>. Resolve the current stable release at design time (check the vLLM releases page, or take the tag from <code>gcloud container ai profiles manifests create</code> output) and record it in <code>migration-state.md</code>; do not reuse a tag remembered from a previous migration or from documentation examples.</li>
+<li>Expose the service through the GKE Gateway API. Default to a regional internal Application Load Balancer (<code>gatewayClassName: gke-l7-rilb</code>) with an HTTPRoute that sends <code>/v1</code> requests to the vLLM ClusterIP service (<code>{workload_name}-vllm-svc</code>) on port 8000, based on <code>assets/gke-inference-gateway.yaml.tmpl</code>.</li>
+<li>If the user needs LLM-aware load balancing (routing on KV-cache utilization, queue depth, or LoRA adapter placement), offer the GKE Inference Gateway as an upgrade: it requires an <code>InferencePool</code> resource as the HTTPRoute backend instead of a Service, and it is only supported on the <code>gke-l7-rilb</code> and <code>gke-l7-regional-external-managed</code> GatewayClasses. Fetch <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-gke-inference-gateway.md.txt" rel="noopener">About GKE Inference Gateway</a> before generating InferencePool manifests; do not improvise them from memory.</li>
+<li>For multi-node models, use <strong>LeaderWorkerSet (LWS)</strong> with vLLM.</li>
+<li><strong>Security &amp; Access:</strong></li>
+<li>Always use <strong>GKE Workload Identity</strong> for Google Cloud API access.</li>
+<li><strong>Gated Model Secret Security:</strong> For gated models (e.g., Llama 3, Gemma) requiring Hugging Face tokens (<code>HF_TOKEN</code>):</li>
+<li>NEVER write literal token values into Deployment or Pod specifications; reference the secret securely using <code>env.valueFrom.secretKeyRef</code> (e.g., pointing to <code>hf-secret</code>).</li>
+<li>Always warn the user about the security risks of exposing sensitive API tokens in plain text prompts or manifest files.</li>
+<li>NEVER write a Kubernetes <code>Secret</code> manifest to disk, and do NOT include it in templates. Instead, explicitly instruct the user to create the Secret directly via CLI <em>before</em> applying any other manifests: <code>kubectl create secret generic hf-secret --namespace={namespace} --from-literal=hf_api_token=&lt;YOUR_HF_TOKEN&gt;</code> with the user substituting the real value themselves.</li>
+<li>If the user has already pasted a token into the conversation, treat that token as exposed: use a <code>&lt;YOUR_HF_TOKEN&gt;</code> placeholder in every command and manifest you produce, and advise the user to revoke and reissue the token at <a href="https://huggingface.co/settings/tokens" rel="noopener">https://huggingface.co/settings/tokens</a> once the migration is complete.</li>
+<li><strong>Endpoint exposure:</strong> Default the Gateway to the internal class (<code>gke-l7-rilb</code>). The vLLM OpenAI-compatible endpoint has no built-in authentication; if the user requires external exposure, warn them explicitly that an unauthenticated external listener is an open inference API on their GPU bill, and require an explicit decision plus a fronting control (IAP, an authenticating API gateway, or strict client allowlisting) before generating an externally-exposed Gateway manifest.</li>
+<li><strong>Model Storage &amp; Cold Starts:</strong></li>
+<li>Stage the chosen model in a Cloud Storage bucket to save on downloading more than once.</li>
+<li><strong>Execute staging via a Job on the cluster</strong>: Explain to the user that staging weights via a cluster Job avoids downloading heavy weights to their local workstation and avoids re-downloading on every container restart. Always save the staging manifest as <code>model-staging-job.yaml</code> and instruct the user to run <code>kubectl apply -f model-staging-job.yaml</code>.</li>
+<li><strong>Staging Logic based on Source/Target:</strong></li>
+<li><strong>Source is Hugging Face ( gCS FUSE or Lustre target):</strong> Use the staging Job to download weights directly to the PVC.</li>
+<li><strong>Source is GCS (GCS FUSE target):</strong> The staging Job is <strong>OPTIONAL</strong>. If the PVC mounts the GCS bucket directly via FUSE, the weights are already accessible and no staging step is needed.</li>
+<li><strong>Source is GCS (Lustre target):</strong> Use the staging Job to copy weights from the source GCS bucket to the Lustre PVC (e.g., using <code>gcloud storage cp</code>).</li>
+<li>Favor Cloud Storage staging via <strong>Cloud Storage FUSE</strong> for most workloads, or <strong>Managed Lustre</strong> for ultra-low latency, PiB-scale needs.</li>
+<li>Every pod that mounts a Cloud Storage FUSE volume MUST carry the pod annotation <code>gke-gcsfuse/volumes: &quot;true&quot;</code> (this injects the FUSE sidecar) and MUST run as the Kubernetes ServiceAccount bound to a Google service account with <code>roles/storage.objectUser</code> on the model bucket via Workload Identity. A pod missing either one will fail to mount or fail to read; check both before troubleshooting anything else storage-related.</li>
+<li><strong>Observability:</strong></li>
+<li>Default to <strong>Google Cloud Managed Service for Prometheus</strong> with DCGM metrics for deep GPU visibility.</li>
+<li><strong>Autoscaling:</strong></li>
+<li>Do NOT assume the user wants Horizontal Pod Autoscaling (HPA); you MUST ask them during discovery.</li>
+<li>If HPA is declined, omit all autoscaling manifests.</li>
+<li>If HPA is desired, warn the user about the <strong>LLM Autoscaling Trap</strong>: standard CPU, Memory, and GPU Memory utilization metrics are unreliable because vLLM preallocates VRAM for KV caching, appearing highly utilized constantly.</li>
+<li>Recommend scaling based on custom server metrics reflecting actual concurrency or queue depth (e.g., <code>vllm:num_requests_waiting</code> or batch size).</li>
+<li>Include a reasonable default in the form of <strong>Queue Size</strong> unless the user specifically mentions a different metric.</li>
+<li>Implementation can use either GKE Custom Metrics (Stackdriver Adapter) or KEDA.</li>
+</ul>
+<h4>Workflow</h4>
+<p>The solution design and implementation workflow consists of the following 4 phases:</p>
+<ul>
+<li><strong>Phase 1: Discovery:</strong> Inspect existing infrastructure via <code>gcloud</code> and gather model/traffic requirements.</li>
+<li><strong>Phase 2: Solution Design:</strong> Calculate VRAM requirements, select hardware/storage, and generate Kubernetes manifests.</li>
+<li><strong>Phase 3: Implementation:</strong> Provision resources, stage model weights via an ephemeral pod, and apply workload manifests using <code>kubectl</code>.</li>
+<li><strong>Phase 4: Validation and Cutover:</strong> Verify pod health and endpoint inference, then provide traffic migration guidance.</li>
+</ul>
+<p>At the start of <strong>every architectural response</strong>, print a simple visual progress indicator line to keep both the user and model aligned on the current phase:</p>
+<p><pre><code>**Migration Progress:** [● Discovery] ➔ [○ Solution Design] ➔ [○ Implementation] ➔ [○ Validation]</code></pre></p>
+<p><em>(Update <code>●</code> to mark the current active phase, e.g., <code>[● Solution Design]</code> during Phase 2).</em></p>
+<h5>Phase Routing Rules</h5>
+<p>Determine the active phase based on the user&#39;s prompt context:</p>
+<p>If <code>migration-state.md</code> exists in the current directory, read it before anything else and resume from the recorded phase with the recorded values; only re-ask a discovery question if its value is missing from the file or contradicted by the user&#39;s prompt.</p>
+<ul>
+<li><strong>Phase 1 (Discovery):</strong> Use for new migration requests without prior discovery.</li>
+<li><strong>Phase 2 (Solution Design):</strong> Use when the prompt indicates discovery is complete or asks for architecture design / YAML manifest generation.</li>
+<li><strong>Phase 3 (Implementation):</strong> Use when the prompt indicates model weights are staged or asks directly for deployment steps/commands. Progress indicator: <code><strong>Migration Progress:</strong> [○ Discovery] ➔ [○ Solution Design] ➔ [● Implementation] ➔ [○ Validation]</code>.</li>
+<li><strong>Phase 4 (Validation):</strong> Use when the prompt indicates the workload is running or asks for health checks/testing steps.</li>
+</ul>
+<h5>Phase 1: Discovery</h5>
+<p>The goal of Phase 1 is to discover all workload specifications necessary to design and build the target GKE inference infrastructure.</p>
+<p><strong>Phase 1 Response Requirements:</strong> Every response during Phase 1 MUST begin with the visual progress indicator: <code><strong>Migration Progress:</strong> [● Discovery] ➔ [○ Solution Design] ➔ [○ Implementation] ➔ [○ Validation]</code>.</p>
+<h5>Discovery Checklist (Attributes to Identify)</h5>
+<p>The agent must discover or confirm the following 6 core attribute categories:</p>
+<ul>
+<li><strong>Source Platform &amp; Service Configuration:</strong></li>
+<li>Source platform (Cloud Run, Gemini API, Gemini Enterprise Agent Platform, custom VM).</li>
+<li>Container image tag, environment variables, CPU/RAM allocations, and secret bindings.</li>
+<li><strong>Model Specifications:</strong></li>
+<li>Model name and parameter size (e.g., Gemma 2 9B, Llama 3 70B).</li>
+<li>Target precision &amp; quantization tolerance (FP16/BF16 vs INT8/INT4 AWQ). <em>Must inquire about quantization tolerance during discovery.</em></li>
+<li>Gated model status (whether Hugging Face token <code>HF_TOKEN</code> access is required).</li>
+<li><strong>Model-Specific Architecture Requirements:</strong> Explicitly check the model card (e.g., on Hugging Face) or <code>config.json</code> for custom configuration requirements. For example, determine if the architecture requires <code>--trust-remote-code</code> (like Qwen models), specific rope scaling arguments, or other custom flags.</li>
+<li><strong>Target GKE &amp; Hardware Infrastructure:</strong></li>
+<li>Target GKE cluster name and region (or confirm creating a new cluster).</li>
+<li>Accelerator preference (L4, A100, H100, TPU v5e) and provisioning model (Spot/CCC vs On-Demand).</li>
+<li>Regional quota availability for requested GPUs/TPUs.</li>
+<li><strong>Model Storage &amp; Staging:</strong></li>
+<li>Current location of model weights (GCS bucket, Hugging Face Hub, external URL).</li>
+<li>Preferred storage integration (Cloud Storage FUSE vs Managed Lustre).</li>
+<li><strong>Traffic Profile &amp; Load Balancing:</strong></li>
+<li>Expected traffic volume, concurrency, and request patterns (spiky vs consistent baseline).</li>
+<li>Load balancing needs (GKE Inference Gateway, standard Ingress/Service).</li>
+<li><strong>Autoscaling Requirements:</strong> Ask the user if they need Horizontal Pod Autoscaling (HPA). Do not assume they do. If they do, identify target metrics (defaulting to Queue Size) and discuss the LLM Autoscaling Trap.</li>
+</ul>
+<ul>
+<li><strong>Model Equivalence (Gemini API / Agent Platform sources only):</strong></li>
+<li>Which Gemini model and API features are in use (function calling, system instructions, context length, multimodal inputs).</li>
+<li>Which open-weights model will replace it, and how the user plans to evaluate output quality against the current system before cutover.</li>
+<li>Client impact: the vLLM endpoint is OpenAI-compatible, not Gemini-API-compatible; identify the client code and SDK calls that must change.</li>
+</ul>
+<h5>Discovery Execution (Automated &amp; Interactive)</h5>
+<ul>
+<li><strong>Request Infrastructure Access &amp; Permission First:</strong> You MUST explicitly request permission from the user to inspect existing environment resources via CLI commands (such as <code>gcloud run services list</code> or <code>gcloud run services describe</code>) before executing any discovery commands.</li>
+<li><strong>Inspection Upon Approval:</strong> Once the user grants permission, execute <code>gcloud</code> CLI commands, inspect environment variables, and review local workspace files to populate checklist items automatically:</li>
+<li><strong>Cloud Run Workloads:</strong> Run <code>gcloud run services list --format=&quot;table(metadata.name,status.url,status.latestReadyRevisionName)&quot;</code> to enumerate services, then <code>gcloud run services describe {service_name} --format=&quot;yaml(spec.template.spec.containers,spec.template.metadata.annotations,spec.template.spec.serviceAccountName,spec.template.spec.containerConcurrency)&quot;</code> to extract only the container image, env vars, resource limits, concurrency, and secret bindings. Prefer <code>--format</code> filters on all discovery commands; never pull a full unfiltered resource description into the conversation.</li>
+<li><strong>Existing GKE Clusters:</strong> Run <code>gcloud container clusters list</code> and <code>gcloud container clusters describe {cluster_name}</code> to inspect active cluster config, Workload Identity setup, and available accelerator pools.</li>
+<li><strong>Vertex AI / Storage:</strong> Run <code>gcloud ai endpoints list</code> or <code>gcloud storage buckets list</code> to locate model artifacts and storage buckets.</li>
+<li><strong>Workspace &amp; Environment:</strong> Inspect local configuration files or environment variables in the active workspace directory.</li>
+<li><strong>Summarize, Query Missing Items, and Confirm:</strong> Present a consolidated summary of all discovered configuration data and prompt the user for any remaining missing attributes. If any checklist item is unresolved or ambiguous, obtain explicit user confirmation before moving to Phase 2. If every checklist item was resolved without ambiguity, you MAY present the discovery summary and the Phase 2 solution design in the same response, under a single combined approval gate; the design approval then covers both.</li>
+<li><strong>Persist discovery state:</strong> After the user confirms the discovery summary, write it to <code>migration-state.md</code> in the current directory: one section per checklist category with the confirmed values, plus a final line <code>Current phase: &lt;phase name&gt;</code>. Update the <code>Current phase:</code> line every time the workflow advances a phase.</li>
+</ul>
+<h5>Phase 2: Solution Design</h5>
+<p>Based on the discovery phase, design the architecture and manifests needed to accomplish the migration.</p>
+<p><strong>Phase 2 Response Requirements:</strong> Every response during Phase 2 MUST begin with the visual progress indicator: <code><strong>Migration Progress:</strong> [○ Discovery] ➔ [● Solution Design] ➔ [○ Implementation] ➔ [○ Validation]</code>.</p>
+<p><strong>Just-in-Time Context Loading:</strong> When evaluating specific architectural choices below (e.g., storage options, load balancing, or autoscaling), fetch and read the relevant reference documentation link from the <strong>Supporting links</strong> section as needed.</p>
+<ol>
+<li><strong>Map components and alternatives:</strong> For each major component (e.g., Load Balancing, Autoscaling, Single vs Multi-node), present your recommended &quot;Golden Path&quot; option along with alternatives. If the user requested HPA, ensure the design addresses the LLM Autoscaling Trap and recommends custom metrics (defaulting to Queue Size).</li>
+<li><strong>Accelerator Selection:</strong> Refer to</li>
+</ol>
+<p>    <a href="https://docs.cloud.google.com/compute/docs/gpus.md.txt" rel="noopener">GPU platforms</a> or</p>
+<p>    <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/plan-tpus.md.txt" rel="noopener">Plan your TPU configuration in GKE</a> to</p>
+<p>    recommend the best accelerator for the target model.</p>
+<p>    <em>(Note: the manifest templates in <code>assets/</code> are GPU-only. If the user selects Cloud TPU, state this explicitly, and base the serving manifests on the GKE TPU serving documentation instead of the templates in this skill.)</em></p>
+<ol>
+<li><strong>Storage Selection:</strong> Refer to <a href="https://docs.cloud.google.com/ai-hypercomputer/docs/storage.md.txt" rel="noopener">GCP AI Storage Options</a> to recommend the best storage solution for model staging and serving.</li>
+<li><strong>Hardware &amp; VRAM Sizing:</strong> Accurately calculate VRAM using the [Deterministic VRAM Sizing Formula](#deterministic-vram-sizing-formula) below, based on parameters, context window, and quantization. Map to appropriate GPUs (L4, A100, H100).</li>
+<li><strong>Cluster &amp; Node Setup:</strong> Design the appropriate cluster for the job. Add appropriate sized nodes for the task using Custom Compute Classes (CCC). Design Workload Identity if required. The vLLM Deployment MUST select nodes with <code>nodeSelector: cloud.google.com/compute-class: {compute_class_name}</code> so the workload actually schedules through the ComputeClass. If the user declines CCC and wants on-demand nodes only, replace this selector with <code>cloud.google.com/gke-accelerator: {accelerator_type}</code> and skip <code>ccc-profile.yaml</code> entirely; do not apply a ComputeClass that no workload references.</li>
+<li><strong>Model Staging Design:</strong> Determine if a staging Job is required based on the source location of the model weights and the target storage solution. If the source is Hugging Face, or if the target is Lustre and source is GCS, plan for a Job to download/copy weights. If the source is GCS and target is GCS FUSE, skip staging. Plan for using Cloud Storage FUSE or Lustre CSI to mount this storage to the workload.</li>
+<li><strong>Draft solution architecture and manifests:</strong> Read the manifest templates in <code>assets/</code> (<code>assets/vllm-deployment.yaml.tmpl</code>, <code>assets/ccc-profile.yaml.tmpl</code>, <code>assets/gke-inference-gateway.yaml.tmpl</code>, <code>assets/storage-config.yaml.tmpl</code>, and <code>assets/model-staging-job.yaml.tmpl</code>), substitute the parameters discovered in Phase 1, and save the resulting YAML manifests (<code>vllm-deployment.yaml</code>, <code>ccc-profile.yaml</code>, <code>gke-inference-gateway.yaml</code>, <code>storage-config.yaml</code>, <code>model-staging-job.yaml</code>) to disk in the current directory. When creating <code>vllm-deployment.yaml</code>, explicitly inject any required model-specific architecture flags discovered in Phase 1 (e.g., <code>--trust-remote-code</code>) into the container <code>args</code> array. When creating <code>gke-inference-gateway.yaml</code>, base it on <code>assets/gke-inference-gateway.yaml.tmpl</code>: use <code>gatewayClassName: gke-l7-rilb</code> for the Gateway resource unless the user has explicitly chosen external exposure or the InferencePool-based GKE Inference Gateway, and route <code>/v1</code> traffic to the vLLM ClusterIP service (<code>{workload_name}-vllm-svc</code> on port 8000) in the HTTPRoute resource. If using a storage class other than <code>gcsfuse-csi</code> (e.g., <code>lustre-csi</code>), remove the <code>gcsfuse.cloud.google.com</code> annotations from <code>storage-config.yaml</code>.</li>
+<li><strong>Request review and iterate:</strong> Present the generated solution architecture and diagram to the user and request their feedback. Iterate on the design until the user approves it before moving to Phase 3.</li>
+</ol>
+<h5>Deterministic VRAM Sizing Formula</h5>
+<p>To accurately calculate VRAM requirements for model serving/inference, use the following deterministic formula:</p>
+<p><strong>Hardware &amp; Sizing Recommendation Requirements:</strong> When calculating VRAM sizing or recommending hardware:</p>
+<ul>
+<li>Explain the VRAM calculation explicitly using the formula below (parameter size, KV cache, 20% safety margin).</li>
+<li>Recommend a specific accelerator type (e.g., NVIDIA L4 with 24GB VRAM for 8B models in FP16/BF16).</li>
+<li>Recommend using <strong>Custom Compute Classes (CCC)</strong> to maximize accelerator obtainability.</li>
+<li>Inquire about or confirm the user&#39;s <strong>quantization tolerance</strong> (FP16/BF16 vs INT8/INT4) in the Discovery phase.</li>
+</ul>
+<p>$$VRAM_{\text{total}} = \left( \frac{\text{Parameters} \times 2}{\text{Quantization}} + KV\_Cache\_Overhead \right) \times 1.2$$</p>
+<p>Where:</p>
+<ul>
+<li><strong>Parameters</strong>: Model size in billions of parameters (e.g., <code>8</code> for 8B, <code>70</code> for 70B).</li>
+<li><strong>Quantization</strong>: Divisor based on target precision relative to 16-bit (FP16/BF16):</li>
+<li><code>1</code> for 16-bit (FP16 / BF16, 2 bytes/param)</li>
+<li><code>2</code> for 8-bit (FP8 / INT8, 1 byte/param)</li>
+<li><code>4</code> for 4-bit (INT4 / AWQ / GPTQ, 0.5 bytes/param)</li>
+<li><strong>$KV\_Cache\_Overhead$</strong>: Memory (GB) reserved for key-value cache during generation:</li>
+</ul>
+<p>    $$KV\_Cache\_Overhead \,(GB) = \frac{2 \times n_{\text{layers}} \times n_{\text{kv\_heads}} \times d_{\text{head}} \times \text{Context Length} \times \text{Batch Size} \times \text{Precision Bytes}}{10^9}$$</p>
+<p>    <em>(Rule of thumb: If model layer architecture details are unknown, estimate $KV\_Cache\_Overhead \approx 0.2 \times \text{Model Weight Memory}$).</em></p>
+<ul>
+<li><strong><code>1.2</code> Multiplier</strong>: 20% safety margin for CUDA context, activation memory, and serving engine overhead.</li>
+</ul>
+<p>When mapping the result to an accelerator, compare $VRAM_{\text{total}}$ against the card&#39;s full memory (e.g., 24 GB for an L4), not against memory discounted by <code>--gpu-memory-utilization</code>. The 1.2 multiplier and vLLM&#39;s utilization cap reserve headroom for the same overheads; applying both double-counts the margin and pushes sizing one accelerator tier too high.</p>
+<h5>Phase 3: Implementation</h5>
+<p>Carry out the approved design per the Execution policy: generate the commands below and either hand them to the user or, if the user has asked you to run them, execute them and report the output.</p>
+<ol>
+<li><strong>Identify deployment prerequisites:</strong> Ensure billing, APIs, and IAM permissions are in place.</li>
+<li><strong>Infrastructure Provisioning:</strong> Provide explicit <code>gcloud</code> commands to provision storage and cluster prerequisites (such as enabling the Cloud Storage FUSE CSI driver) and configure Workload Identity IAM bindings. <strong>Gateway API Pre-flight Check:</strong> Explicitly instruct the user to verify the Gateway API is enabled on their cluster. Recommend running <code>gcloud container clusters update &lt;CLUSTER_NAME&gt; --gateway-api=standard</code> before they attempt to apply the routing manifests to prevent CRD-not-found errors.</li>
+<li><strong>Storage Provisioning:</strong> Create the necessary storage resources (Cloud Storage bucket or Managed Lustre file system).</li>
+<li><strong>Model Staging:</strong> Apply conditional logic based on the design from Phase 2.</li>
+</ol>
+<ul>
+<li><strong>Skipped:</strong> If the model is already in GCS and using GCS FUSE, skip to step 5.</li>
+<li><strong>Hugging Face Source:</strong> If using a gated model (e.g., Llama 3, Gemma), explicitly instruct the user to run the <code>kubectl create secret generic hf-secret ...</code> command locally <strong>before</strong> applying any jobs or deployments (see Gated Model Secret Security rules). Once the secret is created, instruct the user to run <code>kubectl apply -f model-staging-job.yaml</code>.</li>
+<li><strong>GCS to Lustre Source:</strong> Instruct the user to run <code>kubectl apply -f model-staging-job.yaml</code> (which should be configured to use <code>gcloud storage cp</code> or similar).</li>
+<li><strong>Completion Gate:</strong> For any active staging Job, gate on completion with <code>kubectl wait --for=condition=complete job/{workload_name}-model-staging --timeout=90m</code> (scale the timeout to the model size). If the Job fails, inspect it with <code>kubectl logs job/{workload_name}-model-staging</code> before retrying. Explain that staging through a cluster Job avoids downloading heavy weights to the user&#39;s workstation and avoids re-downloading on every container restart.</li>
+</ul>
+<ol>
+<li><strong>Workload Deployment:</strong> Provide explicit <code>kubectl apply</code> commands to deploy the storage config (<code>kubectl apply -f storage-config.yaml</code>), ComputeClass (<code>kubectl apply -f ccc-profile.yaml</code>), vLLM deployment (<code>kubectl apply -f vllm-deployment.yaml</code>), and Inference Gateway (<code>kubectl apply -f gke-inference-gateway.yaml</code>). Ensure the vLLM deployment spec mounts the staged model weights from the PVC into <code>/models</code>. Ensure that if a Secret was created for a gated model, it is referenced correctly in the Deployment manifest. Set vLLM&#39;s <code>--model</code> flag to the staged local path (<code>/models/{model_name}</code>), never to the Hugging Face repo ID; a repo ID makes vLLM re-download the full weights on every pod start and silently defeats the staging step. Preserve the model&#39;s public name for API clients with <code>--served-model-name={model_id}</code>.</li>
+<li><strong>Verify the rollout:</strong> Confirm success with <code>kubectl rollout status deployment/{workload_name}-vllm --timeout=30m</code> and <code>kubectl get pods -l app={workload_name}-vllm -o wide</code>. If the rollout fails or times out, go directly to Troubleshooting Guidance with the observed error; do not ask the user whether the deployment succeeded when the command output already answers it. Ask the user only about outcomes the cluster cannot verify (for example, whether response quality matches the source system).</li>
+</ol>
+<h5>Phase 4: Validation and Cutover</h5>
+<p>Verify that the deployed infrastructure meets the workload&#39;s requirements and provide instructions for traffic migration.</p>
+<p><strong>Phase 4 Response Requirements:</strong> Every response during Phase 4 MUST begin with the visual progress indicator: <code><strong>Migration Progress:</strong> [○ Discovery] ➔ [○ Solution Design] ➔ [○ Implementation] ➔ [● Validation]</code>.</p>
+<ol>
+<li><strong>Health Checks:</strong> Recommend explicit health check commands to verify pod, node, and gateway status (<code>kubectl get pods</code>, <code>kubectl get nodes</code>, and <code>kubectl get gateway</code>).</li>
+<li><strong>Testing Inference:</strong> Verify the service is serving the model. Provide a <code>kubectl port-forward</code> command (<code>kubectl port-forward svc/{workload_name}-vllm-svc 8000:8000</code>) and a sample <code>curl</code> request to <code>/v1/chat/completions</code> to test endpoint inference. Compare responses with the previous infrastructure if applicable.</li>
+<li><strong>Traffic Cutover Guidance:</strong> Do NOT attempt to implement traffic migration automatically. Instead:</li>
+</ol>
+<ul>
+<li>Provide the internal GKE endpoint that is ready to receive traffic.</li>
+<li>Offer suggestions based on the relevant codebase (if any) for how to migrate the traffic over.</li>
+<li>Suggest a standard GKE rollout (e.g., updating the existing deployment manifest to point to the new service) without fancy canary tests or blue/green deployments.</li>
+<li>Offer more advanced traffic migration options only if the user explicitly asks for them.</li>
+</ul>
+<ol>
+<li><strong>Rollback readiness:</strong> Before any traffic moves, confirm the source service stays deployed (scaled down is fine, deleted is not) until the GKE endpoint has served production traffic for a period the user chooses. Provide the single command or config change that restores traffic to the source. Only after the user declares the migration stable, provide the commands to decommission the source service.</li>
+<li><strong>Compile Validation Report &amp; Request Final Approval:</strong> Compile a validation report summarizing all health check outcomes and inference test results. You MUST explicitly request final user approval to finalize and complete the migration workflow.</li>
+</ol>
+<h5>Troubleshooting Guidance</h5>
+<p>When users report issues where pods are created but the inference endpoint is not responding (or request troubleshooting help):</p>
+<ol>
+<li>Recommend specific diagnostic commands: <code>kubectl logs {pod_name}</code> (to check container startup logs) and <code>kubectl describe pod {pod_name}</code> (to inspect pod initialization state).</li>
+<li>Suggest verifying Google Cloud accelerator quotas (GPU/TPU) in the target region to ensure required resources can be provisioned.</li>
+<li><strong>Check for JIT Compilation / Startup Delays:</strong> If <code>curl</code> returns <code>Connection refused</code> but the Pod is <code>Running</code>, the serving engine (e.g., vLLM) may still be executing JIT compilation (such as Triton PTX or Torch Inductor) or capturing CUDA graphs. This can take several minutes <em>after</em> model weights are loaded. Advise the user to check <code>kubectl logs {pod_name}</code> and explicitly wait for the <code>Uvicorn running on <a href="http://0.0.0.0:8000" rel="noopener">http://0.0.0.0:8000</a></code> (or equivalent) log message before assuming there is a networking issue.</li>
+<li>Recommend checking GKE Workload Identity bindings, PVC mount health (Cloud Storage FUSE), and GKE Inference Gateway listener configurations.</li>
+</ol>
+<h4>Supporting links</h4>
+<p>Use these references as needed to ground your design choices, answer user questions, and generate implementation manifests:</p>
+<ul>
+<li><a href="https://docs.cloud.google.com/compute/docs/gpus.md.txt" rel="noopener">GPU platforms</a></li>
+<li><a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/plan-tpus.md.txt" rel="noopener">Plan your TPU configuration in GKE</a></li>
+<li><a href="https://docs.cloud.google.com/cloud-assist/configure-mcp" rel="noopener">Gemini Cloud Assist MCP Documentation</a></li>
+<li><a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/machine-learning/inference.md.txt" rel="noopener">About AI/ML model inference on GKE</a></li>
+<li><a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/machine-learning/choose-lb-strategy.md.txt" rel="noopener">Choose a load balancing strategy for AI/ML model inference on GKE</a></li>
+<li><a href="https://docs.cloud.google.com/kubernetes-engine/docs/best-practices/machine-learning/inference/autoscaling.md.txt" rel="noopener">Best practices for autoscaling large language model inference workloads with GPUs on Google Kubernetes Engine</a></li>
+<li><a href="https://docs.cloud.google.com/ai-hypercomputer/docs/storage.md.txt" rel="noopener">Google Cloud AI Storage Options</a></li>
+<li><a href="https://docs.cloud.google.com/architecture/optimize-ai-ml-workloads-cloud-storage-fuse.md.txt" rel="noopener">Optimize AI/ML workloads with Cloud Storage FUSE</a></li>
+<li><a href="https://docs.cloud.google.com/architecture/optimize-ai-ml-workloads-managed-lustre.md.txt" rel="noopener">Optimize AI/ML workloads with Managed Lustre</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration" aria-label="Copy install google-cloud-solution-guided-gke-ai-migration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-solution-guided-gke-ai-migration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

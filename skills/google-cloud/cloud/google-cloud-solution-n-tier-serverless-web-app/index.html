@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-solution-n-tier-serverless-web-app — Aidentity</title>
+<meta name="description" content="Assists in developing a secure n-tier serverless web application based on best practices and architecture guidance. Use when users need agentic assistance with designing and creating a multi-product solution in Google Cloud for a secure n-tier serverless web application. Don&#39;t use when designing VM or GKE-based architectures or when not using Google Cloud.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-solution-n-tier-serverless-web-app — Aidentity">
+<meta property="og:description" content="Assists in developing a secure n-tier serverless web application based on best practices and architecture guidance. Use when users need agentic assistance with designing and creating a multi-product solution in Google Cloud for a secure n-tier serverless web application. Don&#39;t use when designing VM or GKE-based architectures or when not using Google Cloud.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-solution-n-tier-serverless-web-app","description":"Assists in developing a secure n-tier serverless web application based on best practices and architecture guidance. Use when users need agentic assistance with designing and creating a multi-product solution in Google Cloud for a secure n-tier serverless web application. Don't use when designing VM or GKE-based architectures or when not using Google Cloud.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-solution-n-tier-serverless-web-app
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-solution-n-tier-serverless-web-app</h1>
+      <p class="summary">Assists in developing a secure n-tier serverless web application based on best practices and architecture guidance. Use when users need agentic assistance with designing and creating a multi-product solution in Google Cloud for a secure n-tier serverless web application. Don&#39;t use when designing VM or GKE-based architectures or when not using Google Cloud.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>&lt;!-- disableFinding(all) --&gt;</p>
+<p>&lt;!-- mdlint off --&gt;</p>
+<h3>Secure n-tier serverless web application with strict private application tiers</h3>
+<p>This skill guides agents through the workflow of designing and implementing a</p>
+<p>secure serverless web application with as many architectural design layers as</p>
+<p>specified by the user. It uses Cloud Run for the serverless layers and Cloud SQL</p>
+<p>for PostgreSQL as the data layer. A three-tier web application might be</p>
+<p>represented in three architectural layers: a Cloud Run presentation layer, a</p>
+<p>Cloud Run application layer, and a Cloud SQL for PostgreSQL database layer.</p>
+<p>The architecture enforces strict physical and network isolation across all tiers (T1 to TN):</p>
+<ul>
+<li><strong>Tier 1 presentation tier (frontend / reverse proxy)</strong>: Public-facing UI rendering/gateway service (Cloud Run). Exposes the entry point via Cloud Load Balancing and routes requests downstream to internal tiers privately via Direct VPC Egress.</li>
+<li><strong>Tier 2..N application tier (internal microservices / business logic)</strong>: Private application services (Cloud Run). 100% isolated from the internet (Ingress: VPC-internal, <code>INGRESS_TRAFFIC_INTERNAL_ONLY</code>), reachable exclusively via upstream VPC routing (<code>egress = &quot;ALL_TRAFFIC&quot;</code> with Private Google Access on the subnet for <code>*.run.app</code> URLs).</li>
+<li><strong>Data tier</strong>: Private Cloud SQL for persistent data and Memorystore for</li>
+</ul>
+<p>    Redis for caching, reachable exclusively from authorized application tiers.</p>
+<h4>General guidance to the LLM</h4>
+<h5>1. Direct Resource Map (Zero-Search File Access)</h5>
+<p>All necessary reference architectures, HCL templates, and checklists are co-located in this skill. Use exact relative paths from this skill folder:</p>
+<table><thead><tr><th>Asset Path</th><th>Purpose &amp; Usage</th></tr></thead><tbody>
+<tr><td><code>assets/main.tf</code></td><td><strong>Single Source of Truth for Terraform (HCL)</strong>. Contains all security boundaries, Cloud Run v2 configs, PSC endpoints, DNS private zones, and firewall rules.</td></tr>
+<tr><td><code>assets/output-template.md</code></td><td>Standardized Solution Architecture report markdown structure.</td></tr>
+<tr><td><code>references/non-negotiable-architectural-rules.md</code></td><td>Non-negotiable security rules, audit checklist, and product mappings.</td></tr>
+<tr><td><code>references/related-guidance.md</code></td><td>Supplemental architecture guidance for non-standard or multi-region requirements.</td></tr>
+</tbody></table>
+<ul>
+<li><strong>No Directory Crawling</strong>: Do NOT run <code>list_dir</code> chains down workspace directories to discover these files.</li>
+<li><strong>No Search Thrashing on Local Files</strong>: Do NOT run <code>code_search</code> or <code>find_by_name</code> queries to look inside <code>assets/main.tf</code>. Read the file directly using <code>view_file</code> once and reuse the context.</li>
+<li><strong>No Redundant Skill Searches</strong>: Do NOT call <code>skill_search</code> for serverless or n-tier architecture skills while executing this skill.</li>
+</ul>
+<h5>2. Direct Inline Generation (No Subagent Delegation)</h5>
+<ul>
+<li>Perform all architecture compilation, Terraform drafting, <code>gcloud</code> command assembly, and validation script generation <strong>directly in the primary conversation</strong>.</li>
+<li>Do <strong>NOT</strong> invoke subagents (<code>invoke_subagent</code>) to research external GitHub Terraform modules, probe environment configs, or draft reports. All required patterns are fully contained in <code>assets/main.tf</code> and <code>references/</code>.</li>
+</ul>
+<h5>3. One-Shot Clean Artifact Writing</h5>
+<ul>
+<li>Generate complete, fully-rendered, and valid HCL blocks and Markdown reports in a single <code>write_to_file</code> call.</li>
+<li>Avoid leaving placeholders or malformed code fences that require multi-turn <code>replace_file_content</code> and <code>grep_search</code> patch loops.</li>
+<li><strong>No Unpopulated Placeholders</strong>: When embedding code or scripts inside architecture reports (e.g., Section 6 of <code>assets/output-template.md</code>), always inline the actual complete Terraform code, gcloud commands, and validation script code. Never output literal template placeholder comments (e.g., <code># [Paste of main.tf file contents]</code>).</li>
+</ul>
+<h5>4. Technical Completeness Checklist</h5>
+<ul>
+<li>When providing a concise architecture summary or security checklist (e.g., when instructed not to generate full IaC), you MUST explicitly include the following technical specifications:</li>
+<li>For regional load balancer deployments: regional proxy-only subnet purpose (<code>REGIONAL_MANAGED_PROXY</code>) and <code>network</code> parameter on regional forwarding rules.</li>
+<li>Cloud SQL PostgreSQL version (<code>POSTGRES_18</code>), Edition (<code>Enterprise Edition</code>), High Availability (<code>Regional HA</code>), and Private Service Connect (<code>psc_enabled = true</code>).</li>
+</ul>
+<h4>Workflow</h4>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>Optional MCP Server Integration</strong>: If your AI coding client supports the <strong>Model Context Protocol (<code>MCP</code>)</strong>, you can connect the <a href="https://developers.google.com/knowledge/mcp" rel="noopener">Google Developer Knowledge MCP Server</a> (<code>npx -y @google/mcp-developer-knowledge-server</code>) to dynamically query real-time Google Cloud documentation (<code>cloud.google.com/docs</code>) alongside this skill&#39;s offline knowledge base (<code>references/related-guidance.md</code>).</p>
+<p>The solution design and implementation workflow is divided into the following</p>
+<p>phases:</p>
+<ul>
+<li><strong>Phase 1: Requirements discovery and analysis</strong>: Analyze the workload&#39;s</li>
+</ul>
+<p>    requirements, constraints, dependencies, and current state.</p>
+<ul>
+<li><strong>Phase 2: Solution design &amp; IaC drafting</strong>: Build a technology stack, architecture, and deployment configuration for the workload. <strong>IMPORTANT: You should offer to generate the complete Terraform code (based on <code>assets/main.tf</code> and adhering to all Phase 3 specifications) alongside the solution architecture during this phase.</strong> This allows the user to immediately review and iteratively modify the code as the conversation continues. However, if the user explicitly states they do not want code, do not generate it yet.</li>
+<li><strong>Phase 3: Implementation plan &amp; iterative refinement</strong>: Modify and refine the generated design and deployment instructions as the conversation and user feedback evolve.</li>
+<li><strong>Phase 4: Solution validation</strong>: Validate that the deployment meets the</li>
+</ul>
+<p>    requirements of the workload.</p>
+<hr>
+<h5>Phase 1: Requirements discovery and analysis</h5>
+<p>To prevent multi-turn interview fatigue and maintain trajectory determinism across evaluations, adopt an <strong>opinionated 80% default golden path</strong> unless the user explicitly requests deviations:</p>
+<ol>
+<li><strong>Default Golden Path Configuration (<code>80% Baseline</code>)</strong>:</li>
+</ol>
+<ul>
+<li><strong>Architecture</strong>: Secure 3-tier serverless pipeline (<code>frontend</code> Cloud Run -&gt; <code>backend application</code> Cloud Run -&gt; <code>Cloud SQL PostgreSQL</code>).</li>
+<li><strong>Region</strong>: <code>us-central1</code>.</li>
+<li><strong>Database</strong>: Cloud SQL for PostgreSQL (<code>POSTGRES_18</code>) Enterprise Edition via Private Service Connect (<code>psc_enabled = true</code>).</li>
+<li><strong>Edge Protection</strong>: Global external Application Load Balancer with Cloud Armor WAF (<code>sqli-v33-stable</code>) and Cloud CDN (<code>enable_cdn = true</code>).</li>
+<li><strong>Networking &amp; Security</strong>: Direct VPC Egress (<code>ALL_TRAFFIC</code>), <code>run.app.</code> Cloud DNS private zone, least-privilege Cloud NGFW egress firewall policies (<code>TCP 5432, 443</code>), and Cloud SQL Auth Proxy sidecar (<code>DB_SOCKET_PATH</code> with IAM Auth).</li>
+</ul>
+<ol>
+<li><strong>Disambiguation Protocol (<code>Maximum 2 Optional Questions</code>)</strong>:</li>
+</ol>
+<p>    If the user&#39;s initial prompt leaves requirements open-ended (and is not fast-forwarding with exact specs), do <strong>not</strong> present a multi-topic questionnaire. Only ask up to <strong>2 optional disambiguation questions</strong> concisely before confirmation:</p>
+<ol>
+<li><strong>Load Balancer &amp; Residency Topology</strong>: Do you require a <strong>Global Application Load Balancer with Cloud CDN</strong> (default for worldwide users), or a <strong>Regional Application Load Balancer without CDN</strong> (for strict EU/regional data residency compliance)?</li>
+<li><strong>In-Memory Caching Tier</strong>: Should we provision an optional <strong>Memorystore for Redis</strong> caching tier (<code>Private Services Access</code>) alongside Cloud SQL to accelerate read queries?</li>
+</ol>
+<ol>
+<li><strong>Verify &amp; Confirm</strong>: Present the confirmed 3-tier golden path decomposition to the user and request confirmation before proceeding to Phase 2 (or fast-forward automatically when instructed).</li>
+</ol>
+<h5>Phase 2: Solution design</h5>
+<ol>
+<li>**Retrieve the 9 architectural security boundaries and report audit checklist from <code>references/non-negotiable-architectural-rules.md</code>. If the customer request is _not_ requesting a direct deployment 80% case, also retrieve <code>references/related-guidance.md</code>. <em>Important</em>: Use the retrieved content to ground your design and verify the report audit checklist before TF generation (<code>assets/main.tf</code> is the Single Source of Truth for exact HCL). If the <a href="https://developers.google.com/knowledge/mcp" rel="noopener">Google Developer Knowledge MCP Server</a> is connected, query docs dynamically in real time.</li>
+</ol>
+<ol>
+<li><strong>Map components to Google Cloud products</strong>: Map your confirmed decomposition directly to Google Cloud products using these mandatory product mapping specifications:</li>
+</ol>
+<ul>
+<li><strong>Public Ingress &amp; WAF</strong>: global or regional external Application Load Balancer (<code>INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER</code>), Cloud Armor (<code>sqli-v33-stable</code>), Cloud CDN (if global Application Load Balancer; note that Cloud CDN is NOT supported on regional Application Load Balancers). Note: When deploying a regional external Application Load Balancer, an explicit proxy-only subnet (<code>purpose = &quot;REGIONAL_MANAGED_PROXY&quot;</code>) is required in the VPC and <code>network</code> must be specified on the regional forwarding rule.</li>
+<li><strong>Internal compute tiers (T1 to TN)</strong>: Cloud Run microservices (<code>INGRESS_TRAFFIC_INTERNAL_ONLY</code>), Direct VPC Egress configured with <code>egress = &quot;ALL_TRAFFIC&quot;</code>, Private Google Access enabled on the subnet, and a Cloud DNS Managed Private Zone (<code>google_dns_managed_zone</code>) for <code>run.app.</code> bound to <code>vpc_network</code> mapping <code>*.run.app</code> directly to Private Google Access VIPs (<code>199.36.153.4/30 / 199.36.153.8/30</code>) when calling internal <code>*.run.app</code> URLs, deployed from specified/placeholder container image.</li>
+<li><strong>Private data tier</strong>: Cloud SQL for PostgreSQL (<code>POSTGRES_18</code>) via Private Service Connect + IAM DB Auth. If database caching was selected, add Memorystore Redis via Private Services Access. Depending on reliability requirements, specify either &quot;Cloud SQL for PostgreSQL Enterprise edition instance&quot; or a &quot;Cloud SQL for PostgreSQL Enterprise Plus edition instance&quot;.</li>
+<li><strong>Secrets, Registry, &amp; Security</strong>: Secret Manager, Artifact Registry, Cloud NGFW global/regional network firewall policies (<code>google_compute_network_firewall_policy</code> + <code>google_compute_network_firewall_policy_rule</code> explicitly permitting outbound TCP port 5432 to Cloud SQL PSC IP and TCP port 443 to Private Google Access VIPs <code>199.36.153.4/30, 199.36.153.8/30</code> on <code>allow_backend_db_egress</code>), and optional VPC Service Controls.</li>
+</ul>
+<ol>
+<li><strong>Create architecture diagram</strong>: Create a clean Mermaid format architecture diagram (<code>assets/output-template.md</code>) illustrating the multi-tier request and data flow across entry point, public reverse proxy, private microservice compute tiers, and private database/caching endpoints.</li>
+</ol>
+<ol>
+<li><strong>Draft solution architecture and generate Terraform &amp; <code>gcloud</code> CLI code</strong>:</li>
+</ol>
+<p>    Compile the requirements, technical decomposition, product mapping,</p>
+<p>    architecture diagram, design recommendations, AND the complete</p>
+<p>    Infrastructure as Code (`Terraform based on assets/main.tf alongside a</p>
+<p>    self-contained sequence of gcloud CLI deployment commands adhering to all</p>
+<p>    Phase 3 mandatory specifications`) into a single Markdown file structured</p>
+<p>    strictly per the standardized Google Cloud Solution Architecture output</p>
+<p>    template at <code>assets/output-template.md</code> and present them to the user.</p>
+<p>    When saving or outputting the report artifact, append an ISO 8601 UTC timestamp and ensure the filename strictly ends with the <code>.md</code> extension (<code>e.g., workload_name_architecture_report-20260701T212820Z.md</code>). Verify that all 9 security boundaries from <code>assets/main.tf</code> are documented cleanly in your report, and all template placeholders are replaced with actual complete code blocks.</p>
+<ol>
+<li><strong>Request review and iterate</strong>: Present the solution architecture (and Terraform code, <code>gcloud</code> script, or validation script if generated) to the user and request feedback. Modify and refine both the architecture and code iteratively as the conversation continues.</li>
+</ol>
+<hr>
+<h5>Phase 3: Implementation plan</h5>
+<ol>
+<li><strong>Retrieve relevant building block templates from the <code>assets/</code> directory</strong>.</li>
+</ol>
+<p>    <em>Important</em>: Use the code in <code>assets/main.tf</code> as the</p>
+<p>    foundation for your Terraform implementation plan (<code>assets/output-template.md</code> for architecture structure).</p>
+<ol>
+<li><strong>Identify deployment prerequisites</strong>:</li>
+</ol>
+<ul>
+<li>Required Google Cloud APIs (<code>run.googleapis.com</code>,</li>
+</ul>
+<p>        <code>sqladmin.googleapis.com</code>, <code>redis.googleapis.com</code>,</p>
+<p>        <code>servicenetworking.googleapis.com</code>, <code>secretmanager.googleapis.com</code>,</p>
+<p>        <code>monitoring.googleapis.com</code>, <code>dns.googleapis.com</code>).</p>
+<ul>
+<li>Required IAM permissions (Project Editor, Security Admin, etc.).</li>
+</ul>
+<ol>
+<li><strong>Generate Infrastructure as Code (IaC) (<code>Architectural Specifications</code>)</strong>:</li>
+</ol>
+<p>    Retrieve relevant architectural and hierarchy guidance from</p>
+<p>    <code>references/non-negotiable-architectural-rules.md</code>. Base code strictly on the building blocks in</p>
+<p>    <code>assets/main.tf</code> (<code>Section 5.1</code> for Tier 1, <code>Section 5.2</code> for Tiers 2..N), ensuring <code>database_version = &quot;POSTGRES_18&quot;</code> is preserved exactly. Do NOT generate from memory/v1 legacy resources or revert to older database versions like <code>POSTGRES_15</code>.</p>
+<ol>
+<li><strong>Write deployment instructions &amp; README.md</strong>: Draft comprehensive step-by-step deployment instructions (or a complete <code>README.md</code> artifact), ensuring you include:</li>
+</ol>
+<ul>
+<li>Instructions to initialize and apply Terraform (<code>terraform init</code>, <code>terraform apply</code>). <strong>Zero-Install Environment Recommendation</strong>: Explicitly recommend running <code>terraform</code> commands and your generated automated validation script inside <strong>Google Cloud Shell</strong> (<code>https://shell.cloud.google.com</code>), where <code>python3</code>, <code>gcloud</code>, and <code>terraform</code> are 100% pre-installed and authenticated out of the box so developers without local SDKs can deploy and validate immediately.</li>
+<li><strong>Step-by-Step <code>gcloud</code> CLI Deployment Commands (<code>Bottom-Up Wiring</code>)</strong>: In Section 6.3 (&quot;Step-by-step gcloud CLI deployment commands&quot;) inside <code>assets/output-template.md</code>, provide a complete, self-contained sequence of <code>gcloud</code> CLI commands required to deploy this exact architecture without Terraform. These commands must enforce reverse/bottom-up order (<code>VPC/subnets -&gt; data tiers -&gt; internal microservices -&gt; public gateway -&gt; load balancer</code>), specify <code>--database-version=POSTGRES_18</code> when provisioning Cloud SQL, and extract downstream container URLs (<code>gcloud run services describe... --format=&#39;value(status.url)&#39;</code>) into shell variables to dynamically pass them via <code>--update-env-vars</code> into upstream services.</li>
+<li>Explanation of all Terraform variables, <strong>explicitly including and documenting the <code>enable_vpc_sc</code> variable</strong>.</li>
+<li><strong>Dedicated VPC Service Controls Guidance Section</strong>: Provide specific instructions and gcloud commands for implementing an Org-level VPC-SC service perimeter around Cloud Run (<code>run.googleapis.com</code>), Cloud SQL (<code>sqladmin.googleapis.com</code>), and Secret Manager (<code>secretmanager.googleapis.com</code>) when <code>enable_vpc_sc = true</code>.</li>
+<li>Container image deployment strategies (specifying pre-existing image URLs or placeholder bootstrapping followed by CI/CD).</li>
+<li>Cloud DNS Managed Private Zone (<code>google_dns_managed_zone</code>) configuration for <code>run.app.</code> bound to <code>vpc_network</code>, mapping <code>*.run.app</code> directly to Private Google Access VIPs (<code>199.36.153.4/30 / 199.36.153.8/30</code>), alongside external DNS records and database schema initialization.</li>
+</ul>
+<ol>
+<li><strong>Request review</strong>: Present the implementation plan to the user for</li>
+</ol>
+<p>    approval. Iterate as needed.</p>
+<hr>
+<h5>Phase 4: Solution validation</h5>
+<ol>
+<li><strong>Define solution verification steps &amp; requirements</strong>: During validation planning, mandate these 5 verification steps across any deployed environment:</li>
+</ol>
+<ul>
+<li><strong>SSL Provisioning</strong>: Verify that the Google-managed SSL certificate (<code>google_compute_managed_ssl_certificate</code>) becomes <code>ACTIVE</code> (checking <code>--global</code> status or regional equivalents).</li>
+<li><strong>Frontend Ingress Block</strong>: Verify that direct internet access targeting the Tier 1 Frontend&#39;s default <code>*.run.app</code> URL is blocked (<code>HTTP 403 Forbidden</code> from edge screening).</li>
+<li><strong>Backend Ingress Block</strong>: Verify that direct internet access targeting internal compute tiers&#39; <code>*.run.app</code> URLs (<code>INGRESS_TRAFFIC_INTERNAL_ONLY</code>) is blocked across all internal microservice tiers (<code>HTTP 404 Not Found</code> or <code>HTTP 403 Forbidden</code>).</li>
+<li><strong>Frontend Public Access via Application Load Balancer</strong>: Verify that accessing the custom domain routes successfully to the presentation tier via the Application Load Balancer (<code>HTTP 200</code> to <code>399</code>).</li>
+<li><strong>Edge WAF Protection</strong>: Verify that a simulated SQL injection request (<code>/?id=1%20OR%201=1</code> on the custom domain) is intercepted and blocked (<code>HTTP 403 Forbidden</code> from Cloud Armor).</li>
+<li><strong>Private Server-to-Server Connectivity</strong>: Verify via Cloud Run application logs (<code>Logs Explorer</code>) and database connection pooling telemetry (<code>Cloud SQL Query Insights</code>) that tier 1 -&gt; tier 2 -&gt; data tier queries succeed over private VPC fiber (<code>Direct VPC Egress</code> + <code>Private Service Connect</code> / <code>Private Services Access</code>).</li>
+</ul>
+<ol>
+<li><strong>Generate tailored automated validation script</strong>: Rather than relying on a static pre-packaged script, <strong>generate a custom automated validation script</strong> (e.g., self-contained Python validation script using standard built-in <code>urllib</code> / <code>subprocess</code> libraries, or a cross-platform bash/PowerShell script) customized precisely to the user&#39;s deployed domain, SSL certificate name, and exact multi-tier <code>*.run.app</code> URIs.</li>
+</ol>
+<ol>
+<li><strong>Provide cross-platform execution guidance</strong>: Explain how the user can execute the generated script across their target OS (<code>macOS</code>, <code>Linux</code>, <code>Windows PowerShell</code>, or zero-install <strong>Google Cloud Shell</strong> (<code>https://shell.cloud.google.com</code>)).</li>
+</ol>
+<ol>
+<li><strong>Compile validation report</strong>: Document the validation checks, the generated verification script code, execution commands, and expected outcomes in Section 6.4 (&quot;Solution verification guide and custom automated validation script&quot;) inside <code>assets/output-template.md</code>.</li>
+</ol>
+<ol>
+<li><strong>Conduct validation and finalize</strong>: Assist the user in running the generated verification script, inspecting logs, and troubleshooting any DNS or WAF propagation issues. Request final approval.</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app" aria-label="Copy install google-cloud-solution-n-tier-serverless-web-app">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-solution-n-tier-serverless-web-app/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

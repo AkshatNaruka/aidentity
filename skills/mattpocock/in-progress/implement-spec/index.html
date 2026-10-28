@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>implement-spec — Aidentity</title>
+<meta name="description" content="Implement a specification in code.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/implement-spec/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="implement-spec — Aidentity">
+<meta property="og:description" content="Implement a specification in code.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/implement-spec/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"implement-spec","description":"Implement a specification in code.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/implement-spec/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=planning">planning</a><span>/</span>implement-spec
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>implement-spec</h1>
+      <p class="summary">Implement a specification in code.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=planning">planning</a>
+        <span class="tag warn">in progress</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>You have been provided a spec. This spec should have tickets associated with it, describing how to implement the spec.</p>
+<p>The goal is a PR which implements the entire spec on a single branch.</p>
+<p>The tickets are not a list of steps. They are a <strong>task graph</strong> with blocking relationships between them. This means there is always a <strong>frontier</strong> of tickets which are ready to be grabbed.</p>
+<p>Communication to and from subagents should be sparse. Communicate primarily through <strong>context pointers</strong>: to the spec, tickets, research notes, and previous commits. Don&#39;t duplicate information already available via pointers.</p>
+<p><strong>Implementer subagents</strong> should be run in the background where possible for <strong>maximum concurrency</strong>.</p>
+<h4>Steps</h4>
+<ol>
+<li>Read the spec and tickets. Read enough to understand the task graph.</li>
+</ol>
+<ol>
+<li>(optional) Use an <strong>exploration subagent</strong> to conduct any exploration required by the tickets - relevant codebase files or external documentation. Ensure the exploration subagent can save files - it should save its markdown notes in a directory outside the repo, accessible by all future subagents. This lets <strong>implementer subagents</strong> focus on implementation rather than exploration.</li>
+</ol>
+<ol>
+<li>Create a branch, and a draft PR. The PR should be marked as &#39;closing&#39; the spec issue and tickets.</li>
+</ol>
+<ol>
+<li>Use <strong>implementer subagents</strong> to implement each ticket. Each implementer subagent should work in its own worktree, on its own branch.</li>
+</ol>
+<ol>
+<li>Once an <strong>implementer subagent</strong> completes, merge its work to the PR branch with a <strong>merger subagent</strong>.</li>
+</ol>
+<ol>
+<li>If this changes the <strong>frontier</strong> of available tickets, kick off more <strong>implementer subagents</strong> to work on the new tickets. This allows for maximum concurrency.</li>
+</ol>
+<ol>
+<li>Once all tickets are complete, run /code-review on the PR branch. Fix all issues raised by the code review in a single <strong>implementer subagent</strong>.</li>
+</ol>
+<ol>
+<li>Mark the PR as ready for review.</li>
+</ol>
+<ol>
+<li>Clean up all <strong>implementer subagent</strong> worktrees.</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/planning-and-task-breakdown/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="planning-and-task-breakdown breaks work into ordered tasks. use when you have a spec or clear requirements and need to break work into implementable tasks. use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">planning-and-task-breakdown</span>
+    <span class="r-desc">Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/spec-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="spec-driven-development creates specs before coding. use when starting a new project, feature, or significant change and no specification exists yet. use when requirements are unclear, ambiguous, or only exist as a vague idea. use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">spec-driven-development</span>
+    <span class="r-desc">Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/to-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-spec turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-spec</span>
+    <span class="r-desc">Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/to-tickets/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-tickets break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker). planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-tickets</span>
+    <span class="r-desc">Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/in-progress/implement-spec</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/in-progress/implement-spec" aria-label="Copy install implement-spec">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>planning</dd></div>
+          <div><dt>Status</dt><dd>in-progress</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/in-progress/implement-spec</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/in-progress/implement-spec/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

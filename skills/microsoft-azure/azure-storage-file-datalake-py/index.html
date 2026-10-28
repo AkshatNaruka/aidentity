@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-storage-file-datalake-py — Aidentity</title>
+<meta name="description" content="Azure Data Lake Storage Gen2 SDK for Python. Use for hierarchical file systems, big data analytics, and file/directory operations. Triggers: &quot;data lake&quot;, &quot;DataLakeServiceClient&quot;, &quot;FileSystemClient&quot;, &quot;ADLS Gen2&quot;, &quot;hierarchical namespace&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-file-datalake-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-storage-file-datalake-py — Aidentity">
+<meta property="og:description" content="Azure Data Lake Storage Gen2 SDK for Python. Use for hierarchical file systems, big data analytics, and file/directory operations. Triggers: &quot;data lake&quot;, &quot;DataLakeServiceClient&quot;, &quot;FileSystemClient&quot;, &quot;ADLS Gen2&quot;, &quot;hierarchical namespace&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-file-datalake-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-storage-file-datalake-py","description":"Azure Data Lake Storage Gen2 SDK for Python. Use for hierarchical file systems, big data analytics, and file/directory operations. Triggers: \"data lake\", \"DataLakeServiceClient\", \"FileSystemClient\", \"ADLS Gen2\", \"hierarchical namespace\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-storage-file-datalake-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-storage-file-datalake-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-storage-file-datalake-py</h1>
+      <p class="summary">Azure Data Lake Storage Gen2 SDK for Python. Use for hierarchical file systems, big data analytics, and file/directory operations. Triggers: &quot;data lake&quot;, &quot;DataLakeServiceClient&quot;, &quot;FileSystemClient&quot;, &quot;ADLS Gen2&quot;, &quot;hierarchical namespace&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Data Lake Storage Gen2 SDK for Python</h3>
+<p>Hierarchical file system for big data analytics workloads.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-storage-file-datalake azure-identity</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_STORAGE_ACCOUNT_URL=https://&lt;account&gt;.dfs.core.windows.net  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.storage.filedatalake import DataLakeServiceClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+account_url = &quot;https://&lt;account&gt;.dfs.core.windows.net&quot;
+
+with DataLakeServiceClient(account_url=account_url, credential=credential) as service_client:
+    # Use service_client here (see following sections for operations)
+    ...</code></pre></p>
+<h4>Client Hierarchy</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>DataLakeServiceClient</code></td><td>Account-level operations</td></tr>
+<tr><td><code>FileSystemClient</code></td><td>Container (file system) operations</td></tr>
+<tr><td><code>DataLakeDirectoryClient</code></td><td>Directory operations</td></tr>
+<tr><td><code>DataLakeFileClient</code></td><td>File operations</td></tr>
+</tbody></table>
+<h4>File System Operations</h4>
+<p><pre><code># Create file system (container)
+file_system_client = service_client.create_file_system(&quot;myfilesystem&quot;)
+
+# Get existing
+file_system_client = service_client.get_file_system_client(&quot;myfilesystem&quot;)
+
+# Delete
+service_client.delete_file_system(&quot;myfilesystem&quot;)
+
+# List file systems
+for fs in service_client.list_file_systems():
+    print(fs.name)</code></pre></p>
+<h4>Directory Operations</h4>
+<p><pre><code>file_system_client = service_client.get_file_system_client(&quot;myfilesystem&quot;)
+
+# Create directory
+directory_client = file_system_client.create_directory(&quot;mydir&quot;)
+
+# Create nested directories
+directory_client = file_system_client.create_directory(&quot;path/to/nested/dir&quot;)
+
+# Get directory client
+directory_client = file_system_client.get_directory_client(&quot;mydir&quot;)
+
+# Delete directory
+directory_client.delete_directory()
+
+# Rename/move directory
+directory_client.rename_directory(new_name=&quot;myfilesystem/newname&quot;)</code></pre></p>
+<h4>File Operations</h4>
+<h5>Upload File</h5>
+<p><pre><code># Get file client
+file_client = file_system_client.get_file_client(&quot;path/to/file.txt&quot;)
+
+# Upload from local file
+with open(&quot;local-file.txt&quot;, &quot;rb&quot;) as data:
+    file_client.upload_data(data, overwrite=True)
+
+# Upload bytes
+file_client.upload_data(b&quot;Hello, Data Lake!&quot;, overwrite=True)
+
+# Append data (for large files)
+file_client.append_data(data=b&quot;chunk1&quot;, offset=0, length=6)
+file_client.append_data(data=b&quot;chunk2&quot;, offset=6, length=6)
+file_client.flush_data(12)  # Commit the data</code></pre></p>
+<h5>Download File</h5>
+<p><pre><code>file_client = file_system_client.get_file_client(&quot;path/to/file.txt&quot;)
+
+# Download all content
+download = file_client.download_file()
+content = download.readall()
+
+# Download to file
+with open(&quot;downloaded.txt&quot;, &quot;wb&quot;) as f:
+    download = file_client.download_file()
+    download.readinto(f)
+
+# Download range
+download = file_client.download_file(offset=0, length=100)</code></pre></p>
+<h5>Delete File</h5>
+<p><pre><code>file_client.delete_file()</code></pre></p>
+<h4>List Contents</h4>
+<p><pre><code># List paths (files and directories)
+for path in file_system_client.get_paths():
+    print(f&quot;{&#39;DIR&#39; if path.is_directory else &#39;FILE&#39;}: {path.name}&quot;)
+
+# List paths in directory
+for path in file_system_client.get_paths(path=&quot;mydir&quot;):
+    print(path.name)
+
+# Recursive listing
+for path in file_system_client.get_paths(path=&quot;mydir&quot;, recursive=True):
+    print(path.name)</code></pre></p>
+<h4>File/Directory Properties</h4>
+<p><pre><code># Get properties
+properties = file_client.get_file_properties()
+print(f&quot;Size: {properties.size}&quot;)
+print(f&quot;Last modified: {properties.last_modified}&quot;)
+
+# Set metadata
+file_client.set_metadata(metadata={&quot;processed&quot;: &quot;true&quot;})</code></pre></p>
+<h4>Access Control (ACL)</h4>
+<p><pre><code># Get ACL
+acl = directory_client.get_access_control()
+print(f&quot;Owner: {acl[&#39;owner&#39;]}&quot;)
+print(f&quot;Permissions: {acl[&#39;permissions&#39;]}&quot;)
+
+# Set ACL
+directory_client.set_access_control(
+    owner=&quot;user-id&quot;,
+    permissions=&quot;rwxr-x---&quot;
+)
+
+# Update ACL entries
+from azure.storage.filedatalake import AccessControlChangeResult
+directory_client.update_access_control_recursive(
+    acl=&quot;user:user-id:rwx&quot;
+)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.storage.filedatalake.aio import DataLakeServiceClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def datalake_operations():
+    async with DefaultAzureCredential() as credential:
+        async with DataLakeServiceClient(
+            account_url=&quot;https://&lt;account&gt;.dfs.core.windows.net&quot;,
+            credential=credential
+        ) as service_client:
+            file_system_client = service_client.get_file_system_client(&quot;myfilesystem&quot;)
+            file_client = file_system_client.get_file_client(&quot;test.txt&quot;)
+            
+            await file_client.upload_data(b&quot;async content&quot;, overwrite=True)
+            
+            download = await file_client.download_file()
+            content = await download.readall()
+
+import asyncio
+asyncio.run(datalake_operations())</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.storage.filedatalake</code> sync clients with <code>azure.storage.filedatalake.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with DataLakeServiceClient(...) as client:</code> (sync) or <code>async with DataLakeServiceClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / API keys when possible).</li>
+<li><strong>Use hierarchical namespace</strong> for file system semantics</li>
+<li><strong>Use <code>append_data</code> + <code>flush_data</code></strong> for large file uploads</li>
+<li><strong>Set ACLs at directory level</strong> and inherit to children</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+<li><strong>Use <code>get_paths</code> with <code>recursive=True</code></strong> for full directory listing</li>
+<li><strong>Set metadata</strong> for custom file attributes</li>
+<li><strong>Consider Blob API</strong> for simple object storage use cases</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-storage-file-datalake-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-storage-file-datalake-py" aria-label="Copy install azure-storage-file-datalake-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-storage-file-datalake-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-storage-file-datalake-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>finishing-a-development-branch — Aidentity</title>
+<meta name="description" content="Use when implementation is complete, all tests pass, and you need to decide how to integrate the work">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/finishing-a-development-branch/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="finishing-a-development-branch — Aidentity">
+<meta property="og:description" content="Use when implementation is complete, all tests pass, and you need to decide how to integrate the work">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/finishing-a-development-branch/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"finishing-a-development-branch","description":"Use when implementation is complete, all tests pass, and you need to decide how to integrate the work","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/finishing-a-development-branch/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>finishing-a-development-branch
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>finishing-a-development-branch</h1>
+      <p class="summary">Use when implementation is complete, all tests pass, and you need to decide how to integrate the work</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Finishing a Development Branch</h3>
+<h4>Overview</h4>
+<p><strong>Core principle:</strong> Verify tests → Detect environment → Present options → Execute choice → Clean up.</p>
+<p><strong>Announce at start:</strong> &quot;I&#39;m using the finishing-a-development-branch skill to complete this work.&quot;</p>
+<h4>Step 1: Verify Tests</h4>
+<p>Run the project&#39;s full test suite (<code>npm test</code> / <code>cargo test</code> / <code>pytest</code> / <code>go test ./...</code>).</p>
+<p><strong>If tests fail</strong>, report the failures and stop — the menu comes after a green suite:</p>
+<p><pre><code>Tests failing (&lt;N&gt; failures). Must fix before completing:
+
+[Show failures]</code></pre></p>
+<p><strong>If tests pass:</strong> continue to Step 2.</p>
+<h4>Step 2: Detect Environment</h4>
+<p><pre><code>GIT_DIR=$(cd &quot;$(git rev-parse --git-dir)&quot; 2&gt;/dev/null &amp;&amp; pwd -P)
+GIT_COMMON=$(cd &quot;$(git rev-parse --git-common-dir)&quot; 2&gt;/dev/null &amp;&amp; pwd -P)
+# Capture now, while still inside the workspace — Step 5 changes directory
+# before cleanup (Step 6) needs this value
+WORKTREE_PATH=$(git rev-parse --show-toplevel)</code></pre></p>
+<p>This determines which menu to show and how cleanup works:</p>
+<table><thead><tr><th>State</th><th>Menu</th><th>Cleanup</th></tr></thead><tbody>
+<tr><td><code>GIT_DIR == GIT_COMMON</code> (normal repo)</td><td>Standard 3 options</td><td>No worktree to clean up</td></tr>
+<tr><td><code>GIT_DIR != GIT_COMMON</code>, named branch</td><td>Standard 3 options</td><td>Provenance-based (see Step 6)</td></tr>
+<tr><td><code>GIT_DIR != GIT_COMMON</code>, detached HEAD</td><td>Reduced 2 options (no merge)</td><td>Externally managed — leave in place</td></tr>
+</tbody></table>
+<h4>Step 3: Determine Base Branch</h4>
+<p>The base branch is whatever this work forked from — usually named in the</p>
+<p>plan, the conversation, or the branch&#39;s upstream. If it is not already</p>
+<p>known, ask: &quot;This branch split from &lt;your best guess&gt; - is that correct?&quot;</p>
+<p>Confirm before merging: merging into the wrong base is expensive to undo.</p>
+<h4>Step 4: Present Options</h4>
+<p><strong>Normal repo and named-branch worktree — present exactly these 3 options:</strong></p>
+<p><pre><code>Implementation complete. What would you like to do?
+
+1. Merge back to &lt;base-branch&gt; locally
+2. Push and create a Pull Request
+3. Keep the branch as-is (I&#39;ll handle it later)
+
+Which option?</code></pre></p>
+<p><strong>Detached HEAD — present exactly these 2 options:</strong></p>
+<p><pre><code>Implementation complete. You&#39;re on a detached HEAD (externally managed workspace).
+
+1. Push as new branch and create a Pull Request
+2. Keep as-is (I&#39;ll handle it later)
+
+Which option?</code></pre></p>
+<p>Present the menu exactly as written — concise, with every option coming</p>
+<p>from the list above. Discarding the work happens only in response to your</p>
+<p>human partner explicitly asking for it (see &quot;If your human partner asks to</p>
+<p>discard the work&quot; below). Wait for their answer; the integration decision</p>
+<p>is theirs.</p>
+<h4>Step 5: Execute Choice</h4>
+<h5>Option 1: Merge Locally</h5>
+<p><pre><code># Get main repo root for CWD safety
+MAIN_ROOT=$(git -C &quot;$(git rev-parse --git-common-dir)/..&quot; rev-parse --show-toplevel)
+cd &quot;$MAIN_ROOT&quot;
+
+# Merge first — verify success before removing anything
+git checkout &lt;base-branch&gt;
+git pull
+git merge &lt;feature-branch&gt;
+
+# Verify tests on merged result
+&lt;test command&gt;</code></pre></p>
+<p>If tests fail on the merged result: stop, leave the worktree and branch in</p>
+<p>place, and investigate — nothing has been pushed, so the merge is local</p>
+<p>and recoverable.</p>
+<p>Once the merged result is green: clean up the worktree (Step 6), then</p>
+<p>delete the branch:</p>
+<p><pre><code>git branch -d &lt;feature-branch&gt;</code></pre></p>
+<h5>Option 2: Push and Create PR</h5>
+<p><pre><code>git push -u origin &lt;feature-branch&gt;
+# From a detached HEAD, name the new branch on the remote:
+# git push origin HEAD:refs/heads/&lt;new-branch&gt;</code></pre></p>
+<p>Then create the pull/merge request against &lt;base-branch&gt; with the forge&#39;s</p>
+<p>tooling — its CLI if one is available, or the creation URL most forges</p>
+<p>print when you push — following the repo&#39;s PR template and conventions if</p>
+<p>present, and report the URL to your human partner.</p>
+<p>Keep the worktree — your human partner iterates on PR feedback there.</p>
+<h5>Option 3: Keep As-Is</h5>
+<p>Report: &quot;Keeping branch &lt;name&gt;. Worktree preserved at &lt;path&gt;.&quot;</p>
+<h5>If your human partner asks to discard the work</h5>
+<p>This path exists only as a response to an explicit request to throw the</p>
+<p>work away. Confirm first:</p>
+<p><pre><code>This will permanently delete:
+- Branch &lt;name&gt;
+- All commits: &lt;commit-list&gt;
+- Worktree at &lt;path&gt;
+
+Type &#39;discard&#39; to confirm.</code></pre></p>
+<p>Wait for that exact confirmation. When it arrives:</p>
+<p><pre><code>MAIN_ROOT=$(git -C &quot;$(git rev-parse --git-common-dir)/..&quot; rev-parse --show-toplevel)
+cd &quot;$MAIN_ROOT&quot;</code></pre></p>
+<p>Then clean up the worktree (Step 6) and force-delete the branch:</p>
+<p><pre><code>git branch -D &lt;feature-branch&gt;</code></pre></p>
+<h4>Step 6: Cleanup Workspace</h4>
+<p><strong>Runs for Option 1 and confirmed discards.</strong> Options 2 and 3 always</p>
+<p>preserve the worktree. Both callers have already changed directory to the</p>
+<p>main repo root — worktree removal must run from outside the worktree —</p>
+<p>and use the <code>GIT_DIR</code>/<code>GIT_COMMON</code>/<code>WORKTREE_PATH</code> values captured in</p>
+<p>Step 2, from before that directory change.</p>
+<p><strong>If <code>GIT_DIR == GIT_COMMON</code>:</strong> Normal repo, no worktree to clean up. Done.</p>
+<p><strong>If <code>WORKTREE_PATH</code> is under <code>.worktrees/</code> or <code>worktrees/</code>:</strong> Superpowers</p>
+<p>created this worktree — we own cleanup:</p>
+<p><pre><code>git worktree remove &quot;$WORKTREE_PATH&quot;
+git worktree prune  # Self-healing: clean up any stale registrations</code></pre></p>
+<p><strong>If removal is refused</strong> (<code>contains modified or untracked files</code>): the</p>
+<p>worktree holds files that exist nowhere else — uncommitted plans, notes,</p>
+<p>or scratch work. Never <code>--force</code> on your own initiative. Show your human</p>
+<p>partner what is at stake and ask:</p>
+<p><pre><code>git -C &quot;$WORKTREE_PATH&quot; status --porcelain -uall</code></pre></p>
+<p><pre><code>Worktree removal refused — these files were never committed:
+
+&lt;file list&gt;
+
+1. Commit them to &lt;branch&gt; before cleanup
+2. Move them into &lt;main repo root&gt;
+3. Delete them (unrecoverable)
+
+Which?</code></pre></p>
+<p>Carry out the choice, then remove the worktree.</p>
+<p><strong>Otherwise:</strong> The host environment owns this workspace — leave it in</p>
+<p>place. If your platform provides a workspace-exit tool, use it.</p>
+<h4>Quick Reference</h4>
+<table><thead><tr><th>Option</th><th>Merge</th><th>Push</th><th>Keep Worktree</th><th>Cleanup Branch</th></tr></thead><tbody>
+<tr><td>1. Merge locally</td><td>yes</td><td>-</td><td>-</td><td>yes</td></tr>
+<tr><td>2. Create PR</td><td>-</td><td>yes</td><td>yes</td><td>-</td></tr>
+<tr><td>3. Keep as-is</td><td>-</td><td>-</td><td>yes</td><td>-</td></tr>
+<tr><td>Discard (explicit request only)</td><td>-</td><td>-</td><td>-</td><td>yes (force)</td></tr>
+</tbody></table>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;Tests passed earlier this session&quot;</td><td>Run the suite on the tree you are about to integrate. A green run only proves the tree it ran on.</td></tr>
+<tr><td>&quot;They obviously want it merged&quot;</td><td>Integration is your human partner&#39;s decision. Present the menu and wait.</td></tr>
+<tr><td>&quot;They seem done with this feature — I&#39;ll offer to discard it&quot;</td><td>The menu is complete as written. Discard happens only when your human partner asks for it in so many words.</td></tr>
+<tr><td>&quot;&#39;Yeah, get rid of it&#39; counts as confirmation&quot;</td><td>Only the typed word <code>discard</code> authorizes deletion.</td></tr>
+<tr><td>&quot;The PR is up, so the worktree is clutter now&quot;</td><td>PR feedback gets fixed in that worktree. It stays until the work lands.</td></tr>
+<tr><td>&quot;This other worktree looks stale — I&#39;ll clean it too&quot;</td><td>Clean up only worktrees under <code>.worktrees/</code> or <code>worktrees/</code>. Everything else belongs to the host.</td></tr>
+<tr><td>&quot;Removal refused — <code>--force</code> is just finishing the cleanup&quot;</td><td>The refusal means files exist only in that worktree. <code>--force</code> destroys them permanently. Show your human partner and ask.</td></tr>
+<tr><td>&quot;The merged-result failure is probably flaky&quot;</td><td>A failing merged result stops everything. Branch and worktree stay put while you investigate.</td></tr>
+<tr><td>&quot;The base branch is obviously main&quot;</td><td>Confirm the fork point or ask. Merging into the wrong base is expensive to undo.</td></tr>
+<tr><td>&quot;The push was rejected — force-push will fix it&quot;</td><td>A rejected push means the remote moved. Investigate; force-push only on your human partner&#39;s explicit request.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/finishing-a-development-branch</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/finishing-a-development-branch" aria-label="Copy install finishing-a-development-branch">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/finishing-a-development-branch</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/finishing-a-development-branch/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

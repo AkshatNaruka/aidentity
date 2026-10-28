@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-eventhub-rust — Aidentity</title>
+<meta name="description" content="Azure Event Hubs library for Rust. Send and receive events for streaming data ingestion and batch processing. Triggers: &quot;event hubs rust&quot;, &quot;ProducerClient rust&quot;, &quot;ConsumerClient rust&quot;, &quot;send event rust&quot;, &quot;streaming rust&quot;, &quot;eventhub rust&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-rust/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-eventhub-rust — Aidentity">
+<meta property="og:description" content="Azure Event Hubs library for Rust. Send and receive events for streaming data ingestion and batch processing. Triggers: &quot;event hubs rust&quot;, &quot;ProducerClient rust&quot;, &quot;ConsumerClient rust&quot;, &quot;send event rust&quot;, &quot;streaming rust&quot;, &quot;eventhub rust&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-rust/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-eventhub-rust","description":"Azure Event Hubs library for Rust. Send and receive events for streaming data ingestion and batch processing. Triggers: \"event hubs rust\", \"ProducerClient rust\", \"ConsumerClient rust\", \"send event rust\", \"streaming rust\", \"eventhub rust\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-rust/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-eventhub-rust
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-eventhub-rust</h1>
+      <p class="summary">Azure Event Hubs library for Rust. Send and receive events for streaming data ingestion and batch processing. Triggers: &quot;event hubs rust&quot;, &quot;ProducerClient rust&quot;, &quot;ConsumerClient rust&quot;, &quot;send event rust&quot;, &quot;streaming rust&quot;, &quot;eventhub rust&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Event Hubs library for Rust</h3>
+<p>Client library for Azure Event Hubs — send and receive events for streaming data ingestion.</p>
+<p>Use this skill when:</p>
+<ul>
+<li>An app needs to send events to Azure Event Hubs from Rust</li>
+<li>You need to receive and process events from partitions</li>
+<li>You need batch sending for throughput optimization</li>
+<li>You need to control consumer start position</li>
+</ul>
+<p>&gt; <strong>IMPORTANT:</strong> Only use the official <code>azure_messaging_eventhubs</code> crate published by the <a href="https://crates.io/users/azure-sdk" rel="noopener">azure-sdk</a> crates.io user. Do NOT use unofficial or community crates. Official crates use underscores in names and none have version 0.21.0.</p>
+<h4>Installation</h4>
+<p><pre><code>cargo add azure_messaging_eventhubs azure_identity tokio futures</code></pre></p>
+<p>&gt; <code>DeveloperToolsCredential::new(None)?</code> already returns an <code>Arc&lt;DeveloperToolsCredential&gt;</code>, so you can pass or clone it directly into <code>.open()</code>. Add <code>azure_core</code> only when you need direct <code>azure_core</code> imports such as <code>ErrorKind</code>.</p>
+<h4>Environment Variables</h4>
+<p><pre><code>EVENTHUBS_HOST=&lt;namespace&gt;.servicebus.windows.net # Required — fully qualified namespace
+EVENTHUB_NAME=&lt;eventhub-name&gt;                     # Required — name of the Event Hub</code></pre></p>
+<h4>Key Concepts</h4>
+<table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Namespace</strong></td><td>Container for one or more Event Hubs</td></tr>
+<tr><td><strong>Event Hub</strong></td><td>Stream of events, partitioned for parallel reads</td></tr>
+<tr><td><strong>Partition</strong></td><td>Ordered, append-only sequence of events</td></tr>
+<tr><td><strong>Producer</strong></td><td>Sends events via <code>ProducerClient</code></td></tr>
+<tr><td><strong>Consumer</strong></td><td>Receives events from partitions via <code>ConsumerClient</code></td></tr>
+</tbody></table>
+<h4>Authentication</h4>
+<p>Rust Azure SDK code must not use <code>DefaultAzureCredential</code>. The Rust identity crate does not provide that type.</p>
+<p><pre><code>use azure_identity::DeveloperToolsCredential;
+use azure_messaging_eventhubs::ProducerClient;
+
+#[tokio::main]
+async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    // Local dev: DeveloperToolsCredential. Production: use ManagedIdentityCredential.
+    let credential = DeveloperToolsCredential::new(None)?;
+
+    let producer = ProducerClient::builder()
+        .open(
+            &quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+            &quot;&lt;eventhub-name&gt;&quot;,
+            credential.clone(),
+        )
+        .await?;
+    Ok(())
+}</code></pre></p>
+<p>Prefer the crate README/examples when checking builder signatures and receive-stream event wrapper shapes.</p>
+<h4>Core Workflow</h4>
+<h5>Send Events</h5>
+<p><pre><code>// Send a single event
+producer.send_event(vec![1, 2, 3, 4], None).await?;</code></pre></p>
+<h5>Send Batch</h5>
+<p><pre><code>let batch = producer.create_batch(None).await?;
+batch.try_add_event_data(vec![1, 2, 3, 4], None)?;
+
+producer.send_batch(batch, None).await?;</code></pre></p>
+<h5>Receive Events</h5>
+<p><pre><code>use azure_identity::DeveloperToolsCredential;
+use azure_messaging_eventhubs::ConsumerClient;
+
+// Local dev: DeveloperToolsCredential. Production: use ManagedIdentityCredential.
+let credential = DeveloperToolsCredential::new(None)?;
+let consumer = ConsumerClient::builder()
+    .open(
+        &quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+        &quot;&lt;eventhub-name&gt;&quot;.to_string(),
+        credential.clone(),
+    )
+    .await?;</code></pre></p>
+<h5>Receive from Partition</h5>
+<p><pre><code>use futures::stream::StreamExt;
+use azure_messaging_eventhubs::{
+    ConsumerClient, OpenReceiverOptions, StartLocation, StartPosition,
+};
+
+let receiver = consumer
+    .open_receiver_on_partition(
+        &quot;0&quot;.to_string(),
+        Some(OpenReceiverOptions {
+            start_position: Some(StartPosition {
+                location: StartLocation::Earliest,
+                ..Default::default()
+            }),
+            ..Default::default()
+        }),
+    )
+    .await?;
+
+let mut stream = receiver.stream_events();
+while let Some(event_result) = stream.next().await {
+    match event_result {
+        // Body is on the inner event data, not the received wrapper: `event.event_data().body()`.
+        Ok(event) =&gt; {
+            let body = event.event_data().body().unwrap_or_default();
+            println!(&quot;Received: {:?}&quot;, body);
+        }
+        Err(err) =&gt; eprintln!(&quot;Error: {:?}&quot;, err),
+    }
+}</code></pre></p>
+<h4>RBAC Roles</h4>
+<p>For Entra ID auth, assign one of these roles:</p>
+<table><thead><tr><th>Role</th><th>Access</th></tr></thead><tbody>
+<tr><td><code>Azure Event Hubs Data Sender</code></td><td>Send events</td></tr>
+<tr><td><code>Azure Event Hubs Data Receiver</code></td><td>Receive events</td></tr>
+<tr><td><code>Azure Event Hubs Data Owner</code></td><td>Full access</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Use <code>cargo add</code> to manage dependencies, never edit <code>Cargo.toml</code> directly.</strong> Add and remove Rust SDK dependencies with cargo commands instead of manual manifest edits.</li>
+<li><strong>Pass or clone credentials directly into <code>.open()</code>.</strong> <code>DeveloperToolsCredential::new(None)?</code> already returns an <code>Arc</code>, so you do not need to annotate the binding as <code>Arc&lt;dyn TokenCredential&gt;</code> unless you are naming that trait object type explicitly.</li>
+<li><strong>Match the builder signature.</strong> <code>ProducerClient::builder().open(...)</code> takes the hub name as <code>&amp;str</code>, while <code>ConsumerClient::builder().open(...)</code> takes an owned <code>String</code>.</li>
+<li><strong>Use <code>DeveloperToolsCredential</code></strong> for local dev, <strong><code>ManagedIdentityCredential</code></strong> for production — Rust does not provide a single <code>DefaultAzureCredential</code> type</li>
+<li><strong>Never hardcode credentials</strong> — use environment variables or managed identity</li>
+<li><strong>Use batching</strong> — <code>create_batch</code> + <code>send_batch</code> for throughput optimization</li>
+<li><strong>Handle errors per event</strong> — match on <code>Ok</code>/<code>Err</code> in the event stream</li>
+<li><strong>Extract event bodies via <code>event.event_data().body()</code></strong>, not <code>event.body()</code> — <code>ReceivedEventData</code> wraps the underlying <code>EventData</code>.</li>
+<li><strong>Specify start position</strong> — use <code>StartLocation::Earliest</code> or <code>StartLocation::Latest</code> to control where consumption begins</li>
+<li><strong>Run <code>cargo clippy -- -D warnings</code></strong> when the prompt, eval, or CI expects lint-clean output</li>
+</ol>
+<h4>Reference Links</h4>
+<table><thead><tr><th>Resource</th><th>Link</th></tr></thead><tbody>
+<tr><td>API Reference</td><td><a href="https://docs.rs/azure_messaging_eventhubs/latest/azure_messaging_eventhubs" rel="noopener">https://docs.rs/azure_messaging_eventhubs/latest/azure_messaging_eventhubs</a></td></tr>
+<tr><td>crates.io</td><td><a href="https://crates.io/crates/azure_messaging_eventhubs" rel="noopener">https://crates.io/crates/azure_messaging_eventhubs</a></td></tr>
+<tr><td>Source Code</td><td><a href="https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/eventhubs/azure_messaging_eventhubs" rel="noopener">https://github.com/Azure/azure-sdk-for-rust/tree/main/sdk/eventhubs/azure_messaging_eventhubs</a></td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-eventhub-rust</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-eventhub-rust" aria-label="Copy install azure-eventhub-rust">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-eventhub-rust</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-eventhub-rust/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

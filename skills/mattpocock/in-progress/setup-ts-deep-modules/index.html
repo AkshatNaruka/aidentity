@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>setup-ts-deep-modules — Aidentity</title>
+<meta name="description" content="Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/setup-ts-deep-modules/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="setup-ts-deep-modules — Aidentity">
+<meta property="og:description" content="Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/setup-ts-deep-modules/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"setup-ts-deep-modules","description":"Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/in-progress/setup-ts-deep-modules/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>setup-ts-deep-modules
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>setup-ts-deep-modules</h1>
+      <p class="summary">Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag warn">in progress</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Setup TS Deep Modules</h3>
+<p>Make every package in this repo a <strong>deep module</strong>: a lot of behaviour behind a small interface. A package&#39;s public surface is its <strong>entry points</strong> (the files at the package root), and everything in its subfolders is hidden. This skill installs <a href="https://github.com/sverweij/dependency-cruiser" rel="noopener">dependency-cruiser</a> and the rules that make the entry points the only way in, then proves the rules bite.</p>
+<p>For the vocabulary (deep module, interface, seam, depth), call the Skill tool with &quot;codebase-design&quot; and use its language throughout.</p>
+<h4>The shape this enforces</h4>
+<p><pre><code>src/packages/
+  &lt;name&gt;/
+    index.ts        ← an entry point (public). Import this from outside.
+    client.ts       ← another entry point. Packages may expose SEVERAL.
+    lib/            ← implementation: hidden from outside, free to import each other.
+    tests/          ← co-located tests + fixtures (a subfolder, so private).</code></pre></p>
+<p>The public surface is the package&#39;s <strong>root files</strong>, not one designated <code>index.ts</code>. By convention implementation lives in <code>lib/</code> and tests in <code>tests/</code>, giving every package the same two-folder shape. The rule itself is general, though: <em>anything</em> in <em>any</em> subfolder is private, so you never extend the config to add a folder.</p>
+<p>Four rules, all <code>error</code>:</p>
+<ol>
+<li><strong>Entry-point boundary</strong>: code outside a package (app code or another package) may import only that package&#39;s entry points (its root files), never anything in its subfolders.</li>
+<li><strong>Intra-package freedom</strong>: a package&#39;s own files import each other freely.</li>
+<li><strong>Tests through the entry points</strong>: files under <code>&lt;pkg&gt;/tests/</code> may import any package&#39;s entry points and their own <code>tests/</code> fixtures, but never any package&#39;s subfolder internals (not even their own). Integration tests across packages are fine; deep imports are not.</li>
+<li><strong>No cycles</strong>: no dependency cycles.</li>
+</ol>
+<p><strong>Entry points, not a barrel.</strong> Because the public surface is <em>every</em> root file, a package can expose several small entry points (<code>index.ts</code>, <code>client.ts</code>, <code>server.ts</code>) instead of funnelling everything through one giant <code>index.ts</code>. Barrel files that re-export a whole subtree are discouraged; keep entry points small and hide implementation in subfolders.</p>
+<p>Layering (which packages may depend on which) is a <em>different</em> concern and is left as a commented stub in the config for this repo to fill in.</p>
+<h4>Steps</h4>
+<h5>1. Detect the environment</h5>
+<ul>
+<li><strong>Package manager</strong>: <code>pnpm-lock.yaml</code> → pnpm, <code>yarn.lock</code> → yarn, <code>bun.lockb</code> → bun, else npm. Use it for every command below (<code>pnpm</code>/<code>yarn</code>/<code>npm run</code>/<code>bunx</code>).</li>
+<li><strong>Packages root</strong>: if <code>src/</code> exists use <code>src/packages</code>, else <code>packages</code>. Confirm the choice with the user if the repo already has a different obvious convention.</li>
+<li><strong>Existing config</strong>: check for a <code>.dependency-cruiser.*</code> file. If one exists, do <strong>not</strong> overwrite it: merge the four rules and the options in, and tell the user what you added.</li>
+</ul>
+<p><strong>Done when:</strong> package manager, packages root, and existing-config status are all known.</p>
+<h5>2. Install dependency-cruiser</h5>
+<p>Install <code>dependency-cruiser</code> as a devDependency with the detected package manager.</p>
+<p><strong>Done when:</strong> <code>dependency-cruiser</code> is in <code>devDependencies</code>.</p>
+<h5>3. Write the config</h5>
+<p>Copy [<code>dependency-cruiser.config.cjs</code>](./dependency-cruiser.config.cjs) to the repo root as <code>.dependency-cruiser.cjs</code>. Set <code>PACKAGES_ROOT</code> to the root detected in step 1. The rules are path-depth based and extension-agnostic, so nothing else needs adapting.</p>
+<p><strong>Done when:</strong> <code>.dependency-cruiser.cjs</code> exists with the correct <code>PACKAGES_ROOT</code>, and the four forbidden rules are present.</p>
+<h5>4. Wire it into the checks</h5>
+<ul>
+<li>Add a <code>lint:boundaries</code> script: <code>depcruise &lt;packages-root&gt;</code> (or <code>depcruise src</code>).</li>
+<li>Fold it into the repo&#39;s umbrella check command, the one that already runs typecheck (e.g. a <code>check</code> / <code>ci</code> / <code>validate</code> script). Do <strong>not</strong> touch <code>tsconfig</code> or add path aliases.</li>
+<li>If there is no umbrella script, add <code>lint:boundaries</code> and tell the user to include it in CI.</li>
+</ul>
+<p><strong>Done when:</strong> <code>lint:boundaries</code> exists and runs as part of the same command as typecheck.</p>
+<h5>5. Scaffold the example package</h5>
+<p>Create a committed <code>&lt;packages-root&gt;/example/</code> as a copy-me template:</p>
+<ul>
+<li><code>index.ts</code> is an entry point. Export one function that delegates to an internal file (so the package is visibly <em>deep</em>, not a pass-through).</li>
+<li><code>lib/impl.ts</code>: an internal file in a <strong>subfolder</strong>, imported by <code>index.ts</code>, not reachable from outside.</li>
+<li><code>tests/example.test.ts</code> imports <strong>only</strong> <code>../index</code> (an entry point) and asserts against the public function.</li>
+</ul>
+<p>Tell the user this is a starter template to copy or delete.</p>
+<p><strong>Done when:</strong> the example package exists, exposes its behaviour through a root entry point, and hides <code>impl</code> in a subfolder.</p>
+<h5>6. Prove the rules bite</h5>
+<p>This is the completion criterion for the whole skill: a config that doesn&#39;t fail on a violation is worthless.</p>
+<ol>
+<li>Run <code>lint:boundaries</code>. It must <strong>pass</strong> on the clean example.</li>
+<li>Temporarily add a deep import to <code>tests/example.test.ts</code> (e.g. <code>import { thing } from &quot;../lib/impl&quot;</code>). Run <code>lint:boundaries</code> again; it must <strong>fail</strong> with <code>tests-through-entrypoints</code>.</li>
+<li>Revert the deep import. Run once more, and it must <strong>pass</strong>.</li>
+</ol>
+<p><strong>Done when:</strong> you have observed a pass, then a fail on the deep import, then a pass again. If step 2 does not fail, the rules are not wired correctly, so fix before finishing.</p>
+<h5>7. Document the convention</h5>
+<p>Write a <code>README.md</code> <strong>in the packages folder</strong> (<code>&lt;packages-root&gt;/README.md</code>, next to the packages it governs) covering: the <code>src/packages/&lt;name&gt;/</code> layout (entry points at the root, <code>lib/</code> for implementation, <code>tests/</code> for tests), &quot;import only through a package&#39;s entry points (its root files)&quot;, and how to run <code>lint:boundaries</code>. <strong>Discourage barrel files</strong> explicitly: expose several small entry points instead of re-exporting a whole subtree through one index. Keep it to the copy-me snippet plus the four rules in one paragraph each.</p>
+<p>Then add a <strong>context pointer</strong> to it from the repo&#39;s agent-instructions file (<code>CLAUDE.md</code> if present, else <code>AGENTS.md</code>, creating <code>AGENTS.md</code> if neither exists). One line is enough, e.g. <code>Packages are deep modules: see [src/packages/README.md](./src/packages/README.md) before adding or importing one.</code> This is what makes an agent discover the boundary rule instead of tripping over it.</p>
+<p><strong>Done when:</strong> <code>&lt;packages-root&gt;/README.md</code> exists and discourages barrels, and the repo&#39;s <code>CLAUDE.md</code>/<code>AGENTS.md</code> links to it.</p>
+<h4>Notes</h4>
+<ul>
+<li>The config&#39;s <code>$1</code> back-references (dependency-cruiser&#39;s group matching) are what let a package reach its own internals while outsiders can&#39;t. Don&#39;t flatten them into separate per-package rules.</li>
+<li>Public vs private is decided by <strong>depth</strong>: a package&#39;s root files are entry points; anything in a subfolder is private. The conventional subfolders are <code>lib/</code> (implementation) and <code>tests/</code>, but the rule doesn&#39;t hardcode them: any subfolder is private, so a new folder never needs a config change. Adding an entry point is just adding a root file (no barrel).</li>
+<li>Packages are <strong>flat</strong>: one tier of immediate children under the root. A package&#39;s internals may nest as deep as you like; a package may not contain another package.</li>
+<li>Use <code>.cjs</code> (not <code>.js</code>) so the config&#39;s <code>module.exports</code> works even in <code>&quot;type&quot;: &quot;module&quot;</code> repos.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/in-progress/setup-ts-deep-modules</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/in-progress/setup-ts-deep-modules" aria-label="Copy install setup-ts-deep-modules">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>in-progress</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/in-progress/setup-ts-deep-modules</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/in-progress/setup-ts-deep-modules/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

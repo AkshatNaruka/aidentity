@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>using-agent-skills — Aidentity</title>
+<meta name="description" content="Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/using-agent-skills/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="using-agent-skills — Aidentity">
+<meta property="og:description" content="Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/using-agent-skills/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"using-agent-skills","description":"Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/using-agent-skills/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=agents">agents</a><span>/</span>using-agent-skills
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>using-agent-skills</h1>
+      <p class="summary">Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=agents">agents</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Using Agent Skills</h3>
+<h4>Overview</h4>
+<p>Agent Skills is a collection of engineering workflow skills organized by development phase. Each skill encodes a specific process that senior engineers follow. This meta-skill helps you discover and apply the right skill for your current task.</p>
+<h4>Skill Discovery</h4>
+<p>When a task arrives, identify the development phase and apply the corresponding skill:</p>
+<p><pre><code>Task arrives
+    │
+    ├── Don&#39;t know what you want yet? ──────→ interview-me
+    ├── Have a rough concept, need variants? → idea-refine
+    ├── New project/feature/change? ──→ spec-driven-development
+    ├── No quality bar written down? ──→ constraint-driven-development
+    ├── Have a spec, need tasks? ──────→ planning-and-task-breakdown
+    ├── Implementing code? ────────────→ incremental-implementation
+    │   ├── UI work? ─────────────────→ frontend-ui-engineering
+    │   ├── API work? ────────────────→ api-and-interface-design
+    │   ├── Need better context? ─────→ context-engineering
+    │   ├── Need doc-verified code? ───→ source-driven-development
+    │   └── Stakes high / unfamiliar code? ──→ doubt-driven-development
+    ├── Writing/running tests? ────────→ test-driven-development
+    │   └── Browser-based? ───────────→ browser-testing-with-devtools
+    ├── Something broke? ──────────────→ debugging-and-error-recovery
+    ├── Reviewing code? ───────────────→ code-review-and-quality
+    │   ├── Too complex? ─────────────→ code-simplification
+    │   ├── Security concerns? ───────→ security-and-hardening
+    │   └── Performance concerns? ────→ performance-optimization
+    ├── Committing/branching? ─────────→ git-workflow-and-versioning
+    ├── CI/CD pipeline work? ──────────→ ci-cd-and-automation
+    ├── Deprecating/migrating? ────────→ deprecation-and-migration
+    ├── Writing docs/ADRs? ───────────→ documentation-and-adrs
+    ├── Adding logs/metrics/alerts? ───→ observability-and-instrumentation
+    └── Deploying/launching? ─────────→ shipping-and-launch</code></pre></p>
+<h4>Core Operating Behaviors</h4>
+<p>These behaviors apply at all times, across all skills. They are non-negotiable.</p>
+<h5>1. Surface Assumptions</h5>
+<p>Before implementing anything non-trivial, explicitly state your assumptions:</p>
+<p><pre><code>ASSUMPTIONS I&#39;M MAKING:
+1. [assumption about requirements]
+2. [assumption about architecture]
+3. [assumption about scope]
+→ Correct me now or I&#39;ll proceed with these.</code></pre></p>
+<p>Don&#39;t silently fill in ambiguous requirements. The most common failure mode is making wrong assumptions and running with them unchecked. Surface uncertainty early — it&#39;s cheaper than rework.</p>
+<h5>2. Manage Confusion Actively</h5>
+<p>When you encounter inconsistencies, conflicting requirements, or unclear specifications:</p>
+<ol>
+<li><strong>STOP.</strong> Do not proceed with a guess.</li>
+<li>Name the specific confusion.</li>
+<li>Present the tradeoff or ask the clarifying question.</li>
+<li>Wait for resolution before continuing.</li>
+</ol>
+<p><strong>Bad:</strong> Silently picking one interpretation and hoping it&#39;s right.</p>
+<p><strong>Good:</strong> &quot;I see X in the spec but Y in the existing code. Which takes precedence?&quot;</p>
+<h5>3. Push Back When Warranted</h5>
+<p>You are not a yes-machine. When an approach has clear problems:</p>
+<ul>
+<li>Point out the issue directly</li>
+<li>Explain the concrete downside (quantify when possible — &quot;this adds ~200ms latency&quot; not &quot;this might be slower&quot;)</li>
+<li>Propose an alternative</li>
+<li>Accept the human&#39;s decision if they override with full information</li>
+</ul>
+<p>Sycophancy is a failure mode. &quot;Of course!&quot; followed by implementing a bad idea helps no one. Honest technical disagreement is more valuable than false agreement.</p>
+<h5>4. Enforce Simplicity</h5>
+<p>Your natural tendency is to overcomplicate. Actively resist it.</p>
+<p>Before finishing any implementation, ask:</p>
+<ul>
+<li>Can this be done in fewer lines?</li>
+<li>Are these abstractions earning their complexity?</li>
+<li>Would a staff engineer look at this and say &quot;why didn&#39;t you just...&quot;?</li>
+</ul>
+<p>If you build 1000 lines and 100 would suffice, you have failed. Prefer the boring, obvious solution. Cleverness is expensive.</p>
+<h5>5. Maintain Scope Discipline</h5>
+<p>Touch only what you&#39;re asked to touch.</p>
+<p>Do NOT:</p>
+<ul>
+<li>Remove comments you don&#39;t understand</li>
+<li>&quot;Clean up&quot; code orthogonal to the task</li>
+<li>Refactor adjacent systems as a side effect</li>
+<li>Delete code that seems unused without explicit approval</li>
+<li>Add features not in the spec because they &quot;seem useful&quot;</li>
+</ul>
+<p>Your job is surgical precision, not unsolicited renovation.</p>
+<h5>6. Verify, Don&#39;t Assume</h5>
+<p>Every skill includes a verification step. A task is not complete until verification passes. &quot;Seems right&quot; is never sufficient — there must be evidence (passing tests, build output, runtime data).</p>
+<p>Per-skill verification is the local check. The project-wide bar that applies to <em>every</em> change, regardless of which skill is active, is the Definition of Done: tests pass, no regressions, behavior verified at runtime, docs updated. See <code>../../references/definition-of-done.md</code>. It complements each task&#39;s acceptance criteria rather than replacing them.</p>
+<h4>Failure Modes to Avoid</h4>
+<p>These are the subtle errors that look like productivity but create problems:</p>
+<ol>
+<li>Making wrong assumptions without checking</li>
+<li>Not managing your own confusion — plowing ahead when lost</li>
+<li>Not surfacing inconsistencies you notice</li>
+<li>Not presenting tradeoffs on non-obvious decisions</li>
+<li>Being sycophantic (&quot;Of course!&quot;) to approaches with clear problems</li>
+<li>Overcomplicating code and APIs</li>
+<li>Modifying code or comments orthogonal to the task</li>
+<li>Removing things you don&#39;t fully understand</li>
+<li>Building without a spec because &quot;it&#39;s obvious&quot;</li>
+<li>Skipping verification because &quot;it looks right&quot;</li>
+</ol>
+<h4>Skill Rules</h4>
+<ol>
+<li><strong>Check for an applicable skill before starting work.</strong> Skills encode processes that prevent common mistakes.</li>
+</ol>
+<ol>
+<li><strong>Skills are workflows, not suggestions.</strong> Follow the steps in order. Don&#39;t skip verification steps.</li>
+</ol>
+<ol>
+<li><strong>Multiple skills can apply.</strong> A feature implementation might involve <code>idea-refine</code> → <code>spec-driven-development</code> → <code>planning-and-task-breakdown</code> → <code>incremental-implementation</code> → <code>test-driven-development</code> → <code>code-review-and-quality</code> → <code>code-simplification</code> → <code>shipping-and-launch</code> in sequence.</li>
+</ol>
+<ol>
+<li><strong>When in doubt, start with a spec.</strong> If the task is non-trivial and there&#39;s no spec, begin with <code>spec-driven-development</code>.</li>
+</ol>
+<h4>Lifecycle Sequence</h4>
+<p>For a complete feature, the typical skill sequence is:</p>
+<p><pre><code>1.  interview-me                → Extract what the user actually wants
+2.  idea-refine                 → Refine vague ideas
+3.  spec-driven-development     → Define what we&#39;re building
+4.  planning-and-task-breakdown → Break into verifiable chunks
+5.  context-engineering         → Load the right context
+6.  source-driven-development   → Verify against official docs
+7.  incremental-implementation  → Build slice by slice
+8.  observability-and-instrumentation → Instrument as you build (runs parallel with 7-9, not after)
+9.  doubt-driven-development    → Cross-examine non-trivial decisions in-flight
+10. test-driven-development     → Prove each slice works
+11. code-review-and-quality     → Review before merge
+12. code-simplification         → Reduce unnecessary complexity while preserving behavior
+13. git-workflow-and-versioning → Clean commit history
+14. documentation-and-adrs      → Document decisions
+15. deprecation-and-migration   → Retire old systems and move users safely when needed
+16. shipping-and-launch         → Deploy safely</code></pre></p>
+<p>Not every task needs every skill. A bug fix might only need: <code>debugging-and-error-recovery</code> → <code>test-driven-development</code> → <code>code-review-and-quality</code>.</p>
+<h4>Quick Reference</h4>
+<table><thead><tr><th>Phase</th><th>Skill</th><th>One-Line Summary</th></tr></thead><tbody>
+<tr><td>Define</td><td>interview-me</td><td>Surface what the user actually wants before any plan, spec, or code exists</td></tr>
+<tr><td>Define</td><td>idea-refine</td><td>Refine ideas through structured divergent and convergent thinking</td></tr>
+<tr><td>Define</td><td>spec-driven-development</td><td>Requirements and acceptance criteria before code</td></tr>
+<tr><td>Plan</td><td>planning-and-task-breakdown</td><td>Decompose into small, verifiable tasks</td></tr>
+<tr><td>Build</td><td>incremental-implementation</td><td>Thin vertical slices, test each before expanding</td></tr>
+<tr><td>Build</td><td>source-driven-development</td><td>Verify against official docs before implementing</td></tr>
+<tr><td>Build</td><td>doubt-driven-development</td><td>Adversarial fresh-context review of every non-trivial decision</td></tr>
+<tr><td>Build</td><td>context-engineering</td><td>Right context at the right time</td></tr>
+<tr><td>Build</td><td>frontend-ui-engineering</td><td>Production-quality UI with accessibility</td></tr>
+<tr><td>Build</td><td>api-and-interface-design</td><td>Stable interfaces with clear contracts</td></tr>
+<tr><td>Verify</td><td>test-driven-development</td><td>Failing test first, then make it pass</td></tr>
+<tr><td>Verify</td><td>browser-testing-with-devtools</td><td>Chrome DevTools MCP for runtime verification</td></tr>
+<tr><td>Verify</td><td>debugging-and-error-recovery</td><td>Reproduce → localize → fix → guard</td></tr>
+<tr><td>Review</td><td>code-review-and-quality</td><td>Five-axis review with quality gates</td></tr>
+<tr><td>Review</td><td>code-simplification</td><td>Preserve behavior while reducing unnecessary complexity</td></tr>
+<tr><td>Review</td><td>security-and-hardening</td><td>OWASP prevention, input validation, least privilege</td></tr>
+<tr><td>Review</td><td>performance-optimization</td><td>Measure first, optimize only what matters</td></tr>
+<tr><td>Ship</td><td>git-workflow-and-versioning</td><td>Atomic commits, clean history</td></tr>
+<tr><td>Ship</td><td>ci-cd-and-automation</td><td>Automated quality gates on every change</td></tr>
+<tr><td>Ship</td><td>deprecation-and-migration</td><td>Remove old systems and migrate users safely</td></tr>
+<tr><td>Ship</td><td>documentation-and-adrs</td><td>Document the why, not just the what</td></tr>
+<tr><td>Ship</td><td>observability-and-instrumentation</td><td>Structured logs, RED metrics, traces, symptom-based alerts</td></tr>
+<tr><td>Ship</td><td>shipping-and-launch</td><td>Pre-launch checklist, monitoring, rollback plan</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/mattpocock/productivity/writing-for-agents/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="writing-for-agents writing documents for agents. use when creating or editing skills, or modifying agents.md or claude.md. agents agents mattpocock/skills">
+  <span>
+    <span class="r-name">writing-for-agents</span>
+    <span class="r-desc">Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/agent-framework-azure-ai-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="agent-framework-azure-ai-py build azure ai foundry agents using the microsoft agent framework python sdk (agent-framework-azure-ai). use when creating persistent agents with azureaiagentsprovider, using hosted tools (code interpreter, file search, web search), integrating mcp servers, managing conversation threads, or implementing streaming responses. covers function tools, structured outputs, and multi-tool agents. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">agent-framework-azure-ai-py</span>
+    <span class="r-desc">Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/entra-agent-id/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="entra-agent-id microsoft entra agent id (preview) for creating oauth2-capable ai agent identities via microsoft graph beta api. covers agent identity blueprints, blueprintprincipals, agent identities, required permissions, sponsors, and workload identity federation. includes microsoft entra sdk for agentid (containerized sidecar) for polyglot agent authentication (docker/kubernetes), 3p agent integration, autonomous and interactive agent patterns. triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;agent identity blueprint&quot;, &quot;blueprintprincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3p agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">entra-agent-id</span>
+    <span class="r-desc">Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/m365-agents-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="m365-agents-py microsoft 365 agents sdk for python. build multichannel agents for teams/m365/copilot studio with aiohttp hosting, agentapplication routing, streaming responses, and msal-based auth. triggers: &quot;microsoft 365 agents sdk&quot;, &quot;microsoft_agents&quot;, &quot;agentapplication&quot;, &quot;start_agent_process&quot;, &quot;turncontext&quot;, &quot;copilot studio client&quot;, &quot;cloudadapter&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">m365-agents-py</span>
+    <span class="r-desc">Microsoft 365 Agents SDK for Python. Build multichannel agents for Teams/M365/Copilot Studio with aiohttp hosting, AgentApplication routing, streaming responses, and MSAL-based auth. Triggers: &quot;Microsoft 365 Agents SDK&quot;, &quot;microsoft_agents&quot;, &quot;AgentApplication&quot;, &quot;start_agent_process&quot;, &quot;TurnContext&quot;, &quot;Copilot Studio client&quot;, &quot;CloudAdapter&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/using-agent-skills</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/using-agent-skills" aria-label="Copy install using-agent-skills">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>agents</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/using-agent-skills</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/using-agent-skills/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

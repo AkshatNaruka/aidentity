@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-filestore-autoscale — Aidentity</title>
+<meta name="description" content="Inspects Google Cloud Filestore capacity and utilization, evaluates storage scaling rules, and performs capacity autoscaling (scale UP for low free space or scale DOWN for cost optimization). Use when monitoring Filestore instance headroom, resizing instance shares, configuring automated growth/shrink thresholds, or preventing out-of-space outages. Don&#39;t use for Cloud Storage (GCS) buckets, Persistent Disk block storage, or NetApp Volumes.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-filestore-autoscale/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-filestore-autoscale — Aidentity">
+<meta property="og:description" content="Inspects Google Cloud Filestore capacity and utilization, evaluates storage scaling rules, and performs capacity autoscaling (scale UP for low free space or scale DOWN for cost optimization). Use when monitoring Filestore instance headroom, resizing instance shares, configuring automated growth/shrink thresholds, or preventing out-of-space outages. Don&#39;t use for Cloud Storage (GCS) buckets, Persistent Disk block storage, or NetApp Volumes.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-filestore-autoscale/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-filestore-autoscale","description":"Inspects Google Cloud Filestore capacity and utilization, evaluates storage scaling rules, and performs capacity autoscaling (scale UP for low free space or scale DOWN for cost optimization). Use when monitoring Filestore instance headroom, resizing instance shares, configuring automated growth/shrink thresholds, or preventing out-of-space outages. Don't use for Cloud Storage (GCS) buckets, Persistent Disk block storage, or NetApp Volumes.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-filestore-autoscale/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-filestore-autoscale
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-filestore-autoscale</h1>
+      <p class="summary">Inspects Google Cloud Filestore capacity and utilization, evaluates storage scaling rules, and performs capacity autoscaling (scale UP for low free space or scale DOWN for cost optimization). Use when monitoring Filestore instance headroom, resizing instance shares, configuring automated growth/shrink thresholds, or preventing out-of-space outages. Don&#39;t use for Cloud Storage (GCS) buckets, Persistent Disk block storage, or NetApp Volumes.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Filestore Autoscale</h3>
+<p>This skill enables agents to inspect, evaluate, and modify Google Cloud</p>
+<p>Filestore instance capacities across GCP projects based on configured</p>
+<p>thresholds.</p>
+<h4>Quick Start</h4>
+<ol>
+<li>Ensure <code>gcloud</code> is installed. See <a href="https://cloud.google.com/sdk/docs/install" rel="noopener">gcloud installation guide</a> if needed.</li>
+<li>Enable essential APIs:</li>
+</ol>
+<p>   <pre><code>   gcloud services enable file.googleapis.com monitoring.googleapis.com --quiet
+   </code></pre></p>
+<ol>
+<li>Inspect fleet capacity and free space (see &quot;Discovery &amp; Read Operations&quot; below).</li>
+<li>Evaluate against configured up/down capacity thresholds.</li>
+<li>Scale target instances and apply attribution tags.</li>
+</ol>
+<h4>Attribution</h4>
+<p>Tag every Cloud Filestore command or API request provided or executed.</p>
+<p>Prefix <code>gcloud</code> commands with the correct metrics environment targeting this skill:</p>
+<p><pre><code>CLOUDSDK_METRICS_ENVIRONMENT=&quot;gcs-skills gcs-skills/1.0 (skill:google-cloud-filestore-autoscale)&quot; \
+gcloud filestore instances update ...</code></pre></p>
+<p>On direct HTTP calls to the REST API, append the <code>User-Agent</code>:</p>
+<p><pre><code>User-Agent: gcs-skills/1.0 (skill:google-cloud-filestore-autoscale)</code></pre></p>
+<h4>Conceptual &amp; Informational Queries (CRITICAL)</h4>
+<p>For purely conceptual, educational, or informational questions (e.g., &quot;What are Filestore scaling limits?&quot;,</p>
+<p>&quot;Can Basic instances scale down?&quot;, &quot;Explain Filestore Tiers&quot;):</p>
+<ul>
+<li><strong>Rule</strong>: <strong>Answer immediately using your pre-trained knowledge and the matrix below.</strong></li>
+<li><strong>Constraint</strong>: <strong>Do not execute external tool calls or API requests</strong> for basic knowledge questions.</li>
+</ul>
+<h4>Handling &quot;No-Command&quot; Constraints (CRITICAL)</h4>
+<p>If the user prompt contains constraints like &quot;Do not execute commands&quot;, &quot;without executing&quot;, or &quot;read-only&quot;:</p>
+<ul>
+<li><strong>Rule</strong>: <strong>Strictly avoid calling the <code>run_command</code> tool</strong> to execute any shell or <code>gcloud</code> commands (including read-only list/describe commands).</li>
+<li><strong>Discovery</strong>:</li>
+</ul>
+<ol>
+<li>First, check if Filestore MCP tools (<code>list_instances</code>, <code>get_instance</code>) are available and use them (these are API calls, not command executions).</li>
+<li>If MCP tools are not available, search local markdown documentation files (e.g., <code>references/instance-tiers-specs.md</code>) for any mock instance definitions or project details matching the request. (Do NOT attempt to read evaluation config files such as <code>EVAL.yaml</code> or <code>EVAL.txtpb</code> during evaluation runs as access is restricted).</li>
+<li>If no data can be found, explain the required steps and formulas, and output the exact commands the user should run, without executing them yourself.</li>
+</ol>
+<ul>
+<li><strong>Mandatory User Confirmation Requirement</strong>: Even when the user prompt asks not to execute commands or asks only for command syntax/recommendations, your response MUST STILL end with a clear question prompting the user for confirmation before executing any capacity resizing commands (e.g., <em>&quot;Would you like me to proceed with scaling <code>[instance]</code> from [A] TiB to [B] TiB? Please confirm to execute.&quot;</em>).</li>
+</ul>
+<h4>Tier &amp; Capacity Limits Matrix</h4>
+<p>Filestore tiers enforce specific boundaries and behaviors. The skill must accept both modern UI names (<code>Basic</code>, <code>Zonal</code>, <code>Regional</code>) and legacy API enums interchangeably.</p>
+<p>See <code>references/instance-tiers-specs.md</code> for the full Tier &amp; Capacity Limits Matrix (Min/Max capacities, step increments).</p>
+<p><strong>Critical Thresholds:</strong></p>
+<ul>
+<li><strong>Basic HDD / Basic SSD</strong>: Can scale up, but <strong>cannot scale down</strong>.</li>
+<li><strong>Zonal / Regional</strong>: Can scale down, but cannot shrink below their minimum floor (1 TiB or 10 TiB depending on band) AND cannot shrink below the current <code>used_bytes</code> metric.</li>
+</ul>
+<h4>Core Operational Workflow</h4>
+<h5>1. Discovery &amp; Read Operations</h5>
+<ul>
+<li><strong>MCP-First</strong>: Prefer using Filestore MCP tools (<code>list_instances</code>, <code>get_instance</code>) to discover and inspect fleet capacity.</li>
+<li><strong>CLI Fallback</strong>: If MCP is unavailable, use <code>gcloud filestore instances list --project={project_id}</code>. You MUST ask for the Project ID if not provided (e.g., &quot;to avoid inspection of unrelated projects in a multi-project environment&quot;).</li>
+<li><strong>Utilization</strong>: Fetch the 5-minute average of <code>file.googleapis.com/nfs/server/used_bytes</code> from the Cloud Monitoring API to evaluate <code>used_bytes</code>. If you cannot fetch this programmatically, state the formulas explicitly for the user.</li>
+</ul>
+<h5>2. Autoscale Needed Matrix</h5>
+<p>The skill must categorize each evaluated instance into one of 5 definitive verdicts. On the initial analysis/fleet inspection run, the skill suggests the required scaling action with target capacity and update commands, and <strong>prompts for user confirmation before executing any autoscale modifications</strong>. State the value of the &quot;Autoscale Needed&quot; column clearly as one of the following:</p>
+<ul>
+<li><strong>Yes (Scale Up)</strong>: Triggered when free space percentage is below the scale-up safety threshold (&lt; 15% free space remaining). The evaluation response MUST explicitly state that the current free space percentage is below the 15% scale-up safety threshold. Capacity must be increased by 10% (default) or step-size minimum, rounded to the tier&#39;s step increment, not exceeding the maximum capacity. Suggest target capacity, provide the attributed <code>gcloud</code> update command, and MUST conclude the response with a clear question prompting the user for confirmation to execute (e.g., <em>&quot;Would you like me to proceed with scaling <code>[instance]</code> from [A] TiB to [B] TiB? Please confirm to execute.&quot;</em>).</li>
+<li><strong>Yes (Scale Down)</strong>: Triggered when free space exceeds the scale-down threshold (&gt; 30% free space remaining) and the instance is eligible for downscaling. Capacity must be decreased by 10% (default), rounded to step size. Target capacity must be <code>&gt;= max(tier_min, used_bytes)</code>. Suggest target capacity, cost savings, and provide the attributed <code>gcloud</code> update command, prompting the user for confirmation to execute.</li>
+<li><strong>No (Healthy)</strong>: Triggered when the instance&#39;s free space is within the optimal operating range (15% – 30%). No action required.</li>
+<li><strong>No (At min capacity limit)</strong>: Triggered when free space is &gt; 30%, but the instance is already at the minimum allowed tier capacity floor (e.g. 1 TiB or 10 TiB) or currently used space limit. No action can be taken.</li>
+<li><strong>No (Tier cannot scale down)</strong>: Triggered when free space is &gt; 30%, but the instance is on a Basic tier (Basic HDD / Basic SSD) which does not support downscaling. The agent must explicitly inform the user that scale-down is not supported and suggest data migration instead. No action can be taken.</li>
+</ul>
+<h5>Output Format</h5>
+<p><strong>Every status report, evaluation, or recommendation response MUST include a markdown table summarizing the evaluated instances.</strong> Even if evaluating a single instance, format it as a table.</p>
+<p>The table MUST contain the following columns:</p>
+<ul>
+<li><code>Instance</code></li>
+<li><code>Service Tier</code></li>
+<li><code>Provisioned Capacity</code></li>
+<li><code>Used Bytes</code></li>
+<li><code>Free Space %</code></li>
+<li><code>Autoscale Needed</code> (MUST contain one of: <code>Yes (Scale Up)</code>, <code>Yes (Scale Down)</code>, <code>No (Healthy)</code>, <code>No (At min capacity limit)</code>, or <code>No (Tier cannot scale down)</code>)</li>
+</ul>
+<h5>3. Execution &amp; Confirmation Workflow</h5>
+<ol>
+<li><strong>Analysis &amp; Recommendation (First Run / Inspection)</strong>:</li>
+</ol>
+<ul>
+<li>Calculate step-aligned target capacity adhering to tier ceilings, floors, and basic scale-up only rules.</li>
+<li>Present the summary table and proposed actions.</li>
+<li><strong>MANDATORY USER CONFIRMATION PROMPT</strong>: Whenever recommending target capacity or providing a <code>gcloud filestore instances update</code> command, your response MUST explicitly include a clear question asking the user to confirm execution before any modifications are made (e.g. <em>&quot;Would you like me to proceed with scaling <code>[instance]</code> from [A] TiB to [B] TiB? Please confirm to execute.&quot;</em>) to prevent accidental billing spikes or capacity exhaustion.</li>
+<li><strong>Do not execute autoscale commands without user confirmation.</strong></li>
+</ul>
+<ol>
+<li><strong>Execution upon Confirmation</strong>:</li>
+</ol>
+<ul>
+<li>Once the user confirms (e.g., &quot;Yes, proceed with scaling&quot;, &quot;Scale instance X&quot;), execute the attributed <code>gcloud filestore instances update</code> command on the confirmed instance(s).</li>
+</ul>
+<ol>
+<li><strong>Fallback</strong>:</li>
+</ol>
+<ul>
+<li>If execution fails due to Prod mutation restrictions, output the failure reason and provide the user with the exact attributed <code>gcloud</code> command to run manually, reminding them to confirm before manual execution.</li>
+</ul>
+<h5>Custom Thresholds</h5>
+<p>If the user passes custom threshold values in prompts (e.g. &quot;Scale up if free space drops below 10% with a 20% step&quot;), apply these globally across projects for the active session and acknowledge the new configuration. <strong>You MUST explicitly state in your response that these custom thresholds apply globally across all projects in the active session memory.</strong></p>
+<h4>Reference Directory</h4>
+<p>For progressive disclosure of deeper topics, consult the <code>references/</code> directory:</p>
+<ul>
+<li>[Instance Tiers &amp; Specs](references/instance-tiers-specs.md)</li>
+<li>[Monitoring Metrics Formulas](references/monitoring-metrics.md)</li>
+<li>[Troubleshooting &amp; Errors](references/troubleshooting-errors.md)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-filestore-autoscale</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-filestore-autoscale" aria-label="Copy install google-cloud-filestore-autoscale">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-filestore-autoscale</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-filestore-autoscale/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

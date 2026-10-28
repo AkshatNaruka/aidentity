@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-eventhub-py — Aidentity</title>
+<meta name="description" content="Azure Event Hubs SDK for Python streaming. Use for high-throughput event ingestion, producers, consumers, and checkpointing. Triggers: &quot;event hubs&quot;, &quot;EventHubProducerClient&quot;, &quot;EventHubConsumerClient&quot;, &quot;streaming&quot;, &quot;partitions&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-eventhub-py — Aidentity">
+<meta property="og:description" content="Azure Event Hubs SDK for Python streaming. Use for high-throughput event ingestion, producers, consumers, and checkpointing. Triggers: &quot;event hubs&quot;, &quot;EventHubProducerClient&quot;, &quot;EventHubConsumerClient&quot;, &quot;streaming&quot;, &quot;partitions&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-eventhub-py","description":"Azure Event Hubs SDK for Python streaming. Use for high-throughput event ingestion, producers, consumers, and checkpointing. Triggers: \"event hubs\", \"EventHubProducerClient\", \"EventHubConsumerClient\", \"streaming\", \"partitions\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-eventhub-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-eventhub-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-eventhub-py</h1>
+      <p class="summary">Azure Event Hubs SDK for Python streaming. Use for high-throughput event ingestion, producers, consumers, and checkpointing. Triggers: &quot;event hubs&quot;, &quot;EventHubProducerClient&quot;, &quot;EventHubConsumerClient&quot;, &quot;streaming&quot;, &quot;partitions&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Event Hubs SDK for Python</h3>
+<p>Big data streaming platform for high-throughput event ingestion.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-eventhub azure-identity
+# For checkpointing with blob storage
+pip install azure-eventhub-checkpointstoreblob-aio</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>EVENT_HUB_FULLY_QUALIFIED_NAMESPACE=&lt;namespace&gt;.servicebus.windows.net  # Required for all auth methods
+EVENT_HUB_NAME=my-eventhub  # Required for all auth methods
+STORAGE_ACCOUNT_URL=https://&lt;account&gt;.blob.core.windows.net  # Required for checkpoint storage
+CHECKPOINT_CONTAINER=checkpoints  # Required for checkpoint storage
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.eventhub import EventHubProducerClient, EventHubConsumerClient
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+namespace = &quot;&lt;namespace&gt;.servicebus.windows.net&quot;
+eventhub_name = &quot;my-eventhub&quot;
+
+# Producer
+with EventHubProducerClient(
+    fully_qualified_namespace=namespace,
+    eventhub_name=eventhub_name,
+    credential=credential
+) as producer:
+    # Use producer here (see following sections for operations)
+    ...
+
+# Consumer
+with EventHubConsumerClient(
+    fully_qualified_namespace=namespace,
+    eventhub_name=eventhub_name,
+    consumer_group=&quot;$Default&quot;,
+    credential=credential
+) as consumer:
+    # Use consumer here (see following sections for operations)
+    ...</code></pre></p>
+<h4>Client Types</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>EventHubProducerClient</code></td><td>Send events to Event Hub</td></tr>
+<tr><td><code>EventHubConsumerClient</code></td><td>Receive events from Event Hub</td></tr>
+<tr><td><code>BlobCheckpointStore</code></td><td>Track consumer progress</td></tr>
+</tbody></table>
+<h4>Send Events</h4>
+<p><pre><code>from azure.eventhub import EventHubProducerClient, EventData
+from azure.identity import DefaultAzureCredential
+
+with EventHubProducerClient(
+    fully_qualified_namespace=&quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+    eventhub_name=&quot;my-eventhub&quot;,
+    credential=DefaultAzureCredential()
+) as producer:
+    # Create batch (handles size limits)
+    event_data_batch = producer.create_batch()
+    
+    for i in range(10):
+        try:
+            event_data_batch.add(EventData(f&quot;Event {i}&quot;))
+        except ValueError:
+            # Batch is full, send and create new one
+            producer.send_batch(event_data_batch)
+            event_data_batch = producer.create_batch()
+            event_data_batch.add(EventData(f&quot;Event {i}&quot;))
+    
+    # Send remaining
+    producer.send_batch(event_data_batch)</code></pre></p>
+<h5>Send to Specific Partition</h5>
+<p><pre><code># By partition ID
+event_data_batch = producer.create_batch(partition_id=&quot;0&quot;)
+
+# By partition key (consistent hashing)
+event_data_batch = producer.create_batch(partition_key=&quot;user-123&quot;)</code></pre></p>
+<h4>Receive Events</h4>
+<h5>Simple Receive</h5>
+<p><pre><code>from azure.eventhub import EventHubConsumerClient
+
+def on_event(partition_context, event):
+    print(f&quot;Partition: {partition_context.partition_id}&quot;)
+    print(f&quot;Data: {event.body_as_str()}&quot;)
+    partition_context.update_checkpoint(event)
+
+with EventHubConsumerClient(
+    fully_qualified_namespace=&quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+    eventhub_name=&quot;my-eventhub&quot;,
+    consumer_group=&quot;$Default&quot;,
+    credential=DefaultAzureCredential()
+) as consumer:
+    consumer.receive(
+        on_event=on_event,
+        starting_position=&quot;-1&quot;,  # Beginning of stream
+    )</code></pre></p>
+<h5>With Blob Checkpoint Store (Production)</h5>
+<p><pre><code>from azure.eventhub import EventHubConsumerClient
+from azure.eventhub.extensions.checkpointstoreblob import BlobCheckpointStore
+from azure.identity import DefaultAzureCredential
+
+checkpoint_store = BlobCheckpointStore(
+    blob_account_url=&quot;https://&lt;account&gt;.blob.core.windows.net&quot;,
+    container_name=&quot;checkpoints&quot;,
+    credential=DefaultAzureCredential()
+)
+
+with EventHubConsumerClient(
+    fully_qualified_namespace=&quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+    eventhub_name=&quot;my-eventhub&quot;,
+    consumer_group=&quot;$Default&quot;,
+    credential=DefaultAzureCredential(),
+    checkpoint_store=checkpoint_store
+) as consumer:
+    def on_event(partition_context, event):
+        print(f&quot;Received: {event.body_as_str()}&quot;)
+        # Checkpoint after processing
+        partition_context.update_checkpoint(event)
+
+    consumer.receive(on_event=on_event)</code></pre></p>
+<h4>Async Client</h4>
+<p><pre><code>from azure.eventhub.aio import EventHubProducerClient, EventHubConsumerClient
+from azure.identity.aio import DefaultAzureCredential
+import asyncio
+
+async def send_events():
+    credential = DefaultAzureCredential()
+    
+    async with EventHubProducerClient(
+        fully_qualified_namespace=&quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+        eventhub_name=&quot;my-eventhub&quot;,
+        credential=credential
+    ) as producer:
+        batch = await producer.create_batch()
+        batch.add(EventData(&quot;Async event&quot;))
+        await producer.send_batch(batch)
+
+async def receive_events():
+    async def on_event(partition_context, event):
+        print(event.body_as_str())
+        await partition_context.update_checkpoint(event)
+    
+    async with EventHubConsumerClient(
+        fully_qualified_namespace=&quot;&lt;namespace&gt;.servicebus.windows.net&quot;,
+        eventhub_name=&quot;my-eventhub&quot;,
+        consumer_group=&quot;$Default&quot;,
+        credential=DefaultAzureCredential()
+    ) as consumer:
+        await consumer.receive(on_event=on_event)
+
+asyncio.run(send_events())</code></pre></p>
+<h4>Event Properties</h4>
+<p><pre><code>event = EventData(&quot;My event body&quot;)
+
+# Set properties
+event.properties = {&quot;custom_property&quot;: &quot;value&quot;}
+event.content_type = &quot;application/json&quot;
+
+# Read properties (on receive)
+print(event.body_as_str())
+print(event.sequence_number)
+print(event.offset)
+print(event.enqueued_time)
+print(event.partition_key)</code></pre></p>
+<h4>Get Event Hub Info</h4>
+<p><pre><code>with producer:
+    info = producer.get_eventhub_properties()
+    print(f&quot;Name: {info[&#39;name&#39;]}&quot;)
+    print(f&quot;Partitions: {info[&#39;partition_ids&#39;]}&quot;)
+    
+    for partition_id in info[&#39;partition_ids&#39;]:
+        partition_info = producer.get_partition_properties(partition_id)
+        print(f&quot;Partition {partition_id}: {partition_info[&#39;last_enqueued_sequence_number&#39;]}&quot;)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async) for proper cleanup. For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / API keys when possible).</li>
+<li><strong>Use batches</strong> for sending multiple events</li>
+<li><strong>Use checkpoint store</strong> in production for reliable processing</li>
+<li><strong>Use async client</strong> for high-throughput scenarios</li>
+<li><strong>Use partition keys</strong> for ordered delivery within a partition</li>
+<li><strong>Handle batch size limits</strong> — catch ValueError when batch is full</li>
+<li><strong>Set appropriate consumer groups</strong> for different applications</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/checkpointing.md](references/checkpointing.md)</td><td>Checkpoint store patterns, blob checkpointing, checkpoint strategies</td></tr>
+<tr><td>[references/partitions.md](references/partitions.md)</td><td>Partition management, load balancing, starting positions</td></tr>
+<tr><td>[scripts/setup_consumer.py](scripts/setup_consumer.py)</td><td>CLI for Event Hub info, consumer setup, and event sending/receiving</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-eventhub-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-eventhub-py" aria-label="Copy install azure-eventhub-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-eventhub-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-eventhub-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

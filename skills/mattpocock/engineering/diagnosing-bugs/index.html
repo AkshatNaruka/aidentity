@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>diagnosing-bugs — Aidentity</title>
+<meta name="description" content="Diagnosis loop for hard bugs and performance regressions. Use when the user says &quot;diagnose&quot;/&quot;debug this&quot;, or reports something broken/throwing/failing/slow.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/diagnosing-bugs/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="diagnosing-bugs — Aidentity">
+<meta property="og:description" content="Diagnosis loop for hard bugs and performance regressions. Use when the user says &quot;diagnose&quot;/&quot;debug this&quot;, or reports something broken/throwing/failing/slow.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/diagnosing-bugs/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"diagnosing-bugs","description":"Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/diagnosing-bugs/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=general">general</a><span>/</span>diagnosing-bugs
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>diagnosing-bugs</h1>
+      <p class="summary">Diagnosis loop for hard bugs and performance regressions. Use when the user says &quot;diagnose&quot;/&quot;debug this&quot;, or reports something broken/throwing/failing/slow.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Diagnosing Bugs</h3>
+<p>A discipline for hard bugs. Skip phases only when explicitly justified.</p>
+<p>When exploring the codebase, read <code>CONTEXT.md</code> (if it exists) to get a clear mental model of the relevant modules, and check ADRs in the area you&#39;re touching.</p>
+<h4>Redact</h4>
+<p>This skill has you show commands, outputs and captured artifacts. <strong>Redact every secret first</strong>: write <code>&lt;REDACTED&gt;</code> in its place. Build loops against env vars, so the credential stays in the environment rather than in what you show. Captured artifacts carry auth headers: quote only the lines that carry the signal.</p>
+<p>If the redacted output is not enough to diagnose the bug, say so and ask the user.</p>
+<h4>Phase 1: Build a feedback loop</h4>
+<p><strong>This is the skill.</strong> Everything else is mechanical. If you have a <strong>tight</strong> pass/fail signal for the bug (one that goes red on _this_ bug), you will find the cause; bisection, hypothesis-testing, and instrumentation all just consume it. If you don&#39;t have one, no amount of staring at code will save you.</p>
+<p>Spend disproportionate effort here. <strong>Be aggressive. Be creative. Refuse to give up.</strong></p>
+<h5>Ways to construct one, in roughly this order</h5>
+<ol>
+<li><strong>Failing test</strong> at whatever seam reaches the bug: unit, integration, e2e.</li>
+<li><strong>Curl / HTTP script</strong> against a running dev server.</li>
+<li><strong>CLI invocation</strong> with a fixture input, diffing stdout against a known-good snapshot.</li>
+<li><strong>Headless browser script</strong> (Playwright / Puppeteer) that drives the UI and asserts on DOM/console/network.</li>
+<li><strong>Replay a captured trace.</strong> Save a real network request / payload / event log to disk; replay it through the code path in isolation.</li>
+<li><strong>Throwaway harness.</strong> Spin up a minimal subset of the system (one service, mocked deps) that exercises the bug code path with a single function call.</li>
+<li><strong>Property / fuzz loop.</strong> If the bug is &quot;sometimes wrong output&quot;, run 1000 random inputs and look for the failure mode.</li>
+<li><strong>Bisection harness.</strong> If the bug appeared between two known states (commit, dataset, version), automate &quot;boot at state X, check, repeat&quot; so you can <code>git bisect run</code> it.</li>
+<li><strong>Differential loop.</strong> Run the same input through old-version vs new-version (or two configs) and diff outputs.</li>
+<li><strong>HITL bash script.</strong> Last resort. If a human must click, drive _them_ with <code>scripts/hitl-loop.template.sh</code> so the loop is still structured. Captured output feeds back to you.</li>
+</ol>
+<p>Build the right feedback loop, and the bug is 90% fixed.</p>
+<h5>Tighten the loop</h5>
+<p>Treat the loop as a product. Once you have _a_ loop, <strong>tighten</strong> it:</p>
+<ul>
+<li>Can I make it faster? (Cache setup, skip unrelated init, narrow the test scope.)</li>
+<li>Can I make the signal sharper? (Assert on the specific symptom, not &quot;didn&#39;t crash&quot;.)</li>
+<li>Can I make it more deterministic? (Pin time, seed RNG, isolate filesystem, freeze network.)</li>
+</ul>
+<p>A 30-second flaky loop is barely better than no loop; a 2-second deterministic one is tight, a debugging superpower.</p>
+<h5>Non-deterministic bugs</h5>
+<p>The goal is not a clean repro but a <strong>higher reproduction rate</strong>. Loop the trigger 100×, parallelise, add stress, narrow timing windows, inject sleeps. A 50%-flake bug is debuggable; 1% is not, so keep raising the rate until it&#39;s debuggable.</p>
+<h5>When you genuinely cannot build a loop</h5>
+<p>Stop and say so explicitly. List what you tried. Ask the user for: (a) access to whatever environment reproduces it, (b) a redacted captured artifact (HAR file, log dump, core dump, screen recording with timestamps), or (c) permission to add temporary production instrumentation. Do <strong>not</strong> proceed to hypothesise without a loop.</p>
+<h5>Completion criterion: a tight loop that goes red</h5>
+<p>Phase 1 is done when the loop is <strong>tight</strong> and <strong>red-capable</strong>: you can name <strong>one command</strong> (a script path, a test invocation, a curl) that you have <strong>already run at least once</strong> (show the invocation and its output, redacted), and that is:</p>
+<ul>
+<li>[ ] <strong>Red-capable</strong>: it drives the actual bug code path and asserts the <strong>user&#39;s exact symptom</strong>, so it can go red on this bug and green once fixed. Not &quot;runs without erroring&quot;; it must be able to _catch this specific bug_.</li>
+<li>[ ] <strong>Deterministic</strong>: same verdict every run (flaky bugs: a pinned, high reproduction rate, per above).</li>
+<li>[ ] <strong>Fast</strong>: seconds, not minutes.</li>
+<li>[ ] <strong>Agent-runnable</strong>: you can run it unattended; a human in the loop only via <code>scripts/hitl-loop.template.sh</code>.</li>
+</ul>
+<p>If you catch yourself reading code to build a theory before this command exists, <strong>stop: jumping straight to a hypothesis is the exact failure this skill prevents.</strong> No red-capable command, no Phase 2.</p>
+<h4>Phase 2: Reproduce + minimise</h4>
+<p>Run the loop. Watch it go red as the bug appears.</p>
+<p>Confirm:</p>
+<ul>
+<li>[ ] The loop produces the failure mode the <strong>user</strong> described, not a different failure that happens to be nearby. Wrong bug = wrong fix.</li>
+<li>[ ] The failure is reproducible across multiple runs (or, for non-deterministic bugs, reproducible at a high enough rate to debug against).</li>
+<li>[ ] You have captured the exact symptom (error message, wrong output, slow timing) so later phases can verify the fix actually addresses it.</li>
+</ul>
+<h5>Minimise</h5>
+<p>Once it&#39;s red, shrink the repro to the <strong>smallest scenario that still goes red</strong>. Cut inputs, callers, config, data, and steps <strong>one at a time</strong>, re-running the loop after each cut, and keep only what&#39;s load-bearing for the failure.</p>
+<p>Why bother: a minimal repro shrinks the hypothesis space in Phase 3 (fewer moving parts left to suspect) and becomes the clean regression test in Phase 5.</p>
+<p>Done when <strong>every remaining element is load-bearing</strong>: removing any one of them makes the loop go green.</p>
+<p>Do not proceed until you have reproduced <strong>and</strong> minimised.</p>
+<h4>Phase 3: Hypothesise</h4>
+<p>Generate <strong>3–5 ranked hypotheses</strong> before testing any of them. Single-hypothesis generation anchors on the first plausible idea.</p>
+<p>Each hypothesis must be <strong>falsifiable</strong>: state the prediction it makes.</p>
+<p>&gt; Format: &quot;If &lt;X&gt; is the cause, then &lt;changing Y&gt; will make the bug disappear / &lt;changing Z&gt; will make it worse.&quot;</p>
+<p>If you cannot state the prediction, the hypothesis is a vibe: discard or sharpen it.</p>
+<p><strong>Show the ranked list to the user before testing.</strong> They often have domain knowledge that re-ranks instantly (&quot;we just deployed a change to #3&quot;), or know hypotheses they&#39;ve already ruled out. Cheap checkpoint, big time saver. Don&#39;t block on it; proceed with your ranking if the user is AFK.</p>
+<h4>Phase 4: Instrument</h4>
+<p>Each probe must map to a specific prediction from Phase 3. <strong>Change one variable at a time.</strong></p>
+<p>Tool preference:</p>
+<ol>
+<li><strong>Debugger / REPL inspection</strong> if the env supports it. One breakpoint beats ten logs.</li>
+<li><strong>Targeted logs</strong> at the boundaries that distinguish hypotheses.</li>
+<li>Never &quot;log everything and grep&quot;.</li>
+</ol>
+<p><strong>Tag every debug log</strong> with a unique prefix, e.g. <code>[DEBUG-a4f2]</code>. Cleanup at the end becomes a single grep. Untagged logs survive; tagged logs die.</p>
+<p><strong>Perf branch.</strong> For performance regressions, logs are usually wrong. Instead: establish a baseline measurement (timing harness, <code>performance.now()</code>, profiler, query plan), then bisect. Measure first, fix second.</p>
+<h4>Phase 5: Fix + regression test</h4>
+<p>Write the regression test <strong>before the fix</strong>, but only if there is a <strong>correct seam</strong> for it.</p>
+<p>A correct seam is one where the test exercises the <strong>real bug pattern</strong> as it occurs at the call site. If the only available seam is too shallow (single-caller test when the bug needs multiple callers, unit test that can&#39;t replicate the chain that triggered the bug), a regression test there gives false confidence.</p>
+<p><strong>If no correct seam exists, that itself is the finding.</strong> Note it. The codebase architecture is preventing the bug from being locked down. Flag this for the next phase.</p>
+<p>If a correct seam exists:</p>
+<ol>
+<li>Turn the minimised repro into a failing test at that seam.</li>
+<li>Watch it fail.</li>
+<li>Apply the fix.</li>
+<li>Watch it pass.</li>
+<li>Re-run the Phase 1 feedback loop against the original (un-minimised) scenario.</li>
+</ol>
+<h4>Phase 6: Cleanup</h4>
+<p>Required before declaring done:</p>
+<ul>
+<li>[ ] Original repro no longer reproduces (re-run the Phase 1 loop)</li>
+<li>[ ] Regression test passes (or absence of seam is documented)</li>
+<li>[ ] All <code>[DEBUG-...]</code> instrumentation removed (<code>grep</code> the prefix)</li>
+<li>[ ] Throwaway prototypes deleted (or moved to a clearly-marked debug location)</li>
+<li>[ ] The hypothesis that turned out correct is stated in the commit / PR message, so the next debugger learns</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/diagnosing-bugs</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/diagnosing-bugs" aria-label="Copy install diagnosing-bugs">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/diagnosing-bugs</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/diagnosing-bugs/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

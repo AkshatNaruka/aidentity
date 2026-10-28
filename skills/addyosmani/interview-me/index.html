@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>interview-me — Aidentity</title>
+<meta name="description" content="Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified (&quot;build me X&quot; without &quot;for whom&quot; or &quot;why now&quot;), when the user explicitly invokes (&quot;interview me&quot;, &quot;grill me&quot;, &quot;are we sure?&quot;, &quot;stress-test my thinking&quot;), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/interview-me/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="interview-me — Aidentity">
+<meta property="og:description" content="Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified (&quot;build me X&quot; without &quot;for whom&quot; or &quot;why now&quot;), when the user explicitly invokes (&quot;interview me&quot;, &quot;grill me&quot;, &quot;are we sure?&quot;, &quot;stress-test my thinking&quot;), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/interview-me/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"interview-me","description":"Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified (\"build me X\" without \"for whom\" or \"why now\"), when the user explicitly invokes (\"interview me\", \"grill me\", \"are we sure?\", \"stress-test my thinking\"), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/interview-me/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>interview-me
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>interview-me</h1>
+      <p class="summary">Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified (&quot;build me X&quot; without &quot;for whom&quot; or &quot;why now&quot;), when the user explicitly invokes (&quot;interview me&quot;, &quot;grill me&quot;, &quot;are we sure?&quot;, &quot;stress-test my thinking&quot;), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Interview Me</h3>
+<h4>Overview</h4>
+<p>What people ask for and what they actually want are different things. They ask for &quot;a dashboard&quot; because that&#39;s what one asks for, not because a dashboard solves their problem. They say &quot;make it faster&quot; without a number to hit.</p>
+<p>The cheapest moment to find this gap is before any plan, spec, or code exists. Once you&#39;ve started building, switching costs are real, and the user will rationalize the wrong thing into a &quot;good enough&quot; thing. The misfit gets locked in.</p>
+<p>This skill closes the gap before it costs anything. The other Define-phase skills assume you already know roughly what you want: <code>idea-refine</code> generates variations from an idea, <code>spec-driven-development</code> writes the requirements down, <code>doubt-driven-development</code> stress-tests a plan after you&#39;ve drafted one. Interview-me is the part before all of those, where you ask one question at a time, with your best guess attached, until you can predict what the user is going to say before they say it.</p>
+<h4>When to Use</h4>
+<p>Apply this skill when:</p>
+<ul>
+<li>The ask is missing at least one of: <strong>who</strong> the user is, <strong>why</strong> they want it, what <strong>success</strong> looks like, what the binding <strong>constraint</strong> is</li>
+<li>The request is conventional rather than specific (&quot;build me X&quot;, &quot;make it faster&quot;) and you can&#39;t unpack the convention without guessing</li>
+<li>You&#39;re tempted to start with assumptions you haven&#39;t surfaced</li>
+<li>The user hasn&#39;t said which value they&#39;re optimizing for when two reasonable ones are in tension (simplicity vs. flexibility, cost vs. speed)</li>
+<li>The user explicitly invokes: &quot;interview me&quot;, &quot;grill me&quot;, &quot;before we start, are we sure?&quot;, &quot;stress-test my thinking&quot;</li>
+</ul>
+<p><strong>When NOT to use:</strong></p>
+<ul>
+<li>The ask is unambiguous and self-contained (&quot;rename this variable&quot;, &quot;fix this typo&quot;)</li>
+<li>The user has explicitly asked for speed over verification</li>
+<li>Pure information requests (&quot;how does X work?&quot;, &quot;what does this code do?&quot;)</li>
+<li>Mechanical operations (renames, formats, file moves)</li>
+<li>You already have ≥95% confidence; re-read the stop condition below before assuming you don&#39;t</li>
+</ul>
+<h4>Loading Constraints</h4>
+<p>This skill needs a live, responsive user. <strong>Do not invoke in non-interactive contexts</strong> like CI pipelines, scheduled runs, <code>/loop</code>, or autonomous-loop. If you&#39;re in one of those and the ask is underspecified, flag that as a blocker for the user instead of guessing.</p>
+<h4>The Process</h4>
+<h5>Step 1: Hypothesize, with a confidence number</h5>
+<p>Before asking anything, write down your current best read of what the user wants in <strong>one sentence</strong>, plus an honest confidence number (0–100%):</p>
+<p><pre><code>HYPOTHESIS: You want a way to answer &quot;how are we doing?&quot; in standup, and &quot;dashboard&quot; was the convention that came to mind.
+CONFIDENCE: ~30% — missing: who it&#39;s for, what &quot;metrics&quot; means in context, and what success looks like</code></pre></p>
+<p>The number forces honesty. If you wrote down a high number but can&#39;t actually predict the user&#39;s reactions to the next three questions you&#39;d ask, the number is wrong. Start at the confidence level you can defend.</p>
+<p>When confidence is below ~70%, append a brief reason on the same line — what&#39;s still unresolved or missing. This tells the user exactly what the interview needs to surface, and prevents the number from being a vague signal.</p>
+<h5>Step 2: Ask one question at a time, each with a guess attached</h5>
+<p>Format:</p>
+<p><pre><code>Q: &lt;one focused question&gt;
+GUESS: &lt;your hypothesis for the answer, with the reasoning that produced it&gt;</code></pre></p>
+<p>Wait for the user to react before asking the next question.</p>
+<p><strong>Why one at a time, not a batch:</strong></p>
+<ul>
+<li>The user can&#39;t react to your hypotheses if you bury them in a list</li>
+<li>Batches encourage skim-reading and surface answers</li>
+<li>The third question often depends on the answer to the first; asking them all at once locks in the wrong framing</li>
+<li>The user&#39;s energy for thinking carefully is finite; spend it one question at a time</li>
+</ul>
+<p><strong>Why attach a guess:</strong></p>
+<ul>
+<li>The user reacts faster to a wrong guess than they generate an answer from scratch</li>
+<li>It commits you to a hypothesis you can be visibly wrong about, which keeps you honest</li>
+<li>It surfaces <em>your</em> assumptions, which is what the interview is meant to expose</li>
+</ul>
+<p>The risk here is a polite user agreeing with your guess to be agreeable. Mitigate by being visibly willing to be wrong, and occasionally guess in a direction you expect the user to push back on.</p>
+<h5>Step 3: Listen for &quot;want vs. should want&quot;</h5>
+<p>The most dangerous answers are the ones where the user says what a thoughtful answer <em>sounds like</em> rather than what they actually want. Watch for:</p>
+<ul>
+<li>Answers that pattern-match best-practice talk (&quot;I want it to be scalable&quot;, &quot;clean architecture&quot;) without specifics</li>
+<li>Answers that defer to convention (&quot;the way most apps do it&quot;, &quot;the standard approach&quot;)</li>
+<li>Phrases like &quot;I should probably…&quot;, &quot;I think I&#39;m supposed to…&quot;, &quot;good engineering practice says…&quot;</li>
+<li>Buzzwords as goals — when &quot;modern&quot;, &quot;scalable&quot;, &quot;robust&quot; are the answer instead of a specific outcome</li>
+</ul>
+<p>When you hear these, the question to ask is:</p>
+<p>&gt; <em>&quot;If you didn&#39;t have to justify this to anyone, what would you actually want?&quot;</em></p>
+<p>That single question often does more work than the previous five.</p>
+<h5>Step 4: Restate intent in the user&#39;s own words</h5>
+<p>When your confidence is high, write back what you now think the user wants. Keep it tight (5–8 lines), use their language where possible, and structure it so the user can confirm or correct line by line:</p>
+<p><pre><code>Here&#39;s what I now think you want:
+
+- Outcome:      &lt;one line&gt;
+- User:         &lt;one line — who benefits&gt;
+- Why now:      &lt;one line — what changed&gt;
+- Success:      &lt;one line — how we know it worked&gt;
+- Constraint:   &lt;one line — the binding limit&gt;
+- Out of scope: &lt;one line — what we&#39;re explicitly not doing&gt;
+
+Yes / no / refine?</code></pre></p>
+<p>Including &quot;Out of scope&quot; is non-negotiable. Half of misalignment is silent disagreement about what is <em>not</em> being built.</p>
+<h5>Step 5: Confirm — explicit yes, not &quot;whatever you think&quot;</h5>
+<p>The gate is an explicit &quot;yes.&quot; The following are <strong>not</strong> yes:</p>
+<ul>
+<li>&quot;Whatever you think is best.&quot; → The user is delegating, which means they don&#39;t have 95% confidence either. Re-ask with two concrete options framed as a choice.</li>
+<li>&quot;Sounds good.&quot; → Ambiguous. Ask: &quot;Anything you&#39;d refine?&quot; Silence isn&#39;t confirmation.</li>
+<li>&quot;Sure, let&#39;s go.&quot; → Often a polite exit, not an endorsement. Same follow-up.</li>
+<li>Silence followed by &quot;okay let&#39;s start.&quot; → The user has given up on the interview, not converged. Stop and ask whether you&#39;ve missed something.</li>
+</ul>
+<p>If they correct you, fold the correction in and restate. Loop until you get an explicit yes.</p>
+<h5>The 95% Confidence Stop</h5>
+<p>You&#39;re done when you can answer yes to this:</p>
+<p>&gt; <em>Can I predict the user&#39;s reaction to the next three questions I would ask?</em></p>
+<p>If yes, you have shared understanding. Stop interviewing and produce the restate. If no, you&#39;re not done; ask the next question.</p>
+<p>This is a checkable test, not a vibe. It also has a floor: if you&#39;ve gone several rounds and still can&#39;t predict, that&#39;s information about the ask, not a reason to keep grinding. Stop and tell the user: &quot;I&#39;ve asked X questions and I still can&#39;t predict your reactions. Something foundational is missing. Want to step back?&quot;</p>
+<h4>Output</h4>
+<p>The output of this skill is a <strong>confirmed statement of intent</strong>: the restate from Step 4, with an explicit yes from Step 5. That&#39;s the deliverable. Specs, plans, and task lists are downstream; they consume the intent this skill produces.</p>
+<p>If the user wants the intent to persist (a multi-session project, a handoff to another collaborator), offer to save it to <code>docs/intent/[topic].md</code>. Only save if they confirm.</p>
+<h4>Example</h4>
+<p>A short before-and-after.</p>
+<p><strong>Without <code>interview-me</code>:</strong></p>
+<p><pre><code>User:  build me a dashboard for our metrics
+Agent: &lt;starts proposing chart libraries and layouts&gt;</code></pre></p>
+<p>The agent has assumed: who it&#39;s for, what metrics, what &quot;for our team&quot; means, what success looks like. None of these are stated. Every assumption is a place the user can later say &quot;that&#39;s not what I meant.&quot;</p>
+<p><strong>With <code>interview-me</code>:</strong></p>
+<p><pre><code>User: build me a dashboard for our metrics
+
+Agent:
+HYPOTHESIS: You want a way to answer &quot;how are we doing?&quot; in standup, and &quot;dashboard&quot; came to mind because that&#39;s the conventional answer.
+CONFIDENCE: ~30% — missing: who it&#39;s for, what &quot;metrics&quot; are, and what success looks like
+
+Q:     When you say &quot;how are we doing?&quot;, who&#39;s asking — you alone, the engineering team in standup, or up the chain (e.g., your manager, an exec, a board)?
+GUESS: engineering team in standup, because &quot;we&quot; usually scopes that way and standups are where this question gets asked. If it&#39;s for execs the metrics and the framing change a lot.
+
+User: It&#39;s actually for me. I keep losing track of which experiments are running and what their early signal looks like.
+
+Agent:
+Updated read: not a team dashboard at all. It&#39;s a personal experiment tracker. Confidence: ~60% — still missing: what &quot;early signal&quot; means and what done looks like.
+
+Q:     Is the gap that you don&#39;t know which experiments exist, or that you can&#39;t see their results in one place?
+GUESS: the second one. You have a list of experiments somewhere, but their results live in five different tools, and reconciling them by hand is what you&#39;re tired of.
+
+User: First one actually. I literally don&#39;t have a list. They&#39;re spread across different docs.
+
+Agent: &lt;continues&gt;</code></pre></p>
+<p>Two questions in, the agent has discovered the actual ask isn&#39;t &quot;a dashboard.&quot; It&#39;s &quot;a list.&quot; Different artifact, different scope, different work. The dashboard would have been wrong.</p>
+<h4>Interaction with Other Skills</h4>
+<ul>
+<li><strong><code>idea-refine</code></strong>: downstream. If the confirmed intent is &quot;I want X but I don&#39;t know how to scope it,&quot; hand off to <code>idea-refine</code> to generate variations against the now-explicit intent.</li>
+<li><strong><code>spec-driven-development</code></strong>: downstream. If the confirmed intent is concrete (&quot;I want X for Y users with Z success criteria&quot;), hand off to <code>spec-driven-development</code> to write it down.</li>
+<li><strong><code>planning-and-task-breakdown</code></strong>: two hops downstream of this skill (after the spec).</li>
+<li><strong><code>doubt-driven-development</code></strong>: opposite end of the timeline. Interview-me is pre-decision intent extraction; doubt-driven is post-decision artifact review. Both catch divergence, but at different moments.</li>
+<li><strong><code>source-driven-development</code></strong>: orthogonal. Interview-me clarifies what the user wants; SDD verifies framework facts. They don&#39;t compete.</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;The ask is clear enough&quot;</td><td>If you can&#39;t write the user&#39;s desired outcome in one sentence right now, the ask isn&#39;t clear. Run Step 1 before deciding.</td></tr>
+<tr><td>&quot;Asking too many questions wastes their time&quot;</td><td>Time wasted by 4–6 targeted questions is small. Time wasted by building the wrong thing is enormous, and the user is the one bearing that cost.</td></tr>
+<tr><td>&quot;I&#39;ll figure it out as I build&quot;</td><td>Switching costs after code exists are 10x what they are now. Discovery during implementation is rework.</td></tr>
+<tr><td>&quot;They said &#39;whatever you think,&#39; so I should just decide&quot;</td><td>&quot;Whatever you think&quot; is delegation, not decision. Re-ask with two concrete options as a choice.</td></tr>
+<tr><td>&quot;I should give them several options to pick from&quot;</td><td>Options work when the user knows what they want and is choosing between trade-offs. They don&#39;t know what they want yet. Listing options widens the search; asking narrows it.</td></tr>
+<tr><td>&quot;If I attach my guess, I&#39;m leading them&quot;</td><td>Leading is the point. Reacting is faster than generating from scratch. The risk is sycophancy, not leading; mitigate by being visibly willing to be wrong.</td></tr>
+<tr><td>&quot;We&#39;ve talked enough, I get it&quot;</td><td>Test it: can you predict their reaction to the next three questions? If not, you don&#39;t get it yet.</td></tr>
+<tr><td>&quot;The user said yes, we&#39;re done&quot;</td><td>If the yes followed a vague restate or an open-ended &quot;sounds good,&quot; the yes is hollow. Restate concretely and re-confirm.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Three or more questions in a single message: that&#39;s batching, not interviewing</li>
+<li>A question without your hypothesis attached: that&#39;s surveying, not committing</li>
+<li>Accepting &quot;whatever you think is best&quot; as a terminal answer</li>
+<li>Producing a spec, plan, or task list before the user has explicitly confirmed your restate</li>
+<li>Questions framed as &quot;what would be best practice?&quot; instead of &quot;what do you actually want?&quot;</li>
+<li>The user gives a sophistication-signaling answer (&quot;scalable&quot;, &quot;clean&quot;, &quot;modern&quot;) and you accept it without probing whether it&#39;s what they actually want</li>
+<li>Three or more rounds without your confidence visibly rising: you&#39;re asking the wrong questions, step back and reframe</li>
+<li>A confidence number below ~70% with no reason attached: the user can&#39;t help close the gap if they don&#39;t know what&#39;s missing</li>
+<li>Saving the intent doc before the user has confirmed (the doc itself implies a yes the user didn&#39;t give)</li>
+<li>Skipping the &quot;Out of scope&quot; line in the restate (silent disagreement about non-goals is half of misalignment)</li>
+</ul>
+<h4>Verification</h4>
+<p>After applying interview-me:</p>
+<ul>
+<li>[ ] An explicit hypothesis with a confidence number was stated in the first turn</li>
+<li>[ ] Every confidence number below ~70% was accompanied by a one-line reason (what&#39;s still unresolved or missing)</li>
+<li>[ ] Questions were asked one at a time, each with the agent&#39;s guess attached</li>
+<li>[ ] At least one &quot;what would you actually want if you didn&#39;t have to justify it?&quot; probe ran when the user gave a sophistication-signaling or convention-signaling answer</li>
+<li>[ ] A concrete restate (Outcome / User / Why now / Success / Constraint / Out of scope) was written back to the user</li>
+<li>[ ] The user confirmed the restate with an explicit yes (not &quot;whatever you think,&quot; not &quot;sounds good,&quot; not silence)</li>
+<li>[ ] At the stop point, the agent could predict reactions to the next three questions it would ask</li>
+<li>[ ] Any handoff to a downstream skill (<code>idea-refine</code>, <code>spec-driven-development</code>) was framed in terms of the confirmed intent, not the original underspecified ask</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/interview-me</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/interview-me" aria-label="Copy install interview-me">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/interview-me</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/interview-me/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

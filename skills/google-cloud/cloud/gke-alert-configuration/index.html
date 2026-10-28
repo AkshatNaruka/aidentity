@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-alert-configuration — Aidentity</title>
+<meta name="description" content="Configures alerting policies in Terraform for Google Kubernetes Engine (GKE) clusters, workloads, and services using PromQL and Google Cloud Managed Service for Prometheus. Use when writing, analyzing, validating, or deploying Terraform alerting policies to monitor GKE service latency, traffic, error rates using Multi-Window Multi-Burn-Rate SLO alerts, memory saturation, and cluster health such as CrashLoopBackOff and Node NotReady conditions. Don&#39;t use for non-GKE compute runtimes such as standalone Compute Engine VMs or standalone Cloud Run services without GKE.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-alert-configuration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-alert-configuration — Aidentity">
+<meta property="og:description" content="Configures alerting policies in Terraform for Google Kubernetes Engine (GKE) clusters, workloads, and services using PromQL and Google Cloud Managed Service for Prometheus. Use when writing, analyzing, validating, or deploying Terraform alerting policies to monitor GKE service latency, traffic, error rates using Multi-Window Multi-Burn-Rate SLO alerts, memory saturation, and cluster health such as CrashLoopBackOff and Node NotReady conditions. Don&#39;t use for non-GKE compute runtimes such as standalone Compute Engine VMs or standalone Cloud Run services without GKE.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-alert-configuration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-alert-configuration","description":"Configures alerting policies in Terraform for Google Kubernetes Engine (GKE) clusters, workloads, and services using PromQL and Google Cloud Managed Service for Prometheus. Use when writing, analyzing, validating, or deploying Terraform alerting policies to monitor GKE service latency, traffic, error rates using Multi-Window Multi-Burn-Rate SLO alerts, memory saturation, and cluster health such as CrashLoopBackOff and Node NotReady conditions. Don't use for non-GKE compute runtimes such as standalone Compute Engine VMs or standalone Cloud Run services without GKE.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-alert-configuration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-alert-configuration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-alert-configuration</h1>
+      <p class="summary">Configures alerting policies in Terraform for Google Kubernetes Engine (GKE) clusters, workloads, and services using PromQL and Google Cloud Managed Service for Prometheus. Use when writing, analyzing, validating, or deploying Terraform alerting policies to monitor GKE service latency, traffic, error rates using Multi-Window Multi-Burn-Rate SLO alerts, memory saturation, and cluster health such as CrashLoopBackOff and Node NotReady conditions. Don&#39;t use for non-GKE compute runtimes such as standalone Compute Engine VMs or standalone Cloud Run services without GKE.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Alert Configuration</h3>
+<p>This skill provides guidelines and best practices for creating robust,</p>
+<p>high-signal alerting policies for Google Kubernetes Engine workloads using</p>
+<p>Google Cloud Managed Service for Prometheus and Terraform. It ensures</p>
+<p>comprehensive coverage of the <strong>4 Golden Signals</strong> and key cluster health</p>
+<p>metrics while minimizing alert noise.</p>
+<hr>
+<h4>Critical Rules</h4>
+<ul>
+<li><strong>Negative Triggers and Scope Redirection for Non-GKE Standalone Runtimes</strong>:</li>
+<li>This skill is strictly scoped to Google Kubernetes Engine (GKE)</li>
+</ul>
+<p>        workloads, clusters, and services using PromQL and Google Cloud Managed</p>
+<p>        Service for Prometheus.</p>
+<ul>
+<li><strong>Do not use for non-GKE compute runtimes</strong>, such as standalone Compute</li>
+</ul>
+<p>        Engine virtual machines or standalone Cloud Run services without GKE.</p>
+<ul>
+<li><strong>STOP AND RESPOND DIRECTLY (Do Not Edit Files)</strong>: When the user</li>
+</ul>
+<p>        requests alert configuration for non-GKE compute infrastructure:</p>
+<ol>
+<li>**Do not write, create, edit, or validate any Terraform files on</li>
+</ol>
+<p>            disk**.</p>
+<ol>
+<li><strong>Immediately stop and respond directly to the user in chat</strong>:</li>
+</ol>
+<ul>
+<li><strong>Explicitly Clarify Out-of-Scope</strong>: State clearly that</li>
+</ul>
+<p>                standalone Compute Engine virtual machine monitoring or</p>
+<p>                standalone Cloud Run monitoring is out of scope for this</p>
+<p>                GKE-specific PromQL alerting skill, which is designed</p>
+<p>                specifically for GKE workloads using Google Cloud Managed</p>
+<p>                Service for Prometheus and PromQL.</p>
+<ul>
+<li><strong>Do Not Generate GKE PromQL Alerts</strong>: Do not create or generate</li>
+</ul>
+<p>                Kubernetes PromQL alert policies or fabricate Kubernetes</p>
+<p>                container, pod, or node resources for non-GKE infrastructure.</p>
+<ul>
+<li><strong>Redirect the User</strong>: Guide and redirect the user to standard</li>
+</ul>
+<p>                Google Cloud Monitoring metrics, such as</p>
+<p>                <code>compute.googleapis.com/instance/cpu/utilization</code> or</p>
+<p>                <code>run.googleapis.com/request_latencies</code>, using standard</p>
+<p>                <code>google_monitoring_alert_policy</code> with <code>condition_threshold</code> or</p>
+<p>                MQL, or recommend the relevant specialized Cloud observability</p>
+<p>                skill.</p>
+<ul>
+<li><strong>Mandatory <code>kube-state-metrics</code> (KSM) Cost Guardrail</strong>:</li>
+<li>Deploying open-source <code>kube-state-metrics</code> in Google Cloud Managed</li>
+</ul>
+<p>        Service for Prometheus incurs billable metric ingestion costs.</p>
+<ul>
+<li><strong>STOP AND ASK PERMISSION FIRST (Do Not Edit Files)</strong>: When a requested</li>
+</ul>
+<p>        alert rule relies on <strong>Tier 2 KSM metrics</strong> (such as <code>kube_cronjob_*</code>,</p>
+<p>        <code>kube_pod_status_phase</code>, <code>kube_persistentvolume_*</code>, <code>kube_deployment_*</code>,</p>
+<p>        <code>kube_statefulset_*</code>, <code>kube_job_*</code>, or <code>kube_daemonset_*</code>), **do not</p>
+<p>        write, create, edit, or validate any Terraform files or generate alert</p>
+<p>        policies before obtaining user approval**.</p>
+<ul>
+<li>Instead, you <strong>must immediately stop and respond directly to the user</strong></li>
+</ul>
+<p>        to:</p>
+<ol>
+<li><strong>Alert the user</strong> that the requested alert requires</li>
+</ol>
+<p>            <code>kube-state-metrics</code>.</p>
+<ol>
+<li><strong>Explain the cost impact</strong>: Detail that <code>kube-state-metrics</code> incurs</li>
+</ol>
+<p>            billable sample ingestion costs in Google Cloud Managed Service for</p>
+<p>            Prometheus.</p>
+<ol>
+<li><strong>Ask for explicit permission</strong>: Ask the user for explicit</li>
+</ol>
+<p>            permission before assuming, enabling, or generating KSM-dependent</p>
+<p>            alert configurations.</p>
+<ol>
+<li><strong>Recommend filtering or allowlisting</strong>: Suggest and recommend</li>
+</ol>
+<p>            filtering or allowlisting only the specific required metrics, such</p>
+<p>            as using a <code>PodMonitoring</code> resource with <code>metricRelabeling</code></p>
+<p>            (<code>action: keep</code>) or KSM <code>--metric-allowlist</code> to minimize ingestion</p>
+<p>            costs. Provide a concrete allowlist example.</p>
+<ul>
+<li><strong>Always prefer Non-KSM Native Alternatives</strong> (Tier 1 cAdvisor or native</li>
+</ul>
+<p>        GKE metrics documented in</p>
+<p>        [metrics_and_alerts_catalog.md](references/metrics_and_alerts_catalog.md))</p>
+<p>        whenever possible, such as using <code>container_memory_working_set_bytes</code></p>
+<p>        and <code>container_spec_memory_limit_bytes</code> instead of</p>
+<p>        <code>kube_pod_container_resource_limits</code>.</p>
+<ul>
+<li><strong>Explicit Tier and Cost Surcharge Identification in Response</strong>: In</li>
+</ul>
+<p>        every response where you generate or recommend an alerting policy, you</p>
+<p>        <strong>must explicitly state its classification tier and cost impact</strong>:</p>
+<ul>
+<li><strong>Tier 1 native or standard metric</strong> (GKE built-in metrics, cAdvisor</li>
+</ul>
+<p>            <code>container_*</code>, kubelet volume stats, kubelet node conditions, and</p>
+<p>            control-plane metrics; see</p>
+<p>            [metrics_and_alerts_catalog.md](references/metrics_and_alerts_catalog.md)):</p>
+<p>            State that it is a **Tier 1 native or standard metric with zero KSM</p>
+<p>            cost surcharge**.</p>
+<ul>
+<li><strong>Tier 2 KSM metric</strong>: State that it is a **Tier 2 KSM-dependent</li>
+</ul>
+<p>            metric** and follow the permission and allowlisting guardrail above.</p>
+<p>            *(Tip: Generally, metrics with the <code>kube_</code> prefix that represent</p>
+<p>            resource state or metadata belong to Tier 2).*</p>
+<ul>
+<li><strong>Plan-Validate-Execute Loop for Approved File Edits</strong>: When modifying,</li>
+</ul>
+<p>    adding, or merging approved Terraform files on disk in a workspace, follow</p>
+<p>    the three-phase workflow:</p>
+<ol>
+<li><strong>Plan</strong>: Draft a structured change plan (<code>changes.json</code>) containing</li>
+</ol>
+<p>        proposed policy resource names, PromQL expressions, grouping labels, and</p>
+<p>        durations.</p>
+<ol>
+<li><strong>Validate</strong>: Run the pre-edit validation script (`python3</li>
+</ol>
+<p>        scripts/validate_config.py --plan changes.json`) to verify PromQL</p>
+<p>        grammar, lookback windows, duration rules, and ensure no duplicate</p>
+<p>        signals exist.</p>
+<ol>
+<li><strong>Execute</strong>: After the plan passes validation, apply or merge changes</li>
+</ol>
+<p>        in-place into the target Terraform configuration (<code>alerts.tf</code>).</p>
+<ol>
+<li><em>Note</em>: When answering questions or providing Terraform snippets</li>
+</ol>
+<p>        directly in chat where no disk modification is requested, output the</p>
+<p>        complete, valid Terraform HCL block in your response.</p>
+<ul>
+<li><strong>Configure the 4 Golden Signals and Cluster Health</strong>: Always ensure the</li>
+</ul>
+<p>    target Kubernetes workload or service has the following alerting coverage:</p>
+<ol>
+<li><strong>Latency</strong> (P95 response time)</li>
+<li><strong>Errors</strong> (Multi-Window Multi-Burn-Rate SLO alerts, such as Fast Burn 1</li>
+</ol>
+<p>        hour / 5 minutes with factor 14.4, Slow Burn 6 hours / 30 minutes with</p>
+<p>        factor 6.0; do not use simple static ratios)</p>
+<ol>
+<li><strong>Traffic</strong> (Sudden drop or complete metric disappearance using</li>
+</ol>
+<p>        <code>absent()</code> or <code>default 0</code> syntax, or overload spikes)</p>
+<ol>
+<li><strong>Saturation (Memory Limit Utilization Only)</strong>: When describing or</li>
+</ol>
+<p>        configuring alert policies for a cluster or project, include ONLY</p>
+<p>        <strong>Memory Saturation</strong> (<code>container_memory_working_set_bytes</code> /</p>
+<p>        <code>container_spec_memory_limit_bytes</code>). Do <strong>NOT</strong> include CPU saturation</p>
+<p>        alerts or list <code>container_cpu_usage_seconds_total</code> as an alert metric</p>
+<p>        because CPU is compressible and throttled by CFS quotas rather than</p>
+<p>        causing uncompressible fatal termination (OOM).</p>
+<ol>
+<li><strong>Cluster Health</strong> (Pod CrashLooping, Node NotReady)</li>
+</ol>
+<ul>
+<li><strong>PromQL Only (Managed Prometheus)</strong>: You must use</li>
+</ul>
+<p>    <code>condition_prometheus_query_language</code> with PromQL. Do <strong>NOT</strong> use MQL or</p>
+<p>    standard <code>condition_threshold</code> unless explicitly requested. Google Cloud</p>
+<p>    Managed Service for Prometheus is the standard telemetry ingestion path for</p>
+<p>    GKE.</p>
+<ul>
+<li><strong>Terraform Only</strong>: Write the generated observability configuration ONLY as</li>
+</ul>
+<p>    Terraform (<code>.tf</code>) files, such as <code>alerts.tf</code> and <code>variables.tf</code>.</p>
+<ul>
+<li><strong>Dynamic Multi-Resource Alerting (No Hardcoding)</strong>: You must not hardcode</li>
+</ul>
+<p>    specific pod names, node names, or service names in alerting conditions</p>
+<p>    unless explicitly requested. Alerting policies must be written to cover</p>
+<p>    resources dynamically:</p>
+<ul>
+<li>Always use grouping aggregations (`by (cluster, namespace, service, pod,</li>
+</ul>
+<p>        container)`) instead of filtering to a single instance. This allows a</p>
+<p>        single alert policy to dynamically track each service or pod separately.</p>
+<ul>
+<li>Always declare and use Terraform variables for <code>project_id</code>,</li>
+</ul>
+<p>        <code>cluster_name</code>, and <code>namespace</code> (<code>var.project_id</code>, <code>var.cluster_name</code>,</p>
+<p>        <code>var.namespace</code>) to make the configuration reusable across environments.</p>
+<p>        Always define these variables in <code>variables.tf</code> (or within the</p>
+<p>        configuration) and reference all three in policies or PromQL label</p>
+<p>        matchers.</p>
+<ul>
+<li><strong>No Redundant Duration Windows on Lookbacks</strong>:</li>
+<li>When PromQL expressions already use an aggregated lookback window (such</li>
+</ul>
+<p>        as <code>increase(...[15m]) &gt; 3</code> or multi-window SLO burn rates), the query</p>
+<p>        time window already smooths out transient spikes.</p>
+<ul>
+<li>Adding a Terraform duration on top of a PromQL lookback window increases</li>
+</ul>
+<p>        the Mean Time to Detect (MTTD) without providing additional smoothing</p>
+<p>        benefits.</p>
+<ul>
+<li>In these cases, set Terraform <code>duration = &quot;0s&quot;</code> (or <code>&quot;60s&quot;</code>). Do not</li>
+</ul>
+<p>        enforce <code>duration = &quot;300s&quot;</code> on top of <code>[15m]</code>, which delays critical</p>
+<p>        crashloop alerts by up to 20 minutes total (15 minutes + 5 minutes).</p>
+<ul>
+<li>Use <code>duration = &quot;300s&quot;</code> only on instantaneous gauge conditions, such as</li>
+</ul>
+<p>        <code>kube_node_status_condition == 0</code>.</p>
+<ul>
+<li><strong>Use SLO Burn Rates Instead of Simple Ratios</strong>: For error rate alerting,</li>
+</ul>
+<p>    always generate Multi-Window Multi-Burn-Rate (MWMBR) SLO alerts (such as</p>
+<p>    14.4x burn rate over 1 hour and 5 minute windows for a 99% SLO) rather than</p>
+<p>    simple error rate ratios (<code>rate(5xx)/rate(total) &gt; 0.05</code>), which produce</p>
+<p>    excessive false alarms on low traffic.</p>
+<ul>
+<li><strong>Robust Traffic Drop Detection (<code>absent()</code> / <code>default 0</code>)</strong>: When</li>
+</ul>
+<p>    monitoring for traffic drops to zero, do not use <code>rate(...) == 0</code> alone</p>
+<p>    because Prometheus time series disappear completely when no requests occur</p>
+<p>    (evaluating to an empty vector rather than 0). Use <code>default 0</code> syntax, such</p>
+<p>    as <code>sum(rate(...[5m])) default 0 == 0</code>, or <code>absent(...) == 1</code>.</p>
+<ul>
+<li><strong>Notification Channels</strong>: By default, never configure any notification</li>
+</ul>
+<p>    channels without user input. If the user explicitly provides a notification</p>
+<p>    channel, configure the alerts to use it. Otherwise, you must prompt the user</p>
+<p>    in your response to ask if they would like to configure one.</p>
+<ul>
+<li><strong>Consult GKE Metrics and Open-Source Alerts Catalog</strong>: When designing or</li>
+</ul>
+<p>    generating evaluation suites or alerting policies, consult</p>
+<p>    [metrics_and_alerts_catalog.md](references/metrics_and_alerts_catalog.md)</p>
+<p>    for public GKE metrics (<code>kubernetes.io/</code>) and open-source Kubernetes alerts</p>
+<p>    (<code>awesome-prometheus-alerts</code>).</p>
+<ul>
+<li><strong>Plain English Response</strong>: You must include a plain English explanation for</li>
+</ul>
+<p>    what the alerts do in your response. Explain what the alert measures, what</p>
+<p>    the threshold represents, and what a trigger indicates.</p>
+<hr>
+<h4>Alerting Policy Structure in Terraform</h4>
+<p>Alerting policies must be defined using the <code>google_monitoring_alert_policy</code></p>
+<p>resource with <code>condition_prometheus_query_language</code>. Always declare variables in</p>
+<p><code>variables.tf</code> for <code>project_id</code>, <code>cluster_name</code>, and <code>namespace</code>.</p>
+<p><pre><code># variables.tf
+variable &quot;project_id&quot; {
+  type        = string
+  description = &quot;Google Cloud Project ID&quot;
+}
+
+variable &quot;cluster_name&quot; {
+  type        = string
+  description = &quot;GKE Cluster Name&quot;
+}
+
+variable &quot;namespace&quot; {
+  type        = string
+  description = &quot;Target Kubernetes Namespace&quot;
+  default     = &quot;default&quot;
+}
+
+variable &quot;slo_target&quot; {
+  type        = number
+  description = &quot;SLO Target fraction (for example 0.99 for 99%)&quot;
+  default     = 0.99
+}</code></pre></p>
+<p><pre><code># alerts.tf
+# Example: Multi-Window Multi-Burn-Rate (MWMBR) SLO Alert (Fast Burn: 14.4x, 1h &amp; 5m windows)
+resource &quot;google_monitoring_alert_policy&quot; &quot;k8s_service_error_rate_slo&quot; {
+  project      = var.project_id
+  display_name = &quot;[K8s] ${var.cluster_name} - Service Error Rate SLO Fast Burn&quot;
+  combiner     = &quot;OR&quot;
+
+  conditions {
+    display_name = &quot;Error Budget Fast Burn (14.4x over 1h and 5m)&quot;
+    condition_prometheus_query_language {
+      query    = &lt;&lt;-EOT
+        (
+          (
+            sum(
+              rate(
+                http_requests_total{
+                  cluster=&quot;${var.cluster_name}&quot;,
+                  namespace=&quot;${var.namespace}&quot;,
+                  status=~&quot;5..&quot;
+                }[5m]
+              )
+            ) by (service, namespace, cluster)
+            /
+            sum(
+              rate(
+                http_requests_total{
+                  cluster=&quot;${var.cluster_name}&quot;,
+                  namespace=&quot;${var.namespace}&quot;
+                }[5m]
+              )
+            ) by (service, namespace, cluster)
+          ) &gt; (1 - ${var.slo_target}) * 14.4
+        )
+        and
+        (
+          (
+            sum(
+              rate(
+                http_requests_total{
+                  cluster=&quot;${var.cluster_name}&quot;,
+                  namespace=&quot;${var.namespace}&quot;,
+                  status=~&quot;5..&quot;
+                }[1h]
+              )
+            ) by (service, namespace, cluster)
+            /
+            sum(
+              rate(
+                http_requests_total{
+                  cluster=&quot;${var.cluster_name}&quot;,
+                  namespace=&quot;${var.namespace}&quot;
+                }[1h]
+              )
+            ) by (service, namespace, cluster)
+          ) &gt; (1 - ${var.slo_target}) * 14.4
+        )
+      EOT
+      duration = &quot;0s&quot;
+    }
+  }
+}</code></pre></p>
+<hr>
+<h4>Telemetry Metrics and PromQL Examples</h4>
+<p>For GKE metrics (<code>kubernetes.io/</code>), community open-source alerts</p>
+<p>(<code>awesome-prometheus-alerts</code>), KSM cost guardrails, and non-KSM native</p>
+<p>alternatives, you must read and follow:</p>
+<ul>
+<li>[metrics_and_alerts_catalog.md](references/metrics_and_alerts_catalog.md)</li>
+</ul>
+<p>For specific PromQL queries corresponding to each of the Golden Signals, you</p>
+<p>must read and follow:</p>
+<ul>
+<li>[promql_queries.md](references/promql_queries.md)</li>
+</ul>
+<p>For GKE cluster prerequisites, enabling Google Cloud Managed Service for</p>
+<p>Prometheus collection, configuring PodMonitoring custom scraping, and enabling</p>
+<p>control plane metrics collection (API Server, Controller Manager, Scheduler),</p>
+<p>you must read and follow:</p>
+<ul>
+<li>[gke_configuration_prerequisites.md](references/gke_configuration_prerequisites.md)</li>
+</ul>
+<hr>
+<h4>Tooling Scripts and Validation Loop</h4>
+<p>Use the <code>validate_config.py</code> script to validate change plans and Terraform</p>
+<p>configurations when working in a repository:</p>
+<ul>
+<li><strong>Pre-Edit Plan Validation</strong>: Draft a <code>changes.json</code> plan specifying the</li>
+</ul>
+<p>    proposed policies, queries, and durations, and validate it before editing:</p>
+<ul>
+<li>Command: <code>python3 scripts/validate_config.py --plan changes.json</code></li>
+<li><strong>Post-Edit and Directory Validation</strong>: Scan existing or modified Terraform</li>
+</ul>
+<p>    files in a directory to ensure no duplicates or syntax errors exist:</p>
+<ul>
+<li>Command: `python3 scripts/validate_config.py --directory [TARGET_TF_DIR]</li>
+</ul>
+<p>        --cluster-var &quot;${var.cluster_name}&quot;`</p>
+<ul>
+<li>Single file validation: `python3 scripts/validate_config.py --file</li>
+</ul>
+<p>        [PATH_TO_TF_FILE]`</p>
+<hr>
+<h4>Technical Considerations and Gotchas</h4>
+<ul>
+<li><strong>Lookback Windows versus Duration Buffers</strong>:</li>
+<li>Do not add large <code>duration = &quot;300s&quot;</code> buffers to alerts that already use</li>
+</ul>
+<p>        aggregated lookback windows like <code>increase(...[15m])</code> or multi-window</p>
+<p>        SLO rates.</p>
+<ul>
+<li>The <code>[15m]</code> window in <code>increase(...[15m]) &gt; 3</code> already smooths spikes.</li>
+</ul>
+<p>        Adding <code>duration = &quot;300s&quot;</code> increases MTTD by forcing the restart count</p>
+<p>        to remain above 3 for an extra 5 continuous minutes, delaying alerts by</p>
+<p>        up to 20 minutes total.</p>
+<ul>
+<li>Use <code>duration = &quot;0s&quot;</code> or <code>&quot;60s&quot;</code> when using lookback window functions.</li>
+</ul>
+<p>        Reserve <code>duration = &quot;300s&quot;</code> for raw instantaneous gauge conditions, such</p>
+<p>        as <code>kube_node_status_condition == 0</code>.</p>
+<ul>
+<li><strong>Memory Saturation Only for Cluster Alerting</strong>:</li>
+<li>Do not configure CPU saturation alerts for cluster or workload</li>
+</ul>
+<p>        monitoring. CPU is compressible (throttled by the CFS scheduler), while</p>
+<p>        memory is uncompressible (triggers OOMKills).</p>
+<ul>
+<li>Configure Memory Saturation using <code>container_memory_working_set_bytes</code> /</li>
+</ul>
+<p>        <code>container_spec_memory_limit_bytes</code>.</p>
+<ul>
+<li><strong>Missing Resource Limits Blind Spot (Mandatory Explanation)</strong>: Saturation</li>
+</ul>
+<p>    alerts that compare usage to limits (such as</p>
+<p>    <code>container_spec_memory_limit_bytes</code>) will <strong>fail to resolve</strong> or return</p>
+<p>    <code>NaN</code> if workloads do not have explicit Memory limits configured in their</p>
+<p>    Kubernetes manifests.</p>
+<ul>
+<li><strong>Mandatory Instruction</strong>: Whenever you generate, discuss, or recommend</li>
+</ul>
+<p>        any memory saturation alert comparing usage against limits (including</p>
+<p>        non-KSM cAdvisor alternatives using</p>
+<p>        <code>container_spec_memory_limit_bytes</code>), you **must explicitly explain and</p>
+<p>        warn the user in your response** that container memory limits must be</p>
+<p>        explicitly configured in the Kubernetes pod specs or manifests</p>
+<p>        (<code>resources.limits.memory</code>) for the saturation query to resolve (and not</p>
+<p>        return <code>NaN</code> or fail to resolve).</p>
+<ul>
+<li><strong>Linear Disk Predictions (<code>predict_linear</code>)</strong>: When forecasting volume</li>
+</ul>
+<p>    exhaustion using</p>
+<p>    `predict_linear(kubelet_volume_stats_available_bytes[6h:5m], 4 <em> 24 </em> 3600)</p>
+<p>    &lt; 0<code>, explain that </code>predict_linear` uses linear regression over the recent</p>
+<p>    lookback window (for example, 6 hours) to project when available disk will</p>
+<p>    drop below 0 (for example, within 4 days). Identify</p>
+<p>    <code>kubelet_volume_stats_available_bytes</code> as a Tier 1 native kubelet metric</p>
+<p>    with zero KSM surcharge.</p>
+<ul>
+<li><strong>API Server Error and Client Metrics</strong>:</li>
+<li><code>apiserver_request_total</code> and <code>rest_client_requests_total</code> are Tier 1</li>
+</ul>
+<p>        Control Plane metrics with zero KSM cost surcharge. Explain that</p>
+<p>        <code>apiserver_request_total</code> monitors 5xx HTTP error rates across API</p>
+<p>        server endpoints, while <code>rest_client_requests_total</code> monitors 4xx and</p>
+<p>        5xx requests sent by REST clients communicating with the API server.</p>
+<ul>
+<li><strong>Traffic Disappearance Gotcha (<code>absent()</code> / <code>default 0</code>)</strong>:</li>
+<li>When traffic drops completely to zero, Prometheus and GMP stop emitting</li>
+</ul>
+<p>        the <code>http_requests_total</code> time series.</p>
+<ul>
+<li><code>sum(rate(...[5m])) == 0</code> evaluates to an empty vector, preventing the</li>
+</ul>
+<p>        alert from triggering.</p>
+<ul>
+<li>Always use <code>sum(rate(...[5m])) default 0 == 0</code> or <code>absent(...) == 1</code> to</li>
+</ul>
+<p>        reliably detect total traffic loss.</p>
+<ul>
+<li><strong>CrashLooping versus Normal Restarts</strong>: A container restarting occasionally</li>
+</ul>
+<p>    might be normal, for example job completion or a minor rolling update. Alert</p>
+<p>    on <strong>frequent</strong> restarts (such as more than 3 restarts in 15 minutes with</p>
+<p>    <code>duration = &quot;0s&quot;</code>) using <code>kube_pod_container_status_restarts_total</code> rather</p>
+<p>    than a single restart to avoid noise.</p>
+<ul>
+<li><strong>Node Upgrades</strong>: During GKE cluster upgrades, nodes are drained and</li>
+</ul>
+<p>    restarted, which can trigger &quot;Node NotReady&quot; alerts. Warn the user that</p>
+<p>    these alerts might fire during maintenance windows, or suggest configuring</p>
+<p>    maintenance windows if supported.</p>
+<hr>
+<h4>Additional Resources</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/monitoring/managed-prometheus.md.txt" rel="noopener">Google Cloud Managed Service for Prometheus Documentation</a></li>
+<li><a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/monitoring.md.txt" rel="noopener">GKE Observability and Monitoring Concepts</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/alerts/terraform-alert-policy.md.txt" rel="noopener">Google Cloud Alerting Policies in Terraform</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/pricing.md.txt" rel="noopener">Google Cloud Monitoring Pricing</a></li>
+<li><a href="https://sre.google/workbook/alerting-on-slos/" rel="noopener">Google SRE Workbook: Alerting on SLOs</a></li>
+<li><a href="https://github.com/samber/awesome-prometheus-alerts" rel="noopener">Awesome Prometheus Alerts Repository</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-alert-configuration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-alert-configuration" aria-label="Copy install gke-alert-configuration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-alert-configuration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-alert-configuration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-agents-cli-onboarding — Aidentity</title>
+<meta name="description" content="Onboarding entrypoint for agents-cli in Agent Platform. It should be used when the user wants to &quot;create a new agent&quot;, &quot;develop an agent&quot;, &quot;build an agent using ADK&quot;, &quot;run the agent locally&quot;, &quot;debug agent code&quot;, &quot;test an agent&quot;, &quot;evaluate an agent&quot;, &quot;deploy an agent&quot;, &quot;publish an agent&quot;, &quot;monitor an agent&quot;, or needs the ADK (Agent Development Kit) development lifecycle.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-agents-cli-onboarding/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-agents-cli-onboarding — Aidentity">
+<meta property="og:description" content="Onboarding entrypoint for agents-cli in Agent Platform. It should be used when the user wants to &quot;create a new agent&quot;, &quot;develop an agent&quot;, &quot;build an agent using ADK&quot;, &quot;run the agent locally&quot;, &quot;debug agent code&quot;, &quot;test an agent&quot;, &quot;evaluate an agent&quot;, &quot;deploy an agent&quot;, &quot;publish an agent&quot;, &quot;monitor an agent&quot;, or needs the ADK (Agent Development Kit) development lifecycle.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-agents-cli-onboarding/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-agents-cli-onboarding","description":"Onboarding entrypoint for agents-cli in Agent Platform. It should be used when the user wants to \"create a new agent\", \"develop an agent\", \"build an agent using ADK\", \"run the agent locally\", \"debug agent code\", \"test an agent\", \"evaluate an agent\", \"deploy an agent\", \"publish an agent\", \"monitor an agent\", or needs the ADK (Agent Development Kit) development lifecycle.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-agents-cli-onboarding/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-agents-cli-onboarding
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-agents-cli-onboarding</h1>
+      <p class="summary">Onboarding entrypoint for agents-cli in Agent Platform. It should be used when the user wants to &quot;create a new agent&quot;, &quot;develop an agent&quot;, &quot;build an agent using ADK&quot;, &quot;run the agent locally&quot;, &quot;debug agent code&quot;, &quot;test an agent&quot;, &quot;evaluate an agent&quot;, &quot;deploy an agent&quot;, &quot;publish an agent&quot;, &quot;monitor an agent&quot;, or needs the ADK (Agent Development Kit) development lifecycle.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Agents CLI Onboarding</h3>
+<p>&gt; [!TIP] <strong>One-Time Setup</strong>: To install the CLI and enable all 7 specialized</p>
+<p>&gt; development skills in your coding agent, run the setup command:</p>
+<p>&gt;</p>
+<p>&gt; <pre><code>&gt; uvx google-agents-cli setup
+&gt; </code></pre></p>
+<p>&gt;</p>
+<p>&gt; Alternatively, to install only the expert skills and let the agent handle</p>
+<p>&gt; execution:</p>
+<p>&gt;</p>
+<p>&gt; <pre><code>&gt; npx skills add google/agents-cli
+&gt; </code></pre></p>
+<h4>Overview</h4>
+<p>This skill serves as the entrypoint for <strong>agents-cli</strong> — Google&#39;s toolkit for</p>
+<p>building, evaluating, and deploying AI agents on the Gemini Enterprise Agent</p>
+<p>Platform.</p>
+<p>Use this skill to perform the initial setup and identify the correct specialized</p>
+<p>workflows for your task.</p>
+<h4>The Agent Development Lifecycle</h4>
+<p>After running the setup, the following specialized skills become available and</p>
+<p>will activate automatically based on your requests. Use this table to identify</p>
+<p>which skill to load for your current phase:</p>
+<table><thead><tr><th>Phase</th><th>Specialized Skill</th><th>Purpose / When to Load</th></tr></thead><tbody>
+<tr><td><strong>0 — Understand</strong></td><td><code>google-agents-cli-workflow</code></td><td><strong>Clarify intent.</strong> Define the agent spec in <code>.agents-cli-spec.md</code> before coding.</td></tr>
+<tr><td><strong>1 — Study</strong></td><td><code>google-agents-cli-workflow</code></td><td><strong>Leverage samples.</strong> Study existing agent samples (e.g., <code>ambient-expense</code>) before scaffolding.</td></tr>
+<tr><td><strong>2 — Scaffold</strong></td><td><code>google-agents-cli-scaffold</code></td><td><strong>Create/Enhance.</strong> Initialize the project structure, CI/CD, and infrastructure templates.</td></tr>
+<tr><td><strong>3 — Build</strong></td><td><code>google-agents-cli-adk-code</code></td><td><strong>Implement.</strong> Write agent logic, tools, callbacks, and manage state using ADK APIs.</td></tr>
+<tr><td><strong>4 — Evaluate</strong></td><td><code>google-agents-cli-eval</code></td><td><strong>Validate Quality.</strong> Run systematic evaluations (LLM-as-judge).</td></tr>
+<tr><td><strong>5 — Deploy</strong></td><td><code>google-agents-cli-deploy</code></td><td><strong>Go Production.</strong> Deploy to Agent Runtime (Vertex AI), Cloud Run, or GKE.</td></tr>
+<tr><td><strong>6 — Publish</strong></td><td><code>google-agents-cli-publish</code></td><td><strong>Register.</strong> Make your agent available as a tool in Gemini Enterprise.</td></tr>
+<tr><td><strong>7 — Observe</strong></td><td><code>google-agents-cli-observability</code></td><td><strong>Monitor.</strong> Set up Cloud Trace, prompt-response logging, and BigQuery analytics.</td></tr>
+</tbody></table>
+<h4>Key CLI Commands</h4>
+<p>Below are the primary commands you will use throughout the development</p>
+<p>lifecycle:</p>
+<table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>agents-cli setup</code></td><td>Install the CLI and configure skills in your coding agent.</td></tr>
+<tr><td><code>agents-cli scaffold &lt;name&gt;</code></td><td>Create a new agent project from a template.</td></tr>
+<tr><td><code>agents-cli eval run</code></td><td>Run the agent and grade the traces in a single step (generate + grade).</td></tr>
+<tr><td><code>agents-cli deploy</code></td><td>Deploy your agent to Google Cloud (Agent Runtime, Cloud Run, GKE).</td></tr>
+<tr><td><code>agents-cli publish gemini-enterprise</code></td><td>Register your deployed agent with Gemini Enterprise.</td></tr>
+</tbody></table>
+<p>*For the full list of available commands and global options, run `agents-cli</p>
+<p>--help`.*</p>
+<h4>Next Steps</h4>
+<p>Follow this sequence to initiate the development workflow:</p>
+<ol>
+<li><strong>Execute Setup:</strong> Run the <code>uvx</code> or <code>npx</code> command in the <code>[!TIP]</code> box above</li>
+</ol>
+<p>    to install the CLI and enable the specialized skills in your environment.</p>
+<ol>
+<li><strong>Verify Installation:</strong> Run <code>agents-cli info</code> to confirm the installation</li>
+</ol>
+<p>    and view the active project configuration.</p>
+<ol>
+<li><strong>Initiate Phase 0:</strong> Ask the user for their core requirements (agent</li>
+</ol>
+<p>    purpose, external tools, deployment target) and document them in</p>
+<p>    <code>.agents-cli-spec.md</code> before writing any code.</p>
+<h4>Reporting Issues</h4>
+<p>Report bugs or improvements at <a href="https://github.com/google/agents-cli/issues" rel="noopener">Google Agents CLI Issues</a>.</p>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://github.com/google/agents-cli/tree/main/docs/src" rel="noopener">Google Agents CLI Documentation</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-agents-cli-onboarding</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-agents-cli-onboarding" aria-label="Copy install google-agents-cli-onboarding">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-agents-cli-onboarding</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-agents-cli-onboarding/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

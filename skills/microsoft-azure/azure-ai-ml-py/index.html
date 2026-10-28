@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-ai-ml-py — Aidentity</title>
+<meta name="description" content="Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-ml-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-ai-ml-py — Aidentity">
+<meta property="og:description" content="Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-ml-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-ai-ml-py","description":"Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: \"azure-ai-ml\", \"MLClient\", \"workspace\", \"model registry\", \"training jobs\", \"datasets\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-ml-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-ai-ml-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-ai-ml-py</h1>
+      <p class="summary">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Machine Learning SDK v2 for Python</h3>
+<p>Client library for managing Azure ML resources: workspaces, jobs, models, data, and compute.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-ai-ml</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_SUBSCRIPTION_ID=&lt;your-subscription-id&gt;  # Required for all auth methods
+AZURE_RESOURCE_GROUP=&lt;your-resource-group&gt;  # Required for all auth methods
+AZURE_ML_WORKSPACE_NAME=&lt;your-workspace-name&gt;  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>from azure.ai.ml import MLClient
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+import os
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+with MLClient(
+    credential=credential,
+    subscription_id=os.environ[&quot;AZURE_SUBSCRIPTION_ID&quot;],
+    resource_group_name=os.environ[&quot;AZURE_RESOURCE_GROUP&quot;],
+    workspace_name=os.environ[&quot;AZURE_ML_WORKSPACE_NAME&quot;]
+) as ml_client:
+    for ws in ml_client.workspaces.list():
+        print(ws.name)</code></pre></p>
+<h5>From Config File</h5>
+<p><pre><code>from azure.ai.ml import MLClient
+from azure.identity import DefaultAzureCredential
+
+# Uses config.json in current directory or parent
+with MLClient.from_config(
+    credential=DefaultAzureCredential()
+) as ml_client:
+    for ws in ml_client.workspaces.list():
+        print(ws.name)</code></pre></p>
+<p>&gt; <strong>Long-lived <code>ml_client</code>:</strong> Subsequent examples in this skill assume <code>ml_client</code> was created via the pattern above and is alive for the lifetime of your script. In production, wrap your top-level workflow in a single <code>with MLClient(...) as ml_client:</code> block so the underlying HTTP transport closes cleanly on exit.</p>
+<h4>Workspace Management</h4>
+<h5>Create Workspace</h5>
+<p><pre><code>from azure.ai.ml.entities import Workspace
+
+ws = Workspace(
+    name=&quot;my-workspace&quot;,
+    location=&quot;eastus&quot;,
+    display_name=&quot;My Workspace&quot;,
+    description=&quot;ML workspace for experiments&quot;,
+    tags={&quot;purpose&quot;: &quot;demo&quot;}
+)
+
+ml_client.workspaces.begin_create(ws).result()</code></pre></p>
+<h5>List Workspaces</h5>
+<p><pre><code>for ws in ml_client.workspaces.list():
+    print(f&quot;{ws.name}: {ws.location}&quot;)</code></pre></p>
+<h4>Data Assets</h4>
+<h5>Register Data</h5>
+<p><pre><code>from azure.ai.ml.entities import Data
+from azure.ai.ml.constants import AssetTypes
+
+# Register a file
+my_data = Data(
+    name=&quot;my-dataset&quot;,
+    version=&quot;1&quot;,
+    path=&quot;azureml://datastores/workspaceblobstore/paths/data/train.csv&quot;,
+    type=AssetTypes.URI_FILE,
+    description=&quot;Training data&quot;
+)
+
+ml_client.data.create_or_update(my_data)</code></pre></p>
+<h5>Register Folder</h5>
+<p><pre><code>my_data = Data(
+    name=&quot;my-folder-dataset&quot;,
+    version=&quot;1&quot;,
+    path=&quot;azureml://datastores/workspaceblobstore/paths/data/&quot;,
+    type=AssetTypes.URI_FOLDER
+)
+
+ml_client.data.create_or_update(my_data)</code></pre></p>
+<h4>Model Registry</h4>
+<h5>Register Model</h5>
+<p><pre><code>from azure.ai.ml.entities import Model
+from azure.ai.ml.constants import AssetTypes
+
+model = Model(
+    name=&quot;my-model&quot;,
+    version=&quot;1&quot;,
+    path=&quot;./model/&quot;,
+    type=AssetTypes.CUSTOM_MODEL,
+    description=&quot;My trained model&quot;
+)
+
+ml_client.models.create_or_update(model)</code></pre></p>
+<h5>List Models</h5>
+<p><pre><code>for model in ml_client.models.list(name=&quot;my-model&quot;):
+    print(f&quot;{model.name} v{model.version}&quot;)</code></pre></p>
+<h4>Compute</h4>
+<h5>Create Compute Cluster</h5>
+<p><pre><code>from azure.ai.ml.entities import AmlCompute
+
+cluster = AmlCompute(
+    name=&quot;cpu-cluster&quot;,
+    type=&quot;amlcompute&quot;,
+    size=&quot;Standard_DS3_v2&quot;,
+    min_instances=0,
+    max_instances=4,
+    idle_time_before_scale_down=120
+)
+
+ml_client.compute.begin_create_or_update(cluster).result()</code></pre></p>
+<h5>List Compute</h5>
+<p><pre><code>for compute in ml_client.compute.list():
+    print(f&quot;{compute.name}: {compute.type}&quot;)</code></pre></p>
+<h4>Jobs</h4>
+<h5>Command Job</h5>
+<p><pre><code>from azure.ai.ml import command, Input
+
+job = command(
+    code=&quot;./src&quot;,
+    command=&quot;python train.py --data ${{inputs.data}} --lr ${{inputs.learning_rate}}&quot;,
+    inputs={
+        &quot;data&quot;: Input(type=&quot;uri_folder&quot;, path=&quot;azureml:my-dataset:1&quot;),
+        &quot;learning_rate&quot;: 0.01
+    },
+    environment=&quot;AzureML-sklearn-1.0-ubuntu20.04-py38-cpu@latest&quot;,
+    compute=&quot;cpu-cluster&quot;,
+    display_name=&quot;training-job&quot;
+)
+
+returned_job = ml_client.jobs.create_or_update(job)
+print(f&quot;Job URL: {returned_job.studio_url}&quot;)</code></pre></p>
+<h5>Monitor Job</h5>
+<p><pre><code>ml_client.jobs.stream(returned_job.name)</code></pre></p>
+<h4>Pipelines</h4>
+<p><pre><code>from azure.ai.ml import dsl, Input, Output
+from azure.ai.ml.entities import Pipeline
+
+@dsl.pipeline(
+    compute=&quot;cpu-cluster&quot;,
+    description=&quot;Training pipeline&quot;
+)
+def training_pipeline(data_input):
+    prep_step = prep_component(data=data_input)
+    train_step = train_component(
+        data=prep_step.outputs.output_data,
+        learning_rate=0.01
+    )
+    return {&quot;model&quot;: train_step.outputs.model}
+
+pipeline = training_pipeline(
+    data_input=Input(type=&quot;uri_folder&quot;, path=&quot;azureml:my-dataset:1&quot;)
+)
+
+pipeline_job = ml_client.jobs.create_or_update(pipeline)</code></pre></p>
+<h4>Environments</h4>
+<h5>Create Custom Environment</h5>
+<p><pre><code>from azure.ai.ml.entities import Environment
+
+env = Environment(
+    name=&quot;my-env&quot;,
+    version=&quot;1&quot;,
+    image=&quot;mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04&quot;,
+    conda_file=&quot;./environment.yml&quot;
+)
+
+ml_client.environments.create_or_update(env)</code></pre></p>
+<h4>Datastores</h4>
+<h5>List Datastores</h5>
+<p><pre><code>for ds in ml_client.datastores.list():
+    print(f&quot;{ds.name}: {ds.type}&quot;)</code></pre></p>
+<h5>Get Default Datastore</h5>
+<p><pre><code>default_ds = ml_client.datastores.get_default()
+print(f&quot;Default: {default_ds.name}&quot;)</code></pre></p>
+<h4>MLClient Operations</h4>
+<table><thead><tr><th>Property</th><th>Operations</th></tr></thead><tbody>
+<tr><td><code>workspaces</code></td><td>create, get, list, delete</td></tr>
+<tr><td><code>jobs</code></td><td>create_or_update, get, list, stream, cancel</td></tr>
+<tr><td><code>models</code></td><td>create_or_update, get, list, archive</td></tr>
+<tr><td><code>data</code></td><td>create_or_update, get, list</td></tr>
+<tr><td><code>compute</code></td><td>begin_create_or_update, get, list, delete</td></tr>
+<tr><td><code>environments</code></td><td>create_or_update, get, list</td></tr>
+<tr><td><code>datastores</code></td><td>create_or_update, get, list, get_default</td></tr>
+<tr><td><code>components</code></td><td>create_or_update, get, list</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.ai.ml</code> sync clients with <code>azure.ai.ml</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with MLClient(...) as client:</code> (sync) or <code>async with MLClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use versioning</strong> for data, models, and environments</li>
+<li><strong>Configure idle scale-down</strong> to reduce compute costs</li>
+<li><strong>Use environments</strong> for reproducible training</li>
+<li><strong>Stream job logs</strong> to monitor progress</li>
+<li><strong>Register models</strong> after successful training jobs</li>
+<li><strong>Use pipelines</strong> for multi-step workflows</li>
+<li><strong>Tag resources</strong> for organization and cost tracking</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-projects-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-projects-py build ai applications using the azure ai projects python sdk (azure-ai-projects). use when working with foundry project clients, creating versioned agents with promptagentdefinition, running evaluations, managing connections/deployments/datasets/indexes, or using openai-compatible clients. this is the high-level foundry sdk - for low-level agent operations, use azure-ai-agents-python skill. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-projects-py</span>
+    <span class="r-desc">Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-ai-ml-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-ai-ml-py" aria-label="Copy install azure-ai-ml-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-ai-ml-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-ai-ml-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

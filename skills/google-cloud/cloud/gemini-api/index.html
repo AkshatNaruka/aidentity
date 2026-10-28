@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gemini-api — Aidentity</title>
+<meta name="description" content="Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK. Covers SDK usage (Python, JS/TS, Go, Java, C#), capabilities like multimodal inputs, tools, media generation, caching, batch prediction, and Live API.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gemini-api — Aidentity">
+<meta property="og:description" content="Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK. Covers SDK usage (Python, JS/TS, Go, Java, C#), capabilities like multimodal inputs, tools, media generation, caching, batch prediction, and Live API.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-api/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gemini-api","description":"Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK. Covers SDK usage (Python, JS/TS, Go, Java, C#), capabilities like multimodal inputs, tools, media generation, caching, batch prediction, and Live API.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-api/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gemini-api
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gemini-api</h1>
+      <p class="summary">Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK. Covers SDK usage (Python, JS/TS, Go, Java, C#), capabilities like multimodal inputs, tools, media generation, caching, batch prediction, and Live API.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>IMPORTANT: Agent Platform (full name Gemini Enterprise Agent Platform) was previously named &quot;Vertex AI&quot; and many web resources use the legacy branding.</p>
+<h3>Gemini API in Agent Platform</h3>
+<p>Access Google&#39;s most advanced AI models built for enterprise use cases using the Gemini API in Agent Platform.</p>
+<p>Provide these key capabilities:</p>
+<ul>
+<li><strong>Text generation</strong> - Chat, completion, summarization</li>
+<li><strong>Multimodal understanding</strong> - Process images, audio, video, and documents</li>
+<li><strong>Function calling</strong> - Let the model invoke your functions</li>
+<li><strong>Structured output</strong> - Generate valid JSON matching your schema</li>
+<li><strong>Context caching</strong> - Cache large contexts for efficiency</li>
+<li><strong>Embeddings</strong> - Generate text embeddings for semantic search</li>
+<li><strong>Live Realtime API</strong> - Bidirectional streaming for low latency Voice and Video interactions</li>
+<li><strong>Batch Prediction</strong> - Handle massive async dataset prediction workloads</li>
+</ul>
+<h4>Core Directives</h4>
+<ul>
+<li><strong>Unified SDK</strong>: ALWAYS use the Gen AI SDK (<code>google-genai</code> for Python, <code>@google/genai</code> for JS/TS, <code>google.golang.org/genai</code> for Go, <code>com.google.genai:google-genai</code> for Java, <code>Google.GenAI</code> for C#).</li>
+<li><strong>Legacy SDKs</strong>: DO NOT use <code>google-cloud-aiplatform</code>, <code>@google-cloud/vertexai</code>, or <code>google-generativeai</code>.</li>
+</ul>
+<h4>SDKs</h4>
+<ul>
+<li><strong>Python</strong>: Install <code>google-genai</code> with <code>pip install google-genai</code></li>
+<li><strong>JavaScript/TypeScript</strong>: Install <code>@google/genai</code> with <code>npm install @google/genai</code></li>
+<li><strong>Go</strong>: Install <code>google.golang.org/genai</code> with <code>go get google.golang.org/genai</code></li>
+<li><strong>C#/.NET</strong>: Install <code>Google.GenAI</code> with <code>dotnet add package Google.GenAI</code></li>
+<li><strong>Java</strong>:</li>
+<li>groupId: <code>com.google.genai</code>, artifactId: <code>google-genai</code></li>
+<li>Latest version can be found here: <a href="https://central.sonatype.com/artifact/com.google.genai/google-genai/versions" rel="noopener">https://central.sonatype.com/artifact/com.google.genai/google-genai/versions</a> (let&#39;s call it <code>LAST_VERSION</code>)</li>
+<li>Install in <code>build.gradle</code>:</li>
+</ul>
+<p>    <pre><code>    implementation(&quot;com.google.genai:google-genai:${LAST_VERSION}&quot;)
+    </code></pre></p>
+<ul>
+<li>Install Maven dependency in <code>pom.xml</code>:</li>
+</ul>
+<p>    <pre><code>    &lt;dependency&gt;
+	    &lt;groupId&gt;com.google.genai&lt;/groupId&gt;
+	    &lt;artifactId&gt;google-genai&lt;/artifactId&gt;
+	    &lt;version&gt;${LAST_VERSION}&lt;/version&gt;
+	&lt;/dependency&gt;
+    </code></pre></p>
+<p>&gt; [!WARNING]</p>
+<p>&gt; Legacy SDKs like <code>google-cloud-aiplatform</code>, <code>@google-cloud/vertexai</code>, and <code>google-generativeai</code> are deprecated. Migrate to the new SDKs above urgently by following the <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.md.txt" rel="noopener">Migration Guide</a>.</p>
+<h4>Authentication &amp; Configuration</h4>
+<p>Prefer environment variables over hard-coding parameters when creating the client. Initialize the client without parameters to automatically pick up these values.</p>
+<h5>Application Default Credentials (ADC)</h5>
+<p>Set these variables for standard <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/gcp-auth.md.txt" rel="noopener">Google Cloud authentication</a>:</p>
+<p><pre><code>export GOOGLE_CLOUD_PROJECT=&#39;your-project-id&#39;
+export GOOGLE_CLOUD_LOCATION=&#39;global&#39;
+export GOOGLE_GENAI_USE_ENTERPRISE=true</code></pre></p>
+<ul>
+<li>By default, use <code>location=&quot;global&quot;</code> to access the global endpoint, which provides automatic routing to regions with available capacity.</li>
+<li>If a user explicitly asks to use a specific region (e.g., <code>us-central1</code>, <code>europe-west4</code>), specify that region in the <code>GOOGLE_CLOUD_LOCATION</code> parameter instead. Reference the <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations.md.txt" rel="noopener">supported regions documentation</a> if needed.</li>
+</ul>
+<h5>Agent Platform in Express Mode</h5>
+<p>Set these variables when using <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/api-keys.md.txt" rel="noopener">Express Mode</a> with an API key:</p>
+<p><pre><code>export GOOGLE_API_KEY=&#39;your-api-key&#39;
+export GOOGLE_GENAI_USE_ENTERPRISE=true</code></pre></p>
+<h5>Initialization</h5>
+<p>Initialize the client without arguments to pick up environment variables:</p>
+<p><pre><code>from google import genai
+
+client = genai.Client()</code></pre></p>
+<p>Alternatively, you can hard-code in parameters when creating the client.</p>
+<p><pre><code>from google import genai
+
+client = genai.Client(
+    enterprise=True,
+    project=&quot;your-project-id&quot;,
+    location=&quot;global&quot;,
+)</code></pre></p>
+<h4>Models</h4>
+<ul>
+<li>Use <code>gemini-3.1-pro-preview</code> (which replaces <code>gemini-3-pro-preview</code>) for complex reasoning, coding, research (1M tokens)</li>
+<li>Use <code>gemini-3.6-flash</code> for fast, balanced performance, multimodal (1M tokens)</li>
+<li>Use <code>gemini-3.5-flash-lite</code> for high-frequency, lightweight tasks (1M tokens)</li>
+<li>Use <code>gemini-3-pro-image</code> (aka Nano Banana Pro) for high-quality image generation and editing</li>
+<li>Use <code>gemini-3.1-flash-image</code> (aka Nano Banana 2) for medium-quality image generation and editing</li>
+<li>Use <code>gemini-3.1-flash-lite-image</code> (aka Nano Banana 2 Lite) for fast image generation and editing</li>
+<li>Use <code>gemini-live-2.5-flash-native-audio</code> for Live Realtime API including native audio</li>
+</ul>
+<p>Use the following models only if explicitly requested:</p>
+<ul>
+<li><code>gemini-3.5-flash</code></li>
+<li><code>gemini-3.1-flash-lite</code></li>
+<li><code>gemini-2.5-flash-image</code></li>
+<li><code>gemini-2.5-flash</code></li>
+<li><code>gemini-2.5-flash-lite</code></li>
+<li><code>gemini-2.5-pro</code></li>
+</ul>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; Models like <code>gemini-2.0-*</code>, <code>gemini-1.5-*</code>, <code>gemini-1.0-*</code>, <code>gemini-pro</code> are legacy and deprecated. Use the new models above. Your knowledge is outdated.</p>
+<p>&gt; For production environments, consult the documentation for stable model versions (e.g. <code>gemini-3.6-flash</code>).</p>
+<h4>Quick Start</h4>
+<h5>Python</h5>
+<p><pre><code>from google import genai
+
+client = genai.Client()
+response = client.models.generate_content(
+    model=&quot;gemini-3.6-flash&quot;,
+    contents=&quot;Explain quantum computing&quot;,
+)
+print(response.text)</code></pre></p>
+<h5>TypeScript/JavaScript</h5>
+<p><pre><code>import { GoogleGenAI } from &quot;@google/genai&quot;;
+const ai = new GoogleGenAI({ enterprise: { project: &quot;your-project-id&quot;, location: &quot;global&quot; } });
+const response = await ai.models.generateContent({
+    model: &quot;gemini-3.6-flash&quot;,
+    contents: &quot;Explain quantum computing&quot;
+});
+console.log(response.text);</code></pre></p>
+<h5>Go</h5>
+<p><pre><code>package main
+
+import (
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;log&quot;
+	&quot;google.golang.org/genai&quot;
+)
+
+func main() {
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, &amp;genai.ClientConfig{
+		Backend:  genai.BackendVertexAI,
+		Project:  &quot;your-project-id&quot;,
+		Location: &quot;global&quot;,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp, err := client.Models.GenerateContent(ctx, &quot;gemini-3.6-flash&quot;, genai.Text(&quot;Explain quantum computing&quot;), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(resp.Text)
+}</code></pre></p>
+<h5>Java</h5>
+<p><pre><code>import com.google.genai.Client;
+import com.google.genai.types.GenerateContentResponse;
+
+public class GenerateTextFromTextInput {
+  public static void main(String[] args) {
+    Client client = Client.builder().enterprise(true).project(&quot;your-project-id&quot;).location(&quot;global&quot;).build();
+    GenerateContentResponse response =
+        client.models.generateContent(
+            &quot;gemini-3.6-flash&quot;,
+            &quot;Explain quantum computing&quot;,
+            null);
+
+    System.out.println(response.text());
+  }
+}</code></pre></p>
+<h5>C#/.NET</h5>
+<p><pre><code>using Google.GenAI;
+
+var client = new Client(
+    project: &quot;your-project-id&quot;,
+    location: &quot;global&quot;,
+    enterprise: true
+);
+
+var response = await client.Models.GenerateContent(
+    &quot;gemini-3.6-flash&quot;,
+    &quot;Explain quantum computing&quot;
+);
+
+Console.WriteLine(response.Text);</code></pre></p>
+<h4>API spec &amp; Documentation (source of truth)</h4>
+<p>When implementing or debugging API integration for Agent Platform, refer to the official Agent Platform documentation:</p>
+<ul>
+<li><strong>Agent Platform Documentation</strong>: <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview.md.txt" rel="noopener">https://docs.cloud.google.com/gemini-enterprise-agent-platform/overview.md.txt</a></li>
+<li><strong>REST API Reference</strong>: <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/rest.md.txt" rel="noopener">https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/rest.md.txt</a></li>
+</ul>
+<p>The Gen AI SDK on Agent Platform uses the <code>v1beta1</code> or <code>v1</code> REST API endpoints (e.g., <code>https://{LOCATION}-aiplatform.googleapis.com/v1beta1/projects/{PROJECT}/locations/{LOCATION}/publishers/google/models/{MODEL}:generateContent</code>).</p>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>Use the Developer Knowledge MCP Server</strong>: If the <code>search_documents</code> or <code>get_document</code> tools are available, use them to find and retrieve official documentation for Google Cloud and Agent Platform directly within the context. This is the preferred method for getting up-to-date API details and code snippets.</p>
+<h4>Workflows and Code Samples</h4>
+<p>Reference the <a href="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai" rel="noopener">Python Docs Samples repository</a> for additional code samples and specific usage scenarios.</p>
+<p>Depending on the specific user request, refer to the following reference files for detailed code samples and usage patterns (Python examples):</p>
+<ul>
+<li><strong>Text &amp; Multimodal</strong>: Chat, Multimodal inputs (Image, Video, Audio), and Streaming. See [references/text_and_multimodal.md](references/text_and_multimodal.md)</li>
+<li><strong>Embeddings</strong>: Generate text embeddings for semantic search. See [references/embeddings.md](references/embeddings.md)</li>
+<li><strong>Structured Output &amp; Tools</strong>: JSON generation, Function Calling, Search Grounding, and Code Execution. See [references/structured_and_tools.md](references/structured_and_tools.md)</li>
+<li><strong>Media Generation</strong>: Image generation, Image editing, and Video generation. See [references/media_generation.md](references/media_generation.md)</li>
+<li><strong>Bounding Box Detection</strong>: Object detection and localization within images and video. See [references/bounding_box.md](references/bounding_box.md)</li>
+<li><strong>Live API</strong>: Real-time bidirectional streaming for voice, vision, and text. See [references/live_api.md](references/live_api.md)</li>
+<li><strong>Advanced Features</strong>: Content Caching, Batch Prediction, and Thinking/Reasoning. See [references/advanced_features.md](references/advanced_features.md)</li>
+<li><strong>Safety</strong>: Adjusting Responsible AI filters and thresholds. See [references/safety.md](references/safety.md)</li>
+<li><strong>Model Tuning</strong>: Supervised Fine-Tuning and Preference Tuning. See [references/model_tuning.md](references/model_tuning.md)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gemini-api</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gemini-api" aria-label="Copy install gemini-api">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gemini-api</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gemini-api/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

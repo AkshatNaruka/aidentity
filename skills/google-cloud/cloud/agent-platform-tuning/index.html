@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-tuning — Aidentity</title>
+<meta name="description" content="Agent Platform Model Tuning. Use when you need to fine-tune open models or Gemini models using Agent Platform infrastructure. Don&#39;t use for model training outside Agent Platform, model deployment to endpoints (use `agent-platform-deploy`), or managing serving endpoints (use `agent-platform-endpoint-management`).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-tuning/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-tuning — Aidentity">
+<meta property="og:description" content="Agent Platform Model Tuning. Use when you need to fine-tune open models or Gemini models using Agent Platform infrastructure. Don&#39;t use for model training outside Agent Platform, model deployment to endpoints (use `agent-platform-deploy`), or managing serving endpoints (use `agent-platform-endpoint-management`).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-tuning/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-tuning","description":"Agent Platform Model Tuning. Use when you need to fine-tune open models or Gemini models using Agent Platform infrastructure. Don't use for model training outside Agent Platform, model deployment to endpoints (use `agent-platform-deploy`), or managing serving endpoints (use `agent-platform-endpoint-management`).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-tuning/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-tuning
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-tuning</h1>
+      <p class="summary">Agent Platform Model Tuning. Use when you need to fine-tune open models or Gemini models using Agent Platform infrastructure. Don&#39;t use for model training outside Agent Platform, model deployment to endpoints (use `agent-platform-deploy`), or managing serving endpoints (use `agent-platform-endpoint-management`).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Platform Model Tuning</h3>
+<h4>Overview</h4>
+<p>This skill provides procedural knowledge for fine-tuning Large Language Models</p>
+<p>(both Open Models and Gemini Models) using Agent Platform&#39;s tuning service. It</p>
+<p>covers the entire lifecycle from environment setup and data preparation to job</p>
+<p>configuration, monitoring, and deployment.</p>
+<h4>Workflow Decision Tree</h4>
+<ol>
+<li><strong>Model Category Identification</strong>: Has the user explicitly stated whether</li>
+</ol>
+<p>    they want to tune an <strong>Open Model</strong> or a <strong>Gemini Model</strong>?</p>
+<ul>
+<li><strong>No</strong> → <strong>STOP</strong>. Ask the user if they want to tune an Open Model or a</li>
+</ul>
+<p>        Gemini Model. <strong>CRITICAL EXCEPTION for Environment Setup Requests:</strong> If</p>
+<p>        the user is specifically asking for environment setup instructions (e.g.</p>
+<p>        &quot;What environment setup is needed?&quot;), you <strong>MUST</strong> provide the full</p>
+<p>        [Phase 0 environment setup](#phase-0) instructions in your initial</p>
+<p>        response, <em>simultaneously</em> with asking clarifying questions about the</p>
+<p>        model category.</p>
+<ul>
+<li>If the user provides a specific tuning purpose, you should recommend</li>
+</ul>
+<p>        three models: one Open Model, one Gemini Model, and a third generally</p>
+<p>        recommended choice. Briefly list the pros and cons of each (e.g., Gemini</p>
+<p>        models might be more expensive, etc.). <strong>CRITICAL:</strong> You must read</p>
+<p>        <code>references/models.md</code> during this step and only recommend models</p>
+<p>        explicitly listed in that catalog. Do not recommend unsupported models</p>
+<p>        like Mistral. If the user names a model that is not in the catalog,</p>
+<p>        follow the fallback rule in that catalog. Do not proceed with model</p>
+<p>        configuration until the category is confirmed.</p>
+<ul>
+<li><strong>Yes</strong> → Proceed.</li>
+</ul>
+<ol>
+<li><strong>Environment Check</strong>: Has the environment (Auth, APIs, IAM, Venv) been</li>
+</ol>
+<p>    initialized?</p>
+<ul>
+<li><strong>No</strong> → Go to [Phase 0: Environment &amp; IAM Setup](#phase-0).</li>
+<li><strong>Yes</strong> → Proceed.</li>
+</ul>
+<ol>
+<li><strong>Dataset Status</strong>: Is the dataset ready in JSONL format, **is its structure</li>
+</ol>
+<p>    valid for tuning**, and is it uploaded to Google Cloud Storage?</p>
+<p>    <pre><code>    -   **No** → Go to [Phase 1: Dataset Preparation &amp; Upload](#phase-1).
+    -   **Yes** → Proceed.
+    </code></pre></p>
+<ol>
+<li><strong>Column Selection Confirmation</strong>: Have you presented the columns to the</li>
+</ol>
+<p>    user and confirmed the mapping?</p>
+<ul>
+<li><strong>No</strong> → <strong>STOP</strong>. You must show samples and get user confirmation on</li>
+</ul>
+<p>        column mapping as described in Phase 1.0 before proceeding.</p>
+<ul>
+<li><strong>Yes</strong> → Proceed.</li>
+</ul>
+<ol>
+<li><strong>Configuration</strong>: Has the user provided the target model and</li>
+</ol>
+<p>    hyperparameters, or explicitly agreed to your recommendations?</p>
+<ul>
+<li><strong>No</strong> → Go to</li>
+</ul>
+<p>        [Phase 2: Model Configuration &amp; Recommendation](#phase-2).</p>
+<ul>
+<li><strong>Yes</strong> → Proceed.</li>
+</ul>
+<ol>
+<li><strong>Job Status</strong>: Has the tuning job been submitted?</li>
+</ol>
+<p>    <pre><code>    -   **No** → Go to
+        [Phase 3: Tuning Job Execution](#phase-3-tuning-job-execution).
+    -   **Yes** → Proceed.
+    </code></pre></p>
+<ol>
+<li><strong>Job Completion</strong>: Is the tuning job complete?</li>
+</ol>
+<p>    <pre><code>    -   **No** → Go to [Phase 4: Monitoring](#phase-4-monitoring).
+    -   **Yes** → Proceed.
+    </code></pre></p>
+<ol>
+<li><strong>Deployment</strong>: Has the tuned model been deployed (if required)?</li>
+</ol>
+<p>    <pre><code>    -   **No** → Go to [Phase 5: Model Deployment](#phase-5-model-deployment).
+    -   **Yes** → Task Complete.
+    </code></pre></p>
+<h4>Phase 0: Environment &amp; IAM Setup {#phase-0}</h4>
+<p>Ensure the foundational environment is ready before proceeding.</p>
+<h5>0.1 Authentication &amp; Project Context</h5>
+<ul>
+<li>Check if <code>gcloud</code> CLI is installed. If it is not installed, prompt the user</li>
+</ul>
+<p>    for permission to install it before proceeding. If it is installed, update</p>
+<p>    it:</p>
+<p><pre><code>gcloud components update --quiet &gt; /dev/null 2&gt;&amp;1</code></pre></p>
+<ul>
+<li>Verify <code>gcloud auth list</code>. If not authenticated, run <code>gcloud auth login</code>.</li>
+<li>Ensure <code>project</code> is known. Use <code>gcloud config get project</code> to retrieve the</li>
+</ul>
+<p>    current project.</p>
+<ul>
+<li><strong>CRITICAL: Ask for Confirmation.</strong> You must prompt the user to confirm the</li>
+</ul>
+<p>    retrieved project before proceeding, in case they want to switch to a</p>
+<p>    different one. The location must also be confirmed — see section 0.2 for</p>
+<p>    which location to propose, which depends on the model category.</p>
+<h5>0.2 Location</h5>
+<p>Location handling <strong>depends on the model category</strong> you established in the</p>
+<p>workflow decision tree. The two categories have different supported locations —</p>
+<p>never apply one category&#39;s locations to the other.</p>
+<ul>
+<li><strong>Open models</strong> share one fixed location set, and <code>global</code> is the</li>
+</ul>
+<p>    recommended choice.</p>
+<ul>
+<li><strong>Gemini models</strong> differ per model and must be looked up. <code>global</code> is not</li>
+</ul>
+<p>    accepted for them today.</p>
+<p>If the user names a location that is not valid for their model and category,</p>
+<p>STOP. Respond with an error naming the requested location as unsupported, list</p>
+<p>the locations that are valid, and do NOT ask for a dataset, do NOT proceed with</p>
+<p>any other setup step, and do NOT silently retry elsewhere.</p>
+<h5>Open Models (RECOMMEND: <code>global</code>)</h5>
+<p><strong>Recommend <code>global</code> and confirm it with the user.</strong> Propose it as a single</p>
+<p>recommended choice rather than making the user pick a region first, and do not</p>
+<p>steer them toward a specific region instead.</p>
+<p>These are the only locations available for open model tuning:</p>
+<ul>
+<li><code>global</code> (the recommended choice)</li>
+<li><code>us-central1</code></li>
+<li><code>europe-west4</code></li>
+<li><code>us-west1</code></li>
+<li><code>us-east5</code></li>
+<li><code>asia-southeast1</code></li>
+</ul>
+<p>The <code>global</code> endpoint automatically selects a supported region that has</p>
+<p>available capacity, so it is the most likely to be scheduled successfully.</p>
+<p>Pinning a region up front restricts the job to that one region&#39;s capacity, which</p>
+<p>is why <code>global</code> is the recommended location for open model tuning.</p>
+<ul>
+<li><strong>The user named a location</strong> → use it verbatim, provided it is <code>global</code> or</li>
+</ul>
+<p>    one of the regions listed above. Do not talk them out of it.</p>
+<ul>
+<li><strong>The user asked which locations are supported</strong> → answer the question.</li>
+</ul>
+<p>    Share the list above and say that <code>global</code> is recommended and why. Never</p>
+<p>    withhold it.</p>
+<ul>
+<li><strong>The user did not name a location</strong> → propose <code>global</code> and ask them to</li>
+</ul>
+<p>    confirm it before you proceed. Say that <code>global</code> lets the service pick a</p>
+<p>    region with available capacity. Do NOT silently assume <code>global</code>.</p>
+<p>The point of proposing a single choice is to avoid making region selection a</p>
+<p>decision the user must resolve before anything else can happen — that ordering</p>
+<p>is what previously blocked people. It is not a reason to hide the list: quote it</p>
+<p>whenever the user asks, and quote it when rejecting an unsupported location.</p>
+<p>Fall back to an explicit region <strong>only</strong> in the cases below, and tell the user</p>
+<p>why you are doing so:</p>
+<ul>
+<li><strong>CMEK.</strong> Customer-managed encryption keys are rejected on <code>global</code> with a</li>
+</ul>
+<p>    <code>FAILED_PRECONDITION</code> error. A CMEK-protected job must name the region that</p>
+<p>    holds the key.</p>
+<ul>
+<li><strong>Data residency.</strong> If the user requires the job to stay in a specific</li>
+</ul>
+<p>    jurisdiction, honor their region. <code>global</code> currently runs the job in either</p>
+<p>    <code>us-central1</code> or <code>europe-west4</code>.</p>
+<p>If a <code>global</code> job is accepted but then fails with a <code>FAILED_PRECONDITION</code> error</p>
+<p>saying the model does not support global endpoint tuning, that model is not</p>
+<p>onboarded to the global endpoint yet. The model itself is still tunable:</p>
+<p>resubmit once in an explicit region from the list above (<code>us-central1</code> is the</p>
+<p>safest choice) and tell the user why you switched.</p>
+<h5>Working with a <code>global</code> job</h5>
+<ul>
+<li>The API host stays <code>aiplatform.googleapis.com</code>. There is no</li>
+</ul>
+<p>    <code>global-aiplatform.googleapis.com</code> host.</p>
+<ul>
+<li>The service resolves <code>global</code> to a real region at run time. Sub-resources</li>
+</ul>
+<p>    (the tuned model, checkpoints, TensorBoard) come back with that <strong>real</strong></p>
+<p>    region in their resource names, not <code>global</code>. Read the location out of the</p>
+<p>    returned resource name before using it for monitoring or deployment; never</p>
+<p>    assume it is still <code>global</code>.</p>
+<ul>
+<li>Quota is shared across regions, so pinning a region does not grant extra</li>
+</ul>
+<p>    quota.</p>
+<h5>Gemini Models (per-model, look it up)</h5>
+<p><code>global</code> is <strong>not accepted for Gemini tuning today</strong> — the service rejects it at</p>
+<p>job creation with a <code>FAILED_PRECONDITION</code> error, so do not propose it here.</p>
+<p><strong>There is no single region allowlist for Gemini.</strong> Supported tuning regions</p>
+<p>vary by model and by model version: some Gemini models are restricted to two</p>
+<p>regions while others support many more. Do NOT reuse the open model list above,</p>
+<p>and do NOT assume a region carries over from another Gemini model.</p>
+<p>Before submitting, look up the chosen model in the supervised fine-tuning</p>
+<p>documentation and read its <strong>&quot;Supported endpoint for model tuning&quot;</strong></p>
+<p>row:</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tuning/supervised-tuning" rel="noopener">supervised tuning</a></p>
+<ul>
+<li><strong>The user asked which regions are supported</strong> → look up that specific model</li>
+</ul>
+<p>    and tell them what the docs say. Do not answer from memory or from the open</p>
+<p>    model list, and do not answer for a different Gemini model.</p>
+<ul>
+<li><strong>The model&#39;s row names specific regions</strong> → the user&#39;s region must be one</li>
+</ul>
+<p>    of them. If it is not, STOP and report the supported regions for that model.</p>
+<ul>
+<li><strong>The model&#39;s row is absent or the docs are unclear</strong> → ask the user for the</li>
+</ul>
+<p>    region rather than guessing one.</p>
+<p>Confirm the region with the user before proceeding. Note that some Gemini models</p>
+<p>also restrict CMEK and serve tuned models only on the <code>us</code> and <code>eu</code> multi-region</p>
+<p>endpoints, so check the same table for those limits before promising them.</p>
+<h5>0.3 Enable APIs</h5>
+<p>Ensure <code>aiplatform.googleapis.com</code> and <code>storage.googleapis.com</code> are enabled.</p>
+<p><pre><code>gcloud services enable aiplatform.googleapis.com storage.googleapis.com \
+    --project=YOUR_PROJECT</code></pre></p>
+<h5>0.4 IAM Permissions</h5>
+<p>Verify the following identities have the required roles.</p>
+<ul>
+<li><strong>Agent Platform Service Agent</strong>:</li>
+</ul>
+<p>    <code>service-PROJECT_NUMBER@gcp-sa-aiplatform.iam.gserviceaccount.com</code></p>
+<ul>
+<li><strong>Managed OSS Fine Tuning Service Agent</strong>:</li>
+</ul>
+<p>    <code>service-PROJECT_NUMBER@gcp-sa-vertex-moss-ft.iam.gserviceaccount.com</code></p>
+<ul>
+<li><strong>User Identity</strong>: The account running the commands.</li>
+</ul>
+<h5>0.5 Python Dependencies</h5>
+<p>The scripts in this skill import <code>vertexai</code> (from <code>google-cloud-aiplatform</code>),</p>
+<p><code>google-genai</code>, <code>google-cloud-storage</code>, and <code>datasets</code>.</p>
+<p><strong>CRITICAL AGENT INSTRUCTION:</strong> Do <strong>not</strong> create a virtual environment, and do</p>
+<p>not install anything before checking. A venv starts empty and hides packages the</p>
+<p>environment already provides, forcing a redundant several-minute install.</p>
+<p>Probe first and install only if the probe fails:</p>
+<p><pre><code>python3 -c &quot;import vertexai, google.genai, google.cloud.storage, datasets&quot; \
+  || pip install -r references/requirements.txt</code></pre></p>
+<p>Then run every script with a plain <code>python3 scripts/...</code> — no activation prefix.</p>
+<p>The <code>references/requirements.txt</code> pins are a fallback for an environment that</p>
+<p>does not already provide these SDKs. Do not apply them on top of a working</p>
+<p>environment: they would downgrade packages other tools may share.</p>
+<h4>Phase 1: Dataset Preparation &amp; Upload {#phase-1}</h4>
+<h5>1.0 Dataset Discovery &amp; Confirmation</h5>
+<ul>
+<li><strong>User-Provided Dataset Verification:</strong> If the user specifies a dataset</li>
+</ul>
+<p>    filename or path in their prompt, verify its existence in the workspace</p>
+<p>    (e.g. via script execution or checking for typos).</p>
+<ul>
+<li><strong>If the file cannot be found anywhere</strong>, you <strong>MUST</strong> inform the user</li>
+</ul>
+<p>        that the dataset file does not exist or cannot be accessed. You <strong>MUST</strong></p>
+<p>        prompt the user to provide a valid dataset path. Alternatively, if</p>
+<p>        candidate dataset files are found in the workspace during your search,</p>
+<p>        you <strong>MUST</strong> present the candidates to the user and ask them to select</p>
+<p>        one. You <strong>MUST</strong> stop tool execution immediately after reporting the</p>
+<p>        missing file or presenting candidates, and wait for the user&#39;s response.</p>
+<p>        Do <strong>NOT</strong> ask for 90/10 validation split permission, and do <strong>NOT</strong></p>
+<p>        attempt to upload the dataset before receiving a valid dataset file</p>
+<p>        selection from the user.</p>
+<ul>
+<li><strong>If the file is found and verified</strong>, proceed to Step 1.1 Formatting &amp;</li>
+</ul>
+<p>        Validation below.</p>
+<ul>
+<li><strong>Auto-Discovery: From User Bucket:</strong> If the user does not have a dataset</li>
+</ul>
+<p>    and no suitable alternative is found in the Hugging Face reference, offer to</p>
+<p>    search the user&#39;s GCS buckets for potential training data. Prioritize</p>
+<p>    searching for files with extensions like <code>.jsonl</code>, <code>.json</code>, <code>.csv</code>, and</p>
+<p>    <code>.parquet</code>. If such files are found, read the first few lines/records of</p>
+<p>    each to determine if they contain text-based data suitable for tuning (e.g.,</p>
+<p>    prompt/completion pairs) that can be modified to follow</p>
+<p>    [Data Preparation Guide](references/data_prep.md) and is related to the</p>
+<p>    tuning task requested. <strong>DO NOT</strong> search without prompting first.</p>
+<ul>
+<li><strong>Auto-Discovery: From Task to Huggingface:</strong> If the user has a specific</li>
+</ul>
+<p>    task, refer to [Huggingface Datasets Reference](references/hf_datasets.md)</p>
+<p>    and recommend a dataset from this if one exists. For each dataset</p>
+<p>    recommended, provide some information about the dataset and provide some</p>
+<p>    reasonable splits. &gt; [!IMPORTANT] &gt; **CRITICAL: Ask for Confirmation and</p>
+<p>    Column Selection.** Do not proceed &gt; with dataset preparation or upload</p>
+<p>    until you perform the following &gt; steps and get user confirmation: &gt; 1.</p>
+<p>    <strong>Dataset and Split Confirmation:</strong> Present the dataset and &gt; available</p>
+<p>    splits to the user and have them confirm which to use. &gt; 2. **Column</p>
+<p>    Selection (Hugging Face or Custom Datasets):** You must: &gt; - Provide a list</p>
+<p>    of all available columns in the selected dataset &gt; split. &gt; - **Show a few</p>
+<p>    samples from the dataset** to help the user &gt; understand the content and</p>
+<p>    make the choice of columns. &gt; - Recommend which columns should be mapped to</p>
+<p>    <code>prompt</code> (or user &gt; message) and <code>completion</code> (or assistant response),</p>
+<p>    offering a few &gt; reasonable options if applicable. &gt; - Ask the user to</p>
+<p>    confirm the column mapping or specify which &gt; columns to use.</p>
+<h5>1.1 Formatting &amp; Validation</h5>
+<ul>
+<li><strong>Conversion</strong>: If data is in CSV, JSON, or Parquet, use</li>
+</ul>
+<p>    <code>scripts/prepare_dataset.py</code> to convert.</p>
+<ul>
+<li><strong>Validation Split Confirmation</strong>: If the user only provides a training</li>
+</ul>
+<p>    dataset, <strong>you must prompt the user</strong> to seek permission to split the</p>
+<p>    training dataset 90/10 to form a validation dataset (using</p>
+<p>    <code>--validation_split 0.1</code>). If they agree, proceed with the split. If they</p>
+<p>    decline, just use the training dataset without a validation dataset. Do</p>
+<p>    <strong>NOT</strong> offer an 80/20 split; the tuning service rejects it, for the reason</p>
+<p>    given in</p>
+<p>    [Data Preparation Guide](references/data_prep.md#sizing-the-validation-split).</p>
+<ul>
+<li><strong>Validation</strong>: If data is already in JSONL, validate it before uploading.</li>
+</ul>
+<p>    Simply having a <code>.jsonl</code> extension is not enough. You must verify that the</p>
+<p>    content schema is valid for tuning (e.g. correct system/user/model roles).</p>
+<p><pre><code>python3 scripts/prepare_dataset.py \
+    --input my_data.jsonl \
+    --format &lt;messages|messages_gemini&gt; \
+    --validate_only</code></pre></p>
+<p>*(Use <code>--format messages</code> for open models and <code>--format messages_gemini</code> for</p>
+<p>Gemini models.)* - Refer to [Data Preparation Guide](references/data_prep.md)</p>
+<p>for required schemas.</p>
+<h5>1.2 Upload</h5>
+<p>Upload formatted <code>.jsonl</code> files to GCS using a unique directory (e.g., with a</p>
+<p>datetime timestamp) to avoid overwriting outputs from different runs.</p>
+<p><pre><code>ARTIFACTS=&quot;gs://YOUR_BUCKET/tuning_agent_job_&lt;datetime&gt;/dataset.jsonl&quot;
+gcloud storage cp dataset.jsonl &quot;$ARTIFACTS&quot;</code></pre></p>
+<h4>Phase 2: Model Configuration &amp; Recommendation {#phase-2}</h4>
+<p>Help the user choose the best model and parameters. **Always seek user</p>
+<p>confirmation before submitting the job.**</p>
+<ul>
+<li>If the user does not specify a specific model in their prompt, calculate</li>
+</ul>
+<p>    recommendations based on the <strong>Models Catalog</strong>.</p>
+<ul>
+<li><strong>Prompt for Confirmation:</strong> Present the recommended model to the user and</li>
+</ul>
+<p>    ask for their confirmation before configuring hyperparameters.</p>
+<h5>2.1 Configuration</h5>
+<h5>For Open Models</h5>
+<ul>
+<li>Recommend <code>tuning_mode</code>, <code>epochs</code>, <code>learning_rate</code>, and <code>adapter_size</code> based</li>
+</ul>
+<p>    on the [Tuning Guide](references/tuning_guide.md) and model-specific</p>
+<p>    baselines in the [Models Catalog](references/models.md).</p>
+<h5>Verify the Live Model ID</h5>
+<p>Before submitting the job, run <code>scripts/list_models.py</code> and pick <code>--base_model</code></p>
+<p>only from its <code>models</code> output. Do not invent IDs or version numbers.</p>
+<p><pre><code>python3 scripts/list_models.py --project YOUR_PROJECT --filter gemini</code></pre></p>
+<p>Output: <code>{&quot;models&quot;: [...], &quot;total_count&quot;: N, &quot;truncated&quot;: bool}</code>.</p>
+<ul>
+<li>For Gemini, strip <code>google/</code> and <code>@default</code> (e.g.</li>
+</ul>
+<p>    <code>google/gemini-2.5-flash@default</code> → <code>gemini-2.5-flash</code>); for open models,</p>
+<p>    pass <code>publisher/family@version</code> as-is.</p>
+<ul>
+<li>Skip Gemini variants ending in <code>-embedding</code>, <code>-tts</code>, <code>-image</code>,</li>
+</ul>
+<p>    <code>-computer-use</code>, or <code>-native-audio</code>; they are not tunable.</p>
+<ul>
+<li>If <code>truncated</code> is <code>true</code>, re-run with a tighter <code>--filter</code> (e.g.</li>
+</ul>
+<p>    <code>gemini-2.5</code>) before deciding the target version is unavailable.</p>
+<ul>
+<li>If <code>models</code> is empty, stop and ask the user.</li>
+</ul>
+<h5>2.2 Calculating Cost (Open Models Only)</h5>
+<ul>
+<li>We can calculate a rough estimate of cost of tuning based on the dataset and</li>
+</ul>
+<p>    the selected model in the [Models Catalog](references/models.md):</p>
+<p>    <pre><code>    python3 scripts/calculate_cost.py \
+        --input my_data.jsonl \
+        --model MODEL_NAME \
+        --tuning_mode TUNING_MODE \
+        --epochs epochs
+    </code></pre></p>
+<p>    <code>--model</code> takes either the display name (<code>Qwen 3 8B</code>) or the same resource</p>
+<p>    name you pass to <code>--base_model</code> (<code>qwen/qwen3@qwen3-8b</code>), so the value chosen</p>
+<p>    in Step 2.1 can be reused as-is.</p>
+<p>&gt; [!NOTE] <strong>Handling Missing Dataset Errors:</strong> If <code>scripts/calculate_cost.py</code></p>
+<p>&gt; fails because the dataset file (e.g. <code>my_data.jsonl</code> or <code>dummy_data.jsonl</code>)</p>
+<p>&gt; cannot be found, you <strong>MUST</strong> inform the user that the dataset file does not</p>
+<p>&gt; exist or cannot be accessed. You <strong>MUST</strong> prompt the user to provide a valid</p>
+<p>&gt; dataset path, and stop tool execution immediately to wait for their response.</p>
+<p>&gt; Do <strong>NOT</strong> retry or loop, do <strong>NOT</strong> invent a specific cost number, and do</p>
+<p>&gt; <strong>NOT</strong> prompt for job submission approval before receiving a valid dataset</p>
+<p>&gt; from the user.</p>
+<ul>
+<li><strong>Prompt for Confirmation:</strong> Present the recommended hyperparameter</li>
+</ul>
+<p>    configuration and estimated cost to the user and ask for their approval</p>
+<p>    before proceeding to job submission. Make sure to note that the estimated</p>
+<p>    cost is just an estimate and can vary from actual billing costs.</p>
+<h4>Phase 3: Tuning Job Execution {#phase-3-tuning-job-execution}</h4>
+<p><strong>CRITICAL Pre-Flight Check (GCS Verification):</strong> Before you propose a</p>
+<p>confirmation prompt or submit any tuning job, you <strong>MUST</strong> verify that the</p>
+<p>specified training dataset GCS URI (e.g. <code>gs://dummy_bucket/dataset.jsonl</code> or</p>
+<p><code>gs://YOUR_BUCKET/...</code>) actually exists and is accessible. Run `gcloud storage</p>
+<p>ls $DATASET_URI<code> (or </code>gsutil ls`).</p>
+<ul>
+<li><strong>If the verification fails</strong> (e.g. <code>BucketNotFound</code>, <code>404</code>, <code>AccessDenied</code>,</li>
+</ul>
+<p>    or indicating a dummy/missing bucket), you <strong>MUST</strong> inform the user that the</p>
+<p>    GCS bucket or dataset does not exist or cannot be accessed. You <strong>MUST</strong></p>
+<p>    prompt the user to provide a valid GCS URI for the dataset, and stop tool</p>
+<p>    execution immediately to wait for their response. Do <strong>NOT</strong> propose a</p>
+<p>    confirmation prompt and do <strong>NOT</strong> execute any tuning scripts before</p>
+<p>    receiving a valid dataset URI from the user.</p>
+<ul>
+<li><strong>If the verification succeeds</strong>, proceed to propose the confirmation prompt</li>
+</ul>
+<p>    below.</p>
+<h5>For Gemini Models</h5>
+<p>Check if <code>scripts/tune_gemini_model.py</code> exists.</p>
+<ul>
+<li><strong>If <code>scripts/tune_gemini_model.py</code> exists:</strong> Submit the Gemini model tuning</li>
+</ul>
+<p>    job using this script.</p>
+<p>    <pre><code>    python3 scripts/tune_gemini_model.py
+    </code></pre></p>
+<ul>
+<li><strong>If <code>scripts/tune_gemini_model.py</code> does not exist:</strong> Instruct the user to</li>
+</ul>
+<p>    manually configure and submit the tuning job via the Google Cloud Console UI</p>
+<p>    or using the Agent Platform SDK for Python.</p>
+<h5>For Open Models</h5>
+<p>Submit the open model tuning job using <code>scripts/tune_open_model.py</code>. Identify</p>
+<p>the model id using available models documentation</p>
+<p>at</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/open-model-tuning#supported-models" rel="noopener">documentation</a>.</p>
+<p><code>--base_model</code> takes a publisher model <strong>resource name</strong></p>
+<p>(<code>{publisher}/{model_id}@{version_id}</code>), not the display name shown in the</p>
+<p>catalog. See &quot;Model Resource Name Format&quot; in <code>references/models.md</code> for the</p>
+<p>format, verified examples, and how to look up a name you do not have.</p>
+<p><pre><code>python3 scripts/tune_open_model.py \
+    --project YOUR_PROJECT \
+    --location global \
+    --base_model BASE_MODEL_ID \
+    --train_dataset gs://YOUR_BUCKET/tuning_agent_job_&lt;datetime&gt;/dataset.jsonl \
+    --output_uri gs://YOUR_BUCKET/tuning_agent_job_&lt;datetime&gt;/output \
+    --epochs EPOCHS \
+    --learning_rate LR \
+    --tuning_mode MODE</code></pre></p>
+<p>This script is open model only, and <code>--location</code> falls back to <code>global</code> if</p>
+<p>omitted. Always pass the location the user confirmed in section 0.2 explicitly,</p>
+<p>so it is visible in the command string you present for approval.</p>
+<p>&gt; [!WARNING] <strong><code>--output_uri</code> is required for open models.</strong> The Python SDK</p>
+<p>&gt; declares it as <code>output_uri: Optional[str] = None</code>, but the tuning backend</p>
+<p>&gt; rejects open model jobs that omit it with `INVALID_ARGUMENT: The output_uri</p>
+<p>&gt; field is required for this model.` Treat the SDK&#39;s &quot;optional&quot; signature as</p>
+<p>&gt; wrong here and always pass a GCS destination.</p>
+<p>Because the flag is mandatory, you must establish where the tuned model is</p>
+<p>written before you can submit. **Never invent a bucket name, derive one from the</p>
+<p>project number, or run <code>gcloud storage buckets create</code> unprompted.** Creating a</p>
+<p>bucket is a mutating action and is subject to the Tier M confirmation policy</p>
+<p>below.</p>
+<ul>
+<li><strong>The user named a bucket or URI</strong> → use it, appending a unique per-job</li>
+</ul>
+<p>    directory as in section 1.2.</p>
+<ul>
+<li><strong>A bucket was already used for the dataset upload in section 1.2</strong> →</li>
+</ul>
+<p>    propose reusing it for the output and ask the user to confirm.</p>
+<ul>
+<li><strong>Neither</strong> → <strong>STOP and ask the user</strong> where they want the tuned model</li>
+</ul>
+<p>    stored. Offer to create a bucket for them as one of the options. If they</p>
+<p>    accept, propose the exact bucket name and location, get explicit</p>
+<p>    confirmation, and only then create it.</p>
+<p>&gt; [!IMPORTANT] <strong>Interactive Confirmation Required (Tier M):</strong> Before proceeding</p>
+<p>&gt; with job submission, you <strong>MUST</strong> present the proposed command string showing</p>
+<p>&gt; all literal flags in a confirmation prompt to the user with &#39;Yes&#39; and &#39;No&#39;</p>
+<p>&gt; options.</p>
+<p>&gt; <strong>CRITICAL:</strong> When presenting this confirmation prompt to the user, you MUST</p>
+<p>&gt; output it as a direct plain text response and stop tool execution immediately.</p>
+<p>&gt; Do NOT call any command execution or interactive tools in the same turn, as</p>
+<p>&gt; unexpected tool calls may be auto-replied by the simulation harness and cause</p>
+<p>&gt; an infinite loop. Yield immediately for the user&#39;s reply.</p>
+<h4>Phase 4: Monitoring {#phase-4-monitoring}</h4>
+<p>Monitor the job via the Cloud Console link provided in the script output.</p>
+<p><code>--location</code> is required and must be the same location you submitted with: an</p>
+<p>open model job submitted on <code>global</code> is polled with <code>--location global</code>, even</p>
+<p>though the work runs in a real region behind the scenes.</p>
+<p>Additionally, ask the user if they want you to monitor the job status for them</p>
+<p>in the background. If they agree, execute <code>scripts/monitor_tuning_job.py</code> as a</p>
+<p>background task to periodically poll the job status and notify the user to show</p>
+<p>the status. If the user declines, leave it completely to the user to check on</p>
+<p>the status.</p>
+<h4>Phase 5: Model Deployment {#phase-5-model-deployment}</h4>
+<p>Once the tuning job is <code>SUCCEEDED</code>, deploy the model.</p>
+<p>Deployment requires a real region — <code>--region=global</code> is not valid here. If the</p>
+<p>job ran on <code>global</code>, read the region out of the tuned model&#39;s resource name</p>
+<p>(<code>projects/.../locations/&lt;REGION&gt;/models/...</code>) and deploy there; do not guess.</p>
+<p><pre><code>ARTIFACTS=&quot;gs://YOUR_BUCKET/tuning_agent_job_&lt;datetime&gt;/output/postprocess/node-0/checkpoints/final&quot;
+gcloud ai model-garden models deploy \
+    --project=YOUR_PROJECT \
+    --region=YOUR_LOCATION \
+    --model=&quot;$ARTIFACTS&quot; \
+    --machine-type=MACHINE_TYPE \
+    --accelerator-type=ACCELERATOR_TYPE \
+    --accelerator-count=COUNT</code></pre></p>
+<p>&gt; [!IMPORTANT] <strong>Interactive Confirmation Required (Tier M):</strong> Before proceeding</p>
+<p>&gt; with deployment, you <strong>MUST</strong> present the proposed command string showing all</p>
+<p>&gt; literal flags in a confirmation prompt to the user with &#39;Yes&#39; and &#39;No&#39;</p>
+<p>&gt; options.</p>
+<p>&gt; <strong>CRITICAL:</strong> When presenting this confirmation prompt to the user, you MUST</p>
+<p>&gt; output it as a direct plain text response and stop tool execution immediately.</p>
+<p>&gt; Do NOT call any command execution or interactive tools in the same turn, as</p>
+<p>&gt; unexpected tool calls may be auto-replied by the simulation harness and cause</p>
+<p>&gt; an infinite loop. Yield immediately for the user&#39;s reply.</p>
+<p>Refer to [Models Catalog](references/models.md) for hardware recommendations for</p>
+<p>specific open models.</p>
+<h4>Resources</h4>
+<ul>
+<li>[Data Preparation Guide](references/data_prep.md)</li>
+<li>[Models Catalog](references/models.md)</li>
+<li>[Tuning Guide](references/tuning_guide.md)</li>
+<li><code>scripts/prepare_dataset.py</code>: Data conversion &amp; validation.</li>
+<li><code>scripts/tune_open_model.py</code>: Open model tuning job submission.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-tuning</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-tuning" aria-label="Copy install agent-platform-tuning">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-tuning</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-tuning/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-solution-multi-agent-security — Aidentity</title>
+<meta name="description" content="Designs, deploys, and secures Google Cloud Agent Gateway solutions. Use when the user needs to configure multi-agent security, ingress (CLIENT_TO_AGENT), or egress (AGENT_TO_ANYWHERE) patterns involving Model Armor, IAP, and Agent Registry. Don&#39;t use for general Cloud Load Balancing or basic VPC setup not related to Agent Gateways.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-multi-agent-security/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-solution-multi-agent-security — Aidentity">
+<meta property="og:description" content="Designs, deploys, and secures Google Cloud Agent Gateway solutions. Use when the user needs to configure multi-agent security, ingress (CLIENT_TO_AGENT), or egress (AGENT_TO_ANYWHERE) patterns involving Model Armor, IAP, and Agent Registry. Don&#39;t use for general Cloud Load Balancing or basic VPC setup not related to Agent Gateways.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-multi-agent-security/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-solution-multi-agent-security","description":"Designs, deploys, and secures Google Cloud Agent Gateway solutions. Use when the user needs to configure multi-agent security, ingress (CLIENT_TO_AGENT), or egress (AGENT_TO_ANYWHERE) patterns involving Model Armor, IAP, and Agent Registry. Don't use for general Cloud Load Balancing or basic VPC setup not related to Agent Gateways.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-solution-multi-agent-security/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-solution-multi-agent-security
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-solution-multi-agent-security</h1>
+      <p class="summary">Designs, deploys, and secures Google Cloud Agent Gateway solutions. Use when the user needs to configure multi-agent security, ingress (CLIENT_TO_AGENT), or egress (AGENT_TO_ANYWHERE) patterns involving Model Armor, IAP, and Agent Registry. Don&#39;t use for general Cloud Load Balancing or basic VPC setup not related to Agent Gateways.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=security">security</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Gateway multi-agent security</h3>
+<h4>Critical Enforcement Rules &amp; Rationale</h4>
+<ul>
+<li><strong>Gcloud Release Tracks</strong>: Always use the exact release tracks specified in</li>
+</ul>
+<p>    the commands (e.g., <code>gcloud beta network-services agent-gateways</code>). Omitting</p>
+<p>    these prefixes causes commands to fail because Agent Gateway features are</p>
+<p>    located in specialized, non-default namespaces.</p>
+<ul>
+<li><strong>API Enablement</strong>: Include <code>modelarmor.googleapis.com</code> in the API</li>
+</ul>
+<p>    enablement list when setting up guardrails. Excluding it prevents Model</p>
+<p>    Armor policies and filters from successfully attaching to the Gateway.</p>
+<ul>
+<li><strong>Egress Verification</strong>: Egress policy verification requires using the</li>
+</ul>
+<p>    Python script</p>
+<p>    ([scripts/verify_egress_policies.py](scripts/verify_egress_policies.py)),</p>
+<p>    not <code>curl</code>. Egress gateways rely on runtime SDK lifecycle handling and JWT</p>
+<p>    context that a standard curl command cannot simulate correctly.</p>
+<ul>
+<li><strong>Model Armor Keys</strong>: In <code>model-armor-config.yaml</code>, always include both</li>
+</ul>
+<p>    <code>piAndJailbreakFilterSettings</code> and <code>sdpFilterSettings</code> (`filterEnforcement:</p>
+<p>    ENFORCE`). Invalid or missing filters cause deployment validation failures</p>
+<p>    or lead to silent bypasses of the guardrails.</p>
+<ul>
+<li><strong>Subnet Private Access</strong>: Any subnet hosting a Private Service Connect</li>
+</ul>
+<p>    network attachment for Egress Gateways must have `private_ip_google_access =</p>
+<p>    true` enabled in Terraform. Disabling this blocks connectivity to</p>
+<p>    Google-managed endpoints, causing total routing failures for agents.</p>
+<ul>
+<li><strong>Direct Delivery</strong>: Immediately provide the requested architecture,</li>
+</ul>
+<p>    configuration files, CLI commands, scripts, and diagrams in full. Do not</p>
+<p>    stop at a planning phase, do not generate a plan artifact, and do not ask</p>
+<p>    for user confirmation before delivering outputs.</p>
+<ul>
+<li><strong>No Infrastructure Execution</strong>: Do not attempt to run deployment or</li>
+</ul>
+<p>    verification commands (such as <code>gcloud</code>, <code>kubectl</code>, <code>terraform</code>, or <code>curl</code>)</p>
+<p>    against real cloud resources during design. You are generating plan</p>
+<p>    configurations, not executing them.</p>
+<p>&gt; [!IMPORTANT] <strong>Just-In-Time (JIT) Resource Loading Protocol:</strong> Inspect</p>
+<p>&gt; template files in [assets/](assets/) and executable scripts in</p>
+<p>&gt; [scripts/](scripts/) using <code>view_file</code> as needed for extended configurations,</p>
+<p>&gt; deployment scripts, and test suites.</p>
+<hr>
+<h4>Quick Reference: Required Filenames</h4>
+<p>Always generate files with these exact names when requested:</p>
+<ol>
+<li><code>agw-ingress-config.yaml</code></li>
+</ol>
+<p>    ([assets/agw-ingress-config.yaml](assets/agw-ingress-config.yaml))</p>
+<ol>
+<li><code>agw-egress-config.yaml</code></li>
+</ol>
+<p>    ([assets/agw-egress-config.yaml](assets/agw-egress-config.yaml))</p>
+<ol>
+<li><code>agw-authz-extension.yaml</code></li>
+</ol>
+<p>    ([assets/agw-authz-extension.yaml](assets/agw-authz-extension.yaml))</p>
+<ol>
+<li><code>agw-authz-policy.yaml</code></li>
+</ol>
+<p>    ([assets/agw-authz-policy.yaml](assets/agw-authz-policy.yaml))</p>
+<ol>
+<li><code>model-armor-config.yaml</code></li>
+</ol>
+<p>    ([assets/model-armor-config.yaml](assets/model-armor-config.yaml))</p>
+<ol>
+<li><code>sgp-policy.yaml</code> ([assets/sgp-policy.yaml](assets/sgp-policy.yaml))</li>
+<li><code>iap-policy.json</code> ([assets/iap-policy.json](assets/iap-policy.json))</li>
+<li><code>model-armor-payload.json</code></li>
+</ol>
+<p>    ([assets/model-armor-payload.json](assets/model-armor-payload.json))</p>
+<hr>
+<h4>1. Dual Ingress &amp; Egress Architecture Design (<code>dual_ingress_egress_architecture_design</code>)</h4>
+<ul>
+<li><strong>Ingress Pattern</strong>: <code>CLIENT_TO_AGENT</code> fronted by Ingress Control Plane</li>
+</ul>
+<p>    (Agent Gateway, Model Armor).</p>
+<ul>
+<li><strong>Egress Pattern</strong>: <code>AGENT_TO_ANYWHERE</code> utilizing Egress Control Plane</li>
+</ul>
+<p>    (Agent Gateway, <code>roles/iap.egressor</code> CEL policies, Cloud DNS) and Egress</p>
+<p>    Data Plane (PSC Interface, Cloud Run, PSC Google APIs Global Endpoint),</p>
+<p>    coordinated via Agent Registry &amp; Agent Engine runtime.</p>
+<ul>
+<li><strong>Mermaid Diagram</strong>:</li>
+</ul>
+<p>    <pre><code>    graph TD
+        Client[&quot;External Clients&quot;] --&gt;|HTTPS / MCP| GLB[&quot;Global Load Balancer&quot;]
+        GLB --&gt; Ingress[&quot;Ingress Agent Gateway (CLIENT_TO_AGENT)&quot;]
+        Ingress --&gt; MA[&quot;Model Armor (CONTENT_AUTHZ)&quot;]
+        MA --&gt; Agent[&quot;Agent Engine Agents (BillingAgent, SupportAgent, FraudAgent)&quot;]
+        Agent --&gt; Egress[&quot;Egress Agent Gateway (AGENT_TO_ANYWHERE)&quot;]
+        Egress --&gt; PSC[&quot;Private Service Connect Network Attachment&quot;]
+        PSC --&gt; Tools[&quot;Private MCP Tool Backends&quot;]
+    </code></pre></p>
+<hr>
+<h4>2. Ingress &amp; Egress Guardrail Policy Config (<code>ingress_and_egress_guardrail_policy_config</code>)</h4>
+<p>When requested for Ingress &amp; Egress guardrail policy configs, you MUST generate</p>
+<p>and create all required files in the workspace:</p>
+<ul>
+<li><code>agw-ingress-config.yaml</code></li>
+</ul>
+<p>    ([assets/agw-ingress-config.yaml](assets/agw-ingress-config.yaml)): Declares</p>
+<p>    <code>governedAccessPath: CLIENT_TO_AGENT</code> with protocols <code>HTTP</code> and <code>MCP</code>.</p>
+<ul>
+<li><code>agw-egress-config.yaml</code></li>
+</ul>
+<p>    ([assets/agw-egress-config.yaml](assets/agw-egress-config.yaml)): Declares</p>
+<p>    <code>governedAccessPath: AGENT_TO_ANYWHERE</code> with protocol <code>MCP</code>.</p>
+<ul>
+<li><code>agw-authz-extension.yaml</code></li>
+</ul>
+<p>    ([assets/agw-authz-extension.yaml](assets/agw-authz-extension.yaml)):</p>
+<p>    Configures AuthzExtension service for IAP authorization.</p>
+<ul>
+<li><code>agw-authz-policy.yaml</code></li>
+</ul>
+<p>    ([assets/agw-authz-policy.yaml](assets/agw-authz-policy.yaml)): Configures</p>
+<p>    <code>AuthzPolicy</code> action <code>ALLOW</code> targeting both Ingress and Egress gateways.</p>
+<ul>
+<li><code>iap-policy.json</code> ([assets/iap-policy.json](assets/iap-policy.json)): Binds</li>
+</ul>
+<p>    <code>roles/iap.egressor</code> with CEL condition checking</p>
+<p>    `iap.googleapis.com/mcp.toolName == &#39;get_account_balance&#39; &amp;&amp;</p>
+<p>    iap.googleapis.com/mcp.tool.isReadOnly == true`.</p>
+<ul>
+<li><code>model-armor-config.yaml</code></li>
+</ul>
+<p>    ([assets/model-armor-config.yaml](assets/model-armor-config.yaml)): Enables</p>
+<p>    <code>piAndJailbreakFilterSettings</code> and <code>sdpFilterSettings</code> with</p>
+<p>    <code>filterEnforcement: ENFORCE</code>.</p>
+<ul>
+<li><code>sgp-policy.yaml</code> ([assets/sgp-policy.yaml](assets/sgp-policy.yaml)):</li>
+</ul>
+<p>    Implements Natural Language Constraints blocking transactions &gt; $1000 and</p>
+<p>    sanitizing PII.</p>
+<hr>
+<h4>3. Ingress &amp; Egress Infrastructure Deployment (<code>ingress_and_egress_infrastructure_deployment</code>)</h4>
+<p>Inspect and provide the step-by-step <code>gcloud</code> CLI commands from</p>
+<p>[scripts/deploy_infrastructure.sh](scripts/deploy_infrastructure.sh):</p>
+<ol>
+<li><strong>Enable Required APIs</strong>: <code>compute</code>, <code>networkservices</code>, <code>networksecurity</code>,</li>
+</ol>
+<p>    <code>modelarmor</code>, <code>iap</code>, <code>agentregistry</code>, <code>serviceextensions</code>, and <code>aiplatform</code>.</p>
+<ol>
+<li><strong>Import Agent Gateways</strong>: Ingress (<code>agw-ingress-config.yaml</code>) and Egress</li>
+</ol>
+<p>    (<code>agw-egress-config.yaml</code>) via `gcloud alpha network-services agent-gateways</p>
+<p>    import`.</p>
+<ol>
+<li><strong>Import Authz Extension</strong>: <code>agw-authz-extension.yaml</code> via `gcloud beta</li>
+</ol>
+<p>    service-extensions authz-extensions import`.</p>
+<ol>
+<li><strong>Import Authz Policy</strong>: <code>agw-authz-policy.yaml</code> via `gcloud beta</li>
+</ol>
+<p>    network-security authz-policies import`.</p>
+<hr>
+<h4>4. Ingress &amp; Egress Security Validation (<code>ingress_and_egress_security_validation</code>)</h4>
+<p>When validating security for Ingress and Egress:</p>
+<ol>
+<li><strong>Ingress 403 Unauthenticated Test</strong>: Provide the copy-pasteable</li>
+</ol>
+<p>    verification curl command from</p>
+<p>    [scripts/validate_ingress_unauth.sh](scripts/validate_ingress_unauth.sh)</p>
+<p>    sending an unauthenticated POST request to the Reasoning Engine endpoint</p>
+<p>    expecting HTTP 403 Forbidden.</p>
+<ol>
+<li>**Python Egress Verification Script (MUST use Python script snippet, NOT</li>
+</ol>
+<p>    curl)**: Provide the Python verification script snippet from</p>
+<p>    [scripts/verify_egress_policies.py](scripts/verify_egress_policies.py)</p>
+<p>    sending JSON-RPC <code>tools/call</code> requests (<code>get_account_balance</code>) through the</p>
+<p>    Egress Gateway to verify HTTP 200 for allowed tools.</p>
+<ol>
+<li><strong>Model Armor Test Payload</strong>: Generate <code>model-armor-payload.json</code></li>
+</ol>
+<p>    ([assets/model-armor-payload.json](assets/model-armor-payload.json))</p>
+<p>    containing prompt injection/jailbreak instructions.</p>
+<hr>
+<h4>5. Troubleshooting Ingress &amp; Egress Failures (<code>troubleshooting_ingress_and_egress_failures</code>)</h4>
+<ul>
+<li><strong>Ingress 403 (Client-to-Agent)</strong>:</li>
+</ul>
+<ul>
+<li><strong>Root Cause</strong>: Unauthenticated client requests or missing/invalid OAuth</li>
+</ul>
+<p>        2.0 / IAP identity tokens.</p>
+<ul>
+<li><strong>OAuth Configuration Steps</strong>:</li>
+</ul>
+<ol>
+<li>Configure OAuth 2.0 Client ID credentials in Google Cloud Console.</li>
+<li>Grant the client identity / service account</li>
+</ol>
+<p>            <code>roles/iap.httpsResourceAccessor</code> permission.</p>
+<ol>
+<li>Exchange credentials with Google OAuth to acquire an OIDC / OAuth ID</li>
+</ol>
+<p>            token.</p>
+<ol>
+<li>Pass the token in the <code>Authorization: Bearer &lt;TOKEN&gt;</code> header.</li>
+</ol>
+<ul>
+<li><strong>Verification Command</strong>: Provide the curl command from</li>
+</ul>
+<p>        [scripts/verify_ingress_auth.sh](scripts/verify_ingress_auth.sh).</p>
+<ul>
+<li><strong>Egress 403 (Agent-to-Anywhere)</strong>:</li>
+</ul>
+<ul>
+<li><strong>Root Cause</strong>: Missing <code>roles/iap.egressor</code> IAM bindings on the Agent</li>
+</ul>
+<p>        Identity, malformed principal ID, or mismatched CEL condition on tool</p>
+<p>        metadata.</p>
+<ul>
+<li><strong>Fix Command</strong>: Provide the exact <code>gcloud</code> command from</li>
+</ul>
+<p>        [scripts/fix_egress_iap.sh](scripts/fix_egress_iap.sh).</p>
+<hr>
+<h4>6. Hybrid VPN Connectivity &amp; Egress Routing (<code>hybrid_vpn_connectivity_egress_routing</code>)</h4>
+<ul>
+<li><strong>Terraform HCL</strong>: Refer to baseline Terraform config in</li>
+</ul>
+<p>    [assets/main.tf](assets/main.tf) for VPC, subnets</p>
+<p>    (<code>private_ip_google_access = true</code>), PSC network attachment, Cloud DNS</p>
+<p>    private forwarding for <code>aws.internal.</code>, and HA VPN gateway/router.</p>
+<ul>
+<li><strong>Egress Gateway Config (<code>agw-egress-config.yaml</code>)</strong>: Generate configuration</li>
+</ul>
+<p>    declaring <code>governedAccessPath: AGENT_TO_ANYWHERE</code>, pointing to the PSC</p>
+<p>    network attachment, and referencing <code>aws.internal.</code> in <code>dnsPeeringConfig</code></p>
+<p>    (see [assets/agw-egress-config.yaml](assets/agw-egress-config.yaml)).</p>
+<ul>
+<li><strong>Python SDK Deployment Script</strong>: Refer to</li>
+</ul>
+<p>    [scripts/hybrid_vpn_agent.py](scripts/hybrid_vpn_agent.py) for the complete</p>
+<p>    script initializing Vertex AI with <code>agent_to_anywhere_config</code> referencing</p>
+<p>    the Egress Gateway, enabling telemetry, and deploying <code>HybridAgent</code> using</p>
+<p>    <code>types.IdentityType.AGENT_IDENTITY</code>.</p>
+<hr>
+<h4>7. Private Egress GKE Internal Load Balancer (<code>private_egress_gke_internal_load_balancer</code>)</h4>
+<ul>
+<li>Expose GKE internal MCP tool server via an Internal Load Balancer (ILB) at</li>
+</ul>
+<p>    literal IP <code>10.0.1.50</code>, connecting via Agent Gateway PSC Interface + Cloud</p>
+<p>    DNS Private zone.</p>
+<ul>
+<li><strong>Cloud DNS Record Mapping</strong>: Provide the command from</li>
+</ul>
+<p>    [scripts/create_gke_dns_record.sh](scripts/create_gke_dns_record.sh) mapping</p>
+<p>    the private domain to GKE&#39;s private ILB IP <code>10.0.1.50</code>.</p>
+<ul>
+<li><strong>Explicit TLS Warning</strong>: Agent Gateway egress **does not natively trust</li>
+</ul>
+<p>    self-signed certificates or private enterprise CAs<strong>. You </strong>must** use</p>
+<p>    publicly trusted TLS certificates signed by a trusted Certificate Authority</p>
+<p>    (e.g., Let&#39;s Encrypt).</p>
+<hr>
+<h4>8. Governance Controls Model Armor SGP (<code>governance_controls_model_armor_sgp</code>)</h4>
+<p>When configuring dual safety layers with Model Armor on Ingress and SGP on</p>
+<p>Egress:</p>
+<ol>
+<li><strong>Model Armor Config</strong>: Generate <code>model-armor-config.yaml</code></li>
+</ol>
+<p>    ([assets/model-armor-config.yaml](assets/model-armor-config.yaml)) with</p>
+<p>    <code>piAndJailbreakFilterSettings</code> and <code>sdpFilterSettings</code> (`filterEnforcement:</p>
+<p>    ENFORCE`).</p>
+<ol>
+<li><strong>Semantic Governance Policy</strong>: Generate <code>sgp-policy.yaml</code></li>
+</ol>
+<p>    ([assets/sgp-policy.yaml](assets/sgp-policy.yaml)) with Natural Language</p>
+<p>    Constraints blocking transactions &gt; $1000 and sanitizing PII.</p>
+<ol>
+<li><strong>Curl PATCH Command</strong>: Provide the curl command from</li>
+</ol>
+<p>    [scripts/enforce_sgp_patch.sh](scripts/enforce_sgp_patch.sh) to update</p>
+<p>    <code>authzExtensions</code> with <code>sgpEnforcementMode</code> set to <code>ENFORCE</code>.</p>
+<hr>
+<h4>9. Multi-Agent Cloud Run Egress Routing (<code>multi_agent_cloud_run_egress_routing</code>)</h4>
+<p>Do NOT produce a plan artifact or stop at planning. When configuring multi-agent</p>
+<p>Cloud Run egress routing, you MUST directly provide and generate ALL required</p>
+<p>components:</p>
+<ol>
+<li><strong>Egress Gateway Config (<code>agw-egress-config-run.yaml</code>)</strong>: Generate</li>
+</ol>
+<p>    configuration declaring <code>governedAccessPath: AGENT_TO_ANYWHERE</code>, PSC network</p>
+<p>    attachment, and DNS peering for <code>*.run.app</code> (see</p>
+<p>    [assets/agw-egress-config-run.yaml](assets/agw-egress-config-run.yaml)).</p>
+<ol>
+<li><strong>Register Cloud Run Services in Agent Registry</strong>: Provide the registration</li>
+</ol>
+<p>    commands from</p>
+<p>    [scripts/register_cloud_run_services.sh](scripts/register_cloud_run_services.sh)</p>
+<p>    registering all 3 Cloud Run services (<code>marketing-tool-service</code>,</p>
+<p>    <code>sales-tool-service</code>, <code>support-tool-service</code>) in the <code>us-east4</code> Agent</p>
+<p>    Registry.</p>
+<ol>
+<li><strong><code>iap-policy.json</code> (Multi-Agent)</strong>: Generate <code>iap-policy.json</code></li>
+</ol>
+<p>    ([assets/iap-policy-multi-agent.json](assets/iap-policy-multi-agent.json))</p>
+<p>    containing all 3 <code>principal://</code> bindings in the <code>members</code> list under</p>
+<p>    <code>roles/iap.egressor</code>.</p>
+<ol>
+<li><strong>Python SDK Deployment Script</strong>: Refer to</li>
+</ol>
+<p>    [scripts/multi_agent_cloud_run.py](scripts/multi_agent_cloud_run.py) for the</p>
+<p>    complete GenAI SDK deployment script.</p>
+<hr>
+<h4>10. Advanced Model Armor Filtering (<code>advanced_model_armor_filtering</code>)</h4>
+<p>For custom keyword matching, configure <code>userDefinedFilterSettings</code> (see</p>
+<p>[assets/model-armor-advanced.yaml](assets/model-armor-advanced.yaml)).</p>
+<hr>
+<h4>11. Known Traps &amp; Gotchas (<code>known_traps_and_gotchas</code>)</h4>
+<ul>
+<li><strong><code>network_attachment</code> is <code>ForceNew</code></strong>: Enabling Semantic Governance</li>
+</ul>
+<p>    Policies (SGP) or modifying network attachments after the initial Terraform</p>
+<p>    apply will force-recreate the gateway resource. If not managed carefully,</p>
+<p>    this can cause dependency deadlocks during destroy operations. Plan</p>
+<p>    infrastructure sequencing accordingly.</p>
+<ul>
+<li><strong>Authz Policy Limit</strong>: An Agent Gateway allows at most **4 custom</li>
+</ul>
+<p>    authorization policies** attached concurrently. Ensure your security posture</p>
+<p>    consolidates rules within this limit.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-solution-multi-agent-security</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-solution-multi-agent-security" aria-label="Copy install google-cloud-solution-multi-agent-security">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-solution-multi-agent-security</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-solution-multi-agent-security/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

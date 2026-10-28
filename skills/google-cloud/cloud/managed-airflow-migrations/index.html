@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>managed-airflow-migrations — Aidentity</title>
+<meta name="description" content="Provides guidance for migrating Apache Airflow DAGs in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Covers migration to Airflow 2.11.1 (MSAA Gen 2 and 3) and Airflow 3 (MSAA Gen 3), including environment inspection, GCS download/upload and scanning patterns for breaking changes. Use when migrating the DAG code to newer Airflow version. Don&#39;t use when checking DAG run failures unrelated to code migration.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-migrations/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="managed-airflow-migrations — Aidentity">
+<meta property="og:description" content="Provides guidance for migrating Apache Airflow DAGs in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Covers migration to Airflow 2.11.1 (MSAA Gen 2 and 3) and Airflow 3 (MSAA Gen 3), including environment inspection, GCS download/upload and scanning patterns for breaking changes. Use when migrating the DAG code to newer Airflow version. Don&#39;t use when checking DAG run failures unrelated to code migration.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-migrations/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"managed-airflow-migrations","description":"Provides guidance for migrating Apache Airflow DAGs in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Covers migration to Airflow 2.11.1 (MSAA Gen 2 and 3) and Airflow 3 (MSAA Gen 3), including environment inspection, GCS download/upload and scanning patterns for breaking changes. Use when migrating the DAG code to newer Airflow version. Don't use when checking DAG run failures unrelated to code migration.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-migrations/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>managed-airflow-migrations
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>managed-airflow-migrations</h1>
+      <p class="summary">Provides guidance for migrating Apache Airflow DAGs in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Covers migration to Airflow 2.11.1 (MSAA Gen 2 and 3) and Airflow 3 (MSAA Gen 3), including environment inspection, GCS download/upload and scanning patterns for breaking changes. Use when migrating the DAG code to newer Airflow version. Don&#39;t use when checking DAG run failures unrelated to code migration.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Managed Service for Apache Airflow (formerly Cloud Composer) Migration Guide</h3>
+<p>This skill guides you through the process of adjusting Airflow DAGs from an</p>
+<p>existing Managed Service for Apache Airflow (formerly Cloud Composer)</p>
+<p>environment (or available locally) to make them compatible with **Airflow</p>
+<p>2.11.1<strong> (MSAA Gen 2 or 3) or </strong>Airflow 3** (MSAA Gen 3).</p>
+<hr>
+<h4>Phase 1: Discovery &amp; Download</h4>
+<p>Before making any changes, download the existing DAG files if explicitly</p>
+<p>requested. Inspect the source environment to confirm source version only if</p>
+<p>explicitly requested. For detailed instructions about environment inspection and</p>
+<p>downloading files check</p>
+<p>[references/environment-inspection.md](references/environment-inspection.md).</p>
+<hr>
+<h4>Phase 2: Target Version &amp; Dependency Mapping</h4>
+<h5>2.1 Airflow 2.11.1+ Dependency Mapping</h5>
+<p>If migrating to Airflow 2.11.1 (MSAA Gen 2) or Airflow 3, use the list below to</p>
+<p>trace the version progression of key dependencies. The list covers changes</p>
+<p>needed to get to Airflow 2.11.1. Take them into account when migrating from</p>
+<p>Airflow 2 (earlier than 2.11.1) to Airflow 3.</p>
+<h5>Composer 2.10.0 (Airflow 2.10.2)</h5>
+<ul>
+<li><strong>Google Provider</strong>: <code>10.26.0</code></li>
+<li><strong>SSH Provider</strong>: <code>3.14.0</code></li>
+<li><strong>HTTP Provider</strong>: <code>4.13.3</code></li>
+<li><strong>Breaking Changes</strong>: <em>Baseline for oldest fully documented source.</em></li>
+</ul>
+<h5>Composer 2.15.3 (Airflow 2.10.5)</h5>
+<ul>
+<li><strong>Google Provider</strong>: <code>18.0.0</code></li>
+<li><strong>SSH Provider</strong>: <code>4.1.4</code></li>
+<li><strong>HTTP Provider</strong>: <code>5.3.4</code></li>
+<li><strong>Breaking Changes</strong>:</li>
+<li><strong>SSH Provider 4.0.0:</strong> Hook <code>timeout</code> removed; <code>get_conn()</code> context</li>
+</ul>
+<p>        manager.</p>
+<ul>
+<li><strong>HTTP Provider 5.0.0:</strong> <code>SimpleHttpOperator</code> -&gt; <code>HttpOperator</code>.</li>
+<li><strong>Google Provider 11.0.0:</strong> <code>BigQueryExecuteQueryOperator</code> removed.</li>
+<li><strong>Google Provider 12.0.0:</strong> Legacy Data Pipeline operators removed.</li>
+<li><strong>Google Provider 13.0.0:</strong> <code>AutoMLBatchPredictOperator</code> removed.</li>
+<li><strong>Google Provider 17.0.0:</strong> <code>BigQueryCreateEmptyTableOperator</code> and</li>
+</ul>
+<p>        <code>BigQueryCreateExternalTableOperator</code> removed; Life Sciences operators</p>
+<p>        removed.</p>
+<ul>
+<li><strong>Google Provider 18.0.0:</strong> Legacy DV360 operators removed.</li>
+</ul>
+<h5>Composer 2.16.1 (Airflow 2.10.5)</h5>
+<ul>
+<li><strong>Google Provider</strong>: <code>19.0.0</code></li>
+<li><strong>SSH Provider</strong>: <code>4.1.6</code></li>
+<li><strong>HTTP Provider</strong>: <code>5.5.0</code></li>
+<li><strong>Breaking Changes</strong>: <strong>Google Provider 19.0.0:</strong> AutoML operators removed</li>
+</ul>
+<p>    (use Vertex AI).</p>
+<h5>Composer 2.17.0 (Target Airflow 2.11.1)</h5>
+<ul>
+<li><strong>Google Provider</strong>: <strong><code>20.0.0</code></strong></li>
+<li><strong>SSH Provider</strong>: <strong><code>5.0.0</code></strong></li>
+<li><strong>HTTP Provider</strong>: <strong><code>6.0.2</code></strong></li>
+<li><strong>Breaking Changes</strong>:</li>
+<li><strong>SSH Provider 5.0.0:</strong> <code>sshtunnel</code> removed (native tunneling).</li>
+<li><strong>HTTP Provider 6.0.0:</strong> JSON serialization.</li>
+<li><strong>Google Provider 20.0.0:</strong> ADLS Gen2 migration.</li>
+</ul>
+<h5>2.2 Airflow 3 Migration</h5>
+<p>If migrating to Airflow 3 (MSAA Gen 3), note that this is a major version</p>
+<p>upgrade with significant changes, including:</p>
+<ul>
+<li>Decoupled Task SDK (imports change from <code>airflow</code> to <code>airflow.sdk</code>).</li>
+<li>Removal of direct metadata DB access.</li>
+<li>Renaming of <code>Dataset</code> to <code>Asset</code>.</li>
+<li>Removal of SubDAGs and SLAs.</li>
+<li>Changes to context variables availability.</li>
+</ul>
+<p>Take into account all applicable changes within Airflow 2 (e.g. when migrating</p>
+<p>from Airflow 2.10.2, apply changes needed to move to Airflow 2.11.1 and Airflow</p>
+<p>3 migration changes on top of that).</p>
+<hr>
+<h4>Phase 3: Analysis &amp; Remediation (Scanning Downloaded Files)</h4>
+<p>Run the scan commands from the root of your local workspace</p>
+<p>(<code>./migration_workspace</code> unless indicated otherwise).</p>
+<hr>
+<h5>3.1 Airflow 2.11.1 Core &amp; Dependency checks</h5>
+<p>Use these scans if migrating to Airflow 2.11.1+ (intermediate step when</p>
+<p>migrating to Airflow 3).</p>
+<h5>3.1.1 Dataset Scheduling (Airflow 2.11.0)</h5>
+<ul>
+<li><strong>Change:</strong> DAGs scheduled on datasets only trigger if events occur while</li>
+</ul>
+<p>    the DAG is unpaused.</p>
+<ul>
+<li><strong>Scan Command:</strong> <code>grep -rn &quot;Dataset(&quot; ./dags</code></li>
+<li><strong>Remediation:</strong> You MUST document that these DAGs must remain unpaused to</li>
+</ul>
+<p>    catch events, or plan manual triggers for catch-up.</p>
+<h5>3.1.2 HTML in Descriptions (Airflow 2.11.0)</h5>
+<ul>
+<li><strong>Change:</strong> Raw HTML in DAG docs / params is escaped by default.</li>
+<li><strong>Scan Command:</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;doc_md.*&lt;|doc_md.*&gt;|description.*&lt;|description.*&gt;&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Convert HTML to Markdown, or set</li>
+</ul>
+<p>    <code>AIRFLOW__WEBSERVER__ALLOW_RAW_HTML_DESCRIPTIONS=True</code> in target.</p>
+<h5>3.1.3 Teardown Tasks (Airflow 2.10.5)</h5>
+<ul>
+<li><strong>Change:</strong> Teardowns always run when a DAG is marked failed.</li>
+<li><strong>Scan Command:</strong> <code>grep -rn &quot;as_teardown&quot; ./dags</code></li>
+<li><strong>Remediation:</strong> Ensure teardown tasks are idempotent.</li>
+</ul>
+<h5>3.1.4 Pendulum 3 Upgrade (Airflow 2.11.0)</h5>
+<ul>
+<li><strong>Change:</strong> <code>Period</code> renamed to <code>Interval</code>, testing helpers removed.</li>
+<li><strong>Scan Command (Code):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;pendulum\.Period|pendulum\.period&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><strong>Scan Command (Tests):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;\.test\(|set_test_now\(&quot; ./tests 2&gt;/dev/null || true
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Replace <code>Period</code> with <code>Interval</code>, and <code>period(...)</code> with</li>
+</ul>
+<p>    <code>interval(...)</code>.</p>
+<hr>
+<h5>3.2 Path A: Airflow 2.11.1 Provider Package Scan</h5>
+<h5>3.2.1 SSH Provider (SSH 4.0.0 &amp; 5.0.0)</h5>
+<ul>
+<li><strong>Scan Command (Timeout):</strong> <code>grep -rn &quot;SSHHook&quot; ./dags | grep &quot;timeout&quot;</code></li>
+<li><strong>Scan Command (Context Manager):</strong> <code>grep -rn &quot;with SSHHook&quot; ./dags</code></li>
+<li><strong>Scan Command (Tunnel Attributes):</strong> <code>grep -rn &quot;\.get_tunnel&quot; ./dags</code></li>
+<li><strong>Remediation:</strong></li>
+<li>Replace <code>timeout</code> with <code>conn_timeout</code> in <code>SSHHook</code>.</li>
+<li>Replace <code>with hook as conn:</code> with <code>with hook.get_conn() as conn:</code>.</li>
+<li>Use <code>get_tunnel()</code> as context manager: `with hook.get_tunnel(...) as</li>
+</ul>
+<p>        tunnel:`.</p>
+<h5>3.2.2 HTTP Provider (HTTP 5.0.0 &amp; 6.0.0)</h5>
+<ul>
+<li><strong>Scan Command:</strong> <code>grep -rn &quot;SimpleHttpOperator&quot; ./dags</code></li>
+<li><strong>Remediation:</strong> Replace <code>SimpleHttpOperator</code> with <code>HttpOperator</code>.</li>
+</ul>
+<h5>3.2.3 Google Provider (v11 to v20)</h5>
+<ul>
+<li><strong>Scan Command (BigQuery query):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn &quot;BigQueryExecuteQueryOperator&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><em>Remediation:</em> Replace with <code>BigQueryInsertJobOperator</code> (use</li>
+</ul>
+<p>        <code>configuration</code> dict).</p>
+<ul>
+<li><strong>Scan Command (BigQuery table):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;BigQueryCreateEmptyTableOperator|BigQueryCreateExternalTableOperator&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><em>Remediation:</em> Replace with <code>BigQueryCreateTableOperator</code> (use</li>
+</ul>
+<p>        <code>table_resource</code> dict).</p>
+<ul>
+<li><strong>Scan Command (AutoML):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;AutoMLTrainModelOperator|AutoMLPredictOperator|AutoMLCreateDatasetOperator|AutoMLBatchPredictOperator&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><em>Remediation:</em> Migrate to Vertex AI operators.</li>
+<li><strong>Scan Command (Dataflow):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn -E &quot;CreateDataPipelineOperator|RunDataPipelineOperator&quot; ./dags
+    </code></pre></p>
+<ul>
+<li><em>Remediation:</em> Replace with</li>
+</ul>
+<p>        <code>DataflowCreatePipelineOperator</code>/<code>DataflowRunPipelineOperator</code>.</p>
+<ul>
+<li><strong>Scan Command (Life Sciences):</strong></li>
+</ul>
+<p>    <pre><code>    grep -rn &quot;LifeSciencesRunPipelineOperator&quot; ./dags`
+    </code></pre></p>
+<ul>
+<li><em>Remediation:</em> Migrate to Google Cloud Batch operators</li>
+</ul>
+<p>        (<code>BatchCreateJobOperator</code>).</p>
+<ul>
+<li><strong>Scan Command (ADLS to GCS):</strong> <code>grep -rn &quot;ADLSToGCSOperator&quot; ./dags</code></li>
+<li><em>Remediation:</em> Ensure <code>file_system_name</code> is provided.</li>
+</ul>
+<hr>
+<h5>3.3 Airflow 3 Migration checks</h5>
+<p>Use instructions from [references/airflow-3.md](references/airflow-3.md) when</p>
+<p>migrating to Airflow 3.</p>
+<hr>
+<h4>Phase 4: Deployment &amp; Verification</h4>
+<p>*Perform deployment and verification steps only if explicitly requested to do</p>
+<p>so.*</p>
+<h5>4.1 Static Verification (when migrating to Airflow 3)</h5>
+<p>After applying code changes for Airflow 3, verify syntax correctness. If</p>
+<p>available in the development environment, run static lint checks:</p>
+<p><pre><code>ruff check {target_dag_file} --select AIR30</code></pre></p>
+<p>Resolve any reported deprecation warnings before finalization. If ruff is not</p>
+<p>available, recommend installing one.</p>
+<h5>4.2 Deployment to MSAA</h5>
+<h5>4.2.1 Get Target GCS Bucket Path (only when requested)</h5>
+<p><pre><code>gcloud composer environments describe &lt;TARGET_ENV&gt; \
+    --location &lt;TARGET_REGION&gt; \
+    --format=&quot;value(config.dagGcsPrefix)&quot;</code></pre></p>
+<p><em>Expected Output:</em> <code>gs://&lt;target-bucket-name&gt;/dags</code></p>
+<h5>4.2 Upload Modified DAGs and Bucket Dependencies (Only when requested)</h5>
+<p><em>Perform this step only if explicitly requested to do so.</em> Copy the modified</p>
+<p>DAGs and any backed-up bucket dependencies from your local workspace to the</p>
+<p>target GCS bucket. *If you skipped the inspection step, ensure you have the</p>
+<p>correct <code>&lt;target-bucket-name&gt;</code>.*</p>
+<ol>
+<li><strong>Upload DAGs:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud storage cp -r ./dags/* gs://&lt;target-bucket-name&gt;/dags/
+    </code></pre></p>
+<ol>
+<li><strong>Upload Other Bucket Dependencies (If applicable):</strong></li>
+</ol>
+<p>    <pre><code>    gcloud storage cp -r ./migration_workspace/&lt;dependency-folder&gt; gs://&lt;target-bucket-name&gt;/&lt;dependency-folder&gt;
+    </code></pre></p>
+<h5>4.3 Verify DAGs via Airflow CLI</h5>
+<p>*Perform this step only if explicitly requested to upload modified DAGS to a</p>
+<p>target environment (and after uploading).*</p>
+<p>You can verify that your DAGs have been successfully uploaded, parsed, and</p>
+<p>registered by the Airflow scheduler in the target environment using the Airflow</p>
+<p>CLI.</p>
+<ol>
+<li><strong>List Registered DAGs:</strong> Run the following command to list all DAGs</li>
+</ol>
+<p>    registered in the target environment. Verify that your migrated DAGs appear</p>
+<p>    in this list.</p>
+<p>    <pre><code>    gcloud composer environments run &lt;TARGET_ENV&gt; \
+        --location &lt;TARGET_REGION&gt; \
+        dags list
+    </code></pre></p>
+<ol>
+<li><strong>Check for Import Errors:</strong> If some DAGs are missing from the list, or to</li>
+</ol>
+<p>    ensure there are no parsing issues, check for import errors:</p>
+<p>    <pre><code>    gcloud composer environments run &lt;TARGET_ENV&gt; \
+        --location &lt;TARGET_REGION&gt; \
+        dags list-import-errors
+    </code></pre></p>
+<p>    <em>Expected Output:</em></p>
+<ul>
+<li>If there are no errors, the command will output <code>No data found</code>.</li>
+<li>If there are errors, it will list the file path and the traceback of the</li>
+</ul>
+<p>        error.</p>
+<p>*Note: It may take a couple of minutes for the Airflow scheduler to parse the</p>
+<p>new files and for changes to reflect in these commands.*</p>
+<h5>4.4 Verify in Cloud Logging</h5>
+<p>*Perform this step only if explicitly requested to upload modified DAGS to a</p>
+<p>target environment (and after uploading).* Monitor Cloud Logging for the target</p>
+<p>environment to detect any runtime errors or import errors.</p>
+<p>Run the following query in the <strong>GCP Cloud Logging Console</strong> (or via `gcloud</p>
+<p>logging read`):</p>
+<p><pre><code>resource.type=&quot;cloud_composer_environment&quot;
+resource.labels.environment_name=&quot;&lt;TARGET_ENV&gt;&quot;
+log_id(&quot;airflow-scheduler&quot;)
+severity&gt;=ERROR</code></pre></p>
+<hr>
+<h4>Appendix: Local Environment Verification</h4>
+<p>If you want to verify your changes locally before deploying to the target</p>
+<p>environment, you can use the Composer Local Development CLI tool</p>
+<p>(<code>composer-dev</code>). Use</p>
+<p>[references/local-development-environment.md](references/local-development-environment.md)</p>
+<p>as a reference for interactions with local development environments.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/managed-airflow-migrations</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/managed-airflow-migrations" aria-label="Copy install managed-airflow-migrations">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/managed-airflow-migrations</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/managed-airflow-migrations/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

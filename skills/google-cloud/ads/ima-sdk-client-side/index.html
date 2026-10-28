@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ima-sdk-client-side — Aidentity</title>
+<meta name="description" content="Supports Interactive Media Ads (IMA) SDK. Use this skill for client-side ad insertion when you are requesting video ads for websites, apps, TVs or other platforms using VAST or VMAP. Do not use for Dynamic Ad Insertion (DAI), SSAI, or SGAI.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/ima-sdk-client-side/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ima-sdk-client-side — Aidentity">
+<meta property="og:description" content="Supports Interactive Media Ads (IMA) SDK. Use this skill for client-side ad insertion when you are requesting video ads for websites, apps, TVs or other platforms using VAST or VMAP. Do not use for Dynamic Ad Insertion (DAI), SSAI, or SGAI.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/ima-sdk-client-side/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"ima-sdk-client-side","description":"Supports Interactive Media Ads (IMA) SDK. Use this skill for client-side ad insertion when you are requesting video ads for websites, apps, TVs or other platforms using VAST or VMAP. Do not use for Dynamic Ad Insertion (DAI), SSAI, or SGAI.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/ima-sdk-client-side/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=ads">ads</a><span>/</span>ima-sdk-client-side
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>ima-sdk-client-side</h1>
+      <p class="summary">Supports Interactive Media Ads (IMA) SDK. Use this skill for client-side ad insertion when you are requesting video ads for websites, apps, TVs or other platforms using VAST or VMAP. Do not use for Dynamic Ad Insertion (DAI), SSAI, or SGAI.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=ads">ads</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>IMA SDK client-side</h3>
+<p>The Google IMA SDK (Interactive Media Ads) lets you load in-stream video and</p>
+<p>audio ads into websites, apps, TVs and other digital platforms. Use an IMA SDK</p>
+<p>to request ads from any VAST-compliant ad server and manage ad playback.</p>
+<h4>Prerequisites</h4>
+<p>Before integrating the IMA SDK, you <strong>must</strong> read the platform-specific guide</p>
+<p>below to support all platforms that your app can support:</p>
+<ul>
+<li><strong>Web/HTML5/ReactJs/NodeJs/Angular:</strong> Read all these guides</li>
+</ul>
+<p>    [ima-sdk-web-guide.md](references/ima-sdk-web-guide.md),</p>
+<p>    [ima-sdk-web-iframe-mode.md](references/ima-sdk-web-iframe-mode.md),</p>
+<p>    [ima-sdk-web-mobile-safari.md](references/ima-sdk-web-mobile-safari.md)</p>
+<ul>
+<li><strong>Android/AndroidTV/ReactNative:</strong> Read [ima-sdk-android-guide.md](references/ima-sdk-android-guide.md)</li>
+<li><strong>iOS/tvOS/ReactNative:</strong> Read all these guides</li>
+</ul>
+<p>    [ima-sdk-ios-guide.md](references/ima-sdk-ios-guide.md),</p>
+<p>    [ima-sdk-tvos-guide.md](references/ima-sdk-tvos-guide.md)</p>
+<hr>
+<h4>Quick start (general workflow)</h4>
+<ol>
+<li>Import the SDK: Prerequisites, dependencies.</li>
+<li>Initialization: Early setup, Warmup, Settings Configuration, and Ad UI</li>
+</ol>
+<p>    Setup.</p>
+<ol>
+<li>Ad Request: Creating and triggering the request, User gesture compliance.</li>
+<li>Ad Load Success/Failure: Handling the load event to get the AdsManager, or</li>
+</ol>
+<p>    handling early fatal errors.</p>
+<ol>
+<li>Ad Playback Events: Listening to playback events via AdsManager to</li>
+</ol>
+<p>    coordinate content play/pause, and handling non-fatal LOG events and fatal</p>
+<p>    active playback errors.</p>
+<ol>
+<li>Cleanup: Properly destroying the AdsManager to release resources and prevent</li>
+</ol>
+<p>    memory leaks.</p>
+<p>For detailed, platform-specific implementation details, always refer to the</p>
+<p>guides in the Prerequisites section.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-mcp-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-mcp-setup guides developers through downloading, configuring, and installing the official open-source google ads mcp server. use this skill when a user wants to connect their ai assistant (such as gemini, claude code, or cursor) to their google ads account to query campaigns or retrieve reporting metrics using natural language. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-mcp-setup</span>
+    <span class="r-desc">Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/ads/ima-sdk-client-side</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/ads/ima-sdk-client-side" aria-label="Copy install ima-sdk-client-side">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>ads</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/ads/ima-sdk-client-side</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/ads/ima-sdk-client-side/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

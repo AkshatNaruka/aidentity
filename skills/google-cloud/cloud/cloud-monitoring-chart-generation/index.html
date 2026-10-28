@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-monitoring-chart-generation — Aidentity</title>
+<meta name="description" content="Generates Google Cloud Monitoring Server-Driven UI (SDUI) Widget and XyChart Protocol Buffer textprotos from resolved PromQL or ListTimeSeries queries. Use when: - Generating valid google.monitoring.dashboard.v1.Widget textprotos, containing PrometheusQuery or TimeSeriesFilter datasets, for use with the Cloud Monitoring Dashboards API, gcloud CLI, or declarative dashboard definitions. - Synthesizing Server-Driven UI (SDUI) widget titles, axis labels, and plot types for Prometheus or ListTimeSeries queries. Don&#39;t use for: - Metric discovery or PromQL query generation. For those tasks, use the cloud-monitoring-metric-selection or cloud-monitoring-promql-query skills.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-chart-generation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-monitoring-chart-generation — Aidentity">
+<meta property="og:description" content="Generates Google Cloud Monitoring Server-Driven UI (SDUI) Widget and XyChart Protocol Buffer textprotos from resolved PromQL or ListTimeSeries queries. Use when: - Generating valid google.monitoring.dashboard.v1.Widget textprotos, containing PrometheusQuery or TimeSeriesFilter datasets, for use with the Cloud Monitoring Dashboards API, gcloud CLI, or declarative dashboard definitions. - Synthesizing Server-Driven UI (SDUI) widget titles, axis labels, and plot types for Prometheus or ListTimeSeries queries. Don&#39;t use for: - Metric discovery or PromQL query generation. For those tasks, use the cloud-monitoring-metric-selection or cloud-monitoring-promql-query skills.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-chart-generation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-monitoring-chart-generation","description":"Generates Google Cloud Monitoring Server-Driven UI (SDUI) Widget and XyChart Protocol Buffer textprotos from resolved PromQL or ListTimeSeries queries. Use when: - Generating valid google.monitoring.dashboard.v1.Widget textprotos, containing PrometheusQuery or TimeSeriesFilter datasets, for use with the Cloud Monitoring Dashboards API, gcloud CLI, or declarative dashboard definitions. - Synthesizing Server-Driven UI (SDUI) widget titles, axis labels, and plot types for Prometheus or ListTimeSeries queries. Don't use for: - Metric discovery or PromQL query generation. For those tasks, use the cloud-monitoring-metric-selection or cloud-monitoring-promql-query skills.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-chart-generation/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-monitoring-chart-generation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-monitoring-chart-generation</h1>
+      <p class="summary">Generates Google Cloud Monitoring Server-Driven UI (SDUI) Widget and XyChart Protocol Buffer textprotos from resolved PromQL or ListTimeSeries queries. Use when: - Generating valid google.monitoring.dashboard.v1.Widget textprotos, containing PrometheusQuery or TimeSeriesFilter datasets, for use with the Cloud Monitoring Dashboards API, gcloud CLI, or declarative dashboard definitions. - Synthesizing Server-Driven UI (SDUI) widget titles, axis labels, and plot types for Prometheus or ListTimeSeries queries. Don&#39;t use for: - Metric discovery or PromQL query generation. For those tasks, use the cloud-monitoring-metric-selection or cloud-monitoring-promql-query skills.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Cloud Monitoring Chart Generation Skill (<code>cloud-monitoring-chart-generation</code>)</h3>
+<p>Transforms PromQL or ListTimeSeries JSON request payloads and metric metadata</p>
+<p>into valid Server-Driven UI (SDUI) <code>google.monitoring.dashboard.v1.Widget</code></p>
+<p>Protocol Buffer textprotos. These generated textprotos are designed to be</p>
+<p>ingested by the Cloud Monitoring Dashboards API, gcloud CLI, or declarative</p>
+<p>dashboard provisioning pipelines.</p>
+<p>&gt; [!IMPORTANT] <strong>Preferred API &amp; Mutually Exclusive Queries</strong>:</p>
+<p>&gt; - <strong>API Preference</strong>: Always prefer generating <code>ListTimeSeries</code> (<code>time_series_filter</code>) configurations for widgets over PromQL, unless the user explicitly requested PromQL or the metric math strictly requires it.</p>
+<p>&gt; - <strong>Mutually Exclusive</strong>: A widget dataset <code>time_series_query</code> must contain <strong>EITHER</strong> a <code>time_series_filter</code> OR a <code>prometheus_query</code>. You must never populate both fields in the same dataset simultaneously.</p>
+<p>&gt; - <strong>Strict Passthrough</strong>: You MUST copy the provided PromQL query or ListTimeSeries JSON exact filter string character-for-character. DO NOT invent, rewrite, or modify the queries under any circumstances.</p>
+<p>&gt; [!CAUTION] <strong>CRITICAL EXECUTION &amp; WORKING DIRECTORY RULES</strong>:</p>
+<p>&gt;</p>
+<p>&gt; -   <strong>DO NOT CHANGE WORKING DIRECTORY</strong>: Keep your working directory at your</p>
+<p>&gt;     workspace root. Do NOT <code>cd</code> into skill subdirectories.</p>
+<p>&gt; -   <strong>NO DISCOVERY OR SEARCH RULE</strong>: The metric descriptor, PromQL query,</p>
+<p>&gt;     ListTimeSeries JSON payload, unit, and resource type are ALWAYS present in</p>
+<p>&gt;     the conversation context. <strong>NEVER</strong> run file or codebase search tools,</p>
+<p>&gt;     like grep, find, directory listings, or codebase queries, to discover</p>
+<p>&gt;     metric metadata or inspect repository structures.</p>
+<p>&gt; -   <strong>SCRIPT EXECUTION</strong>: Execute the bundled Python scripts directly using</p>
+<p>&gt;     python3.</p>
+<p>&gt; -   <strong>OUTPUT GENERATION</strong>: The <code>assemble_widget_proto</code> script automatically</p>
+<p>&gt;     generates a unique UUID-based filename to prevent parallel execution</p>
+<p>&gt;     collisions. It will print the generated filename to standard error</p>
+<p>&gt;     strongly prefixed with &quot;Wrote widget textproto to:&quot;. You MUST parse this</p>
+<p>&gt;     exact prefix from the logs to extract the generated path and use it for</p>
+<p>&gt;     validation in Stage 4.</p>
+<h4>Prerequisites: Environment Setup</h4>
+<p>Install the required dependencies in your environment or sandbox:</p>
+<p><pre><code>pip install -r scripts/requirements.txt</code></pre></p>
+<h4>Follow the workflow pipeline</h4>
+<p><pre><code>[ Stage 1: compute_labels ]  ---&gt;  [ Stage 2: LLM Synthesis ]  ---&gt;  [ Stage 3: assemble_widget_proto ]
+  Generates candidate labels         Formulates SemanticPlotSpec       Emits validated widget textproto</code></pre></p>
+<h5>Stage 1: Baseline Candidate Synthesis</h5>
+<p>Run Stage 1 using python3:</p>
+<p><pre><code># For PromQL:
+python3 scripts/compute_labels.py \
+  --metric_display_name &quot;METRIC_DISPLAY_NAME&quot; \
+  --resource_type &quot;RESOURCE_TYPE&quot; \
+  --metric_unit &quot;UNIT&quot; \
+  --promql_query &#39;PROMQL_QUERY&#39;
+
+# For ListTimeSeries:
+python3 scripts/compute_labels.py \
+  --metric_display_name &quot;METRIC_DISPLAY_NAME&quot; \
+  --resource_type &quot;RESOURCE_TYPE&quot; \
+  --metric_unit &quot;UNIT&quot; \
+  --filter_string &#39;metric.type=&quot;m&quot;...&#39; \
+  --per_series_aligner &quot;ALIGN_RATE&quot; \
+  --cross_series_reducer &quot;REDUCE_SUM&quot;</code></pre></p>
+<h5>Stage 2: SemanticPlotSpec Prediction (LLM)</h5>
+<p>Review the user prompt, PromQL or LTS query structure, and Stage 1 baseline</p>
+<p>candidates to formulate a 4-key <code>SemanticPlotSpec</code> JSON object:</p>
+<ol>
+<li><strong><code>title</code></strong>: Polish <code>titleCandidate</code> to ensure it is concise, human-readable,</li>
+</ol>
+<p>   and under 80 characters.</p>
+<ol>
+<li><strong><code>yAxisLabel</code></strong>: Set this to a concise, human-readable quantitative</li>
+</ol>
+<p>    descriptor or metric concept, like <code>&quot;Utilization&quot;</code>, <code>&quot;Bytes&quot;</code>, or `&quot;Bytes</p>
+<p>    Rate&quot;<code>. Do NOT append unit symbols or suffixes like </code>&quot;(%)&quot;<code>, </code>&quot;(/s)&quot;`, or</p>
+<p>    <code>&quot;(By)&quot;</code> to the label, because units are rendered automatically via</p>
+<p>    <code>unitOverride</code>.</p>
+<ol>
+<li><strong><code>plotType</code></strong>: Default to <code>LINE</code>. Use <code>STACKED_AREA</code> if requested by the</li>
+</ol>
+<p>   user or for distribution queries.</p>
+<ol>
+<li><strong><code>unitOverride</code></strong>: Set this to the Unified Code for Units of Measure (UCUM)</li>
+</ol>
+<p>    unit string, derived by applying the corresponding rules below:</p>
+<h5>List Time Series (LTS) Unit Strategy:</h5>
+<ul>
+<li><strong>Trust the Candidate</strong>: For List Time Series flows, set this directly to</li>
+</ul>
+<p>    the <code>unitOverrideCandidate</code> produced by Stage 1. Stage 1 mathematically</p>
+<p>    processes <code>ALIGN_RATE</code>, for example producing <code>By/s</code>, forces <code>%</code> for</p>
+<p>    <code>ALIGN_PERCENT_CHANGE</code>, and correctly outputs native normalizations</p>
+<p>    unconditionally.</p>
+<h5>PromQL Unit Strategy (LLM Manual Override):</h5>
+<p>Because PromQL expressions can geometrically compose, for example</p>
+<p><code>histogram_quantile(..., rate(...))</code>, rely on your own semantic reasoning to</p>
+<p>govern the final unit:</p>
+<ul>
+<li><strong>Rate Functions (<code>rate(...)</code>, <code>irate(...)</code>)</strong>: Convert cumulative counters</li>
+</ul>
+<p>    into per-second rates. Append <code>/s</code> to the raw metric unit. For example, a</p>
+<p>    raw metric unit of <code>By</code> with <code>rate(...)</code> results in <code>unitOverride: &quot;By/s&quot;</code>.</p>
+<ul>
+<li><strong>Exception</strong>: If <code>rate()</code> is evaluated inside a <code>histogram_quantile()</code>,</li>
+</ul>
+<p>        the output is the raw bucket unit like <code>&quot;s&quot;</code>, not a rate.</p>
+<ul>
+<li>**Ratios &amp; Percentages (<code>100 <em> (A / B)</code>)</em>*: Ratios of identical metric units</li>
+</ul>
+<p>    typically represent percentages, resulting in <code>unitOverride: &quot;%&quot;</code>.</p>
+<ul>
+<li><strong>Normalizations</strong>: Normalize <code>10^2.%</code> to <code>&quot;%&quot;</code>.</li>
+<li><strong>Preserved Units</strong>: For simple aggregation functions like</li>
+</ul>
+<p>    <code>avg_over_time(...)</code> or <code>sum by (...)</code>, retain and output the underlying</p>
+<p>    metric unit without modification.</p>
+<ul>
+<li><strong>Legend Template</strong>: Do NOT configure the <code>legend_template</code> field. It is</li>
+</ul>
+<p>    intentionally omitted so that the Cloud Monitoring frontend dynamically</p>
+<p>    renders its multi-column table legend at runtime.</p>
+<p>Example <code>SemanticPlotSpec</code>:</p>
+<p><pre><code>{
+  &quot;title&quot;: &quot;VM CPU Utilization us-central1-a&quot;,
+  &quot;yAxisLabel&quot;: &quot;Utilization&quot;,
+  &quot;plotType&quot;: &quot;LINE&quot;,
+  &quot;unitOverride&quot;: &quot;%&quot;
+}</code></pre></p>
+<h5>Stage 3: Protobuf Assembly &amp; Output</h5>
+<p>Run Stage 3 using python3 to generate and save the widget textproto. Use</p>
+<p><code>--promql_query</code> for PromQL, or <code>--lts_request_json</code> for ListTimeSeries:</p>
+<p><pre><code># For PromQL:
+python3 scripts/assemble_widget_proto.py \
+  --promql_query &#39;PROMQL_QUERY&#39; \
+  --spec_json &#39;SEMANTIC_PLOT_SPEC_JSON&#39;
+
+# For ListTimeSeries:
+python3 scripts/assemble_widget_proto.py \
+  --lts_request_json &#39;{&quot;filter&quot;: &quot;...&quot;, &quot;aggregation&quot;: {...}}&#39; \
+  --spec_json &#39;SEMANTIC_PLOT_SPEC_JSON&#39;</code></pre></p>
+<p>&gt; [!IMPORTANT] <strong>MANDATORY FILE OUTPUT CONTRACT</strong>: Do not attempt to guess or</p>
+<p>&gt; enforce the output filename. The script will automatically generate a</p>
+<p>&gt; guaranteed-unique filename and print it to standard error. Search stderr for</p>
+<p>&gt; the explicit prefix &quot;Wrote widget textproto to:&quot; to deterministically capture</p>
+<p>&gt; this filename, and then target it in Stage 4 validation.</p>
+<ul>
+<li><strong>Assigned Filename Feedback</strong>: Whenever an output file is saved, the script</li>
+</ul>
+<p>    logs the file path to stderr. Read your command execution logs for the exact</p>
+<p>    filename created so you can target it in Stage 4 validation.</p>
+<ul>
+<li><strong>Text Chat Output</strong>: Enclose the generated SDUI widget textproto inside</li>
+</ul>
+<p>    a ```<code> </code>`<code>textproto</code>``` code block in your response:</p>
+<p><pre><code>title: &quot;...&quot;
+xy_chart {
+  ...
+}</code></pre></p>
+<h5>Verify and auto-retry</h5>
+<p>&gt; [!CAUTION] <strong>DO NOT FINISH YOUR TURN UNTIL FILE VERIFICATION PASSES</strong>: 1.</p>
+<p>&gt; <strong>Validate Artifact</strong>: Execute the validator script against the generated file</p>
+<p>&gt; output from Stage 3:</p>
+<p>&gt;</p>
+<p>&gt; <pre><code>&gt;    # For PromQL charts:
+&gt;    python3 scripts/validate_chart.py --input_file &quot;GENERATED_FILE.textproto&quot; \
+&gt;       --expected_promql_substring &quot;SOME_IDENTIFYING_SUBSTRING_FROM_QUERY&quot; \
+&gt;       --expected_unit_override &quot;UNIT_OVERRIDE_CANDIDATE&quot;
+&gt;
+&gt;    # For ListTimeSeries (LTS) charts:
+&gt;    python3 scripts/validate_chart.py --input_file &quot;GENERATED_FILE.textproto&quot; \
+&gt;       --expected_lts_filter_substring &quot;SOME_IDENTIFYING_SUBSTRING_FROM_FILTER&quot; \
+&gt;       --expected_unit_override &quot;UNIT_OVERRIDE_CANDIDATE&quot;
+&gt;
+&gt;    # ALWAYS provide an identifying substring and the Stage 1 unit override candidate to verify you didn&#39;t mutate the data.
+    
+&gt;    # CRITICAL: If you generated multiple charts for multiple metrics, you MUST run this validation script independently for EACH file generated to ensure every chart is correct!
+&gt; </code></pre></p>
+<p>&gt;</p>
+<p>&gt; 2.  <strong>Auto-Retry if Missing or Failed</strong>: If <code>validate_chart</code> reports that the</p>
+<p>&gt;     file is missing or invalid, verify your script parameters and immediately</p>
+<p>&gt;     re-run Stage 3:</p>
+<p>&gt;</p>
+<p>&gt;     <pre><code>&gt;     python3 scripts/assemble_widget_proto.py \
+&gt;       --promql_query &#39;PROMQL_QUERY&#39; \
+&gt;       --spec_json &#39;SEMANTIC_PLOT_SPEC_JSON&#39;
+&gt;     # Or use --lts_request_json if applicable
+&gt;     </code></pre></p>
+<p>&gt; 3. <strong>Validation &amp; Retries</strong>: Run <code>validate_chart</code> to verify the generated</p>
+<p>&gt;    textproto. If validation fails due to a schema or syntax error, correct</p>
+<p>&gt;    the parameters and retry up to 2 times. If validation still fails after 2</p>
+<p>&gt;    retries, stop retrying, notify the user of the validation error, and</p>
+<p>&gt;    present the best-effort textproto.</p>
+<p>&gt; 4.  <strong>Execution vs. Validation Errors</strong>: Note that schema/syntax validation</p>
+<p>&gt;     errors from <code>validate_chart.py</code> are distinct from OS or environment</p>
+<p>&gt;     execution restrictions, which are handled below in **Graceful Sandbox</p>
+<p>&gt;     Fallback**.</p>
+<h5>Perform graceful sandbox fallback</h5>
+<p>If <code>compute_labels.py</code>, <code>assemble_widget_proto.py</code>, or <code>validate_chart.py</code></p>
+<p>cannot be executed due to environment or sandbox restrictions, do the</p>
+<p>following:</p>
+<ol>
+<li>Notify the user which script cannot be executed and why.</li>
+<li>**Synthesize and output the complete widget textproto directly in your</li>
+</ol>
+<p>   response**, following all formatting and unit rules.</p>
+<ol>
+<li>Provide a <strong>&quot;Local Verification&quot;</strong> section containing the standalone python3</li>
+</ol>
+<p>   commands so the user can run and validate the schema locally if desired.</p>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/monitoring/dashboards/api-dashboard" rel="noopener">Dashboards API</a></li>
+<li><a href="https://prometheus.io/docs/prometheus/latest/querying/" rel="noopener">Prometheus Docs</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-monitoring-chart-generation</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-monitoring-chart-generation" aria-label="Copy install cloud-monitoring-chart-generation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-monitoring-chart-generation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-monitoring-chart-generation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-logging-cross-project-configuration — Aidentity</title>
+<meta name="description" content="Configure and troubleshoot Google Cloud cross-project centralized logging and read-time aggregation. Use when: - Setting up log routing from multiple projects/folders/organizations to a central log bucket. - Creating cross-project log sinks and configuring central log buckets. - Troubleshooting cross-project routing. Don&#39;t use for single-project basic configurations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-cross-project-configuration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-logging-cross-project-configuration — Aidentity">
+<meta property="og:description" content="Configure and troubleshoot Google Cloud cross-project centralized logging and read-time aggregation. Use when: - Setting up log routing from multiple projects/folders/organizations to a central log bucket. - Creating cross-project log sinks and configuring central log buckets. - Troubleshooting cross-project routing. Don&#39;t use for single-project basic configurations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-cross-project-configuration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-logging-cross-project-configuration","description":"Configure and troubleshoot Google Cloud cross-project centralized logging and read-time aggregation. Use when: - Setting up log routing from multiple projects/folders/organizations to a central log bucket. - Creating cross-project log sinks and configuring central log buckets. - Troubleshooting cross-project routing. Don't use for single-project basic configurations.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-logging-cross-project-configuration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-logging-cross-project-configuration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-logging-cross-project-configuration</h1>
+      <p class="summary">Configure and troubleshoot Google Cloud cross-project centralized logging and read-time aggregation. Use when: - Setting up log routing from multiple projects/folders/organizations to a central log bucket. - Creating cross-project log sinks and configuring central log buckets. - Troubleshooting cross-project routing. Don&#39;t use for single-project basic configurations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Configuring Cross-Project Logging</h3>
+<p>This skill describes how to use <code>gcloud</code> commands to configure Cloud Logging so</p>
+<p>that you store log data in a central location, regardless of the point of</p>
+<p>origin. The skill also describes how to query log data when that data is stored</p>
+<p>in multiple projects.</p>
+<p>&gt; [!IMPORTANT] <strong>Sandbox Network Limitation (CRITICAL for Agent Testing):</strong></p>
+<p>&gt; During evaluation or in restricted sandboxed environments, network traffic to</p>
+<p>&gt; GCP APIs is blocked. Do <strong>NOT</strong> run network discovery commands to find</p>
+<p>&gt; resource names, project IDs, or organization IDs. Always use the exact project</p>
+<p>&gt; IDs or placeholders provided in the user prompt or instructions, for example,</p>
+<p>&gt; <code>{project_id}</code>, <code>{source_project_id}</code>, <code>{central_project_id}</code>. Assume these</p>
+<p>&gt; resources exist and proceed directly with configuration commands. Running</p>
+<p>&gt; these discovery commands will cause the execution to hang and timeout.</p>
+<h4>Safety and Confirmation Tiers (CRITICAL)</h4>
+<p>Before executing any commands on behalf of the user, you MUST adhere to the</p>
+<p>following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R: Read-Only</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Commands that only read state or query logs.</li>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging read</code></li>
+<li><code>gcloud logging buckets list</code></li>
+<li><strong>Rule:</strong> No confirmation needed. You may execute these commands</li>
+</ul>
+<p>        immediately to gather information.</p>
+<ol>
+<li><strong>Tier M: Mutation (Non-Billing)</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Configuration modifications or free metadata creations</li>
+</ul>
+<p>        that do not incur direct storage or billing costs and do not affect</p>
+<p>        resource security/access policies.</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging views create</code></li>
+<li><code>gcloud logging views update</code></li>
+<li><code>gcloud logging scopes create</code></li>
+<li><code>gcloud logging buckets create</code></li>
+<li><strong>Rule:</strong> No confirmation needed. You may execute these commands</li>
+</ul>
+<p>        immediately to apply configurations.</p>
+<ol>
+<li><strong>Tier B: Billing and Security-Sensitive Mutations (High-Risk)</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Operations that create billing-inducing resources or</li>
+</ul>
+<p>        integrations, or modify security and IAM access control policies</p>
+<p>        (presenting a risk of privilege escalation).</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging metrics create</code></li>
+<li><code>gcloud logging links create</code></li>
+<li><code>gcloud projects add-iam-policy-binding</code></li>
+<li><strong>Rule:</strong> <strong>Interactive confirmation required.</strong> These commands create</li>
+</ul>
+<p>        resources that incur billing costs or alter security access. You MUST</p>
+<p>        present the exact, literal command and receive user confirmation before</p>
+<p>        executing. NEVER execute in the same turn as asking.</p>
+<ol>
+<li><strong>Tier D: Causes irreversible data loss</strong></li>
+</ol>
+<ul>
+<li><strong>Description:</strong> Actions that permanently discard or delete logs, for</li>
+</ul>
+<p>        example sink exclusions.</p>
+<ul>
+<li><strong>Example commands:</strong></li>
+<li><code>gcloud logging buckets delete</code></li>
+<li><code>gcloud logging sinks update --add-exclusion</code></li>
+<li><strong>Rule:</strong> <strong>Explicit typed confirmation required.</strong> These commands</li>
+</ul>
+<p>        discard or delete logs immediately and irreversibly, or they may result</p>
+<p>        in log data not being stored. You MUST ask for explicit typed</p>
+<p>        confirmation, for example, &quot;Yes, discard logs&quot;, and halt execution until</p>
+<p>        the user replies.</p>
+<h4>Decision Matrix: Centralized Storage vs. Distributed Storage with Read-Time Aggregation</h4>
+<p>Use this decision matrix to evaluate and choose between <strong>Centralized Storage</strong></p>
+<p>and <strong>Read-Time Aggregation</strong>. With centralized storage, log data is routed to</p>
+<p>one log bucket, regardless of where the data originates. You write queries</p>
+<p>against the centralized log bucket. With read-time aggregation, log data is</p>
+<p>stored by the resource where it originates. However, a single query aggregates</p>
+<p>the data by querying all resources.</p>
+<p>After you have determined the optimal architecture for handling cross-project</p>
+<p>logs, follow the corresponding configuration steps detailed below.</p>
+<table><thead><tr><th>Criterion</th><th>Centralized Storage</th><th>Read-Time Aggregation</th></tr></thead><tbody>
+<tr><td><strong>GCP Project Scale</strong></td><td>Scales to thousands of</td><td>Best for &lt; 375 projects.</td></tr>
+</tbody></table>
+<p>:                       : projects.                :                          :</p>
+<table><thead><tr><th><strong>Log Storage</strong></th><th>Consolidated in a single</th><th>Resides in originating</th></tr></thead><tbody>
+</tbody></table>
+<p>:                       : log bucket.              : resources.               :</p>
+<table><thead><tr><th><strong>SQL Analytics</strong></th><th>Easy; unified querying</th><th>Hard; requires querying</th></tr></thead><tbody>
+</tbody></table>
+<p>:                       : via Observability        : multiple log buckets.    :</p>
+<p>:                       : Analytics.               :                          :</p>
+<table><thead><tr><th><strong>Access Control</strong></th><th>Scoped access via log</th><th>Requires IAM access to</th></tr></thead><tbody>
+</tbody></table>
+<p>:                       : views on the centralized : all views on resources   :</p>
+<p>:                       : log bucket.              : that store log data.     :</p>
+<table><thead><tr><th><strong>Configuration</strong></th><th>Options vary based on</th><th>Will not interfere with</th></tr></thead><tbody>
+</tbody></table>
+<p>: <strong>Complexity</strong>        : Project, Folder,         : bucket-based log-based   :</p>
+<p>:                       : Organization structure.  : metrics.                 :</p>
+<table><thead><tr><th><strong>Cost</strong></th><th>Potential for duplicate</th><th>Cost-effective; no data</th></tr></thead><tbody>
+</tbody></table>
+<p>:                       : storage of log buckets   : replication.             :</p>
+<p>:                       : if exclusions aren&#39;t     :                          :</p>
+<p>:                       : set.                     :                          :</p>
+<h4>Architecture</h4>
+<h5>Centralized Storage (Log Routing)</h5>
+<p><pre><code>graph LR
+    subgraph &quot;Source Project(s)&quot;
+        Log[Resource Logs] --&gt; Sink[&quot;Sink: route-to-central-project&quot;]
+    end
+
+    subgraph &quot;Central Project&quot;
+        Sink --&gt; Bucket[&quot;Bucket: central-logs-bucket (us-central1)&quot;]
+    end</code></pre></p>
+<h5>Read-Time Aggregation (Log Scopes)</h5>
+<p><pre><code>graph LR
+    subgraph &quot;Source Project 1&quot;
+        Log1[Resource Logs] --&gt; Bucket1[&quot;Bucket: _Default&quot;]
+    end
+
+    subgraph &quot;Source Project 2&quot;
+        Log2[Resource Logs] --&gt; Bucket2[&quot;Bucket: _Default&quot;]
+    end
+
+    subgraph &quot;Scoping Project (No Log Storage)&quot;
+        Scope[&quot;Log scope: central-query-scope&quot;]
+        Scope -.-&gt; View1[&quot;_AllLogs View on Bucket1&quot;]
+        Scope -.-&gt; View2[&quot;_AllLogs View on Bucket2&quot;]
+    end</code></pre></p>
+<h4>Setup Steps: Centralized Storage (Log Routing)</h4>
+<p>Use these steps to route logs from one or more source projects to a central log</p>
+<p>bucket in a project. Create or select the Google Cloud project that you will use</p>
+<p>for storing your log data. This is the central project.</p>
+<h5>1. Create log bucket in central project (Tier M)</h5>
+<p>Create a custom log bucket with Log Analytics enabled.</p>
+<p>&gt; [Tip] Use regional log buckets, for example, set the location to</p>
+<p>&gt; <code>us-central1</code>. Don&#39;t use the <code>global</code> location. This approach ensures</p>
+<p>&gt; compatibility with Observability Analytics and SQL querying.</p>
+<p><pre><code>gcloud logging buckets create {bucket_id} \
+    --project={central_project_id} \
+    --location={region} \
+    --retention-days={retention_days} \
+    --enable-analytics</code></pre></p>
+<h5>2. Create log sink in central project (Tier M)</h5>
+<p>Create a project-level sink in the central project pointing to the central log</p>
+<p>bucket. This sink will route logs that land in the central project&#39;s log router</p>
+<p>into the central log bucket.</p>
+<p><pre><code>gcloud logging sinks create {sink_name} \
+    logging.googleapis.com/projects/{central_project_id}/locations/{region}/buckets/{bucket_id} \
+    --project={central_project_id}</code></pre></p>
+<h5>3. Create log sink in source resource (Tier M)</h5>
+<p>To route logs to the central project, you must create a log sink in each source</p>
+<p>organization, folder, or project. While you can configure a sink to route only a</p>
+<p>subset of logs using the <code>--log-filter</code> argument, recommended practice is to</p>
+<p>route all non-audit logs, and then restrict access or partition logs at the</p>
+<p>destination using custom Log Views on the centralized log bucket.</p>
+<ul>
+<li><strong>For an organization-level log sink</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging sinks create {sink_name} \
+        logging.googleapis.com/projects/{central_project_id} \
+        --organization={source_organization_id} \
+        --include-children \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/activity&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/activity&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/system_event&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/system_event&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/access_transparency&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/access_transparency&quot;)&#39;
+    </code></pre></p>
+<ul>
+<li><strong>For project-level log sinks</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging sinks create {sink_name} \
+        logging.googleapis.com/projects/{central_project_id} \
+        --project={source_project_id} \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/activity&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/activity&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/system_event&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/system_event&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;cloudaudit.googleapis.com/access_transparency&quot;)&#39; \
+        --exclusion=filter=&#39;LOG_ID(&quot;externalaudit.googleapis.com/access_transparency&quot;)&#39;
+    </code></pre></p>
+<h5>4. Grant IAM permissions to sink writers (Tier B)</h5>
+<p>&gt; [!IMPORTANT] <strong>Security Action (Tier B):</strong> Granting IAM permissions changes</p>
+<p>&gt; access control policy and must be explicitly confirmed by the user before</p>
+<p>&gt; execution.</p>
+<p>To allow the source sinks to route logs to the central project&#39;s router, and to</p>
+<p>allow the central sink to write logs to the central bucket:</p>
+<ol>
+<li><strong>Grant Logs Writer permission to the source sink:</strong> Retrieve the</li>
+</ol>
+<p>    <code>writerIdentity</code> of the source log sink and grant it</p>
+<p>    <code>roles/logging.logWriter</code> on the central project.</p>
+<p>    <pre><code>    # Get the writer identity of the source sink
+    gcloud logging sinks describe {sink_name} \
+        --project={source_project_id} \
+        --format=&quot;value(writerIdentity)&quot;
+    </code></pre></p>
+<p>    The output is the <code>{source_writer_identity}</code> value (for example</p>
+<p>    <code>serviceAccount:...</code>) for the following command:</p>
+<p>    <pre><code>    # Grant Logs Writer permissions on the central project
+    gcloud projects add-iam-policy-binding {central_project_id} \
+        --member={source_writer_identity} \
+        --role=roles/logging.logWriter
+    </code></pre></p>
+<ol>
+<li><strong>Grant Bucket Writer permission to the central sink:</strong> Retrieve the</li>
+</ol>
+<p>    <code>writerIdentity</code> of the central log sink and grant it</p>
+<p>    <code>roles/logging.bucketWriter</code> on the central project.</p>
+<p>    <pre><code>    # Get the writer identity of the central sink
+    gcloud logging sinks describe {central_sink_name} \
+        --project={central_project_id} \
+        --format=&quot;value(writerIdentity)&quot;
+    </code></pre></p>
+<p>    The output is the <code>{central_writer_identity}</code> value for the following</p>
+<p>    command:</p>
+<p>    <pre><code>    # Grant Bucket Writer permissions on the central project
+    gcloud projects add-iam-policy-binding {central_project_id} \
+        --member={central_writer_identity} \
+        --role=roles/logging.bucketWriter
+    </code></pre></p>
+<h5>5. Create custom Log Views on the central bucket (Tier M)</h5>
+<p>To partition logs or restrict access by log ID or project (since all logs were</p>
+<p>routed to the same central bucket), create custom Log Views on the central</p>
+<p>bucket.</p>
+<ul>
+<li><strong>Filter by log ID:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging views create {view_id} \
+        --bucket={bucket_id} \
+        --location={region} \
+        --project={central_project_id} \
+        --log-filter=&#39;LOG_ID(&quot;{log_id}&quot;)&#39;
+    </code></pre></p>
+<ul>
+<li><strong>Filter by source project:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging views create {view_id} \
+        --bucket={bucket_id} \
+        --location={region} \
+        --project={central_project_id} \
+        --log-filter=&#39;project_id=&quot;{source_project_id}&quot;&#39;
+    </code></pre></p>
+<h5>Verify Centralized Log Routing (Tier R)</h5>
+<p>To verify that logs are being routed from the source projects to the central</p>
+<p>regional log bucket:</p>
+<ol>
+<li><strong>Write a test log in the source project:</strong></li>
+</ol>
+<p>    <pre><code>    gcloud logging write {test_log_id} &quot;Test log entry for verification&quot; \
+        --severity=WARNING \
+        --project={source_project_id}
+    </code></pre></p>
+<ol>
+<li><strong>Read the test log from the central log bucket:</strong> For regional log buckets,</li>
+</ol>
+<p>    you <strong>must</strong> specify the <code>--view</code> flag. Because the default view <code>_Default</code></p>
+<p>    only contains logs matching the default filter, you should query the</p>
+<p>    <strong><code>_AllLogs</code></strong> view or your custom log view on the central bucket:</p>
+<p>    <pre><code>    gcloud logging read &#39;logName:&quot;projects/{source_project_id}/logs/{test_log_id}&quot;&#39; \
+        --bucket={bucket_id} \
+        --location={region} \
+        --view=_AllLogs \
+        --project={central_project_id}
+    </code></pre></p>
+<hr>
+<h4>Setup Steps: Read-Time Aggregation (Log Scopes)</h4>
+<p>Create or select a Google Cloud project that you will use for querying your log</p>
+<p>data. This is the scoping project. Use these steps to configure a log scope. Log</p>
+<p>scopes let you issue a query for log data that is stored in multiple projects.</p>
+<h5>1. Create a custom Log View (Optional but recommended) (Tier M)</h5>
+<p>Create a Log View in the source project to restrict which logs are accessible.</p>
+<p>&gt; [!IMPORTANT] <strong>Gotcha:</strong> Log View filters can only contain specific</p>
+<p>&gt; restrictions. Refer to</p>
+<p>&gt; <a href="https://docs.cloud.google.com/logging/docs/logs-views.md.txt#view-filter" rel="noopener">https://docs.cloud.google.com/logging/docs/logs-views.md.txt#view-filter</a></p>
+<p><pre><code>gcloud logging views create {view_id} \
+    --bucket={bucket_id} \
+    --location={region} \
+    --project={source_project_id} \
+    --log-filter=&#39;LOG_ID(&quot;{log_id}&quot;)&#39;</code></pre></p>
+<ul>
+<li><code>{bucket_id}</code>: for example, <code>_Default</code></li>
+<li><code>{region}</code>: for example, <code>global</code></li>
+<li><code>{view_id}</code>: for example, <code>app-logs-view</code></li>
+<li>If you want to allow access to all logs in the log bucket, omit the</li>
+</ul>
+<p>    <code>--log-filter</code> flag.</p>
+<h5>2. Create a log scope in the scoping project (Tier M)</h5>
+<p>Create a log scope in the scoping project listing the source resources, which</p>
+<p>may be projects or specific log views.</p>
+<p><pre><code>gcloud logging scopes create {log_scope_id} \
+    --project={scoping_project_id} \
+    --resource-names={resource_names}</code></pre></p>
+<ul>
+<li><code>{log_scope_id}</code>: for example, <code>central-query-scope</code></li>
+<li><code>{resource_names}</code>: Comma-separated list of log views. For example,</li>
+</ul>
+<p>    <code>projects/source-project-1/locations/global/buckets/_Default/views/app-logs-view,projects/source-project-2/locations/global/buckets/_Default/views/app-logs-view</code>.</p>
+<p>    You can include up to 100 views in the scope.</p>
+<h5>3. Update Default Observability Scope (Optional) (Tier M)</h5>
+<p>Link the log scope to the project&#39;s default observability scope so it is used by</p>
+<p>default in Logs Explorer.</p>
+<p><pre><code>gcloud observability scopes update _Default \
+    --project={scoping_project_id} \
+    --location=global \
+    --log-scope=//logging.googleapis.com/projects/{scoping_project_id}/locations/global/logScopes/{log_scope_id}</code></pre></p>
+<h5>4. Grant IAM permissions to users (Tier B)</h5>
+<p>Unlike centralized routing, permissions are checked at query time on all source</p>
+<p>projects. Users running queries must have:</p>
+<ul>
+<li><code>roles/logging.viewAccessor</code> granted on the specific Log View (with IAM</li>
+</ul>
+<p>    conditions) or <code>roles/logging.viewer</code> on the source projects.</p>
+<ul>
+<li>Access to the scoping project.</li>
+</ul>
+<h4>Troubleshooting Cross-Project Log Routing and Sink Permission Failures</h4>
+<p>If logs are not appearing in a central project&#39;s bucket after configuring</p>
+<p>centralized logging:</p>
+<h5>1. Verify Log Router Sink Filters in Source Resource</h5>
+<ul>
+<li>Ensure that the log sink&#39;s filter matches the logs you expect to route.</li>
+</ul>
+<p>    &gt; [!IMPORTANT] <strong>Gotcha:</strong> Standard filter expressions like <code>logName:abc</code> or</p>
+<p>    &gt; <code>logName=&quot;projects/{project_id}/logs/abc&quot;</code> can fail to match in log sinks.</p>
+<p>    &gt; <strong>Always</strong> use <code>LOG_ID(&quot;abc&quot;)</code> for precise matching in log sink filters.</p>
+<ul>
+<li>Verify that you have not configured an exclusion filter that accidentally</li>
+</ul>
+<p>    discards these logs.</p>
+<h5>2. Verify and Grant Writer Identity Permissions (Most Common Cause)</h5>
+<p>The log sink&#39;s writer identity service account in the source project must be</p>
+<p>explicitly granted the necessary permissions on the central resource.</p>
+<ul>
+<li><strong>Step A: Get the Writer Identity</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging sinks describe {sink_name} \
+        --project={source_project_id} \
+        --format=&quot;value(writerIdentity)&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Step B: Grant the Permission in the Central Project (Tier B)</strong></li>
+</ul>
+<p>    &gt; [!IMPORTANT] <strong>Security Action (Tier B):</strong> Granting IAM permissions</p>
+<p>    &gt; changes access control policy and must be explicitly confirmed by the user</p>
+<p>    &gt; before execution.</p>
+<ul>
+<li><strong>For Cloud Logging Buckets (standard):</strong> Grant</li>
+</ul>
+<p>        <code>roles/logging.bucketWriter</code>:</p>
+<p>        <pre><code>        gcloud projects add-iam-policy-binding {central_project_id} \
+            --member={writer_identity} \
+            --role=roles/logging.bucketWriter
+        </code></pre></p>
+<ul>
+<li><strong>For GCS Buckets:</strong> Grant <code>roles/storage.objectCreator</code> on the GCS</li>
+</ul>
+<p>        bucket.</p>
+<ul>
+<li><strong>For Pub/Sub Topics:</strong> Grant <code>roles/pubsub.publisher</code> on the Pub/Sub</li>
+</ul>
+<p>        topic.</p>
+<ul>
+<li><strong>For BigQuery Datasets:</strong> Grant <code>roles/bigquery.dataEditor</code> on the</li>
+</ul>
+<p>        BigQuery dataset.</p>
+<hr>
+<h4>References and Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/logging/docs/routing/overview.md.txt" rel="noopener">GCP Cloud Logging - Routing and Storage Overview</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/log-scope/create-and-manage.md.txt" rel="noopener">GCP Cloud Logging - Log Scopes</a></li>
+<li><a href="https://docs.cloud.google.com/logging/docs/logs-views.md.txt" rel="noopener">GCP Cloud Logging - Custom Log Views</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-logging-cross-project-configuration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-logging-cross-project-configuration" aria-label="Copy install cloud-logging-cross-project-configuration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-logging-cross-project-configuration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-logging-cross-project-configuration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

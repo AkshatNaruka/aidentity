@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-waf-security — Aidentity</title>
+<meta name="description" content="Generates security-focused guidance for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework (WAF). Use this skill to evaluate workloads, identify security requirements, and provide actionable recommendations for IAM, network security, data protection, and operational security.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-security/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-waf-security — Aidentity">
+<meta property="og:description" content="Generates security-focused guidance for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework (WAF). Use this skill to evaluate workloads, identify security requirements, and provide actionable recommendations for IAM, network security, data protection, and operational security.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-security/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-waf-security","description":"Generates security-focused guidance for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework (WAF). Use this skill to evaluate workloads, identify security requirements, and provide actionable recommendations for IAM, network security, data protection, and operational security.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-security/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-waf-security
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-waf-security</h1>
+      <p class="summary">Generates security-focused guidance for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework (WAF). Use this skill to evaluate workloads, identify security requirements, and provide actionable recommendations for IAM, network security, data protection, and operational security.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=security">security</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Well-Architected Framework skill for the Security pillar</h3>
+<h4>Overview</h4>
+<p>The security pillar of the Google Cloud Well-Architected Framework provides</p>
+<p>design principles and best practices for building a robust security posture by</p>
+<p>integrating security into every layer of the architecture for cloud workloads.</p>
+<p>It focuses on maintaining confidentiality and integrity of data and systems</p>
+<p>while ensuring compliance and privacy. It provides a structured approach to risk</p>
+<p>management, threat defense, and identity control, enabling you to operate cloud</p>
+<p>workloads securely and at scale.</p>
+<h4>Workflow</h4>
+<p>When this skill is activated, follow these steps to evaluate and improve the</p>
+<p>security posture of the specified Google Cloud workload:</p>
+<ol>
+<li><strong>Understand the context</strong>: Ask targeted questions from the **Workload</li>
+</ol>
+<p>    assessment questions** list to gather information about the user&#39;s current</p>
+<p>    architecture, security requirements, and constraints.</p>
+<ol>
+<li><strong>Analyze and identify gaps</strong>: Evaluate the workload against the **Core</li>
+</ol>
+<p>    principles<strong> and the </strong>Validation checklist** to identify security</p>
+<p>    vulnerabilities, missing controls, or deviations from best practices.</p>
+<ol>
+<li><strong>Formulate recommendations</strong>: Provide actionable, prioritized guidance</li>
+</ol>
+<p>    based on the Google Cloud Well-Architected Framework. Recommend specific</p>
+<p>    products from <strong>Relevant Google Cloud products</strong> to address the identified</p>
+<p>    gaps.</p>
+<ol>
+<li><strong>Explain the recommendations</strong>: Align all recommendations with the</li>
+</ol>
+<p>    appropriate <strong>Core principles</strong> and state the benefits that each</p>
+<p>    recommendation provides.</p>
+<ol>
+<li><strong>Iterate and refine</strong>: Help the user adapt the recommendations to their</li>
+</ol>
+<p>    specific requirements and constraints.</p>
+<h4>Core principles</h4>
+<p>The recommendations in the security pillar of the Well-Architected Framework are</p>
+<p>aligned with the following core principles:</p>
+<ul>
+<li><strong>Implement security by design</strong>: Integrate cloud security and network</li>
+</ul>
+<p>   security considerations starting from the initial design phase of your</p>
+<p>   applications and infrastructure. Google Cloud provides architecture</p>
+<p>   blueprints and recommendations to help you apply this principle. Grounding</p>
+<p>   document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/implement-security-by-design.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/implement-security-by-design.md.txt</a></p>
+<ul>
+<li><strong>Implement zero trust</strong>: Use a _never trust, always verify_ approach, where</li>
+</ul>
+<p>   access to resources is granted based on continuous verification of trust.</p>
+<p>   Google Cloud supports this principle through products like Chrome Enterprise</p>
+<p>   Premium, Identity-Aware Proxy (IAP) and IAM Recommender. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/implement-zero-trust.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/implement-zero-trust.md.txt</a></p>
+<ul>
+<li><strong>Implement shift-left security</strong>: Implement security controls early in the</li>
+</ul>
+<p>   software development lifecycle. Avoid security defects before system changes</p>
+<p>   are made. Detect and fix security bugs early, fast, and reliably after the</p>
+<p>   system changes are committed. Google Cloud supports this principle through</p>
+<p>   products like Cloud Build, Binary Authorization, and Artifact Registry.</p>
+<p>   Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/implement-shift-left-security.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/implement-shift-left-security.md.txt</a></p>
+<ul>
+<li><strong>Implement preemptive cyber defense</strong>: Adopt a proactive approach to</li>
+</ul>
+<p>   security by implementing robust fundamental measures like threat</p>
+<p>   intelligence. This approach helps you build a foundation for more effective</p>
+<p>   threat detection and response. Google Cloud&#39;s approach to layered security</p>
+<p>   controls aligns with this principle. Google Cloud supports this principle</p>
+<p>   through products like Security Command Center, Google Threat Intelligence,</p>
+<p>   and Google SecOps. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/implement-preemptive-cyber-defense.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/implement-preemptive-cyber-defense.md.txt</a></p>
+<ul>
+<li><strong>Use AI securely and responsibly</strong>: Develop and deploy AI systems in a</li>
+</ul>
+<p>   responsible and secure manner. The recommendations for this principle are</p>
+<p>   aligned with guidance in the AI and ML perspective of the Well-Architected</p>
+<p>   Framework and in Google&#39;s Secure AI Framework (SAIF). Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/use-ai-securely-and-responsibly.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/use-ai-securely-and-responsibly.md.txt</a></p>
+<ul>
+<li><strong>Use AI for security</strong>: Use AI capabilities to improve your existing</li>
+</ul>
+<p>   security systems and processes through Gemini in Security and overall</p>
+<p>   platform-security capabilities. Use AI as a tool to increase the automation</p>
+<p>   of remedial work and ensure security hygiene to make other systems more</p>
+<p>   secure. Google Cloud supports this principle through products like Google</p>
+<p>   Threat Intelligence and Google SecOps. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/use-ai-for-security.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/use-ai-for-security.md.txt</a></p>
+<ul>
+<li><strong>Meet regulatory, compliance, and privacy needs</strong>: Adhere to</li>
+</ul>
+<p>   industry-specific regulations, compliance standards, and privacy</p>
+<p>   requirements. Google Cloud helps you meet these obligations through products</p>
+<p>   like Assured Workloads, Organization Policy Service, and our compliance</p>
+<p>   resource center. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/security/meet-regulatory-compliance-and-privacy-needs.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/meet-regulatory-compliance-and-privacy-needs.md.txt</a></p>
+<ul>
+<li><strong>Shared responsibilities and shared fate on Google Cloud</strong>: Understand that</li>
+</ul>
+<p>  Google is responsible for the security _of_ the cloud and you&#39;re responsible</p>
+<p>  for the security of your workloads _in_ the cloud. Recognize how this division</p>
+<p>  of responsibilities varies based on the workload type. Learn what Google does</p>
+<p>  to help ensure that security _of_ the cloud. Take appropriate actions to help</p>
+<p>  ensure that your workloads are secure _in_ the cloud.</p>
+<p>  Grounding document: <a href="https://docs.cloud.google.com/architecture/framework/security/shared-responsibility-shared-fate.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/security/shared-responsibility-shared-fate.md.txt</a></p>
+<h4>Relevant Google Cloud products</h4>
+<p>The following are _examples_ of Google Cloud products and features that are</p>
+<p>relevant to security:</p>
+<ul>
+<li><strong>Identity and access management</strong></li>
+</ul>
+<ul>
+<li><strong>Cloud Identity</strong>: Manage user lifecycles, authentication, and identity</li>
+</ul>
+<p>    federation.</p>
+<ul>
+<li><strong>Identity and Access Management (IAM)</strong>: Fine-grained access control for</li>
+</ul>
+<p>    Google Cloud resources.</p>
+<ul>
+<li><strong>Identity-Aware Proxy (IAP)</strong>: Secure access to applications without a VPN.</li>
+<li><strong>Chrome Enterprise Premium</strong>: Endpoint security and context-aware access.</li>
+<li><strong>IAM Recommender</strong>: Provide policy intelligence.</li>
+</ul>
+<ul>
+<li><strong>Network security</strong></li>
+</ul>
+<ul>
+<li><strong>Google Cloud Armor</strong>: DDoS protection and Web Application Firewall (WAF).</li>
+<li><strong>VPC Service Controls</strong>: Define security perimeters to prevent data</li>
+</ul>
+<p>    exfiltration.</p>
+<ul>
+<li><strong>Cloud Next-Generation Firewall (NGFW)</strong>: Advanced threat protection for</li>
+</ul>
+<p>    network traffic.</p>
+<ul>
+<li><strong>Shared VPC</strong>: Centralized network management across projects.</li>
+<li><strong>Cloud Interconnect and IPsec VPN</strong>: Secure, private connectivity.</li>
+</ul>
+<p>  -<strong>Private Service Connect</strong>: Provide private access to managed services</p>
+<ul>
+<li><strong>Data security</strong></li>
+</ul>
+<ul>
+<li><strong>Cloud Key Management Service (KMS)</strong>: Manage encryption keys.</li>
+<li><strong>Sensitive Data Protection (formerly Cloud DLP)</strong>: Discover and redact</li>
+</ul>
+<p>    sensitive data.</p>
+<ul>
+<li><strong>Confidential Computing</strong>: Encrypt data in use (memory).</li>
+</ul>
+<ul>
+<li><strong>Security operations (SecOps)</strong></li>
+</ul>
+<ul>
+<li><strong>Google SecOps (Chronicle)</strong>: Threat detection and security analytics.</li>
+<li><strong>Security Command Center (SCC)</strong>: Centralized vulnerability and threat</li>
+</ul>
+<p>    management.</p>
+<ul>
+<li><strong>Cloud Logging and Cloud Monitoring</strong>: Visibility into system activity.</li>
+<li><strong>BigQuery</strong>: Storing exported logs for analysis.</li>
+</ul>
+<ul>
+<li><strong>Automation and supply chain</strong></li>
+</ul>
+<ul>
+<li><strong>Cloud Build</strong>: Secure CI/CD pipelines.</li>
+<li><strong>Artifact Analysis</strong>: Vulnerability scanning for container images.</li>
+<li><strong>Binary Authorization</strong>: Deploy-time policy enforcement.</li>
+<li><strong>Assured open source software</strong>: Use secured OSS packages.</li>
+</ul>
+<h4>Workload assessment questions</h4>
+<p>Ask appropriate questions to understand the security-related requirements and</p>
+<p>constraints of the workload and the user&#39;s organization. Choose questions from</p>
+<p>the following list:</p>
+<ul>
+<li><strong>Security by design</strong>:</li>
+</ul>
+<ul>
+<li>How do you incorporate security considerations into your project&#39;s initial</li>
+</ul>
+<p>    planning and design phases?</p>
+<ul>
+<li>How do you define and document security requirements for new applications</li>
+</ul>
+<p>    and services?</p>
+<ul>
+<li>How do you ensure that security is integrated into your development</li>
+</ul>
+<p>    lifecycle?</p>
+<ul>
+<li>What tools and techniques do you use to perform threat modeling during the</li>
+</ul>
+<p>    design phase?</p>
+<ul>
+<li>How do you manage and prioritize security vulnerabilities discovered during</li>
+</ul>
+<p>    the design and development process?</p>
+<ul>
+<li>How do you handle security updates and patches for your applications and</li>
+</ul>
+<p>    infrastructure?</p>
+<ul>
+<li>How do you document and communicate security design decisions to your team</li>
+</ul>
+<p>    and stakeholders?</p>
+<ul>
+<li>How do you ensure that security configurations are consistently applied</li>
+</ul>
+<p>    across your environments?</p>
+<ul>
+<li>How do you validate the effectiveness of your security controls and</li>
+</ul>
+<p>    measures?</p>
+<ul>
+<li>How do you handle security exceptions and deviations from your security</li>
+</ul>
+<p>    design?</p>
+<ul>
+<li><strong>Zero trust</strong>:</li>
+</ul>
+<ul>
+<li>How do you verify and authenticate users and devices accessing your Google</li>
+</ul>
+<p>    Cloud resources?</p>
+<ul>
+<li>How do you implement the principle of least privilege for access control?</li>
+<li>How do you monitor and control network traffic within your Google Cloud</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you secure data in transit and at rest in your Google Cloud</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you implement continuous monitoring and logging of user and device</li>
+</ul>
+<p>    activity?</p>
+<ul>
+<li>How do you handle and respond to security incidents and breaches in a Zero</li>
+</ul>
+<p>    Trust environment?</p>
+<ul>
+<li>How do you manage and update security policies and controls in a Zero Trust</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you ensure that third-party applications and services comply with</li>
+</ul>
+<p>    your Zero Trust principles?</p>
+<ul>
+<li>How do you handle remote access and BYOD devices in a Zero Trust</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you educate and train your employees on Zero Trust principles and</li>
+</ul>
+<p>    practices?</p>
+<ul>
+<li><strong>Shift-left security</strong>:</li>
+</ul>
+<ul>
+<li>How do you integrate security testing into your development pipeline early</li>
+</ul>
+<p>    in the process?</p>
+<ul>
+<li>What types of security testing do you perform during the development phase?</li>
+<li>How do you provide developers with feedback on security vulnerabilities and</li>
+</ul>
+<p>    best practices?</p>
+<ul>
+<li>How do you empower developers to take ownership of security in their code?</li>
+<li>How do you ensure that security requirements are clearly defined and</li>
+</ul>
+<p>    communicated to developers?</p>
+<ul>
+<li>How do you measure the effectiveness of your Shift Left security</li>
+</ul>
+<p>    initiatives?</p>
+<ul>
+<li>How do you handle security dependencies and third-party libraries in your</li>
+</ul>
+<p>    code?</p>
+<ul>
+<li>How do you manage and update security configurations in your development</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you handle security exceptions and deviations from your security</li>
+</ul>
+<p>    policies in development?</p>
+<ul>
+<li>How do you promote a culture of security awareness and responsibility among</li>
+</ul>
+<p>    developers?</p>
+<ul>
+<li><strong>Preemptive cyber defense</strong>:</li>
+</ul>
+<ul>
+<li>How do you proactively identify and mitigate potential security threats</li>
+</ul>
+<p>    before they impact your systems?</p>
+<ul>
+<li>What tools and techniques do you use for continuous security monitoring and</li>
+</ul>
+<p>    analysis?</p>
+<ul>
+<li>How do you respond to and remediate security alerts and incidents?</li>
+<li>How do you simulate and test your incident response plans?</li>
+<li>How do you stay up-to-date with the latest security threats and</li>
+</ul>
+<p>    vulnerabilities?</p>
+<ul>
+<li>How do you handle and mitigate DDoS attacks against your applications and</li>
+</ul>
+<p>    services?</p>
+<ul>
+<li>How do you protect your sensitive data from insider threats?</li>
+<li>How do you ensure that your security controls are effective against advanced</li>
+</ul>
+<p>    persistent threats (APTs)?</p>
+<ul>
+<li>How do you handle security vulnerabilities in your supply chain?</li>
+<li>How do you adapt your security posture to evolving threats and technologies?</li>
+</ul>
+<ul>
+<li><strong>Security of AI workloads</strong>:</li>
+</ul>
+<ul>
+<li>How do you ensure the security of your AI models and data?</li>
+<li>How do you address potential biases and ethical concerns in your AI models?</li>
+<li>How do you protect your AI models from adversarial attacks and data</li>
+</ul>
+<p>    poisoning?</p>
+<ul>
+<li>How do you ensure the privacy of data used in your AI models?</li>
+<li>How do you explain and interpret the decisions made by your AI models?</li>
+<li>How do you manage and control access to your AI models and data?</li>
+<li>How do you ensure compliance with regulations and standards related to</li>
+</ul>
+<p>    AI and ML?</p>
+<ul>
+<li>How do you monitor and detect anomalies in the behavior of your AI models?</li>
+<li>How do you handle and respond to security incidents involving your AI</li>
+</ul>
+<p>    models?</p>
+<ul>
+<li>How do you educate and train your employees on the secure and responsible</li>
+</ul>
+<p>    use of AI and ML?</p>
+<ul>
+<li><strong>AI for security</strong>:</li>
+</ul>
+<ul>
+<li>How do you leverage AI and ML to enhance your security posture?</li>
+<li>What types of AI models do you use for security purposes?</li>
+<li>How do you train and validate your AI models for security applications?</li>
+<li>How do you ensure the accuracy and reliability of AI-based security</li>
+</ul>
+<p>    systems?</p>
+<ul>
+<li>How do you handle false positives and false negatives from AI-based</li>
+</ul>
+<p>    security systems?</p>
+<ul>
+<li>How do you integrate AI-based security systems with your existing security</li>
+</ul>
+<p>    infrastructure?</p>
+<ul>
+<li>How do you manage and update your AI models for security applications?</li>
+<li>How do you explain and interpret the decisions made by your AI models for</li>
+</ul>
+<p>    security applications?</p>
+<ul>
+<li>How do you ensure the ethical and responsible use of AI and ML for security</li>
+</ul>
+<p>    purposes?</p>
+<ul>
+<li>How do you measure the effectiveness of AI and ML in improving your security</li>
+</ul>
+<p>    posture?</p>
+<ul>
+<li><strong>Regulatory compliance and privacy</strong>:</li>
+</ul>
+<ul>
+<li>What regulatory compliance frameworks and privacy standards do you need to</li>
+</ul>
+<p>    adhere to?</p>
+<ul>
+<li>How do you assess and manage compliance risks in your Google Cloud</li>
+</ul>
+<p>    environment?</p>
+<ul>
+<li>How do you ensure the privacy of sensitive data stored and processed in</li>
+</ul>
+<p>    Google Cloud?</p>
+<ul>
+<li>How do you handle data subject requests (DSRs) related to privacy</li>
+</ul>
+<p>    regulations?</p>
+<ul>
+<li>How do you document and track compliance activities and evidence?</li>
+<li>How do you ensure that third-party vendors and partners comply with your</li>
+</ul>
+<p>    regulatory and privacy requirements?</p>
+<ul>
+<li>How do you handle data breaches and security incidents related to compliance</li>
+</ul>
+<p>    regulations?</p>
+<ul>
+<li>How do you stay up-to-date with changes in regulatory compliance and privacy</li>
+</ul>
+<p>    standards?</p>
+<ul>
+<li>How do you educate and train your employees on regulatory compliance and</li>
+</ul>
+<p>    privacy requirements?</p>
+<ul>
+<li>How do you demonstrate and prove compliance to auditors and regulators?</li>
+</ul>
+<h4>Validation checklist</h4>
+<p>Use the following checklist to evaluate the architecture&#39;s alignment with</p>
+<p>security recommendations:</p>
+<ul>
+<li><strong>Security by design</strong>:</li>
+</ul>
+<ul>
+<li>Are system components selected based on their security features and</li>
+</ul>
+<p>    hardening?</p>
+<ul>
+<li>Is defense-in-depth implemented at the network, host, and application</li>
+</ul>
+<p>    layers?</p>
+<ul>
+<li>Are safe libraries and application frameworks used to prevent common</li>
+</ul>
+<p>    vulnerabilities?</p>
+<ul>
+<li>Is a risk assessment performed using industry standards?</li>
+</ul>
+<ul>
+<li><strong>Zero trust</strong>:</li>
+</ul>
+<ul>
+<li>Is Cloud Identity used as a centralized identity provider for managing user</li>
+</ul>
+<p>    lifecycles and federation?</p>
+<ul>
+<li>Is access control enforced based on user identity and context (device,</li>
+</ul>
+<p>    location)?</p>
+<ul>
+<li>Are private connectivity methods (Cloud Interconnect, VPN) used for internal</li>
+</ul>
+<p>    traffic?</p>
+<ul>
+<li>Are default networks disabled in all projects?</li>
+<li>Are VPC Service Controls perimeters established around sensitive data?</li>
+</ul>
+<ul>
+<li><strong>Shift-left security</strong>:</li>
+</ul>
+<ul>
+<li>Is infrastructure provisioned using Infrastructure as Code</li>
+</ul>
+<p>    (e.g., Terraform)?</p>
+<ul>
+<li>Are automated security scans integrated into the CI/CD pipeline?</li>
+<li>Is there a process for scanning and patching vulnerabilities in</li>
+</ul>
+<p>    dependencies?</p>
+<ul>
+<li>Is Binary Authorization used to ensure only trusted images are deployed?</li>
+</ul>
+<ul>
+<li><strong>Preemptive cyber defense</strong>:</li>
+</ul>
+<ul>
+<li>Is threat intelligence integrated into security operations?</li>
+<li>Is security logging enabled and centralized for all critical resources?</li>
+<li>Are automated responses configured for common security threats?</li>
+<li>Are defenses validated through periodic testing or red-teaming?</li>
+</ul>
+<ul>
+<li><strong>AI security and governance</strong>:</li>
+</ul>
+<ul>
+<li>Are AI pipelines secured against tampering and data poisoning?</li>
+<li>Is differential privacy or data masking used for training data where</li>
+</ul>
+<p>    appropriate?</p>
+<ul>
+<li>Are Vertex Explainable AI and fairness indicators used for model governance?</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-waf-security</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-waf-security" aria-label="Copy install google-cloud-waf-security">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-waf-security</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-waf-security/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

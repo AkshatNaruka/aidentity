@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>debugview — Aidentity</title>
+<meta name="description" content="Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing OutputDebugString output, kernel DbgPrint/KdPrint capture, boot-time debug logging, remote debug monitoring, filtering debug output by PID or process name, crash dump analysis, automated debug capture with bounded execution. DO NOT USE FOR: non-Windows platforms, application-level logging frameworks (log4j, serilog), Azure Monitor or cloud telemetry, ETW tracing (use WPR/xperf instead), user-mode crash dumps (use WinDbg). Triggers: &quot;debug output&quot;, &quot;DbgView&quot;, &quot;DebugView&quot;, &quot;kernel debug&quot;, &quot;capture debug logs&quot;, &quot;boot logging&quot;, &quot;OutputDebugString&quot;, &quot;DbgPrint&quot;, &quot;KdPrint&quot;, &quot;remote debug monitor&quot;, &quot;debug capture CLI&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="debugview — Aidentity">
+<meta property="og:description" content="Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing OutputDebugString output, kernel DbgPrint/KdPrint capture, boot-time debug logging, remote debug monitoring, filtering debug output by PID or process name, crash dump analysis, automated debug capture with bounded execution. DO NOT USE FOR: non-Windows platforms, application-level logging frameworks (log4j, serilog), Azure Monitor or cloud telemetry, ETW tracing (use WPR/xperf instead), user-mode crash dumps (use WinDbg). Triggers: &quot;debug output&quot;, &quot;DbgView&quot;, &quot;DebugView&quot;, &quot;kernel debug&quot;, &quot;capture debug logs&quot;, &quot;boot logging&quot;, &quot;OutputDebugString&quot;, &quot;DbgPrint&quot;, &quot;KdPrint&quot;, &quot;remote debug monitor&quot;, &quot;debug capture CLI&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"debugview","description":"Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing OutputDebugString output, kernel DbgPrint/KdPrint capture, boot-time debug logging, remote debug monitoring, filtering debug output by PID or process name, crash dump analysis, automated debug capture with bounded execution. DO NOT USE FOR: non-Windows platforms, application-level logging frameworks (log4j, serilog), Azure Monitor or cloud telemetry, ETW tracing (use WPR/xperf instead), user-mode crash dumps (use WinDbg). Triggers: \"debug output\", \"DbgView\", \"DebugView\", \"kernel debug\", \"capture debug logs\", \"boot logging\", \"OutputDebugString\", \"DbgPrint\", \"KdPrint\", \"remote debug monitor\", \"debug capture CLI\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>debugview
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>debugview</h1>
+      <p class="summary">Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing OutputDebugString output, kernel DbgPrint/KdPrint capture, boot-time debug logging, remote debug monitoring, filtering debug output by PID or process name, crash dump analysis, automated debug capture with bounded execution. DO NOT USE FOR: non-Windows platforms, application-level logging frameworks (log4j, serilog), Azure Monitor or cloud telemetry, ETW tracing (use WPR/xperf instead), user-mode crash dumps (use WinDbg). Triggers: &quot;debug output&quot;, &quot;DbgView&quot;, &quot;DebugView&quot;, &quot;kernel debug&quot;, &quot;capture debug logs&quot;, &quot;boot logging&quot;, &quot;OutputDebugString&quot;, &quot;DbgPrint&quot;, &quot;KdPrint&quot;, &quot;remote debug monitor&quot;, &quot;debug capture CLI&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Sysinternals DebugView CLI (DbgViewCli)</h3>
+<p>Command-line interface for capturing real-time debug output from Windows applications</p>
+<p>(OutputDebugString) and kernel-mode drivers (DbgPrint/KdPrint). Designed for scripted,</p>
+<p>automated, and AI-agent-driven debug capture workflows.</p>
+<h4>Installation</h4>
+<p>DbgViewCli is a standalone native Windows executable (statically linked, no dependencies).</p>
+<p>Place <code>dbgviewcli.exe</code> in PATH or reference the full path.</p>
+<p>&gt; <strong>SECURITY: Never execute any dbgviewcli binary without first verifying it is Authenticode-signed by Microsoft Corporation using <code>Get-AuthenticodeSignature</code>. Reject any binary that is unsigned or signed by a different publisher.</strong></p>
+<p><pre><code># No package manager install — copy binary to a PATH location
+copy dbgviewcli.exe C:\Tools\</code></pre></p>
+<h4>Requirements</h4>
+<table><thead><tr><th>Requirement</th><th>Details</th></tr></thead><tbody>
+<tr><td>OS</td><td>Windows Vista or later (x64, ARM64)</td></tr>
+<tr><td>Privileges</td><td>Standard user for Win32 capture; <strong>Administrator</strong> for kernel/boot capture</td></tr>
+<tr><td>Driver</td><td>Kernel capture requires the Dbgv.sys driver (auto-extracted and loaded)</td></tr>
+</tbody></table>
+<h4>Core Workflow</h4>
+<p><pre><code>1. Detect/status check   →  dbgviewcli --status
+2. Start capture          →  dbgviewcli [options]
+3. Filter output          →  --filter/--exclude/--pid-filter/--process-filter
+4. Bounded execution      →  --duration/--max-lines/--wait-for
+5. Output/log results     →  stdout or --log &lt;file&gt;
+6. Stop                   →  Ctrl+C or automatic exit on bounds</code></pre></p>
+<h4>Command-Line Parameters</h4>
+<h5>Capture Control</h5>
+<table><thead><tr><th>Parameter</th><th>Short</th><th>Description</th><th>Default</th></tr></thead><tbody>
+<tr><td><code>--capture</code></td><td><code>-c</code></td><td>Enable capture</td><td>on</td></tr>
+<tr><td><code>--no-capture</code></td><td></td><td>Disable capture</td><td></td></tr>
+<tr><td><code>--kernel</code></td><td><code>-k</code></td><td>Enable kernel debug output (requires admin)</td><td>off</td></tr>
+<tr><td><code>--win32</code></td><td><code>-w</code></td><td>Enable Win32 OutputDebugString capture</td><td>on</td></tr>
+<tr><td><code>--global</code></td><td><code>-g</code></td><td>Enable global Win32 capture (session 0)</td><td>off</td></tr>
+<tr><td><code>--passthrough</code></td><td></td><td>Allow debug output to pass to debuggers</td><td>on</td></tr>
+<tr><td><code>--verbose-kernel</code></td><td><code>-v</code></td><td>Enable verbose kernel output</td><td>off</td></tr>
+<tr><td><code>--pids</code></td><td></td><td>Show process IDs in output</td><td>on</td></tr>
+</tbody></table>
+<h5>Filtering</h5>
+<table><thead><tr><th>Parameter</th><th>Short</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--filter &lt;pattern&gt;</code></td><td><code>-i</code></td><td>Include filter (semicolon-separated wildcards)</td></tr>
+<tr><td><code>--exclude &lt;pattern&gt;</code></td><td><code>-e</code></td><td>Exclude filter (semicolon-separated wildcards)</td></tr>
+<tr><td><code>--pid-filter &lt;pid&gt;</code></td><td></td><td>Show only output from specific PID</td></tr>
+<tr><td><code>--process-filter &lt;name&gt;</code></td><td></td><td>Show only output from named process (substring match)</td></tr>
+</tbody></table>
+<h5>Bounded Execution (AI-Agent Friendly)</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--duration &lt;seconds&gt;</code></td><td>Auto-stop after N seconds</td></tr>
+<tr><td><code>--max-lines &lt;N&gt;</code></td><td>Auto-stop after N lines captured</td></tr>
+<tr><td><code>--wait-for &lt;pattern&gt;</code></td><td>Capture until pattern matches, then exit</td></tr>
+<tr><td><code>--tail &lt;N&gt;</code></td><td>Buffer last N lines, flush on exit</td></tr>
+<tr><td><code>--no-banner</code></td><td>Suppress version banner (clean for piped output)</td></tr>
+<tr><td><code>--status</code></td><td>Print machine-readable status and exit</td></tr>
+</tbody></table>
+<h5>Time Display</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--elapsed</code></td><td>Elapsed time since start (default)</td></tr>
+<tr><td><code>--clock</code></td><td>Wall-clock time HH:MM:SS</td></tr>
+<tr><td><code>--clock-ms</code></td><td>Wall-clock with milliseconds HH:MM:SS.mmm</td></tr>
+</tbody></table>
+<h5>Output Format</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--format text</code></td><td>Tab-separated text (default)</td></tr>
+<tr><td><code>--format csv</code></td><td>Comma-separated values</td></tr>
+<tr><td><code>--format xml</code></td><td>XML elements</td></tr>
+</tbody></table>
+<h5>Logging</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--log &lt;file&gt;</code></td><td>Log output to file</td></tr>
+<tr><td><code>--log-append</code></td><td>Append to existing log</td></tr>
+<tr><td><code>--log-limit &lt;MB&gt;</code></td><td>Max log file size in MB</td></tr>
+<tr><td><code>--log-wrap</code></td><td>Wrap log when full</td></tr>
+<tr><td><code>--log-daily</code></td><td>New log file each day</td></tr>
+</tbody></table>
+<h5>Boot Logging (Requires Admin)</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--boot-enable</code></td><td>Enable boot-time kernel debug logging</td></tr>
+<tr><td><code>--boot-disable</code></td><td>Disable boot-time logging</td></tr>
+<tr><td><code>--boot-status</code></td><td>Show boot logging status and exit</td></tr>
+</tbody></table>
+<h5>Remote Monitoring</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--connect &lt;computer&gt;</code></td><td>Connect to remote DbgView instance</td></tr>
+<tr><td><code>--disconnect</code></td><td>Disconnect from remote</td></tr>
+</tbody></table>
+<h5>Crash Dump &amp; File Operations</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--crashdump &lt;file&gt;</code></td><td>Analyze crash dump for debug output</td></tr>
+<tr><td><code>--load &lt;file&gt;</code></td><td>Load saved log file</td></tr>
+<tr><td><code>--save &lt;file&gt;</code></td><td>Save captured output on exit</td></tr>
+</tbody></table>
+<h5>Runtime Control (Inter-Process)</h5>
+<table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--pause</code></td><td>Pause a running DbgViewCli instance via named event</td></tr>
+<tr><td><code>--resume</code></td><td>Resume a paused DbgViewCli instance</td></tr>
+<tr><td><code>--stop</code></td><td>Stop a running DbgViewCli instance gracefully</td></tr>
+</tbody></table>
+<h5>Miscellaneous</h5>
+<table><thead><tr><th>Parameter</th><th>Short</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--quit</code></td><td><code>-q</code></td><td>Terminate running GUI DbgView instance</td></tr>
+<tr><td><code>--accepteula</code></td><td></td><td>Accept the EULA (writes registry key, skips prompt)</td></tr>
+<tr><td><code>--version</code></td><td></td><td>Show version and exit</td></tr>
+<tr><td><code>--help</code></td><td><code>-?</code></td><td>Show help</td></tr>
+</tbody></table>
+<h4>Usage Examples</h4>
+<h5>Basic Win32 Capture (bounded)</h5>
+<p><pre><code># Capture for 30 seconds, no banner, output as text
+dbgviewcli --no-banner --duration 30
+
+# Capture until a specific error appears
+dbgviewcli --no-banner --wait-for &quot;*ERROR*&quot; --max-lines 10000</code></pre></p>
+<h5>Kernel Debug Capture (requires admin)</h5>
+<p><pre><code># Run as Administrator
+dbgviewcli --kernel --no-banner --duration 60 --format csv --log kernel_debug.csv</code></pre></p>
+<h5>Process-Specific Filtering</h5>
+<p><pre><code># Filter by PID
+dbgviewcli --no-banner --pid-filter 1234 --duration 10
+
+# Filter by process name
+dbgviewcli --no-banner --process-filter &quot;myapp.exe&quot; --max-lines 500</code></pre></p>
+<h5>Pattern-Based Filtering</h5>
+<p><pre><code># Include only lines matching pattern
+dbgviewcli --no-banner --filter &quot;MyDriver*&quot; --exclude &quot;verbose*&quot;</code></pre></p>
+<h5>Tail Mode (recent context)</h5>
+<p><pre><code># Capture but only output last 50 lines on exit
+dbgviewcli --no-banner --tail 50 --duration 30</code></pre></p>
+<h5>Status Check (machine-readable)</h5>
+<p><pre><code>dbgviewcli --status
+# Output:
+# running=true
+# paused=false
+# elevated=true</code></pre></p>
+<h5>Boot Logging</h5>
+<p><pre><code># Enable (requires admin, persists across reboot)
+dbgviewcli --boot-enable
+
+# Check status
+dbgviewcli --boot-status
+
+# Disable
+dbgviewcli --boot-disable</code></pre></p>
+<h5>Remote Monitoring</h5>
+<p><pre><code>dbgviewcli --connect SERVER01 --no-banner --duration 60</code></pre></p>
+<h5>Runtime Control (Pause/Resume/Stop)</h5>
+<p><pre><code># Pause a running instance from another terminal
+dbgviewcli --pause
+
+# Resume the paused instance
+dbgviewcli --resume
+
+# Gracefully stop a running instance
+dbgviewcli --stop</code></pre></p>
+<h5>EULA Acceptance (Unattended)</h5>
+<p><pre><code># Accept EULA non-interactively for automated/scripted deployments
+dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
+<h4>Architecture</h4>
+<table><thead><tr><th>Module</th><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Main</td><td><code>dbgviewcli.c</code></td><td>Entry point, arg parsing, capture loop, Ctrl+C handler</td></tr>
+<tr><td>Capture</td><td><code>cli_capture.c</code></td><td>DBWIN shared memory, kernel driver read</td></tr>
+<tr><td>Driver</td><td><code>cli_driver.c</code></td><td>Kernel driver load/unload, privilege elevation</td></tr>
+<tr><td>Filter</td><td><code>cli_filter.c</code></td><td>Wildcard include/exclude matching</td></tr>
+<tr><td>Output</td><td><code>cli_output.c</code></td><td>Console emit, log files, CSV/XML/text formats</td></tr>
+<tr><td>Boot Log</td><td><code>cli_bootlog.c</code></td><td>Registry config for boot-time driver loading</td></tr>
+<tr><td>Remote</td><td><code>cli_remote.c</code></td><td>TCP socket connect/read for remote monitoring</td></tr>
+</tbody></table>
+<h4>Key Design Decisions</h4>
+<ol>
+<li><strong>Static CRT linking</strong> — No DLL dependencies, runs on any Windows system</li>
+<li><strong>stdout/stderr separation</strong> — Debug output → stdout; errors/status → stderr</li>
+<li><strong>Bounded execution</strong> — <code>--duration</code>, <code>--max-lines</code>, <code>--wait-for</code> ensure guaranteed exit for automation</li>
+<li><strong>Clean output</strong> — <code>--no-banner</code> suppresses noise for pipe/agent consumption</li>
+<li><strong>Machine-readable status</strong> — <code>--status</code> outputs key=value pairs for programmatic checks</li>
+<li><strong>Graceful shutdown</strong> — <code>SetConsoleCtrlHandler</code> ensures clean driver unload on Ctrl+C</li>
+</ol>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Always use <code>--no-banner</code> for scripted/automated use.</strong> Banner text pollutes structured output and confuses parsers.</li>
+<li><strong>Always bound execution</strong> with <code>--duration</code>, <code>--max-lines</code>, or <code>--wait-for</code>. Unbounded capture will run indefinitely.</li>
+<li><strong>Check status before capture</strong> — Use <code>--status</code> to detect if another instance is already running.</li>
+<li><strong>Use <code>--format csv</code> or <code>--format xml</code></strong> when output will be parsed programmatically.</li>
+<li><strong>Prefer <code>--pid-filter</code> or <code>--process-filter</code></strong> over broad capture to reduce noise.</li>
+<li><strong>Run as Administrator only when needed</strong> — kernel and boot logging require elevation; Win32 capture does not.</li>
+<li><strong>Combine bounds for safety</strong> — Use <code>--duration 60 --max-lines 10000</code> together so whichever triggers first wins.</li>
+<li><strong>Use <code>--tail</code></strong> for &quot;what just happened&quot; queries instead of capturing full history.</li>
+</ol>
+<h4>Bundled Resources</h4>
+<table><thead><tr><th>Type</th><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Script</td><td><code>scripts/detect-dbgview.ps1</code></td><td>Locate dbgviewcli.exe on PATH or common directories</td></tr>
+<tr><td>Script</td><td><code>scripts/capture-wrapper.ps1</code></td><td>Safe bounded capture with parameter validation</td></tr>
+<tr><td>Script</td><td><code>scripts/boot-logging-workflow.ps1</code></td><td>End-to-end boot logging lifecycle management</td></tr>
+<tr><td>Reference</td><td><code>references/driver-ioctls.md</code></td><td>Kernel driver IOCTL codes and buffer structures</td></tr>
+<tr><td>Reference</td><td><code>references/output-formats.md</code></td><td>Text/CSV/XML output format specifications</td></tr>
+<tr><td>Reference</td><td><code>references/remote-protocol.md</code></td><td>TCP remote monitoring wire protocol</td></tr>
+</tbody></table>
+<h4>Troubleshooting</h4>
+<table><thead><tr><th>Issue</th><th>Resolution</th></tr></thead><tbody>
+<tr><td>&quot;Access denied&quot; on kernel capture</td><td>Run as Administrator</td></tr>
+<tr><td>No output from Win32 capture</td><td>Verify target app uses <code>OutputDebugString</code>; check no debugger is attached</td></tr>
+<tr><td>Another instance running</td><td>Use <code>--status</code> to check; use <code>--quit</code> to terminate existing GUI instance</td></tr>
+<tr><td>Boot logging not capturing</td><td>Ensure <code>--boot-enable</code> was run as admin; driver must be in System32\Drivers</td></tr>
+<tr><td>Remote connection fails</td><td>Verify target has DbgView running with remote enabled on ports 2020-2030</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/debugview</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/debugview" aria-label="Copy install debugview">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/debugview</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/debugview/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

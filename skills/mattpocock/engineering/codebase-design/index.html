@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>codebase-design — Aidentity</title>
+<meta name="description" content="Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/codebase-design/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="codebase-design — Aidentity">
+<meta property="og:description" content="Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/codebase-design/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"codebase-design","description":"Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/codebase-design/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=design">design</a><span>/</span>codebase-design
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>codebase-design</h1>
+      <p class="summary">Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=design">design</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Codebase Design</h3>
+<p>Design <strong>deep modules</strong>: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface. Use this language and these principles wherever code is being designed or restructured. The aim is leverage for callers, locality for maintainers, and testability for everyone.</p>
+<h4>Glossary</h4>
+<p>Use these terms exactly: don&#39;t substitute &quot;component,&quot; &quot;service,&quot; &quot;API,&quot; or &quot;boundary.&quot; Consistent language is the whole point.</p>
+<p><strong>Module</strong>: anything with an interface and an implementation. Deliberately scale-agnostic: a function, class, package, or tier-spanning slice. _Avoid_: unit, component, service.</p>
+<p><strong>Interface</strong>: everything a caller must know to use the module correctly: the type signature, but also invariants, ordering constraints, error modes, required configuration, and performance characteristics. _Avoid_: API, signature (too narrow, they refer only to the type-level surface).</p>
+<p><strong>Implementation</strong>: what&#39;s inside a module, its body of code. Distinct from <strong>Adapter</strong>: a thing can be a small adapter with a large implementation (a Postgres repo) or a large adapter with a small implementation (an in-memory fake). Reach for &quot;adapter&quot; when the seam is the topic; &quot;implementation&quot; otherwise.</p>
+<p><strong>Depth</strong>: leverage at the interface. The amount of behaviour a caller (or test) can exercise per unit of interface they have to learn. A module is <strong>deep</strong> when a large amount of behaviour sits behind a small interface, <strong>shallow</strong> when the interface is nearly as complex as the implementation.</p>
+<p><strong>Seam</strong> _(Michael Feathers)_: a place where you can alter behaviour without editing in that place; the <em>location</em> at which a module&#39;s interface lives. Where to put the seam is its own design decision, distinct from what goes behind it. _Avoid_: boundary (overloaded with DDD&#39;s bounded context).</p>
+<p><strong>Adapter</strong>: a concrete thing that satisfies an interface at a seam. Describes <em>role</em> (what slot it fills), not substance (what&#39;s inside).</p>
+<p><strong>Leverage</strong>: what callers get from depth. More capability per unit of interface they learn. One implementation pays back across N call sites and M tests.</p>
+<p><strong>Locality</strong>: what maintainers get from depth. Change, bugs, knowledge, and verification concentrate in one place rather than spreading across callers. Fix once, fixed everywhere.</p>
+<h4>Deep vs shallow</h4>
+<p><strong>Deep module</strong> = small interface + lots of implementation:</p>
+<p><pre><code>┌─────────────────────┐
+│   Small Interface   │  ← Few methods, simple params
+├─────────────────────┤
+│                     │
+│  Deep Implementation│  ← Complex logic hidden
+│                     │
+└─────────────────────┘</code></pre></p>
+<p><strong>Shallow module</strong> = large interface + little implementation (avoid):</p>
+<p><pre><code>┌─────────────────────────────────┐
+│       Large Interface           │  ← Many methods, complex params
+├─────────────────────────────────┤
+│  Thin Implementation            │  ← Just passes through
+└─────────────────────────────────┘</code></pre></p>
+<p>When designing an interface, ask:</p>
+<ul>
+<li>Can I reduce the number of methods?</li>
+<li>Can I simplify the parameters?</li>
+<li>Can I hide more complexity inside?</li>
+</ul>
+<h4>Principles</h4>
+<ul>
+<li><strong>Depth is a property of the interface, not the implementation.</strong> A deep module can be internally composed of small, mockable, swappable parts; they just aren&#39;t part of the interface. A module can have <strong>internal seams</strong> (private to its implementation, used by its own tests) as well as the <strong>external seam</strong> at its interface.</li>
+<li><strong>The deletion test.</strong> Imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.</li>
+<li><strong>The interface is the test surface.</strong> Callers and tests cross the same seam. If you want to test <em>past</em> the interface, the module is probably the wrong shape.</li>
+<li><strong>One adapter means a hypothetical seam. Two adapters means a real one.</strong> Don&#39;t introduce a seam unless something actually varies across it.</li>
+</ul>
+<h4>Designing for testability</h4>
+<p>Good interfaces make testing natural:</p>
+<ol>
+<li><strong>Accept dependencies, don&#39;t create them.</strong></li>
+</ol>
+<p>   <pre><code>   // Testable
+   function processOrder(order, paymentGateway) {}
+
+   // Hard to test
+   function processOrder(order) {
+     const gateway = new StripeGateway();
+   }
+   </code></pre></p>
+<ol>
+<li><strong>Return results, don&#39;t produce side effects.</strong></li>
+</ol>
+<p>   <pre><code>   // Testable
+   function calculateDiscount(cart): Discount {}
+
+   // Hard to test
+   function applyDiscount(cart): void {
+     cart.total -= discount;
+   }
+   </code></pre></p>
+<ol>
+<li><strong>Small surface area.</strong> Fewer methods = fewer tests needed. Fewer params = simpler test setup.</li>
+</ol>
+<h4>Relationships</h4>
+<ul>
+<li>A <strong>Module</strong> has exactly one <strong>Interface</strong> (the surface it presents to callers and tests).</li>
+<li><strong>Depth</strong> is a property of a <strong>Module</strong>, measured against its <strong>Interface</strong>.</li>
+<li>A <strong>Seam</strong> is where a <strong>Module</strong>&#39;s <strong>Interface</strong> lives.</li>
+<li>An <strong>Adapter</strong> sits at a <strong>Seam</strong> and satisfies the <strong>Interface</strong>.</li>
+<li><strong>Depth</strong> produces <strong>Leverage</strong> for callers and <strong>Locality</strong> for maintainers.</li>
+</ul>
+<h4>Rejected framings</h4>
+<ul>
+<li><strong>Depth as ratio of implementation-lines to interface-lines</strong> (Ousterhout): rewards padding the implementation. We use depth-as-leverage instead.</li>
+<li><strong>&quot;Interface&quot; as the TypeScript <code>interface</code> keyword or a class&#39;s public methods</strong>: too narrow: interface here includes every fact a caller must know.</li>
+<li><strong>&quot;Boundary&quot;</strong>: overloaded with DDD&#39;s bounded context. Say <strong>seam</strong> or <strong>interface</strong>.</li>
+</ul>
+<h4>Going deeper</h4>
+<ul>
+<li><strong>Deepening a cluster given its dependencies</strong>, see [DEEPENING.md](DEEPENING.md): dependency categories, seam discipline, and replace-don&#39;t-layer testing.</li>
+<li><strong>Exploring alternative interfaces</strong>, see [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md): spin up parallel sub-agents to design the interface several radically different ways, then compare on depth, locality, and seam placement.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/anthropic-official/canvas-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="canvas-design create beautiful visual art in .png and .pdf documents using design philosophy. you should use this skill when the user asks to create a poster, piece of art, design, or other static piece. create original visual designs, never copying existing artists&#39; work to avoid copyright violations. design design anthropics/skills">
+  <span>
+    <span class="r-name">canvas-design</span>
+    <span class="r-desc">Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists&#39; work to avoid copyright violations.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../../skills/anthropic-official/frontend-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="frontend-design guidance for distinctive, intentional visual design when building new ui or reshaping an existing one. helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults. design design frontend anthropics/skills">
+  <span>
+    <span class="r-name">frontend-design</span>
+    <span class="r-desc">Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/code-review/index.html"
+     data-source="mattpocock"
+     data-category="code-review"
+     data-search="code-review review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: standards (does the code follow this repo&#39;s documented coding standards?) and spec (does the code match what the originating issue/spec asked for?). runs both reviews in parallel sub-agents and reports them side by side. use when the user wants to review a branch, a pr, work-in-progress changes, or asks to &quot;review since x&quot;. code-review code-review mattpocock/skills">
+  <span>
+    <span class="r-name">code-review</span>
+    <span class="r-desc">Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo&#39;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/codebase-design</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/codebase-design" aria-label="Copy install codebase-design">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>design</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/codebase-design</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/codebase-design/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>requesting-code-review — Aidentity</title>
+<meta name="description" content="Use when completing tasks, implementing major features, or before merging to verify work meets requirements">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/requesting-code-review/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="requesting-code-review — Aidentity">
+<meta property="og:description" content="Use when completing tasks, implementing major features, or before merging to verify work meets requirements">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/requesting-code-review/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"requesting-code-review","description":"Use when completing tasks, implementing major features, or before merging to verify work meets requirements","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/requesting-code-review/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=code-review">code-review</a><span>/</span>requesting-code-review
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>requesting-code-review</h1>
+      <p class="summary">Use when completing tasks, implementing major features, or before merging to verify work meets requirements</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=code-review">code-review</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Requesting Code Review</h3>
+<p>Dispatch a code reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session&#39;s history.</p>
+<p><strong>Core principle:</strong> Review early, review often.</p>
+<h4>When to Request Review</h4>
+<p><strong>Mandatory:</strong></p>
+<ul>
+<li>After each task in subagent-driven development</li>
+<li>After completing major feature</li>
+<li>Before merge to main</li>
+</ul>
+<p><strong>Optional but valuable:</strong></p>
+<ul>
+<li>When stuck (fresh perspective)</li>
+<li>Before refactoring (baseline check)</li>
+<li>After fixing complex bug</li>
+</ul>
+<h4>How to Request</h4>
+<p><strong>1. Get git SHAs:</strong></p>
+<p><pre><code>BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
+HEAD_SHA=$(git rev-parse HEAD)</code></pre></p>
+<p><strong>2. Dispatch code reviewer subagent:</strong></p>
+<p>Dispatch a <code>general-purpose</code> subagent, filling the template at [code-reviewer.md](code-reviewer.md)</p>
+<p><strong>Placeholders:</strong></p>
+<ul>
+<li><code>{DESCRIPTION}</code> - Brief summary of what you built</li>
+<li><code>{PLAN_OR_REQUIREMENTS}</code> - What it should do</li>
+<li><code>{BASE_SHA}</code> - Starting commit</li>
+<li><code>{HEAD_SHA}</code> - Ending commit</li>
+</ul>
+<p><strong>3. Act on feedback:</strong></p>
+<ul>
+<li>Fix Critical issues immediately</li>
+<li>Fix Important issues before proceeding</li>
+<li>Note Minor issues for later</li>
+<li>Push back if reviewer is wrong (with reasoning)</li>
+</ul>
+<h4>Example</h4>
+<p><pre><code>[Just completed Task 2: Add verification function]
+
+You: Let me request code review before proceeding.
+
+BASE_SHA=$(git log --oneline | grep &quot;Task 1&quot; | head -1 | awk &#39;{print $1}&#39;)
+HEAD_SHA=$(git rev-parse HEAD)
+
+[Dispatch code reviewer subagent]
+  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
+  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+  BASE_SHA: a7981ec
+  HEAD_SHA: 3df7661
+
+[Subagent returns]:
+  Strengths: Clean architecture, real tests
+  Issues:
+    Important: Missing progress indicators
+    Minor: Magic number (100) for reporting interval
+  Assessment: Ready to proceed
+
+You: [Fix progress indicators]
+[Continue to Task 3]</code></pre></p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;ll just review the diff myself instead of dispatching a reviewer&quot;</td><td>You&#39;re the coordinator — reviewing the diff inline burns the context window you need to keep driving the work. Dispatch a reviewer subagent: the diff and the evaluation live in its context, and only the findings come back to you.</td></tr>
+<tr><td>&quot;The reviewer needs my whole session history to understand the change&quot;</td><td>Hand it precisely crafted context, never your session&#39;s history. That keeps the reviewer on the work product, not your thought process.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<p><strong>Never:</strong></p>
+<ul>
+<li>Skip review because &quot;it&#39;s simple&quot;</li>
+<li>Ignore Critical issues</li>
+<li>Proceed with unfixed Important issues</li>
+<li>Argue with valid technical feedback</li>
+</ul>
+<p><strong>If reviewer wrong:</strong></p>
+<ul>
+<li>Push back with technical reasoning</li>
+<li>Show code/tests that prove it works</li>
+<li>Request clarification</li>
+</ul>
+<p>See template at: [code-reviewer.md](code-reviewer.md)</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/code-review/index.html"
+     data-source="mattpocock"
+     data-category="code-review"
+     data-search="code-review review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: standards (does the code follow this repo&#39;s documented coding standards?) and spec (does the code match what the originating issue/spec asked for?). runs both reviews in parallel sub-agents and reports them side by side. use when the user wants to review a branch, a pr, work-in-progress changes, or asks to &quot;review since x&quot;. code-review code-review mattpocock/skills">
+  <span>
+    <span class="r-name">code-review</span>
+    <span class="r-desc">Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo&#39;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/receiving-code-review/index.html"
+     data-source="obra-superpowers"
+     data-category="code-review"
+     data-search="receiving-code-review use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation code-review code-review obra/superpowers">
+  <span>
+    <span class="r-name">receiving-code-review</span>
+    <span class="r-desc">Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/brainstorming/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="brainstorming you must use this before any creative work - creating features, building components, adding functionality, or modifying behavior. explores user intent, requirements and design before implementation. general  obra/superpowers">
+  <span>
+    <span class="r-name">brainstorming</span>
+    <span class="r-desc">You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/requesting-code-review</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/requesting-code-review" aria-label="Copy install requesting-code-review">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>code-review</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/requesting-code-review</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/requesting-code-review/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

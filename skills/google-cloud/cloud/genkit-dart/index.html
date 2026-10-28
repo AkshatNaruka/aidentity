@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>developing-genkit-dart — Aidentity</title>
+<meta name="description" content="Generates code and provides documentation for the Genkit Dart SDK. Use when the user asks to build AI agents in Dart, use Genkit flows, or integrate LLMs into Dart/Flutter applications.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-dart/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="developing-genkit-dart — Aidentity">
+<meta property="og:description" content="Generates code and provides documentation for the Genkit Dart SDK. Use when the user asks to build AI agents in Dart, use Genkit flows, or integrate LLMs into Dart/Flutter applications.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-dart/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"developing-genkit-dart","description":"Generates code and provides documentation for the Genkit Dart SDK. Use when the user asks to build AI agents in Dart, use Genkit flows, or integrate LLMs into Dart/Flutter applications.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/genkit-dart/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>developing-genkit-dart
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>developing-genkit-dart</h1>
+      <p class="summary">Generates code and provides documentation for the Genkit Dart SDK. Use when the user asks to build AI agents in Dart, use Genkit flows, or integrate LLMs into Dart/Flutter applications.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Genkit Dart</h3>
+<p>Genkit Dart is an AI SDK for Dart that provides a unified interface for code generation, structured outputs, tools, flows, and AI agents.</p>
+<h4>Core Features and Usage</h4>
+<p>If you need help with initializing Genkit (<code>Genkit()</code>), Generation (<code>ai.generate</code>), Tooling (<code>ai.defineTool</code>), Flows (<code>ai.defineFlow</code>), Embeddings (<code>ai.embedMany</code>), streaming, or calling remote flow endpoints, please load the core framework reference:</p>
+<p>[references/genkit.md](references/genkit.md)</p>
+<h4>Prompts (Dotprompt)</h4>
+<p><code>.prompt</code> files keep prompt content out of Dart code with YAML frontmatter plus a</p>
+<p>Handlebars template. See [references/dotprompt.md](references/dotprompt.md):</p>
+<p><code>promptDir</code>, <code>ai.prompt()</code> (call/stream/render), variants, partials, named</p>
+<p>schemas via <code>defineSchema</code>, and the <code>tools</code>/<code>maxTurns</code>/<code>returnToolRequests</code>/<code>use</code></p>
+<p>(middleware) frontmatter fields. A <code>.prompt</code> file can also back an agent directly</p>
+<p>via <code>definePromptAgent</code>.</p>
+<h4>Agents</h4>
+<p>Genkit Dart has an <strong>agent</strong> API for persistent, multi-turn conversations</p>
+<p>(sessions, snapshots, interrupts, branching, background execution, custom state,</p>
+<p>artifacts, and multi-agent delegation). Server APIs come from</p>
+<p><code>package:genkit/genkit.dart</code> and the browser/HTTP client from</p>
+<p><code>package:genkit/client.dart</code>. The <code>remoteAgent</code> client works from any Dart app,</p>
+<p>including <strong>Flutter</strong>, and the backend is fully interchangeable — it can talk to</p>
+<p>a Genkit agent implemented in Dart, JS/TypeScript, or Go over the same HTTP</p>
+<p>protocol. A few Dart specifics: interrupts are modeled as tools that call</p>
+<p><code>ctx.interrupt(...)</code> (there is no <code>defineInterrupt</code>), sub-agent delegation uses</p>
+<p>the <code>agents()</code> middleware from <code>package:genkit_middleware</code>, and there is no</p>
+<p><code>artifacts()</code> middleware yet (define artifact tools directly).</p>
+<p>For more details see:</p>
+<ul>
+<li>[Agents](references/agents.md): defining/serving an agent and client-managed state (start here).</li>
+<li>[Sessions &amp; persistence](references/agents-sessions.md): session stores (<code>InMemorySessionStore</code>/<code>FileSessionStore</code>/<code>FirestoreSessionStore</code>).</li>
+<li>[Human-in-the-loop / interrupts](references/agents-human-in-the-loop.md): pausing for approval/input via <code>ctx.interrupt</code> and resuming.</li>
+<li>[Branching](references/agents-branching.md): forking a conversation from a snapshot.</li>
+<li>[Background agents](references/agents-background.md): detaching long-running turns and polling.</li>
+<li>[Working with state](references/agents-state.md): typed custom session state, auto-synced to the client.</li>
+<li>[Artifacts](references/agents-artifacts.md): producing and reading named deliverables.</li>
+<li>[Multi-agent orchestration](references/agents-multi-agent.md): delegating to sub-agents with the <code>agents()</code> middleware.</li>
+<li>[Advanced custom agents](references/agents-custom.md): <code>defineCustomAgent</code> for full turn control.</li>
+<li>[Deploying agents](references/agents-deployment.md): serving agents over HTTP with <code>genkit_shelf</code> (multiple agents, CORS).</li>
+</ul>
+<h4>Genkit CLI (recommended)</h4>
+<p><code>genkit start</code> unintrusively wraps any Dart program that uses the Genkit library, running it unchanged while capturing traces from every Genkit action so you can prove tools were actually called and inspect model I/O from the terminal, even for headless checks. It forwards stdio, so interactive CLI tools that rely on stdin/stdout work without issues. Running the app directly (<code>dart run</code>) skips trace capture, so you&#39;re debugging blind. Check install with <code>genkit --version</code>.</p>
+<p><strong>Installation:</strong></p>
+<p><pre><code>curl -sL cli.genkit.dev | bash # Native CLI
+# OR
+npm install -g genkit-cli # Via npm
+# OR run commands directly with npx without a global install (prefix every genkit command):
+# npx genkit-cli start -- dart run main.dart</code></pre></p>
+<p><strong>Primary pattern (default):</strong> prefix <code>genkit start --</code> to your normal run command. This collects telemetry from any Genkit code your program runs, whether triggered from the dev UI, your own web server/web UI, or a plain script. Starts the Developer UI (usually <a href="http://localhost:4000" rel="noopener">http://localhost:4000</a>) for running flows, model and agent playground, and browsing traces:</p>
+<p><pre><code>genkit start -- dart run main.dart
+genkit start --noui -- dart run main.dart   # same, without the Dev UI (still a persistent server)</code></pre></p>
+<p><code>genkit start</code> runs until you stop it with Ctrl+C. That is expected and correct for the common cases: a server your web/mobile app calls, or an interactive CLI you exit yourself. <code>--noui</code> only drops the Dev UI; it is <strong>not</strong> a one-shot command and will not exit on its own. Do <strong>not</strong> use <code>genkit start</code> as a blocking step in automated/non-interactive contexts; use <code>flow:run</code> (below) for that.</p>
+<p><strong>Non-interactive use (agents/CI):</strong> add the global <code>--non-interactive</code> flag before <code>--</code> so the CLI uses defaults and never blocks on a prompt (e.g. the first-run analytics notice): <code>genkit start --non-interactive -- dart run main.dart</code> (works with <code>flow:run</code> too).</p>
+<p><strong>Run a flow (<code>flow:run</code>):</strong> invoke a specific flow by name from the CLI. Append your run command after <code>--</code> to spin up the runtime just for this run (the command runs as-is to register your flows):</p>
+<p><pre><code>genkit flow:run myFlow &#39;{&quot;data&quot;: &quot;input&quot;}&#39; -- dart run main.dart</code></pre></p>
+<p>This is <strong>self-terminating</strong>: it runs the flow once, prints a <code>Trace ID</code>, then exits, so it&#39;s the right choice for a quick, non-interactive check (unlike <code>genkit start</code>). Note: <code>flow:run</code> runs <strong>flows</strong> (<code>ai.defineFlow</code>), not agents; you can&#39;t <code>flow:run</code> an agent (<code>ai.defineAgent</code>) directly. To exercise an agent from the CLI, wrap one turn in a throwaway flow and run that (see [Agents](references/agents.md)). Traces for this run can be inspected using the trace commands below.</p>
+<p><strong>Debugging with traces:</strong> the fastest way to see prompts, model inputs/outputs, tool calls, latencies, and errors. Inspect from the terminal after any run under <code>genkit start</code>:</p>
+<p><pre><code>genkit trace:list                        # find recent trace IDs
+genkit trace:get &lt;traceId&gt;               # full trace details (inputs, outputs, tool calls, errors)
+genkit trace:get &lt;traceId&gt; --format json # machine-readable JSON, safe to pipe into jq or other parsers</code></pre></p>
+<p>For machine-readable output, pass <code>--format json</code> to get clean JSON you can pipe into <code>jq</code> or other parsers. The <strong>default</strong> output is human-oriented (banner/log lines, possible truncation on large traces), so don&#39;t pipe that form directly; use <code>--format json</code>, grep, or the Dev UI trace viewer.</p>
+<p><strong>Documentation:</strong></p>
+<p><pre><code>genkit docs:search &quot;streaming&quot; dart
+genkit docs:list dart
+genkit docs:read dart/flows.md</code></pre></p>
+<h4>Plugin Ecosystem</h4>
+<p>Genkit relies on a large suite of plugins to perform generative AI actions, interface with external LLMs, or host web servers.</p>
+<p>When asked to use any given plugin, always verify usage by referring to its corresponding reference below. You should load the reference when you need to know the specific initialization arguments, tools, models, and usage patterns for the plugin:</p>
+<table><thead><tr><th>Plugin Name</th><th>Reference Link</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>genkit_google_genai</code></td><td>[references/genkit_google_genai.md](references/genkit_google_genai.md)</td><td>Load for Google Gemini plugin interface usage.</td></tr>
+<tr><td><code>genkit_anthropic</code></td><td>[references/genkit_anthropic.md](references/genkit_anthropic.md)</td><td>Load for Anthropic plugin interface for Claude models.</td></tr>
+<tr><td><code>genkit_openai</code></td><td>[references/genkit_openai.md](references/genkit_openai.md)</td><td>Load for OpenAI plugin interface for GPT models, Groq, and custom compatible endpoints.</td></tr>
+<tr><td><code>genkit_middleware</code></td><td>[references/genkit_middleware.md](references/genkit_middleware.md)</td><td>Load for Tooling for specific agentic behavior: <code>filesystem</code>, <code>skills</code>, and <code>toolApproval</code> interrupts.</td></tr>
+<tr><td><code>genkit_mcp</code></td><td>[references/genkit_mcp.md](references/genkit_mcp.md)</td><td>Load for Model Context Protocol integration (Server, Host, and Client capabilities).</td></tr>
+<tr><td><code>genkit_chrome</code></td><td>[references/genkit_chrome.md](references/genkit_chrome.md)</td><td>Load for Running Gemini Nano locally inside the Chrome browser using the Prompt API.</td></tr>
+<tr><td><code>genkit_shelf</code></td><td>[references/genkit_shelf.md](references/genkit_shelf.md)</td><td>Load for Integrating Genkit Flow actions over HTTP using Dart Shelf.</td></tr>
+<tr><td><code>genkit_firebase_ai</code></td><td>[references/genkit_firebase_ai.md](references/genkit_firebase_ai.md)</td><td>Load for Firebase AI plugin interface (Gemini API via Vertex AI).</td></tr>
+</tbody></table>
+<h4>External Dependencies</h4>
+<p>Whenever you define schemas mapping inside of Tools, Flows, and Prompts, you must use the <a href="https://pub.dev/packages/schemantic" rel="noopener">schemantic</a> library.</p>
+<p>To learn how to use schemantic, ensure you read [references/schemantic.md](references/schemantic.md) for how to implement type safe generated Dart code. This is particularly relevant when you encounter symbols like <code>@Schema()</code>, <code>SchemanticType</code>, or classes with the <code>$</code> prefix. Genkit Dart uses schemantic for all of its data models so it&#39;s a CRITICAL skill to understand for using Genkit Dart.</p>
+<h4>Best Practices</h4>
+<ul>
+<li><strong>Agent or flow?</strong> If the task is conversational, multi-turn, or described as &quot;an agent&quot;, &quot;assistant&quot;, or &quot;chatbot&quot;, build it with <code>ai.defineAgent</code> (see [Agents](references/agents.md)) rather than hand-rolling a <code>generate</code> + tools loop inside a flow. Reach for a plain flow only for single-shot, stateless generation.</li>
+<li>Always check that code cleanly compiles using <code>dart analyze</code> before generating the final response.</li>
+<li>Always use the Genkit CLI for local development and debugging.</li>
+<li>Verify with traces, not a blind run. Running the app directly (<code>dart run</code>) does not capture dev traces. See the [Genkit CLI](#genkit-cli-recommended) section for how to run your app and capture traces.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/genkit-dart</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/genkit-dart" aria-label="Copy install developing-genkit-dart">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/genkit-dart</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/genkit-dart/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

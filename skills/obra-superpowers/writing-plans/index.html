@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>writing-plans — Aidentity</title>
+<meta name="description" content="Use when you have a spec or requirements for a multi-step task, before touching code">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-plans/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="writing-plans — Aidentity">
+<meta property="og:description" content="Use when you have a spec or requirements for a multi-step task, before touching code">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-plans/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"writing-plans","description":"Use when you have a spec or requirements for a multi-step task, before touching code","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/writing-plans/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>writing-plans
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>writing-plans</h1>
+      <p class="summary">Use when you have a spec or requirements for a multi-step task, before touching code</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Writing Plans</h3>
+<h4>Overview</h4>
+<p>Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.</p>
+<p>Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don&#39;t know good test design very well.</p>
+<p><strong>Announce at start:</strong> &quot;I&#39;m using the writing-plans skill to create the implementation plan.&quot;</p>
+<p><strong>Context:</strong> If working in an isolated worktree, it should have been created via the <code>superpowers:using-git-worktrees</code> skill at execution time.</p>
+<p><strong>Save plans to:</strong> <code>docs/superpowers/plans/YYYY-MM-DD-&lt;feature-name&gt;.md</code></p>
+<ul>
+<li>(User preferences for plan location override this default)</li>
+</ul>
+<h4>Scope Check</h4>
+<p>If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn&#39;t, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.</p>
+<h4>File Structure</h4>
+<p>Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.</p>
+<ul>
+<li>Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.</li>
+<li>You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.</li>
+<li>Files that change together should live together. Split by responsibility, not by technical layer.</li>
+<li>In existing codebases, follow established patterns. If the codebase uses large files, don&#39;t unilaterally restructure - but if a file you&#39;re modifying has grown unwieldy, including a split in the plan is reasonable.</li>
+</ul>
+<p>This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.</p>
+<h4>Task Right-Sizing</h4>
+<p>A task is the smallest unit that carries its own test cycle and is worth a</p>
+<p>fresh reviewer&#39;s gate. When drawing task boundaries: fold setup,</p>
+<p>configuration, scaffolding, and documentation steps into the task whose</p>
+<p>deliverable needs them; split only where a reviewer could meaningfully</p>
+<p>reject one task while approving its neighbor. Each task ends with an</p>
+<p>independently testable deliverable.</p>
+<h4>Bite-Sized Task Granularity</h4>
+<p><strong>Each step is one action (2-5 minutes):</strong></p>
+<ul>
+<li>&quot;Write the failing test&quot; - step</li>
+<li>&quot;Run it to make sure it fails&quot; - step</li>
+<li>&quot;Implement the minimal code to make the test pass&quot; - step</li>
+<li>&quot;Run the tests and make sure they pass&quot; - step</li>
+<li>&quot;Commit&quot; - step</li>
+</ul>
+<h4>Plan Document Header</h4>
+<p><strong>Every plan MUST start with this header:</strong></p>
+<p><pre><code># [Feature Name] Implementation Plan
+
+&gt; **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** [One sentence describing what this builds]
+
+**Architecture:** [2-3 sentences about approach]
+
+**Tech Stack:** [Key technologies/libraries]
+
+**Spec:** [path to the spec/design doc this plan implements — the plan
+argues from the spec, so the spec travels with it; executors read both]
+
+## Global Constraints
+
+[The spec&#39;s project-wide requirements — version floors, dependency limits,
+naming and copy rules, platform requirements — one line each, with exact
+values copied verbatim from the spec. Every task&#39;s requirements implicitly
+include this section.]
+
+---</code></pre></p>
+<h4>Task Structure</h4>
+<p>`<pre><code>### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
+
+**Interfaces:**
+- Consumes: [what this task uses from earlier tasks — exact signatures]
+- Produces: [what later tasks rely on — exact function names, parameter
+  and return types. A task&#39;s implementer sees only their own task; this
+  block is how they learn the names and types neighboring tasks use.]
+
+- [ ] **Step 1: Write the failing test**
+</code></pre>python</p>
+<p>def test_specific_behavior():</p>
+<p>    result = function(input)</p>
+<p>    assert result == expected</p>
+<p><pre><code>
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `pytest tests/path/test.py::test_name -v`
+Expected: FAIL with &quot;function not defined&quot;
+
+- [ ] **Step 3: Write minimal implementation**
+</code></pre>python</p>
+<p>def function(input):</p>
+<p>    return expected</p>
+<p><pre><code>
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `pytest tests/path/test.py::test_name -v`
+Expected: PASS
+
+- [ ] **Step 5: Commit**
+</code></pre>bash</p>
+<p>git add tests/path/test.py src/path/file.py</p>
+<p>git commit -m &quot;feat: add specific feature&quot;</p>
+<p><pre><code></code></pre>`</p>
+<h4>No Placeholders</h4>
+<p>Every step must contain the actual content an engineer needs. These are <strong>plan failures</strong> — never write them:</p>
+<ul>
+<li>&quot;TBD&quot;, &quot;TODO&quot;, &quot;implement later&quot;, &quot;fill in details&quot;</li>
+<li>&quot;Add appropriate error handling&quot; / &quot;add validation&quot; / &quot;handle edge cases&quot;</li>
+<li>&quot;Write tests for the above&quot; (without actual test code)</li>
+<li>&quot;Similar to Task N&quot; (repeat the code — the engineer may be reading tasks out of order)</li>
+<li>Steps that describe what to do without showing how (code blocks required for code steps)</li>
+<li>References to types, functions, or methods not defined in any task</li>
+</ul>
+<h4>Self-Review</h4>
+<p>After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.</p>
+<p><strong>1. Spec coverage:</strong> Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.</p>
+<p><strong>2. Placeholder scan:</strong> Search your plan for red flags — any of the patterns from the &quot;No Placeholders&quot; section above. Fix them.</p>
+<p><strong>3. Type consistency:</strong> Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called <code>clearLayers()</code> in Task 3 but <code>clearFullLayers()</code> in Task 7 is a bug.</p>
+<p>If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.</p>
+<h4>Execution Handoff</h4>
+<p>After saving the plan, offer execution choice:</p>
+<p><strong>&quot;Plan complete and saved to <code>docs/superpowers/plans/&lt;filename&gt;.md</code>. Two execution options:</strong></p>
+<p><strong>1. Subagent-Driven (recommended)</strong> - I dispatch a fresh subagent per task, review between tasks, fast iteration</p>
+<p><strong>2. Inline Execution</strong> - Execute tasks in this session using executing-plans, batch execution with checkpoints</p>
+<p><strong>Which approach?&quot;</strong></p>
+<p><strong>If Subagent-Driven chosen:</strong></p>
+<ul>
+<li><strong>REQUIRED SUB-SKILL:</strong> Use superpowers:subagent-driven-development</li>
+<li>Fresh subagent per task + two-stage review</li>
+</ul>
+<p><strong>If Inline Execution chosen:</strong></p>
+<ul>
+<li><strong>REQUIRED SUB-SKILL:</strong> Use superpowers:executing-plans</li>
+<li>Batch execution with checkpoints for review</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/writing-plans</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/writing-plans" aria-label="Copy install writing-plans">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/writing-plans</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/writing-plans/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

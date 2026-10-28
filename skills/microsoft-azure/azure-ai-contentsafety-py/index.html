@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-ai-contentsafety-py — Aidentity</title>
+<meta name="description" content="Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-contentsafety-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-ai-contentsafety-py — Aidentity">
+<meta property="og:description" content="Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-contentsafety-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-ai-contentsafety-py","description":"Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: \"azure-ai-contentsafety\", \"ContentSafetyClient\", \"content moderation\", \"harmful content\", \"text analysis\", \"image analysis\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-ai-contentsafety-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-ai-contentsafety-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-ai-contentsafety-py</h1>
+      <p class="summary">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure AI Content Safety SDK for Python</h3>
+<p>Detect harmful user-generated and AI-generated content in applications.</p>
+<h4>Installation</h4>
+<p><pre><code>pip install azure-ai-contentsafety</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>CONTENT_SAFETY_ENDPOINT=https://&lt;resource&gt;.cognitiveservices.azure.com  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production
+CONTENT_SAFETY_KEY=&lt;your-api-key&gt;  # Only required for the legacy API-key auth path below</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<p><pre><code>import os
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+from azure.ai.contentsafety import ContentSafetyClient
+from azure.ai.contentsafety.models import AnalyzeTextOptions
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with ContentSafetyClient(
+    endpoint=os.environ[&quot;CONTENT_SAFETY_ENDPOINT&quot;],
+    credential=credential,
+) as client:
+    response = client.analyze_text(AnalyzeTextOptions(text=&quot;Hello, world!&quot;))</code></pre></p>
+<h5>Legacy: API Key (existing keyed deployments)</h5>
+<p>New code should use <code>DefaultAzureCredential</code> above. Use <code>AzureKeyCredential</code> only if you have an existing keyed deployment that hasn&#39;t been migrated to Entra ID yet — for example, regulated environments still completing their Entra rollout.</p>
+<p><pre><code>import os
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.contentsafety import ContentSafetyClient
+from azure.ai.contentsafety.models import AnalyzeTextOptions
+
+with ContentSafetyClient(
+    endpoint=os.environ[&quot;CONTENT_SAFETY_ENDPOINT&quot;],
+    credential=AzureKeyCredential(os.environ[&quot;CONTENT_SAFETY_KEY&quot;]),
+) as client:
+    response = client.analyze_text(AnalyzeTextOptions(text=&quot;Hello, world!&quot;))</code></pre></p>
+<p>The <code>BlocklistClient</code> accepts the same <code>AzureKeyCredential</code> if you also need to manage blocklists with a key.</p>
+<h4>Analyze Text</h4>
+<p><pre><code>from azure.ai.contentsafety import ContentSafetyClient
+from azure.ai.contentsafety.models import AnalyzeTextOptions, TextCategory
+from azure.identity import DefaultAzureCredential
+
+with ContentSafetyClient(endpoint, DefaultAzureCredential()) as client:
+    request = AnalyzeTextOptions(text=&quot;Your text content to analyze&quot;)
+    response = client.analyze_text(request)
+
+    # Check each category
+    for category in [TextCategory.HATE, TextCategory.SELF_HARM, 
+                     TextCategory.SEXUAL, TextCategory.VIOLENCE]:
+        result = next((r for r in response.categories_analysis 
+                       if r.category == category), None)
+        if result:
+            print(f&quot;{category}: severity {result.severity}&quot;)</code></pre></p>
+<h4>Analyze Image</h4>
+<p><pre><code>from azure.ai.contentsafety import ContentSafetyClient
+from azure.ai.contentsafety.models import AnalyzeImageOptions, ImageData
+from azure.identity import DefaultAzureCredential
+import base64
+
+with ContentSafetyClient(endpoint, DefaultAzureCredential()) as client:
+    # From file
+    with open(&quot;image.jpg&quot;, &quot;rb&quot;) as f:
+        image_data = base64.b64encode(f.read()).decode(&quot;utf-8&quot;)
+
+    request = AnalyzeImageOptions(
+        image=ImageData(content=image_data)
+    )
+
+    response = client.analyze_image(request)
+
+    for result in response.categories_analysis:
+        print(f&quot;{result.category}: severity {result.severity}&quot;)</code></pre></p>
+<h5>Image from URL</h5>
+<p><pre><code>from azure.ai.contentsafety.models import AnalyzeImageOptions, ImageData
+
+request = AnalyzeImageOptions(
+    image=ImageData(blob_url=&quot;https://example.com/image.jpg&quot;)
+)
+
+response = client.analyze_image(request)</code></pre></p>
+<h4>Text Blocklist Management</h4>
+<h5>Create Blocklist</h5>
+<p><pre><code>from azure.ai.contentsafety import BlocklistClient
+from azure.ai.contentsafety.models import TextBlocklist
+from azure.identity import DefaultAzureCredential
+
+with BlocklistClient(endpoint, DefaultAzureCredential()) as blocklist_client:
+    blocklist = TextBlocklist(
+        blocklist_name=&quot;my-blocklist&quot;,
+        description=&quot;Custom terms to block&quot;
+    )
+
+    result = blocklist_client.create_or_update_text_blocklist(
+        blocklist_name=&quot;my-blocklist&quot;,
+        options=blocklist
+    )</code></pre></p>
+<h5>Add Block Items</h5>
+<p><pre><code>from azure.ai.contentsafety.models import AddOrUpdateTextBlocklistItemsOptions, TextBlocklistItem
+
+items = AddOrUpdateTextBlocklistItemsOptions(
+    blocklist_items=[
+        TextBlocklistItem(text=&quot;blocked-term-1&quot;),
+        TextBlocklistItem(text=&quot;blocked-term-2&quot;)
+    ]
+)
+
+result = blocklist_client.add_or_update_blocklist_items(
+    blocklist_name=&quot;my-blocklist&quot;,
+    options=items
+)</code></pre></p>
+<h5>Analyze with Blocklist</h5>
+<p><pre><code>from azure.ai.contentsafety.models import AnalyzeTextOptions
+
+request = AnalyzeTextOptions(
+    text=&quot;Text containing blocked-term-1&quot;,
+    blocklist_names=[&quot;my-blocklist&quot;],
+    halt_on_blocklist_hit=True
+)
+
+response = client.analyze_text(request)
+
+if response.blocklists_match:
+    for match in response.blocklists_match:
+        print(f&quot;Blocked: {match.blocklist_item_text}&quot;)</code></pre></p>
+<h4>Severity Levels</h4>
+<p>Text analysis returns 4 severity levels (0, 2, 4, 6) by default. For 8 levels (0-7):</p>
+<p><pre><code>from azure.ai.contentsafety.models import AnalyzeTextOptions, AnalyzeTextOutputType
+
+request = AnalyzeTextOptions(
+    text=&quot;Your text&quot;,
+    output_type=AnalyzeTextOutputType.EIGHT_SEVERITY_LEVELS
+)</code></pre></p>
+<h4>Harm Categories</h4>
+<table><thead><tr><th>Category</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>Hate</code></td><td>Attacks based on identity (race, religion, gender, etc.)</td></tr>
+<tr><td><code>Sexual</code></td><td>Sexual content, relationships, anatomy</td></tr>
+<tr><td><code>Violence</code></td><td>Physical harm, weapons, injury</td></tr>
+<tr><td><code>SelfHarm</code></td><td>Self-injury, suicide, eating disorders</td></tr>
+</tbody></table>
+<h4>Severity Scale</h4>
+<table><thead><tr><th>Level</th><th>Text Range</th><th>Image Range</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>0</td><td>Safe</td><td>Safe</td><td>No harmful content</td></tr>
+<tr><td>2</td><td>Low</td><td>Low</td><td>Mild references</td></tr>
+<tr><td>4</td><td>Medium</td><td>Medium</td><td>Moderate content</td></tr>
+<tr><td>6</td><td>High</td><td>High</td><td>Severe content</td></tr>
+</tbody></table>
+<h4>Client Types</h4>
+<table><thead><tr><th>Client</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>ContentSafetyClient</code></td><td>Analyze text and images</td></tr>
+<tr><td><code>BlocklistClient</code></td><td>Manage custom blocklists</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.ai.contentsafety</code> sync clients with <code>azure.ai.contentsafety.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with ContentSafetyClient(...) as client:</code> (sync) or <code>async with ContentSafetyClient(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use blocklists</strong> for domain-specific terms</li>
+<li><strong>Set severity thresholds</strong> appropriate for your use case</li>
+<li><strong>Handle multiple categories</strong> — content can be harmful in multiple ways</li>
+<li><strong>Use halt_on_blocklist_hit</strong> for immediate rejection</li>
+<li><strong>Log analysis results</strong> for audit and improvement</li>
+<li><strong>Consider 8-severity mode</strong> for finer-grained control</li>
+<li><strong>Pre-moderate AI outputs</strong> before showing to users</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-projects-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-projects-py build ai applications using the azure ai projects python sdk (azure-ai-projects). use when working with foundry project clients, creating versioned agents with promptagentdefinition, running evaluations, managing connections/deployments/datasets/indexes, or using openai-compatible clients. this is the high-level foundry sdk - for low-level agent operations, use azure-ai-agents-python skill. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-projects-py</span>
+    <span class="r-desc">Build AI applications using the Azure AI Projects Python SDK (azure-ai-projects). Use when working with Foundry project clients, creating versioned agents with PromptAgentDefinition, running evaluations, managing connections/deployments/datasets/indexes, or using OpenAI-compatible clients. This is the high-level Foundry SDK - for low-level agent operations, use azure-ai-agents-python skill.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-ai-contentsafety-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-ai-contentsafety-py" aria-label="Copy install azure-ai-contentsafety-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-ai-contentsafety-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-ai-contentsafety-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

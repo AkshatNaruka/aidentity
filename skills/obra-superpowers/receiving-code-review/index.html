@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>receiving-code-review — Aidentity</title>
+<meta name="description" content="Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/receiving-code-review/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="receiving-code-review — Aidentity">
+<meta property="og:description" content="Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/receiving-code-review/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"receiving-code-review","description":"Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/receiving-code-review/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=code-review">code-review</a><span>/</span>receiving-code-review
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>receiving-code-review</h1>
+      <p class="summary">Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=code-review">code-review</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Code Review Reception</h3>
+<h4>Overview</h4>
+<p>Code review requires technical evaluation, not emotional performance.</p>
+<p><strong>Core principle:</strong> Verify before implementing. Ask before assuming. Technical correctness over social comfort.</p>
+<h4>The Response Pattern</h4>
+<p><pre><code>WHEN receiving code review feedback:
+
+1. READ: Complete feedback without reacting
+2. UNDERSTAND: Restate requirement in own words (or ask)
+3. VERIFY: Check against codebase reality
+4. EVALUATE: Technically sound for THIS codebase?
+5. RESPOND: Technical acknowledgment or reasoned pushback
+6. IMPLEMENT: One item at a time, test each</code></pre></p>
+<h4>Forbidden Responses</h4>
+<p><strong>NEVER:</strong></p>
+<ul>
+<li>&quot;You&#39;re absolutely right!&quot; (explicit instruction-file violation)</li>
+<li>&quot;Great point!&quot; / &quot;Excellent feedback!&quot; (performative)</li>
+<li>&quot;Let me implement that now&quot; (before verification)</li>
+</ul>
+<p><strong>INSTEAD:</strong></p>
+<ul>
+<li>Restate the technical requirement</li>
+<li>Ask clarifying questions</li>
+<li>Push back with technical reasoning if wrong</li>
+<li>Just start working (actions &gt; words)</li>
+</ul>
+<h4>Handling Unclear Feedback</h4>
+<p><pre><code>IF any item is unclear:
+  STOP - do not implement anything yet
+  ASK for clarification on unclear items
+
+WHY: Items may be related. Partial understanding = wrong implementation.</code></pre></p>
+<p><strong>Example:</strong></p>
+<p><pre><code>your human partner: &quot;Fix 1-6&quot;
+You understand 1,2,3,6. Unclear on 4,5.
+
+❌ WRONG: Implement 1,2,3,6 now, ask about 4,5 later
+✅ RIGHT: &quot;I understand items 1,2,3,6. Need clarification on 4 and 5 before proceeding.&quot;</code></pre></p>
+<h4>Source-Specific Handling</h4>
+<h5>From your human partner</h5>
+<ul>
+<li><strong>Trusted</strong> - implement after understanding</li>
+<li><strong>Still ask</strong> if scope unclear</li>
+<li><strong>No performative agreement</strong></li>
+<li><strong>Skip to action</strong> or technical acknowledgment</li>
+</ul>
+<h5>From External Reviewers</h5>
+<p><pre><code>BEFORE implementing:
+  1. Check: Technically correct for THIS codebase?
+  2. Check: Breaks existing functionality?
+  3. Check: Reason for current implementation?
+  4. Check: Works on all platforms/versions?
+  5. Check: Does reviewer understand full context?
+
+IF suggestion seems wrong:
+  Push back with technical reasoning
+
+IF can&#39;t easily verify:
+  Say so: &quot;I can&#39;t verify this without [X]. Should I [investigate/ask/proceed]?&quot;
+
+IF conflicts with your human partner&#39;s prior decisions:
+  Stop and discuss with your human partner first</code></pre></p>
+<p><strong>your human partner&#39;s rule:</strong> &quot;External feedback - be skeptical, but check carefully&quot;</p>
+<h4>YAGNI Check for &quot;Professional&quot; Features</h4>
+<p><pre><code>IF reviewer suggests &quot;implementing properly&quot;:
+  grep codebase for actual usage
+
+  IF unused: &quot;This endpoint isn&#39;t called. Remove it (YAGNI)?&quot;
+  IF used: Then implement properly</code></pre></p>
+<p><strong>your human partner&#39;s rule:</strong> &quot;You and reviewer both report to me. If we don&#39;t need this feature, don&#39;t add it.&quot;</p>
+<h4>Implementation Order</h4>
+<p><pre><code>FOR multi-item feedback:
+  1. Clarify anything unclear FIRST
+  2. Then implement in this order:
+     - Blocking issues (breaks, security)
+     - Simple fixes (typos, imports)
+     - Complex fixes (refactoring, logic)
+  3. Test each fix individually
+  4. Verify no regressions</code></pre></p>
+<h4>When To Push Back</h4>
+<p>Push back when:</p>
+<ul>
+<li>Suggestion breaks existing functionality</li>
+<li>Reviewer lacks full context</li>
+<li>Violates YAGNI (unused feature)</li>
+<li>Technically incorrect for this stack</li>
+<li>Legacy/compatibility reasons exist</li>
+<li>Conflicts with your human partner&#39;s architectural decisions</li>
+</ul>
+<p><strong>How to push back:</strong></p>
+<ul>
+<li>Use technical reasoning, not defensiveness</li>
+<li>Ask specific questions</li>
+<li>Reference working tests/code</li>
+<li>Involve your human partner if architectural</li>
+</ul>
+<p><strong>If you&#39;re uncomfortable pushing back out loud:</strong> Name that tension, then tell your partner about the issue you&#39;ve seen. They&#39;ll appreciate your honesty.</p>
+<h4>Acknowledging Correct Feedback</h4>
+<p>When feedback IS correct:</p>
+<p><pre><code>✅ &quot;Fixed. [Brief description of what changed]&quot;
+✅ &quot;Good catch - [specific issue]. Fixed in [location].&quot;
+✅ [Just fix it and show in the code]
+
+❌ &quot;You&#39;re absolutely right!&quot;
+❌ &quot;Great point!&quot;
+❌ &quot;Thanks for catching that!&quot;
+❌ &quot;Thanks for [anything]&quot;
+❌ ANY gratitude expression</code></pre></p>
+<p><strong>Why no thanks:</strong> Actions speak. Just fix it. The code itself shows you heard the feedback.</p>
+<p><strong>If you catch yourself about to write &quot;Thanks&quot;:</strong> DELETE IT. State the fix instead.</p>
+<h4>Gracefully Correcting Your Pushback</h4>
+<p>If you pushed back and were wrong:</p>
+<p><pre><code>✅ &quot;You were right - I checked [X] and it does [Y]. Implementing now.&quot;
+✅ &quot;Verified this and you&#39;re correct. My initial understanding was wrong because [reason]. Fixing.&quot;
+
+❌ Long apology
+❌ Defending why you pushed back
+❌ Over-explaining</code></pre></p>
+<p>State the correction factually and move on.</p>
+<h4>Common Mistakes</h4>
+<table><thead><tr><th>Mistake</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Performative agreement</td><td>State requirement or just act</td></tr>
+<tr><td>Blind implementation</td><td>Verify against codebase first</td></tr>
+<tr><td>Batch without testing</td><td>One at a time, test each</td></tr>
+<tr><td>Assuming reviewer is right</td><td>Check if breaks things</td></tr>
+<tr><td>Avoiding pushback</td><td>Technical correctness &gt; comfort</td></tr>
+<tr><td>Partial implementation</td><td>Clarify all items first</td></tr>
+<tr><td>Can&#39;t verify, proceed anyway</td><td>State limitation, ask for direction</td></tr>
+</tbody></table>
+<h4>Real Examples</h4>
+<p><strong>Performative Agreement (Bad):</strong></p>
+<p><pre><code>Reviewer: &quot;Remove legacy code&quot;
+❌ &quot;You&#39;re absolutely right! Let me remove that...&quot;</code></pre></p>
+<p><strong>Technical Verification (Good):</strong></p>
+<p><pre><code>Reviewer: &quot;Remove legacy code&quot;
+✅ &quot;Checking... build target is 10.15+, this API needs 13+. Need legacy for backward compat. Current impl has wrong bundle ID - fix it or drop pre-13 support?&quot;</code></pre></p>
+<p><strong>YAGNI (Good):</strong></p>
+<p><pre><code>Reviewer: &quot;Implement proper metrics tracking with database, date filters, CSV export&quot;
+✅ &quot;Grepped codebase - nothing calls this endpoint. Remove it (YAGNI)? Or is there usage I&#39;m missing?&quot;</code></pre></p>
+<p><strong>Unclear Item (Good):</strong></p>
+<p><pre><code>your human partner: &quot;Fix items 1-6&quot;
+You understand 1,2,3,6. Unclear on 4,5.
+✅ &quot;Understand 1,2,3,6. Need clarification on 4 and 5 before implementing.&quot;</code></pre></p>
+<h4>GitHub Thread Replies</h4>
+<p>When replying to inline review comments on GitHub, reply in the comment thread (<code>gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies</code>), not as a top-level PR comment.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/code-review/index.html"
+     data-source="mattpocock"
+     data-category="code-review"
+     data-search="code-review review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: standards (does the code follow this repo&#39;s documented coding standards?) and spec (does the code match what the originating issue/spec asked for?). runs both reviews in parallel sub-agents and reports them side by side. use when the user wants to review a branch, a pr, work-in-progress changes, or asks to &quot;review since x&quot;. code-review code-review mattpocock/skills">
+  <span>
+    <span class="r-name">code-review</span>
+    <span class="r-desc">Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo&#39;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/requesting-code-review/index.html"
+     data-source="obra-superpowers"
+     data-category="code-review"
+     data-search="requesting-code-review use when completing tasks, implementing major features, or before merging to verify work meets requirements code-review code-review obra/superpowers">
+  <span>
+    <span class="r-name">requesting-code-review</span>
+    <span class="r-desc">Use when completing tasks, implementing major features, or before merging to verify work meets requirements</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/brainstorming/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="brainstorming you must use this before any creative work - creating features, building components, adding functionality, or modifying behavior. explores user intent, requirements and design before implementation. general  obra/superpowers">
+  <span>
+    <span class="r-name">brainstorming</span>
+    <span class="r-desc">You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/receiving-code-review</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/receiving-code-review" aria-label="Copy install receiving-code-review">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>code-review</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/receiving-code-review</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/receiving-code-review/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

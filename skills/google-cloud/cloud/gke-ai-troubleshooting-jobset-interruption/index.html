@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-ai-troubleshooting-jobset-interruption — Aidentity</title>
+<meta name="description" content="Diagnoses GKE JobSet interruptions, restarts, and preemptions for AI/ML training workloads autonomously. Use when troubleshooting JobSet restart loops, spot VM preemptions, node readiness failures, host VM issues, or coordinator worker crashes. Don&#39;t use for general GKE cluster creation, basic workload deployment, or non-JobSet application issues.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-ai-troubleshooting-jobset-interruption — Aidentity">
+<meta property="og:description" content="Diagnoses GKE JobSet interruptions, restarts, and preemptions for AI/ML training workloads autonomously. Use when troubleshooting JobSet restart loops, spot VM preemptions, node readiness failures, host VM issues, or coordinator worker crashes. Don&#39;t use for general GKE cluster creation, basic workload deployment, or non-JobSet application issues.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-ai-troubleshooting-jobset-interruption","description":"Diagnoses GKE JobSet interruptions, restarts, and preemptions for AI/ML training workloads autonomously. Use when troubleshooting JobSet restart loops, spot VM preemptions, node readiness failures, host VM issues, or coordinator worker crashes. Don't use for general GKE cluster creation, basic workload deployment, or non-JobSet application issues.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-ai-troubleshooting-jobset-interruption
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-ai-troubleshooting-jobset-interruption</h1>
+      <p class="summary">Diagnoses GKE JobSet interruptions, restarts, and preemptions for AI/ML training workloads autonomously. Use when troubleshooting JobSet restart loops, spot VM preemptions, node readiness failures, host VM issues, or coordinator worker crashes. Don&#39;t use for general GKE cluster creation, basic workload deployment, or non-JobSet application issues.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE JobSet Interruption Troubleshooting</h3>
+<p>Use this skill to systematically diagnose and resolve JobSet interruptions,</p>
+<p>restarts, and preemptions on GKE clusters hosting large-scale AI/ML workloads.</p>
+<h4>⚠️ Prerequisites &amp; Sandbox Rules</h4>
+<ul>
+<li>JobSet metrics package must be enabled in <code>kube-state-metrics</code> for your</li>
+</ul>
+<p>    cluster.</p>
+<ul>
+<li>Cloud Logging and Cloud Monitoring enabled for the Google Cloud Project.</li>
+<li><strong>Autonomous &amp; Sandbox Execution Rule</strong>: If API queries, tools, or commands</li>
+</ul>
+<p>    encounter <code>403 Permission Denied</code>, authentication errors, or network</p>
+<p>    isolation, **do NOT enter authentication or credential troubleshooting</p>
+<p>    loops**. Populate the query templates with the acquired variables</p>
+<p>    (<code>{project_id}</code>, <code>{cluster_name}</code>, <code>{workload_name}</code>, <code>{start_time}</code>,</p>
+<p>    <code>{end_time}</code>), inspect any locally staged telemetry or mock data files if</p>
+<p>    available, and complete the diagnostic workflow and resolution</p>
+<p>    recommendations autonomously.</p>
+<h4>🔍 Diagnostic Workflow</h4>
+<h5>Step 0: Context Acquisition &amp; Time Window Definition</h5>
+<p>Independently gather context using tools, workspace files, environment details,</p>
+<p>or user prompt context:</p>
+<ul>
+<li><strong>Project ID</strong> (<code>{project_id}</code>)</li>
+<li><strong>Cluster Name</strong> (<code>{cluster_name}</code>)</li>
+<li><strong>Workload Name (JobSet Name)</strong> (<code>{workload_name}</code>)</li>
+<li><strong>Workload Namespace</strong> (<code>{namespace}</code>)</li>
+<li><strong>Issue Time</strong> (<code>{issue_time}</code>)</li>
+</ul>
+<p>If specific variables are not explicitly provided by the user, inspect cluster</p>
+<p>resources or logs to determine them, or use the <code>{variable}</code> placeholders</p>
+<p>provided.</p>
+<h5>Time Handling Rules</h5>
+<ol>
+<li><strong>Autonomous Time Window</strong>: If a relative time (e.g., &quot;X minutes ago&quot;) or no</li>
+</ol>
+<p>    exact timestamp is provided, calculate the query window based on current</p>
+<p>    time or available log timestamps.</p>
+<ol>
+<li><strong>Window Calculation</strong>: If a timestamp <code>{issue_time}</code> is available (or</li>
+</ol>
+<p>    calculated as <code>T</code>), set <code>{start_time}</code> = <code>T - 30m</code> and <code>{end_time}</code> = `T +</p>
+<p>    30m`.</p>
+<hr>
+<h5>Step 1: Identify JobSet Restarts and Attempts [Low Risk]</h5>
+<p>Verify if the JobSet is experiencing restart loops and determine the frequency</p>
+<p>of restarts.</p>
+<h5>Visual Chart / MQL Query - restarts</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch prometheus_target
+    | metric &#39;prometheus.googleapis.com/kube_jobset_restarts/gauge&#39;
+    | filter resource.cluster_name == &#39;{cluster_name}&#39; &amp;&amp; metric.jobset_name == &#39;{workload_name}&#39;
+    | align next_older(1m)
+    | every 1m
+    | group_by [metric.jobset_name], [val: max(value)]
+    </code></pre></p>
+<h5>PromQL Metric Query - restarts</h5>
+<ul>
+<li><strong>PromQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    kube_jobset_restarts{jobset_name=&quot;{workload_name}&quot;, cluster=&quot;{cluster_name}&quot;}
+    </code></pre></p>
+<ul>
+<li><strong>Diagnostic Logic</strong>: A non-zero or increasing value for restarts indicates</li>
+</ul>
+<p>    that the JobSet is being actively restarted by the controller due to worker</p>
+<p>    failure or interruption.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to Step 2 automatically after reporting findings.</li>
+</ul>
+<hr>
+<h5>Step 2: Inspect Nodepool Interruptions [Low Risk]</h5>
+<p>Determine if the JobSet restarts were triggered by physical nodepool-level</p>
+<p>events (such as spot preemptions, maintenance, or host terminations).</p>
+<h5>A. Metrics Query (Nodepool Interruption Counts)</h5>
+<h5>Visual Chart / MQL Query - interruptions</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch k8s_node_pool
+    | metric &#39;kubernetes.io/node_pool/interruption_count&#39;
+    | filter cluster_name == &#39;{cluster_name}&#39;
+    | align next_older(10m)
+    | every 10m
+    | group_by [metric.interruption_type, metric.interruption_reason, metadata.system.node_pool_name], [val: sum(value)]
+    </code></pre></p>
+<h5>PromQL Query - interruptions</h5>
+<ul>
+<li><strong>PromQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    sum by (interruption_type, interruption_reason, node_pool_name, cluster_name) (
+      avg_over_time(kubernetes_io:node_pool_interruption_count{cluster_name=&quot;{cluster_name}&quot;}[10m])
+    )
+    </code></pre></p>
+<h5>B. Log Query (Nodepool Life Events)</h5>
+<ul>
+<li><strong>LQL Log Filter Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    resource.type=&quot;gke_nodepool&quot;
+    AND resource.labels.cluster_name=&quot;{cluster_name}&quot;
+    AND timestamp &gt;= &quot;{start_time}&quot;
+    AND timestamp &lt;= &quot;{end_time}&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Diagnostic Logic</strong>:</li>
+</ul>
+<ul>
+<li><strong>PreemptionEvent</strong>: Spot VMs were preempted, or node was scale-down.</li>
+<li><strong>MaintenanceEvent</strong>: Node pool updated or Google scheduled maintenance.</li>
+<li><strong>TerminationEvent</strong>: Serious host failures. Check <code>interruption_reason</code></li>
+</ul>
+<p>        or logs for host issues.</p>
+<ul>
+<li>See [Failure Signatures](references/failure_signatures.md) for examples</li>
+</ul>
+<p>        of node termination logs and preemption events.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to Step 3 automatically.</li>
+</ul>
+<hr>
+<h5>Step 3: Inspect Nodes and Underlying Host VMs [Low Risk]</h5>
+<p>Correlate node readiness failures with physical host VMs to see if a single</p>
+<p>faulty host repeatedly fails coordinator pods.</p>
+<h5>A. Metrics Query (Node Ready Status Check)</h5>
+<h5>Visual Chart / MQL Query - node status</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch k8s_node
+    | metric &#39;kubernetes.io/node/status_condition&#39;
+    | filter cluster_name == &#39;{cluster_name}&#39; &amp;&amp; metric.condition == &#39;Ready&#39; &amp;&amp; metric.status == &#39;False&#39;
+    | align next_older(1m)
+    | every 1m
+    | group_by [node_name, metadata.user.gke_nodepool], [val: max(value)]
+    </code></pre></p>
+<h5>PromQL Query - node status</h5>
+<ul>
+<li><strong>PromQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    sum by (status, condition, node_pool_name) (
+      kubernetes_io:node_status_condition{cluster_name=&quot;{cluster_name}&quot;, condition=&quot;Ready&quot;, status=&quot;False&quot;}
+    )
+    </code></pre></p>
+<h5>B. Metrics Query (Node-to-Host Metadata Topology Correlation)</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch k8s_node
+    | metric &#39;kubernetes.io/node/cpu/total_cores&#39;
+    | filter cluster_name == &#39;{cluster_name}&#39;
+    | align next_older(1m)
+    | every 1m
+    | group_by [node_name, metadata.user.gce_topology_host, metadata.user.gke_nodepool], [val: max(value)]
+    </code></pre></p>
+<h5>C. Log Query (Node Fault Logs)</h5>
+<ul>
+<li><strong>LQL Log Filter Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    resource.type=&quot;k8s_node&quot;
+    AND resource.labels.cluster_name=&quot;{cluster_name}&quot;
+    AND (textPayload:&quot;host error&quot; OR textPayload:&quot;kernel panic&quot; OR textPayload:&quot;hardware failure&quot; OR textPayload:&quot;NodeNotReady&quot;)
+    AND timestamp &gt;= &quot;{start_time}&quot;
+    AND timestamp &lt;= &quot;{end_time}&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Diagnostic Logic</strong>: Identify if specific nodes are unhealthy</li>
+</ul>
+<p>    (<code>Ready=False</code> or <code>Unknown</code>) and correlate them to their GCE physical host</p>
+<p>    ID via <code>metadata.user.gce_topology_host</code>. Check if the same host is</p>
+<p>    repeatedly failing.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to Step 4 automatically.</li>
+</ul>
+<hr>
+<h5>Step 4: Inspect Pod and Worker / Container Failures [Low Risk]</h5>
+<p>Analyze pod status phases and retrieve coordinator worker logs to identify</p>
+<p>application-level crashes or network deadlocks.</p>
+<p>&gt; <strong>Required Execution Order</strong>: You MUST analyze pod status phases (Section A)</p>
+<p>&gt; and unschedulable pod metrics (Section B) to assess overall workload health</p>
+<p>&gt; before inspecting specific worker container logs (Section C).</p>
+<h5>A. Metrics Query (Pod Lifecycle Phases)</h5>
+<h5>Visual Chart / MQL Query - pod phase</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch k8s_pod
+    | metric &#39;kubernetes.io/pod/status/phase&#39;
+    | filter cluster_name == &#39;{cluster_name}&#39; &amp;&amp; pod_name ==~ &#39;{workload_name}.*&#39;
+    | align next_older(10m)
+    | every 10m
+    | group_by [metric.phase], [val: count()]
+    </code></pre></p>
+<h5>PromQL Query - pod phase</h5>
+<ul>
+<li><strong>PromQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    sum by (phase) (
+      avg_over_time(kube_pod_status_phase{cluster=&quot;{cluster_name}&quot;, pod=~&quot;{workload_name}.*&quot;}[10m])
+    )
+    </code></pre></p>
+<h5>B. Metrics Query (Unschedulable Pod Count)</h5>
+<ul>
+<li><strong>MQL Query Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    fetch k8s_pod
+    | metric &#39;kubernetes.io/pod/status/unschedulable&#39;
+    | filter cluster_name == &#39;{cluster_name}&#39; &amp;&amp; pod_name ==~ &#39;{workload_name}.*&#39;
+    | align next_older(10m)
+    | every 10m
+    | group_by [pod_name], [val: max(value)]
+    </code></pre></p>
+<h5>C. Log Query (Worker Container Logs)</h5>
+<ul>
+<li><strong>LQL Log Filter Specification</strong>:</li>
+</ul>
+<p>    <pre><code>    resource.type=&quot;k8s_container&quot;
+    AND resource.labels.cluster_name=&quot;{cluster_name}&quot;
+    AND labels.&quot;k8s-pod/jobset_sigs_k8s_io/jobset-name&quot;=&quot;{workload_name}&quot;
+    AND timestamp &gt;= &quot;{start_time}&quot;
+    AND timestamp &lt;= &quot;{end_time}&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Diagnostic Logic</strong>:</li>
+</ul>
+<ol>
+<li>Check the pod timeline to spot pending or unschedulable pods.</li>
+<li>Use worker container logs to analyze worker 0 in slice 0 (coordinator)</li>
+</ol>
+<p>        for NCCL timeouts, collective communication issues, or MegaScale hangs.</p>
+<ul>
+<li><strong>Automation</strong>: Proceed to Resolution.</li>
+</ul>
+<hr>
+<h4>🛠️ Resolution Workflow</h4>
+<h5>Resolution 1: Preemption &amp; Autoscaling Optimizations [Low Risk]</h5>
+<p>If Step 2 showed high preemption counts on Spot VMs:</p>
+<ul>
+<li><strong>Action</strong>: Suggest switching critical long-running training workloads to</li>
+</ul>
+<p>    <strong>GKE Reserved/On-Demand VMs</strong> or utilizing <strong>Compact Placement Policies</strong></p>
+<p>    to minimize defragmentation interruptions.</p>
+<ul>
+<li><strong>Justification</strong>: Eliminates spot-market preemptions and reduces training</li>
+</ul>
+<p>    restarts.</p>
+<h5>Resolution 2: Quarantine Faulty Host VMs [High Risk]</h5>
+<p>If Step 3 identified a specific host ID (<code>gce-topology-host</code>) that consistently</p>
+<p>fails or triggers restarts across multiple attempts:</p>
+<ul>
+<li><strong>Action</strong>: Recommend cordoning/draining the GKE node, deleting the</li>
+</ul>
+<p>    underlying GCE VM instance to trigger instance recreation, and opening a</p>
+<p>    support ticket with Google Cloud Support specifying the physical host ID.</p>
+<ul>
+<li><strong>Justification</strong>: GKE auto-repair will recreate the VM instance on healthy</li>
+</ul>
+<p>    physical hardware, preventing infinite restart loops.</p>
+<hr>
+<h4>📋 Copypaste Checklist</h4>
+<ul>
+<li>[ ] Gather context and compute <code>{start_time}</code> (<code>{issue_time} - 30m</code>) and</li>
+</ul>
+<p>    <code>{end_time}</code> (<code>{issue_time} + 30m</code>) window.</p>
+<ul>
+<li>[ ] Query JobSet restart attempts.</li>
+<li>[ ] Check Nodepool interruptions (spot preemptions vs. hardware</li>
+</ul>
+<p>    terminations).</p>
+<ul>
+<li>[ ] Query node-to-host mapping and check node logs for physical host errors.</li>
+<li>[ ] Inspect pod timeline status and coordinator worker container logs.</li>
+<li>[ ] Recommend appropriate scheduling strategy (On-demand vs Spot) or host VM</li>
+</ul>
+<p>    quarantining.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption" aria-label="Copy install gke-ai-troubleshooting-jobset-interruption">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-ai-troubleshooting-jobset-interruption/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

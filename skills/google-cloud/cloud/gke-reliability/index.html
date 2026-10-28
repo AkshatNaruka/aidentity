@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-reliability — Aidentity</title>
+<meta name="description" content="Improves GKE workload reliability, using PDBs, health probes, and topology spread constraints. Use when configuring GKE workload reliability, setting up PDBs, or configuring GKE health probes (liveness, readiness, startup). Don&#39;t use for disaster recovery setup or full cluster backups (use gke-backup-dr instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-reliability/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-reliability — Aidentity">
+<meta property="og:description" content="Improves GKE workload reliability, using PDBs, health probes, and topology spread constraints. Use when configuring GKE workload reliability, setting up PDBs, or configuring GKE health probes (liveness, readiness, startup). Don&#39;t use for disaster recovery setup or full cluster backups (use gke-backup-dr instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-reliability/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-reliability","description":"Improves GKE workload reliability, using PDBs, health probes, and topology spread constraints. Use when configuring GKE workload reliability, setting up PDBs, or configuring GKE health probes (liveness, readiness, startup). Don't use for disaster recovery setup or full cluster backups (use gke-backup-dr instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-reliability/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-reliability
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-reliability</h1>
+      <p class="summary">Improves GKE workload reliability, using PDBs, health probes, and topology spread constraints. Use when configuring GKE workload reliability, setting up PDBs, or configuring GKE health probes (liveness, readiness, startup). Don&#39;t use for disaster recovery setup or full cluster backups (use gke-backup-dr instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Reliability</h3>
+<p>This reference covers high availability and reliability configuration for GKE</p>
+<p>clusters and workloads.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>get_cluster</code>, <code>get_k8s_resource</code>, <code>describe_k8s_resource</code>,</p>
+<p>&gt; <code>apply_k8s_manifest</code>, <code>list_k8s_events</code></p>
+<h4>Golden Path Reliability Defaults</h4>
+<table><thead><tr><th>Setting</th><th>Golden Path Value</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Cluster type</td><td>Regional (4 zones:</td><td>Control plane replicated across</td></tr>
+</tbody></table>
+<p>:                  : us-central1-a/b/c/f)  : zones                            :</p>
+<table><thead><tr><th>Upgrade strategy</th><th>SURGE (<code>maxSurge: 1</code>)</th><th>Rolling upgrades with extra</th></tr></thead><tbody>
+</tbody></table>
+<p>:                  :                       : capacity                         :</p>
+<table><thead><tr><th>Auto-repair</th><th><code>true</code></th><th>Unhealthy nodes replaced</th></tr></thead><tbody>
+</tbody></table>
+<p>:                  :                       : automatically                    :</p>
+<table><thead><tr><th>Auto-upgrade</th><th><code>true</code></th><th>Nodes follow control plane</th></tr></thead><tbody>
+</tbody></table>
+<p>:                  :                       : version                          :</p>
+<table><thead><tr><th>Release channel</th><th>REGULAR</th><th>Balanced freshness and stability</th></tr></thead><tbody>
+<tr><td>Stateful HA</td><td>Enabled</td><td>Leader election for stateful</td></tr>
+</tbody></table>
+<p>:                  :                       : workloads                        :</p>
+<h4>Workflows</h4>
+<h5>1. Verify Cluster High Availability</h5>
+<p><pre><code># MCP (preferred)
+get_cluster(name=&quot;projects/&lt;PROJECT&gt;/locations/&lt;REGION&gt;/clusters/&lt;CLUSTER&gt;&quot;,
+  readMask=&quot;location,locations,nodePools.locations&quot;)
+
+# gcloud fallback
+gcloud container clusters describe &lt;CLUSTER&gt; --region &lt;REGION&gt; \
+  --format=&quot;json(location, locations)&quot; \
+  --quiet</code></pre></p>
+<ul>
+<li>If <code>location</code> is a region (e.g., <code>us-central1</code>), the control plane is</li>
+</ul>
+<p>    regional</p>
+<ul>
+<li>If <code>locations</code> has multiple entries, nodes span multiple zones</li>
+</ul>
+<h5>2. Pod Disruption Budgets (PDBs)</h5>
+<p>PDBs ensure minimum pod availability during voluntary disruptions (node</p>
+<p>upgrades, autoscaler scale-down).</p>
+<p><strong>Check existing PDBs:</strong></p>
+<p><pre><code># MCP (preferred)
+get_k8s_resource(parent=&quot;...&quot;, resourceType=&quot;poddisruptionbudget&quot;)
+
+# kubectl fallback
+kubectl get pdb --all-namespaces</code></pre></p>
+<p><strong>Create PDB:</strong></p>
+<p><pre><code>apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: my-app-pdb
+  namespace: default
+spec:
+  minAvailable: 2       # Or use maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: my-app</code></pre></p>
+<p>&gt; Every production Deployment with 2+ replicas should have a PDB.</p>
+<h5>3. Health Probes</h5>
+<p>Every production container should have liveness and readiness probes. Startup</p>
+<p>probes are recommended for slow-starting apps.</p>
+<p><strong>Check existing probes:</strong></p>
+<p><pre><code># MCP (preferred)
+describe_k8s_resource(parent=&quot;...&quot;, resourceType=&quot;deployment&quot;, name=&quot;&lt;APP&gt;&quot;, namespace=&quot;&lt;NS&gt;&quot;)
+
+# kubectl fallback
+kubectl get deployment &lt;APP&gt; -n &lt;NS&gt; -o yaml | grep -E &quot;livenessProbe|readinessProbe|startupProbe&quot;</code></pre></p>
+<p><strong>Recommended probe configuration:</strong></p>
+<p><pre><code>spec:
+  containers:
+  - name: app
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 2
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 2
+      failureThreshold: 3
+    startupProbe:             # For slow-starting apps
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 2
+      failureThreshold: 30    # 30 * 5s = 150s max startup time</code></pre></p>
+<ul>
+<li><strong>Readiness</strong>: Determines when a pod can accept traffic</li>
+<li><strong>Liveness</strong>: Determines when to restart a container</li>
+<li><strong>Startup</strong>: Disables liveness/readiness until the app is ready (prevents</li>
+</ul>
+<p>    premature restarts)</p>
+<h5>4. Graceful Shutdown</h5>
+<p>Ensure applications handle <code>SIGTERM</code> and drain in-flight requests:</p>
+<p><pre><code>spec:
+  terminationGracePeriodSeconds: 30    # Default; increase for long-running requests
+  containers:
+  - name: app
+    lifecycle:
+      preStop:
+        exec:
+          command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;sleep 5&quot;]  # Allow LB to deregister</code></pre></p>
+<h5>5. Topology Spread Constraints</h5>
+<p>Distribute pods across zones and nodes to survive failures:</p>
+<p><pre><code>spec:
+  topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        app: my-app
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: my-app</code></pre></p>
+<ul>
+<li><strong>Zone spread</strong> (<code>DoNotSchedule</code>): Hard requirement -- pods must be balanced</li>
+</ul>
+<p>    across zones</p>
+<ul>
+<li><strong>Node spread</strong> (<code>ScheduleAnyway</code>): Best-effort -- prefer distribution but</li>
+</ul>
+<p>    don&#39;t block scheduling</p>
+<h5>6. Replicas</h5>
+<table><thead><tr><th>Workload Type</th><th>Minimum Replicas</th><th>Reason</th></tr></thead><tbody>
+<tr><td>Stateless web/API</td><td>2</td><td>Survive single pod/node</td></tr>
+</tbody></table>
+<p>:                      :                      : failure                        :</p>
+<table><thead><tr><th>Critical services</th><th>3</th><th>Survive zone failure with zone</th></tr></thead><tbody>
+</tbody></table>
+<p>:                      :                      : spread                         :</p>
+<table><thead><tr><th>Stateful (databases)</th><th>3 (with replication)</th><th>Application-level quorum</th></tr></thead><tbody>
+<tr><td>Batch/jobs</td><td>1</td><td>Ephemeral by nature</td></tr>
+</tbody></table>
+<h4>Best Practices &amp; Production Guidelines</h4>
+<ol>
+<li><strong>Regional clusters for production</strong>: Always use regional clusters to</li>
+</ol>
+<p>    survive zone failures.</p>
+<ol>
+<li><strong>PDBs for everything</strong>: Every production workload with 2+ replicas needs a</li>
+</ol>
+<p>    PodDisruptionBudget (PDB) to protect against voluntary disruptions.</p>
+<ol>
+<li><strong>Probes with Explicit Timeouts</strong>: Every production container must have both</li>
+</ol>
+<p>    liveness and readiness probes defined. **Always explicitly define</p>
+<p>    <code>initialDelaySeconds</code>, <code>periodSeconds</code>, and <code>timeoutSeconds</code>** for all</p>
+<p>    probes. Never rely on the Kubernetes default timeout of 1 second if your</p>
+<p>    application requires more, but always set a strict limit to prevent hanging</p>
+<p>    connections.</p>
+<ol>
+<li><strong>Zone spreading</strong>: Use topology spread constraints to distribute pods</li>
+</ol>
+<p>    across failure domains (zones and nodes).</p>
+<ol>
+<li><strong>Graceful shutdown</strong>: Handle <code>SIGTERM</code> and set appropriate</li>
+</ol>
+<p>    <code>terminationGracePeriodSeconds</code> with a <code>preStop</code> sleep hook to allow load</p>
+<p>    balancer deregistration.</p>
+<ol>
+<li><strong>Maintenance windows</strong>: Schedule upgrades during low-traffic periods (see</li>
+</ol>
+<p>    the <code>gke-upgrades</code> skill).</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-reliability</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-reliability" aria-label="Copy install gke-reliability">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-reliability</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-reliability/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>git-guardrails-claude-code — Aidentity</title>
+<meta name="description" content="Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/git-guardrails-claude-code/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="git-guardrails-claude-code — Aidentity">
+<meta property="og:description" content="Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/git-guardrails-claude-code/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"git-guardrails-claude-code","description":"Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/misc/git-guardrails-claude-code/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=git">git</a><span>/</span>git-guardrails-claude-code
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>git-guardrails-claude-code</h1>
+      <p class="summary">Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=git">git</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Setup Git Guardrails</h3>
+<p>Sets up a PreToolUse hook that intercepts and blocks dangerous git commands before Claude executes them.</p>
+<h4>What Gets Blocked</h4>
+<ul>
+<li><code>git push</code> (all variants including <code>--force</code>)</li>
+<li><code>git reset --hard</code></li>
+<li><code>git clean -f</code> / <code>git clean -fd</code></li>
+<li><code>git branch -D</code></li>
+<li><code>git checkout .</code> / <code>git restore .</code></li>
+</ul>
+<p>When blocked, Claude sees a message telling it that it does not have authority to access these commands.</p>
+<h4>Steps</h4>
+<h5>1. Ask scope</h5>
+<p>Ask the user: install for <strong>this project only</strong> (<code>.claude/settings.json</code>) or <strong>all projects</strong> (<code>~/.claude/settings.json</code>)?</p>
+<h5>2. Copy the hook script</h5>
+<p>The bundled script is at: [scripts/block-dangerous-git.sh](scripts/block-dangerous-git.sh)</p>
+<p>Copy it to the target location based on scope:</p>
+<ul>
+<li><strong>Project</strong>: <code>.claude/hooks/block-dangerous-git.sh</code></li>
+<li><strong>Global</strong>: <code>~/.claude/hooks/block-dangerous-git.sh</code></li>
+</ul>
+<p>Make it executable with <code>chmod +x</code>.</p>
+<h5>3. Add hook to settings</h5>
+<p>Add to the appropriate settings file:</p>
+<p><strong>Project</strong> (<code>.claude/settings.json</code>):</p>
+<p><pre><code>{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;\&quot;$CLAUDE_PROJECT_DIR\&quot;/.claude/hooks/block-dangerous-git.sh&quot;
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre></p>
+<p><strong>Global</strong> (<code>~/.claude/settings.json</code>):</p>
+<p><pre><code>{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;~/.claude/hooks/block-dangerous-git.sh&quot;
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre></p>
+<p>If the settings file already exists, merge the hook into the existing <code>hooks.PreToolUse</code> array. Don&#39;t overwrite other settings.</p>
+<h5>4. Ask about customization</h5>
+<p>Ask if user wants to add or remove any patterns from the blocked list. Edit the copied script accordingly.</p>
+<h5>5. Verify</h5>
+<p>Run a quick test:</p>
+<p><pre><code>echo &#39;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git push origin main&quot;}}&#39; | &lt;path-to-script&gt;</code></pre></p>
+<p>Should exit with code 2 and print a BLOCKED message to stderr.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/git-workflow-and-versioning/index.html"
+     data-source="addyosmani"
+     data-category="git"
+     data-search="git-workflow-and-versioning structures git workflow practices. use when making any code change. use when committing, branching, resolving conflicts, opening or reviewing a pull request (pr), pushing to a remote, or when you need to organize work across multiple parallel streams. use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog. git git addyosmani/agent-skills">
+  <span>
+    <span class="r-name">git-workflow-and-versioning</span>
+    <span class="r-desc">Structures git workflow practices. Use when making any code change. Use when committing, branching, resolving conflicts, opening or reviewing a pull request (PR), pushing to a remote, or when you need to organize work across multiple parallel streams. Use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/obra-superpowers/using-git-worktrees/index.html"
+     data-source="obra-superpowers"
+     data-category="git"
+     data-search="using-git-worktrees use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback git git obra/superpowers">
+  <span>
+    <span class="r-name">using-git-worktrees</span>
+    <span class="r-desc">Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/code-review/index.html"
+     data-source="mattpocock"
+     data-category="code-review"
+     data-search="code-review review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: standards (does the code follow this repo&#39;s documented coding standards?) and spec (does the code match what the originating issue/spec asked for?). runs both reviews in parallel sub-agents and reports them side by side. use when the user wants to review a branch, a pr, work-in-progress changes, or asks to &quot;review since x&quot;. code-review code-review mattpocock/skills">
+  <span>
+    <span class="r-name">code-review</span>
+    <span class="r-desc">Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo&#39;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/codebase-design/index.html"
+     data-source="mattpocock"
+     data-category="design"
+     data-search="codebase-design shared vocabulary for designing deep modules. use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or ai-navigable, or when another skill needs the deep-module vocabulary. design design mattpocock/skills">
+  <span>
+    <span class="r-name">codebase-design</span>
+    <span class="r-desc">Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/misc/git-guardrails-claude-code</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/misc/git-guardrails-claude-code" aria-label="Copy install git-guardrails-claude-code">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>git</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/misc/git-guardrails-claude-code</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/misc/git-guardrails-claude-code/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

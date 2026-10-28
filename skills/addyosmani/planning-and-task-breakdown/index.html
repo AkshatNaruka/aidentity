@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>planning-and-task-breakdown — Aidentity</title>
+<meta name="description" content="Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/planning-and-task-breakdown/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="planning-and-task-breakdown — Aidentity">
+<meta property="og:description" content="Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/planning-and-task-breakdown/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"planning-and-task-breakdown","description":"Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/planning-and-task-breakdown/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=planning">planning</a><span>/</span>planning-and-task-breakdown
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>planning-and-task-breakdown</h1>
+      <p class="summary">Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=planning">planning</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Planning and Task Breakdown</h3>
+<h4>Overview</h4>
+<p>Decompose work into small, verifiable tasks with explicit acceptance criteria. Good task breakdown is the difference between an agent that completes work reliably and one that produces a tangled mess. Every task should be small enough to implement, test, and verify in a single focused session.</p>
+<h4>When to Use</h4>
+<ul>
+<li>You have a spec and need to break it into implementable units</li>
+<li>A task feels too large or vague to start</li>
+<li>Work needs to be parallelized across multiple agents or sessions</li>
+<li>You need to communicate scope to a human</li>
+<li>The implementation order isn&#39;t obvious</li>
+</ul>
+<p><strong>When NOT to use:</strong> Single-file changes with obvious scope, or when the spec already contains well-defined tasks.</p>
+<h4>The Planning Process</h4>
+<h5>Step 1: Enter Plan Mode</h5>
+<p>Before writing any code, operate in read-only mode:</p>
+<ul>
+<li>Read the spec and relevant codebase sections</li>
+<li>Identify existing patterns and conventions</li>
+<li>Map dependencies between components</li>
+<li>Note risks and unknowns</li>
+</ul>
+<p><strong>Do NOT write code during planning.</strong> The output is a plan document saved to <code>tasks/plan.md</code> and a task list recorded in the task list target (see Output Files; default <code>tasks/todo.md</code>), not implementation.</p>
+<h5>Step 2: Identify the Dependency Graph</h5>
+<p>Map what depends on what:</p>
+<p><pre><code>Database schema
+    │
+    ├── API models/types
+    │       │
+    │       ├── API endpoints
+    │       │       │
+    │       │       └── Frontend API client
+    │       │               │
+    │       │               └── UI components
+    │       │
+    │       └── Validation logic
+    │
+    └── Seed data / migrations</code></pre></p>
+<p>Implementation order follows the dependency graph bottom-up: build foundations first.</p>
+<h5>Step 3: Slice Vertically</h5>
+<p>Instead of building all the database, then all the API, then all the UI — build one complete feature path at a time:</p>
+<p><strong>Bad (horizontal slicing):</strong></p>
+<p><pre><code>Task 1: Build entire database schema
+Task 2: Build all API endpoints
+Task 3: Build all UI components
+Task 4: Connect everything</code></pre></p>
+<p><strong>Good (vertical slicing):</strong></p>
+<p><pre><code>Task 1: User can create an account (schema + API + UI for registration)
+Task 2: User can log in (auth schema + API + UI for login)
+Task 3: User can create a task (task schema + API + UI for creation)
+Task 4: User can view task list (query + API + UI for list view)</code></pre></p>
+<p>Each vertical slice delivers working, testable functionality.</p>
+<h5>Step 4: Write Tasks</h5>
+<p>Each task follows this structure, whether it lands in the markdown task list or as an item in an external tracker (see Output Files):</p>
+<p><pre><code>## Task [N]: [Short descriptive title]
+
+**Description:** One paragraph explaining what this task accomplishes.
+
+**Acceptance criteria:**
+- [ ] [Specific, testable condition]
+- [ ] [Specific, testable condition]
+
+**Verification:**
+- [ ] Tests pass: [the repository&#39;s focused-test command]
+- [ ] Build succeeds: [the repository&#39;s build command]
+- [ ] Manual check: [description of what to verify]
+
+**Dependencies:** [Task numbers this depends on, or &quot;None&quot;]
+
+**Files likely touched:**
+- `src/path/to/file.ts`
+- `tests/path/to/test.ts`
+
+**Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]</code></pre></p>
+<h5>Step 5: Order and Checkpoint</h5>
+<p>Arrange tasks so that:</p>
+<ol>
+<li>Dependencies are satisfied (build foundation first)</li>
+<li>Each task leaves the system in a working state</li>
+<li>Verification checkpoints occur after every 2-3 tasks</li>
+<li>High-risk tasks are early (fail fast)</li>
+</ol>
+<p>Add explicit checkpoints to the task list target:</p>
+<p><pre><code>## Checkpoint: After Tasks 1-3
+- [ ] All tests pass
+- [ ] Application builds without errors
+- [ ] Core user flow works end-to-end
+- [ ] Review with human before proceeding</code></pre></p>
+<h4>Task Sizing Guidelines</h4>
+<table><thead><tr><th>Size</th><th>Files</th><th>Scope</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>XS</strong></td><td>1</td><td>Single function or config change</td><td>Add a validation rule</td></tr>
+<tr><td><strong>S</strong></td><td>1-2</td><td>One component or endpoint</td><td>Add a new API endpoint</td></tr>
+<tr><td><strong>M</strong></td><td>3-5</td><td>One feature slice</td><td>User registration flow</td></tr>
+<tr><td><strong>L</strong></td><td>5-8</td><td>Multi-component feature</td><td>Search with filtering and pagination</td></tr>
+<tr><td><strong>XL</strong></td><td>8+</td><td><strong>Too large — break it down further</strong></td><td>—</td></tr>
+</tbody></table>
+<p>If a task is L or larger, it should be broken into smaller tasks. An agent performs best on S and M tasks.</p>
+<p><strong>When to break a task down further:</strong></p>
+<ul>
+<li>It would take more than one focused session (roughly 2+ hours of agent work)</li>
+<li>You cannot describe the acceptance criteria in 3 or fewer bullet points</li>
+<li>It touches two or more independent subsystems (e.g., auth and billing)</li>
+<li>You find yourself writing &quot;and&quot; in the task title (a sign it is two tasks)</li>
+</ul>
+<h4>Output Files</h4>
+<ul>
+<li><strong>Plan document:</strong> Save the implementation plan to <code>tasks/plan.md</code>. This is always a markdown file — design decisions, risks, and open questions don&#39;t map cleanly onto individual tracker issues.</li>
+<li><strong>Task list:</strong> Record each task in the <strong>task list target</strong> (defined below).</li>
+</ul>
+<p>Create the <code>tasks/</code> directory if it does not exist.</p>
+<p><strong>Never overwrite an incomplete plan.</strong> Before writing <code>tasks/plan.md</code> or <code>tasks/todo.md</code>, check whether they already exist and still contain unchecked tasks:</p>
+<ul>
+<li>Same work being replanned (the user asked to revise or extend this plan) → update the existing files in place.</li>
+<li>Different work → <strong>stop and ask.</strong> The unchecked tasks may be mid-build in another session. Do not delete, overwrite, or rename the existing files on your own; present the conflict and let the user decide (finish the old plan first, explicitly discard it, or tell you where the new plan should go).</li>
+</ul>
+<p>The same rule applies to an external task list target: never bulk-close or delete another plan&#39;s open tracker items to make room for new ones.</p>
+<h5>Task List Target</h5>
+<p>The task list target is where tasks and checkpoints are recorded. It is defined once, here; every other reference in this skill defers to it.</p>
+<ul>
+<li><strong>Default: a checklist-style markdown file at <code>tasks/todo.md</code>.</strong> This is the convention the <code>/build</code> command and other downstream tooling expect. Use it unless the project says otherwise.</li>
+<li><strong>External tracker:</strong> if the project&#39;s agent rules (<code>CLAUDE.md</code>, <code>AGENTS.md</code>, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, <code>bd</code>/beads), create one tracker item per task instead of writing <code>tasks/todo.md</code>. Map the Step 4 structure onto the tracker&#39;s fields: acceptance criteria and verification steps in the item body, dependencies via the tracker&#39;s linking mechanism (<code>bd dep add</code>, &quot;blocked by&quot;, etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.</li>
+</ul>
+<p>When using an external tracker, note it in <code>tasks/plan.md</code> (e.g. &quot;Tasks tracked in Linear project FOO&quot;) so downstream steps and future sessions know where to look, and keep the plan document&#39;s Task List section as an ordered index of tracker item IDs or links rather than a duplicate checklist.</p>
+<h4>Plan Document Template</h4>
+<p><pre><code># Implementation Plan: [Feature/Project Name]
+
+## Overview
+[One paragraph summary of what we&#39;re building]
+
+## Architecture Decisions
+- [Key decision 1 and rationale]
+- [Key decision 2 and rationale]
+
+## Task List
+
+### Phase 1: Foundation
+- [ ] Task 1: ...
+- [ ] Task 2: ...
+
+### Checkpoint: Foundation
+- [ ] Tests pass, builds clean
+
+### Phase 2: Core Features
+- [ ] Task 3: ...
+- [ ] Task 4: ...
+
+### Checkpoint: Core Features
+- [ ] End-to-end flow works
+
+### Phase 3: Polish
+- [ ] Task 5: ...
+- [ ] Task 6: ...
+
+### Checkpoint: Complete
+- [ ] All acceptance criteria met
+- [ ] Ready for review
+
+## Risks and Mitigations
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| [Risk] | [High/Med/Low] | [Strategy] |
+
+## Open Questions
+- [Question needing human input]</code></pre></p>
+<p>When tasks live in an external tracker, keep the Task List section above as an ordered index of tracker item IDs or links instead of a duplicate checklist.</p>
+<h4>Parallelization Opportunities</h4>
+<p>When multiple agents or sessions are available:</p>
+<ul>
+<li><strong>Safe to parallelize:</strong> Independent feature slices, tests for already-implemented features, documentation</li>
+<li><strong>Must be sequential:</strong> Database migrations, shared state changes, dependency chains</li>
+<li><strong>Needs coordination:</strong> Features that share an API contract (define the contract first, then parallelize)</li>
+</ul>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;ll figure it out as I go&quot;</td><td>That&#39;s how you end up with a tangled mess and rework. 10 minutes of planning saves hours.</td></tr>
+<tr><td>&quot;The tasks are obvious&quot;</td><td>Write them down anyway. Explicit tasks surface hidden dependencies and forgotten edge cases.</td></tr>
+<tr><td>&quot;Planning is overhead&quot;</td><td>Planning is the task. Implementation without a plan is just typing.</td></tr>
+<tr><td>&quot;I can hold it all in my head&quot;</td><td>Context windows are finite. Written plans survive session boundaries and compaction.</td></tr>
+<tr><td>&quot;The old <code>tasks/plan.md</code> is stale, I&#39;ll just replace it&quot;</td><td>Unchecked tasks may be mid-build in another session. Overwriting them destroys work state that exists nowhere else. Stop and ask.</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<ul>
+<li>Starting implementation without a written task list</li>
+<li>Overwriting a <code>tasks/plan.md</code> or <code>tasks/todo.md</code> that still has unchecked tasks for different work, without asking</li>
+<li>Writing <code>tasks/todo.md</code> when the project has designated an external tracker (or scattering tasks across both)</li>
+<li>Tasks that say &quot;implement the feature&quot; without acceptance criteria</li>
+<li>No verification steps in the plan</li>
+<li>All tasks are XL-sized</li>
+<li>No checkpoints between tasks</li>
+<li>Dependency order isn&#39;t considered</li>
+</ul>
+<h4>Verification</h4>
+<p>Before starting implementation, confirm:</p>
+<ul>
+<li>[ ] Every task has acceptance criteria</li>
+<li>[ ] Every task has a verification step</li>
+<li>[ ] Task dependencies are identified and ordered correctly</li>
+<li>[ ] Tasks are recorded in the task list target (default <code>tasks/todo.md</code>)</li>
+<li>[ ] No pre-existing incomplete plan was overwritten without explicit user confirmation</li>
+<li>[ ] No task touches more than ~5 files</li>
+<li>[ ] Checkpoints exist between major phases</li>
+<li>[ ] The human has reviewed and approved the plan</li>
+</ul>
+<h4>See Also</h4>
+<p>Acceptance criteria are per-task and answer &quot;did we build the right thing?&quot;. They sit on top of the project-wide Definition of Done, the standing bar every task clears before it counts as done. See <code>../../references/definition-of-done.md</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/spec-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="spec-driven-development creates specs before coding. use when starting a new project, feature, or significant change and no specification exists yet. use when requirements are unclear, ambiguous, or only exist as a vague idea. use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">spec-driven-development</span>
+    <span class="r-desc">Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/to-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-spec turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-spec</span>
+    <span class="r-desc">Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/to-tickets/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-tickets break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker). planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-tickets</span>
+    <span class="r-desc">Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/in-progress/implement-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="implement-spec implement a specification in code. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">implement-spec</span>
+    <span class="r-desc">Implement a specification in code.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/planning-and-task-breakdown</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/planning-and-task-breakdown" aria-label="Copy install planning-and-task-breakdown">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>planning</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/planning-and-task-breakdown</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/planning-and-task-breakdown/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

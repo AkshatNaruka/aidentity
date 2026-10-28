@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-speech-to-text-rest-py — Aidentity</title>
+<meta name="description" content="Azure Speech to Text REST API for short audio (Python). Use for simple speech recognition of audio files up to 60 seconds without the Speech SDK. Triggers: &quot;speech to text REST&quot;, &quot;short audio transcription&quot;, &quot;speech recognition REST API&quot;, &quot;STT REST&quot;, &quot;recognize speech REST&quot;. DO NOT USE FOR: Long audio (&gt;60 seconds), real-time streaming, batch transcription, custom speech models, speech translation. Use Speech SDK or Batch Transcription API instead.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-speech-to-text-rest-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-speech-to-text-rest-py — Aidentity">
+<meta property="og:description" content="Azure Speech to Text REST API for short audio (Python). Use for simple speech recognition of audio files up to 60 seconds without the Speech SDK. Triggers: &quot;speech to text REST&quot;, &quot;short audio transcription&quot;, &quot;speech recognition REST API&quot;, &quot;STT REST&quot;, &quot;recognize speech REST&quot;. DO NOT USE FOR: Long audio (&gt;60 seconds), real-time streaming, batch transcription, custom speech models, speech translation. Use Speech SDK or Batch Transcription API instead.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-speech-to-text-rest-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-speech-to-text-rest-py","description":"Azure Speech to Text REST API for short audio (Python). Use for simple speech recognition of audio files up to 60 seconds without the Speech SDK. Triggers: \"speech to text REST\", \"short audio transcription\", \"speech recognition REST API\", \"STT REST\", \"recognize speech REST\". DO NOT USE FOR: Long audio (>60 seconds), real-time streaming, batch transcription, custom speech models, speech translation. Use Speech SDK or Batch Transcription API instead.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-speech-to-text-rest-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-speech-to-text-rest-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-speech-to-text-rest-py</h1>
+      <p class="summary">Azure Speech to Text REST API for short audio (Python). Use for simple speech recognition of audio files up to 60 seconds without the Speech SDK. Triggers: &quot;speech to text REST&quot;, &quot;short audio transcription&quot;, &quot;speech recognition REST API&quot;, &quot;STT REST&quot;, &quot;recognize speech REST&quot;. DO NOT USE FOR: Long audio (&gt;60 seconds), real-time streaming, batch transcription, custom speech models, speech translation. Use Speech SDK or Batch Transcription API instead.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Speech to Text REST API for Short Audio</h3>
+<p>Simple REST API for speech-to-text transcription of short audio files (up to 60 seconds). No SDK required - just HTTP requests.</p>
+<h4>Prerequisites</h4>
+<ol>
+<li><strong>Azure subscription</strong> - <a href="https://azure.microsoft.com/free/" rel="noopener">Create one free</a></li>
+<li><strong>Speech resource</strong> - Create in <a href="https://portal.azure.com/#create/Microsoft.CognitiveServicesSpeechServices" rel="noopener">Azure Portal</a></li>
+<li><strong>Get credentials</strong> - After deployment, go to resource &gt; Keys and Endpoint</li>
+</ol>
+<h4>Environment Variables</h4>
+<p><pre><code># Required
+AZURE_SPEECH_KEY=&lt;your-speech-resource-key&gt;
+AZURE_SPEECH_REGION=&lt;region&gt;  # e.g., eastus, westus2, westeurope
+
+# Alternative: Use endpoint directly
+AZURE_SPEECH_ENDPOINT=https://&lt;region&gt;.stt.speech.microsoft.com</code></pre></p>
+<h4>Installation</h4>
+<p><pre><code>pip install requests</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Two auth modes are supported.</strong> Use a subscription key (<code>Ocp-Apim-Subscription-Key</code> header) for quick access, or a Microsoft Entra token (including one acquired with <code>DefaultAzureCredential</code>) via the <code>Authorization</code> request header (see &quot;Option 2&quot; below). Never hardcode credentials in source.</p>
+<p>&gt; 2. <strong>Use context managers for files and HTTP resources</strong> so file handles and network connections are released deterministically:</p>
+<p>&gt;    - Sync: <code>with open(...) as f:</code> and (when reusing connections) <code>with requests.Session() as session:</code></p>
+<p>&gt;    - Async: <code>async with aiohttp.ClientSession() as session:</code></p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<h4>Quick Start</h4>
+<p><pre><code>import os
+import requests
+
+def transcribe_audio(audio_file_path: str, language: str = &quot;en-US&quot;) -&gt; dict:
+    &quot;&quot;&quot;Transcribe short audio file (max 60 seconds) using REST API.&quot;&quot;&quot;
+    region = os.environ[&quot;AZURE_SPEECH_REGION&quot;]
+    api_key = os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+    
+    url = f&quot;https://{region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1&quot;
+    
+    headers = {
+        &quot;Ocp-Apim-Subscription-Key&quot;: api_key,
+        &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;,
+        &quot;Accept&quot;: &quot;application/json&quot;
+    }
+    
+    params = {
+        &quot;language&quot;: language,
+        &quot;format&quot;: &quot;detailed&quot;  # or &quot;simple&quot;
+    }
+    
+    with open(audio_file_path, &quot;rb&quot;) as audio_file:
+        response = requests.post(url, headers=headers, params=params, data=audio_file)
+    
+    response.raise_for_status()
+    return response.json()
+
+# Usage
+result = transcribe_audio(&quot;audio.wav&quot;, &quot;en-US&quot;)
+print(result[&quot;DisplayText&quot;])</code></pre></p>
+<h4>Audio Requirements</h4>
+<table><thead><tr><th>Format</th><th>Codec</th><th>Sample Rate</th><th>Notes</th></tr></thead><tbody>
+<tr><td>WAV</td><td>PCM</td><td>16 kHz, mono</td><td><strong>Recommended</strong></td></tr>
+<tr><td>OGG</td><td>OPUS</td><td>16 kHz, mono</td><td>Smaller file size</td></tr>
+</tbody></table>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Maximum 60 seconds of audio</li>
+<li>For pronunciation assessment: maximum 30 seconds</li>
+<li>No partial/interim results (final only)</li>
+</ul>
+<h4>Content-Type Headers</h4>
+<p><pre><code># WAV PCM 16kHz
+wav_headers = {
+    &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;
+}
+
+# OGG OPUS
+ogg_headers = {
+    &quot;Content-Type&quot;: &quot;audio/ogg; codecs=opus&quot;
+}</code></pre></p>
+<h4>Response Formats</h4>
+<h5>Simple Format (default)</h5>
+<p><pre><code>params = {&quot;language&quot;: &quot;en-US&quot;, &quot;format&quot;: &quot;simple&quot;}</code></pre></p>
+<p><pre><code>{
+  &quot;RecognitionStatus&quot;: &quot;Success&quot;,
+  &quot;DisplayText&quot;: &quot;Remind me to buy 5 pencils.&quot;,
+  &quot;Offset&quot;: &quot;1236645672289&quot;,
+  &quot;Duration&quot;: &quot;1236645672289&quot;
+}</code></pre></p>
+<h5>Detailed Format</h5>
+<p><pre><code>params = {&quot;language&quot;: &quot;en-US&quot;, &quot;format&quot;: &quot;detailed&quot;}</code></pre></p>
+<p><pre><code>{
+  &quot;RecognitionStatus&quot;: &quot;Success&quot;,
+  &quot;Offset&quot;: &quot;1236645672289&quot;,
+  &quot;Duration&quot;: &quot;1236645672289&quot;,
+  &quot;NBest&quot;: [
+    {
+      &quot;Confidence&quot;: 0.9052885,
+      &quot;Display&quot;: &quot;What&#39;s the weather like?&quot;,
+      &quot;ITN&quot;: &quot;what&#39;s the weather like&quot;,
+      &quot;Lexical&quot;: &quot;what&#39;s the weather like&quot;,
+      &quot;MaskedITN&quot;: &quot;what&#39;s the weather like&quot;
+    }
+  ]
+}</code></pre></p>
+<h4>Chunked Transfer (Recommended)</h4>
+<p>For lower latency, stream audio in chunks:</p>
+<p><pre><code>import os
+import requests
+
+def transcribe_chunked(audio_file_path: str, language: str = &quot;en-US&quot;) -&gt; dict:
+    &quot;&quot;&quot;Stream audio in chunks for lower latency.&quot;&quot;&quot;
+    region = os.environ[&quot;AZURE_SPEECH_REGION&quot;]
+    api_key = os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+    
+    url = f&quot;https://{region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1&quot;
+    
+    headers = {
+        &quot;Ocp-Apim-Subscription-Key&quot;: api_key,
+        &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;,
+        &quot;Accept&quot;: &quot;application/json&quot;,
+        &quot;Transfer-Encoding&quot;: &quot;chunked&quot;,
+        &quot;Expect&quot;: &quot;100-continue&quot;
+    }
+    
+    params = {&quot;language&quot;: language, &quot;format&quot;: &quot;detailed&quot;}
+    
+    def generate_chunks(file_path: str, chunk_size: int = 1024):
+        with open(file_path, &quot;rb&quot;) as f:
+            while chunk := f.read(chunk_size):
+                yield chunk
+    
+    response = requests.post(
+        url, 
+        headers=headers, 
+        params=params, 
+        data=generate_chunks(audio_file_path)
+    )
+    
+    response.raise_for_status()
+    return response.json()</code></pre></p>
+<h4>Authentication Options</h4>
+<h5>Option 1: Subscription Key (Simple)</h5>
+<p><pre><code>headers = {
+    &quot;Ocp-Apim-Subscription-Key&quot;: os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+}</code></pre></p>
+<h5>Option 2: Bearer Token</h5>
+<p><pre><code>import requests
+import os
+
+def get_access_token() -&gt; str:
+    &quot;&quot;&quot;Get access token from the token endpoint.&quot;&quot;&quot;
+    region = os.environ[&quot;AZURE_SPEECH_REGION&quot;]
+    api_key = os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+    
+    token_url = f&quot;https://{region}.api.cognitive.microsoft.com/sts/v1.0/issueToken&quot;
+    
+    response = requests.post(
+        token_url,
+        headers={
+            &quot;Ocp-Apim-Subscription-Key&quot;: api_key,
+            &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;,
+            &quot;Content-Length&quot;: &quot;0&quot;
+        }
+    )
+    response.raise_for_status()
+    return response.text
+
+# Use token in requests (valid for 10 minutes)
+token = get_access_token()
+headers = {
+    &quot;Authorization&quot;: f&quot;Bearer {token}&quot;,
+    &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;,
+    &quot;Accept&quot;: &quot;application/json&quot;
+}</code></pre></p>
+<h4>Query Parameters</h4>
+<table><thead><tr><th>Parameter</th><th>Required</th><th>Values</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>language</code></td><td><strong>Yes</strong></td><td><code>en-US</code>, <code>de-DE</code>, etc.</td><td>Language of speech</td></tr>
+<tr><td><code>format</code></td><td>No</td><td><code>simple</code>, <code>detailed</code></td><td>Result format (default: simple)</td></tr>
+<tr><td><code>profanity</code></td><td>No</td><td><code>masked</code>, <code>removed</code>, <code>raw</code></td><td>Profanity handling (default: masked)</td></tr>
+</tbody></table>
+<h4>Recognition Status Values</h4>
+<table><thead><tr><th>Status</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>Success</code></td><td>Recognition succeeded</td></tr>
+<tr><td><code>NoMatch</code></td><td>Speech detected but no words matched</td></tr>
+<tr><td><code>InitialSilenceTimeout</code></td><td>Only silence detected</td></tr>
+<tr><td><code>BabbleTimeout</code></td><td>Only noise detected</td></tr>
+<tr><td><code>Error</code></td><td>Internal service error</td></tr>
+</tbody></table>
+<h4>Profanity Handling</h4>
+<p><pre><code># Mask profanity with asterisks (default)
+params = {&quot;language&quot;: &quot;en-US&quot;, &quot;profanity&quot;: &quot;masked&quot;}
+
+# Remove profanity entirely
+params = {&quot;language&quot;: &quot;en-US&quot;, &quot;profanity&quot;: &quot;removed&quot;}
+
+# Include profanity as-is
+params = {&quot;language&quot;: &quot;en-US&quot;, &quot;profanity&quot;: &quot;raw&quot;}</code></pre></p>
+<h4>Error Handling</h4>
+<p><pre><code>import requests
+
+def transcribe_with_error_handling(audio_path: str, language: str = &quot;en-US&quot;) -&gt; dict | None:
+    &quot;&quot;&quot;Transcribe with proper error handling.&quot;&quot;&quot;
+    region = os.environ[&quot;AZURE_SPEECH_REGION&quot;]
+    api_key = os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+    
+    url = f&quot;https://{region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1&quot;
+    
+    try:
+        with open(audio_path, &quot;rb&quot;) as audio_file:
+            response = requests.post(
+                url,
+                headers={
+                    &quot;Ocp-Apim-Subscription-Key&quot;: api_key,
+                    &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;,
+                    &quot;Accept&quot;: &quot;application/json&quot;
+                },
+                params={&quot;language&quot;: language, &quot;format&quot;: &quot;detailed&quot;},
+                data=audio_file
+            )
+        
+        if response.status_code == 200:
+            result = response.json()
+            if result.get(&quot;RecognitionStatus&quot;) == &quot;Success&quot;:
+                return result
+            else:
+                print(f&quot;Recognition failed: {result.get(&#39;RecognitionStatus&#39;)}&quot;)
+                return None
+        elif response.status_code == 400:
+            print(f&quot;Bad request: Check language code or audio format&quot;)
+        elif response.status_code == 401:
+            print(f&quot;Unauthorized: Check API key or token&quot;)
+        elif response.status_code == 403:
+            print(f&quot;Forbidden: Missing authorization header&quot;)
+        else:
+            print(f&quot;Error {response.status_code}: {response.text}&quot;)
+        
+        return None
+        
+    except requests.exceptions.RequestException as e:
+        print(f&quot;Request failed: {e}&quot;)
+        return None</code></pre></p>
+<h4>Async Version</h4>
+<p><pre><code>import os
+import aiohttp
+import asyncio
+
+async def transcribe_async(audio_file_path: str, language: str = &quot;en-US&quot;) -&gt; dict:
+    &quot;&quot;&quot;Async version using aiohttp.&quot;&quot;&quot;
+    region = os.environ[&quot;AZURE_SPEECH_REGION&quot;]
+    api_key = os.environ[&quot;AZURE_SPEECH_KEY&quot;]
+    
+    url = f&quot;https://{region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1&quot;
+    
+    headers = {
+        &quot;Ocp-Apim-Subscription-Key&quot;: api_key,
+        &quot;Content-Type&quot;: &quot;audio/wav; codecs=audio/pcm; samplerate=16000&quot;,
+        &quot;Accept&quot;: &quot;application/json&quot;
+    }
+    
+    params = {&quot;language&quot;: language, &quot;format&quot;: &quot;detailed&quot;}
+    
+    async with aiohttp.ClientSession() as session:
+        with open(audio_file_path, &quot;rb&quot;) as f:
+            audio_data = f.read()
+        
+        async with session.post(url, headers=headers, params=params, data=audio_data) as response:
+            response.raise_for_status()
+            return await response.json()
+
+# Usage
+result = asyncio.run(transcribe_async(&quot;audio.wav&quot;, &quot;en-US&quot;))
+print(result[&quot;DisplayText&quot;])</code></pre></p>
+<h4>Supported Languages</h4>
+<p>Common language codes (see <a href="https://learn.microsoft.com/azure/ai-services/speech-service/language-support" rel="noopener">full list</a>):</p>
+<table><thead><tr><th>Code</th><th>Language</th></tr></thead><tbody>
+<tr><td><code>en-US</code></td><td>English (US)</td></tr>
+<tr><td><code>en-GB</code></td><td>English (UK)</td></tr>
+<tr><td><code>de-DE</code></td><td>German</td></tr>
+<tr><td><code>fr-FR</code></td><td>French</td></tr>
+<tr><td><code>es-ES</code></td><td>Spanish (Spain)</td></tr>
+<tr><td><code>es-MX</code></td><td>Spanish (Mexico)</td></tr>
+<tr><td><code>zh-CN</code></td><td>Chinese (Mandarin)</td></tr>
+<tr><td><code>ja-JP</code></td><td>Japanese</td></tr>
+<tr><td><code>ko-KR</code></td><td>Korean</td></tr>
+<tr><td><code>pt-BR</code></td><td>Portuguese (Brazil)</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Use context managers for files and HTTP resources.</strong> Use <code>with open(...) as f:</code> and (when reusing connections) <code>with requests.Session() as session:</code> for sync code, or <code>async with aiohttp.ClientSession() as session:</code> for async code.</li>
+<li><strong>Use WAV PCM 16kHz mono</strong> for best compatibility</li>
+<li><strong>Enable chunked transfer</strong> for lower latency</li>
+<li><strong>Cache access tokens</strong> for 9 minutes (valid for 10)</li>
+<li><strong>Specify the correct language</strong> for accurate recognition</li>
+<li><strong>Use detailed format</strong> when you need confidence scores</li>
+<li><strong>Handle all RecognitionStatus values</strong> in production code</li>
+</ol>
+<h4>When NOT to Use This API</h4>
+<p>Use the Speech SDK or Batch Transcription API instead when you need:</p>
+<ul>
+<li>Audio longer than 60 seconds</li>
+<li>Real-time streaming transcription</li>
+<li>Partial/interim results</li>
+<li>Speech translation</li>
+<li>Custom speech models</li>
+<li>Batch transcription of many files</li>
+</ul>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/pronunciation-assessment.md](references/pronunciation-assessment.md)</td><td>Pronunciation assessment parameters and scoring</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-speech-to-text-rest-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-speech-to-text-rest-py" aria-label="Copy install azure-speech-to-text-rest-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-speech-to-text-rest-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-speech-to-text-rest-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

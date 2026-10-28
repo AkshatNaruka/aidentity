@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-platform-alert-configuration — Aidentity</title>
+<meta name="description" content="Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-alert-configuration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="agent-platform-alert-configuration — Aidentity">
+<meta property="og:description" content="Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-alert-configuration/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agent-platform-alert-configuration","description":"Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don't use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/agent-platform-alert-configuration/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>agent-platform-alert-configuration
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>agent-platform-alert-configuration</h1>
+      <p class="summary">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Agent Platform Alert Configuration</h3>
+<h4>Critical Steps</h4>
+<h5>1. Safety &amp; Confirmation Tiers (CRITICAL)</h5>
+<p>Before executing any commands or writing configurations on behalf of the user,</p>
+<p>you MUST adhere to the following safety tiers based on the action requested:</p>
+<ol>
+<li><strong>Tier R: Read-only (<code>check_telemetry.py</code> / <code>gather_agent_info.py</code>)</strong></li>
+</ol>
+<ul>
+<li><strong>Rule</strong>: No confirmation needed. You may execute these scripts</li>
+</ul>
+<p>        immediately to inspect telemetry status or gather agent configuration</p>
+<p>        details.</p>
+<ol>
+<li>**Tier B: Billing &amp; Resource Creation (<code>create_online_monitor.py</code> /</li>
+</ol>
+<p>    provisioning)**</p>
+<ul>
+<li><strong>Rule</strong>: <strong>Explicit User Confirmation Required</strong>. These actions incur</li>
+</ul>
+<p>        additional billing charges and create cloud resources. The agent MUST</p>
+<p>        ALWAYS warn the user explicitly about the potential extra billing costs</p>
+<p>        of BOTH the Online Monitor (specifically mentioning <strong>LLM evaluations</strong>)</p>
+<p>        and Telemetry (specifically mentioning **Cloud Trace/Cloud Logging</p>
+<p>        export**). You MUST STOP and ask for explicit approval before proceeding</p>
+<p>        with provisioning or providing setup commands.</p>
+<h5>2. Prerequisites &amp; Dependencies</h5>
+<h5>Agent Telemetry</h5>
+<ul>
+<li><strong>Disclaimer</strong>: For Reliability, Cost, Safety, and Security alerts to</li>
+</ul>
+<p>    function, the underlying agent MUST be instrumented to emit OpenTelemetry</p>
+<p>    (OTel) metrics. If the agent does not emit these metrics, the alerting</p>
+<p>    policies will have no data stream to evaluate.</p>
+<h5>Python Environment</h5>
+<p>Before executing any python script in this skill you MUST install the required</p>
+<p>dependencies in your environment. Run this command first:</p>
+<p><pre><code>pip install -r scripts/requirements.txt</code></pre></p>
+<h5>3. Input Assumptions</h5>
+<ul>
+<li><strong>Explicit Project Adherence</strong>: You must ONLY configure alerts, query</li>
+</ul>
+<p>    telemetry, or interact with the Google Cloud Project(s) explicitly provided</p>
+<p>    by the user in the prompt. Do NOT assume or use other projects from your</p>
+<p>    environment or history unless the user explicitly directs you to do so.</p>
+<ul>
+<li><strong>Sequential File Transformations</strong>: If the user explicitly asks to copy a</li>
+</ul>
+<p>    file and then modify it, you MUST perform these actions sequentially (copy</p>
+<p>    first, then modify) rather than writing the final content directly.</p>
+<h5>4. Execution Steps</h5>
+<ol>
+<li><strong>Mandatory Prerequisite Execution Protocol (SEQUENTIAL)</strong>: Before</li>
+</ol>
+<p>    generating or writing ANY configuration, you MUST execute these steps in</p>
+<p>    order:</p>
+<ol>
+<li><strong>Step 1: Streamlined Discovery (Mandatory)</strong>: Run</li>
+</ol>
+<p>        <code>gather_agent_info.py</code> to automatically identify agent runtime, verify</p>
+<p>        telemetry, metric scopes, linked datasets, and more. This script covers</p>
+<p>        most of the manual verifications listed in subsequent steps.</p>
+<ul>
+<li>Command: `python3 scripts/gather_agent_info.py --project-id</li>
+</ul>
+<p>            {project_id} --agent-name {agent_name}`</p>
+<ul>
+<li><strong>Note</strong>: If this script <strong>fails</strong>, returns <strong>partial data</strong>, or</li>
+</ul>
+<p>            doesn&#39;t produce everything you need, you MUST satisfy requirements</p>
+<p>            by running the manual fallback steps listed in Step 2 and then</p>
+<p>            perform Step 3 below. If Step 1 succeeds and provides all info,</p>
+<p>            <strong>SKIP</strong> to Step 3 (Pre-existing Policies Verification).</p>
+<ol>
+<li><strong>Step 2: Metric Scope Verification (Fallback)</strong>: Run this ONLY if Step</li>
+</ol>
+<p>        1 failed to determine the metric scope.</p>
+<ul>
+<li><strong>Action A (CLI)</strong>: Run `gcloud beta monitoring metrics-scopes list</li>
+</ul>
+<p>            projects/{project_id}`. If a scoping project is returned, you MUST</p>
+<p>            deploy policies there.</p>
+<ul>
+<li><strong>Action B (Code Scan)</strong>: Search Terraform configurations for</li>
+</ul>
+<p>            <code>google_monitoring_monitored_project</code> resources to extract the</p>
+<p>            scoping project.</p>
+<ul>
+<li><strong>Action C (Fallback)</strong>: If ambiguous, ASK the user: &quot;Are you using</li>
+</ul>
+<p>            a multi-project Cloud Monitoring Metric Scope? If so, what is the</p>
+<p>            scoping project ID?&quot;</p>
+<ol>
+<li><strong>Step 3: Pre-existing Policies Verification</strong>: Avoid duplicates.</li>
+</ol>
+<ul>
+<li><strong>Action</strong>: Scan the target directory to see if aggregated policies</li>
+</ul>
+<p>            already exist targeting the same metrics (grouped by</p>
+<p>            <code>reasoning_engine_id</code> or <code>gen_ai_agent_name</code>). Use</p>
+<p>            <code>scan_duplicates.py</code> to verify.</p>
+<ol>
+<li><strong>Alert Policy Type Resource Files</strong>: You MUST list and read files under</li>
+</ol>
+<p>    <code>references/</code> with names ending in <code>_alert_policies.md</code> to learn how to</p>
+<p>    configure alert policies based on type. By default you MUST configure all of</p>
+<p>    the following alert types UNLESS the user requests to generate explicit</p>
+<p>    alert policies and/or types. Follow their tables of content to help you find</p>
+<p>    the reference sections you need to read:</p>
+<p>    Alert Type      | Reference File</p>
+<p>    :-------------- | :-------------</p>
+<p>    <strong>Reliability</strong> | [reliability_alert_policies.md](references/reliability_alert_policies.md)</p>
+<p>    <strong>Quality</strong>     | [quality_alert_policies.md](references/quality_alert_policies.md)</p>
+<p>    <strong>Cost</strong>        | [cost_alert_policies.md](references/cost_alert_policies.md)</p>
+<p>    <strong>Safety</strong>      | [safety_alert_policies.md](references/safety_alert_policies.md)</p>
+<p>    <strong>Security</strong>    | [security_alert_policies.md](references/security_alert_policies.md)</p>
+<h5>5. Outputs &amp; Formats</h5>
+<ul>
+<li><strong>Always configure the supported alerting policies</strong> for the target agent:</li>
+<li><strong>For Reliability Monitoring</strong>: You MUST configure exactly five alerting</li>
+</ul>
+<p>        policies:</p>
+<ol>
+<li><strong>Latency</strong> (anomaly monitoring)</li>
+<li><strong>Error Rate - Fast Burn SLO</strong> (1-Hour Window)</li>
+<li><strong>Error Rate - Slow Burn SLO</strong> (3-Day Window)</li>
+<li><strong>Model Call Error Rate</strong> (SQL-based Observability Analytics</li>
+</ol>
+<p>            Alerting)</p>
+<ol>
+<li><strong>Tool Call Error Rate</strong> (SQL-based Observability Analytics</li>
+</ol>
+<p>            Alerting)</p>
+<ul>
+<li><strong>For Quality Monitoring</strong>: You MUST configure exactly three alerting</li>
+</ul>
+<p>        policies (Requires Vertex AI Online Monitors):</p>
+<ol>
+<li><strong>Final Response Quality</strong></li>
+<li><strong>Tool Use Quality</strong></li>
+<li><strong>Hallucination</strong></li>
+</ol>
+<ul>
+<li><strong>For Cost Monitoring</strong>: You MUST configure exactly one cost alerting</li>
+</ul>
+<p>        policy:</p>
+<ol>
+<li><strong>Rapid Token Burn Rate</strong> (anomaly monitoring)</li>
+</ol>
+<ul>
+<li><strong>For Safety Monitoring</strong>: You MUST configure exactly one safety</li>
+</ul>
+<p>        alerting policy:</p>
+<ol>
+<li><strong>High Model Armor Safety Policy Trigger Rate</strong> (SQL-based</li>
+</ol>
+<p>            Observability Analytics Alerting)</p>
+<ul>
+<li><strong>For Security Monitoring</strong>: You MUST configure exactly one security</li>
+</ul>
+<p>        alerting policy:</p>
+<ol>
+<li><strong>High IAM Permission Denied Trigger Rate</strong> (SQL-based Observability</li>
+</ol>
+<p>            Analytics Alerting)</p>
+<ul>
+<li><strong>Terraform Only</strong>: Write the generated observability configuration ONLY as</li>
+</ul>
+<p>    Terraform (<code>.tf</code>) files (such as <code>alerts.tf</code>, <code>variables.tf</code>).</p>
+<ul>
+<li>You <strong>ONLY</strong> need to install Terraform if you&#39;re asked to deploy the</li>
+</ul>
+<p>        alerts AND there is no valid Terraform install. SQL-based alerting using</p>
+<p>        <code>condition_sql</code> requires the provider version <strong>&gt;= 6.0.0</strong> (or late 5.x</p>
+<p>        versions supporting the feature).</p>
+<ul>
+<li>If you are <strong>NOT</strong> asked to deploy the alerts you do not need to install</li>
+</ul>
+<p>        terraform.</p>
+<ul>
+<li><strong>Dynamic Multi-Resource Alerting (No Single-Resource Pinning)</strong>: You MUST</li>
+</ul>
+<p>    NOT hardcode specific agent IDs or resource name filters (for example,</p>
+<p>    <code>{gen_ai_agent_name=&quot;{agent_name}&quot;}</code> or</p>
+<p>    <code>metric.labels.agent_resource_name=&quot;{agent_name}&quot;</code>) in alerting conditions</p>
+<p>    unless explicitly requested (for example, &quot;ONLY for this agent&quot;). Merely mentioning</p>
+<p>    a specific agent name or ID in the request does NOT constitute an explicit</p>
+<p>    request to pin/filter; you MUST still default to dynamic grouping to cover</p>
+<p>    all agents. To cover all active agents in the project dynamically:</p>
+<p>    <em>Good Example (PromQL Grouping):</em></p>
+<p>    <pre><code>    sum(rate(workload_googleapis_com:gen_ai_invoke_agent_duration_count{monitored_resource=&quot;generic_node&quot;}[5m])) by (gen_ai_agent_name)
+    </code></pre></p>
+<p>    <em>Bad Example (PromQL Hardcoded Filter):</em></p>
+<p>    <pre><code>    sum(rate(workload_googleapis_com:gen_ai_invoke_agent_duration_count{monitored_resource=&quot;generic_node&quot;, gen_ai_agent_name=&quot;support-bot&quot;}[5m]))
+    </code></pre></p>
+<ul>
+<li><strong>For Reliability Metrics using PromQL</strong>: ALWAYS use grouping</li>
+</ul>
+<p>        aggregations. Group by <code>gen_ai_agent_name</code> (for example, `by</p>
+<p>        (gen_ai_agent_name)`). Avoid filtering to a single ID/Name unless</p>
+<p>        requested.</p>
+<ul>
+<li><strong>For Quality Metrics using Standard Threshold Filters</strong>: Omit the</li>
+</ul>
+<p>        <code>agent_resource_name</code> filter entirely. Configure the condition filter to</p>
+<p>        only target the monitored resource type</p>
+<p>        (<code>aiplatform.googleapis.com/OnlineEvaluator</code>) and metric type</p>
+<p>        (<code>aiplatform.googleapis.com/online_evaluator/scores</code>) globally for the</p>
+<p>        project.</p>
+<p>    <em>Good Example (SQL Grouping):</em></p>
+<p>    <pre><code>    SELECT
+      JSON_VALUE(resource.attributes, &#39;$.&quot;cloud.resource_id&quot;&#39;) as agent_id,
+      ...
+    FROM ...
+    GROUP BY agent_id
+    </code></pre></p>
+<p>    <em>Bad Example (SQL Hardcoded Filter):</em></p>
+<p>    <pre><code>    SELECT ...
+    FROM ...
+    WHERE JSON_VALUE(resource.attributes, &#39;$.&quot;cloud.resource_id&quot;&#39;) = &#39;support-bot&#39;
+    </code></pre></p>
+<ul>
+<li><strong>For Downstream Calls using SQL</strong>: Omit the <code>ENDS_WITH</code> filter</li>
+</ul>
+<p>        targeting a specific agent name. Instead, extract the agent identifier</p>
+<p>        (for example, <code>JSON_VALUE(resource.attributes, &#39;$.&quot;cloud.resource_id&quot;&#39;)</code>) and</p>
+<p>        add it to the <code>GROUP BY</code> clause alongside the model or tool name.</p>
+<ul>
+<li><strong>Directory Inference</strong>: Prefer the path explicitly provided by the user (if</li>
+</ul>
+<p>    any). Otherwise, deploy configuration files to target Terraform or SRE</p>
+<p>    folders (such as <code>monitoring/</code>, <code>ops/</code>, <code>sre/</code>). Use tools to locate where</p>
+<p>    alert policies or state pointers exist in the project, rather than blindly</p>
+<p>    writing to the root.</p>
+<ul>
+<li><strong>Notification Channels</strong>: By default, never configure any notification</li>
+</ul>
+<p>    channels without user input. If the user explicitly provides a notification</p>
+<p>    channel in their prompt, configure the alerts to use it. If no notification</p>
+<p>    channel is provided, you MUST explicitly ask the user in your final response</p>
+<p>    if they would like to configure notification channels. **This is a mandatory</p>
+<p>    question and you MUST NOT omit it from your response.<strong> </strong>IMPORTANT** Do NOT</p>
+<p>    make assumptions about notification channels. If you search the codebase for</p>
+<p>    a notification channel you must ALWAYS confirm with the user before using</p>
+<p>    it.</p>
+<ul>
+<li><strong>Plain English Response</strong>: You MUST include a plain English explanation for</li>
+</ul>
+<p>    what the alerts do in your response. This must explain in plain English what</p>
+<p>    the alert measures, how the algorithm works, and what a trigger indicates.</p>
+<h5>6. Output Verification</h5>
+<ul>
+<li><strong>Background Task Cleanup</strong>: You MUST verify the status of all background</li>
+</ul>
+<p>    tasks that you spawn. Before completing your execution and returning your</p>
+<p>    final response, you MUST terminate or kill any active or hanging background</p>
+<p>    tasks (using the <code>manage_task</code> tool with action <code>kill</code>).</p>
+<ul>
+<li><strong>Validate Configuration</strong>: Run the <strong>Config Linting</strong> tool to make sure all</li>
+</ul>
+<p>    the output files are written with the correct grammar and structure. See</p>
+<p>    details about the tool in the <code>Tooling Scripts</code> section below.</p>
+<h4>Tooling Scripts</h4>
+<p>Use the following scripts to discover agents, gather configuration details,</p>
+<p>resolve duplicates, and validate configs:</p>
+<ol>
+<li><strong>Agent Information Gathering</strong>: Streamlines discovery, environment auditing</li>
+</ol>
+<p>    (Metric Scopes, BQ Datasets, Notification Channels), table derivations (Log</p>
+<p>    &amp; Trace), and Online Evaluator verifications.</p>
+<ul>
+<li>Command: `python3 scripts/gather_agent_info.py --project-id {project_id}</li>
+</ul>
+<p>        --agent-name {agent_name}`</p>
+<ol>
+<li><strong>Duplicate Verification &amp; Merge</strong>: Verifies pre-existing alerts in the</li>
+</ol>
+<p>    target folder to ensure changes are merged in-place rather than appended:</p>
+<ul>
+<li>Command: `python3 scripts/scan_duplicates.py {target_tf_dir}</li>
+</ul>
+<p>        --engine-var &#39;${var.gen_ai_agent_name}&#39;`</p>
+<ol>
+<li><strong>Config Linting</strong>: Validates PromQL grammar, matching engine labels, and</li>
+</ol>
+<p>    HCL structure:</p>
+<ul>
+<li>Command: <code>python3 scripts/lint_syntax.py {path_to_tf_file}</code></li>
+<li><strong>Self-Correction Loop</strong>: If validation fails (exits non-zero or outputs</li>
+</ul>
+<p>        errors), you MUST read the command output, locate the line/file</p>
+<p>        containing the lint error, analyze the PromQL syntax or Terraform HCL</p>
+<p>        issue, apply adjustments in-place, and re-run the <code>lint_syntax.py</code></p>
+<p>        validation. Repeat this loop until the validation script passes</p>
+<p>        successfully.</p>
+<h4>Gotchas &amp; Behavioral Corrections</h4>
+<ul>
+<li><strong>Raw Error Boundaries</strong>: Explain that raw error counts or absolute failed</li>
+</ul>
+<p>    request count boundaries do not scale under changing traffic throughput.</p>
+<p>    Recommend ratio-based error rate alerts instead.</p>
+<ul>
+<li><strong>Safe Threshold Modulation E2E Validation</strong>: When verifying a dynamic</li>
+</ul>
+<p>    metric threshold policy end-to-end, do NOT attempt to force real platform</p>
+<p>    errors. Instead, deploy the alert policy with standard safe bounds (Z-score</p>
+<p>    multiplier &gt; 15), then temporarily update standard deviation Z-score limits</p>
+<p>    to a negative value (for example, &gt; -3) to trigger/verify the &quot;Firing&quot; state before</p>
+<p>    reverting. Always get confirmation before taking this action proactively.</p>
+<ul>
+<li><strong>Expected Script Failures</strong>:</li>
+<li><code>scan_duplicates.py</code> exiting with code 1: Parse the JSON</li>
+</ul>
+<p>        output for duplicate resource targets. Perform in-place upgrade edits,</p>
+<p>        then re-check until it passes with 0.</p>
+<ul>
+<li><strong>Avoid Redundant Discovery Calls</strong>: If <code>gather_agent_info.py</code></li>
+</ul>
+<p>        successfully returns the Trace or Log table names (or writes them to</p>
+<p>        variables file), do NOT redundantly call</p>
+<p>        <code>list_trace_scope_table_names.py</code> or <code>list_log_scope_table_names.py</code>.</p>
+<p>        These scripts are run internally by <code>gather_agent_info.py</code> and are</p>
+<p>        provided as external Fallbacks only.</p>
+<ul>
+<li><strong>Script Execution Failures &amp; Self-Correction</strong>: If the execution of</li>
+</ul>
+<p>        utility scripts (such as <code>gather_agent_info.py</code>, <code>check_telemetry.py</code>,</p>
+<p>        <code>create_online_monitor.py</code>, <code>analyze_traffic.py</code>,</p>
+<p>        <code>list_log_scope_table_names.py</code>, or <code>list_trace_scope_table_names.py</code>)</p>
+<p>        fails unexpectedly, you MUST read and inspect the stdout/stderr logs or</p>
+<p>        error output. Analyze the error message and attempt to dynamically</p>
+<p>        correct parameters and retry execution before escalating or</p>
+<p>        falling back to manual plans. Consult the relevant domain-specific</p>
+<p>        reference file for detailed troubleshooting steps for specific scripts.</p>
+<ul>
+<li><strong>Distribution Metric Aligner Constraint</strong>: Standard <code>ALIGN_MEAN</code> cannot be</li>
+</ul>
+<p>    applied to <code>DELTA</code> distribution metrics like <code>online_evaluator/scores</code>. You</p>
+<p>    MUST use percentile-based aligners (like <code>ALIGN_PERCENTILE_50</code>) to reduce</p>
+<p>    the score distribution into a comparable numeric stream.</p>
+<ul>
+<li><strong>HCL Heredoc Interpolation</strong>: When referencing Terraform variables inside</li>
+</ul>
+<p>    PromQL or SQL queries (which are defined as strings), you MUST use the</p>
+<p>    ${var.variable_name} syntax. Bare references like var.variable_name will</p>
+<p>    fail at deployment time.</p>
+<ul>
+<li><strong>Avoid Recursive Directory Operations</strong>: You MUST NOT run recursive listing</li>
+</ul>
+<p>    or search commands (such as <code>ls -R</code>, <code>find .</code>, or raw recursive <code>grep</code>) from</p>
+<p>    the repository root if it contains a very large number of files, as this</p>
+<p>    will freeze your session. Always target specific subdirectories.</p>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluate-online" rel="noopener">Continuous evaluation with online monitors</a></li>
+<li><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/rubric-metric-details" rel="noopener">Agent Platform Quality Metrics</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/alerts" rel="noopener">Google Cloud Alerting Policies Guide</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/promql" rel="noopener">Google Cloud Monitoring PromQL Documentation</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-migrate-from-ai-studio/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-migrate-from-ai-studio guides agents and users through migrating from gemini api in google ai studio to gemini enterprise agent platform (formerly vertex ai). use this skill when moving applications to google cloud, to leverage cloud credits, or to unify inferencing with other cloud infrastructure (iam, billing, telemetry). cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-migrate-from-ai-studio</span>
+    <span class="r-desc">Guides agents and users through migrating from Gemini API in Google AI Studio to Gemini Enterprise Agent Platform (formerly Vertex AI). Use this skill when moving applications to Google Cloud, to leverage Cloud credits, or to unify inferencing with other Cloud infrastructure (IAM, billing, telemetry).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/agent-platform-alert-configuration</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/agent-platform-alert-configuration" aria-label="Copy install agent-platform-alert-configuration">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/agent-platform-alert-configuration</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/agent-platform-alert-configuration/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

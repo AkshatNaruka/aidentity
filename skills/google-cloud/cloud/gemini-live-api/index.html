@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gemini-live-api — Aidentity</title>
+<meta name="description" content="Generates a Gemini LiveAPI client service class in the user&#39;s chosen programming language. Use when the user wants to build, scaffold, or integrate a client that connects to the Gemini Enterprise LiveAPI websocket endpoint, handles session setup/resumption, bearer token refresh, and sending/receiving `ClientMessage`/`ServerMessage` protos. Don&#39;t use for general (non-live, non-bidirectional) Gemini API usage such as one-shot `generateContent`, embeddings, image/video generation, or fine-tuning — use the `gemini-api` skill for those.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-live-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gemini-live-api — Aidentity">
+<meta property="og:description" content="Generates a Gemini LiveAPI client service class in the user&#39;s chosen programming language. Use when the user wants to build, scaffold, or integrate a client that connects to the Gemini Enterprise LiveAPI websocket endpoint, handles session setup/resumption, bearer token refresh, and sending/receiving `ClientMessage`/`ServerMessage` protos. Don&#39;t use for general (non-live, non-bidirectional) Gemini API usage such as one-shot `generateContent`, embeddings, image/video generation, or fine-tuning — use the `gemini-api` skill for those.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-live-api/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gemini-live-api","description":"Generates a Gemini LiveAPI client service class in the user's chosen programming language. Use when the user wants to build, scaffold, or integrate a client that connects to the Gemini Enterprise LiveAPI websocket endpoint, handles session setup/resumption, bearer token refresh, and sending/receiving `ClientMessage`/`ServerMessage` protos. Don't use for general (non-live, non-bidirectional) Gemini API usage such as one-shot `generateContent`, embeddings, image/video generation, or fine-tuning — use the `gemini-api` skill for those.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gemini-live-api/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gemini-live-api
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gemini-live-api</h1>
+      <p class="summary">Generates a Gemini LiveAPI client service class in the user&#39;s chosen programming language. Use when the user wants to build, scaffold, or integrate a client that connects to the Gemini Enterprise LiveAPI websocket endpoint, handles session setup/resumption, bearer token refresh, and sending/receiving `ClientMessage`/`ServerMessage` protos. Don&#39;t use for general (non-live, non-bidirectional) Gemini API usage such as one-shot `generateContent`, embeddings, image/video generation, or fine-tuning — use the `gemini-api` skill for those.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>LiveAPI Service Skill</h3>
+<p>This skill provides instructions for generating a **LiveAPI client service</p>
+<p>class** that connects to the Gemini Enterprise Live API over WebSockets. The</p>
+<p>generated client handles bidirectional streaming, bearer-token authentication</p>
+<p>via Application Default Credentials (ADC), transparent session resumption, and</p>
+<p><code>ClientMessage</code> / <code>ServerMessage</code> proto exchange.</p>
+<p>The skill also produces a demo frontend + backend service so the user can</p>
+<p>interactively validate the generated client (text, audio, video, transcription,</p>
+<p>and interrupt handling).</p>
+<h4>Prerequisites</h4>
+<p>Before running the generation flow, ensure the following are available on the</p>
+<p>host:</p>
+<ul>
+<li>A Google Cloud project with the Vertex AI / Gemini Enterprise Agent Platform</li>
+</ul>
+<p>    APIs enabled.</p>
+<ul>
+<li>Application Default Credentials configured on the host running the generated</li>
+</ul>
+<p>    client:</p>
+<p>    <pre><code>    gcloud auth application-default login
+    </code></pre></p>
+<ul>
+<li>A destination output folder supplied by the user (e.g. <code>/tmp/liveapi_out</code>)</li>
+</ul>
+<p>    where the generated code, environment, and demo will be written. <strong>Never</strong></p>
+<p>    mutate the host&#39;s system Python environment.</p>
+<ul>
+<li>The user&#39;s chosen implementation language (Python is the default and</li>
+</ul>
+<p>    reference language for this skill).</p>
+<h4>Reference Files</h4>
+<p>Provided files in <code>references/</code> (do <strong>not</strong> treat these as standalone skills —</p>
+<p>they are loaded on demand):</p>
+<ul>
+<li><code>client_server_messages.md</code>: Public reference for the <code>ClientMessage</code> /</li>
+</ul>
+<p>    <code>ServerMessage</code> schemas used by the Live API.</p>
+<ul>
+<li><code>client_server_messages.proto</code>: The proto definition generated from</li>
+</ul>
+<p>    <code>client_server_messages.md</code>.</p>
+<ul>
+<li><code>session_manager.md</code>: Describes how to correctly handle sessions, buffering,</li>
+</ul>
+<p>    and resumption on disconnection.</p>
+<h4>Steps</h4>
+<h5>Step 1: Copy the reference files</h5>
+<p>Copy <code>client_server_messages.md</code>, <code>client_server_messages.proto</code>, and</p>
+<p><code>session_manager.md</code> from this skill&#39;s <code>references/</code> folder into the user&#39;s</p>
+<p>destination output folder. These files become the source of truth for the</p>
+<p>generated client.</p>
+<h5>Step 2: Reconcile with the public documentation</h5>
+<p>Examine the public documents linked from <code>client_server_messages.md</code>. If there</p>
+<p>are any discrepancies between the public documents and the copied</p>
+<p><code>client_server_messages.md</code> / <code>client_server_messages.proto</code>, update the copies</p>
+<p>in the destination folder so the generated client compiles and runs against the</p>
+<p>current server contract.</p>
+<h5>Step 3: Implement the client class</h5>
+<p>Implement a class in the user&#39;s chosen language that:</p>
+<ul>
+<li>Imports the local <code>client_server_messages.proto</code> types (<code>ClientMessage</code>,</li>
+</ul>
+<p>    <code>ServerMessage</code>).</p>
+<ul>
+<li>Opens a WebSocket connection to the Live API endpoint.</li>
+<li>Exposes async methods so the user can send and receive data to/from the</li>
+</ul>
+<p>    model.</p>
+<p>For languages that require an isolated runtime (e.g. Python), create an isolated</p>
+<p>environment (e.g. <code>venv</code>) <strong>inside the destination folder</strong> and generate a bash</p>
+<p>script (e.g. <code>setup.sh</code>) that recreates the environment and installs</p>
+<p>dependencies. <strong>Never</strong> install into the system interpreter or the user&#39;s global</p>
+<p>site-packages, and never instruct the user to run <code>sudo pip install</code>.</p>
+<h5>Initialization parameters</h5>
+<p>The user provides the following at construction time:</p>
+<ul>
+<li><code>project_id</code></li>
+<li><code>location</code></li>
+<li><code>model_id</code></li>
+<li><code>config</code>: a <code>ClientMessage</code> with the <code>setup</code> field populated.</li>
+</ul>
+<h5>Authentication</h5>
+<p>Obtain a bearer token via Application Default Credentials, attach it to the</p>
+<p>WebSocket connect request as <code>Authorization: Bearer &lt;token&gt;</code>, refresh the token</p>
+<p>before or upon expiry, and reuse the refreshed token on every reconnection</p>
+<p>(including <code>go_away</code> and unexpected disconnects). <strong>Do not</strong> hard-code a</p>
+<p>long-lived API key as the only auth mechanism.</p>
+<h5>Public async API</h5>
+<p>The class MUST expose the following async methods, gated on receipt of a</p>
+<p><code>setup_complete</code> <code>ServerMessage</code> before sending:</p>
+<ul>
+<li><code>send_realtime_data(data)</code>: send realtime input. <code>data</code> is a <code>ClientMessage</code></li>
+</ul>
+<p>    carrying a <code>realtime_input</code> field.</p>
+<ul>
+<li><code>send_client_content(data)</code>: send non-realtime, turn-based content that</li>
+</ul>
+<p>    contributes to history. <code>data</code> is a <code>ClientMessage</code> carrying a</p>
+<p>    <code>client_content</code> field.</p>
+<ul>
+<li><code>receive()</code>: yield <code>ServerMessage</code> instances parsed from the WebSocket</li>
+</ul>
+<p>    stream.</p>
+<p>Do not expose synchronous blocking variants as the primary API surface.</p>
+<h5>Step 4: Write a test file</h5>
+<p>Once the client is implemented, generate a test file that initializes the</p>
+<p>connection and exercises sending <code>text</code>, <code>audio</code>, and <code>video</code> data and receiving</p>
+<p>the responses. Ask the user for any information required to run the test</p>
+<p>(project, model, media samples).</p>
+<h5>Step 5: Generate <code>how_to_run.md</code></h5>
+<p>Provide a <code>how_to_run.md</code> in the destination folder that documents the generated</p>
+<p>class. Include full examples showing how to build <code>ClientMessage</code> payloads for</p>
+<p>every supported modality, how to send them, and how to receive data from the</p>
+<p>model.</p>
+<h5>Step 6: Generate a demo frontend + backend service</h5>
+<p>Create scripts that deploy the implementation as a service with both a frontend</p>
+<p>UI and a backend service (any language). The service MUST reuse the</p>
+<p><code>ClientMessage</code> / <code>ServerMessage</code> protos from Step 1 for wire traffic. Through</p>
+<p>the UI the user should be able to:</p>
+<ul>
+<li>Start a new connection / close the current connection.</li>
+<li>Select the model to use.</li>
+<li>Select input sources (audio and/or video from camera or screenshot) and</li>
+</ul>
+<p>    stream them to the model.</p>
+<ul>
+<li>Send a text message to the model.</li>
+<li>Hear model audio and see the interleaved model and user transcription /</li>
+</ul>
+<p>    conversation history.</p>
+<p>While implementing audio and transcription playback, follow the guidance in</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api/best-practices" rel="noopener">Live API best practices</a>.</p>
+<h5>Handling the <code>interrupt</code> signal</h5>
+<p>When a <code>ServerMessage</code>&#39;s <code>server_content</code> arrives with <code>interrupted: true</code>, the</p>
+<p>UI MUST:</p>
+<ul>
+<li>Ensure played audio and its corresponding transcription remain time-aligned.</li>
+<li>Immediately stop the currently playing model audio and stop appending to the</li>
+</ul>
+<p>    in-progress transcription bubble.</p>
+<ul>
+<li>Clear the unplayed audio buffer and any pending unrendered transcription so</li>
+</ul>
+<p>    stale content does not bleed into the next turn.</p>
+<ul>
+<li>Start new chat bubbles for the next user and model turns.</li>
+</ul>
+<h5>Handling the transcription <code>finished</code> signal</h5>
+<p>For streamed <code>input_transcription</code> / <code>output_transcription</code> chunks, append to</p>
+<p>the currently active bubble while <code>finished</code> is unset, and close that bubble and</p>
+<p>start a fresh one when <code>finished</code> is observed. Route <code>input_transcription</code> text</p>
+<p>to user-role bubbles and <code>output_transcription</code> text to model-role bubbles.</p>
+<h5>Step 7: Generate <code>how_to_test_with_ui.md</code></h5>
+<p>Write <code>how_to_test_with_ui.md</code> describing how to launch and use the demo</p>
+<p>service. It MUST include:</p>
+<ul>
+<li>The exact shell command(s) or script invocation(s) to start the backend</li>
+</ul>
+<p>    service.</p>
+<ul>
+<li>The exact shell command(s) or script invocation(s) to start the frontend UI.</li>
+<li>The host and port (e.g. <code>http://localhost:PORT</code>) the user should open in</li>
+</ul>
+<p>    their browser.</p>
+<ul>
+<li>How to start a session, select a model, choose input sources (mic, camera,</li>
+</ul>
+<p>    screen), send a text message, and observe model audio and transcription in</p>
+<p>    the UI.</p>
+<h4>Validation Checklist</h4>
+<p>Before considering the generation complete, verify each item:</p>
+<ul>
+<li>[ ] <code>client_server_messages.md</code>, <code>client_server_messages.proto</code>, and</li>
+</ul>
+<p>    <code>session_manager.md</code> were copied into the destination folder.</p>
+<ul>
+<li>[ ] The generated client imports the local proto-generated <code>ClientMessage</code></li>
+</ul>
+<p>    and <code>ServerMessage</code> types.</p>
+<ul>
+<li>[ ] The client connects to the Live API WebSocket at</li>
+</ul>
+<p>    <code>wss://{location}-aiplatform.googleapis.com/ws/google.cloud.aiplatform.v1beta1.LlmBidiService/BidiGenerateContent</code></p>
+<p>    (or the <code>wss://aiplatform.googleapis.com/...</code> global variant), and formats</p>
+<p>    the setup <code>model</code> field as</p>
+<p>    <code>projects/{project_id}/locations/{location}/publishers/google/models/{model_id}</code>.</p>
+<ul>
+<li>[ ] Authentication uses ADC-provided bearer tokens sent as `Authorization:</li>
+</ul>
+<p>    Bearer &lt;token&gt;`, is refreshed before expiry, and reattached on every</p>
+<p>    reconnect.</p>
+<ul>
+<li>[ ] Public async methods <code>send_realtime_data</code>, <code>send_client_content</code>, and</li>
+</ul>
+<p>    <code>receive</code> are present, correctly typed, and gated on <code>setup_complete</code>.</p>
+<ul>
+<li>[ ] Transparent session resumption is enabled</li>
+</ul>
+<p>    (<code>session_resumption.transparent = true</code>), the latest <code>new_handle</code> is</p>
+<p>    tracked, sent-message indexing starts at 1, the buffer is pruned via</p>
+<p>    <code>last_consumed_client_message_index</code>, and buffered messages are replayed on</p>
+<p>    reconnect (including on <code>go_away</code> and WebSocket close codes 1000 / 1006).</p>
+<ul>
+<li>[ ] If using python, an isolated environment (e.g. <code>venv</code>) plus a <code>setup.sh</code></li>
+</ul>
+<p>    and <code>requirements.txt</code> (or equivalent) exist inside the destination folder;</p>
+<p>    no changes were made to system or user-global Python.</p>
+<ul>
+<li>[ ] <code>how_to_run.md</code> and <code>how_to_test_with_ui.md</code> are present, and the demo</li>
+</ul>
+<p>    UI reuses the same <code>ClientMessage</code> / <code>ServerMessage</code> protos.</p>
+<ul>
+<li>[ ] Interrupt handling and transcription <code>finished</code> handling behave as</li>
+</ul>
+<p>    described above.</p>
+<ul>
+<li>[ ] The client does <strong>not</strong> target <code>generativelanguage.googleapis.com</code> and</li>
+</ul>
+<p>    does <strong>not</strong> authenticate via API key in a query string.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gemini-live-api</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gemini-live-api" aria-label="Copy install gemini-live-api">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gemini-live-api</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gemini-live-api/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

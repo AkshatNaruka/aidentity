@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-monitoring-list-time-series-request — Aidentity</title>
+<meta name="description" content="Generates valid Cloud Monitoring ListTimeSeries requests and aggregation specifications from metric descriptors and resource parameters. Use when asked to create, generate, format, or build ListTimeSeries requests, JSON payloads, filter expressions, or aligner/reducer aggregations for Cloud Monitoring metrics and charts. Don&#39;t use for metric discovery or metric selection.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-list-time-series-request/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-monitoring-list-time-series-request — Aidentity">
+<meta property="og:description" content="Generates valid Cloud Monitoring ListTimeSeries requests and aggregation specifications from metric descriptors and resource parameters. Use when asked to create, generate, format, or build ListTimeSeries requests, JSON payloads, filter expressions, or aligner/reducer aggregations for Cloud Monitoring metrics and charts. Don&#39;t use for metric discovery or metric selection.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-list-time-series-request/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-monitoring-list-time-series-request","description":"Generates valid Cloud Monitoring ListTimeSeries requests and aggregation specifications from metric descriptors and resource parameters. Use when asked to create, generate, format, or build ListTimeSeries requests, JSON payloads, filter expressions, or aligner/reducer aggregations for Cloud Monitoring metrics and charts. Don't use for metric discovery or metric selection.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-monitoring-list-time-series-request/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-monitoring-list-time-series-request
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-monitoring-list-time-series-request</h1>
+      <p class="summary">Generates valid Cloud Monitoring ListTimeSeries requests and aggregation specifications from metric descriptors and resource parameters. Use when asked to create, generate, format, or build ListTimeSeries requests, JSON payloads, filter expressions, or aligner/reducer aggregations for Cloud Monitoring metrics and charts. Don&#39;t use for metric discovery or metric selection.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Cloud Monitoring ListTimeSeries Request Generator</h3>
+<p>Use this skill to translate any Cloud Monitoring metric descriptor into valid,</p>
+<p>production-ready <code>ListTimeSeries</code> REST API query parameters (<code>name</code>, <code>filter</code>,</p>
+<p><code>interval.startTime</code>, <code>interval.endTime</code>, <code>aggregation.*</code>, <code>view</code>).</p>
+<h4>CRITICAL RULES</h4>
+<ul>
+<li><strong>Mandatory Project ID Clarification</strong>: You MUST ensure the GCP Project ID</li>
+</ul>
+<p>    is present in the user prompt, input payload, or environment context (such</p>
+<p>    as via <code>gcloud config get-value project</code>). If the Project ID is missing and</p>
+<p>    cannot be resolved, you MUST ask the user to clarify it before generating or</p>
+<p>    executing <code>ListTimeSeries</code> requests. Do NOT use placeholders for project</p>
+<p>    names.</p>
+<h4>Workflow</h4>
+<h5>Inspect Metric Metadata</h5>
+<ol>
+<li><strong>Use Provided Metric Metadata First</strong>: If the user&#39;s prompt already</li>
+</ol>
+<p>    includes metric metadata such as <code>metric.type</code>, <code>metricKind</code>, <code>valueType</code>,</p>
+<p>    resource types, or label keys, use those values directly instead of calling</p>
+<p>    API tools.</p>
+<ol>
+<li><strong>Discover Missing Metadata</strong>: If exact metric descriptors including</li>
+</ol>
+<p>    <code>metric.type</code>, <code>metricKind</code>, and <code>valueType</code> are missing or underspecified,</p>
+<p>    resolve the target metric&#39;s descriptor using one of these paths:</p>
+<ul>
+<li><strong>Vague Query</strong>: If the prompt is vague, such as asking for VM CPU</li>
+</ul>
+<p>        usage, use the <code>cloud-monitoring-metric-selection</code> skill first to</p>
+<p>        identify the specific metric type.</p>
+<ul>
+<li><strong>Known Metric Type</strong>: If you already have the specific metric type name</li>
+</ul>
+<p>        such as <code>compute.googleapis.com/instance/cpu/utilization</code>, but need its</p>
+<p>        descriptor, call the <code>list_metric_descriptors</code> MCP tool. If the tool is</p>
+<p>        missing, refer to the <code>cloud-monitoring-metric-selection</code> skill to</p>
+<p>        configure the Cloud Monitoring MCP server.</p>
+<ul>
+<li><strong>Fallback</strong>: If the MCP tool cannot be configured, fall back to making</li>
+</ul>
+<p>        a direct Cloud Monitoring API call.</p>
+<ol>
+<li><strong>Identify Key Fields</strong>: From the retrieved descriptor, identify key schema</li>
+</ol>
+<p>    attributes:</p>
+<ul>
+<li><strong><code>type</code></strong>: The Cloud Monitoring metric type string.</li>
+<li><strong><code>metricKind</code></strong>: <code>GAUGE</code>, <code>DELTA</code>, or <code>CUMULATIVE</code>.</li>
+<li><strong><code>valueType</code></strong>: <code>INT64</code>, <code>DOUBLE</code>, <code>DISTRIBUTION</code>, or <code>BOOL</code>.</li>
+<li><strong><code>monitoredResourceTypes</code></strong>: Compatible <code>resource.type</code> strings, for</li>
+</ul>
+<p>        example <code>[&quot;cloudsql_database&quot;, &quot;cloudsql_instance&quot;]</code>. If multiple</p>
+<p>        resource types are listed, select the specific <code>resource.type</code> that</p>
+<p>        matches the target granularity of the user&#39;s request.</p>
+<hr>
+<h5>Construct Monitoring Filter</h5>
+<p>The <code>filter</code> parameter is a mandatory string in Cloud Monitoring syntax that</p>
+<p>restricts the query to a single <code>metric.type</code> and optional resource and metric</p>
+<p>labels:</p>
+<ol>
+<li><strong>Single Metric Type Restriction</strong>: Every <code>filter</code> MUST specify exactly one</li>
+</ol>
+<p>    <code>metric.type</code> clause using an equality operator. For example:</p>
+<ul>
+<li><code>metric.type = &quot;compute.googleapis.com/instance/cpu/utilization&quot;</code></li>
+</ul>
+<ol>
+<li><strong>Monitored Resource Type Filter</strong>: MUST include the <code>resource.type</code> filter</li>
+</ol>
+<p>    when the target resource granularity is known, preventing collisions across</p>
+<p>    services that share metric types or sub-resources. For example:</p>
+<ul>
+<li>`metric.type = &quot;cloudsql.googleapis.com/database/cpu/utilization&quot; AND</li>
+</ul>
+<p>        resource.type = &quot;cloudsql_database&quot;`</p>
+<ol>
+<li><strong>Preserve User Literals and IDs</strong>: You MUST use literal resource names,</li>
+</ol>
+<p>    IDs, zones, and project parameters provided by the user without alteration.</p>
+<p>    Do NOT override or replace user-specified identifiers with active resources</p>
+<p>    found during metric metadata discovery unless explicitly requested.</p>
+<ol>
+<li><strong>Label Type Prefixing</strong>:</li>
+</ol>
+<ul>
+<li>Prefix resource-level dimensions, such as instance ID, zone, project,</li>
+</ul>
+<p>        database ID, or subscription ID, with the <code>resource.labels.</code> prefix. For</p>
+<p>        example:</p>
+<ul>
+<li><code>resource.labels.instance_id = &quot;123456789&quot;</code></li>
+<li><code>resource.labels.database_id = &quot;my-project:my-instance&quot;</code></li>
+<li>Prefix metric-level dimensions, such as state, command, response code,</li>
+</ul>
+<p>        or instance name metadata when stored on the metric, with the</p>
+<p>        <code>metric.labels.</code> prefix. For example:</p>
+<ul>
+<li><code>metric.labels.state != &quot;free&quot;</code></li>
+<li><code>metric.labels.instance_name = &quot;instance-1&quot;</code></li>
+</ul>
+<ol>
+<li><strong>Resource Name versus ID Resolution</strong>:</li>
+</ol>
+<ul>
+<li>If the user specifies a human-readable GCE VM instance name such as</li>
+</ul>
+<p>        <code>&quot;instance-1&quot;</code>, but <code>resource.labels.instance_id</code> expects a numeric ID,</p>
+<p>        you MUST filter using either `metric.labels.instance_name =</p>
+<p>        &quot;instance-1&quot;<code> or </code>metadata.system_labels.name = &quot;instance-1&quot;`.</p>
+<ul>
+<li>Do NOT use <code>resource.metadata.name</code> or <code>resource.metadata.*</code>. This</li>
+</ul>
+<p>        prefix is invalid in Cloud Monitoring filter syntax.</p>
+<ul>
+<li>Do NOT assign a string instance name directly to</li>
+</ul>
+<p>        <code>resource.labels.instance_id</code> unless the resource type explicitly uses</p>
+<p>        string IDs.</p>
+<ol>
+<li><strong>Database Identifier Labels</strong>: Database labels such as <code>database_id</code> for</li>
+</ol>
+<p>    Cloud SQL and Spanner, or <code>dataset_id</code> for BigQuery, use composite keys</p>
+<p>    formatted as <code>&lt;project_id&gt;:&lt;instance_name&gt;</code>. For example:</p>
+<p>    <code>resource.labels.database_id = &quot;my-project:foo&quot;</code>.</p>
+<ol>
+<li><strong>Ops Agent Metrics State Label Filtering</strong>: For</li>
+</ol>
+<p>    <code>agent.googleapis.com/memory/percent_used</code> and</p>
+<p>    <code>agent.googleapis.com/disk/percent_used</code> metrics, you MUST use</p>
+<p>    <code>metric.labels.state != &quot;free&quot;</code>. Do NOT filter by `metric.labels.state =</p>
+<p>    &quot;used&quot;`.</p>
+<hr>
+<h5>Choose Aggregation Structure</h5>
+<p>Select the <code>perSeriesAligner</code>, <code>crossSeriesReducer</code>, <code>groupByFields</code>, and</p>
+<p><code>alignmentPeriod</code> according to the metric properties and visualization goal:</p>
+<ol>
+<li><strong>Consult the Aggregations Reference</strong>: You MUST include both</li>
+</ol>
+<p>    <code>perSeriesAligner</code> and <code>crossSeriesReducer</code> in the <code>aggregation</code> query</p>
+<p>    parameters of every request. Read and follow the</p>
+<p>    [Cloud Monitoring ListTimeSeries Basic Aggregations Reference](references/basic_aggregations.md)</p>
+<p>    to select the exact <code>perSeriesAligner</code> and <code>crossSeriesReducer</code> combinations</p>
+<p>    for your metric&#39;s Metric Kind and Value Type pairing, and to apply mandatory</p>
+<p>    SRE rules for utilization metrics, counters, distributions, and state-based</p>
+<p>    gauges such as memory filtered by <code>state != &quot;free&quot;</code>.</p>
+<ol>
+<li><strong>Grouping Fields and Resource Granularity</strong>: When <code>crossSeriesReducer</code> is</li>
+</ol>
+<p>    specified as anything other than <code>REDUCE_NONE</code>, list the exact labels to</p>
+<p>    preserve. When querying multi-instance resources like VMs, databases, or</p>
+<p>    subscriptions, include the primary resource identifier in <code>groupByFields</code>.</p>
+<p>    For example, use <code>resource.labels.instance_id</code> for VMs or</p>
+<p>    <code>resource.labels.database_id</code> for databases. This prevents collapsing</p>
+<p>    separate resource streams into a single global aggregate.</p>
+<ol>
+<li><strong>Alignment Period Determination</strong>: Calculate the query lookback duration</li>
+</ol>
+<p>    from <code>endTime</code> minus <code>startTime</code>, ensuring <code>startTime</code> precedes <code>endTime</code>.</p>
+<p>    If <code>endTime &lt;= startTime</code>, flag an error before computing duration. Set</p>
+<p>    <code>alignmentPeriod</code> according to Cloud Console default fine granularity</p>
+<p>    standards:</p>
+<ul>
+<li><strong>Duration &lt;= 110 minutes</strong>: Set <code>alignmentPeriod = &quot;60s&quot;</code>.</li>
+<li><strong>Duration &lt;= 23 hours</strong>: Set <code>alignmentPeriod = &quot;300s&quot;</code>.</li>
+<li><strong>Duration &lt;= 6 days</strong>: Set <code>alignmentPeriod = &quot;3600s&quot;</code>.</li>
+<li><strong>Duration &lt;= 23 days</strong>: Set <code>alignmentPeriod = &quot;10800s&quot;</code>.</li>
+<li><strong>Duration &lt;= 80 days</strong>: Set <code>alignmentPeriod = &quot;21600s&quot;</code>.</li>
+<li><strong>Duration &lt;= 180 days</strong>: Set <code>alignmentPeriod = &quot;43200s&quot;</code>.</li>
+<li><strong>Duration &lt;= 350 days</strong>: Set <code>alignmentPeriod = &quot;86400s&quot;</code>.</li>
+<li><strong>Duration &lt;= 500 days</strong>: Set <code>alignmentPeriod = &quot;172800s&quot;</code>.</li>
+<li><strong>Omission Rule</strong>: <code>alignmentPeriod</code> is omitted only when</li>
+</ul>
+<p>        <code>perSeriesAligner</code> is set to <code>ALIGN_NONE</code>.</p>
+<hr>
+<h5>Format Valid Request</h5>
+<p>Present the generated <code>ListTimeSeries</code> REST query parameters. For example:</p>
+<p><pre><code>{
+  &quot;name&quot;: &quot;projects/&lt;project_id&gt;&quot;,
+  &quot;filter&quot;: &quot;metric.type = \&quot;&lt;metric_type&gt;\&quot; AND resource.type = \&quot;&lt;resource_type&gt;\&quot;&quot;,
+  &quot;interval&quot;: {
+    &quot;startTime&quot;: &quot;&lt;iso_8601_start&gt;&quot;,
+    &quot;endTime&quot;: &quot;&lt;iso_8601_end&gt;&quot;
+  },
+  &quot;aggregation&quot;: {
+    &quot;alignmentPeriod&quot;: &quot;60s&quot;,
+    &quot;perSeriesAligner&quot;: &quot;ALIGN_RATE&quot;,
+    &quot;crossSeriesReducer&quot;: &quot;REDUCE_SUM&quot;,
+    &quot;groupByFields&quot;: [
+      &quot;resource.labels.zone&quot;
+    ]
+  },
+  &quot;view&quot;: &quot;FULL&quot;
+}</code></pre></p>
+<ul>
+<li><strong>Aggregation Requirements</strong>: Populate the <code>aggregation</code> parameters with the</li>
+</ul>
+<p>    <code>perSeriesAligner</code>, <code>crossSeriesReducer</code>, <code>alignmentPeriod</code>, and optional</p>
+<p>    <code>groupByFields</code> values determined during aggregation selection.</p>
+<ul>
+<li><strong>Interval Requirements</strong>: <code>startTime</code> and <code>endTime</code> MUST be valid RFC 3339</li>
+</ul>
+<p>    and ISO 8601 timestamps such as <code>&quot;YYYY-MM-DDTHH:MM:SSZ&quot;</code>. If not explicitly</p>
+<p>    provided by the user, dynamically compute a one-hour lookback interval</p>
+<p>    ending at the current time, where <code>endTime</code> is the present moment and</p>
+<p>    <code>startTime</code> is one hour prior. Do NOT hardcode static dates from examples.</p>
+<ul>
+<li><strong>Alignment Period Requirement</strong>: Determine <code>alignmentPeriod</code> from the</li>
+</ul>
+<p>    lookback duration of <code>endTime</code> minus <code>startTime</code> using the mapping above.</p>
+<p>    For the default one-hour lookback interval, <code>alignmentPeriod</code> is <code>&quot;60s&quot;</code>.</p>
+<ul>
+<li><strong>View Requirement</strong>: MUST default to <code>&quot;FULL&quot;</code> when time series data points</li>
+</ul>
+<p>    are needed, or <code>&quot;HEADERS&quot;</code> when inspecting metadata and series identities</p>
+<p>    only.</p>
+<hr>
+<h5>Validate Request via list_timeseries MCP Tool</h5>
+<p>You MUST validate the generated request parameters against live Cloud Monitoring</p>
+<p>telemetry before returning the final output. Call the <code>list_timeseries</code> MCP tool</p>
+<p>passing all generated query parameters (<code>name</code>, <code>filter</code>, <code>interval</code>,</p>
+<p><code>aggregation</code>). When validating you MUST set <code>view=&quot;HEADERS&quot;</code> to minimize</p>
+<p>latency and payload size while verifying request structure. A response without</p>
+<p>API errors confirms that your filter and aggregation settings are valid.</p>
+<p>If the <code>list_timeseries</code> tool is unavailable, fall back to a direct API call.</p>
+<hr>
+<h4>References</h4>
+<ul>
+<li>[Cloud Monitoring ListTimeSeries Basic Aggregations Reference](references/basic_aggregations.md)</li>
+<li><a href="https://docs.cloud.google.com/monitoring/api/resources.md.txt" rel="noopener">Cloud Monitoring Monitored Resource Types Reference</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/api/v3/filters.md.txt" rel="noopener">Cloud Monitoring Filter Syntax</a></li>
+<li><a href="https://docs.cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list.md.txt" rel="noopener">Cloud Monitoring REST API Reference: projects.timeSeries.list</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-monitoring-list-time-series-request</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-monitoring-list-time-series-request" aria-label="Copy install cloud-monitoring-list-time-series-request">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-monitoring-list-time-series-request</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-monitoring-list-time-series-request/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

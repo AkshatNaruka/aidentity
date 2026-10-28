@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-waf-reliability — Aidentity</title>
+<meta name="description" content="Generates guidance for reliability, resilience, availability, redundancy, fault-tolerance, and disaster recovery (DR) for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework. Use when the user asks to evaluate, design, or improve the reliability, resilience, availability, or disaster recovery capabilities of Google Cloud workloads.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-reliability/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-waf-reliability — Aidentity">
+<meta property="og:description" content="Generates guidance for reliability, resilience, availability, redundancy, fault-tolerance, and disaster recovery (DR) for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework. Use when the user asks to evaluate, design, or improve the reliability, resilience, availability, or disaster recovery capabilities of Google Cloud workloads.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-reliability/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-waf-reliability","description":"Generates guidance for reliability, resilience, availability, redundancy, fault-tolerance, and disaster recovery (DR) for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework. Use when the user asks to evaluate, design, or improve the reliability, resilience, availability, or disaster recovery capabilities of Google Cloud workloads.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-waf-reliability/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-waf-reliability
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-waf-reliability</h1>
+      <p class="summary">Generates guidance for reliability, resilience, availability, redundancy, fault-tolerance, and disaster recovery (DR) for Google Cloud workloads based on the design principles and recommendations in the Google Cloud Well-Architected Framework. Use when the user asks to evaluate, design, or improve the reliability, resilience, availability, or disaster recovery capabilities of Google Cloud workloads.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Well-Architected Framework skill for the Reliability pillar</h3>
+<h4>Overview</h4>
+<p>The Reliability pillar of the Google Cloud Well-Architected Framework provides</p>
+<p>principles and recommendations to help you design, deploy, and manage reliable,</p>
+<p>resilient, and highly available workloads in Google Cloud. A reliable system</p>
+<p>consistently performs its intended functions under defined conditions, is</p>
+<p>resilient to failures, and recovers gracefully from disruptions, thereby</p>
+<p>minimizing downtime, enhancing user experience, and ensuring data integrity.</p>
+<h4>Core principles</h4>
+<p>The recommendations in the reliability pillar of the Well-Architected Framework</p>
+<p>are aligned with the following core principles:</p>
+<ul>
+<li><strong>Define reliability based on user-experience goals</strong>: Measurement of</li>
+</ul>
+<p>   reliability should reflect the actual experience of the system&#39;s users rather</p>
+<p>   than merely relying on infrastructure metrics. Focus on outcomes that matter</p>
+<p>   most to users. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/reliability/define-reliability-based-on-user-experience-goals.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/define-reliability-based-on-user-experience-goals.md.txt</a></p>
+<ul>
+<li><strong>Set realistic targets for reliability</strong>: Determine appropriate Service</li>
+</ul>
+<p>    Level Objectives (SLOs) that balance the cost and complexity of maximizing</p>
+<p>    availability against business requirements. Provide guidance on defining</p>
+<p>    Service Level Objectives (SLOs) based on monitoring signals, error budgets,</p>
+<p>    and user experience goals. Grounding document:</p>
+<p>    <a href="https://docs.cloud.google.com/architecture/framework/reliability/set-targets.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/set-targets.md.txt</a></p>
+<ul>
+<li><strong>Build highly available systems through resource redundancy</strong>: Eliminate</li>
+</ul>
+<p>   single points of failure by duplicating critical components across zones and</p>
+<p>   regions to maintain operations during localized outages. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/reliability/build-highly-available-systems.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/build-highly-available-systems.md.txt</a></p>
+<ul>
+<li><strong>Take advantage of horizontal scalability</strong>: Design system architectures to</li>
+</ul>
+<p>    scale horizontally (adding more instances) to seamlessly accommodate load</p>
+<p>    fluctuations and improve overall fault tolerance. Incorporate proactive</p>
+<p>    capacity planning to monitor and adjust project quotas and resource</p>
+<p>    availability anticipating sudden load spikes. Grounding document:</p>
+<p>    <a href="https://docs.cloud.google.com/architecture/framework/reliability/horizontal-scalability.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/horizontal-scalability.md.txt</a></p>
+<ul>
+<li><strong>Detect potential failures by using observability</strong>: Implement thorough</li>
+</ul>
+<p>    monitoring, logging, and alerting systems to proactively detect, diagnose,</p>
+<p>    and address anomalies before they cause user-facing issues. Monitor the</p>
+<p>    golden signals (latency, traffic, errors, and saturation) and set up alerts</p>
+<p>    for when the signals cross specified thresholds. Use Cloud Monitoring to</p>
+<p>    build comprehensive dashboards for the golden signals. Grounding document:</p>
+<p>    <a href="https://docs.cloud.google.com/architecture/framework/reliability/observability.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/observability.md.txt</a></p>
+<ul>
+<li><strong>Design for graceful degradation</strong>: Architect systems to maintain critical</li>
+</ul>
+<p>    functionality, even if at reduced performance or with limited features, when</p>
+<p>    dependencies fail or the system experiences extreme stress. To avoid</p>
+<p>    cascading failures, recommend setting up alerts to detect failures early,</p>
+<p>    using the circuit-breaker pattern, handling timeouts effectively to release</p>
+<p>    blocked resources, utilizing retries with exponential backoff and jitter to</p>
+<p>    avoid overwhelming recovering backend systems, and returning custom error</p>
+<p>    responses or static fallback pages. Grounding document:</p>
+<p>    <a href="https://docs.cloud.google.com/architecture/framework/reliability/graceful-degradation.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/graceful-degradation.md.txt</a></p>
+<ul>
+<li><strong>Perform testing for recovery from failures</strong>: Build confidence in system</li>
+</ul>
+<p>   resilience by continuously simulating failures and verifying the</p>
+<p>   effectiveness of automated and manual recovery procedures. Grounding</p>
+<p>   document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/reliability/perform-testing-for-recovery-from-failures.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/perform-testing-for-recovery-from-failures.md.txt</a></p>
+<ul>
+<li><strong>Perform testing for recovery from data loss</strong>: Regularly test backup and</li>
+</ul>
+<p>   restore protocols to ensure rapid recovery from data corruption or loss,</p>
+<p>   remaining within the defined Recovery Time Objective (RTO) and Recovery Point</p>
+<p>   Objective (RPO). Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/reliability/perform-testing-for-recovery-from-data-loss.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/perform-testing-for-recovery-from-data-loss.md.txt</a></p>
+<ul>
+<li><strong>Conduct thorough postmortems</strong>: Foster a blameless culture by investigating</li>
+</ul>
+<p>   outages comprehensively to understand root causes, followed by implementing</p>
+<p>   measures that prevent recurrence. Grounding document:</p>
+<p>   <a href="https://docs.cloud.google.com/architecture/framework/reliability/conduct-postmortems.md.txt" rel="noopener">https://docs.cloud.google.com/architecture/framework/reliability/conduct-postmortems.md.txt</a></p>
+<h4>Relevant Google Cloud products</h4>
+<p>The following are _examples_ of Google Cloud products and features that are</p>
+<p>relevant to reliability:</p>
+<ul>
+<li><strong>Compute</strong>: Compute Engine Managed Instance Groups (MIGs), Google Kubernetes</li>
+</ul>
+<p>  Engine (GKE), Cloud Run</p>
+<ul>
+<li><strong>Networking</strong>: Cloud Load Balancing, Cloud CDN, Cloud DNS</li>
+<li><strong>Storage and databases</strong>: Cloud Storage (multi-region), Cloud SQL High</li>
+</ul>
+<p>  Availability, Spanner, Filestore, Firestore</p>
+<ul>
+<li><strong>Operations</strong>: Cloud Monitoring, Cloud Logging, Google Cloud Managed Service</li>
+</ul>
+<p>  for Prometheus</p>
+<ul>
+<li><strong>Disaster recovery</strong>: Backup and DR Service, Filestore backups</li>
+</ul>
+<h4>Workload assessment questions</h4>
+<p>Ask appropriate questions to understand the reliability-related requirements and</p>
+<p>constraints of the workload and the user&#39;s organization. Choose questions from</p>
+<p>the following list:</p>
+<ul>
+<li>How does your organization define and measure the reliability of your systems</li>
+</ul>
+<p>  in relation to user experience?</p>
+<ul>
+<li>How does your organization approach setting reliability targets for your</li>
+</ul>
+<p>  services?</p>
+<ul>
+<li>What is your organization&#39;s strategy for ensuring high availability through</li>
+</ul>
+<p>  resource redundancy?</p>
+<ul>
+<li>How does your organization leverage horizontal scalability to maintain</li>
+</ul>
+<p>  performance and reliability?</p>
+<ul>
+<li>How does your organization utilize observability (metrics, logs, traces) to</li>
+</ul>
+<p>  gain insights and detect potential failures?</p>
+<ul>
+<li>How does your organization manage alerting based on observability data to</li>
+</ul>
+<p>  ensure timely responses to significant issues without causing alert fatigue?</p>
+<ul>
+<li>What measures does your organization take to ensure systems can gracefully</li>
+</ul>
+<p>  degrade during high load or partial failures?</p>
+<ul>
+<li>How frequently and comprehensively does your organization test for recovery</li>
+</ul>
+<p>  from system failures (e.g., regional failovers, release rollbacks)?</p>
+<ul>
+<li>What is your organization&#39;s approach to testing for recovery from data loss?</li>
+<li>How does your organization conduct and utilize postmortems after incidents?</li>
+</ul>
+<h4>Validation checklist</h4>
+<p>Use the following checklist to evaluate the architecture&#39;s alignment with</p>
+<p>reliability recommendations:</p>
+<ul>
+<li>User-focused SLIs and SLOs are explicitly defined and actively monitored.</li>
+<li>The architecture avoids single points of failure through cross-zone or</li>
+</ul>
+<p>  cross-region redundancy.</p>
+<ul>
+<li>Autoscaling is enabled to handle variable demand without manual intervention.</li>
+<li>Application and infrastructure health checks are configured to trigger</li>
+</ul>
+<p>  automated failovers.</p>
+<ul>
+<li>Regular backup schedules are in place, and restoration processes are routinely</li>
+</ul>
+<p>  tested.</p>
+<ul>
+<li>The system architecture incorporates patterns like circuit breakers, retries</li>
+</ul>
+<p>  with exponential backoff, and rate limiting to support graceful degradation.</p>
+<ul>
+<li>Game days or chaos engineering practices are regularly held to validate</li>
+</ul>
+<p>  failure recovery.</p>
+<ul>
+<li>A formalized, blameless postmortem process exists to ensure organizational</li>
+</ul>
+<p>  learning from operational incidents.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-waf-reliability</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-waf-reliability" aria-label="Copy install google-cloud-waf-reliability">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-waf-reliability</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-waf-reliability/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>managed-airflow-dag-troubleshooting — Aidentity</title>
+<meta name="description" content="Provides guidance for troubleshooting Apache Airflow DAGs (failed DAG runs and task instances) in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Use when figuring out reasons for DAG run or task instance failures. Don&#39;t use when looking for overall recommendations for Managed Airflow environment performance.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-dag-troubleshooting/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="managed-airflow-dag-troubleshooting — Aidentity">
+<meta property="og:description" content="Provides guidance for troubleshooting Apache Airflow DAGs (failed DAG runs and task instances) in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Use when figuring out reasons for DAG run or task instance failures. Don&#39;t use when looking for overall recommendations for Managed Airflow environment performance.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-dag-troubleshooting/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"managed-airflow-dag-troubleshooting","description":"Provides guidance for troubleshooting Apache Airflow DAGs (failed DAG runs and task instances) in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Use when figuring out reasons for DAG run or task instance failures. Don't use when looking for overall recommendations for Managed Airflow environment performance.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/managed-airflow-dag-troubleshooting/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>managed-airflow-dag-troubleshooting
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>managed-airflow-dag-troubleshooting</h1>
+      <p class="summary">Provides guidance for troubleshooting Apache Airflow DAGs (failed DAG runs and task instances) in Managed Service for Apache Airflow (MSAA; formerly Cloud Composer). Use when figuring out reasons for DAG run or task instance failures. Don&#39;t use when looking for overall recommendations for Managed Airflow environment performance.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Managed Service for Apache Airflow (formerly Cloud Composer) DAG troubleshooting guide</h3>
+<p>This skill provides instructions for troubleshooting Managed Airflow DAGs (DAG</p>
+<p>runs and task instances), utilizing <code>gcloud composer</code>, <code>gcloud logging</code> and</p>
+<p><code>gcloud storage</code> commands to fetch remote logs and code.</p>
+<h4>General rules</h4>
+<ol>
+<li>Provide suggestions on how to troubleshoot the failed jobs. Provide only the</li>
+</ol>
+<p>    steps that the user can actually take. Ground all troubleshooting advice in</p>
+<p>    direct findings.</p>
+<ol>
+<li>When troubleshooting a failure, follow the following practices to always</li>
+</ol>
+<p>    provide a deterministic diagnosis:</p>
+<ul>
+<li><strong>Fetch relevant logs</strong>: Always fetch the logs for a task under</li>
+</ul>
+<p>        investigation using <code>gcloud logging read</code>; check the logs for specific</p>
+<p>        error patterns: Python tracebacks, API error codes (e.g., 400, 403, 404,</p>
+<p>        500), or Airflow signals (e.g., <code>AirflowTaskTimeout</code>).</p>
+<ul>
+<li><strong>Fetch task metadata</strong>: When troubleshooting a task, fetch the task</li>
+</ul>
+<p>        state and metadata (execution state, try number, timestamps, and</p>
+<p>        execution details) using:</p>
+<p>        <pre><code>        gcloud composer environments run {env_name} \
+            --location {location} \
+            tasks states-for-dag-run -- -d {dag_id} -r {run_id}
+        </code></pre></p>
+<p>        or for an individual task instance:</p>
+<p>        <pre><code>        gcloud composer environments run {env_name} \
+            --location {location} \
+            tasks state -- {dag_id} {task_id} {execution_date}
+        </code></pre></p>
+<ul>
+<li><strong>Retrieve and compare DAG source code</strong>: Download the remote DAG source</li>
+</ul>
+<p>        code using <code>gcloud storage cp gs://{bucket_name}/dags/{dag_file}.py .</code></p>
+<p>        (find the environment bucket via `gcloud composer environments describe</p>
+<p>        {env_name} --location {location}</p>
+<p>        --format=&quot;value(config.dagGcsPrefix)&quot;`). Compare the parameters in the</p>
+<p>        code (e.g., table IDs, disk sizes, URI paths) against the error messages</p>
+<p>        found in the task logs.</p>
+<ul>
+<li><strong>Explain code mistakes and potential fixes</strong>: Explain mistakes in the</li>
+</ul>
+<p>        code (if any are actually visible); suggest potential fixes (if they are</p>
+<p>        very likely to be meaningful); discuss source code availability if</p>
+<p>        needed - if some source code is unavailable (e.g. imported from a file</p>
+<p>        other than the main source code file), mention this (you can mention the</p>
+<p>        package name) - in such a case take into account most likely trigger</p>
+<p>        rules if they are unknown.</p>
+<ul>
+<li><strong>Check for environment-level errors</strong>: Query Cloud Logging with `gcloud</li>
+</ul>
+<p>        logging read` to see if there are high-level environment issues or known</p>
+<p>        platform errors correlating with the failure (see <strong>Known issues</strong></p>
+<p>        below). You MUST return ALL found issues.</p>
+<ul>
+<li><strong>Identify failing tasks in a DAG run</strong>: When troubleshooting a failed</li>
+</ul>
+<p>        DAG run, mention the task that caused a failure (use `tasks</p>
+<p>        states-for-dag-run` or Cloud Logging to identify failed tasks). Provide</p>
+<p>        a task instance name. If many tasks failed, mention which task was</p>
+<p>        critical (mandatory for successful DAG run execution - look into task</p>
+<p>        dependencies and trigger rules) and focus on this one.</p>
+<ul>
+<li><strong>Verify service configurations in code</strong>: If logs suggest an issue with</li>
+</ul>
+<p>        a specific service (e.g., BigQuery, Dataform, Compute Engine), use the</p>
+<p>        log details to verify the configuration in the DAG source code.</p>
+<ul>
+<li><strong>Correlate logs with code</strong>: E.g., if BigQuery returns a 404, verify</li>
+</ul>
+<p>        the dataset ID or table ID in the DAG source code matches reality.</p>
+<ul>
+<li><strong>Prioritize known platform issues</strong>: Check against <strong>Known issues</strong></li>
+</ul>
+<p>        below. If Cloud Logging queries return matching platform error signals,</p>
+<p>        prioritize that diagnosis.</p>
+<ol>
+<li><strong>Summarize with Evidence (Deterministic Response):</strong> Your response must be</li>
+</ol>
+<p>    specific. Avoid general advice like &#39;check your permissions.&#39; or &#39;check the</p>
+<p>    logs.&#39; Instead, say &#39;The service account is missing X permission.&#39;</p>
+<ul>
+<li><strong>Problem:</strong> State the specific root cause and the exact task instance</li>
+</ul>
+<p>        ID. Identify if it is a code logic error, a configuration mismatch, or</p>
+<p>        an environment timeout.</p>
+<ul>
+<li><strong>Evidence:</strong> <strong>Mandatory.</strong> Provide the verbatim text from the log</li>
+</ul>
+<p>        (<code>textPayload</code>) or the specific line of code from the DAG that caused</p>
+<p>        the failure. Do not summarize the evidence; show the data.</p>
+<ul>
+<li><strong>Recommendation:</strong> Provide an actionable fix. If it is a code error,</li>
+</ul>
+<p>        provide the corrected Python snippet. If it is a resource issue, specify</p>
+<p>        the exact configuration change needed.</p>
+<ol>
+<li><strong>DAGs Generated by Orchestration Pipelines:</strong> Some DAGs may be generated by</li>
+</ol>
+<p>    Orchestration Pipelines. A special requirement related to those DAGs is the</p>
+<p>    need to explain the failure in terms of the logical actions defined in the</p>
+<p>    pipeline YAML.</p>
+<ul>
+<li><strong>Determine if a DAG is generated by Orchestration Pipelines</strong>:</li>
+</ul>
+<p>        Orchestration Pipeline DAGs deployed by dedicated tools have</p>
+<p>        <code>bundle_name</code>, <code>version_id</code>, and <code>pipeline_name</code> set in their DAG Run</p>
+<p>        metadata (<code>DagRun.note</code> that contains JSON metadata). All of them (i.e.</p>
+<p>        Orchestration Pipeline DAGs deployed by dedicated tools and created</p>
+<p>        manually) have an <code>op:orchestration_pipeline</code> tag set (DAG properties,</p>
+<p>        including tags, can be verified in the DAG source code or via `gcloud</p>
+<p>        composer environments run {env_name} --location {location} dags list`).</p>
+<ul>
+<li>Orchestration Pipeline DAGs deployed by dedicated tools have</li>
+</ul>
+<p>        additionally the following tags (information in those tags should be</p>
+<p>        consistent with data in DAG Run attributes mentioned above):</p>
+<ul>
+<li>pipeline name - tag <code>op:pipeline</code>, e.g. <code>op:pipeline:xyz</code> indicates</li>
+</ul>
+<p>            a name <code>xyz</code></p>
+<ul>
+<li>bundle name - tag <code>op:bundle</code></li>
+<li>version id - tag <code>op:version</code></li>
+<li>**Retrieve the resolved pipeline YAML definition from the environment</li>
+</ul>
+<p>        bucket**:</p>
+<ul>
+<li>Determine the YAML file location:</li>
+</ul>
+<ol>
+<li>Retrieve the DAG source code from the environment bucket using</li>
+</ol>
+<p>                <code>gcloud storage cp gs://{bucket_name}/dags/{dag_file}.py .</code> (or</p>
+<p>                <code>gcloud storage cat gs://{bucket_name}/dags/{dag_file}.py</code>).</p>
+<ol>
+<li>Inspect the source code for <code>generate</code> or <code>generate_dags</code></li>
+</ol>
+<p>                function calls:</p>
+<ul>
+<li>Scenario 1: <code>generate</code> call found. The first argument is the</li>
+</ul>
+<p>                    path to the YAML file - relative to the <code>dags</code> folder in</p>
+<p>                    environment&#39;s bucket.</p>
+<ul>
+<li>Scenario 2: <code>generate_dags</code> call found.</li>
+<li>Extract the first argument - this is the data folder. If</li>
+</ul>
+<p>                        it starts with <code>/home/airflow/gcs/</code>, remove this prefix</p>
+<p>                        to get a path relative to the root of environment&#39;s</p>
+<p>                        bucket.</p>
+<ul>
+<li>Extract <code>bundle_name</code>, <code>version_id</code>, and <code>pipeline_name</code></li>
+</ul>
+<p>                        (as explained above).</p>
+<ul>
+<li>Construct the path:</li>
+</ul>
+<p>                        <code>{data_directory}/{bundle_name}/versions/{version_id}/{pipeline_name}.yml</code></p>
+<p>                        (or <code>.yaml</code>).</p>
+<ul>
+<li>Scenario 3: If neither call is found, default to the path:</li>
+</ul>
+<p>                    <code>data/{bundle_name}/versions/{version_id}/{pipeline_name}.yml</code></p>
+<p>                    (or <code>.yaml</code>) in an environment&#39;s bucket.</p>
+<ol>
+<li>Download the YAML file using `gcloud storage cp</li>
+</ol>
+<p>                gs://{bucket_name}/{yaml_path} .<code> (or </code>gcloud storage cat</p>
+<p>                gs://{bucket_name}/{yaml_path}`).</p>
+<ul>
+<li>Map the failed Airflow task back to the logical action name using task</li>
+</ul>
+<p>        instance metadata/notes (e.g. <code>op_action_name</code> in task <code>note</code>).</p>
+<ul>
+<li>If the failure involves user assets (like Python scripts), check their</li>
+</ul>
+<p>        path in the action definition. If they are in the environment bucket,</p>
+<p>        download and read them to debug (`gcloud storage cp</p>
+<p>        gs://{bucket_name}/{asset_path} .`). If they are in a custom artifact</p>
+<p>        bucket (see GCS URIs in logs/config), note the limitation that they</p>
+<p>        cannot be read directly but analyze based on available logs.</p>
+<ol>
+<li>You can assume that environment variables set by default (they can be used</li>
+</ol>
+<p>    in DAG code, but are not visible in custom environment configuration), e.g.</p>
+<p>    <code>GCS_BUCKET</code>, are correct - users cannot change them.</p>
+<ol>
+<li>&quot;Not found&quot; (404) errors from GCP APIs can be misleading. A &quot;not found&quot;</li>
+</ol>
+<p>    error might be returned when a resource actually exists, but the caller does</p>
+<p>    not have permissions to access or view it. If a resource is expected to</p>
+<p>    exist, suggest verifying proper permissions.</p>
+<h5>Important constraints &amp; instructions</h5>
+<ul>
+<li><strong>Read-Only First</strong>: Do NOT attempt to fix the code immediately. You must</li>
+</ul>
+<p>    first prove the root cause using logs and remote code.</p>
+<ul>
+<li><strong>No Speculation</strong>: If logs are empty or code cannot be found, state this</li>
+</ul>
+<p>    clearly. Always reference error messages as the are.</p>
+<ul>
+<li><strong>Safety</strong>: Be careful with secrets. If logs contain sensitive information</li>
+</ul>
+<p>    (e.g. passwords), redact it in your analysis.</p>
+<h5>Applying Fixes - only if explicitly requested</h5>
+<p>When the RCA is complete and a fix is ready:</p>
+<ol>
+<li><strong>Repository Check</strong>: If the current workspace does not seem to be the</li>
+</ol>
+<p>    source of truth for the Managed Airflow environment:</p>
+<ul>
+<li>Ask the user to <strong>open the correct repository</strong>.</li>
+<li>OR ask if they want to <strong>download the remote DAG</strong> to the current</li>
+</ul>
+<p>        workspace to apply the fix (warning them about potential overwrites).</p>
+<h4>Relevant gcloud commands</h4>
+<h5>Environment &amp; DAG Discovery</h5>
+<ul>
+<li><strong>List composer environments:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments list \
+        --locations=us-central1 \
+        --format=&quot;table(name,location,state)&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Describe environment (get DAGs bucket and config):</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments describe {env_name} \
+        --location {region} \
+        --format=&quot;value(config.dagGcsPrefix)&quot;
+    </code></pre></p>
+<ul>
+<li><strong>List composer DAGs:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments run {env_name} \
+        --location {region} \
+        dags list
+    </code></pre></p>
+<ul>
+<li><strong>List composer DAG Runs:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments run {env_name} \
+        --location {region} \
+        dags list-runs -- -d {dag_id} --no-backfill
+    </code></pre></p>
+<ul>
+<li><strong>List task instance states for a DAG run:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments run {env_name} \
+        --location {region} \
+        tasks states-for-dag-run -- -d {dag_id} -r {run_id}
+    </code></pre></p>
+<ul>
+<li><strong>Get state of a specific task instance:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud composer environments run {env_name} \
+        --location {region} \
+        tasks state -- {dag_id} {task_id} {execution_date}
+    </code></pre></p>
+<h5>Log Retrieval</h5>
+<ul>
+<li><strong>Fetch error logs for a DAG / Task:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND labels.dag_id=&quot;{dag_id}&quot; AND severity&gt;=ERROR&#39; \
+        --limit=25 \
+        --format=&quot;table(timestamp,severity,labels.task_id,textPayload)&quot;
+    </code></pre></p>
+<ul>
+<li><strong>Fetch scheduler logs for environment failures:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND log_id(&quot;airflow-scheduler&quot;) AND severity&gt;=ERROR&#39; \
+        --limit=25 \
+        --format=&quot;table(timestamp,severity,textPayload)&quot;
+    </code></pre></p>
+<h5>Code &amp; Asset Retrieval</h5>
+<ul>
+<li><strong>Download DAG code from GCS:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud storage cp gs://{bucket_name}/dags/{dag_file}.py .
+    </code></pre></p>
+<ul>
+<li><strong>Download pipeline YAML definition or script from GCS:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud storage cp gs://{bucket_name}/{path_to_file} .
+    </code></pre></p>
+<h4>Known issues related to DAG runs and task instances</h4>
+<p>Use <code>gcloud logging read</code> with the queries below to identify specific known</p>
+<p>platform failure modes:</p>
+<h5>1. DAG_RUN_TIMEOUT</h5>
+<ul>
+<li><strong>Issue summary:</strong> The task instance execution was interrupted because a</li>
+</ul>
+<p>    timeout for a DAG was exceeded. Unfinished tasks were marked as &#39;SKIPPED&#39; or</p>
+<p>    failed.</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND log_id(&quot;airflow-scheduler&quot;) AND textPayload=~&quot;Run .* of .* has timed-out&quot;&#39; --limit=10
+    </code></pre></p>
+<h5>2. TASK_QUEUED_TIMEOUT</h5>
+<ul>
+<li><strong>Issue summary:</strong> Task failed because it remained queued longer than the</li>
+</ul>
+<p>    maximum allowed queue time.</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND log_id(&quot;airflow-scheduler&quot;) AND textPayload=~&quot;Task requeue attempts exceeded max; marking failed&quot;&#39; --limit=10
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Consider increasing worker resources (CPU, memory, worker</li>
+</ul>
+<p>    count) or adjusting <code>[celery]worker_concurrency</code>.</p>
+<h5>3. TASK_STUCK_IN_QUEUE</h5>
+<ul>
+<li><strong>Issue summary:</strong> Task reached DAG run timeout because task was stuck in</li>
+</ul>
+<p>    queue for too long.</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND log_id(&quot;airflow-scheduler&quot;) AND textPayload=~&quot;Task stuck in queued; will try to requeue&quot;&#39; --limit=10
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Consider increasing the timeout or reducing the load on the</li>
+</ul>
+<p>    environment.</p>
+<h5>4. BIGQUERY_JOB_FAILED</h5>
+<ul>
+<li><strong>Issue summary:</strong> Task failed because of a BigQuery job failure inside a</li>
+</ul>
+<p>    BigQuery operator.</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND (log_id(&quot;airflow-worker&quot;) OR log_id(&quot;airflow-k8s-worker&quot;)) AND textPayload:&quot;airflow/providers/google/cloud/operators/bigquery.py&quot; AND textPayload:&quot;Task failed with exception&quot; AND severity=ERROR&#39; --limit=10
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Inspect the worker logs for the BigQuery Job ID (`Job ID:</li>
+</ul>
+<p>    ...`) to diagnose the underlying query error or permissions issue.</p>
+<h5>5. DETECTED_ZOMBIE</h5>
+<ul>
+<li><strong>Issue summary:</strong> The task instance was revoked by the executor due to</li>
+</ul>
+<p>    missing heartbeats. Task instances send heartbeats periodically (every</p>
+<p>    <code>job_heartbeat_sec</code>, 5 seconds by default) and if heartbeats are missing for</p>
+<p>    <code>scheduler_zombie_task_threshold</code> (300 seconds by default), the task is</p>
+<p>    considered a zombie and marked as failed or up for retry.</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND log_id(&quot;airflow-scheduler&quot;) AND (textPayload:&quot;Detected zombie job:&quot; OR textPayload:&quot;Detected a task instance without a heartbeat:&quot;)&#39; --limit=10
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> This can happen when a worker is overloaded (CPU/memory</li>
+</ul>
+<p>    starvation) and unable to send heartbeats on time, a worker was terminated</p>
+<p>    with unfinished tasks (OOM kill/eviction), or the metadata database is</p>
+<p>    overloaded. Check worker metrics and consider scaling worker CPU/memory.</p>
+<h5>6. WORKER_OUT_OF_POD_STORAGE</h5>
+<ul>
+<li><strong>Issue summary:</strong> Task instance failed because a worker is running out of</li>
+</ul>
+<p>    pod storage (ephemeral disk space reached or pod evicted due to storage</p>
+<p>    limits).</p>
+<ul>
+<li><strong>Cloud Logging Query:</strong></li>
+</ul>
+<p>    <pre><code>    gcloud logging read &#39;resource.type=&quot;cloud_composer_environment&quot; AND resource.labels.environment_name=&quot;{env_name}&quot; AND (log_id(&quot;airflow-worker&quot;) OR log_id(&quot;airflow-k8s-worker&quot;)) AND textPayload:&quot;Pod ephemeral local storage usage exceeds the total limit of containers&quot;&#39; --limit=10
+    </code></pre></p>
+<ul>
+<li><strong>Remediation:</strong> Update the worker storage configuration according to the</li>
+</ul>
+<p>    amount of data being stored or clean up temporary files created during task</p>
+<p>    execution.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/managed-airflow-dag-troubleshooting</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/managed-airflow-dag-troubleshooting" aria-label="Copy install managed-airflow-dag-troubleshooting">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/managed-airflow-dag-troubleshooting</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/managed-airflow-dag-troubleshooting/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

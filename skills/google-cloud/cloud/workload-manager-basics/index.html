@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>workload-manager-basics — Aidentity</title>
+<meta name="description" content="Use this skill to manage Google Cloud Workload Manager evaluations, rules, scanned resources, and validation results by using public client libraries and the REST API. Use when you need to inspect workload best-practice rules, create and run evaluations for Google Cloud general best practices, SAP, SQL Server, or custom organizational rules, review violations, export results to BigQuery, or automate Workload Manager through client libraries because no service-specific public CLI or MCP server is available. Don&#39;t use for general Google Compute Engine instance management, VPC configuration, or standard IAM auditing.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/workload-manager-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="workload-manager-basics — Aidentity">
+<meta property="og:description" content="Use this skill to manage Google Cloud Workload Manager evaluations, rules, scanned resources, and validation results by using public client libraries and the REST API. Use when you need to inspect workload best-practice rules, create and run evaluations for Google Cloud general best practices, SAP, SQL Server, or custom organizational rules, review violations, export results to BigQuery, or automate Workload Manager through client libraries because no service-specific public CLI or MCP server is available. Don&#39;t use for general Google Compute Engine instance management, VPC configuration, or standard IAM auditing.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/workload-manager-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"workload-manager-basics","description":"Use this skill to manage Google Cloud Workload Manager evaluations, rules, scanned resources, and validation results by using public client libraries and the REST API. Use when you need to inspect workload best-practice rules, create and run evaluations for Google Cloud general best practices, SAP, SQL Server, or custom organizational rules, review violations, export results to BigQuery, or automate Workload Manager through client libraries because no service-specific public CLI or MCP server is available. Don't use for general Google Compute Engine instance management, VPC configuration, or standard IAM auditing.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/workload-manager-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>workload-manager-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>workload-manager-basics</h1>
+      <p class="summary">Use this skill to manage Google Cloud Workload Manager evaluations, rules, scanned resources, and validation results by using public client libraries and the REST API. Use when you need to inspect workload best-practice rules, create and run evaluations for Google Cloud general best practices, SAP, SQL Server, or custom organizational rules, review violations, export results to BigQuery, or automate Workload Manager through client libraries because no service-specific public CLI or MCP server is available. Don&#39;t use for general Google Compute Engine instance management, VPC configuration, or standard IAM auditing.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Workload Manager Basics</h3>
+<p>Workload Manager validates enterprise workloads against Google Cloud best</p>
+<p>practices and recommendations. The public client libraries are centered on</p>
+<p>evaluations: define a resource scope, choose built-in or custom rules, run an</p>
+<p>evaluation, then inspect results and scanned resources.</p>
+<h4>Use This Flow</h4>
+<p><pre><code>flowchart LR
+    Rules[&quot;List rules&quot;] --&gt; Eval[&quot;Create or update evaluation&quot;]
+    Resources[&quot;Project, folder, or org scope&quot;] --&gt; Eval
+    Eval --&gt; Run[&quot;Run evaluation&quot;]
+    Run --&gt; Results[&quot;Inspect evaluation results&quot;]
+    Results --&gt; Remediate[&quot;Remediate findings&quot;]
+    Results --&gt; Export[&quot;Optional BigQuery export&quot;]</code></pre></p>
+<h4>Core API Constraints</h4>
+<p>To ensure compatibility, security, and successful integration:</p>
+<ul>
+<li><strong>Public Surface Only:</strong> You MUST strictly interact with Workload Manager</li>
+</ul>
+<p>    using the official public <code>google-cloud-workloadmanager</code> client library or</p>
+<p>    the public REST API (<code>workloadmanager.googleapis.com/v1</code>).</p>
+<ul>
+<li><strong>No Internal or Undocumented APIs:</strong> Do NOT attempt to use internal RPC</li>
+</ul>
+<p>    protocols, private service backends, or undocumented discovery mechanisms.</p>
+<p>    They are not supported for public integrations and will fail.</p>
+<ul>
+<li><strong>No Service-Specific CLI:</strong> There is no public <code>gcloud workload-manager</code></li>
+</ul>
+<p>    CLI command group. Use <code>gcloud</code> only for authentication, IAM role</p>
+<p>    assignment, and fetching raw REST tokens.</p>
+<ul>
+<li><strong>Sandbox Execution Robustness (Auth/Mock Fallbacks):</strong> When gcloud</li>
+</ul>
+<p>    authentication or Workload Manager API calls fail in sandboxed or restricted</p>
+<p>    environments (e.g., due to Context Aware Access token blocks, missing API</p>
+<p>    enablement, or</p>
+<p>    mock resources returning 404/403), immediately fall back to presenting</p>
+<p>    example code and static findings from your references instead of entering</p>
+<p>    retry loops. Present the correct client library code structure or REST API</p>
+<p>    payload example, clearly explain the auth or resource limitation, and list</p>
+<p>    typical rules or mock findings statically to satisfy the request.</p>
+<h4>Prerequisites</h4>
+<ol>
+<li>Enable the Workload Manager API:</li>
+</ol>
+<p>    <pre><code>    gcloud services enable workloadmanager.googleapis.com --quiet
+    </code></pre></p>
+<ol>
+<li>Authenticate locally using Application Default Credentials (ADC) before</li>
+</ol>
+<p>    using client libraries:</p>
+<p>    <pre><code>    gcloud auth application-default login
+    </code></pre></p>
+<ol>
+<li>Ensure the Workload Manager service agent has the required roles granted in</li>
+</ol>
+<p>    your project (mandatory for API/client library usage, see</p>
+<p>    [IAM &amp; Security](references/iam-security.md)).</p>
+<ol>
+<li>Grant the least-privileged role needed for the task. Start with</li>
+</ol>
+<p>    <code>roles/workloadmanager.viewer</code> for read-only access to evaluation resources</p>
+<p>    and use <code>roles/workloadmanager.evaluationAdmin</code> or</p>
+<p>    <code>roles/workloadmanager.admin</code> only when creating, updating, running, or</p>
+<p>    deleting evaluations.</p>
+<h4>Quick Client Library Example</h4>
+<p>Use the Python client library for the first working automation path:</p>
+<p><pre><code>python3 -m pip install --upgrade google-cloud-workloadmanager</code></pre></p>
+<p><pre><code>from google.cloud import workloadmanager_v1
+
+project_id = &quot;PROJECT_ID&quot;
+location = &quot;LOCATION&quot;
+parent = f&quot;projects/{project_id}/locations/{location}&quot;
+
+client = workloadmanager_v1.WorkloadManagerClient()
+
+rules = client.list_rules(
+    request=workloadmanager_v1.ListRulesRequest(
+        parent=parent,
+        evaluation_type=workloadmanager_v1.Evaluation.EvaluationType.OTHER,
+    )
+)
+
+for rule in rules.rules:
+    print(rule.name, rule.display_name, rule.severity)</code></pre></p>
+<h4>Reference Directory</h4>
+<ul>
+<li>[Core Concepts](references/core-concepts.md): Evaluations, rules, results,</li>
+</ul>
+<p>    scanned resources, supported workload types, and API shape.</p>
+<ul>
+<li>[General Best Practices](references/general-best-practices.md): Google Cloud</li>
+</ul>
+<p>    general best-practice posture checks, <code>OTHER</code> evaluation guidance, custom</p>
+<p>    Rego rules, and scale/automation patterns.</p>
+<ul>
+<li>[Client Libraries](references/client-library-usage.md): Python and Go client</li>
+</ul>
+<p>    library examples for listing rules, creating evaluations, running</p>
+<p>    evaluations, and reading findings.</p>
+<ul>
+<li>[REST Usage](references/rest-usage.md): Direct REST examples for the public</li>
+</ul>
+<p>    Workload Manager API and operations polling.</p>
+<ul>
+<li>[Public CLI Status](references/public-cli-status.md): No documented</li>
+</ul>
+<p>    service-specific <code>gcloud workload-manager</code> command group; use <code>gcloud</code> only</p>
+<p>    for auth, IAM, API enablement, and REST tokens.</p>
+<ul>
+<li>[Public MCP Status](references/public-mcp-status.md): No documented public</li>
+</ul>
+<p>    Workload Manager MCP server; use client libraries or REST API instead.</p>
+<ul>
+<li>[Setup Prerequisites](references/setup-prerequisites.md): Terraform examples</li>
+</ul>
+<p>    only for adjacent prerequisites such as API enablement, IAM, BigQuery export</p>
+<p>    datasets, and KMS keys. This is not Workload Manager resource management.</p>
+<ul>
+<li>[IAM &amp; Security](references/iam-security.md): Workload Manager roles,</li>
+</ul>
+<p>    least-privilege guidance, service agents, data handling, and CMEK notes.</p>
+<p>If product behavior or API fields are not covered here, check the current</p>
+<p>Workload Manager product documentation and client library reference before</p>
+<p>implementing.</p>
+<h4>Authoritative References</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/workload-manager/docs/overview" rel="noopener">Workload Manager overview</a></li>
+<li><a href="https://docs.cloud.google.com/workload-manager/docs/reference/best-practices-general" rel="noopener">Google Cloud best practices</a></li>
+<li><a href="https://docs.cloud.google.com/workload-manager/docs/reference/rest" rel="noopener">Workload Manager REST API</a></li>
+<li><a href="https://docs.cloud.google.com/workload-manager/docs/evaluate/custom-rules/about-custom-rules" rel="noopener">About custom rules</a></li>
+<li><a href="https://docs.cloud.google.com/workload-manager/docs/evaluate/custom-rules/rego-custom-rules" rel="noopener">Write custom rules using Rego</a></li>
+<li><a href="https://pypi.org/project/google-cloud-workloadmanager/" rel="noopener">Python package</a></li>
+<li><a href="https://docs.cloud.google.com/iam/docs/roles-permissions/workloadmanager" rel="noopener">Workload Manager IAM roles</a></li>
+<li>For additional information, use the Developer Knowledge MCP server <code>search_documents</code> tool.</li>
+</ul>
+<h4>Additional Context</h4>
+<ul>
+<li><a href="https://discuss.google.dev/t/mastering-cloud-posture-management-security-reliability-and-finops-with-workload-manager/318258" rel="noopener">Mastering cloud posture management with Workload Manager</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/workload-manager-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/workload-manager-basics" aria-label="Copy install workload-manager-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/workload-manager-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/workload-manager-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

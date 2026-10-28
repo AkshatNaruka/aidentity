@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kql — Aidentity</title>
+<meta name="description" content="KQL language expertise for writing correct, efficient Kusto Query Language queries. Covers syntax gotchas, join patterns, dynamic types, datetime pitfalls, regex patterns, serialization, memory management, result-size discipline, and advanced functions (geo, vector, graph). USE THIS SKILL whenever writing, debugging, or reviewing KQL queries — even simple ones — because the gotchas section prevents the most common errors that waste tool calls and cause expensive retry cascades. Trigger on: KQL, Kusto, ADX, Azure Data Explorer, Fabric Real-Time Intelligence, EventHouse, Log Analytics, log analysis, data exploration, time series, anomaly detection, summarize, where clause, join, extend, project, let statement, parse operator, extract function, any mention of pipe-forward query syntax.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/kql/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="kql — Aidentity">
+<meta property="og:description" content="KQL language expertise for writing correct, efficient Kusto Query Language queries. Covers syntax gotchas, join patterns, dynamic types, datetime pitfalls, regex patterns, serialization, memory management, result-size discipline, and advanced functions (geo, vector, graph). USE THIS SKILL whenever writing, debugging, or reviewing KQL queries — even simple ones — because the gotchas section prevents the most common errors that waste tool calls and cause expensive retry cascades. Trigger on: KQL, Kusto, ADX, Azure Data Explorer, Fabric Real-Time Intelligence, EventHouse, Log Analytics, log analysis, data exploration, time series, anomaly detection, summarize, where clause, join, extend, project, let statement, parse operator, extract function, any mention of pipe-forward query syntax.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/kql/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"kql","description":"KQL language expertise for writing correct, efficient Kusto Query Language queries. Covers syntax gotchas, join patterns, dynamic types, datetime pitfalls, regex patterns, serialization, memory management, result-size discipline, and advanced functions (geo, vector, graph). USE THIS SKILL whenever writing, debugging, or reviewing KQL queries — even simple ones — because the gotchas section prevents the most common errors that waste tool calls and cause expensive retry cascades. Trigger on: KQL, Kusto, ADX, Azure Data Explorer, Fabric Real-Time Intelligence, EventHouse, Log Analytics, log analysis, data exploration, time series, anomaly detection, summarize, where clause, join, extend, project, let statement, parse operator, extract function, any mention of pipe-forward query syntax.","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/kql/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>kql
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>kql</h1>
+      <p class="summary">KQL language expertise for writing correct, efficient Kusto Query Language queries. Covers syntax gotchas, join patterns, dynamic types, datetime pitfalls, regex patterns, serialization, memory management, result-size discipline, and advanced functions (geo, vector, graph). USE THIS SKILL whenever writing, debugging, or reviewing KQL queries — even simple ones — because the gotchas section prevents the most common errors that waste tool calls and cause expensive retry cascades. Trigger on: KQL, Kusto, ADX, Azure Data Explorer, Fabric Real-Time Intelligence, EventHouse, Log Analytics, log analysis, data exploration, time series, anomaly detection, summarize, where clause, join, extend, project, let statement, parse operator, extract function, any mention of pipe-forward query syntax.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>KQL Mastery</h3>
+<p>&gt; <strong>Try it yourself</strong>: All <code>✅</code> examples in this skill can be run against the public help cluster:</p>
+<p>&gt; <code>https://help.kusto.windows.net</code>, database <code>Samples</code> (contains <code>StormEvents</code>, <code>SimpleGraph_Nodes</code>/<code>Edges</code>, <code>nyc_taxi</code>, and more).</p>
+<h4>1. KQL Basics</h4>
+<p>Kusto Query Language (KQL) is a pipe-forward query language for exploring data. It is the native query language for Azure Data Explorer (ADX), Microsoft Fabric Real-Time Intelligence (EventHouse), Azure Monitor Log Analytics, Microsoft Sentinel, and other Microsoft data services.</p>
+<h5>Pipe-forward syntax</h5>
+<p>KQL queries are a chain of operators separated by <code>|</code>. Data flows left to right:</p>
+<p><pre><code>StormEvents                          // start with a table
+| where State == &quot;TEXAS&quot;             // filter rows
+| summarize count() by EventType     // aggregate
+| top 5 by count_ desc              // limit results</code></pre></p>
+<h5>Query vs management commands</h5>
+<p>KQL has two execution planes:</p>
+<table><thead><tr><th>Plane</th><th>Starts with</th><th>Examples</th></tr></thead><tbody>
+<tr><td><strong>Query</strong></td><td>Table name, <code>let</code>, <code>print</code>, <code>datatable</code></td><td>`StormEvents \</td><td>where State == &quot;TEXAS&quot;`</td></tr>
+<tr><td><strong>Management</strong></td><td><code>.show</code>, <code>.create</code>, <code>.set</code>, <code>.drop</code>, <code>.alter</code></td><td><code>.show tables</code>, <code>.show table T schema</code></td></tr>
+</tbody></table>
+<p>Management commands can be followed by query operators (the output is tabular), but the entire request runs on the management plane. You cannot start with a query and pipe into a management command.</p>
+<p><pre><code>// ✅ WORKS — management command piped to query operators
+.show tables | project TableName | where TableName has &quot;Events&quot;
+
+// ❌ WRONG — query piped into management command
+StormEvents | take 5 | .show tables</code></pre></p>
+<p>When in doubt: if the first token starts with <code>.</code>, it&#39;s a management command. For a full catalog of schema exploration commands, see <code>references/discovery-queries.md</code>.</p>
+<h4>2. Dynamic Type Discipline</h4>
+<p>KQL&#39;s <code>dynamic</code> type is flexible but strict in certain contexts. A common mistake is using a dynamic column in <code>summarize by</code>, <code>order by</code>, or <code>join on</code> without casting.</p>
+<p><strong>The rule</strong>: Any time you use a dynamic-typed column in <code>by</code>, <code>on</code>, or <code>order by</code>, wrap it in an explicit cast.</p>
+<p><pre><code>// ❌ ERROR: &quot;Summarize group key ... is of a &#39;dynamic&#39; type&quot;
+StormEvents | summarize count() by StormSummary.Details.Location
+
+// ✅ FIX
+StormEvents | summarize count() by tostring(StormSummary.Details.Location)</code></pre></p>
+<p><pre><code>// ❌ ERROR: &quot;order operator: key can&#39;t be of dynamic type&quot;
+StormEvents | order by StormSummary.TotalDamages desc
+
+// ✅ FIX
+StormEvents | order by tolong(StormSummary.TotalDamages) desc</code></pre></p>
+<p><pre><code>// ❌ ERROR in join: dynamic join key
+StormEvents | join kind=inner (PopulationData) on $left.StormSummary == $right.State
+
+// ✅ FIX — cast both sides
+StormEvents
+| extend State_str = tostring(StormSummary.Details.Location)
+| join kind=inner (PopulationData) on $left.State_str == $right.State</code></pre></p>
+<p><strong>Self-correction</strong>: When you see &quot;is of a &#39;dynamic&#39; type&quot; in an error, add <code>tostring()</code>, <code>tolong()</code>, or <code>todouble()</code>.</p>
+<h4>3. Join Patterns &amp; Pitfalls</h4>
+<p>KQL joins have constraints that differ from SQL.</p>
+<h5>Equality only</h5>
+<p>KQL join conditions support <strong>only <code>==</code></strong>. No <code>&lt;</code>, <code>&gt;</code>, <code>!=</code>, or function calls in join predicates.</p>
+<p><pre><code>// ❌ ERROR: &quot;Only equality is allowed in this context&quot;
+StormEvents | join (nyc_taxi) on geo_distance_2points(BeginLon, BeginLat, pickup_longitude, pickup_latitude) &lt; 1000
+
+// ✅ WORKAROUND — pre-bucket into spatial cells, then join on cell ID
+StormEvents
+| extend cell = geo_point_to_s2cell(BeginLon, BeginLat, 8)
+| join kind=inner (nyc_taxi | extend cell = geo_point_to_s2cell(pickup_longitude, pickup_latitude, 8)) on cell</code></pre></p>
+<p>For range joins, pre-bin values: <code>| extend bin_val = bin(Value, 100)</code>, then join on <code>bin_val</code>. Note: values near bin boundaries may land in adjacent bins — consider checking neighboring bins or overlapping the range for precision.</p>
+<h5>Left/right attribute matching</h5>
+<p>Both sides of a join <code>on</code> clause must reference <strong>column entities only</strong> — not expressions, not aggregates.</p>
+<p><pre><code>// ❌ ERROR: &quot;for each left attribute, right attribute should be selected&quot;
+StormEvents | join kind=inner (PopulationData) on $left.State
+
+// ✅ FIX — specify both sides explicitly
+StormEvents | join kind=inner (PopulationData) on $left.State == $right.State</code></pre></p>
+<h5>Cardinality check before large joins</h5>
+<p><strong>Always</strong> check cardinality before joining tables with &gt;10K rows. A cross-join explosion was the source of the single <code>E_RUNAWAY_QUERY</code> error (25K × 195 = potential 4.8M rows).</p>
+<p><pre><code>// Before joining, check how many rows each side contributes
+StormEvents | summarize dcount(State)        // → 67 distinct states
+PopulationData | summarize dcount(State)     // → 52 — safe to join</code></pre></p>
+<h4>4. Regex in KQL</h4>
+<p>KQL handles regex natively — no need for Python.</p>
+<h5>The <code>extract_all</code> gotcha</h5>
+<p>Unlike Python&#39;s <code>re.findall()</code>, KQL&#39;s <code>extract_all</code> <strong>requires capturing groups</strong> in the regex:</p>
+<p><pre><code>// ❌ ERROR: &quot;extractall(): argument 2 must be a valid regex with [1..16] matching groups&quot;
+StormEvents | extend words = extract_all(@&quot;[a-zA-Z]{3,}&quot;, EventNarrative)
+
+// ✅ FIX — add parentheses around the pattern
+StormEvents | extend words = extract_all(@&quot;([a-zA-Z]{3,})&quot;, EventNarrative)</code></pre></p>
+<h5>Regex toolkit — don&#39;t fall back to Python</h5>
+<table><thead><tr><th>Function</th><th>Use case</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>extract(regex, group, source)</code></td><td>Single match</td><td><code>extract(@&quot;User &#39;([^&#39;]+)&#39;&quot;, 1, Msg)</code></td></tr>
+<tr><td><code>extract_all(regex, source)</code></td><td>All matches (needs <code>()</code>)</td><td><code>extract_all(@&quot;(\w+)&quot;, Text)</code></td></tr>
+<tr><td><code>parse</code></td><td>Structured extraction</td><td><code>parse Msg with <em> &quot;User &#39;&quot; Sender &quot;&#39; sent&quot; </em></code></td></tr>
+<tr><td><code>matches regex</code></td><td>Boolean filter</td><td><code>where Url matches regex @&quot;^https?://&quot;</code></td></tr>
+<tr><td><code>replace_regex</code></td><td>Find and replace</td><td><code>replace_regex(Text, @&quot;\s+&quot;, &quot; &quot;)</code></td></tr>
+</tbody></table>
+<h4>5. Serialization Requirements</h4>
+<p>Window functions need serialized (ordered) input.</p>
+<p><pre><code>// ❌ ERROR: &quot;Function &#39;row_cumsum&#39; cannot be invoked. The row set must be serialized.&quot;
+StormEvents
+| where State == &quot;TEXAS&quot;
+| summarize DailyCount = count() by bin(StartTime, 1d)
+| extend CumulativeCount = row_cumsum(DailyCount)
+
+// ✅ FIX — add | serialize (or | order by, which implicitly serializes)
+StormEvents
+| where State == &quot;TEXAS&quot;
+| summarize DailyCount = count() by bin(StartTime, 1d)
+| order by StartTime asc
+| extend CumulativeCount = row_cumsum(DailyCount)</code></pre></p>
+<p>Functions requiring serialization: <code>row_number()</code>, <code>row_cumsum()</code>, <code>prev()</code>, <code>next()</code>, <code>row_window_session()</code>.</p>
+<h4>6. Memory-Safe Query Patterns</h4>
+<p>The most common memory error. Caused by scanning too much data without pre-filtering.</p>
+<h5>The progression of safety</h5>
+<p><pre><code>Safest ──────────────────────────────────────────────── Most dangerous
+| count    | take 10    | where + summarize    | summarize (no filter)    | full scan</code></pre></p>
+<h5>Rules for large tables (&gt;1M rows)</h5>
+<ol>
+<li><strong>Always start with <code>| count</code></strong> to understand table size</li>
+<li><strong>Always <code>| where</code> before <code>| summarize</code></strong> — filter time range, partition key, or category first</li>
+<li><strong>Never <code>dcount()</code> on high-cardinality columns</strong> without pre-filtering</li>
+<li><strong>Check join cardinality</strong> before executing (see Section 3)</li>
+<li><strong>Use <code>materialize()</code></strong> for subqueries referenced multiple times</li>
+</ol>
+<p><pre><code>// ❌ OUT OF MEMORY — large table, no filter, many group-by columns
+StormEvents
+| summarize dcount(EventType), count() by StartTime, State, Source
+| where dcount_EventType &gt; 1
+
+// ✅ SAFE — filter first, then aggregate
+StormEvents
+| where StartTime between (datetime(2007-04-15) .. datetime(2007-04-16))
+| summarize dcount(EventType) by State, Source
+| where dcount_EventType &gt; 1</code></pre></p>
+<h5>When you see <code>E_LOW_MEMORY_CONDITION</code></h5>
+<p>The query touched too much data. Your options:</p>
+<ul>
+<li>Add <code>| where</code> filters (time range, partition key)</li>
+<li>Reduce the number of <code>by</code> columns in <code>summarize</code></li>
+<li>Break into smaller time windows and union results</li>
+<li>Use <code>| sample 10000</code> for exploratory work instead of full scans</li>
+</ul>
+<h5>When you see <code>E_RUNAWAY_QUERY</code></h5>
+<p>A join or aggregation produced too many output rows. Check join cardinality — one or both sides is too large.</p>
+<h4>7. Result Size Discipline</h4>
+<p>Large results slow down analysis. Prevention:</p>
+<table><thead><tr><th>Query type</th><th>Safeguard</th></tr></thead><tbody>
+<tr><td>Exploratory</td><td>Always end with `\</td><td>take 10<code> or </code>\</td><td>take 20`</td></tr>
+<tr><td>Aggregation</td><td>Use `\</td><td>top 20 by ...<code> not unbounded </code>summarize`</td></tr>
+<tr><td>Wide rows (vectors, JSON)</td><td>`\</td><td>project` only needed columns</td></tr>
+<tr><td><code>make_list()</code> / <code>make_set()</code></td><td>Avoid on high-cardinality groups (produces huge cells)</td></tr>
+<tr><td>Unknown size</td><td>Run `\</td><td>count` first</td></tr>
+</tbody></table>
+<p><strong>The vector trap</strong>: Tables with embedding columns (1536-dim float arrays) produce ~30KB per row. Even <code>| take 20</code> yields 600KB. Always <code>| project</code> away vector columns unless you specifically need them.</p>
+<h4>8. String Comparison Strictness</h4>
+<p>KQL sometimes requires explicit casts when comparing computed string values — even when both sides are already strings.</p>
+<p><pre><code>// ❌ ERROR: &quot;Cannot compare values of types string and string. Try adding explicit casts&quot;
+StormEvents | where geo_point_to_s2cell(BeginLon, BeginLat, 16) == other_cell
+
+// ✅ FIX — wrap both sides in tostring()
+StormEvents | where tostring(geo_point_to_s2cell(BeginLon, BeginLat, 16)) == tostring(other_cell)</code></pre></p>
+<p>This is most common with computed values from <code>geo_point_to_s2cell()</code> and <code>strcat()</code> comparisons. When in doubt, cast with <code>tostring()</code>.</p>
+<h4>9. Advanced Functions</h4>
+<p>KQL handles these natively — no need for Python:</p>
+<h5>Vector similarity</h5>
+<p><pre><code>// try it! — cosine similarity on Iris feature vectors
+let target = pack_array(5.1, 3.5, 1.4, 0.2);
+Iris
+| extend Vec = pack_array(SepalLength, SepalWidth, PetalLength, PetalWidth)
+| extend sim = series_cosine_similarity(Vec, target)
+| top 5 by sim desc</code></pre></p>
+<h5>Geo operations</h5>
+<p><pre><code>// Distance between two points (meters)
+StormEvents | extend dist = geo_distance_2points(BeginLon, BeginLat, EndLon, EndLat)
+
+// Spatial bucketing for joins
+StormEvents | extend cell = geo_point_to_s2cell(BeginLon, BeginLat, 8)</code></pre></p>
+<h5>Graph queries</h5>
+<p><pre><code>// Persistent graph model — try it on the help cluster!
+graph(&quot;Simple&quot;)
+| graph-match (src)-[e*1..3]-&gt;(dst)
+  where src.name == &quot;Alice&quot;
+  project src.name, dst.name, path_length = array_length(e)
+
+// Transient graph — build inline with make-graph
+SimpleGraph_Edges
+| make-graph source --&gt; target with SimpleGraph_Nodes on id
+| graph-match (src)-[e*1..5]-&gt;(dst)
+  where src.name == &quot;Alice&quot;
+  project src.name, dst.name, path_length = array_length(e)</code></pre></p>
+<h5>Time series</h5>
+<p><pre><code>// try it! — create a time series and detect anomalies
+StormEvents
+| make-series count() default=0 on StartTime step 1d
+| extend anomalies = series_decompose_anomalies(count_)</code></pre></p>
+<p>For detailed examples and patterns, consult <code>references/advanced-patterns.md</code>.</p>
+<h4>10. Self-Correction Lookup Table</h4>
+<p>When you encounter an error, look it up here before retrying:</p>
+<table><thead><tr><th>Error message contains</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody>
+<tr><td><code>is of a &#39;dynamic&#39; type</code></td><td>Dynamic column in <code>by</code>/<code>on</code>/<code>order by</code></td><td>Wrap in <code>tostring()</code>/<code>tolong()</code></td></tr>
+<tr><td><code>Only equality is allowed</code></td><td>Range predicate in join condition</td><td>Pre-bucket with S2/H3 cells or <code>bin()</code></td></tr>
+<tr><td><code>extractall(): matching groups</code></td><td>Missing <code>()</code> in regex</td><td>Add <code>()</code>: <code>@&quot;(\w+)&quot;</code> not <code>@&quot;\w+&quot;</code></td></tr>
+<tr><td><code>row set must be serialized</code></td><td>Window function on unsorted data</td><td>Add `\</td><td>serialize<code> or </code>\</td><td>order by` before it</td></tr>
+<tr><td><code>Cannot compare values of types string and string</code></td><td>Computed string comparison</td><td>Add <code>tostring()</code> on both sides</td></tr>
+<tr><td><code>Failed to resolve column named &#39;X&#39;</code></td><td>Wrong column name or wrong table</td><td>Run <code>.show table T schema</code> to check column names</td></tr>
+<tr><td><code>E_LOW_MEMORY_CONDITION</code></td><td>Query touched too much data</td><td>Add `\</td><td>where` filters, reduce time range, break into steps</td></tr>
+<tr><td><code>E_RUNAWAY_QUERY</code></td><td>Join/aggregation produced too many rows</td><td>Check cardinality before joining; add pre-filters</td></tr>
+<tr><td><code>for each left attribute, right attribute</code></td><td>Join <code>on</code> clause incomplete</td><td>Use explicit form: <code>on $left.X == $right.Y</code></td></tr>
+<tr><td><code>needs to be bracketed</code></td><td>Reserved word used as identifier</td><td>Use <code>[&#39;keyword&#39;]</code> syntax</td></tr>
+<tr><td><code>plugin doesn&#39;t exist</code></td><td>Unavailable plugin on this cluster</td><td>Fall back to equivalent function or Python</td></tr>
+<tr><td><code>Expected string literal in datetime()</code></td><td>Bare integer in datetime literal</td><td>Use <code>datetime(2024-01-01)</code> not <code>datetime(2024)</code></td></tr>
+<tr><td><code>Unexpected token</code> after <code>by</code></td><td>Complex expression in summarize by-clause</td><td><code>extend</code> the expression first, then <code>summarize by</code> the column</td></tr>
+<tr><td><code>not recognized</code> / <code>unknown operator</code></td><td>Operator not available on this engine</td><td>Check operator support; try equivalent (<code>order by</code> = <code>sort by</code>)</td></tr>
+</tbody></table>
+<h4>11. Datetime Pitfalls</h4>
+<p>Datetime literals are a common source of errors. A wrong literal format can cascade into completely different approaches instead of fixing the small issue.</p>
+<h5>Literal format</h5>
+<p><pre><code>// ❌ WRONG — bare year is not a valid datetime
+StormEvents | where StartTime &gt; datetime(2007)
+
+// ✅ RIGHT — always use full date format
+StormEvents | where StartTime &gt; datetime(2007-01-01)</code></pre></p>
+<h5>Filtering by year, month, or hour</h5>
+<p><pre><code>// ❌ WRONG — comparing datetime column to integer
+StormEvents | where StartTime == 2007
+
+// ✅ RIGHT — use datetime_part() to extract components
+StormEvents | where datetime_part(&quot;year&quot;, StartTime) == 2007
+
+// ✅ ALSO RIGHT — use between with datetime range
+StormEvents | where StartTime between (datetime(2007-01-01) .. datetime(2007-12-31T23:59:59))</code></pre></p>
+<h5>Time bucketing in summarize</h5>
+<p><pre><code>// This works, but can be harder to read and reuse in complex queries
+StormEvents | summarize count() by startofmonth(StartTime)
+
+// Clearer — extend first, then summarize by the computed column
+StormEvents
+| extend Month = startofmonth(StartTime)
+| summarize count() by Month
+| order by Month asc</code></pre></p>
+<h5>Useful datetime functions</h5>
+<table><thead><tr><th>Function</th><th>Purpose</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>bin(ts, 1h)</code></td><td>Round down to bucket boundary</td><td><code>bin(Timestamp, 1d)</code></td></tr>
+<tr><td><code>startofmonth(ts)</code></td><td>First day of month</td><td><code>startofmonth(Timestamp)</code></td></tr>
+<tr><td><code>datetime_part(&quot;hour&quot;, ts)</code></td><td>Extract component</td><td><code>datetime_part(&quot;year&quot;, Timestamp)</code></td></tr>
+<tr><td><code>format_datetime(ts, fmt)</code></td><td>Format as string</td><td><code>format_datetime(Timestamp, &quot;yyyy-MM&quot;)</code></td></tr>
+<tr><td><code>ago(1d)</code></td><td>Relative time</td><td><code>where Timestamp &gt; ago(1d)</code></td></tr>
+<tr><td><code>between(a .. b)</code></td><td>Range filter (inclusive)</td><td><code>where Timestamp between (datetime(2024-01-01) .. datetime(2024-01-31T23:59:59))</code></td></tr>
+<tr><td><code>todatetime(str)</code></td><td>Parse string → datetime</td><td><code>todatetime(&quot;2024-01-15T10:30:00Z&quot;)</code></td></tr>
+<tr><td><code>totimespan(str)</code></td><td>Parse string → timespan</td><td><code>totimespan(&quot;01:30:00&quot;)</code></td></tr>
+</tbody></table>
+<h4>12. Operator Naming &amp; Equality</h4>
+<p>KQL has subtle differences from SQL syntax.</p>
+<h5>Naming conventions</h5>
+<table><thead><tr><th>Entity</th><th>Convention</th><th>Example</th></tr></thead><tbody>
+<tr><td>Tables</td><td>UpperCamelCase</td><td><code>StormEvents</code>, <code>NetworkLogs</code></td></tr>
+<tr><td>Columns</td><td>UpperCamelCase</td><td><code>StartTime</code>, <code>EventType</code></td></tr>
+<tr><td>Variables (<code>let</code>)</td><td>snake_case</td><td><code>let filtered_events = ...</code></td></tr>
+<tr><td>Built-in functions</td><td>snake_case</td><td><code>format_bytes()</code>, <code>geo_distance_2points()</code></td></tr>
+<tr><td>Stored functions</td><td>UpperCamelCase</td><td><code>.create function GetTopUsers</code></td></tr>
+</tbody></table>
+<h5>Equality operators</h5>
+<p><pre><code>// In where clauses, == is case-sensitive, =~ is case-insensitive
+StormEvents | where State == &quot;TEXAS&quot; | count        // exact match
+StormEvents | where State =~ &quot;texas&quot; | count        // case-insensitive
+
+// In joins, use == only
+StormEvents | join kind=inner (PopulationData) on State</code></pre></p>
+<h5>sort vs order</h5>
+<p>Both <code>sort by</code> and <code>order by</code> work identically in KQL — they are aliases. Use whichever you prefer, but be consistent.</p>
+<h5>contains vs has</h5>
+<p><pre><code>// contains: substring match (slower)
+StormEvents | where EventNarrative contains &quot;tree&quot;   // finds &quot;trees&quot;, &quot;treetop&quot; too
+
+// has: term/word match (faster, uses index)
+StormEvents | where EventNarrative has &quot;tree&quot;        // matches word boundaries only
+
+// For exact prefix/suffix
+StormEvents | where EventType startswith &quot;Thunder&quot;
+StormEvents | where Source endswith &quot;Spotter&quot;</code></pre></p>
+<h4>13. Error Recovery Strategy</h4>
+<p>When a first KQL query fails, the temptation is to abandon the entire approach and try something completely different. The correct response is almost always to <strong>fix the specific error</strong>, not change strategy.</p>
+<h5>The pattern to avoid</h5>
+<p><pre><code>Query 1: extract(@&quot;pattern&quot;, 1, col)  → Parse error
+Query 2: todynamic(col)               → Different error  
+Query 3: parse_json(col)              → Another error
+Query 4: Python script                → Works but 10x tokens</code></pre></p>
+<h5>The correct pattern</h5>
+<p><pre><code>Query 1: extract(@&quot;pattern&quot;, 1, col)  → Parse error (bad escaping)
+Query 2: extract(@&quot;pattern&quot;, 1, col)  → Fix the specific escaping issue → Success</code></pre></p>
+<p><strong>Rules for error recovery:</strong></p>
+<ol>
+<li>Read the error message carefully — it almost always tells you exactly what&#39;s wrong</li>
+<li>Fix the <strong>specific</strong> syntax/escaping issue, don&#39;t switch approaches</li>
+<li>Use the self-correction table (Section 10) to map errors to fixes</li>
+<li>Only switch approaches after 2 failed fixes of the same query</li>
+<li>The <code>parse</code> operator is often simpler than <code>extract()</code> for structured text:</li>
+</ol>
+<p><pre><code>// Instead of complex regex on TraceLogs:
+// extract(@&quot;file path: \&quot;\&quot;([^\&quot;]+)\&quot;\&quot;&quot;, 1, Message)
+
+// Use parse for structured extraction (try it on help cluster, SampleLogs db):
+cluster(&quot;help&quot;).database(&quot;SampleLogs&quot;).TraceLogs
+| where Message has &quot;file path&quot;
+| parse Message with * &quot;file path: \&quot;\&quot;&quot; FilePath &quot;\&quot;\&quot;&quot; *
+| project Timestamp, FilePath
+| take 5</code></pre></p>
+<h4>14. Query Writing Checklist</h4>
+<p>Before running any KQL query, mentally check:</p>
+<ol>
+<li><strong>Pre-filtered?</strong> Large tables have a <code>| where</code> before any <code>| summarize</code></li>
+<li><strong>Result bounded?</strong> Exploratory queries end with <code>| take N</code> or <code>| top N</code></li>
+<li><strong>Dynamic columns cast?</strong> Any dynamic column in <code>by</code>/<code>on</code>/<code>order by</code> is wrapped</li>
+<li><strong>Regex has groups?</strong> <code>extract_all</code> patterns have <code>()</code> around what you want to capture</li>
+<li><strong>Join cardinality safe?</strong> Both sides checked with <code>dcount()</code> before joining</li>
+<li><strong>Needed columns only?</strong> Wide tables get <code>| project</code> to drop unneeded columns</li>
+<li><strong>Datetime literals valid?</strong> Using <code>datetime(2024-01-01)</code> not <code>datetime(2024)</code> or bare integers</li>
+<li><strong>Complex by-expressions?</strong> Use <code>| extend</code> first, then <code>| summarize by</code> the computed column</li>
+<li><strong>Error recovery plan?</strong> If a query fails, fix the specific error — don&#39;t change strategy</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/kql</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/kql" aria-label="Copy install kql">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/kql</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/kql/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>developer-device-platform-basics — Aidentity</title>
+<meta name="description" content="Provides guidance and instructions on managing remote devices on Developer Device Platform (DDP). Use when reserving remote Android devices, establishing connection tunnels, checking session status, or extending/cancelling leases. Don&#39;t use for iOS or local device/hardware inquiries.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/developer-device-platform-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="developer-device-platform-basics — Aidentity">
+<meta property="og:description" content="Provides guidance and instructions on managing remote devices on Developer Device Platform (DDP). Use when reserving remote Android devices, establishing connection tunnels, checking session status, or extending/cancelling leases. Don&#39;t use for iOS or local device/hardware inquiries.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/developer-device-platform-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"developer-device-platform-basics","description":"Provides guidance and instructions on managing remote devices on Developer Device Platform (DDP). Use when reserving remote Android devices, establishing connection tunnels, checking session status, or extending/cancelling leases. Don't use for iOS or local device/hardware inquiries.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/developer-device-platform-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>developer-device-platform-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>developer-device-platform-basics</h1>
+      <p class="summary">Provides guidance and instructions on managing remote devices on Developer Device Platform (DDP). Use when reserving remote Android devices, establishing connection tunnels, checking session status, or extending/cancelling leases. Don&#39;t use for iOS or local device/hardware inquiries.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Developer Device Platform</h3>
+<p>Developer Device Platform (DDP) is a Google fully managed, global infrastructure</p>
+<p>providing access to a wide variety of physical and virtual devices.</p>
+<p>&gt; [!WARNING] Developer Device Platform (DDP) is currently at Preview.</p>
+<p>&gt; [!IMPORTANT] For all devicerun and devicestreaming API operations (reserving,</p>
+<p>&gt; status checking, stopping/canceling, updating, or listing a session), always</p>
+<p>&gt; verify and use the exact instructions and curl commands provided in the linked</p>
+<p>&gt; reference <code>.md</code> files.</p>
+<h4>Authentication &amp; Setup</h4>
+<p><strong>CRITICAL</strong>: Before running any requests, you MUST ensure the environment is</p>
+<p>correctly initialized by following these steps:</p>
+<p>Before running any requests, verify if the <code>gcloud</code> executable is present. If</p>
+<p>missing, refer to the official</p>
+<p><a href="https://docs.cloud.google.com/sdk/docs/install-sdk.md.txt" rel="noopener">Google Cloud CLI Installation Guide</a></p>
+<p>to install it on the current platform (Linux, macOS, Windows, etc.).</p>
+<ol>
+<li><strong>Google Cloud Authentication</strong>: Authenticate with your Google Cloud</li>
+</ol>
+<p>    credentials and configure active Application Default Credentials (ADC) for</p>
+<p>    the Developer Device Platform:</p>
+<p>    <pre><code>    gcloud auth login --no-browser
+    gcloud auth application-default login --no-browser
+    </code></pre></p>
+<ol>
+<li><strong>Enable APIs</strong> (if not already enabled):</li>
+</ol>
+<p>    <pre><code>    gcloud services enable devicerun.googleapis.com devicestreaming.googleapis.com testing.googleapis.com --quiet
+    </code></pre></p>
+<p>&gt; [!NOTE] Cloud Testing API is needed for Device Streaming API during Preview.</p>
+<ol>
+<li><strong>Enable gcloud beta component</strong>:</li>
+</ol>
+<p>    <pre><code>    gcloud components install beta
+    </code></pre></p>
+<ol>
+<li><strong>Setup Environment Variables</strong>: Set up the required project variable and</li>
+</ol>
+<p>    access token:</p>
+<p>    <pre><code>    export PROJECT_ID=$(gcloud config get project)
+    export ACCESS_TOKEN=$(gcloud auth application-default print-access-token 2&gt;/dev/null)
+    </code></pre></p>
+<ol>
+<li><strong>Python Environment</strong>: For instructions on setting up the python virtual</li>
+</ol>
+<p>    environment, see [start_adb_forwarder.md].</p>
+<h4>Listing Available Devices</h4>
+<p>To find the correct <code>modelCode</code> and <code>osVersion</code> to use when starting a session,</p>
+<p>you can list the available devices:</p>
+<ol>
+<li><strong>List Models</strong>: Run the following command to list available Android device</li>
+</ol>
+<p>    models:</p>
+<p>    <pre><code>    gcloud beta device-run devices list
+    </code></pre></p>
+<p>    Use the <code>ID</code> column to find the value for the <code>CATALOG_ID</code> parameter to</p>
+<p>    describe a specific device (e.g., <code>shiba-36</code>).</p>
+<ol>
+<li><strong>Describe a Model</strong>: Run the API request to get more details about a</li>
+</ol>
+<p>    specific model (e.g., supportedProducts, resolution). Always rely on the</p>
+<p>    exact curl command and instructions provided in [describe_device.md].</p>
+<h4>Starting a Device Session</h4>
+<p>When the user asks to reserve or connect to a device:</p>
+<ol>
+<li><strong>Check Device Availability</strong>:</li>
+</ol>
+<p>    Look up <code>CATALOG_ID</code> of the device using <code>Listing Available Devices</code></p>
+<p>    instructions. Check the device availability of the <code>CATALOG_ID</code> by using the</p>
+<p>    exact curl command and instructions provided in [describe_device.md]. The</p>
+<p>    device MUST contain &quot;deviceStreaming&quot; in &quot;supportedProducts&quot; to be reserved.</p>
+<p>    If no specific device is specified, use <code>CATALOG_ID=shiba-34</code> (Pixel 8 on</p>
+<p>    SDK 34).</p>
+<p>    If <code>OS_VERSION</code> was not specified by the user, ask the user to select a</p>
+<p>    version from the device list (preferring the version with the highest</p>
+<p>    availability {&quot;available&quot;: &quot;AVAILABILITY_HIGH&quot; }).</p>
+<p>    If <code>OS_VERSION</code> is unavailable for <code>deviceStreaming</code>, do not reserve one.</p>
+<p>    Prompt the user for an alternative <code>OS_VERSION</code>.</p>
+<ol>
+<li><strong>Extract Parameters</strong>:</li>
+</ol>
+<ul>
+<li><code>model_id</code>: <code>modelCode</code> from device details. Required.</li>
+<li><code>version_id</code>: <code>osVersion</code> from device details. Required.</li>
+</ul>
+<ol>
+<li><strong>Reserve Device</strong>:</li>
+</ol>
+<p>    <strong>Rule</strong>: <strong>Explicit User Confirmation Required</strong>. Reserving a device incurs</p>
+<p>    billing charges and creates cloud resources. The agent MUST ALWAYS warn the</p>
+<p>    user explicitly about the billing costs that will be incurred on the active</p>
+<p>    Google Cloud project (e.g., <code>${PROJECT_ID}</code>). You MUST STOP and ask for</p>
+<p>    explicit approval before proceeding with any session creation commands.</p>
+<p>    Then, run the API request with <code>model_id</code> and <code>version_id</code> to reserve the</p>
+<p>    device. Always rely on the exact curl command and instructions provided in</p>
+<p>    [reserve_device.md].</p>
+<p>    Parse the response to get <code>session_name</code> (the session name, e.g.,</p>
+<p>    <code>projects/${PROJECT_ID}/deviceSessions/session-xxxxxx</code>). If reservation</p>
+<p>    fails, report the error.</p>
+<ol>
+<li><strong>Wait for Session to be Active</strong>:</li>
+</ol>
+<p>    While waiting for the device session to be provisioned, poll the session</p>
+<p>    status until <code>&quot;state&quot;</code> is <code>&quot;ACTIVE&quot;</code>. See [session_status.md] for the exact</p>
+<p>    curl command.</p>
+<p>    Repeat this check every 5 seconds to prevent hitting API rate limit. If it</p>
+<p>    does not become active within 2 minutes (typically under 1 minute), report</p>
+<p>    failure and cancel the session. Once active, extract <code>expireTime</code> from the</p>
+<p>    session JSON response and convert it to the user&#39;s local time in a</p>
+<p>    human-readable format (e.g., &quot;June 9, 2026 at 2:44 PM PDT&quot;).</p>
+<ol>
+<li><strong>Start Connection Forwarder</strong>: Start the ADB forwarder script to forward</li>
+</ol>
+<p>    connection to the remote device. Always rely on the exact command and</p>
+<p>    instructions provided in [start_adb_forwarder.md]. Ensure you record the</p>
+<p>    <strong>Command ID</strong>.</p>
+<ol>
+<li><strong>Wait for Online and Parse Port</strong>: Wait for the forwarder to be online and</li>
+</ol>
+<p>    extract the listening port. Always rely on the exact logic and instructions</p>
+<p>    provided in [start_adb_forwarder.md].</p>
+<ol>
+<li><strong>Provide Instructions to User</strong>:</li>
+</ol>
+<p>    Once online, run <code>adb -s localhost:{port} shell getprop ro.product.model</code> to</p>
+<p>    retrieve the device model name. Then, print a message directly to the user</p>
+<p>    in the chat (do NOT create any artifact file) with the following</p>
+<p>    instructions:</p>
+<p>    ### Device is ready!</p>
+<p>    <pre><code>    Device Model: {device_model}
+    OS Version: {version_id}
+    ADB Address: localhost:{port}
+    Session Expiration: {expire_time_human_readable_local}
+    </code></pre></p>
+<ol>
+<li><strong>Save Session State</strong>: Save the <code>{session_name}</code> and <code>{command_id}</code> in your</li>
+</ol>
+<p>    conversation memory/context so you can clean it up later.</p>
+<h4>Viewing the Device Screen of a Reserved Device</h4>
+<p>The coding agent can directly interact with the remote device using <code>adb</code>. Users</p>
+<p>may use a utility to display the screen and manually control the reserved device</p>
+<p>in DDP. See [view_device.md] for an example utility.</p>
+<h4>Stopping a Device Session</h4>
+<p>When the user asks to stop, cleanup, or release the device:</p>
+<ol>
+<li><strong>Identify Session</strong>: Retrieve the active <code>{session_name}</code> and</li>
+</ol>
+<p>    <code>{command_id}</code> from your context. If you don&#39;t have them, list active</p>
+<p>    sessions first (see helper command below) to find the session name.</p>
+<ol>
+<li><strong>Cancel Session via API</strong>: Cancel the session via the API. Always rely on</li>
+</ol>
+<p>    the exact curl command and instructions provided in [cancel_session.md].</p>
+<ol>
+<li><strong>Terminate Connection Forwarder</strong>: Terminate the background process</li>
+</ol>
+<p>    matching <code>{command_id}</code> using your environment&#39;s process management</p>
+<p>    capability.</p>
+<ol>
+<li><strong>Confirm</strong>: Confirm to the user that the session has been cancelled and</li>
+</ol>
+<p>    resources released.</p>
+<h4>Change Device Session Expiration Time</h4>
+<p>When the user asks to change the expiration time of an active device session:</p>
+<p><strong>Rule</strong>: <strong>Explicit User Confirmation Required</strong>. Extending a device session</p>
+<p>incurs additional billing charges and creates cloud resources. The agent MUST</p>
+<p>ALWAYS warn the user explicitly about the extra billing costs that will be</p>
+<p>incurred on the active Google Cloud project (e.g., <code>${PROJECT_ID}</code>). You MUST</p>
+<p>STOP and ask for explicit approval before proceeding with any session extension</p>
+<p>commands.</p>
+<ol>
+<li><strong>Extract Parameters</strong>:</li>
+</ol>
+<ul>
+<li><code>session_name</code>: The active session name.</li>
+<li><code>ttl</code>: The new remaining duration (e.g., <code>3600s</code>). Derive the <code>ttl</code> if</li>
+</ul>
+<p>        it&#39;s provided in another format.</p>
+<ol>
+<li><strong>Change Session via API</strong>: Change the session via the API using</li>
+</ol>
+<p>    <code>updateMask=ttl</code>. Always rely on the exact curl commands and instructions</p>
+<p>    provided in [update_session_expiration.md].</p>
+<ol>
+<li><strong>Restart Connection Forwarder</strong>:</li>
+</ol>
+<ul>
+<li>Run <code>adb disconnect localhost:{port}</code> to ensure the old forwarder</li>
+</ul>
+<p>        connection is closed.</p>
+<ul>
+<li>Stop the old connection forwarder corresponding to <code>{command_id}</code>.</li>
+<li>Start a new connection forwarder by following Step 5 in &quot;Starting a</li>
+</ul>
+<p>        Device Session&quot; (calculating the new <code>--ttl</code> duration in seconds and</p>
+<p>        storing the newly returned Command ID).</p>
+<ol>
+<li><strong>Confirm</strong>: Confirm to the user that the session duration has been updated</li>
+</ol>
+<p>    and the connection forwarder has been restarted with the new TTL.</p>
+<h4>Helper: List Active Sessions</h4>
+<p>To find active sessions if you lost context, always rely on the curl command and</p>
+<p>instructions provided in [list_sessions.md].</p>
+<h4>References</h4>
+<ul>
+<li>[gcloud device-run CLI]</li>
+<li>[Device Streaming API]</li>
+<li>[describe_device.md]</li>
+<li>[reserve_device.md]</li>
+<li>[session_status.md]</li>
+<li>[start_adb_forwarder.md]</li>
+<li>[view_device.md]</li>
+<li>[cancel_session.md]</li>
+<li>[update_session_expiration.md]</li>
+<li>[list_sessions.md]</li>
+</ul>
+<p>[gcloud device-run CLI]: <a href="https://docs.cloud.google.com/sdk/gcloud/reference/beta/device-run" rel="noopener">https://docs.cloud.google.com/sdk/gcloud/reference/beta/device-run</a></p>
+<p>[Device Streaming API]: <a href="https://docs.cloud.google.com/device-streaming/docs/reference/rest.md.txt" rel="noopener">https://docs.cloud.google.com/device-streaming/docs/reference/rest.md.txt</a></p>
+<p>[describe_device.md]: references/describe_device.md</p>
+<p>[reserve_device.md]: references/reserve_device.md</p>
+<p>[session_status.md]: references/session_status.md</p>
+<p>[start_adb_forwarder.md]: references/start_adb_forwarder.md</p>
+<p>[view_device.md]: references/view_device.md</p>
+<p>[cancel_session.md]: references/cancel_session.md</p>
+<p>[update_session_expiration.md]: references/update_session_expiration.md</p>
+<p>[list_sessions.md]: references/list_sessions.md</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/developer-device-platform-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/developer-device-platform-basics" aria-label="Copy install developer-device-platform-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/developer-device-platform-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/developer-device-platform-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

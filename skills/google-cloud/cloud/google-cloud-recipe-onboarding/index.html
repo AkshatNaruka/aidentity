@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-cloud-recipe-onboarding — Aidentity</title>
+<meta name="description" content="Guides a developer&#39;s first steps on Google Cloud, covering account creation, billing setup, project management, and deploying a first resource. Use when a new developer wants to initialize their first Google Cloud project, configure billing, and verify deployment. Don&#39;t use for enterprise organization setup (use Google Cloud Setup guided flow for that instead). Don&#39;t use for complex multi-project architectures.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-onboarding/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-cloud-recipe-onboarding — Aidentity">
+<meta property="og:description" content="Guides a developer&#39;s first steps on Google Cloud, covering account creation, billing setup, project management, and deploying a first resource. Use when a new developer wants to initialize their first Google Cloud project, configure billing, and verify deployment. Don&#39;t use for enterprise organization setup (use Google Cloud Setup guided flow for that instead). Don&#39;t use for complex multi-project architectures.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-onboarding/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-cloud-recipe-onboarding","description":"Guides a developer's first steps on Google Cloud, covering account creation, billing setup, project management, and deploying a first resource. Use when a new developer wants to initialize their first Google Cloud project, configure billing, and verify deployment. Don't use for enterprise organization setup (use Google Cloud Setup guided flow for that instead). Don't use for complex multi-project architectures.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/google-cloud-recipe-onboarding/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>google-cloud-recipe-onboarding
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-cloud-recipe-onboarding</h1>
+      <p class="summary">Guides a developer&#39;s first steps on Google Cloud, covering account creation, billing setup, project management, and deploying a first resource. Use when a new developer wants to initialize their first Google Cloud project, configure billing, and verify deployment. Don&#39;t use for enterprise organization setup (use Google Cloud Setup guided flow for that instead). Don&#39;t use for complex multi-project architectures.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Onboarding to Google Cloud</h3>
+<p>This skill provides a streamlined, non-interactive &quot;happy path&quot; for a singleton developer to get started with <a href="https://cloud.google.com/" rel="noopener">Google Cloud</a>. It covers everything from environment verification and authentication to project selection, billing account linkage, and downstream safety chaining.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; For autonomous agents executing this skill:</p>
+<p>&gt; 1. <strong>Check-Before-Mutate Audits</strong>: Always perform silent pre-execution state audits prior to proposing or executing any project or billing changes.</p>
+<p>&gt; 2. <strong>Single-Question Policy</strong>: Ask the user for exactly <strong>one</strong> operational parameter or confirmation at a time during interactive execution.</p>
+<p>&gt; 3. <strong>Non-Interactive Output</strong>: Append non-interactive overrides (<code>--quiet</code>, <code>--format=&quot;json&quot;</code>) to all mutation commands to guarantee deterministic, machine-parseable outputs and prevent terminal hangs.</p>
+<p>&gt; 4. <strong>First Turn Interaction Rules (Trigger Turn)</strong>: When the developer first triggers this skill with a general onboarding request (e.g. says &quot;I want to get started with Google Cloud&quot;):</p>
+<p>&gt;    - <strong>Preamble Guidance</strong>: Proactively include a short orienting preamble guiding the developer to create a Google Cloud account (pointing to the console at <code>https://console.cloud.google.com/</code>) and run <code>gcloud auth login</code> to authorize their workstation, even if they appear to be already logged in.</p>
+<p>&gt;    - <strong>First Turn Single-Question</strong>: Perform pre-flight audits silently, but do not present a complete parameters summary table or ask for final consent in the first turn. Instead, ask the developer exactly <strong>one</strong> initial operational question (e.g., <em>&quot;Would you like to reuse an existing active project, or create a brand new one?&quot;</em>).</p>
+<p>&gt;    <em>Note: If the developer&#39;s initial prompt explicitly states &quot;I approve the onboarding configuration&quot;, &quot;Let&#39;s proceed with onboarding&quot;, or requests a dry-run plan (e.g., &quot;Show me the exact plan or dry-run commands&quot;), bypass the general preamble and initial question, and proceed directly to the requested step.</em></p>
+<hr>
+<h4>Overview</h4>
+<p>For an individual developer, onboarding to Google Cloud involves verifying local terminal tools, establishing an authenticated session, selecting or instantiating a workspace (<a href="https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy.md.txt" rel="noopener">Project</a>), and linking it to an active billing account. Google Cloud offers a Free Tier and a Free Trial with $300 in credits for first-time users. <a href="https://docs.cloud.google.com/free/docs/free-cloud-features" rel="noopener">Learn more here</a>.</p>
+<hr>
+<h4>Prerequisites</h4>
+<ul>
+<li>A personal Google Account (e.g., <code>@gmail.com</code>) or Google Workspace / Cloud Identity account.</li>
+<li>A valid payment method (credit card or bank account) required for identity verification and to activate the $300 Free Trial credit introduced in the Overview.</li>
+</ul>
+<hr>
+<h4>Steps</h4>
+<h5>Section 1: Verify Host Tooling Setup</h5>
+<p>Before soliciting input or proposing mutations, silently audit the host system&#39;s active tooling and environment status.</p>
+<ol>
+<li>Check if the <code>gcloud</code> CLI binary is installed and accessible:</li>
+</ol>
+<p>   <pre><code>   which gcloud
+   </code></pre></p>
+<ol>
+<li>Check if there is an active authenticated identity session:</li>
+</ol>
+<p>   <pre><code>   gcloud auth list --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li>If the pre-execution audit for <code>which gcloud</code> returns a valid path, proceed directly to Section 2: Authenticate and Route Session.</li>
+<li>If the binary is missing, halt execution and direct the agent/developer to the <a href="https://github.com/google/skills/tree/main/skills/cloud/gcloud" rel="noopener">gcloud skill</a> or official <a href="https://docs.cloud.google.com/sdk/docs/install-sdk.md.txt" rel="noopener">Google Cloud CLI Installation Guide</a> for setup and authentication instructions before retrying.</li>
+</ol>
+<hr>
+<h5>Section 2: Authenticate and Route Session</h5>
+<p>Authorize the gcloud CLI to access Google Cloud using the developer&#39;s Google Account, and verify that the account is appropriate for standalone developer onboarding.</p>
+<ol>
+<li><strong>Execute Credentials Authentication:</strong></li>
+</ol>
+<p>   <pre><code>   gcloud auth login
+   </code></pre></p>
+<p>   &gt; [!IMPORTANT]</p>
+<p>   &gt; <strong>New User / Unauthenticated Guidance</strong>:</p>
+<p>   &gt; If the pre-execution state audits or command failures confirm that the developer is unauthenticated (e.g., <code>gcloud auth list</code> is empty or active credentials are missing):</p>
+<p>   &gt; 1. Guide them to create a Google Cloud account by navigating to the <a href="https://console.cloud.google.com/" rel="noopener">Google Cloud Console</a>.</p>
+<p>   &gt; 2. Instruct them to execute the <code>gcloud auth login</code> command to authorize their local workstation terminal session.</p>
+<p>   &gt; 3. Do not attempt project creation or resource configuration until authentication is completed successfully.</p>
+<ol>
+<li><strong>Verify Active Identity:</strong></li>
+</ol>
+<p>   <pre><code>   gcloud config get-value account --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li><strong>Programmatic Enterprise Routing Guardrail:</strong></li>
+</ol>
+<p>   Before proceeding, verify if the account is bound to a corporate organization, as enterprise setups must follow a different architecture:</p>
+<p>   <pre><code>   gcloud organizations list --format=&quot;json&quot;
+   </code></pre></p>
+<ul>
+<li>Note that new Free Trial accounts automatically receive a Self-Owned Organization (SOO). To distinguish between a personal Free Trial account and an enterprise organization, inspect the JSON output:</li>
+<li><strong>Enterprise Organization (Halt Execution)</strong>: If the output list contains an organization node where <code>owner.directoryCustomerId</code> is present (confirming a domain-verified Google Workspace or Cloud Identity organization), or if the user&#39;s prompt explicitly mentions corporate landing zones or multi-tenant project structures:</li>
+<li><strong>Halt execution</strong> of this skill immediately.</li>
+<li>Route the developer to the official <a href="https://docs.cloud.google.com/docs/enterprise/cloud-setup.md.txt" rel="noopener">Google Cloud Setup guided flow</a>.</li>
+<li><strong>Personal Account / Free Trial SOO (Proceed)</strong>: If the output list is empty <code>[]</code>, or if it contains a Self-Owned Organization (where <code>owner.directoryCustomerId</code> is absent and <code>displayName</code> is not a verified domain name), proceed to Section 3: Select or Instantiate Your Google Cloud Project.</li>
+</ul>
+<hr>
+<h5>Section 3: Select or Instantiate Your Google Cloud Project</h5>
+<p>Google Cloud resources are organized into <strong>Projects</strong>. When developers sign up for a Free Trial via the console, Google Cloud automatically creates a default project (e.g., &quot;My First Project&quot;). Always audit the active environment first to reuse existing projects and prevent token-burning collision errors.</p>
+<ol>
+<li><strong>Silent Project Discovery:</strong></li>
+</ol>
+<p>   List active, accessible projects (limited to prevent context window overflow):</p>
+<p>   <pre><code>   gcloud projects list --filter=&quot;lifecycleState=ACTIVE&quot; --limit=20 --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li><strong>Reuse Existing Project (Recommended):</strong></li>
+</ol>
+<p>   If the list returns an active project, present it to the developer and propose setting it as the default working project:</p>
+<p>   <pre><code>   gcloud config set project {PROJECT_ID} --quiet
+   </code></pre></p>
+<ol>
+<li><strong>Create Custom Project:</strong></li>
+</ol>
+<p>   If no projects exist, or if the developer explicitly requests a brand new workspace:</p>
+<ul>
+<li>Solicit a custom <code>PROJECT_ID</code> and <code>PROJECT_NAME</code> from the developer (Single-Question Policy).</li>
+<li><strong>Structured Confirmation &amp; Consent Gate (Mandatory)</strong>:</li>
+</ul>
+<p>     Before running any project creation or billing linkage commands, the agent <strong>must</strong> present a structured markdown table summarizing the target parameters:</p>
+<table><thead><tr><th>Parameter</th><th>Value</th></tr></thead><tbody>
+<tr><td>Target Project ID</td><td><code>{PROJECT_ID}</code></td></tr>
+<tr><td>Target Project Name</td><td><code>{PROJECT_NAME}</code></td></tr>
+<tr><td>Active Identity Account</td><td><code>{ACCOUNT}</code></td></tr>
+<tr><td>Target Billing Account ID</td><td><code>{BILLING_ACCOUNT_ID}</code></td></tr>
+</tbody></table>
+<p>     Ask the user the exact consent query:</p>
+<p>     <code>&quot;I am ready to initialize your Google Cloud project and link billing. Do you want me to proceed?&quot;</code></p>
+<p>     <strong>CRITICAL</strong>: The agent <strong>MUST NOT</strong> execute any <code>gcloud projects create</code> or billing link commands during this turn. You must display this table, ask the exact consent query, and <strong>strictly stop</strong> to wait for the user&#39;s positive affirmation.</p>
+<ul>
+<li><strong>Project ID Collision Suffix Recovery</strong>: If the project creation</li>
+</ul>
+<p>      command fails because the <code>PROJECT_ID</code> is already taken globally</p>
+<p>      (returning a <code>PROJECT_ID_COLLISION</code> or <code>ALREADY_EXISTS</code> error):</p>
+<ul>
+<li>Automatically append a random 4-digit suffix (e.g., changing <code>my-project</code> to <code>my-project-8472</code>).</li>
+<li>Propose this new available project ID to the developer and re-solicit consent before retrying.</li>
+<li><strong>Execute Project Creation</strong>: Once explicit user consent is confirmed:</li>
+</ul>
+<p>     <pre><code>     gcloud projects create {PROJECT_ID} --name=&quot;{PROJECT_NAME}&quot; --quiet --format=&quot;json&quot;
+     </code></pre></p>
+<ul>
+<li>Set the active working project:</li>
+</ul>
+<p>     <pre><code>     gcloud config set project {PROJECT_ID} --quiet
+     </code></pre></p>
+<hr>
+<h5>Section 4: Verify and Link Billing</h5>
+<p>To deploy resources on Google Cloud, your project must be linked to an active Cloud Billing account.</p>
+<ol>
+<li><strong>Audit Billing Status:</strong></li>
+</ol>
+<p>   Check if the active project is already linked to a billing account:</p>
+<p>   <pre><code>   gcloud billing projects describe {PROJECT_ID} --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li>If the output contains <code>&quot;billingEnabled&quot;: true</code>, skip linkage and proceed immediately to Section 5: Skill Chaining (Spend Controls &amp; Workloads).</li>
+<li><strong>Discover Available Billing Accounts:</strong></li>
+</ol>
+<p>   If the project is unlinked, query the available billing account handles linked to the authenticated user identity:</p>
+<p>   <pre><code>   gcloud billing accounts list --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li><strong>Link Billing Account:</strong></li>
+</ol>
+<p>   Propose linking the project to the discovered Billing Account ID, and execute:</p>
+<p>   <pre><code>   gcloud billing projects link {PROJECT_ID} --billing-account={BILLING_ACCOUNT_ID} --format=&quot;json&quot;
+   </code></pre></p>
+<hr>
+<h5>Section 5: Skill Chaining (Spend Controls &amp; Workloads)</h5>
+<p>Onboarding setup is now complete. To safeguard your environment and deploy workloads, you can chain to downstream specialized skills:</p>
+<ol>
+<li><strong>Billing Spend Controls:</strong></li>
+</ol>
+<p>   To avoid accidental cost overruns, consider setting up a programmatic control to automatically disable billing. When billing is disabled, all Google Cloud services and usage in the project are terminated to stop further costs:</p>
+<ul>
+<li>Direct the developer to the official <a href="https://docs.cloud.google.com/billing/docs/how-to/disable-billing-with-notifications.md.txt" rel="noopener">Disable Billing Usage with Notifications Guide</a>, which provides detailed instructions on how to automatically shut down billing when costs exceed the project budget.</li>
+</ul>
+<ol>
+<li><strong>Deploy Workloads</strong>: To deploy your first resource, trigger the downstream</li>
+</ol>
+<p>    specialized skill matching your target application (e.g.,</p>
+<p>    <a href="https://github.com/google/skills/blob/main/skills/cloud/cloud-run-basics" rel="noopener">cloud-run-basics</a></p>
+<p>    or <code>bigquery-basics</code>). If the specialized skill is not locally available,</p>
+<p>    direct the developer to the corresponding official quickstart, such as the</p>
+<p>    <a href="https://docs.cloud.google.com/run/docs/quickstarts/deploy-container.md.txt" rel="noopener">Cloud Run Container Deployment Quickstart</a>.</p>
+<p>    *Note: Those downstream specialized skills are individually responsible for</p>
+<p>    dynamically enabling their own required service APIs (e.g.,</p>
+<p>    run.googleapis.com) inline during execution.*</p>
+<hr>
+<h4>Validation Logic</h4>
+<p>After completing the onboarding steps, programmatically verify the completed environment state using these diagnostic commands:</p>
+<ol>
+<li><strong>Verify CLI Installation:</strong></li>
+</ol>
+<p>   <pre><code>   which gcloud
+   </code></pre></p>
+<ol>
+<li><strong>Verify Authenticated Identity:</strong></li>
+</ol>
+<p>   <pre><code>   gcloud config get-value account
+   </code></pre></p>
+<ol>
+<li><strong>Verify Project Workspace Existence:</strong></li>
+</ol>
+<p>   <pre><code>   gcloud projects describe {PROJECT_ID} --format=&quot;json&quot;
+   </code></pre></p>
+<ol>
+<li><strong>Verify Billing Linkage</strong> (Ensure the JSON output contains <code>&quot;billingEnabled&quot;: true</code>):</li>
+</ol>
+<p>   <pre><code>   gcloud billing projects describe {PROJECT_ID} --format=&quot;json&quot;
+   </code></pre></p>
+<hr>
+<h4>Additional Resources</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/docs/get-started.md.txt" rel="noopener">Google Cloud Getting Started landing page</a></li>
+<li><a href="https://docs.cloud.google.com/docs/overview.md.txt" rel="noopener">Google Cloud overview</a></li>
+<li><a href="https://docs.cloud.google.com/free/docs/free-cloud-features" rel="noopener">Google Cloud Free Program</a></li>
+<li><a href="https://docs.cloud.google.com/docs/enterprise/cloud-setup.md.txt" rel="noopener">Google Cloud Cloud Setup guided flow</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/google-cloud-recipe-onboarding</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/google-cloud-recipe-onboarding" aria-label="Copy install google-cloud-recipe-onboarding">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/google-cloud-recipe-onboarding</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/google-cloud-recipe-onboarding/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

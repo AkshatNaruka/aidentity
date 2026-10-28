@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-observability — Aidentity</title>
+<meta name="description" content="Configures GKE observability, including Cloud Logging, Cloud Monitoring, and managed Prometheus. Use when configuring GKE monitoring, setting up GKE logging, or configuring Prometheus metrics collection. Don&#39;t use to configure local application logging frameworks or external APMs outside GKE.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-observability/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-observability — Aidentity">
+<meta property="og:description" content="Configures GKE observability, including Cloud Logging, Cloud Monitoring, and managed Prometheus. Use when configuring GKE monitoring, setting up GKE logging, or configuring Prometheus metrics collection. Don&#39;t use to configure local application logging frameworks or external APMs outside GKE.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-observability/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-observability","description":"Configures GKE observability, including Cloud Logging, Cloud Monitoring, and managed Prometheus. Use when configuring GKE monitoring, setting up GKE logging, or configuring Prometheus metrics collection. Don't use to configure local application logging frameworks or external APMs outside GKE.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-observability/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-observability
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-observability</h1>
+      <p class="summary">Configures GKE observability, including Cloud Logging, Cloud Monitoring, and managed Prometheus. Use when configuring GKE monitoring, setting up GKE logging, or configuring Prometheus metrics collection. Don&#39;t use to configure local application logging frameworks or external APMs outside GKE.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=devops">devops</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Observability</h3>
+<p>This reference covers monitoring, logging, and metrics configuration for GKE.</p>
+<p>The golden path enables comprehensive observability including control-plane</p>
+<p>metrics.</p>
+<p>&gt; <strong>MCP Tools:</strong> <code>get_cluster</code>, <code>list_k8s_events</code>, <code>get_k8s_logs</code>,</p>
+<p>&gt; <code>get_k8s_cluster_info</code>, <code>describe_k8s_resource</code>. <strong>CLI-only:</strong> `gcloud</p>
+<p>&gt; container clusters update --monitoring=...<code>, </code>gcloud logging read`</p>
+<h4>Golden Path Observability Defaults</h4>
+<p>Setting                                             | Golden Path Value                                                                                                                                   | Notes</p>
+<p>--------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -----</p>
+<p><code>loggingConfig</code> components                          | SYSTEM_COMPONENTS, WORKLOADS                                                                                                                        | Full workload logging</p>
+<p><code>monitoringConfig</code> components                       | SYSTEM_COMPONENTS, STORAGE, POD, DEPLOYMENT, STATEFULSET, DAEMONSET, HPA, JOBSET, CADVISOR, KUBELET, DCGM, APISERVER, SCHEDULER, CONTROLLER_MANAGER | Full suite including control-plane</p>
+<p><code>managedPrometheusConfig.enabled</code>                   | <code>true</code>                                                                                                                                              | Google-managed Prometheus</p>
+<p><code>advancedDatapathObservabilityConfig.enableMetrics</code> | <code>true</code>                                                                                                                                              | Dataplane V2 flow metrics</p>
+<p><code>loggingService</code>                                    | <code>logging.googleapis.com/kubernetes</code>                                                                                                                 | Cloud Logging</p>
+<p><code>monitoringService</code>                                 | <code>monitoring.googleapis.com/kubernetes</code>                                                                                                              | Cloud Monitoring</p>
+<h5>Control-Plane Metrics (Golden Path Addition)</h5>
+<p>The golden path adds three control-plane monitoring components not present in</p>
+<p>default clusters:</p>
+<table><thead><tr><th>Component</th><th>What It Monitors</th></tr></thead><tbody>
+<tr><td><code>APISERVER</code></td><td>API server request latency, error rates, admission webhook performance</td></tr>
+<tr><td><code>SCHEDULER</code></td><td>Scheduling latency, pending pods, scheduling failures</td></tr>
+<tr><td><code>CONTROLLER_MANAGER</code></td><td>Controller work queue depth, reconciliation latency</td></tr>
+</tbody></table>
+<p>These are critical for diagnosing cluster-level issues (slow API responses,</p>
+<p>scheduling delays, stuck controllers).</p>
+<h4>Enabling Full Monitoring</h4>
+<p><strong>Say this whenever you hand over a <code>--monitoring</code> command:</strong></p>
+<ol>
+<li><strong>Control-plane metrics are NOT enabled by default.</strong> State this outright in</li>
+</ol>
+<p>    your answer — do not leave it implied by the fact that you are supplying an</p>
+<p>    enable command. <code>API_SERVER</code>, <code>SCHEDULER</code>, and <code>CONTROLLER_MANAGER</code> are off</p>
+<p>    on every new cluster and collect nothing until explicitly turned on, and the</p>
+<p>    same is true of <code>DCGM</code>, <code>CADVISOR</code>, <code>KUBELET</code>, and kube-state (<code>POD</code>,</p>
+<p>    <code>DEPLOYMENT</code>, <code>STATEFULSET</code>, <code>DAEMONSET</code>, <code>HPA</code>, <code>STORAGE</code>, <code>JOBSET</code>).</p>
+<p>    <code>SYSTEM</code> is the only package on by default. A user asking &quot;why are there no</p>
+<p>    API server metrics&quot; has almost always simply never enabled them.</p>
+<ol>
+<li><strong>The flag replaces, it does not append.</strong> The set supplied to <code>--monitoring</code></li>
+</ol>
+<p>    overrides the previous setting entirely, so omitting a component silently</p>
+<p>    turns it off. Always pass the full desired list, and always include <code>SYSTEM</code></p>
+<p>    — it cannot be disabled while monitoring is on, and never on Autopilot.</p>
+<ol>
+<li><strong>These metrics bill per sample ingested</strong> via Managed Service for</li>
+</ol>
+<p>    Prometheus. Enabling the full suite on a large cluster is a real cost</p>
+<p>    increase; mention it rather than presenting the list as free.</p>
+<p>&gt; **The gcloud flag and the API field use different spellings for the same</p>
+<p>&gt; components.** Do not copy names between them:</p>
+<p>&gt;</p>
+<p>&gt; Component        | <code>gcloud --monitoring=</code> | <code>monitoringConfig</code> API enum</p>
+<p>&gt; ---------------- | ---------------------- | ---------------------------</p>
+<p>&gt; System           | <code>SYSTEM</code>               | <code>SYSTEM_COMPONENTS</code></p>
+<p>&gt; API server       | <code>API_SERVER</code>           | <code>APISERVER</code></p>
+<p>&gt; Controller mgr   | <code>CONTROLLER_MANAGER</code>   | <code>CONTROLLER_MANAGER</code></p>
+<p>&gt;</p>
+<p>&gt; The remaining components share a spelling. Using an API enum in the CLI flag</p>
+<p>&gt; (or the reverse) fails the command — this is a common and confusing error.</p>
+<p><pre><code># Enable golden path monitoring suite
+gcloud container clusters update &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --monitoring=SYSTEM,API_SERVER,SCHEDULER,CONTROLLER_MANAGER,STORAGE,POD,DEPLOYMENT,STATEFULSET,DAEMONSET,HPA,JOBSET,CADVISOR,KUBELET,DCGM \
+  --quiet
+
+# Enable Managed Prometheus
+gcloud container clusters update &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --enable-managed-prometheus \
+  --quiet
+
+# Enable Dataplane V2 observability metrics
+gcloud container clusters update &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --enable-dataplane-v2-flow-observability \
+  --quiet</code></pre></p>
+<h4>Managed Prometheus</h4>
+<p>Golden path enables Google Managed Prometheus for metrics collection and</p>
+<p>querying.</p>
+<p><strong>Querying metrics:</strong></p>
+<ul>
+<li>Use Cloud Monitoring Metrics Explorer in the console</li>
+<li>Use PromQL via the Prometheus UI or API</li>
+<li>Grafana dashboards via Managed Grafana</li>
+</ul>
+<p><strong>Key GKE metrics:</strong></p>
+<table><thead><tr><th>Metric</th><th>Source</th><th>Use</th></tr></thead><tbody>
+<tr><td><code>container_cpu_usage_seconds_total</code></td><td>cAdvisor</td><td>Pod CPU usage</td></tr>
+<tr><td><code>container_memory_working_set_bytes</code></td><td>cAdvisor</td><td>Pod memory usage</td></tr>
+<tr><td><code>kube_pod_status_phase</code></td><td>kube-state-metrics</td><td>Pod lifecycle</td></tr>
+<tr><td><code>apiserver_request_duration_seconds</code></td><td>API Server</td><td>Control plane latency</td></tr>
+<tr><td><code>scheduler_scheduling_attempt_duration_seconds</code></td><td>Scheduler</td><td>Scheduling performance</td></tr>
+<tr><td><code>kubernetes.io/node/cpu/core_usage_time</code></td><td>Cloud Monitoring</td><td>Node CPU</td></tr>
+<tr><td><code>DCGM_FI_DEV_GPU_UTIL</code></td><td>DCGM</td><td>GPU utilization</td></tr>
+</tbody></table>
+<h4>Live Resource Usage (kubectl-only)</h4>
+<p>No MCP or gcloud equivalent exists for live resource usage. Use <code>kubectl top</code>:</p>
+<p><pre><code>kubectl top pods --all-namespaces --sort-by=cpu
+kubectl top nodes
+kubectl top pods --containers -n &lt;NAMESPACE&gt;  # per-container breakdown</code></pre></p>
+<h4>Cloud Logging (gcloud-only)</h4>
+<p><strong>Querying cluster logs</strong> (no MCP equivalent — use <code>gcloud logging read</code>):</p>
+<p><pre><code># System component logs
+gcloud logging read \
+  &#39;resource.type=&quot;k8s_cluster&quot; AND resource.labels.cluster_name=&quot;&lt;CLUSTER_NAME&gt;&quot;&#39; \
+  --project &lt;PROJECT_ID&gt; --limit 50 \
+  --quiet
+
+# Workload logs for a specific namespace
+gcloud logging read \
+  &#39;resource.type=&quot;k8s_container&quot; AND resource.labels.cluster_name=&quot;&lt;CLUSTER_NAME&gt;&quot; AND resource.labels.namespace_name=&quot;&lt;NAMESPACE&gt;&quot;&#39; \
+  --project &lt;PROJECT_ID&gt; --limit 50 \
+  --quiet
+
+# Audit logs (who did what)
+gcloud logging read \
+  &#39;resource.type=&quot;k8s_cluster&quot; AND logName:&quot;cloudaudit.googleapis.com&quot;&#39; \
+  --project &lt;PROJECT_ID&gt; --limit 50 \
+  --quiet</code></pre></p>
+<h4>Diagnostic Settings</h4>
+<p>For security monitoring and troubleshooting, enable control-plane audit logs:</p>
+<p><pre><code># View current logging config
+gcloud container clusters describe &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --format=&quot;yaml(loggingConfig)&quot; \
+  --quiet</code></pre></p>
+<h4>Alerting</h4>
+<p>Set up alerts for critical conditions:</p>
+<p>Condition               | Metric                                              | Threshold</p>
+<p>----------------------- | --------------------------------------------------- | ---------</p>
+<p>High API server latency | <code>apiserver_request_duration_seconds</code>                | P99 &gt; 5s</p>
+<p>Pod crash loops         | <code>kube_pod_container_status_restarts_total</code>          | &gt; 5 in 10min</p>
+<p>Node not ready          | <code>kube_node_status_condition</code>                        | condition=Ready, status!=True</p>
+<p>High GPU utilization    | <code>DCGM_FI_DEV_GPU_UTIL</code>                              | &gt; 95% sustained</p>
+<p>PVC near capacity       | <code>kubelet_volume_stats_used_bytes / capacity</code>        | &gt; 85%</p>
+<p>Scheduling failures     | <code>scheduler_schedule_attempts_total{result=&quot;error&quot;}</code> | &gt; 0</p>
+<p>&gt; <strong>Prerequisite:</strong> The <code>kube_*</code> series above (e.g., <code>kube_pod_status_phase</code>,</p>
+<p>&gt; <code>kube_pod_container_status_restarts_total</code>, <code>kube_node_status_condition</code>)</p>
+<p>&gt; come from <strong>kube-state-metrics</strong>, which GKE does not collect by default.</p>
+<p>&gt; Deploy the Managed Prometheus kube-state-metrics package first.</p>
+<h5>Proposing Dashboards &amp; Alerts (Production Rules)</h5>
+<p>When designing or proposing alerting and dashboard strategies for GKE:</p>
+<ol>
+<li><strong>Always explicitly name Google Cloud Monitoring</strong> as the platform to</li>
+</ol>
+<p>    implement these alerts and dashboards.</p>
+<ol>
+<li><strong>Always include API server latency</strong> (via</li>
+</ol>
+<p>    <code>apiserver_request_duration_seconds</code> metric) on the dashboard as a critical</p>
+<p>    indicator of control plane health, alongside node CPU/Memory and pod crash</p>
+<p>    loops.</p>
+<h5>Node Health (Production Rules)</h5>
+<p>A comprehensive assessment of node health relies on analyzing these two metrics together:</p>
+<ol>
+<li><strong><code>kubernetes.io/node/status_condition</code></strong> (filtered by <code>status_condition=&quot;Ready&quot;</code>): Use this to track healthy nodes. Note that it will only report values for nodes that have successfully bootstrapped.</li>
+<li><strong><code>compute.googleapis.com/instance_group/size</code></strong> (filtered by <code>instance_group_name=&quot;gke-&lt;cluster_name&gt;-.*&quot;</code>): Use this to track the total number of nodes in a specific cluster. Note that it does not differentiate between healthy and unhealthy nodes.</li>
+</ol>
+<h4>Cost Considerations</h4>
+<p>Monitoring and logging have associated costs:</p>
+<ul>
+<li><strong>Cloud Logging</strong>: Charged per GiB ingested beyond free tier (50</li>
+</ul>
+<p>    GiB/project/month)</p>
+<ul>
+<li><strong>Cloud Monitoring</strong>: Free for GKE system metrics; custom metrics charged</li>
+</ul>
+<p>    per time series</p>
+<ul>
+<li><strong>Managed Prometheus</strong>: Charged per samples ingested</li>
+</ul>
+<p>To reduce costs in non-production:</p>
+<p><pre><code># Reduce to system-only monitoring
+gcloud container clusters update &lt;CLUSTER_NAME&gt; --region &lt;REGION&gt; \
+  --monitoring=SYSTEM \
+  --quiet</code></pre></p>
+<h4>Distributed Tracing &amp; Continuous Profiling (Recommended)</h4>
+<p><strong>Not golden path defaults</strong> — recommended for production microservice</p>
+<p>architectures and performance-sensitive workloads.</p>
+<ul>
+<li><strong>Cloud Trace</strong>: Add OpenTelemetry SDK to your app with the</li>
+</ul>
+<p>    <code>opentelemetry-operations-go</code> (or equivalent) exporter. Traces appear in</p>
+<p>    Cloud Trace console. Identifies cross-service latency bottlenecks.</p>
+<ul>
+<li><strong>Cloud Profiler</strong>: Add the Cloud Profiler agent to your app. Profiles CPU</li>
+</ul>
+<p>    and memory usage in production with low overhead. Identifies hotspots and</p>
+<p>    compares across versions.</p>
+<p><strong>Recent additions:</strong></p>
+<ul>
+<li><strong>Managed OpenTelemetry for GKE (Preview)</strong>: Managed in-cluster OTLP</li>
+</ul>
+<p>    endpoint plus auto-instrumentation for traces, metrics, and logs. Requires</p>
+<p>    GKE 1.34.1-gke.2178000+; enable with `gcloud beta container clusters</p>
+<p>    update ... --managed-otel-scope=COLLECTION_AND_INSTRUMENTATION_COMPONENTS`.</p>
+<ul>
+<li><strong>PSI (Pressure Stall Information) metrics</strong>: cAdvisor</li>
+</ul>
+<p>    <code>container_pressure_{cpu,memory,io}_{waiting,stalled}_seconds_total</code> series</p>
+<p>    (beta in Kubernetes 1.34) can be collected via a Managed Prometheus</p>
+<p>    <code>ClusterNodeMonitoring</code> resource; GKE&#39;s documented collection path requires</p>
+<p>    GKE 1.35+.</p>
+<h4>LQL Query Examples</h4>
+<p>Common Logging Query Language patterns for GKE troubleshooting:</p>
+<p><pre><code># Error logs for a specific container
+resource.type=&quot;k8s_container&quot; AND resource.labels.container_name=&quot;my-app&quot; AND severity&gt;=ERROR
+
+# OOMKilled events
+resource.type=&quot;k8s_event&quot; AND jsonPayload.reason=&quot;OOMKilling&quot;
+
+# Pod scheduling failures
+resource.type=&quot;k8s_event&quot; AND jsonPayload.reason=&quot;FailedScheduling&quot;
+
+# Audit logs (who did what)
+resource.type=&quot;k8s_cluster&quot; AND logName:&quot;cloudaudit.googleapis.com&quot;</code></pre></p>
+<h4>Supporting Links</h4>
+<ul>
+<li><a href="https://docs.cloud.google.com/monitoring/api/metrics_kubernetes" rel="noopener">GKE system metrics</a></li>
+<li><a href="https://cloud.google.com/kubernetes-engine/docs/concepts/observability" rel="noopener">GKE Observability Documentation</a></li>
+<li><a href="https://cloud.google.com/stackdriver/docs/managed-prometheus" rel="noopener">Google Cloud Managed Service for Prometheus</a></li>
+<li><a href="https://cloud.google.com/logging/docs/view/logging-query-language" rel="noopener">Cloud Logging Query Language (LQL)</a></li>
+<li><a href="https://cloud.google.com/monitoring/alerts" rel="noopener">Google Cloud Monitoring Alerts</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-observability</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-observability" aria-label="Copy install gke-observability">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-observability</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-observability/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

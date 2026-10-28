@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>azure-messaging-webpubsubservice-py — Aidentity</title>
+<meta name="description" content="Azure Web PubSub Service SDK for Python. Use for real-time messaging, WebSocket connections, and pub/sub patterns. Triggers: &quot;azure-messaging-webpubsubservice&quot;, &quot;WebPubSubServiceClient&quot;, &quot;real-time&quot;, &quot;WebSocket&quot;, &quot;pub/sub&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-messaging-webpubsubservice-py/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="azure-messaging-webpubsubservice-py — Aidentity">
+<meta property="og:description" content="Azure Web PubSub Service SDK for Python. Use for real-time messaging, WebSocket connections, and pub/sub patterns. Triggers: &quot;azure-messaging-webpubsubservice&quot;, &quot;WebPubSubServiceClient&quot;, &quot;real-time&quot;, &quot;WebSocket&quot;, &quot;pub/sub&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-messaging-webpubsubservice-py/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"azure-messaging-webpubsubservice-py","description":"Azure Web PubSub Service SDK for Python. Use for real-time messaging, WebSocket connections, and pub/sub patterns. Triggers: \"azure-messaging-webpubsubservice\", \"WebPubSubServiceClient\", \"real-time\", \"WebSocket\", \"pub/sub\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-messaging-webpubsubservice-py/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=azure">azure</a><span>/</span>azure-messaging-webpubsubservice-py
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>azure-messaging-webpubsubservice-py</h1>
+      <p class="summary">Azure Web PubSub Service SDK for Python. Use for real-time messaging, WebSocket connections, and pub/sub patterns. Triggers: &quot;azure-messaging-webpubsubservice&quot;, &quot;WebPubSubServiceClient&quot;, &quot;real-time&quot;, &quot;WebSocket&quot;, &quot;pub/sub&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Azure Web PubSub Service SDK for Python</h3>
+<p>Real-time messaging with WebSocket connections at scale.</p>
+<h4>Installation</h4>
+<p><pre><code># Service SDK (server-side)
+pip install azure-messaging-webpubsubservice
+
+# Client SDK (for Python WebSocket clients)
+pip install azure-messaging-webpubsubclient</code></pre></p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_WEBPUBSUB_HUB=my-hub  # Required for all auth methods
+AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used in production</code></pre></p>
+<h4>Authentication &amp; Lifecycle</h4>
+<p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
+<p>&gt;</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
+<p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
+<p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
+<p>&gt;    - Sync: <code>with &lt;Client&gt;(...) as client:</code></p>
+<p>&gt;    - Async: <code>async with &lt;Client&gt;(...) as client:</code> <strong>and</strong> <code>async with DefaultAzureCredential() as credential:</code> (from <code>azure.identity.aio</code>)</p>
+<p>&gt;</p>
+<p>&gt; Snippets may abbreviate this setup, but production code should always follow both rules.</p>
+<h4>Service Client (Server-Side)</h4>
+<h5>Authentication</h5>
+<p><pre><code>from azure.messaging.webpubsubservice import WebPubSubServiceClient
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+
+# Local dev: DefaultAzureCredential. Production: set AZURE_TOKEN_CREDENTIALS=prod or AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;
+credential = DefaultAzureCredential(require_envvar=True)
+# Or use a specific credential directly in production:
+# See https://learn.microsoft.com/python/api/overview/azure/identity-readme?view=azure-python#credential-classes
+# credential = ManagedIdentityCredential()
+
+with WebPubSubServiceClient(
+    endpoint=&quot;https://&lt;name&gt;.webpubsub.azure.com&quot;,
+    hub=&quot;my-hub&quot;,
+    credential=credential
+) as client:
+    # Use `client` for all subsequent operations (see examples below)
+    ...</code></pre></p>
+<h5>Generate Client Access Token</h5>
+<p><pre><code># Token for anonymous user
+token = client.get_client_access_token()
+print(f&quot;URL: {token[&#39;url&#39;]}&quot;)
+
+# Token with user ID
+token = client.get_client_access_token(
+    user_id=&quot;user123&quot;,
+    roles=[&quot;webpubsub.sendToGroup&quot;, &quot;webpubsub.joinLeaveGroup&quot;]
+)
+
+# Token with groups
+token = client.get_client_access_token(
+    user_id=&quot;user123&quot;,
+    groups=[&quot;group1&quot;, &quot;group2&quot;]
+)</code></pre></p>
+<h5>Send to All Clients</h5>
+<p><pre><code># Send text
+client.send_to_all(message=&quot;Hello everyone!&quot;, content_type=&quot;text/plain&quot;)
+
+# Send JSON
+client.send_to_all(
+    message={&quot;type&quot;: &quot;notification&quot;, &quot;data&quot;: &quot;Hello&quot;},
+    content_type=&quot;application/json&quot;
+)</code></pre></p>
+<h5>Send to User</h5>
+<p><pre><code>client.send_to_user(
+    user_id=&quot;user123&quot;,
+    message=&quot;Hello user!&quot;,
+    content_type=&quot;text/plain&quot;
+)</code></pre></p>
+<h5>Send to Group</h5>
+<p><pre><code>client.send_to_group(
+    group=&quot;my-group&quot;,
+    message=&quot;Hello group!&quot;,
+    content_type=&quot;text/plain&quot;
+)</code></pre></p>
+<h5>Send to Connection</h5>
+<p><pre><code>client.send_to_connection(
+    connection_id=&quot;abc123&quot;,
+    message=&quot;Hello connection!&quot;,
+    content_type=&quot;text/plain&quot;
+)</code></pre></p>
+<h5>Group Management</h5>
+<p><pre><code># Add user to group
+client.add_user_to_group(group=&quot;my-group&quot;, user_id=&quot;user123&quot;)
+
+# Remove user from group
+client.remove_user_from_group(group=&quot;my-group&quot;, user_id=&quot;user123&quot;)
+
+# Add connection to group
+client.add_connection_to_group(group=&quot;my-group&quot;, connection_id=&quot;abc123&quot;)
+
+# Remove connection from group
+client.remove_connection_from_group(group=&quot;my-group&quot;, connection_id=&quot;abc123&quot;)</code></pre></p>
+<h5>Connection Management</h5>
+<p><pre><code># Check if connection exists
+exists = client.connection_exists(connection_id=&quot;abc123&quot;)
+
+# Check if user has connections
+exists = client.user_exists(user_id=&quot;user123&quot;)
+
+# Check if group has connections
+exists = client.group_exists(group=&quot;my-group&quot;)
+
+# Close connection
+client.close_connection(connection_id=&quot;abc123&quot;, reason=&quot;Session ended&quot;)
+
+# Close all connections for user
+client.close_all_connections(user_id=&quot;user123&quot;)</code></pre></p>
+<h5>Grant/Revoke Permissions</h5>
+<p><pre><code>from azure.messaging.webpubsubservice import WebPubSubServiceClient
+
+# Grant permission
+client.grant_permission(
+    permission=&quot;joinLeaveGroup&quot;,
+    connection_id=&quot;abc123&quot;,
+    target_name=&quot;my-group&quot;
+)
+
+# Revoke permission
+client.revoke_permission(
+    permission=&quot;joinLeaveGroup&quot;,
+    connection_id=&quot;abc123&quot;,
+    target_name=&quot;my-group&quot;
+)
+
+# Check permission
+has_permission = client.check_permission(
+    permission=&quot;joinLeaveGroup&quot;,
+    connection_id=&quot;abc123&quot;,
+    target_name=&quot;my-group&quot;
+)</code></pre></p>
+<h4>Client SDK (Python WebSocket Client)</h4>
+<p><pre><code>from azure.messaging.webpubsubclient import WebPubSubClient
+
+with WebPubSubClient(credential=token[&quot;url&quot;]) as client:
+    @client.on(&quot;connected&quot;)
+    def on_connected(e):
+        print(f&quot;Connected: {e.connection_id}&quot;)
+
+    @client.on(&quot;server-message&quot;)
+    def on_message(e):
+        print(f&quot;Message: {e.data}&quot;)
+
+    @client.on(&quot;group-message&quot;)
+    def on_group_message(e):
+        print(f&quot;Group {e.group}: {e.data}&quot;)
+
+    client.send_to_group(&quot;my-group&quot;, &quot;Hello from Python!&quot;)</code></pre></p>
+<h4>Async Service Client</h4>
+<p><pre><code>from azure.messaging.webpubsubservice.aio import WebPubSubServiceClient
+from azure.identity.aio import DefaultAzureCredential
+
+async def broadcast():
+    async with DefaultAzureCredential() as credential:
+        async with WebPubSubServiceClient(
+            endpoint=&quot;https://&lt;name&gt;.webpubsub.azure.com&quot;,
+            hub=&quot;my-hub&quot;,
+            credential=credential
+        ) as client:
+            await client.send_to_all(&quot;Hello async!&quot;, content_type=&quot;text/plain&quot;)</code></pre></p>
+<h4>Client Operations</h4>
+<table><thead><tr><th>Operation</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>get_client_access_token</code></td><td>Generate WebSocket connection URL</td></tr>
+<tr><td><code>send_to_all</code></td><td>Broadcast to all connections</td></tr>
+<tr><td><code>send_to_user</code></td><td>Send to specific user</td></tr>
+<tr><td><code>send_to_group</code></td><td>Send to group members</td></tr>
+<tr><td><code>send_to_connection</code></td><td>Send to specific connection</td></tr>
+<tr><td><code>add_user_to_group</code></td><td>Add user to group</td></tr>
+<tr><td><code>remove_user_from_group</code></td><td>Remove user from group</td></tr>
+<tr><td><code>close_connection</code></td><td>Disconnect client</td></tr>
+<tr><td><code>connection_exists</code></td><td>Check connection status</td></tr>
+</tbody></table>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
+<li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async). For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
+<li><strong>Use <code>DefaultAzureCredential</code></strong> for portable auth across local dev and Azure (avoid connection strings / access keys when possible).</li>
+<li><strong>Use roles</strong> to limit client permissions</li>
+<li><strong>Use groups</strong> for targeted messaging</li>
+<li><strong>Generate short-lived tokens</strong> for security</li>
+<li><strong>Use user IDs</strong> to send to users across connections</li>
+<li><strong>Handle reconnection</strong> in client applications</li>
+<li><strong>Use JSON</strong> content type for structured data</li>
+<li><strong>Close connections</strong> gracefully with reasons</li>
+</ol>
+<h4>Reference Files</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/capabilities.md](references/capabilities.md)</td><td>Additional non-hero capabilities, operation-group coverage, and production checklists.</td></tr>
+<tr><td>[references/non-hero-scenarios.md](references/non-hero-scenarios.md)</td><td>Dedicated non-hero examples for secondary/advanced scenarios.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">applicationinsights-web-ts</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentsafety-py</span>
+    <span class="r-desc">Azure AI Content Safety SDK for Python. Use for detecting harmful content in text and images with multi-severity classification. Triggers: &quot;azure-ai-contentsafety&quot;, &quot;ContentSafetyClient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-contentunderstanding-py</span>
+    <span class="r-desc">Azure AI Content Understanding SDK for Python. Use for multimodal content extraction from documents, images, audio, and video. Triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;ContentUnderstandingClient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-language-conversations-py</span>
+    <span class="r-desc">Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/azure-ai-ml-py/index.html"
+     data-source="microsoft-azure"
+     data-category="azure"
+     data-search="azure-ai-ml-py azure machine learning sdk v2 for python. use for ml workspaces, jobs, models, datasets, compute, and pipelines. triggers: &quot;azure-ai-ml&quot;, &quot;mlclient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;. azure azure microsoft/skills">
+  <span>
+    <span class="r-name">azure-ai-ml-py</span>
+    <span class="r-desc">Azure Machine Learning SDK v2 for Python. Use for ML workspaces, jobs, models, datasets, compute, and pipelines. Triggers: &quot;azure-ai-ml&quot;, &quot;MLClient&quot;, &quot;workspace&quot;, &quot;model registry&quot;, &quot;training jobs&quot;, &quot;datasets&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/azure-messaging-webpubsubservice-py</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/azure-messaging-webpubsubservice-py" aria-label="Copy install azure-messaging-webpubsubservice-py">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>azure</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/azure-messaging-webpubsubservice-py</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-messaging-webpubsubservice-py/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

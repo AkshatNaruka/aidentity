@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>using-git-worktrees — Aidentity</title>
+<meta name="description" content="Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="using-git-worktrees — Aidentity">
+<meta property="og:description" content="Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"using-git-worktrees","description":"Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=git">git</a><span>/</span>using-git-worktrees
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">obra/superpowers · MIT</p>
+      <h1>using-git-worktrees</h1>
+      <p class="summary">Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=git">git</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Using Git Worktrees</h3>
+<h4>Overview</h4>
+<p>Ensure work happens in an isolated workspace. Prefer your platform&#39;s native worktree tools. Fall back to manual git worktrees only when no native tool is available.</p>
+<p><strong>Core principle:</strong> Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.</p>
+<p><strong>Announce at start:</strong> &quot;I&#39;m using the using-git-worktrees skill to set up an isolated workspace.&quot;</p>
+<h4>Step 0: Detect Existing Isolation</h4>
+<p><strong>Before creating anything, check if you are already in an isolated workspace.</strong></p>
+<p><pre><code>GIT_DIR=$(cd &quot;$(git rev-parse --git-dir)&quot; 2&gt;/dev/null &amp;&amp; pwd -P)
+GIT_COMMON=$(cd &quot;$(git rev-parse --git-common-dir)&quot; 2&gt;/dev/null &amp;&amp; pwd -P)
+BRANCH=$(git branch --show-current)</code></pre></p>
+<p><strong>Submodule guard:</strong> <code>GIT_DIR != GIT_COMMON</code> is also true inside git submodules. Before concluding &quot;already in a worktree,&quot; verify you are not in a submodule:</p>
+<p><pre><code># If this returns a path, you&#39;re in a submodule, not a worktree — treat as normal repo
+git rev-parse --show-superproject-working-tree 2&gt;/dev/null</code></pre></p>
+<p><strong>If <code>GIT_DIR != GIT_COMMON</code> (and not a submodule):</strong> You are already in a linked worktree. Skip to Step 2 (Project Setup). Do NOT create another worktree.</p>
+<p>Report with branch state:</p>
+<ul>
+<li>On a branch: &quot;Already in isolated workspace at <code>&lt;path&gt;</code> on branch <code>&lt;name&gt;</code>.&quot;</li>
+<li>Detached HEAD: &quot;Already in isolated workspace at <code>&lt;path&gt;</code> (detached HEAD, externally managed). Branch creation needed at finish time.&quot;</li>
+</ul>
+<p><strong>If <code>GIT_DIR == GIT_COMMON</code> (or in a submodule):</strong> You are in a normal repo checkout.</p>
+<p>Has the user already indicated their worktree preference in your instructions? If not, ask for consent before creating a worktree:</p>
+<p>&gt; &quot;Would you like me to set up an isolated worktree? It protects your current branch from changes.&quot;</p>
+<p>Honor any existing declared preference without asking. If the user declines consent, work in place and skip to Step 2.</p>
+<h4>Step 1: Create Isolated Workspace</h4>
+<p><strong>You have two mechanisms. Try them in this order.</strong></p>
+<h5>1a. Native Worktree Tools (preferred)</h5>
+<p>The user has asked for an isolated workspace (Step 0 consent). Do you already have a way to create a worktree? It might be a tool with a name like <code>EnterWorktree</code>, <code>WorktreeCreate</code>, a <code>/worktree</code> command, or a <code>--worktree</code> flag. If you do, use it and skip to Step 2.</p>
+<p>Native tools handle directory placement, branch creation, and cleanup automatically. Using <code>git worktree add</code> when you have a native tool creates phantom state your harness can&#39;t see or manage.</p>
+<p>Only proceed to Step 1b if you have no native worktree tool available.</p>
+<h5>1b. Git Worktree Fallback</h5>
+<p><strong>Only use this if Step 1a does not apply</strong> — you have no native worktree tool available. Create a worktree manually using git.</p>
+<h5>Directory Selection</h5>
+<p>Follow this priority order. Explicit user preference always beats observed filesystem state.</p>
+<ol>
+<li><strong>Check your instructions for a declared worktree directory preference.</strong> If the user has already specified one, use it without asking.</li>
+</ol>
+<ol>
+<li><strong>Check for an existing project-local worktree directory:</strong></li>
+</ol>
+<p>   <pre><code>   ls -d .worktrees 2&gt;/dev/null     # Preferred (hidden)
+   ls -d worktrees 2&gt;/dev/null      # Alternative
+   </code></pre></p>
+<p>   If found, use it. If both exist, <code>.worktrees</code> wins.</p>
+<ol>
+<li><strong>If there is no other guidance available</strong>, default to <code>.worktrees/</code> at the project root.</li>
+</ol>
+<h5>Safety Verification (project-local directories only)</h5>
+<p><strong>MUST verify directory is ignored before creating worktree:</strong></p>
+<p><pre><code>git check-ignore -q .worktrees 2&gt;/dev/null || git check-ignore -q worktrees 2&gt;/dev/null</code></pre></p>
+<p><strong>If NOT ignored:</strong> Add to .gitignore, commit the change, then proceed.</p>
+<p><strong>Why critical:</strong> Prevents accidentally committing worktree contents to repository.</p>
+<h5>Create the Worktree</h5>
+<p><pre><code># Determine path based on chosen location
+path=&quot;$LOCATION/$BRANCH_NAME&quot;
+
+git worktree add &quot;$path&quot; -b &quot;$BRANCH_NAME&quot;
+cd &quot;$path&quot;</code></pre></p>
+<p><strong>Sandbox fallback:</strong> If <code>git worktree add</code> fails with a permission error (sandbox denial), tell the user the sandbox blocked worktree creation and you&#39;re working in the current directory instead. Then run setup and baseline tests in place.</p>
+<h4>Step 2: Project Setup</h4>
+<p>Auto-detect and run appropriate setup:</p>
+<p><pre><code># Node.js
+if [ -f package.json ]; then npm install; fi
+
+# Rust
+if [ -f Cargo.toml ]; then cargo build; fi
+
+# Python
+if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+if [ -f pyproject.toml ]; then poetry install; fi
+
+# Go
+if [ -f go.mod ]; then go mod download; fi</code></pre></p>
+<h4>Step 3: Verify Clean Baseline</h4>
+<p>Run tests to ensure workspace starts clean:</p>
+<p><pre><code># Use project-appropriate command
+npm test / cargo test / pytest / go test ./...</code></pre></p>
+<p><strong>If tests fail:</strong> Report failures, ask whether to proceed or investigate.</p>
+<p><strong>If tests pass:</strong> Report ready.</p>
+<h5>Report</h5>
+<p><pre><code>Worktree ready at &lt;full-path&gt;
+Tests passing (&lt;N&gt; tests, 0 failures)
+Ready to implement &lt;feature-name&gt;</code></pre></p>
+<h4>Quick Reference</h4>
+<table><thead><tr><th>Situation</th><th>Action</th></tr></thead><tbody>
+<tr><td>Already in linked worktree</td><td>Skip creation (Step 0)</td></tr>
+<tr><td>In a submodule</td><td>Treat as normal repo (Step 0 guard)</td></tr>
+<tr><td>Native worktree tool available</td><td>Use it (Step 1a)</td></tr>
+<tr><td>No native tool</td><td>Git worktree fallback (Step 1b)</td></tr>
+<tr><td><code>.worktrees/</code> exists</td><td>Use it (verify ignored)</td></tr>
+<tr><td><code>worktrees/</code> exists</td><td>Use it (verify ignored)</td></tr>
+<tr><td>Both exist</td><td>Use <code>.worktrees/</code></td></tr>
+<tr><td>Neither exists</td><td>Check instruction file, then default <code>.worktrees/</code></td></tr>
+<tr><td>Directory not ignored</td><td>Add to .gitignore + commit</td></tr>
+<tr><td>Permission error on create</td><td>Sandbox fallback, work in place</td></tr>
+<tr><td>Tests fail during baseline</td><td>Report failures + ask</td></tr>
+<tr><td>No package.json/Cargo.toml</td><td>Skip dependency install</td></tr>
+</tbody></table>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;I&#39;m obviously not in a worktree — no need to check&quot;</td><td>Run Step 0. Harness-created isolation and submodules both fool eyeballing; the detection commands settle it.</td></tr>
+<tr><td>&quot;<code>git worktree add</code> is quicker than hunting for a native tool&quot;</td><td>A native tool (e.g. <code>EnterWorktree</code>) owns placement, branching, and cleanup. Bypassing it is the #1 mistake — it creates phantom state your harness can&#39;t see or manage.</td></tr>
+<tr><td>&quot;The worktree directory is surely ignored already&quot;</td><td>Run <code>git check-ignore</code>. An unignored worktree directory commits the whole tree into the repo.</td></tr>
+<tr><td>&quot;Any directory name works&quot;</td><td>Explicit instructions beat an existing project-local directory, which beats the <code>.worktrees/</code> default.</td></tr>
+<tr><td>&quot;The workspace is fresh — baseline tests can wait&quot;</td><td>A dirty baseline makes every later failure ambiguous. Run the tests now; proceeding past failures is your human partner&#39;s call.</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Jesse Vincent</strong> in
+        <a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/git-workflow-and-versioning/index.html"
+     data-source="addyosmani"
+     data-category="git"
+     data-search="git-workflow-and-versioning structures git workflow practices. use when making any code change. use when committing, branching, resolving conflicts, opening or reviewing a pull request (pr), pushing to a remote, or when you need to organize work across multiple parallel streams. use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog. git git addyosmani/agent-skills">
+  <span>
+    <span class="r-name">git-workflow-and-versioning</span>
+    <span class="r-desc">Structures git workflow practices. Use when making any code change. Use when committing, branching, resolving conflicts, opening or reviewing a pull request (PR), pushing to a remote, or when you need to organize work across multiple parallel streams. Use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/misc/git-guardrails-claude-code/index.html"
+     data-source="mattpocock"
+     data-category="git"
+     data-search="git-guardrails-claude-code set up claude code hooks to block dangerous git commands (push, reset --hard, clean, branch -d, etc.) before they execute. use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in claude code. git git mattpocock/skills">
+  <span>
+    <span class="r-name">git-guardrails-claude-code</span>
+    <span class="r-desc">Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/brainstorming/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="brainstorming you must use this before any creative work - creating features, building components, adding functionality, or modifying behavior. explores user intent, requirements and design before implementation. general  obra/superpowers">
+  <span>
+    <span class="r-name">brainstorming</span>
+    <span class="r-desc">You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/executing-plans/index.html"
+     data-source="obra-superpowers"
+     data-category="general"
+     data-search="executing-plans use when you have a written implementation plan to execute in a separate session with review checkpoints general  obra/superpowers">
+  <span>
+    <span class="r-name">executing-plans</span>
+    <span class="r-desc">Use when you have a written implementation plan to execute in a separate session with review checkpoints</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add obra-superpowers/using-git-worktrees</code>
+  <button type="button" data-copy="npx aidentity add obra-superpowers/using-git-worktrees" aria-label="Copy install using-git-worktrees">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/obra/superpowers" rel="noopener">obra/superpowers</a></dd></div>
+          <div><dt>Author</dt><dd>Jesse Vincent</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>git</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">obra-superpowers/using-git-worktrees</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/using-git-worktrees/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

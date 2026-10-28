@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>application-design-center-design-deploy — Aidentity</title>
+<meta name="description" content="Processes GCP infrastructure design and deployment workflows within Application Design Center (ADC). Use when: - Designing GCP infrastructure with Terraform. - Validating local HCL. - Performing best-practice plan scans. - Importing templates to Application Design Center (ADC). - Deploying templates. - Troubleshooting deployment failures. Boundaries: - Only use for GCP-specific cloud infrastructure. - Only use for Terraform coding within the ADC context.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/application-design-center-design-deploy/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="application-design-center-design-deploy — Aidentity">
+<meta property="og:description" content="Processes GCP infrastructure design and deployment workflows within Application Design Center (ADC). Use when: - Designing GCP infrastructure with Terraform. - Validating local HCL. - Performing best-practice plan scans. - Importing templates to Application Design Center (ADC). - Deploying templates. - Troubleshooting deployment failures. Boundaries: - Only use for GCP-specific cloud infrastructure. - Only use for Terraform coding within the ADC context.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/application-design-center-design-deploy/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"application-design-center-design-deploy","description":"Processes GCP infrastructure design and deployment workflows within Application Design Center (ADC). Use when: - Designing GCP infrastructure with Terraform. - Validating local HCL. - Performing best-practice plan scans. - Importing templates to Application Design Center (ADC). - Deploying templates. - Troubleshooting deployment failures. Boundaries: - Only use for GCP-specific cloud infrastructure. - Only use for Terraform coding within the ADC context.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/application-design-center-design-deploy/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>application-design-center-design-deploy
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>application-design-center-design-deploy</h1>
+      <p class="summary">Processes GCP infrastructure design and deployment workflows within Application Design Center (ADC). Use when: - Designing GCP infrastructure with Terraform. - Validating local HCL. - Performing best-practice plan scans. - Importing templates to Application Design Center (ADC). - Deploying templates. - Troubleshooting deployment failures. Boundaries: - Only use for GCP-specific cloud infrastructure. - Only use for Terraform coding within the ADC context.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a> <a class="tag" href="../../../../skills/index.html?q=design">design</a> <a class="tag" href="../../../../skills/index.html?q=devops">devops</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Designing and Deploying GCP Infrastructure with Application Design Center</h3>
+<h4>Overview</h4>
+<p>This skill provides a prescriptive, production-grade workflow for the entire</p>
+<p>infrastructure lifecycle on Google Cloud Platform (GCP). It replaces the</p>
+<p>automated, opaque-box GAD <code>design_infra</code> tool with an **agent-controlled design</p>
+<p>and validation loop** utilizing modular Terraform and local CLI validation,</p>
+<p>followed by a <strong>shifted-left best practices plan scan</strong> prior to synchronization</p>
+<p>with the Application Design Center (ADC) registry for deployment and lifecycle</p>
+<p>management.</p>
+<p>Always maintain the persona of a Principal Cloud Architect. Keep the local</p>
+<p>Terraform configuration as the source of truth, and ensure the design is fully</p>
+<p>compliant with best practices before importing it into the cloud registry.</p>
+<hr>
+<h4>Index</h4>
+<ol>
+<li>[Pre-requisites: Setup &amp; Confirmation](#pre-requisites-setup-confirmation)</li>
+<li>[Phase 1: Local Infrastructure Design &amp; Validation](#phase-1-local-infrastructure-design-validation)</li>
+<li>[Phase 2: Shifted-Left Best Practices Assessment &amp; Iterative Remediation](#phase-2-shifted-left-best-practices-assessment-iterative-remediation)</li>
+<li>[Phase 3: Import IaC to Application Design Center](#phase-3-import-iac-to-application-design-center)</li>
+<li>[Phase 4: Application Deployment &amp; Monitoring](#phase-4-application-deployment-monitoring)</li>
+<li>[Phase 5: Troubleshoot Deployment Failures](#phase-5-troubleshoot-deployment-failures)</li>
+<li>[Phase 6: Verification &amp; E2E Testing](#phase-6-verification-e2e-testing)</li>
+</ol>
+<hr>
+<h4>Pre-requisites: Setup &amp; Confirmation</h4>
+<p>Before executing Phase 1, you <strong>must</strong> perform the following setup steps:</p>
+<ol>
+<li><strong>Confirm Target Project &amp; Location</strong>:</li>
+</ol>
+<ul>
+<li>Explicitly ask the user to confirm the target GCP <strong>project ID</strong> and</li>
+</ul>
+<p>        <strong>location</strong> (region).</p>
+<ul>
+<li>If the user does not specify a location, use <strong><code>us-central1</code></strong> as the</li>
+</ul>
+<p>        default.</p>
+<ul>
+<li>Verify that your local environment has the active project set:</li>
+</ul>
+<p>        <pre><code>        gcloud config set project &lt;project_id&gt;
+        </code></pre></p>
+<hr>
+<h4>Phase 1: Local Infrastructure Design &amp; Validation</h4>
+<p><strong>Goal</strong>: Transform user requirements and codebase characteristics into a 100%</p>
+<p>validated, secure, and compile-ready Terraform configuration locally.</p>
+<ol>
+<li><strong>Invoke the <code>design</code> Skill</strong>: Call and execute the <code>design</code> skill (defined</li>
+</ol>
+<p>    in [design](references/design_guide.md))</p>
+<p>    for the user&#39;s prompt.</p>
+<ul>
+<li>The <code>design</code> skill will autonomously perform the Codebase Analysis,</li>
+</ul>
+<p>        query the catalog registry, planning, HCL generation, and local CLI</p>
+<p>        validation loop (<code>terraform init</code>, <code>validate</code>, <code>plan</code>) in a dedicated</p>
+<p>        scratch directory.</p>
+<ol>
+<li><strong>Locate Validated HCL</strong>: Identify the scratch directory where the <code>design</code></li>
+</ol>
+<p>    skill saved the validated, compile-ready Terraform files (e.g.,</p>
+<p>    <code>scratch/tf_validate_&lt;session_id&gt;/</code>).</p>
+<ol>
+<li><strong>Verify Handover (MANDATORY)</strong>: Ensure that the local validation loop in</li>
+</ol>
+<p>    the <code>design</code> skill completed successfully with a clean plan before</p>
+<p>    proceeding. Meticulously inspect the HCL to verify:</p>
+<ul>
+<li><strong>Secret-Safe Policy</strong>: Confirm that no plaintext credentials,</li>
+</ul>
+<p>        passwords, or hardcoded secrets are written in <code>terraform.tfvars</code> or HCL</p>
+<p>        resource blocks. All sensitive inputs must be wired through GCP Secret</p>
+<p>        Manager.</p>
+<ul>
+<li><strong>State Isolation Policy</strong>: Confirm that there is no remote backend</li>
+</ul>
+<p>        block (e.g., <code>backend &quot;gcs&quot; {}</code>) in the HCL files. State must remain</p>
+<p>        local in the scratch folder during validation, allowing ADC to handle</p>
+<p>        the remote state registry upon import.</p>
+<ul>
+<li><em>Remediation</em>: If any violations are found, correct them in the HCL,</li>
+</ul>
+<p>        re-run local validation, and verify again. Do not proceed with</p>
+<p>        unvalidated or insecure code.</p>
+<ol>
+<li><strong>Export Terraform Plan to JSON (MANDATORY)</strong>: In the scratch directory, run</li>
+</ol>
+<p>    the following commands to generate a binary plan and convert it into a clean</p>
+<p>    JSON representation:</p>
+<p>    <pre><code>    terraform plan -out=tfplan &amp;&amp; terraform show -json tfplan &gt; tfplan.json
+    </code></pre></p>
+<p>    Verify that the <code>tfplan.json</code> file is successfully written in your scratch</p>
+<p>    directory.</p>
+<hr>
+<h4>Phase 2: Shifted-Left Best Practices Assessment &amp; Iterative Remediation</h4>
+<p><strong>Goal</strong>: Validate the local plan&#39;s alignment with security, cost, and</p>
+<p>reliability benchmarks BEFORE importing it into the cloud registry, using the</p>
+<p>native ADC plan assessment API.</p>
+<ol>
+<li><strong>Discover Space ID (MANDATORY)</strong>: Before running the assessment or creating</li>
+</ol>
+<p>    templates, you <strong>must</strong> dynamically discover the active ADC Space ID in your</p>
+<p>    target location:</p>
+<ul>
+<li><strong>List Spaces</strong>: Run the command:</li>
+</ul>
+<p>        <pre><code>        gcloud design-center spaces list --project=&lt;project_id&gt; --location=&lt;location&gt;
+        </code></pre></p>
+<ul>
+<li><strong>Select Space</strong>: Parse the output to identify the active space (e.g.,</li>
+</ul>
+<p>        <code>test-deploy</code> or <code>googlespace</code>). If multiple spaces exist, ask the user</p>
+<p>        to confirm. If no space exists, ask the user or create one:</p>
+<p>        <pre><code>        gcloud design-center spaces create &lt;space_id&gt; --project=&lt;project_id&gt; --location=&lt;location&gt;
+        </code></pre></p>
+<ol>
+<li><strong>Execute Plan Assessment via gcloud</strong>: Run the plan-based assessment using</li>
+</ol>
+<p>    the discovered Space ID and your exported <code>tfplan.json</code> file. Execute the</p>
+<p>    command directly in your terminal:</p>
+<p>    <pre><code>    gcloud design-center spaces generate-terraform-assessment-report &lt;space_id&gt; \
+        --location=&lt;location&gt; \
+        --project=&lt;project_id&gt; \
+        --terraform-plan=&quot;&lt;scratch_directory_path&gt;/tfplan.json&quot; \
+        --format=json
+    </code></pre></p>
+<ol>
+<li><strong>Analyze Findings</strong>: Present all findings to the user in a clean tabular</li>
+</ol>
+<p>    format, detailing specific violations, resource scopes, and associated</p>
+<p>    severity levels.</p>
+<ol>
+<li><strong>Local Remediation Loop</strong>:</li>
+</ol>
+<ul>
+<li><strong>Do not</strong> attempt to import or commit insecure code.</li>
+<li>Edit your <strong>local HCL files</strong> in the scratch directory to fix the</li>
+</ul>
+<p>        reported violations (e.g., adding encryption keys, enabling OS Login, or</p>
+<p>        restricting IAM scopes).</p>
+<ul>
+<li>Re-run Phase 1 local validation and plan export:</li>
+</ul>
+<p>        <pre><code>        terraform validate &amp;&amp; terraform plan -out=tfplan &amp;&amp; terraform show -json tfplan &gt; tfplan.json
+        </code></pre></p>
+<ul>
+<li>Re-run the plan assessment command shown in step 2.</li>
+</ul>
+<ol>
+<li><strong>Exit Criteria</strong>:</li>
+</ol>
+<ul>
+<li>All high/critical findings resolved, or acceptable trade-offs</li>
+</ul>
+<p>        documented.</p>
+<ul>
+<li>Maximum of three (3) iterative attempts reached. Once clean or</li>
+</ul>
+<p>        acceptable, proceed to Phase 3.</p>
+<hr>
+<h4>Phase 3: Import IaC to Application Design Center</h4>
+<p><strong>Goal</strong>: Synchronize the fully validated and best-practice-compliant local HCL</p>
+<p>configuration with the ADC cloud registry to establish the deployable template</p>
+<p>resource.</p>
+<ol>
+<li><strong>Verify or Create the Application Template (MANDATORY)</strong>: Before importing</li>
+</ol>
+<p>    the HCL, you <strong>must</strong> ensure the parent Application Template resource exists</p>
+<p>    in the discovered ADC space.</p>
+<ul>
+<li><strong>Check Existence</strong>: Run `gcloud design-center spaces</li>
+</ul>
+<p>        application-templates describe &lt;template_id&gt; --space=&lt;space_id&gt;</p>
+<p>        --project=&lt;project_id&gt; --location=&lt;location&gt;` to check if the template</p>
+<p>        exists.</p>
+<ul>
+<li><strong>Create if Missing</strong>: If the describe command returns a <code>NOT_FOUND</code></li>
+</ul>
+<p>        error, create the template resource first by running:</p>
+<p>        <pre><code>        gcloud design-center spaces application-templates create &lt;template_id&gt; --space=&lt;space_id&gt; --project=&lt;project_id&gt; --location=&lt;location&gt; --display-name=&quot;&lt;Name&gt;&quot; --description=&quot;&lt;Description&gt;&quot;
+        </code></pre></p>
+<ol>
+<li><strong>Strict HCL Parser Constraints (CRITICAL):</strong> Before calling the import</li>
+</ol>
+<p>    operation, ensure your local HCL complies with the ADC registry&#39;s strict</p>
+<p>    ingestion rules:</p>
+<ul>
+<li><strong>Pure Module Policy (No Resource Blocks):</strong> The ADC parser strictly</li>
+</ul>
+<p>        <strong>prohibits any <code>resource</code> blocks</strong> inside the imported HCL. Only</p>
+<p>        <code>module</code>, <code>variable</code>, <code>output</code>, and <code>provider</code> blocks are allowed. If a</p>
+<p>        resource is required (e.g. Private Service Access peering) but no</p>
+<p>        standalone module is registered for it in the catalog, you MUST check if</p>
+<p>        it is supported as a built-in configuration option inside an existing</p>
+<p>        registered module (e.g. setting <code>private_service_access_config</code> inside</p>
+<p>        <code>module &quot;vpc&quot;</code>).</p>
+<ul>
+<li><strong>Strict String Typing:</strong> The ADC parser does not perform implicit type</li>
+</ul>
+<p>        coercion from boolean to string. For example, subnet private access must</p>
+<p>        be declared as a literal string: <code>subnet_private_access = &quot;true&quot;</code>, NOT</p>
+<p>        as a boolean <code>true</code>.</p>
+<ul>
+<li><strong>No Terraform Block:</strong> The parser strictly prohibits the <code>terraform {}</code></li>
+</ul>
+<p>        version constraint block. Omit it entirely from <code>providers.tf</code> or</p>
+<p>        <code>main.tf</code>.</p>
+<ol>
+<li><strong>Import to ADC Template</strong>: Once the template resource is confirmed to exist</li>
+</ol>
+<p>    and the HCL is validated against the above constraints, invoke the hosted</p>
+<p>    <code>application_design_center:manage_application_template</code> MCP tool with the</p>
+<p>    <code>APPLICATION_TEMPLATE_OPERATION_IMPORT_IAC</code> operation:</p>
+<ul>
+<li><strong>Arguments</strong>:</li>
+</ul>
+<ul>
+<li><code>project</code>: The target project ID.</li>
+<li><code>location</code>: The GCP deployment region (e.g., <code>us-central1</code>).</li>
+<li><code>spaceId</code>: The discovered ADC space ID.</li>
+<li><code>applicationTemplateId</code>: A unique name for your application</li>
+</ul>
+<p>            template.</p>
+<ul>
+<li><code>operation</code>: <code>APPLICATION_TEMPLATE_OPERATION_IMPORT_IAC</code></li>
+<li><code>iacModule</code>: A structured object containing the files list:</li>
+</ul>
+<p>            <pre><code>            {
+              &quot;files&quot;: [
+                { &quot;name&quot;: &quot;main.tf&quot;, &quot;content&quot;: &quot;&lt;content of main.tf&gt;&quot; },
+                { &quot;name&quot;: &quot;variables.tf&quot;, &quot;content&quot;: &quot;&lt;content of variables.tf&gt;&quot; },
+                { &quot;name&quot;: &quot;terraform.tfvars&quot;, &quot;content&quot;: &quot;&lt;content of terraform.tfvars&gt;&quot; }
+              ]
+            }
+            </code></pre></p>
+<ul>
+<li><strong>Resilience &amp; Retries (MANDATORY)</strong>:</li>
+</ul>
+<ul>
+<li>If the <code>IMPORT_IAC</code> call fails due to a transient error (e.g., `502</li>
+</ul>
+<p>            Bad Gateway<code>, </code>504 Gateway Timeout<code>, or </code>429 Rate Limit`), **do not</p>
+<p>            immediately retry**.</p>
+<ul>
+<li>Use <strong>exponential backoff with jitter</strong> (e.g., waiting 2s, 4s, 8s</li>
+</ul>
+<p>            plus a random fraction of a second).</p>
+<ul>
+<li><strong>Verify Revision before Retry</strong>: If a timeout occurred, first call</li>
+</ul>
+<p>            <code>gcloud alpha design-center spaces application-templates describe</code></p>
+<p>            to check if the import actually succeeded in the background. Only</p>
+<p>            retry if the template was not updated.</p>
+<ol>
+<li><strong>Capture Template URI</strong>: Upon success, this establishes the template</li>
+</ol>
+<p>    resource in your space. Construct the <code>applicationTemplateUri</code> using the</p>
+<p>    pattern:</p>
+<p>    <code>projects/{project}/locations/{location}/spaces/{spaceId}/applicationTemplates/{applicationTemplateId}</code></p>
+<hr>
+<h4>Phase 4: Application Deployment &amp; Monitoring</h4>
+<p><strong>Goal</strong>: Deploy the validated, best-practice-compliant application template to</p>
+<p>the GCP environment.</p>
+<ol>
+<li><strong>Deploy Application</strong>: Invoke the hosted</li>
+</ol>
+<p>    <code>application_design_center:manage_application</code> MCP tool with the</p>
+<p>    <code>APPLICATION_OPERATION_DEPLOY</code> operation:</p>
+<ul>
+<li><strong>Arguments</strong>:</li>
+<li><code>project</code>: Target project ID.</li>
+<li><code>location</code>: Target deployment location.</li>
+<li><code>spaceId</code>: Target space ID.</li>
+<li><code>applicationId</code>: A unique ID for the deployed application instance.</li>
+<li><code>applicationTemplateUri</code>: The URI established in Phase 3.</li>
+<li><code>serviceAccount</code>: The deployment service account.</li>
+<li><strong>Resilience &amp; Retries (MANDATORY)</strong>:</li>
+<li>If the <code>DEPLOY</code> operation fails with transient network or gateway</li>
+</ul>
+<p>            errors (e.g., <code>502</code>, <code>504</code>), apply **exponential backoff with</p>
+<p>            jitter** before retrying.</p>
+<ul>
+<li>If the deployment LRO times out or fails with a state conflict,</li>
+</ul>
+<p>            verify the application status using `gcloud design-center spaces</p>
+<p>            applications describe` to confirm its status before retrying the</p>
+<p>            deploy call, avoiding concurrent conflicting deployments.</p>
+<ol>
+<li><strong>Active LRO Monitoring</strong>:</li>
+</ol>
+<ul>
+<li>The tool returns a Long-Running Operation (LRO). Inform the user that</li>
+</ul>
+<p>        the deployment has started.</p>
+<ul>
+<li><strong>Do not sleep</strong> during deployment status polling. Poll the LRO actively</li>
+</ul>
+<p>        every 30–60 seconds until <code>done: true</code> using the command `gcloud</p>
+<p>        design-center operations describe &lt;operation_name&gt;`.</p>
+<ol>
+<li><strong>Handle Results</strong>:</li>
+</ol>
+<ul>
+<li><strong>Success</strong>: If <code>done</code> is <code>true</code> and there is no <code>error</code> field, proceed</li>
+</ul>
+<p>        to Phase 6.</p>
+<ul>
+<li><strong>Failure</strong>: If an <code>error</code> field is present, analyze the error type and</li>
+</ul>
+<p>        proceed to Phase 5.</p>
+<hr>
+<h4>Phase 5: Troubleshoot Deployment Failures</h4>
+<p><strong>Goal</strong>: Diagnose and remediate deployment failures iteratively using the</p>
+<p>specialized troubleshooting skill and established cloud resolution patterns.</p>
+<ol>
+<li><strong>Iterative Cloud Resolution Patterns (CRITICAL):</strong> If the deployment fails</li>
+</ol>
+<p>    with a <code>REVISION_FAILED</code> or <code>TERRAFORM</code> error, check for these common</p>
+<p>    resource conflicts:</p>
+<ul>
+<li><strong>Service Account 409 Conflict (<code>alreadyExists</code>):</strong> If the deployment</li>
+</ul>
+<p>        fails because a service account generated by the module (e.g.</p>
+<p>        <code>frontend-service-us-central-sa</code>) already exists in the project,</p>
+<p>        remediate the local HCL by disabling service account creation and</p>
+<p>        referencing the existing one:</p>
+<p>        <pre><code>        create_service_account = false
+        service_account        = &quot;&lt;existing_service_account_email&gt;&quot;
+        </code></pre></p>
+<ul>
+<li><strong>Container Image 404 NotFound:</strong> If the deployment fails because a</li>
+</ul>
+<p>        container image is not found, confirm that the image exists in your</p>
+<p>        registry. For testing or hello-world deployments, leverage the official</p>
+<p>        public Google hello-world image:</p>
+<p>        <code>us-docker.pkg.dev/cloudrun/container/hello</code></p>
+<ol>
+<li><strong>Delegate to the Troubleshooting Skill</strong>: If a deployment failure occurs</li>
+</ol>
+<p>    and does not match the above patterns, invoke and execute the specialized</p>
+<p>    <code>infra-deployment-debugging</code> guide (located in</p>
+<p>    [infra-deployment-debugging](references/troubleshooting_guide.md)).</p>
+<ol>
+<li><strong>Select the Troubleshooting Context</strong>:</li>
+</ol>
+<ul>
+<li><strong>For Local Validation Errors (Phase 1/2)</strong>: Follow **Case B: Raw</li>
+</ul>
+<p>        Terraform Deployment** instructions in the troubleshooting skill to</p>
+<p>        isolate syntax, compilation, and plan-time validation errors.</p>
+<ul>
+<li><strong>For Cloud Deployment Failures (Phase 4)</strong>: Follow **Case A: ADC</li>
+</ul>
+<p>        Application Deployment** instructions in the troubleshooting skill to</p>
+<p>        analyze LRO errors, retrieve service logs, and diagnose cloud</p>
+<p>        environment issues.</p>
+<ol>
+<li><strong>Apply Local-First Remediation</strong>:</li>
+</ol>
+<ul>
+<li>Follow the troubleshooting skill&#39;s remediation guides to formulate a</li>
+</ul>
+<p>        fix.</p>
+<ul>
+<li><strong>MANDATORY</strong>: Apply the fix directly to your <strong>local HCL files</strong> in the</li>
+</ul>
+<p>        scratch directory, re-run local validation, re-import the HCL, and</p>
+<p>        trigger a new deployment.</p>
+<ul>
+<li>Re-run Phase 1 local validation and plan export:</li>
+</ul>
+<p>        <pre><code>        terraform validate &amp;&amp; terraform plan -out=tfplan &amp;&amp; terraform show -json tfplan &gt; tfplan.json
+        </code></pre></p>
+<ul>
+<li>Re-run the plan assessment (Phase 2) to ensure no new violations are</li>
+</ul>
+<p>        introduced.</p>
+<ul>
+<li>Re-import the corrected HCL to ADC using</li>
+</ul>
+<p>        <code>APPLICATION_TEMPLATE_OPERATION_IMPORT_IAC</code>.</p>
+<ul>
+<li>Trigger a new deployment using <code>APPLICATION_OPERATION_DEPLOY</code>.</li>
+</ul>
+<ol>
+<li><strong>Iteration Threshold</strong>: Repeat the troubleshooting, validation, import, and</li>
+</ol>
+<p>    redeployment cycle up to five (5) times. If it still fails, report the full</p>
+<p>    history and diagnostics to the user.</p>
+<hr>
+<h4>Phase 6: Verification &amp; E2E Testing</h4>
+<p><strong>Goal</strong>: Confirm that the deployed services are healthy and fully functional.</p>
+<ol>
+<li><strong>Retrieve Deployed Resources</strong>: Invoke the hosted</li>
+</ol>
+<p>    <code>application_design_center:manage_application</code> MCP tool with the</p>
+<p>    <code>APPLICATION_OPERATION_GET</code> operation to retrieve the resource details,</p>
+<p>    public endpoints, and output parameters.</p>
+<ol>
+<li><strong>Health Check</strong>: Verify that all services are using the correct container</li>
+</ol>
+<p>    image URLs and that their runtime status is healthy.</p>
+<ol>
+<li><strong>E2E Validation</strong>: Conduct a simple demo test (e.g., checking public HTTP</li>
+</ol>
+<p>    endpoints or triggering a dry-run transaction) to ensure E2E functionality.</p>
+<p>    Present the results and public URLs to the user to conclude the task.</p>
+<h4>Reporting Issues</h4>
+<p>Report bugs or improvements for this skill at <a href="https://github.com/google/skills/issues" rel="noopener">Google Skills Issues</a>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/application-design-center-design-deploy</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/application-design-center-design-deploy" aria-label="Copy install application-design-center-design-deploy">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/application-design-center-design-deploy</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/application-design-center-design-deploy/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

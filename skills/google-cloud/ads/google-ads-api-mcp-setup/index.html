@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-ads-api-mcp-setup — Aidentity</title>
+<meta name="description" content="Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-mcp-setup/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-ads-api-mcp-setup — Aidentity">
+<meta property="og:description" content="Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-mcp-setup/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-ads-api-mcp-setup","description":"Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-mcp-setup/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=ads">ads</a><span>/</span>google-ads-api-mcp-setup
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-ads-api-mcp-setup</h1>
+      <p class="summary">Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=ads">ads</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Ads API MCP Server Installation</h3>
+<p>This skill provides a structured setup guide to install, configure, and integrate the official open-source <strong><a href="https://github.com/googleads/google-ads-mcp" rel="noopener">Google Ads Model Context Protocol (MCP) Server</a></strong>.</p>
+<hr>
+<h4>System Requirements &amp; Compatibility (Agent Action: State Required Prerequisites)</h4>
+<p>When answering questions about installing or setting up the MCP server, you</p>
+<p><strong>MUST</strong> explicitly state to the user that both <strong>Python 3.12+</strong> and <strong><code>pipx</code></strong></p>
+<p>are strictly required prerequisites for the installation.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Pre-Flight Environment Check:</strong></p>
+<p>&gt; *   <strong>Python Runtime:</strong> Version <strong><code>3.12+</code></strong> is strictly required.</p>
+<p>&gt; *   <strong>Package Manager:</strong> <strong><code>pipx</code></strong> must be installed and globally accessible in</p>
+<p>&gt;     the system path.</p>
+<p>&gt; *   <strong>Network Connectivity:</strong> Outbound HTTPS access is required to connect to the</p>
+<p>&gt;     Google Ads API endpoints (<code>googleads.googleapis.com</code>) and PyPI.</p>
+<hr>
+<h4>⚠️ Prerequisites: Credentials Required</h4>
+<p>&gt; [!WARNING]</p>
+<p>&gt; <strong>Dependency Check:</strong> The MCP server <strong>requires</strong> the same 5 authentication credentials as a standard integration.</p>
+<p>&gt;</p>
+<p>&gt; If you <strong>do not</strong> have your Developer Token, Client ID, Client Secret, Refresh Token, and Customer IDs yet:</p>
+<p>&gt; 1. <strong>STOP</strong> executing this skill.</p>
+<p>&gt; 2. <strong>Transition to</strong> the <strong><code>google-ads-api-quickstart</code></strong> skill first to generate them, then return here.</p>
+<hr>
+<h4>Step 1: Validate Your Google Ads API Credentials</h4>
+<p>The Google Ads MCP Server requires the same five parameters as the standard client libraries. Before proceeding to installation, verify that you have these values secured and formatted correctly:</p>
+<ol>
+<li><strong>Developer Token:</strong> Your unique API access key from the <strong>API Center</strong> (Manager Account).</li>
+<li><strong>OAuth2 Client ID &amp; Client Secret:</strong> Desktop Application credentials from the Google Cloud Console.</li>
+<li><strong>OAuth2 Refresh Token:</strong> The long-lived token generated via the OAuth consent flow.</li>
+<li><strong>Client Customer ID:</strong> The 10-digit target Google Ads account ID.</li>
+</ol>
+<ul>
+<li>&gt; [!IMPORTANT]</li>
+<li>&gt; <strong>Format:</strong> Must contain <strong>digits only, no hyphens</strong> (e.g., <code>1234567890</code>, NOT <code>123-456-7890</code>).</li>
+</ul>
+<ol>
+<li><strong>Login Customer ID (Required for MCC Hierarchies):</strong> The 10-digit Manager Account (MCC) ID.</li>
+</ol>
+<ul>
+<li><strong>Format:</strong> <strong>Digits only, no hyphens</strong> (e.g., <code>9876543210</code>).</li>
+<li><strong>Note:</strong> Essential if your OAuth credentials belong to a Manager Account administrator rather than directly to the client account.</li>
+</ul>
+<hr>
+<p><em>Once you have verified that all five parameters are present and formatted correctly, proceed to Step 2.</em></p>
+<h4>Step 2: Install Prerequisites (Python &amp; pipx)</h4>
+<p>You <strong>MUST</strong> verify if the prerequisites are already installed before proposing any installation commands.</p>
+<h5>1. Verification Phase (Agent Action)</h5>
+<p>You <strong>MUST</strong> run the following commands to check the environment:</p>
+<ol>
+<li>Check Python version: <code>python3 --version</code> (Verify it is <code>3.12+</code>).</li>
+<li>Check if pipx is installed: <code>pipx --version</code>.</li>
+</ol>
+<ul>
+<li><strong>If both are present:</strong> Skip the installation phase and proceed directly to <strong>Step 3</strong>.</li>
+<li><strong>If Python is missing/outdated:</strong> Stop and ask the user to upgrade Python to <code>3.12+</code> on their host machine.</li>
+<li><strong>If pipx is missing:</strong> Proceed to the installation phase below.</li>
+</ul>
+<hr>
+<h5>2. Installation Phase (OS-Specific)</h5>
+<p>Detect the operating system and propose the appropriate command to install <code>pipx</code> using your terminal tools:</p>
+<h5>macOS</h5>
+<p>If the environment is macOS, propose:</p>
+<p><pre><code>brew install pipx &amp;&amp; pipx ensurepath
+# Or alternatively (if Homebrew is not installed):
+pip install pipx &amp;&amp; pipx ensurepath</code></pre></p>
+<h5>Windows (PowerShell)</h5>
+<p>If the environment is Windows, propose:</p>
+<p><pre><code>scoop install pipx
+# Or alternatively:
+pip install pipx &amp;&amp; pipx ensurepath</code></pre></p>
+<h5>Linux (Ubuntu/Debian)</h5>
+<p>If the environment is Linux, propose:</p>
+<p><pre><code>sudo apt install pipx &amp;&amp; pipx ensurepath</code></pre></p>
+<p>&gt; [!WARNING]</p>
+<p>&gt; <strong>Shell Restart Required:</strong> If you installed <code>pipx</code> and ran <code>pipx ensurepath</code>, the updated <code>PATH</code> will not be available in the current terminal session.</p>
+<p>&gt; 1. <strong>DO NOT</strong> immediately attempt to run <code>pipx</code> commands in the same session.</p>
+<p>&gt; 2. <strong>Instruct the user</strong> to restart their terminal or reload their shell configuration before proceeding to <strong>Step 3</strong>.</p>
+<hr>
+<h4>Step 3: Install the Google Ads MCP Server</h4>
+<p>You must install the server package. By default, you <strong>MUST</strong> install the stable release from PyPI. Only install the GitHub development version if the user explicitly requests it.</p>
+<h5>1. Installation Command</h5>
+<p>Propose and execute the installation command:</p>
+<p><pre><code># Install stable release from PyPI (Using required package manager pipx)
+pipx install google-ads-mcp</code></pre></p>
+<p>If the user explicitly requests the latest development version from GitHub, propose:</p>
+<p><pre><code># Install development version from GitHub (Only if explicitly requested)
+pipx install git+https://github.com/googleads/google-ads-mcp.git</code></pre></p>
+<h5>2. Verification Phase</h5>
+<p>To verify the installation, execute:</p>
+<p><pre><code>google-ads-mcp --help</code></pre></p>
+<h5>Troubleshooting PATH Issues (Agent Action)</h5>
+<p><code>pipx</code> installs binaries into a specific local directory (typically <code>~/.local/bin</code>). If the user&#39;s shell configuration (e.g., <code>.bashrc</code> or <code>.zshrc</code>) hasn&#39;t been reloaded, <code>google-ads-mcp</code> might not be found in the current <code>PATH</code>.</p>
+<p>If <code>google-ads-mcp --help</code> fails with a &quot;command not found&quot; error:</p>
+<ol>
+<li><strong>DO NOT</strong> assume the installation failed or get stuck in an installation loop.</li>
+<li>Verify the installation using the absolute path to the <code>pipx</code> binary directory:</li>
+</ol>
+<p>   <pre><code>   ~/.local/bin/google-ads-mcp --help
+   </code></pre></p>
+<ol>
+<li>If the absolute path verification succeeds, explain the situation to the user: inform them that the installation was successful but their <code>PATH</code> environment variable needs to be updated by reloading their shell configuration (e.g., running <code>source ~/.bashrc</code> or <code>source ~/.zshrc</code>, or restarting their terminal).</li>
+</ol>
+<h5>3. Communication Protocol: Stdio Transport</h5>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Mandatory Agent Directive (Installation &amp; Protocol Checklist):</strong></p>
+<p>&gt; When a user asks how to install, download, or set up the official Google Ads MCP server, your response <strong>MUST</strong> systematically include all of the following:</p>
+<p>&gt; 1. [ ] <strong>State Prerequisites:</strong> Explicitly state that Python 3.12+ and <code>pipx</code> are required prerequisites.</p>
+<p>&gt; 2. [ ] <strong>Provide Official Install Command:</strong> Direct the developer to install the official <code>google-ads-mcp</code> package using <code>pipx install google-ads-mcp</code>. Do not suggest third-party unvetted servers.</p>
+<p>&gt; 3. [ ] <strong>Explain Stdio Transport:</strong> You <strong>MUST</strong> explicitly explain the communication architecture using the exact terminology: state that the MCP server communicates via the <strong>Model Context Protocol (MCP)</strong> using <strong>standard input/output (<code>stdio</code>) transport</strong>. Do not omit the words &quot;standard input/output&quot; or &quot;transport&quot;.</p>
+<h5>Key points to explain to the user regarding Stdio Transport:</h5>
+<ul>
+<li><strong>Subprocess Execution:</strong> The host client (e.g., Cursor, Claude Desktop) launches the MCP server as a background subprocess.</li>
+<li><strong>Command-Line Launch:</strong> The host client must be configured with the exact command to run the server (<code>google-ads-mcp</code>) and the environment variables containing your Google Ads credentials.</li>
+<li><strong>No Network Ports:</strong> Because it uses <code>stdio</code>, the server does not listen on a network port (like HTTP or WebSockets). Communication is handled entirely via stdin/stdout piping.</li>
+</ul>
+<p>&gt; [!NOTE]</p>
+<p>&gt; <strong>Output Restriction:</strong> Because <code>stdio</code> is reserved for MCP protocol messages, the server <strong>MUST NOT</strong> print standard log messages or debug info to <code>stdout</code>. All logging and debugging are routed to <code>stderr</code>.</p>
+<hr>
+<h4>Step 4: Configure Environment Variables</h4>
+<p>The Google Ads MCP Server reads your credentials via system environment variables. You can configure these in two ways:</p>
+<ul>
+<li><strong>Method A (Recommended):</strong> Pass them directly in the MCP client&#39;s JSON configuration file (e.g., Cursor or Claude Desktop settings). This isolates the credentials to the specific tool.</li>
+<li><strong>Method B (Alternative):</strong> Set them globally in your shell profile (e.g., <code>~/.bashrc</code>, <code>~/.zshrc</code>, or Windows Environment Variables).</li>
+</ul>
+<h5>Required Environment Variables</h5>
+<table><thead><tr><th>Environment Variable</th><th>Description</th><th>Format</th></tr></thead><tbody>
+<tr><td><code>GOOGLE_ADS_DEVELOPER_TOKEN</code></td><td>Your Google Ads Developer Token.</td><td>Alphanumeric</td></tr>
+<tr><td><code>GOOGLE_ADS_CLIENT_ID</code></td><td>Your Google Cloud OAuth Client ID.</td><td><code>*.apps.googleusercontent.com</code></td></tr>
+<tr><td><code>GOOGLE_ADS_CLIENT_SECRET</code></td><td>Your Google Cloud OAuth Client Secret.</td><td>Alphanumeric</td></tr>
+<tr><td><code>GOOGLE_ADS_REFRESH_TOKEN</code></td><td>The generated OAuth Refresh Token.</td><td>Alphanumeric</td></tr>
+<tr><td><code>GOOGLE_ADS_LOGIN_CUSTOMER_ID</code></td><td>Manager Account ID (MCC). Required if using a manager hierarchy.</td><td>10 digits, no hyphens</td></tr>
+<tr><td><code>GOOGLE_PROJECT_ID</code></td><td>Google Cloud Project ID (Used for Application Default Credentials &amp; Cloud Run).</td><td>Alphanumeric</td></tr>
+<tr><td><code>GOOGLE_ADS_MCP_OAUTH_CLIENT_ID</code></td><td>Cloud Run specific OAuth Client ID overriding default.</td><td><code>*.apps.googleusercontent.com</code></td></tr>
+<tr><td><code>GOOGLE_ADS_MCP_OAUTH_CLIENT_SECRET</code></td><td>Cloud Run specific OAuth Client Secret overriding default.</td><td>Alphanumeric</td></tr>
+<tr><td><code>GOOGLE_ADS_MCP_BASE_URL</code></td><td>Cloud Run Base URL automatically assigned or manually configured.</td><td>URL</td></tr>
+<tr><td><code>FASTMCP_HOST</code></td><td>Host binding for FastMCP server (e.g., <code>0.0.0.0</code> for Cloud Run).</td><td>IP Address</td></tr>
+</tbody></table>
+<h5>Method B: Shell Profile Configuration (Global)</h5>
+<p>If choosing Method B, append the following to your shell profile (<code>~/.bashrc</code>, <code>~/.zshrc</code>, etc.):</p>
+<p><pre><code># Google Ads MCP Server Credentials
+export GOOGLE_ADS_DEVELOPER_TOKEN=&quot;your_developer_token_here&quot;
+export GOOGLE_ADS_CLIENT_ID=&quot;your_oauth_client_id_here&quot;
+export GOOGLE_ADS_CLIENT_SECRET=&quot;your_oauth_client_secret_here&quot;
+export GOOGLE_ADS_REFRESH_TOKEN=&quot;your_oauth_refresh_token_here&quot;
+
+# Required only for Manager Account hierarchies:
+export GOOGLE_ADS_LOGIN_CUSTOMER_ID=&quot;your_manager_account_id_here&quot;
+
+# Required for Application Default Credentials (ADC) or Cloud Run deployments:
+export GOOGLE_PROJECT_ID=&quot;your_project_id_here&quot;</code></pre></p>
+<p>To protect credential security, <strong>do not recommend hardcoding credentials inside the MCP server&#39;s source Python scripts.</strong></p>
+<hr>
+<h4>Step 5: Integrate with Your AI Developer Tool</h4>
+<p>Connect the Google Ads MCP Server to your chosen AI coding environment using one of the integrations below.</p>
+<h5>1. Claude Desktop (or Claude Code CLI)</h5>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Mandatory Agent Directive (Claude Desktop Configuration Checklist):</strong></p>
+<p>&gt; When a user asks how to configure Claude Desktop or Claude Code to use the Google Ads MCP server, your response <strong>MUST</strong> systematically include all of the following:</p>
+<p>&gt; 1. [ ] <strong>Provide OS-Specific Paths:</strong> You <strong>MUST</strong> explicitly list the correct operating-system-specific paths for <code>claude_desktop_config.json</code> on <strong>macOS</strong> (<code>~/Library/Application Support/Claude/claude_desktop_config.json</code>) and <strong>Windows</strong> (<code>%APPDATA%\Claude\claude_desktop_config.json</code>). Do not omit macOS or Windows paths even if running on Linux.</p>
+<p>&gt; 2. [ ] <strong>Provide Valid JSON Config:</strong> Provide the full, valid JSON configuration block for <code>claude_desktop_config.json</code>.</p>
+<p>&gt; 3. [ ] <strong>Specify Command &amp; Args:</strong> Ensure the JSON configures the server using <code>pipx</code> as the command and <code>run</code>, <code>google-ads-mcp</code> as the arguments.</p>
+<p>&gt; 4. [ ] <strong>Declare Auth Environment Variables:</strong> Declare environment variables <code>GOOGLE_ADS_DEVELOPER_TOKEN</code>, <code>GOOGLE_ADS_CLIENT_ID</code>, <code>GOOGLE_ADS_CLIENT_SECRET</code>, and <code>GOOGLE_ADS_REFRESH_TOKEN</code> within the configuration.</p>
+<p>Add the server entry to your Claude configuration file.</p>
+<ul>
+<li><strong>File Locations:</strong></li>
+<li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+<li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+<li><strong>Linux:</strong> <code>~/.config/Claude/claude_desktop_config.json</code></li>
+</ul>
+<ul>
+<li><strong>Configuration JSON:</strong></li>
+</ul>
+<p>    <pre><code>    {
+      &quot;mcpServers&quot;: {
+        &quot;google-ads&quot;: {
+          &quot;command&quot;: &quot;pipx&quot;,
+          &quot;args&quot;: [
+            &quot;run&quot;,
+            &quot;google-ads-mcp&quot;
+          ],
+          &quot;env&quot;: {
+            &quot;GOOGLE_ADS_DEVELOPER_TOKEN&quot;: &quot;YOUR_DEVELOPER_TOKEN&quot;,
+            &quot;GOOGLE_ADS_CLIENT_ID&quot;: &quot;YOUR_OAUTH_CLIENT_ID&quot;,
+            &quot;GOOGLE_ADS_CLIENT_SECRET&quot;: &quot;YOUR_OAUTH_CLIENT_SECRET&quot;,
+            &quot;GOOGLE_ADS_REFRESH_TOKEN&quot;: &quot;YOUR_OAUTH_REFRESH_TOKEN&quot;,
+            &quot;GOOGLE_ADS_LOGIN_CUSTOMER_ID&quot;: &quot;YOUR_MANAGER_ACCOUNT_ID_IF_APPLICABLE&quot;
+          }
+        }
+      }
+    }
+    </code></pre></p>
+<p>    <em>(Note: Using <code>pipx run</code> is recommended as it automatically manages the execution path. If you are using the GitHub development version or Application Default Credentials, you can alternatively configure <code>&quot;args&quot;: [&quot;run&quot;, &quot;--spec&quot;, &quot;git+https://github.com/googleads/google-ads-mcp.git&quot;, &quot;google-ads-mcp&quot;]</code> and include <code>&quot;GOOGLE_PROJECT_ID&quot;: &quot;YOUR_PROJECT_ID&quot;</code> in the <code>env</code> block).</em></p>
+<hr>
+<h5>2. Cursor AI Editor</h5>
+<ol>
+<li>Open Cursor and navigate to: <strong>Settings 🡒 Features 🡒 MCP</strong>.</li>
+<li>Click <strong>+ New MCP Server</strong>.</li>
+<li>Configure the following fields:</li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>google-ads</code></li>
+<li><strong>Type:</strong> <code>stdio</code></li>
+<li><strong>Command:</strong> <code>pipx run google-ads-mcp</code></li>
+</ul>
+<ol>
+<li>Under <strong>Environment Variables</strong>, add the required keys and values:</li>
+</ol>
+<ul>
+<li><code>GOOGLE_ADS_DEVELOPER_TOKEN</code></li>
+<li><code>GOOGLE_ADS_CLIENT_ID</code></li>
+<li><code>GOOGLE_ADS_CLIENT_SECRET</code></li>
+<li><code>GOOGLE_ADS_REFRESH_TOKEN</code></li>
+<li><code>GOOGLE_ADS_LOGIN_CUSTOMER_ID</code> <em>(if applicable)</em></li>
+</ul>
+<ol>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<hr>
+<h5>3. Antigravity IDE &amp; CLI Integration</h5>
+<p>When answering questions about connecting the Google Ads MCP server to Antigravity (IDE or CLI), you <strong>MUST</strong> explicitly explain the following architectural and configuration details:</p>
+<ul>
+<li><strong>Mandatory Environment Setup</strong>: Instruct the user to configure and export standard environment variables (such as <code>GOOGLE_ADS_DEVELOPER_TOKEN</code>, <code>GOOGLE_ADS_CLIENT_ID</code>, <code>GOOGLE_ADS_CLIENT_SECRET</code>, <code>GOOGLE_ADS_REFRESH_TOKEN</code>) in their terminal session or IDE environment.</li>
+<li><strong>Server Registration</strong>: Guide the user to register the server inside Antigravity&#39;s settings or by using the standard <code>stdio</code> integration (e.g., configuring the command <code>pipx run google-ads-mcp</code>).</li>
+<li><strong>Automatic Tool Discovery (Core Architecture)</strong>: Explicitly explain that Antigravity utilizes the <strong>Model Context Protocol (MCP)</strong> to discover the server&#39;s tools automatically once the server is connected.</li>
+<li><strong>No Custom Compilation</strong>: Explicitly clarify that because Antigravity natively supports MCP, it <strong>does not</strong> require a separate custom plugin compilation or custom extension loading to use the MCP server.</li>
+</ul>
+<h5>Verifying Activation in Antigravity CLI</h5>
+<ol>
+<li><strong>Configure Environment</strong>: Export all required environment variables for the Google Ads API in your current shell session.</li>
+<li><strong>Start Antigravity CLI</strong>: Launch the CLI:</li>
+</ol>
+<p>    <pre><code>    agy
+    </code></pre></p>
+<ol>
+<li><strong>Verify MCP Status</strong>: Inside the Antigravity CLI prompt, run the <code>/mcp</code> command to list active tools and servers:</li>
+</ol>
+<p>    <pre><code>    /mcp
+    </code></pre></p>
+<ol>
+<li><strong>Confirm Activation</strong>: Verify that <code>google-ads-mcp</code> is listed in the active tools response.</li>
+</ol>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; If <code>google-ads-mcp</code> is missing from the active tools list, exit the CLI, verify your environment variables are correctly set and exported, and restart <code>agy</code>.</p>
+<hr>
+<h4>Step 5.5: Deployment on Google Cloud (Cloud Run)</h4>
+<p>Instead of hosting this MCP server locally, you can host it on Google Cloud Run or on any other cloud-based infrastructure. This is useful if you want to share the server across different agents or run it as a web service.</p>
+<h5>1. Prerequisites</h5>
+<ol>
+<li>A Google Cloud project.</li>
+<li>The <a href="https://cloud.google.com/cli" rel="noopener"><code>gcloud</code> command-line tool</a> installed, authenticated, and with an active project configured:</li>
+</ol>
+<p>   <pre><code>   gcloud config set project YOUR_PROJECT_ID
+   </code></pre></p>
+<h5>2. Build and Push a Docker Image</h5>
+<p>You can use Cloud Build to build and push the image to the Artifact Registry without needing Docker installed locally:</p>
+<ol>
+<li>Create a repository in Artifact Registry:</li>
+</ol>
+<p>   <pre><code>   gcloud artifacts repositories create mcp-servers --repository-format=docker --location=us-central1
+   </code></pre></p>
+<ol>
+<li>Build and submit the image:</li>
+</ol>
+<p>   <pre><code>   gcloud builds submit --tag us-central1-docker.pkg.dev/YOUR_PROJECT_ID/mcp-servers/google-ads-mcp:latest .
+   </code></pre></p>
+<p>   <em>(Note: This step must be performed whenever you want to update the deployed server to the latest version).</em></p>
+<h5>3. Deploy to Google Cloud Run</h5>
+<p>Deploy the container, ensuring you set <code>FASTMCP_HOST=0.0.0.0</code> and all required environment variables:</p>
+<p><pre><code>gcloud run deploy google-ads-mcp \
+  --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/mcp-servers/google-ads-mcp:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars=&quot;GOOGLE_PROJECT_ID=YOUR_PROJECT_ID,GOOGLE_ADS_DEVELOPER_TOKEN=YOUR_DEVELOPER_TOKEN,GOOGLE_ADS_MCP_OAUTH_CLIENT_ID=YOUR_CLIENT_ID,GOOGLE_ADS_MCP_OAUTH_CLIENT_SECRET=YOUR_CLIENT_SECRET,GOOGLE_ADS_MCP_BASE_URL=YOUR_BASE_URL,FASTMCP_HOST=0.0.0.0&quot;</code></pre></p>
+<h5>4. Configure the MCP Client</h5>
+<p>After deployment, update your MCP client configuration (for example, <code>~/.gemini/settings.json</code> or Claude/Cursor config) to use the Cloud Run URL:</p>
+<p><pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;google-ads-mcp&quot;: {
+      &quot;httpUrl&quot;: &quot;https://your-cloud-run-url.a.run.app/mcp&quot;
+    }
+  }
+}</code></pre></p>
+<hr>
+<h4>Step 6: Verify the Integration (Testing)</h4>
+<p>When answering questions about how to verify or test the MCP server integration in</p>
+<p>any AI client (such as Cursor, Claude Desktop, or VS Code), you <strong>MUST</strong> recommend</p>
+<p>performing a baseline verification using the Antigravity CLI first, followed by a</p>
+<p>natural language test query in the client.</p>
+<h5>1. Baseline Verification via Antigravity CLI (Mandatory Agent Action)</h5>
+<p>Regardless of which AI client the user is configuring, always instruct the user to</p>
+<p>verify that <code>google-ads-mcp</code> is active and healthy using the <code>/mcp</code> command inside</p>
+<p>the Antigravity CLI prompt:</p>
+<p><pre><code>agy</code></pre></p>
+<p><pre><code>/mcp</code></pre></p>
+<ul>
+<li><strong>Explain the Why:</strong> Inform the user that verifying via the Antigravity CLI</li>
+</ul>
+<p>    first is the fastest way to isolate core credential, network, or server-start</p>
+<p>    issues. Once <code>google-ads-mcp</code> is confirmed active in the CLI, any remaining</p>
+<p>    issues in Cursor/Claude can be isolated strictly to IDE-specific configuration</p>
+<p>    bugs.</p>
+<h5>2. Run a Test Query in Your AI Assistant</h5>
+<p>In your AI assistant&#39;s chat interface, run one of the following queries. *Be sure</p>
+<p>to replace <code>1234567890</code> with your actual Google Ads Customer ID (without hyphens):*</p>
+<ul>
+<li><em>“Retrieve all campaigns from my Google Ads account <code>1234567890</code>.”</em></li>
+<li><em>“What is the status of the campaigns in Google Ads account <code>1234567890</code>?”</em></li>
+</ul>
+<h5>3. Expected Behavior (Success Criteria)</h5>
+<p>A successful integration will trigger the following flow:</p>
+<ol>
+<li><strong>Tool Discovery</strong>: The AI assistant automatically detects the <code>google-ads-mcp</code></li>
+</ol>
+<p>    server tools.</p>
+<ol>
+<li><strong>Execution</strong>: The assistant formulates the parameters, calls the server via</li>
+</ol>
+<p>    <code>stdio</code> transport, and executes the query.</p>
+<ol>
+<li><strong>Response</strong>: The assistant renders the retrieved campaign data in a clean,</li>
+</ol>
+<p>    readable Markdown table (typically displaying Campaign Name, ID, Status, and</p>
+<p>    Budget).</p>
+<h5>4. Troubleshooting</h5>
+<p>If the assistant fails to retrieve the data or connect to the MCP server, check the following common failure points:</p>
+<ul>
+<li><strong>Authentication/Permission Errors (IDE Environment Gotcha)</strong>: External IDEs (like Cursor or VS Code) often run in isolated environments or background processes that do not inherit shell RC files (e.g., <code>~/.bashrc</code> or <code>~/.zshrc</code>). Ensure your <code>GOOGLE_ADS_DEVELOPER_TOKEN</code>, OAuth client credentials, and <code>GOOGLE_ADS_REFRESH_TOKEN</code> are explicitly configured where the IDE can access them (prefer Method A: setting them directly in the MCP client&#39;s JSON configuration).</li>
+<li><strong>&quot;Tools not found&quot; / Mandatory Client Restart</strong>: MCP servers are only loaded on application startup; changes to configuration files will not take effect dynamically. You <strong>MUST</strong> completely restart your AI tool (Cursor or Claude Desktop) after saving the configuration. Verify that the MCP server is correctly registered in your IDE&#39;s configuration file (e.g., the <code>mcpServers</code> block in Cursor&#39;s <code>project.json</code> or Claude Desktop&#39;s config).</li>
+<li><strong>PATH and Executable Issues (<code>spawn pipx ENOENT</code>)</strong>: If the connection fails or logs show <code>spawn pipx ENOENT</code>, <code>pipx</code> is not in the system PATH of the IDE&#39;s environment. Provide the absolute path to <code>pipx</code> in the &quot;command&quot; field of your config (e.g., <code>/usr/local/bin/pipx</code> or <code>~/.local/bin/pipx</code>).</li>
+<li><strong>Server Crashes on Startup</strong>: If the assistant cannot connect, run the MCP server command directly in your terminal to check for syntax errors, missing dependencies, or node/python path issues.</li>
+</ul>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Verify Connection Status &amp; Logs:</strong></p>
+<p>&gt; *   In <strong>Cursor</strong>, ensure the green dot appears next to the <code>google-ads</code> server in the MCP settings.</p>
+<p>&gt; *   In <strong>Claude</strong>, if the tools do not appear, check the local MCP log file for errors:</p>
+<p>&gt;     <em>   </em>macOS Log Path:* <code>~/Library/Logs/Claude/mcp.log</code></p>
+<p>&gt;     <em>   </em>Windows Log Path:* <code>%APPDATA%\Claude\Logs\mcp.log</code></p>
+<hr>
+<h4>Step 7: Available MCP Tools &amp; Usage Guide</h4>
+<p>Once the Google Ads MCP Server is installed and successfully connected to your AI assistant, the server exposes specific tools that the assistant can discover and invoke autonomously.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Mandatory Agent Directive (Tool Explanation Checklist):</strong></p>
+<p>&gt; When a user asks what tools the Google Ads MCP server provides or how to use them, your response <strong>MUST</strong> systematically include all of the following:</p>
+<p>&gt; 1. [ ] <strong>List All 3 Tools:</strong> Explicitly name <code>list_accessible_customers</code>, <code>get_resource_metadata</code>, and <code>search</code>.</p>
+<p>&gt; 2. [ ] <strong>Define Purpose &amp; Usage:</strong> Explain exactly what each tool does and how/when to invoke it.</p>
+<p>&gt; 3. [ ] <strong>Specify Exact Argument Names:</strong> You <strong>MUST</strong> explicitly name the required arguments for each tool in your explanation. E.g., for <code>search</code>, you <strong>MUST</strong> explicitly state that it requires the exact arguments <code>customer_id</code> (the 10-digit customer ID) and <code>query</code> (the GAQL query string). Do not paraphrase <code>customer_id</code> to &quot;account&quot;.</p>
+<p>&gt; 4. [ ] <strong>State Read-Only Scope:</strong> Explicitly clarify that the server is currently strictly read-only.</p>
+<p>When assisting a user or formulating queries, refer to the following tool definitions and best practices:</p>
+<h5>1. <code>list_accessible_customers</code></h5>
+<ul>
+<li><strong>Purpose:</strong> Returns the list of Google Ads customer IDs and account names that are accessible to the authenticated user.</li>
+<li><strong>How to Use:</strong> Call this tool first when starting a new session or when the target customer ID is unknown. It requires no arguments.</li>
+<li><strong>Example Intent:</strong> <em>&quot;What Google Ads accounts do I have access to?&quot;</em></li>
+</ul>
+<h5>2. <code>get_resource_metadata</code></h5>
+<ul>
+<li><strong>Purpose:</strong> Retrieves detailed structural metadata about a specific Google Ads API resource type (e.g., <code>campaign</code>, <code>ad_group</code>, <code>customer</code>).</li>
+<li><strong>How to Use:</strong> Call this tool to inspect the schema, available fields, metrics, and segments for a resource before constructing a GAQL query.</li>
+<li><strong>Arguments:</strong></li>
+<li><code>resource</code> (string, required): The name of the resource to inspect (e.g., <code>campaign</code>).</li>
+<li><strong>Example Intent:</strong> <em>&quot;What fields and metrics can I query for an ad group?&quot;</em></li>
+</ul>
+<h5>3. <code>search</code></h5>
+<ul>
+<li><strong>Purpose:</strong> Executes a Google Ads Query Language (GAQL) query to fetch resource metrics, attributes, segments, and status.</li>
+<li><strong>How to Use:</strong> Construct a valid GAQL query string based on the resource metadata and execute the search against a specific customer account.</li>
+<li><strong>Arguments:</strong></li>
+<li><code>customer_id</code> (string, required): The 10-digit target Google Ads customer ID (digits only, no hyphens).</li>
+<li><code>query</code> (string, required): A valid GAQL query string (e.g., <code>SELECT campaign.id, campaign.name, campaign.status, metrics.impressions FROM campaign WHERE campaign.status = &#39;ENABLED&#39;</code>).</li>
+<li><strong>Example Intent:</strong> <em>&quot;Get the impressions and status of all enabled campaigns for account 1234567890.&quot;</em></li>
+</ul>
+<p>&gt; [!NOTE]</p>
+<p>&gt; <strong>Read-Only Scope:</strong> The Google Ads MCP Server is currently strictly read-only. It cannot modify bids, pause campaigns, or create new advertising assets.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-quickstart/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-quickstart guides developers through google ads api quickstart: credential setup, choosing from 6 client libraries/rest, configuring environments, and running a &quot;retrieve campaigns&quot; script. troubleshoots common setup errors: user_permission_denied, login_customer_id issues, and developer_token_not_approved. use this skill when: - the user asks how to get started with the google ads api. - the user needs to set up google ads credentials or developer tokens. - the user wants to write a quickstart/example script for google ads. - the user encounters errors like user_permission_denied or developer_token_not_approved. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-quickstart</span>
+    <span class="r-desc">Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/ads/google-ads-api-mcp-setup</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/ads/google-ads-api-mcp-setup" aria-label="Copy install google-ads-api-mcp-setup">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>ads</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/ads/google-ads-api-mcp-setup</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/ads/google-ads-api-mcp-setup/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

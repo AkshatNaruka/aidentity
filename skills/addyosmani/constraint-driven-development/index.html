@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>constraint-driven-development — Aidentity</title>
+<meta name="description" content="Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/constraint-driven-development/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="constraint-driven-development — Aidentity">
+<meta property="og:description" content="Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/constraint-driven-development/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"constraint-driven-development","description":"Establishes a project's quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says \"set up constraints\" or \"define our standards\", when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don't know what number to pick, or when an agent writes more code than anyone will read.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/constraint-driven-development/","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>constraint-driven-development
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">addyosmani/agent-skills · MIT</p>
+      <h1>constraint-driven-development</h1>
+      <p class="summary">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Constraint-Driven Development</h3>
+<h4>Overview</h4>
+<p>Other skills in this pack describe what good looks like. <code>code-review-and-quality</code> gives you five axes. <code>test-driven-development</code> gives you a cycle. <code>security-and-hardening</code> gives you a threat list. All of that lives in prose the agent reads and may or may not follow, and none of it survives the end of the session.</p>
+<p>This skill produces something different: a written record of <strong>this project&#39;s</strong> bar, with numbers, that outlives the conversation and can be checked mechanically.</p>
+<p>The reason matters. When you wrote the code, reading it told you whether it was any good. An agent writes more in an afternoon than you will read that week, so the judgement moves out of your head and into checks that run around the loop. Those checks need to exist, they need numbers you actually chose, and they need to fire close enough to the work that the agent fixes its own output.</p>
+<p>Spec-driven development says what to build. Test-driven development proves it works. Constraint-driven development defines what &quot;good enough to ship&quot; means, before anyone argues about it in a pull request.</p>
+<h4>When to Use</h4>
+<p>Apply this skill when:</p>
+<ul>
+<li>Starting a project or a significant feature and no quality bar is written down</li>
+<li>The user asks to &quot;set up constraints&quot;, &quot;add quality gates&quot;, &quot;define our standards&quot;, or &quot;stop the agent shipping junk&quot;</li>
+<li>An agent is producing volume nobody is reading line by line</li>
+<li>CI has checks but nobody can say which ones block a merge and which ones are decoration</li>
+<li>Coverage, performance, or accessibility numbers get argued about per-PR instead of decided once</li>
+<li>You&#39;re about to run <code>/build auto</code> or any autonomous loop, and the only thing standing between it and main is a test suite the agent also wrote</li>
+</ul>
+<p><strong>When NOT to use:</strong></p>
+<ul>
+<li>The project already has a <code>CONSTRAINTS.md</code> and the user isn&#39;t changing it — read it and follow it instead</li>
+<li>One-off scripts, spikes, throwaway prototypes</li>
+<li>The user wants a code review right now (<code>code-review-and-quality</code>) or a CI pipeline built (<code>ci-cd-and-automation</code>)</li>
+<li>Pre-product-market-fit code with a two-week expected lifetime — the floor below is still worth it, the rest isn&#39;t</li>
+</ul>
+<h4>Loading Constraints</h4>
+<p>The interview needs a live user. <strong>Don&#39;t run it in non-interactive contexts</strong> (CI, <code>/loop</code>, autonomous runs). If constraints are missing and you&#39;re in one of those, apply the Floor below, note that you did, and flag the rest for a human.</p>
+<h4>The Process</h4>
+<h5>Step 1: Detect before you ask</h5>
+<p>Never ask what you can read. Before the first question, gather:</p>
+<table><thead><tr><th>What</th><th>Where to look</th></tr></thead><tbody>
+<tr><td>Language and stack</td><td><code>package.json</code>, <code>pyproject.toml</code>, <code>go.mod</code>, <code>Cargo.toml</code></td></tr>
+<tr><td>Test runner</td><td>dev dependencies, <code>test</code> script, existing test files</td></tr>
+<tr><td>Existing linters</td><td><code>eslint.config.*</code>, <code>biome.json</code>, <code>.ruff.toml</code></td></tr>
+<tr><td>Coverage today</td><td><code>coverage/</code> output, or run the suite once</td></tr>
+<tr><td>CI</td><td><code>.github/workflows/</code>, <code>.gitlab-ci.yml</code></td></tr>
+<tr><td>Agent harness</td><td><code>.claude/</code>, <code>.codex/</code>, <code>AGENTS.md</code></td></tr>
+</tbody></table>
+<p>Report what you found in two lines, then ask only what&#39;s left.</p>
+<h5>Step 2: Four questions, each with a default</h5>
+<p>Follow the one-question-at-a-time discipline from <code>interview-me</code>, with one change: every question here has a default, so &quot;I don&#39;t know&quot; is a complete answer that still produces a working config.</p>
+<p><pre><code>Q1: Beyond the floor, which of these do you want enforced?
+    (a) Test coverage on new code
+    (b) Security scanning
+    (c) Performance budgets
+    (d) Accessibility
+    (e) Architecture boundaries
+GUESS: (a) and (b) — you have a test runner already and you&#39;re handling user input.
+DEFAULT if unsure: (a) and (b).
+Say what each pick costs: (c) and (d) need a running URL, (e) needs a rules file written.</code></pre></p>
+<p><pre><code>Q2: When a check fails while the agent is mid-task, should it block or warn?
+GUESS: Block. You&#39;re running agents unattended and a warning nobody reads is a warning.
+DEFAULT if unsure: Block on the floor, warn on everything else for the first two weeks.</code></pre></p>
+<p><pre><code>Q3: Do you have target numbers in mind, or should I measure where you are today and hold that line?
+GUESS: Measure. Most teams don&#39;t have a number, and an invented one gets ignored.
+DEFAULT if unsure: Measure and hold. See &quot;Ratchets&quot; below.</code></pre></p>
+<p><pre><code>Q4: What&#39;s the slowest check you&#39;ll tolerate before the agent hands work back?
+GUESS: About 90 seconds. Longer and you&#39;ll stop running it.
+DEFAULT if unsure: 90 seconds at task end, unlimited in CI.</code></pre></p>
+<p>Stop at four. A twelve-question intake produces a config nobody understands and a user who regrets starting.</p>
+<h5>Step 3: Write CONSTRAINTS.md</h5>
+<p>One file at the repo root. Any agent on any harness can read it, and a change to it shows up in review where it belongs.</p>
+<p><pre><code># Constraints
+
+Last reviewed: 2026-08-08 by @addy
+
+## Floor (always enforced, no setup required)
+
+- No new suppression comments: `@ts-ignore`, `eslint-disable`, `# noqa`, `# type: ignore`
+- No unimplemented stubs: `throw new Error(&quot;Not implemented&quot;)`, empty `catch {}`
+- No skipped or deleted tests without a reason in the commit message
+- No secrets in source
+- This file does not get weakened to make a change pass
+
+## Enforced with numbers
+
+| Dimension | Rule | Checked by | Runs at |
+|-----------|------|-----------|---------|
+| Types | Zero type errors | `tsc --noEmit` | every edit |
+| Lint | Zero errors from our config | `biome check` | every edit |
+| Secrets | No secrets in source | `gitleaks detect --redact` | every edit |
+| Coverage | Changed lines ≥ 80% covered | `vitest run --coverage` + git diff | task end, CI |
+| Security: code | No high findings | `semgrep scan --config p/default` | CI |
+| Security: deps | Nothing at high or above | `osv-scanner scan source -r .` | CI |
+| Accessibility | Zero critical or serious | `axe $PREVIEW_URL --tags wcag2a,wcag2aa,wcag21aa` | preview deploy |
+| Performance | LCP ≤ 2500ms, CLS ≤ 0.1 | `lighthouse $PREVIEW_URL --output=json` | preview deploy |
+
+Every row names the command that produces the verdict. A dimension with a
+number and no command in this column is an aspiration, not a constraint.
+
+## Measured, not yet enforced
+
+| Metric | Today | Direction |
+|--------|-------|-----------|
+| Project coverage | 62.4% | must not fall |
+| Bundle size (main) | 184 kB | must not grow |
+
+## Exceptions
+
+| ID | Rule | Path | Reason | Owner | Expires |
+|----|------|------|--------|-------|---------|
+| W1 | `no-explicit-any` | `src/legacy/**` | Rewrite tracked in ENG-441 | @addy | 2026-11-01 |</code></pre></p>
+<p>Then add one line to <code>AGENTS.md</code> and <code>CLAUDE.md</code>: <code>Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.</code></p>
+<h5>Step 4: Install what each dimension needs</h5>
+<p>Picking a dimension means installing something. Don&#39;t leave the user with a number and no mechanism, and don&#39;t invent your own checker when a de facto one exists — these tools are listed because their rule formats and thresholds are what everything else in the ecosystem targets, so the team&#39;s existing config keeps working.</p>
+<table><thead><tr><th>Dimension</th><th>Tool</th><th>Install</th><th>Run</th><th>Gate on</th></tr></thead><tbody>
+<tr><td>Types (TS)</td><td>tsc</td><td>already there</td><td><code>tsc --noEmit</code></td><td>any error</td></tr>
+<tr><td>Types (Python)</td><td>mypy</td><td><code>pip install mypy</code></td><td><code>mypy .</code></td><td>any error</td></tr>
+<tr><td>Lint</td><td>your existing config</td><td>already there</td><td><code>eslint .</code> / <code>biome check</code> / <code>ruff check</code></td><td>any error</td></tr>
+<tr><td>Coverage (JS)</td><td>your test runner</td><td>already there</td><td><code>vitest run --coverage</code> (or <code>jest --coverage</code>)</td><td>coverage of changed lines</td></tr>
+<tr><td>Coverage (Python)</td><td>pytest-cov</td><td><code>pip install pytest-cov</code></td><td><code>pytest --cov --cov-report=lcov</code></td><td>same</td></tr>
+<tr><td>Security: code</td><td>Semgrep</td><td><code>pipx install semgrep</code></td><td><code>semgrep scan --config p/default --config p/owasp-top-ten</code></td><td>any high finding</td></tr>
+<tr><td>Security: secrets</td><td>gitleaks</td><td><code>brew install gitleaks</code></td><td><code>gitleaks detect --redact --no-banner</code></td><td>any finding</td></tr>
+<tr><td>Security: dependencies</td><td>osv-scanner</td><td><code>brew install osv-scanner</code></td><td><code>osv-scanner scan source -r .</code></td><td>high or above</td></tr>
+<tr><td>Performance: page</td><td>Lighthouse</td><td><code>npm i -D lighthouse</code></td><td><code>lighthouse $URL --output=json --quiet</code></td><td>LCP, CLS, performance score</td></tr>
+<tr><td>Performance: bundle</td><td>size-limit</td><td><code>npm i -D size-limit</code></td><td><code>size-limit --json</code></td><td>per-entry byte budget</td></tr>
+<tr><td>Accessibility</td><td>axe-core</td><td><code>npm i -D @axe-core/cli</code></td><td><code>axe $URL --tags wcag2a,wcag2aa,wcag21aa</code></td><td>zero critical or serious</td></tr>
+<tr><td>Architecture</td><td>dependency-cruiser</td><td><code>npm i -D dependency-cruiser</code></td><td><code>depcruise --validate src</code></td><td>any violation</td></tr>
+<tr><td>Assertion quality</td><td>Stryker</td><td><code>npm i -D @stryker-mutator/core</code></td><td><code>stryker run --mutate &lt;changed files&gt;</code></td><td>mutation score</td></tr>
+</tbody></table>
+<p>Five things that will bite you if you skip them:</p>
+<ol>
+<li><strong><code>--redact</code> on gitleaks is not optional.</strong> Without it the matched secret lands in the agent&#39;s transcript, which is how a leaked key ends up in a log, a summary, or a commit message. Report the rule and the location, never the value.</li>
+<li><strong>Lighthouse and axe need a URL.</strong> They only work against a running app, so they belong in the runtime stage against a preview deploy or a local server you start first. If the project has no URL to hit — a CLI, a library, a desktop app — say so and drop the dimension rather than inventing a check that can&#39;t run.</li>
+<li><strong>Scope the expensive ones to the diff.</strong> <code>stryker run --mutate</code> on the whole repo takes hours and gets turned off; on the files a change touched it takes under a minute. Same for Semgrep, which takes a path list.</li>
+<li><strong>Coverage needs no second test run.</strong> Read the lcov your suite already writes and intersect it with <code>git diff</code>. Running the suite twice to get a number is the fastest way to make people hate this.</li>
+<li><strong>Semgrep&#39;s registry rules are free to run; check the licence before redistributing them.</strong> <code>opengrep</code> is a drop-in fork with the same rule format and JSON output if that matters to your legal team.</li>
+</ol>
+<p>Add each one to the project&#39;s own script so it&#39;s reproducible without an agent:</p>
+<p><pre><code>{
+  &quot;scripts&quot;: {
+    &quot;check:fast&quot;: &quot;tsc --noEmit &amp;&amp; eslint . &amp;&amp; gitleaks detect --redact --no-banner&quot;,
+    &quot;check:task&quot;: &quot;npm run check:fast &amp;&amp; vitest run --coverage&quot;,
+    &quot;check:full&quot;: &quot;npm run check:task &amp;&amp; semgrep scan --config p/default &amp;&amp; osv-scanner scan source -r .&quot;
+  }
+}</code></pre></p>
+<p>That mapping matters more than the tools. <code>check:fast</code> is what runs after an edit, <code>check:task</code> when the agent thinks it&#39;s done, <code>check:full</code> in CI.</p>
+<p>The commands now live in two places — the <code>Checked by</code> column in <code>CONSTRAINTS.md</code> and these scripts. <code>CONSTRAINTS.md</code> is the canonical source: it carries the reason alongside each command and it shows up in review. The scripts are convenience wrappers that must mirror it, not a second source of truth; if they drift, the file wins.</p>
+<h5>Step 5: Wire it to the lifecycle</h5>
+<p>The single biggest mistake is running everything everywhere. A check that stalls the agent gets switched off, and a gate people switched off is worse than no gate, because the bar still looks like it exists.</p>
+<table><thead><tr><th>Phase</th><th>Command</th><th>What runs</th><th>Budget</th></tr></thead><tbody>
+<tr><td>BUILD</td><td><code>/build</code></td><td>Types, lint, secrets, the floor</td><td>under 5s, changed file only</td></tr>
+<tr><td>VERIFY</td><td><code>/test</code></td><td>Related tests, coverage on changed lines</td><td>under 90s</td></tr>
+<tr><td>REVIEW</td><td><code>/review</code></td><td>Everything, plus the guards below</td><td>minutes</td></tr>
+<tr><td>SHIP</td><td><code>/ship</code></td><td>Direction checks, no regressions</td><td>CI</td></tr>
+</tbody></table>
+<p>Two rules that keep this tolerable:</p>
+<ol>
+<li><strong>Scope to the diff.</strong> Check the lines this change touched, not the whole repo. Coverage of changed lines is a number the agent can move; project coverage is one it inherited.</li>
+<li><strong>Cost decides placement.</strong> Anything over a few seconds moves out of the edit loop. Mutation testing on a whole repo takes hours; on the files a change touched it takes under a minute, which is the difference between a check people run and one they don&#39;t.</li>
+</ol>
+<h5>Step 6: Guard the bar itself</h5>
+<p>Someone will point out that if the agent writes the code and the checks, the checks prove nothing. Half right, and worth engineering around.</p>
+<p>Agents don&#39;t craft clever loopholes. They hit a red check and take the cheapest road to green. Watch for these five moves in the diff, at review time:</p>
+<ol>
+<li><strong>The threshold moved.</strong> A budget lowered, a severity dropped, a check removed from the fast stage. Compare <code>CONSTRAINTS.md</code> against its state at the branch point.</li>
+<li><strong>A test got easier.</strong> <code>.skip</code> added, a test file deleted, assertions pulled out of tests that stayed.</li>
+<li><strong>A checker got silenced.</strong> New <code>@ts-ignore</code> or <code>eslint-disable</code>. Four suppressions deserve special attention because they switch off a check you&#39;re relying on: <code>istanbul ignore</code> drops code from coverage instead of testing it, <code>Stryker disable</code> hides a surviving mutant, <code>nosemgrep</code> and <code>gitleaks:allow</code> do it for security findings.</li>
+<li><strong>Work is unfinished.</strong> A stub that throws, an empty <code>catch</code> turning a failure into silence, a <code>TODO</code> standing where the implementation should be.</li>
+<li><strong>An exception appeared.</strong> A new row in the Exceptions table nobody discussed.</li>
+</ol>
+<p>None of this needs tooling beyond <code>git diff</code>. Tightening the bar should be silent; loosening it should be loud.</p>
+<p>Unlike the numbered dimensions, the floor has no de facto tool of its own, so an agent asked to enforce it tends to write a checker from scratch, and two agents write two different ones. A reference implementation of these five checks ships with this skill in [references/floor-guard.md](references/floor-guard.md) (diff-scoped, exit <code>0</code>/<code>1</code>/<code>2</code>, patterns adaptable per ecosystem). Adapt that rather than reinventing it, for the same reason every dimension names a de facto tool: so the mechanism is the same across runs and stacks.</p>
+<p><strong>Not all checks are equally circular.</strong> Rank them by one question: can the agent make this pass by writing code that doesn&#39;t work?</p>
+<ul>
+<li><strong>External</strong> — axe-core encodes WCAG, <code>osv-scanner</code> reads a vulnerability database, Lighthouse measures a real browser. The agent can&#39;t argue with these.</li>
+<li><strong>Project</strong> — your lint rules, your layer boundaries. A human owns the file.</li>
+<li><strong>Suite</strong> — your own tests. Most useful, and the only genuinely circular one.</li>
+</ul>
+<p>A bar made entirely of the third kind is worth less than one with an outside opinion in it. Check that at least one external constraint is present.</p>
+<h5>Step 7: Ratchets, when you don&#39;t have a number</h5>
+<p>Set 80% coverage on a codebase at 62% and you get a red build forever, then a team that learns to ignore red builds.</p>
+<p>The alternative asks for no decision: record where you are, then refuse to get worse. Put it in the &quot;Measured, not yet enforced&quot; table with today&#39;s number and a direction. Every check compares against the recorded value, not an aspiration. When a number improves, update it; when it drops, that&#39;s the finding.</p>
+<p>This also answers a fair objection to training. Models are rewarded for passing tests, which you can evaluate in seconds. Architectural rot shows up over months and never reaches the weights. A ratchet is the missing penalty, written down where the build can see it.</p>
+<h4>Sane Defaults</h4>
+<p>When the user has no opinion, use these. They&#39;re chosen to be met by most codebases on day one.</p>
+<table><thead><tr><th>Constraint</th><th>Default</th><th>Why this number</th></tr></thead><tbody>
+<tr><td>Coverage of changed lines</td><td>≥ 80%</td><td>High enough to force a test, low enough to allow a config line</td></tr>
+<tr><td>Project coverage</td><td>today&#39;s value, must not fall</td><td>No argument needed to adopt</td></tr>
+<tr><td>Mutation score (if used)</td><td>≥ 60% to start</td><td>Typical for a suite never mutated before; 80% is mature</td></tr>
+<tr><td>Dependency vulnerabilities</td><td>nothing at high or above</td><td>Below that is mostly noise</td></tr>
+<tr><td>LCP</td><td>≤ 2500 ms</td><td>Core Web Vitals &quot;good&quot; threshold</td></tr>
+<tr><td>CLS</td><td>≤ 0.1</td><td>Same</td></tr>
+<tr><td>Accessibility</td><td>zero critical or serious axe violations</td><td>Moderate and minor are often debatable</td></tr>
+<tr><td>Exception lifetime</td><td>90 days</td><td>Long enough to plan the fix, short enough to remember</td></tr>
+<tr><td>Ratchet tolerance</td><td>0.5%</td><td>Absorbs drift when an unrelated file moves the number</td></tr>
+</tbody></table>
+<p>State the number and the reason together. A threshold without a rationale gets deleted by the next person who hits it.</p>
+<h4>Escalation Path</h4>
+<p>Constraints work at three levels of teeth. Start at the first.</p>
+<ol>
+<li><strong>Written only.</strong> <code>CONSTRAINTS.md</code> exists and agents read it. Costs nothing, catches the honest mistakes, relies on the agent complying.</li>
+<li><strong>Scripted.</strong> An <code>npm run check</code> (or <code>make check</code>) that runs the fast checks, wired into your agent&#39;s post-edit hook and your CI. Deterministic, no new dependency.</li>
+<li><strong>Tool-backed.</strong> A dedicated runner that handles diff scoping, budgets, ratchets, and the guard checks. Use when the config outgrows a shell script. The floor-guard reference in [references/floor-guard.md](references/floor-guard.md) is the starting point for the guard-checks half of this.</li>
+</ol>
+<p>Most projects should stop at 2. Move to 3 when you&#39;re maintaining more than about thirty lines of check-running shell.</p>
+<p><strong>A first run can be floor-only.</strong> The floor guard is diff-only and needs no installs, so you can enforce the floor on day one and add numbered dimensions as you install each tool, rather than standing up every checker before the first commit is protected. Security tools that install machine-wide (gitleaks, osv-scanner) can also run CI-only if you&#39;d rather keep laptops clean; declare where each dimension runs in the <code>Runs at</code> column.</p>
+<h4>Common Rationalizations</h4>
+<table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
+<tr><td>&quot;We&#39;ll add constraints once the code settles&quot;</td><td>Code settles around whatever was allowed while it was moving</td></tr>
+<tr><td>&quot;The tests are the constraints&quot;</td><td>Tests you wrote prove you agree with yourself; they say nothing about coverage of new code, dependency risk, or bundle growth</td></tr>
+<tr><td>&quot;We can&#39;t hit 80% coverage&quot;</td><td>Then don&#39;t set 80%. Set today&#39;s number and hold it</td></tr>
+<tr><td>&quot;This will slow the agent down&quot;</td><td>Only if you put slow checks in the fast loop. That&#39;s a placement error, not an argument against constraints</td></tr>
+<tr><td>&quot;I&#39;ll remember what our standards are&quot;</td><td>The agent won&#39;t, and it&#39;s writing most of the code</td></tr>
+<tr><td>&quot;Constraints will block us shipping&quot;</td><td>An exception with an owner and a date unblocks you. Deleting the constraint unblocks everyone forever</td></tr>
+</tbody></table>
+<h4>Red Flags</h4>
+<p>Stop and reconsider if you notice:</p>
+<ul>
+<li>The interview ran past four questions, or produced a config the user can&#39;t explain</li>
+<li>A budget was set that the codebase fails today, with no plan to reach it</li>
+<li>A dimension was written into CONSTRAINTS.md with a number but no tool behind it</li>
+<li>A checker was hand-rolled when a de facto one exists, so the team&#39;s existing config is ignored</li>
+<li>Every constraint is checked by the project&#39;s own test suite, with no external opinion</li>
+<li><code>CONSTRAINTS.md</code> changed in the same commit as the feature that was failing</li>
+<li>An exception has no owner, or an expiry more than a year out</li>
+<li>The agent proposed relaxing a threshold instead of fixing the code</li>
+<li>Slow checks landed in the edit loop and someone has started passing <code>--no-verify</code></li>
+<li>Nobody has opened <code>CONSTRAINTS.md</code> since it was written</li>
+</ul>
+<h4>Verification</h4>
+<p>The skill was applied correctly when:</p>
+<ul>
+<li>[ ] <code>CONSTRAINTS.md</code> exists, and every number in it has a stated reason</li>
+<li>[ ] The floor is enforced and passes on the current codebase without changes</li>
+<li>[ ] Every dimension the user picked has a tool installed and a command that runs today</li>
+<li>[ ] Each constraint says where it runs, and the fast stage stays under a few seconds</li>
+<li>[ ] At least one constraint is external (not judged by this project&#39;s own tests)</li>
+<li>[ ] Measured-only metrics record today&#39;s value and a direction</li>
+<li>[ ] Exceptions have an owner and an expiry date</li>
+<li>[ ] <code>AGENTS.md</code> or <code>CLAUDE.md</code> points at the file</li>
+<li>[ ] A trial run on the current branch produces no failures the user disagrees with</li>
+</ul>
+<h4>See Also</h4>
+<ul>
+<li><code>interview-me</code> — the one-question-at-a-time discipline this skill&#39;s intake borrows</li>
+<li><code>code-review-and-quality</code> — how to review; this skill decides what the review enforces</li>
+<li><code>ci-cd-and-automation</code> — building the pipeline these constraints run in</li>
+<li><code>test-driven-development</code> — the suite that coverage and mutation constraints measure</li>
+<li><code>security-and-hardening</code> — what the security dimension should contain</li>
+<li><code>performance-optimization</code> — where the performance numbers come from</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Addy Osmani</strong> in
+        <a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add addyosmani/constraint-driven-development</code>
+  <button type="button" data-copy="npx aidentity add addyosmani/constraint-driven-development" aria-label="Copy install constraint-driven-development">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/addyosmani/agent-skills" rel="noopener">addyosmani/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Addy Osmani</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">addyosmani/constraint-driven-development</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/constraint-driven-development/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

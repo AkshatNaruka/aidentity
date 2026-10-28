@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud-build-basics — Aidentity</title>
+<meta name="description" content="Teaches the fundamentals of Google Cloud Build (GCB). Covers core concepts, API enablement, console navigation to the Build History page, and the end-to-end workflow for creating and manually running a basic build trigger. Do not use for managing private pools or complex pipeline architectures.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-build-basics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="cloud-build-basics — Aidentity">
+<meta property="og:description" content="Teaches the fundamentals of Google Cloud Build (GCB). Covers core concepts, API enablement, console navigation to the Build History page, and the end-to-end workflow for creating and manually running a basic build trigger. Do not use for managing private pools or complex pipeline architectures.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-build-basics/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cloud-build-basics","description":"Teaches the fundamentals of Google Cloud Build (GCB). Covers core concepts, API enablement, console navigation to the Build History page, and the end-to-end workflow for creating and manually running a basic build trigger. Do not use for managing private pools or complex pipeline architectures.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/cloud-build-basics/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>cloud-build-basics
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>cloud-build-basics</h1>
+      <p class="summary">Teaches the fundamentals of Google Cloud Build (GCB). Covers core concepts, API enablement, console navigation to the Build History page, and the end-to-end workflow for creating and manually running a basic build trigger. Do not use for managing private pools or complex pipeline architectures.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Cloud Build Basics</h3>
+<h4>Prerequisites</h4>
+<p>Before starting, ensure the following prerequisites are met:</p>
+<ol>
+<li><strong>Google Cloud SDK</strong>: Ensure the <a href="https://cloud.google.com/sdk/docs/install" rel="noopener">Google Cloud SDK</a> is installed and configured.</li>
+<li><strong>Authentication</strong>: Authenticate the gcloud CLI:</li>
+</ol>
+<p>    <pre><code>    gcloud auth login
+    gcloud auth application-default login
+    </code></pre></p>
+<ol>
+<li><strong>Project ID</strong>: Know the target Google Cloud Project ID. Set the context:</li>
+</ol>
+<p>    <pre><code>    gcloud config set project &lt;PROJECT_ID&gt;
+    </code></pre></p>
+<ol>
+<li><strong>Enable Cloud Build API</strong>: The Cloud Build API must be enabled for the project.</li>
+</ol>
+<p>    <pre><code>    gcloud services enable cloudbuild.googleapis.com
+    </code></pre></p>
+<ol>
+<li><strong>Permissions</strong>: Ensure the user or service account has the necessary permissions, such as <code>roles/cloudbuild.builds.editor</code> and <code>roles/serviceusage.serviceUsageAdmin</code> (to enable the API).</li>
+</ol>
+<h4>Core Concepts</h4>
+<p>Google Cloud Build (GCB) is a serverless platform that executes your builds on Google Cloud. It translates your source code into deployable artifacts, such as Docker containers or Java archives.</p>
+<table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong><code>cloudbuild.yaml</code></strong></td><td>The required configuration file that defines the build steps. It is written in YAML or JSON.</td></tr>
+<tr><td><strong>Build Steps</strong></td><td>A sequence of actions (steps) GCB performs. Each step runs a command inside a specific Docker container (the builder). Common builders include <code>gcr.io/cloud-builders/gcloud</code>, <code>gcr.io/cloud-builders/docker</code>, and custom containers.</td></tr>
+<tr><td><strong>Artifacts</strong></td><td>The output of the build, typically a container image pushed to Google Container Registry (GCR) or Artifact Registry (AR), or other deployable files.</td></tr>
+<tr><td><strong>Triggers</strong></td><td>Automation rules that invoke a build in response to an event, such as a push to a Git repository, a Pub/Sub message, or a manual request.</td></tr>
+</tbody></table>
+<h4>Navigation: Viewing Build History</h4>
+<p>The Cloud Build Build History page is the central place to monitor the status of past and ongoing builds.</p>
+<ol>
+<li><strong>Open the Cloud Console</strong>: Navigate to the Google Cloud Console.</li>
+<li><strong>Go to Cloud Build</strong>: Use the search bar or the navigation menu to find <strong>Cloud Build</strong>.</li>
+<li><strong>Select Build History</strong>: In the left navigation pane, select <strong>History</strong> (or use the direct URL: <code>https://console.cloud.google.com/cloud-build/builds</code>).</li>
+<li><strong>Review Builds</strong>:</li>
+</ol>
+<ul>
+<li><strong>Status</strong>: Check the status column (<code>SUCCESS</code>, <code>FAILURE</code>, <code>WORKING</code>, <code>QUEUED</code>).</li>
+<li><strong>Region</strong>: Use the region filter at the top to view builds that ran in a specific region (important for regional worker pools).</li>
+<li><strong>Logs</strong>: Click on a specific Build ID to view the detailed logs, execution steps, and build summary. This is crucial for debugging failed builds.</li>
+</ul>
+<p>&gt; [!NOTE]</p>
+<p>&gt; If this is your first time visiting the page, you might see the &quot;zero-state&quot; experience, which offers options to run a sample build or create your first trigger (as noted in the [<code>cb-list-build-zero-state</code>](references/cb-list-build-zero-state.md) skill). Note that region settings for triggers and builds are immutable after creation and must be chosen deliberately.</p>
+<h4>Creating a Basic Automated Trigger</h4>
+<p>This process defines an automation rule to run a build whenever code is pushed to a specified Git branch.</p>
+<h5>Step 1: Start Trigger Creation</h5>
+<ol>
+<li>Navigate to the <strong>Cloud Build Triggers</strong> page (<code>https://console.cloud.google.com/cloud-build/triggers</code>).</li>
+<li>Click <strong>Create trigger</strong>.</li>
+</ol>
+<h5>Step 2: Configure Trigger Settings</h5>
+<ol>
+<li><strong>Name</strong>: Provide a unique, descriptive name (e.g., <code>github-main-branch-build</code>).</li>
+<li><strong>Region</strong>: Select the region where the trigger configuration will be stored (e.g., <code>global</code> or a specific regional endpoint). <strong>Note: Trigger and build region settings are immutable after creation and must be chosen deliberately.</strong></li>
+<li><strong>Event</strong>: Select the event type. For automated CI/CD, select <strong>Push to a branch</strong>.</li>
+<li><strong>Source</strong>: Select the repository source:</li>
+</ol>
+<ul>
+<li><strong>Repository</strong>: Connect your source repository (GitHub, Bitbucket, Cloud Source Repositories, etc.). If needed, authorize the connection.</li>
+<li><strong>Repository Name</strong>: Select the specific repository you want to link.</li>
+</ul>
+<ol>
+<li><strong>Branch</strong>: Enter the branch pattern (e.g., <code>^main$</code> or <code>^develop</code>).</li>
+</ol>
+<h5>Step 3: Configure Build Settings</h5>
+<ol>
+<li><strong>Configuration</strong>: Select <strong>Cloud Build configuration file (yaml or json)</strong>.</li>
+<li><strong>Location</strong>: Keep the default <strong>Repository</strong> and specify the path to your build configuration file (e.g., <code>cloudbuild.yaml</code>).</li>
+</ol>
+<ul>
+<li><em>Alternative</em>: For very simple builds, you can choose <strong>Inline</strong> to paste the YAML configuration directly into the trigger.</li>
+</ul>
+<ol>
+<li><strong>(Optional) Service Account</strong>: For production environments, select a dedicated service account with limited permissions to enforce the principle of least privilege.</li>
+</ol>
+<h5>Step 4: Save and Test</h5>
+<ol>
+<li>Click <strong>Create</strong>. The trigger is now active and will run automatically on the next matching Git push.</li>
+</ol>
+<p>&gt; [!TIP]</p>
+<p>&gt; The <code>cb-create-trigger</code> skill provides detailed <code>gcloud</code> commands for creating triggers across all types (GitHub, Pub/Sub, Webhook) and configurations (inline, Dockerfile, YAML). Use that skill for CLI automation.</p>
+<h4>Running an Existing Trigger Manually</h4>
+<p>Sometimes you need to run a trigger on demand, outside of its normal automation flow (e.g., to rebuild an old commit or test a new substitution).</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Substitution Immutability</strong>: You can only override values for substitution variables that are <strong>already defined in the trigger configuration</strong>. You cannot introduce new substitution variable keys at runtime.</p>
+<h5>Option A: Via the Cloud Console</h5>
+<ol>
+<li>Navigate to the <strong>Cloud Build Triggers</strong> page (<code>https://console.cloud.google.com/cloud-build/triggers</code>).</li>
+<li>Locate the trigger you wish to run.</li>
+<li>Click the vertical ellipsis (⋮) next to the trigger and select <strong>Run</strong>.</li>
+<li>A dialog will appear, allowing you to specify:</li>
+</ol>
+<ul>
+<li><strong>Source branch/tag</strong>: Choose the specific Git reference to build from.</li>
+<li><strong>Substitution Variables</strong>: Override any existing substitution variables (e.g., set <code>_VERSION</code> to a new value).</li>
+</ul>
+<ol>
+<li>Click <strong>Run trigger</strong>. The build will start immediately, and you can monitor its status on the <strong>History</strong> page.</li>
+</ol>
+<h5>Option B: Via the gcloud CLI</h5>
+<p>Use the <code>gcloud builds triggers run</code> command to invoke the trigger and optionally override parameters.</p>
+<p><pre><code># Run the trigger against the &#39;main&#39; branch
+gcloud builds triggers run &lt;TRIGGER_NAME&gt; \
+    --region=&lt;REGION&gt; \
+    --branch=main
+
+# Run the trigger and override a substitution variable
+gcloud builds triggers run &lt;TRIGGER_NAME&gt; \
+    --region=&lt;REGION&gt; \
+    --branch=main \
+    --substitutions=_IMAGE_TAG=&quot;20231027-manual&quot;
+
+# Monitor the initiated build
+# Note: The run command outputs the build ID. Use it to check status:
+# gcloud builds log &lt;BUILD_ID&gt; --region=&lt;REGION&gt;</code></pre></p>
+<p>&gt; [!NOTE]</p>
+<p>&gt; The <code>cb-run-trigger</code> skill provides more complex invocation examples, including running against a specific commit SHA or using tags.</p>
+<h4>Related Skills</h4>
+<ul>
+<li>[<code>cb-create-trigger</code>](references/cb-create-trigger.md): Detailed CLI-focused instructions for creating all trigger types.</li>
+<li>[<code>cb-list-build-zero-state</code>](references/cb-list-build-zero-state.md): Advanced management of the Cloud Build dashboard and onboarding zero state.</li>
+<li>[<code>cb-run-trigger</code>](references/cb-run-trigger.md): Comprehensive guide to manually running triggers using various <code>gcloud</code> options.</li>
+</ul>
+<h4>External Resources &amp; Documentation</h4>
+<ul>
+<li><a href="https://cloud.google.com/build/docs" rel="noopener">Google Cloud Build Documentation</a></li>
+<li><a href="https://cloud.google.com/build/docs/build-config-file-schema" rel="noopener">Cloud Build Configuration File Schema</a></li>
+<li><a href="https://cloud.google.com/build/docs/automating-builds/create-manage-triggers" rel="noopener">Automating Builds with Triggers</a></li>
+<li><a href="https://cloud.google.com/sdk/gcloud/reference/builds" rel="noopener">gcloud CLI builds Reference</a></li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/cloud-build-basics</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/cloud-build-basics" aria-label="Copy install cloud-build-basics">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/cloud-build-basics</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/cloud-build-basics/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

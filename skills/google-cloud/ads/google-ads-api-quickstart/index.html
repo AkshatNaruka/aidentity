@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>google-ads-api-quickstart — Aidentity</title>
+<meta name="description" content="Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-quickstart/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="google-ads-api-quickstart — Aidentity">
+<meta property="og:description" content="Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-quickstart/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"google-ads-api-quickstart","description":"Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a \"retrieve campaigns\" script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/ads/google-ads-api-quickstart/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=ads">ads</a><span>/</span>google-ads-api-quickstart
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>google-ads-api-quickstart</h1>
+      <p class="summary">Guides developers through Google Ads API quickstart: credential setup, choosing from 6 client libraries/REST, configuring environments, and running a &quot;retrieve campaigns&quot; script. Troubleshoots common setup errors: USER_PERMISSION_DENIED, login_customer_id issues, and DEVELOPER_TOKEN_NOT_APPROVED. Use this skill when: - The user asks how to get started with the Google Ads API. - The user needs to set up Google Ads credentials or developer tokens. - The user wants to write a quickstart/example script for Google Ads. - The user encounters errors like USER_PERMISSION_DENIED or DEVELOPER_TOKEN_NOT_APPROVED.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=ads">ads</a> <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Google Ads API Quickstart</h3>
+<p>This skill guides you from absolute zero to running your first successful request to retrieve campaigns.</p>
+<h4>Supported Tracks</h4>
+<p>You can choose to use this skill with:</p>
+<ol>
+<li><strong>Official Client Libraries:</strong> Python, Java, .NET, PHP, Ruby, or Perl.</li>
+<li><strong>Direct REST:</strong> Raw HTTP REST requests.</li>
+</ol>
+<hr>
+<h4>Crucial Requirement: Dynamic Version Resolution &amp; Runtime Resolution</h4>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; To ensure the integration is secure, stable, and up-to-date, you must resolve all API and runtime versions dynamically. Do not rely on hardcoded defaults.</p>
+<h5>Strict Constraints:</h5>
+<ul>
+<li><strong>DO NOT Hardcode:</strong> Never use hardcoded Google Ads API versions (e.g., <code>v24</code>) or language runtime versions (e.g., <code>Python 3.8+</code>, <code>Java 11+</code>) in generated code or environment setup instructions, unless the user explicitly requests a specific version.</li>
+<li><strong>MANDATORY Dynamic Resolution:</strong> You must dynamically resolve the latest stable versions <em>at the start of execution</em> before generating any code or configuration, using the procedures detailed below.</li>
+</ul>
+<h5>A. Dynamic API Version Resolution</h5>
+<p>To ensure the integration is secure, stable, and up-to-date, you <strong>MUST</strong> resolve the absolute newest stable major version of the Google Ads API dynamically.</p>
+<h5>Execution Steps:</h5>
+<ol>
+<li><strong>Pre-Flight Version Resolution:</strong> Use your web search or URL-reading tools to inspect the latest entry in the <a href="https://developers.google.com/google-ads/api/docs/release-notes.md.txt" rel="noopener">Google Ads API Release Notes</a> or the highest versioned directory in the <a href="https://github.com/googleapis/googleapis/tree/master/google/ads/googleads" rel="noopener">Googleapis Github Repository</a> to resolve <code>RESOLVED_API_VERSION</code> (e.g., <code>v24</code>). If using Java, you <strong>MUST</strong> also resolve the latest stable release version of the Google Ads Java Client Library (referred to as <code>RESOLVED_LIBRARY_VERSION</code>, e.g., <code>34.0.0</code>).</li>
+</ol>
+<ol>
+<li><strong>Mandatory Response Anchor:</strong> You <strong>MUST</strong> output the following confirmation block as the <strong>very first line</strong> of your response to the user. Do not output any greeting, pleasantries, or introductory text before this block.</li>
+</ol>
+<p>    <pre><code>    [SYSTEM: Using Google Ads API version: RESOLVED_API_VERSION (Resolved from release notes)]
+    </code></pre></p>
+<ol>
+<li><strong>Strict Placeholder Mapping Table:</strong> You <strong>MUST</strong> perform on-the-fly search-and-replace on all code templates and reference files using the mapping table below. Do not leave raw placeholders in the final output.</li>
+</ol>
+<table><thead><tr><th>Target Language / Tech</th><th>Placeholder in Template</th><th>Replacement Pattern</th><th>Example (Assuming API <code>v24</code>)</th></tr></thead><tbody>
+<tr><td><strong>Java</strong> (Maven/Gradle)</td><td><code>LATEST_LIBRARY_VERSION</code></td><td>Search &amp; substitute the latest Maven release version of the library.</td><td><code>34.0.0</code></td></tr>
+<tr><td><strong>Java</strong> (Imports)</td><td><code>vXX</code></td><td>Replace with <strong>lower-case</strong> API version.</td><td><code>com.google.ads.googleads.v24</code></td></tr>
+<tr><td><strong>.NET / C#</strong> (Namespaces)</td><td><code>VXX</code></td><td>Replace with <strong>title-case</strong> API version.</td><td><code>Google.Ads.GoogleAds.V24</code></td></tr>
+<tr><td><strong>PHP</strong> (Namespaces)</td><td><code>VXX</code></td><td>Replace with <strong>title-case</strong> API version.</td><td><code>Google\Ads\GoogleAds\V24</code></td></tr>
+<tr><td><strong>REST</strong> (Endpoint URL)</td><td><code>vXX</code></td><td>Replace with <strong>lower-case</strong> API version.</td><td><code>https://googleads.googleapis.com/v24/...</code></td></tr>
+</tbody></table>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>Offline Fallback:</strong> If the URLs are unreachable or the scrape fails, do not halt execution. Fall back to these last-known stable versions:</p>
+<p>&gt; *   <strong>Google Ads API Major Version (<code>RESOLVED_API_VERSION</code>):</strong> <code>v24</code></p>
+<p>&gt; *   <strong>Java Client Library Version (<code>RESOLVED_LIBRARY_VERSION</code>):</strong> <code>34.0.0</code></p>
+<h5>B. Dynamic Language Runtime Version Resolution</h5>
+<p>To prevent the generated setup guides from becoming obsolete due to language deprecation cycles, you <strong>MUST</strong> resolve language requirements dynamically.</p>
+<h5>Execution Steps:</h5>
+<ol>
+<li><strong>Fetch Live Requirements:</strong> Use your URL-reading tools to inspect the official <a href="https://developers.google.com/google-ads/api/docs/client-libs.md.txt#supported_api_versions" rel="noopener">Google Ads Client Libraries - Supported Versions</a> page.</li>
+</ol>
+<ol>
+<li><strong>Extract Minimums:</strong> Identify the minimum supported runtime version for the user&#39;s chosen language by scanning the Overview page or compatibility tables (e.g., looking for explicit requirements like Python 3.8+, Java 11+, .NET 6.0+, PHP 8.1+, Ruby 3.0+).</li>
+</ol>
+<ol>
+<li><strong>Apply On-The-Fly:</strong> Substitute all runtime placeholders (e.g., <code>&lt;PYTHON_MIN_VERSION&gt;</code>) in your generated setup guides with these resolved versions.</li>
+</ol>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>Offline Fallback:</strong> If the URL is unreachable or the scrape fails, do not halt execution. Fall back to these last-known safe minimum versions:</p>
+<p>&gt; *   <strong>Python:</strong> <code>3.9+</code></p>
+<p>&gt; *   <strong>Java:</strong> <code>11+</code></p>
+<p>&gt; *   <strong>.NET:</strong> <code>6.0+</code></p>
+<p>&gt; *   <strong>PHP:</strong> <code>8.1+</code></p>
+<p>&gt; *   <strong>Ruby:</strong> <code>3.0+</code></p>
+<p>&gt; *   <strong>Perl:</strong> <code>5.28.1+</code></p>
+<hr>
+<h4>Step 1: Obtain Google Ads API Credentials</h4>
+<p>Before installing libraries or making API calls, you must obtain the five required authentication parameters.</p>
+<h5>1. Developer Token</h5>
+<ul>
+<li><strong>Purpose:</strong> Identifies your developer access and API quota.</li>
+<li><strong>How to Obtain:</strong></li>
+</ul>
+<ol>
+<li>Navigate directly to the <strong>API Center</strong> in your Google Ads Manager Account: <a href="https://ads.google.com/aw/apicenter" rel="noopener">https://ads.google.com/aw/apicenter</a> <em>(Note: You must sign in with a Manager account, not a standard serving account)</em>.</li>
+<li>Copy your Developer Token.</li>
+</ol>
+<p>&gt; [!WARNING]</p>
+<p>&gt; <strong>Pending Token Restriction:</strong> If your Developer Token status is &quot;Pending&quot; (unapproved), you <strong>MUST ONLY</strong> target <strong>Google Ads Test Accounts</strong>. Attempting to call a production account with a pending token will fail with the error: <code>DEVELOPER_TOKEN_NOT_APPROVED</code>.</p>
+<h5>2. OAuth2 Client ID &amp; Client Secret</h5>
+<ul>
+<li><strong>Purpose:</strong> Identifies your application to Google&#39;s OAuth 2.0 server and allows you to request user authorization.</li>
+<li><strong>How to Obtain:</strong></li>
+</ul>
+<ol>
+<li>Open the <a href="https://console.cloud.google.com/" rel="noopener">Google Cloud Console</a>.</li>
+<li>Create a new project (or select an existing one).</li>
+<li>Search for the <strong>Google Ads API</strong> in the API Library and click <strong>Enable</strong>.</li>
+<li>Configure the <strong>OAuth Consent Screen</strong>:</li>
+</ol>
+<ul>
+<li>Select <strong>External</strong> user type.</li>
+<li>Set the Publishing Status to <strong>Testing</strong>.</li>
+<li>&gt; [!IMPORTANT]</li>
+<li>&gt; <strong>Add Test Users:</strong> You <strong>MUST</strong> add the email address of the Google account you use to log into Google Ads as a <strong>Test User</strong> in this step. Otherwise, you will be blocked during authorization.</li>
+</ul>
+<ol>
+<li>Create the OAuth Client:</li>
+</ol>
+<ul>
+<li>Go to <strong>APIs &amp; Services 🡒 Credentials</strong>.</li>
+<li>Click <strong>Create Credentials 🡒 OAuth client ID</strong>.</li>
+<li>Select <strong>Desktop App</strong> as the Application Type.</li>
+<li>Name the client and click <strong>Create</strong>.</li>
+</ul>
+<ol>
+<li><strong>Download Secrets:</strong> Click the download icon (JSON) next to your newly created Client ID. Save this file locally as <code>client_secrets.json</code>.</li>
+</ol>
+<h5>3. OAuth2 Refresh Token</h5>
+<ul>
+<li><strong>Purpose:</strong> Allows your application to obtain new access tokens automatically without requiring manual user login every hour.</li>
+<li><strong>How to Obtain:</strong></li>
+</ul>
+<p>    You must run the Google Cloud (<code>gcloud</code>) CLI to generate your refresh token.</p>
+<p>    #### 1. Install and Verify gcloud CLI:</p>
+<p>    Ensure the <a href="https://cloud.google.com/sdk/docs/install" rel="noopener">gcloud CLI</a> is installed and available in your terminal.</p>
+<p>    #### 2. Execute the Login Flow:</p>
+<p>    Run the following command in your terminal, passing the path to the <code>client_secrets.json</code> file downloaded in the previous step:</p>
+<p>    <pre><code>    gcloud auth application-default login \
+      --scopes=https://www.googleapis.com/auth/adwords,https://www.googleapis.com/auth/cloud-platform \
+      --client-id-file=client_secrets.json
+    </code></pre></p>
+<p>    #### 3. Authorize in Browser:</p>
+<ol>
+<li>The command will open a Google Account login window in your browser.</li>
+<li>Sign in using the <strong>Test User</strong> email registered in your OAuth Consent Screen setup.</li>
+<li>If your app is unverified, click <strong>Advanced</strong> and continue to the project. Click <strong>Continue</strong> to grant permissions.</li>
+</ol>
+<p>    #### 4. Retrieve Your Refresh Token:</p>
+<p>    Once successful, <code>gcloud</code> will output a message indicating where the credentials were saved (typically <code>~/.config/gcloud/application_default_credentials.json</code>). Open that file to copy your <code>refresh_token</code>.</p>
+<h5>4. Client Customer ID</h5>
+<ul>
+<li><strong>Purpose:</strong> The 10-digit ID of the specific Google Ads account you want to query or make changes to.</li>
+<li><strong>Format:</strong> Must be 10 digits with <strong>no hyphens</strong> (e.g., <code>1234567890</code>, NOT <code>123-456-7890</code>).</li>
+<li><strong>How to Find It:</strong> Log in to the Google Ads UI; the ID is displayed in the top-right corner next to your user icon.</li>
+</ul>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Test Account Requirement:</strong> If your Developer Token is pending (unapproved), this <strong>MUST</strong> be the Customer ID of a <strong>Test Account</strong>. Test accounts have a red &quot;Test account&quot; banner in the top right of the UI.</p>
+<hr>
+<h5>5. Login Customer ID</h5>
+<ul>
+<li><strong>What it is:</strong> The 10-digit Customer ID of the Google Ads Manager Account that owns or manages the target client account.</li>
+<li><strong>Format:</strong> Must be 10 digits with <strong>no hyphens</strong> (e.g., <code>9876543210</code>).</li>
+<li><strong>When to Use:</strong> This is <strong>mandatory</strong> if your OAuth credentials (and developer token) belong to a Manager Account, but you are querying a child/client account (Client Customer ID).</li>
+</ul>
+<p>&gt; [!CAUTION]</p>
+<p>&gt; <strong>Preventing <code>USER_PERMISSION_DENIED</code>:</strong></p>
+<p>&gt; If you are accessing a client account through a Manager Account hierarchy, you <strong>MUST</strong> set this parameter.</p>
+<p>&gt; *   <code>login_customer_id</code> = The <strong>Manager</strong> Account ID.</p>
+<p>&gt; *   <code>client_customer_id</code> = The <strong>Child/Client</strong> Account ID.</p>
+<p>&gt; Leaving <code>login_customer_id</code> blank in a manager-client hierarchy is the #1 cause of permission errors.</p>
+<hr>
+<h4>Step 2: Choose Your Integration Strategy</h4>
+<p>Developers can connect to the Google Ads API using either the official high-level client libraries or direct HTTPS REST requests.</p>
+<h5>Path A: Official Client Libraries (Recommended)</h5>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Mandatory Agent Directive:</strong> Once the user selects their language, you <strong>MUST</strong>:</p>
+<p>&gt; 1. Use the <code>view_file</code> tool to lazy-load the corresponding reference file listed below.</p>
+<p>&gt; 2. Apply the <strong>Dynamic Version Resolution</strong> (Section B) to dynamically replace all <code>vXX</code>/<code>VXX</code> placeholders and library versions <em>before</em> generating code.</p>
+<h5>Python</h5>
+<p>If you need to set up the Google Ads API environment for Python, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API Python Setup Reference](references/python.md)</li>
+</ul>
+<p><em>(Package: <code>google-ads</code>)</em></p>
+<h5>Java</h5>
+<p>If you need to set up the Google Ads API environment for Java, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API Java Setup Reference](references/java.md)</li>
+</ul>
+<p><em>(Artifact: <code>com.google.api-ads:google-ads</code>)</em></p>
+<h5>.NET / C#</h5>
+<p>If you need to set up the Google Ads API environment for .NET/C#, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API .NET Setup Reference](references/dotnet.md)</li>
+</ul>
+<p><em>(Package: <code>Google.Ads.GoogleAds</code>)</em></p>
+<h5>PHP</h5>
+<p>If you need to set up the Google Ads API environment for PHP, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API PHP Setup Reference](references/php.md)</li>
+</ul>
+<p><em>(Package: <code>googleads/google-ads-php</code>)</em></p>
+<h5>Ruby</h5>
+<p>If you need to set up the Google Ads API environment for Ruby, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API Ruby Setup Reference](references/ruby.md)</li>
+</ul>
+<p><em>(Gem: <code>google-ads-ruby</code>)</em></p>
+<h5>Perl</h5>
+<p>If you need to set up the Google Ads API environment for Perl, do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API Perl Setup Reference](references/perl.md)</li>
+</ul>
+<p><em>(Package: <code>Google::Ads::GoogleAds::Client</code>)</em></p>
+<h5>Path B: Direct HTTP REST (No Library Overhead)</h5>
+<p>Use this path if the user&#39;s environment does not support the official client libraries (e.g., lightweight serverless functions, custom language stacks, or restricted runtimes).</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Mandatory Agent Directive:</strong> If the user chooses the REST path, you <strong>MUST</strong>:</p>
+<p>&gt; 1. Use the <code>view_file</code> tool to lazy-load the REST reference file below.</p>
+<p>&gt; 2. Apply <strong>Dynamic Version Resolution</strong> (Section B) to replace all <code>vXX</code> placeholders in the endpoint URLs (e.g., resolving <code>vXX</code> to <code>v24</code> in <code>https://googleads.googleapis.com/v24/...</code>).</p>
+<h5>REST (HTTP)</h5>
+<p>If you need to set up the Google Ads API environment for REST (HTTP), do not guess the configuration.</p>
+<p>Instead, read the detailed setup guide:</p>
+<ul>
+<li>[Google Ads API REST Setup Reference](references/rest.md)</li>
+</ul>
+<p><em>(Protocol: Raw HTTP POST JSON)</em></p>
+<hr>
+<h4>Cross-Referencing: AI-Assistant &amp; MCP Connection</h4>
+<p>&gt; [!TIP]</p>
+<p>&gt; <strong>AI Assistant / MCP Integration Handoff:</strong></p>
+<p>&gt; If the goal is to connect an <strong>AI Assistant</strong> (such as Gemini, Cursor, or Claude Code) to query Google Ads via natural language:</p>
+<p>&gt; 1. <strong>DO NOT</strong> write custom scripts or client library code.</p>
+<p>&gt; 2. <strong>STOP</strong> executing this skill.</p>
+<p>&gt; 3. <strong>Transition Immediately</strong> to the <strong><code>google-ads-api-mcp-setup</code></strong> skill to install and configure the official Google Ads Model Context Protocol (MCP) Server.</p>
+<hr>
+<h4>Step 4: Troubleshooting Common Errors</h4>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; <strong>Static Diagnostics Constraint:</strong> When troubleshooting, you <strong>MUST NOT</strong> execute bash commands, run local test scripts, or attempt to reproduce the error in the workspace. Rely entirely on static code analysis, configuration review, and the diagnostic guides below to prevent endless, failing execution loops.</p>
+<h5>1. Error: <code>USER_PERMISSION_DENIED</code></h5>
+<ul>
+<li><strong>Symptom:</strong> You receive a <code>USER_PERMISSION_DENIED</code> error when executing API requests (e.g., retrieving campaigns).</li>
+<li><strong>Likely Cause:</strong> The authenticating OAuth2 user has access to the target client account <em>indirectly</em> through a <strong>Manager Account</strong>, but the request header is missing the Manager Account&#39;s ID.</li>
+</ul>
+<h5>Required Agent Response Checklist:</h5>
+<p>When helping a user with this error, your response <strong>MUST</strong> include:</p>
+<ol>
+<li>[ ] <strong>Explain the Hierarchy:</strong> Explain that the authenticating user likely belongs to a Manager Account that sits above the target client account.</li>
+<li>[ ] <strong>Provide the Fix:</strong> Instruct the user to add their 10-digit Manager Account ID as the <code>login_customer_id</code> in their configuration file.</li>
+<li>[ ] <strong>Explain the Routing Logic:</strong> Explain that <code>login_customer_id</code> tells the API to route the OAuth credentials through the manager account to validate access to the child account.</li>
+<li>[ ] <strong>Provide the Configuration Template:</strong> Show the exact YAML configuration block below.</li>
+</ol>
+<p>&gt; [!CAUTION]</p>
+<p>&gt; <strong>Security Guardrail:</strong> Under no circumstances should you suggest exposing raw passwords, creating new unapproved developer tokens, or widening OAuth scopes beyond the standard <code>adwords</code> scope to bypass this error.</p>
+<h5>Configuration Fix Example (<code>google-ads.yaml</code>):</h5>
+<p><pre><code>developer_token: INSERT_DEVELOPER_TOKEN_HERE
+client_id: INSERT_OAUTH2_CLIENT_ID_HERE
+client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
+refresh_token: INSERT_OAUTH2_REFRESH_TOKEN_HERE
+
+# Add your 10-digit Manager Account ID here to resolve USER_PERMISSION_DENIED:
+login_customer_id: INSERT_LOGIN_CUSTOMER_ID_HERE</code></pre></p>
+<h5>2. Error: <code>DEVELOPER_TOKEN_NOT_APPROVED</code></h5>
+<ul>
+<li><strong>Symptom:</strong> The script fails with a <code>DEVELOPER_TOKEN_NOT_APPROVED</code> error message.</li>
+<li><strong>Likely Cause:</strong> Your Developer Token is currently in the &quot;Pending&quot; (unapproved) state, and you are attempting to target a live production Google Ads account.</li>
+</ul>
+<h5>Required Agent Response Checklist:</h5>
+<p>When helping a user with this error, your response <strong>MUST</strong> include:</p>
+<ol>
+<li>[ ] <strong>Explain the &quot;Pending&quot; Restriction:</strong> Explain that an unapproved (Pending) developer token is fully functional but <strong>restricted to Google Ads Test Accounts only</strong>.</li>
+<li>[ ] <strong>Define Production Access Levels:</strong> You <strong>MUST</strong> explicitly list all three access levels by name: state that targeting live production accounts requires the token to be approved for <strong>Explorer Access</strong>, <strong>Basic Access</strong>, or <strong>Standard Access</strong> by the Google Ads API compliance team. Do not condense or paraphrase this to &quot;at least Basic Access&quot;.</li>
+<li>[ ] <strong>Provide Sandbox Setup Steps:</strong> Guide the user on how to set up a sandbox environment:</li>
+</ol>
+<ul>
+<li>Create a <strong>Test Manager Account</strong> (which does not require an approved token).</li>
+<li>Create <strong>Test Client Accounts</strong> under that Test Manager.</li>
+<li>Use the Test Client Customer ID in their configuration.</li>
+</ul>
+<ol>
+<li>[ ] <strong>Provide a Link to the Guide:</strong> Point the user to the official <a href="https://developers.google.com/google-ads/api/docs/best-practices/test-accounts.md.txt" rel="noopener">Google Ads API Test Accounts Guide</a>.</li>
+</ol>
+<p>&gt; [!CAUTION]</p>
+<p>&gt; <strong>Security &amp; Integrity Guardrail:</strong> You <strong>MUST NOT</strong> advise the developer to modify the client library source code, bypass token validation checks, or use third-party &quot;cracked&quot; wrappers to bypass this error. The restriction is enforced server-side by Google, and client-side modifications will not work.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-audience-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-audience-ingestion guides developers through managing (adding, removing, and clearing) audience members for google products using the data manager api and its associated client libraries. use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for customer match, mobile device id audiences, or any other audience use case supported by the data manager api. don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-audience-ingestion</span>
+    <span class="r-desc">Guides developers through managing (adding, removing, and clearing) audience members for Google products using the Data Manager API and its associated client libraries. Use this skill when the user wants to upload audience members, remove specific users, or clear/replace an entire audience for Customer Match, mobile device ID audiences, or any other audience use case supported by the Data Manager API. Don&#39;t use for uploading events or conversions (use the data-manager-api-event-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-event-ingestion/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-event-ingestion guides developers through implementing event and conversion ingestion to google products using the data manager api /v1/events/ingest endpoint and its associated client libraries. use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, google analytics web or app events, or any other event ingestion use case supported by the data manager api. don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-event-ingestion</span>
+    <span class="r-desc">Guides developers through implementing event and conversion ingestion to Google products using the Data Manager API /v1/events/ingest endpoint and its associated client libraries. Use this skill when the user wants to upload offline conversions, enhanced conversions for leads, click conversions, Google Analytics web or app events, or any other event ingestion use case supported by the Data Manager API. Don&#39;t use for uploading audience members (use the data-manager-api-audience-ingestion skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/data-manager-api-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="data-manager-api-setup guides developers through client library installation and authentication setup steps for the data manager api. use this skill when a user is getting started with the data manager api and needs to setup their local environment, install the client library, or setup access to the api. don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">data-manager-api-setup</span>
+    <span class="r-desc">Guides developers through client library installation and authentication setup steps for the Data Manager API. Use this skill when a user is getting started with the Data Manager API and needs to setup their local environment, install the client library, or setup access to the API. Don&#39;t use for implementing audience or event ingestion logic (use the data-manager-api-audience-ingestion or data-manager-api-event-ingestion skills instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-account-diagnostics/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-account-diagnostics diagnoses google ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. don&#39;t use for setting up new campaigns, uploading conversion events directly, or general google mobile ads sdk integration issues (use gma-android-integrate instead). ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-account-diagnostics</span>
+    <span class="r-desc">Diagnoses Google Ads account performance issues such as conversion loss (value or volume), low lead flow/volume, and lost impression share (opportunities) due to ad rank, bids, or budgets. Use when troubleshooting sudden performance drops, analyzing campaign impression share metrics, investigating low lead flow, or searching for bidding and budget constraints. Don&#39;t use for setting up new campaigns, uploading conversion events directly, or general Google Mobile Ads SDK integration issues (use gma-android-integrate instead).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/ads/google-ads-api-mcp-setup/index.html"
+     data-source="google-cloud"
+     data-category="ads"
+     data-search="google-ads-api-mcp-setup guides developers through downloading, configuring, and installing the official open-source google ads mcp server. use this skill when a user wants to connect their ai assistant (such as gemini, claude code, or cursor) to their google ads account to query campaigns or retrieve reporting metrics using natural language. ads ads cloud google/skills">
+  <span>
+    <span class="r-name">google-ads-api-mcp-setup</span>
+    <span class="r-desc">Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect their AI assistant (such as Gemini, Claude Code, or Cursor) to their Google Ads account to query campaigns or retrieve reporting metrics using natural language.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/ads/google-ads-api-quickstart</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/ads/google-ads-api-quickstart" aria-label="Copy install google-ads-api-quickstart">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>ads</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/ads/google-ads-api-quickstart</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/ads/google-ads-api-quickstart/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

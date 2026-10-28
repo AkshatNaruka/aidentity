@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>to-tickets — Aidentity</title>
+<meta name="description" content="Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-tickets/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="to-tickets — Aidentity">
+<meta property="og:description" content="Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-tickets/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"to-tickets","description":"Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).","url":"https://akshatnaruka.github.io/aidentity/skills/mattpocock/engineering/to-tickets/","author":{"@type":"Person","name":"Matt Pocock"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=planning">planning</a><span>/</span>to-tickets
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">mattpocock/skills · MIT</p>
+      <h1>to-tickets</h1>
+      <p class="summary">Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=planning">planning</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>To Tickets</h3>
+<p>Break a plan, spec, or conversation into a set of <strong>tickets</strong>: tracer-bullet vertical slices, each declaring the tickets that <strong>block</strong> it.</p>
+<p>The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run <code>/setup-matt-pocock-skills</code>.</p>
+<h4>Process</h4>
+<h5>1. Gather context</h5>
+<p>Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.</p>
+<h5>2. Explore the codebase (optional)</h5>
+<p>If you have not already explored the codebase, do so to understand the current state of the code. Ticket titles and descriptions should use the project&#39;s domain glossary vocabulary, and respect ADRs in the area you&#39;re touching.</p>
+<p>Look for opportunities to prefactor the code to make the implementation easier. &quot;Make the change easy, then make the easy change.&quot;</p>
+<h5>3. Draft vertical slices</h5>
+<p>Break the work into <strong>tracer bullet</strong> tickets.</p>
+<p>&lt;vertical-slice-rules&gt;</p>
+<ul>
+<li>Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests): vertical, NOT a horizontal slice of one layer</li>
+<li>A completed slice is demoable or verifiable on its own</li>
+<li>Each slice is sized to fit in a single fresh context window</li>
+<li>Any prefactoring should be done first</li>
+</ul>
+<p>&lt;/vertical-slice-rules&gt;</p>
+<p>Give each ticket its <strong>blocking edges</strong>: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.</p>
+<p><strong>Wide refactors are the exception to vertical slicing.</strong> A <strong>wide refactor</strong> is one mechanical change (rename a column, retype a shared symbol) whose <strong>blast radius</strong> fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don&#39;t force it into a tracer bullet; sequence it as <strong>expand–contract</strong>. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can&#39;t stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket; green is promised only there.</p>
+<h5>4. Quiz the user</h5>
+<p>Present the proposed breakdown as a numbered list. For each ticket, show:</p>
+<ul>
+<li><strong>Title</strong>: short descriptive name</li>
+<li><strong>Blocked by</strong>: which other tickets (if any) must complete first</li>
+<li><strong>What it delivers</strong>: the end-to-end behaviour this ticket makes work</li>
+</ul>
+<p>Ask the user:</p>
+<ul>
+<li>Does the granularity feel right? (too coarse / too fine)</li>
+<li>Are the blocking edges correct: does each ticket only depend on tickets that genuinely gate it?</li>
+<li>Should any tickets be merged or split further?</li>
+</ul>
+<p>Iterate until the user approves the breakdown.</p>
+<h5>5. Publish the tickets to the configured tracker</h5>
+<p>Publish the approved tickets. <strong>How</strong> depends on the tracker <code>/setup-matt-pocock-skills</code> configured; the tickets are the same either way, only the shape of the blocking edges changes:</p>
+<ul>
+<li><strong>Local files</strong> → write one file per ticket under <code>.scratch/&lt;feature-slug&gt;/issues/&lt;NN&gt;-&lt;slug&gt;.md</code>, numbered from <code>01</code> in dependency order (blockers first). Each file&#39;s &quot;Blocked by&quot; lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.</li>
+<li><strong>A real issue tracker (GitHub, Linear, …)</strong> → publish one issue per ticket in dependency order (blockers first) so each ticket&#39;s blocking edges can reference real identifiers. Use the platform&#39;s native blocking / sub-issue relationship where it has one; otherwise set each ticket&#39;s &quot;Blocked by&quot; to the blocking issues. Apply the <code>ready-for-agent</code> triage label unless instructed otherwise; the tickets are agent-grabbable by construction.</li>
+</ul>
+<p>Work the <strong>frontier</strong>: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.</p>
+<p>Do NOT close or modify any parent issue.</p>
+<p>&lt;local-ticket-template&gt;</p>
+<h3>&lt;NN&gt;: &lt;Ticket title&gt;</h3>
+<p><strong>What to build:</strong> the end-to-end behaviour this ticket makes work, from the user&#39;s perspective, not a layer-by-layer implementation list.</p>
+<p><strong>Blocked by:</strong> the numbers/titles of the tickets that gate this one, or &quot;None (can start immediately)&quot;.</p>
+<p><strong>Status:</strong> ready-for-agent</p>
+<ul>
+<li>[ ] Acceptance criterion 1</li>
+<li>[ ] Acceptance criterion 2</li>
+</ul>
+<p>&lt;/local-ticket-template&gt;</p>
+<p>&lt;issue-template&gt;</p>
+<h4>Parent</h4>
+<p>A reference to the parent issue on the tracker (if the source was an existing issue, otherwise omit this section).</p>
+<h4>What to build</h4>
+<p>The end-to-end behaviour this ticket makes work, from the user&#39;s perspective, not layer-by-layer implementation.</p>
+<h4>Acceptance criteria</h4>
+<ul>
+<li>[ ] Criterion 1</li>
+<li>[ ] Criterion 2</li>
+</ul>
+<h4>Blocked by</h4>
+<ul>
+<li>A reference to each blocking ticket, or &quot;None (can start immediately)&quot;.</li>
+</ul>
+<p>&lt;/issue-template&gt;</p>
+<p>In either form, avoid specific file paths or code snippets: they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Matt Pocock</strong> in
+        <a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/addyosmani/planning-and-task-breakdown/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="planning-and-task-breakdown breaks work into ordered tasks. use when you have a spec or clear requirements and need to break work into implementable tasks. use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">planning-and-task-breakdown</span>
+    <span class="r-desc">Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/addyosmani/spec-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="planning"
+     data-search="spec-driven-development creates specs before coding. use when starting a new project, feature, or significant change and no specification exists yet. use when requirements are unclear, ambiguous, or only exist as a vague idea. use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying. planning planning addyosmani/agent-skills">
+  <span>
+    <span class="r-name">spec-driven-development</span>
+    <span class="r-desc">Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/to-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="to-spec turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">to-spec</span>
+    <span class="r-desc">Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you&#39;ve already discussed.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/in-progress/implement-spec/index.html"
+     data-source="mattpocock"
+     data-category="planning"
+     data-search="implement-spec implement a specification in code. planning planning mattpocock/skills">
+  <span>
+    <span class="r-name">implement-spec</span>
+    <span class="r-desc">Implement a specification in code.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="general"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. general  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add mattpocock/engineering/to-tickets</code>
+  <button type="button" data-copy="npx aidentity add mattpocock/engineering/to-tickets" aria-label="Copy install to-tickets">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/mattpocock/skills" rel="noopener">mattpocock/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Matt Pocock</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>planning</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">mattpocock/engineering/to-tickets</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/mattpocock/engineering/to-tickets/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

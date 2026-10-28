@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>entra-agent-id — Aidentity</title>
+<meta name="description" content="Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/entra-agent-id/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="entra-agent-id — Aidentity">
+<meta property="og:description" content="Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/entra-agent-id/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"entra-agent-id","description":"Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: \"agent identity\", \"agent id\", \"Agent Identity Blueprint\", \"BlueprintPrincipal\", \"entra agent\", \"agent identity provisioning\", \"Graph agent identity\", \"entra sidecar\", \"agent id sidecar\", \"auth sidecar\", \"3P agent\", \"third-party agent identity\", \"polyglot agent auth\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/entra-agent-id/","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=agents">agents</a><span>/</span>entra-agent-id
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">microsoft/skills · MIT</p>
+      <h1>entra-agent-id</h1>
+      <p class="summary">Microsoft Entra Agent ID (preview) for creating OAuth2-capable AI agent identities via Microsoft Graph beta API. Covers Agent Identity Blueprints, BlueprintPrincipals, Agent Identities, required permissions, sponsors, and Workload Identity Federation. Includes Microsoft Entra SDK for AgentID (containerized sidecar) for polyglot agent authentication (Docker/Kubernetes), 3P agent integration, autonomous and interactive agent patterns. Triggers: &quot;agent identity&quot;, &quot;agent id&quot;, &quot;Agent Identity Blueprint&quot;, &quot;BlueprintPrincipal&quot;, &quot;entra agent&quot;, &quot;agent identity provisioning&quot;, &quot;Graph agent identity&quot;, &quot;entra sidecar&quot;, &quot;agent id sidecar&quot;, &quot;auth sidecar&quot;, &quot;3P agent&quot;, &quot;third-party agent identity&quot;, &quot;polyglot agent auth&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=agents">agents</a> <a class="tag" href="../../../skills/index.html?q=azure">azure</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Microsoft Entra Agent ID</h3>
+<p>Create and manage OAuth2-capable identities for AI agents using Microsoft Graph beta API.</p>
+<p>&gt; <strong>Preview API</strong> — All Agent Identity endpoints are under <code>/beta</code> only. Not available in <code>/v1.0</code>.</p>
+<h4>Before You Start</h4>
+<p>Search <code>microsoft-docs</code> MCP for the latest Agent ID documentation:</p>
+<ul>
+<li>Query: &quot;Microsoft Entra agent identity setup&quot;</li>
+<li>Verify: API parameters match current preview behavior</li>
+</ul>
+<h4>Conceptual Model</h4>
+<p><pre><code>Agent Identity Blueprint (application)        ← one per agent type/project
+  └── BlueprintPrincipal (service principal)   ← MUST be created explicitly
+        ├── Agent Identity (SP): agent-1       ← one per agent instance
+        ├── Agent Identity (SP): agent-2
+        └── Agent Identity (SP): agent-3</code></pre></p>
+<h4>Prerequisites</h4>
+<h5>PowerShell (recommended for interactive setup)</h5>
+<p><pre><code># Requires PowerShell 7+
+Install-Module Microsoft.Graph.Beta.Applications -Scope CurrentUser -Force</code></pre></p>
+<h5>Python (for programmatic provisioning)</h5>
+<p><pre><code>pip install azure-identity requests</code></pre></p>
+<h5>Required Entra Roles</h5>
+<p>One of: <strong>Agent Identity Developer</strong>, <strong>Agent Identity Administrator</strong>, or <strong>Application Administrator</strong>.</p>
+<h4>Environment Variables</h4>
+<p><pre><code>AZURE_TENANT_ID=&lt;your-tenant-id&gt;
+AZURE_CLIENT_ID=&lt;app-registration-client-id&gt;
+AZURE_CLIENT_SECRET=&lt;app-registration-secret&gt;</code></pre></p>
+<h4>Authentication</h4>
+<p>&gt; <strong>⚠️ <code>DefaultAzureCredential</code> is NOT supported.</strong> Azure CLI tokens contain</p>
+<p>&gt; <code>Directory.AccessAsUser.All</code>, which Agent Identity APIs explicitly reject (403).</p>
+<p>&gt; You MUST use a dedicated app registration with <code>client_credentials</code> flow or</p>
+<p>&gt; connect via <code>Connect-MgGraph</code> with explicit delegated scopes.</p>
+<h5>PowerShell (delegated permissions)</h5>
+<p><pre><code>Connect-MgGraph -Scopes @(
+    &quot;AgentIdentityBlueprint.Create&quot;,
+    &quot;AgentIdentityBlueprint.ReadWrite.All&quot;,
+    &quot;AgentIdentityBlueprintPrincipal.Create&quot;,
+    &quot;User.Read&quot;
+)
+Set-MgRequestContext -ApiVersion beta
+
+$currentUser = (Get-MgContext).Account
+$userId = (Get-MgUser -UserId $currentUser).Id</code></pre></p>
+<h5>Python (application permissions)</h5>
+<p><pre><code>import os
+import requests
+from azure.identity import ClientSecretCredential
+
+credential = ClientSecretCredential(
+    tenant_id=os.environ[&quot;AZURE_TENANT_ID&quot;],
+    client_id=os.environ[&quot;AZURE_CLIENT_ID&quot;],
+    client_secret=os.environ[&quot;AZURE_CLIENT_SECRET&quot;],
+)
+token = credential.get_token(&quot;https://graph.microsoft.com/.default&quot;)
+
+GRAPH = &quot;https://graph.microsoft.com/beta&quot;
+headers = {
+    &quot;Authorization&quot;: f&quot;Bearer {token.token}&quot;,
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+    &quot;OData-Version&quot;: &quot;4.0&quot;,  # Required for all Agent Identity API calls
+}</code></pre></p>
+<h4>Core Workflow</h4>
+<h5>Step 1: Create Agent Identity Blueprint</h5>
+<p>Sponsors are required and <strong>must be User objects</strong> — ServicePrincipals and Groups are rejected.</p>
+<p><pre><code>import subprocess
+
+# Get sponsor user ID (client_credentials has no user context, so use az CLI)
+result = subprocess.run(
+    [&quot;az&quot;, &quot;ad&quot;, &quot;signed-in-user&quot;, &quot;show&quot;, &quot;--query&quot;, &quot;id&quot;, &quot;-o&quot;, &quot;tsv&quot;],
+    capture_output=True, text=True, check=True,
+)
+user_id = result.stdout.strip()
+
+blueprint_body = {
+    &quot;@odata.type&quot;: &quot;Microsoft.Graph.AgentIdentityBlueprint&quot;,
+    &quot;displayName&quot;: &quot;My Agent Blueprint&quot;,
+    &quot;sponsors@odata.bind&quot;: [
+        f&quot;https://graph.microsoft.com/beta/users/{user_id}&quot;
+    ],
+}
+resp = requests.post(f&quot;{GRAPH}/applications&quot;, headers=headers, json=blueprint_body)
+resp.raise_for_status()
+
+blueprint = resp.json()
+app_id = blueprint[&quot;appId&quot;]
+blueprint_obj_id = blueprint[&quot;id&quot;]</code></pre></p>
+<h5>Step 2: Create BlueprintPrincipal</h5>
+<p>&gt; <strong>This step is mandatory.</strong> Creating a Blueprint does NOT auto-create its</p>
+<p>&gt; service principal. Without this, Agent Identity creation fails with:</p>
+<p>&gt; <code>400: The Agent Blueprint Principal for the Agent Blueprint does not exist.</code></p>
+<p><pre><code>sp_body = {
+    &quot;@odata.type&quot;: &quot;Microsoft.Graph.AgentIdentityBlueprintPrincipal&quot;,
+    &quot;appId&quot;: app_id,
+}
+resp = requests.post(f&quot;{GRAPH}/servicePrincipals&quot;, headers=headers, json=sp_body)
+resp.raise_for_status()</code></pre></p>
+<p>If implementing idempotent scripts, check for and create the BlueprintPrincipal</p>
+<p>even when the Blueprint already exists (a previous run may have created the Blueprint</p>
+<p>but crashed before creating the SP).</p>
+<h5>Step 3: Create Agent Identities</h5>
+<p><pre><code>agent_body = {
+    &quot;@odata.type&quot;: &quot;Microsoft.Graph.AgentIdentity&quot;,
+    &quot;displayName&quot;: &quot;my-agent-instance-1&quot;,
+    &quot;agentIdentityBlueprintId&quot;: app_id,
+    &quot;sponsors@odata.bind&quot;: [
+        f&quot;https://graph.microsoft.com/beta/users/{user_id}&quot;
+    ],
+}
+resp = requests.post(f&quot;{GRAPH}/servicePrincipals&quot;, headers=headers, json=agent_body)
+resp.raise_for_status()
+agent = resp.json()</code></pre></p>
+<h4>API Reference</h4>
+<table><thead><tr><th>Operation</th><th>Method</th><th>Endpoint</th><th>OData Type</th></tr></thead><tbody>
+<tr><td>Create Blueprint</td><td><code>POST</code></td><td><code>/applications</code></td><td><code>Microsoft.Graph.AgentIdentityBlueprint</code></td></tr>
+<tr><td>Create BlueprintPrincipal</td><td><code>POST</code></td><td><code>/servicePrincipals</code></td><td><code>Microsoft.Graph.AgentIdentityBlueprintPrincipal</code></td></tr>
+<tr><td>Create Agent Identity</td><td><code>POST</code></td><td><code>/servicePrincipals</code></td><td><code>Microsoft.Graph.AgentIdentity</code></td></tr>
+<tr><td>List Agent Identities</td><td><code>GET</code></td><td><code>/servicePrincipals?$filter=...</code></td><td>—</td></tr>
+<tr><td>Delete Agent Identity</td><td><code>DELETE</code></td><td><code>/servicePrincipals/{id}</code></td><td>—</td></tr>
+<tr><td>Delete Blueprint</td><td><code>DELETE</code></td><td><code>/applications/{id}</code></td><td>—</td></tr>
+</tbody></table>
+<p>All endpoints use base URL: <code>https://graph.microsoft.com/beta</code></p>
+<h4>Required Permissions</h4>
+<table><thead><tr><th>Permission</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>Application.ReadWrite.All</code></td><td>Blueprint CRUD (application objects)</td></tr>
+<tr><td><code>AgentIdentityBlueprint.Create</code></td><td>Create new Blueprints</td></tr>
+<tr><td><code>AgentIdentityBlueprint.ReadWrite.All</code></td><td>Read/update Blueprints</td></tr>
+<tr><td><code>AgentIdentityBlueprintPrincipal.Create</code></td><td>Create BlueprintPrincipals</td></tr>
+<tr><td><code>AgentIdentity.Create.All</code></td><td>Create Agent Identities</td></tr>
+<tr><td><code>AgentIdentity.ReadWrite.All</code></td><td>Read/update Agent Identities</td></tr>
+</tbody></table>
+<p>There are <strong>18 Agent Identity-specific</strong> Graph application permissions. Discover all:</p>
+<p><pre><code>az ad sp show --id 00000003-0000-0000-c000-000000000000 \
+  --query &quot;appRoles[?contains(value, &#39;AgentIdentity&#39;)].{id:id, value:value}&quot; -o json</code></pre></p>
+<p>Grant admin consent (required for application permissions):</p>
+<p><pre><code>az ad app permission admin-consent --id &lt;client-id&gt;</code></pre></p>
+<p>&gt; Admin consent may fail with 404 if the service principal hasn&#39;t replicated. Retry with 10–40s backoff.</p>
+<h4>Cleanup</h4>
+<p><pre><code># Delete Agent Identity
+requests.delete(f&quot;{GRAPH}/servicePrincipals/{agent[&#39;id&#39;]}&quot;, headers=headers)
+
+# Delete BlueprintPrincipal (get SP ID first)
+sps = requests.get(
+    f&quot;{GRAPH}/servicePrincipals?$filter=appId eq &#39;{app_id}&#39;&quot;,
+    headers=headers,
+).json()
+for sp in sps.get(&quot;value&quot;, []):
+    requests.delete(f&quot;{GRAPH}/servicePrincipals/{sp[&#39;id&#39;]}&quot;, headers=headers)
+
+# Delete Blueprint
+requests.delete(f&quot;{GRAPH}/applications/{blueprint_obj_id}&quot;, headers=headers)</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Always create BlueprintPrincipal after Blueprint</strong> — not auto-created; implement idempotent checks on both</li>
+<li><strong>Use User objects as sponsors</strong> — ServicePrincipals and Groups are rejected</li>
+<li><strong>Handle permission propagation delays</strong> — after admin consent, wait 30–120s; retry with backoff on 403</li>
+<li><strong>Include <code>OData-Version: 4.0</code> header</strong> on every Graph request</li>
+<li><strong>Use Workload Identity Federation for production auth</strong> — for local dev, use a client secret on the Blueprint (see [references/oauth2-token-flow.md](references/oauth2-token-flow.md))</li>
+<li><strong>Set <code>identifierUris</code> on Blueprint</strong> before using OAuth2 scoping (<code>api://{app-id}</code>)</li>
+<li><strong>Never use Azure CLI tokens</strong> for API calls — they contain <code>Directory.AccessAsUser.All</code> which is hard-rejected</li>
+<li><strong>Check for existing resources</strong> before creating — implement idempotent provisioning</li>
+</ol>
+<h4>References</h4>
+<table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
+<tr><td>[references/oauth2-token-flow.md](references/oauth2-token-flow.md)</td><td>Production (Managed Identity + WIF) and local dev (client secret) token flows</td></tr>
+<tr><td>[references/known-limitations.md](references/known-limitations.md)</td><td>29 known issues organized by category (from official preview known-issues page)</td></tr>
+<tr><td>[references/sdk-sidecar.md](references/sdk-sidecar.md)</td><td>Microsoft Entra SDK for AgentID — endpoints, 3P agent patterns, Docker/K8s deployment, security</td></tr>
+</tbody></table>
+<h5>External Links</h5>
+<table><thead><tr><th>Resource</th><th>URL</th></tr></thead><tbody>
+<tr><td>Official Setup Guide</td><td><a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-platform/agent-id-setup-instructions" rel="noopener">https://learn.microsoft.com/en-us/entra/agent-id/identity-platform/agent-id-setup-instructions</a></td></tr>
+<tr><td>AI-Guided Setup</td><td><a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-platform/agent-id-ai-guided-setup" rel="noopener">https://learn.microsoft.com/en-us/entra/agent-id/identity-platform/agent-id-ai-guided-setup</a></td></tr>
+<tr><td>Microsoft Entra SDK for AgentID — Overview</td><td><a href="https://learn.microsoft.com/en-us/entra/msidweb/agent-id-sdk/overview" rel="noopener">https://learn.microsoft.com/en-us/entra/msidweb/agent-id-sdk/overview</a></td></tr>
+<tr><td>Microsoft Entra SDK for AgentID — Endpoints</td><td><a href="https://learn.microsoft.com/en-us/entra/msidweb/agent-id-sdk/endpoints" rel="noopener">https://learn.microsoft.com/en-us/entra/msidweb/agent-id-sdk/endpoints</a></td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Microsoft Corporation</strong> in
+        <a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/using-agent-skills/index.html"
+     data-source="addyosmani"
+     data-category="agents"
+     data-search="using-agent-skills discovers and invokes agent skills. use when starting a session or when you need to discover which skill applies to the current task. this is the meta-skill that governs how all other skills are discovered and invoked. agents agents addyosmani/agent-skills">
+  <span>
+    <span class="r-name">using-agent-skills</span>
+    <span class="r-desc">Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/productivity/writing-for-agents/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="writing-for-agents writing documents for agents. use when creating or editing skills, or modifying agents.md or claude.md. agents agents mattpocock/skills">
+  <span>
+    <span class="r-name">writing-for-agents</span>
+    <span class="r-desc">Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/agent-framework-azure-ai-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="agent-framework-azure-ai-py build azure ai foundry agents using the microsoft agent framework python sdk (agent-framework-azure-ai). use when creating persistent agents with azureaiagentsprovider, using hosted tools (code interpreter, file search, web search), integrating mcp servers, managing conversation threads, or implementing streaming responses. covers function tools, structured outputs, and multi-tool agents. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">agent-framework-azure-ai-py</span>
+    <span class="r-desc">Build Azure AI Foundry agents using the Microsoft Agent Framework Python SDK (agent-framework-azure-ai). Use when creating persistent agents with AzureAIAgentsProvider, using hosted tools (code interpreter, file search, web search), integrating MCP servers, managing conversation threads, or implementing streaming responses. Covers function tools, structured outputs, and multi-tool agents.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/microsoft-azure/m365-agents-py/index.html"
+     data-source="microsoft-azure"
+     data-category="agents"
+     data-search="m365-agents-py microsoft 365 agents sdk for python. build multichannel agents for teams/m365/copilot studio with aiohttp hosting, agentapplication routing, streaming responses, and msal-based auth. triggers: &quot;microsoft 365 agents sdk&quot;, &quot;microsoft_agents&quot;, &quot;agentapplication&quot;, &quot;start_agent_process&quot;, &quot;turncontext&quot;, &quot;copilot studio client&quot;, &quot;cloudadapter&quot;. agents agents azure microsoft/skills">
+  <span>
+    <span class="r-name">m365-agents-py</span>
+    <span class="r-desc">Microsoft 365 Agents SDK for Python. Build multichannel agents for Teams/M365/Copilot Studio with aiohttp hosting, AgentApplication routing, streaming responses, and MSAL-based auth. Triggers: &quot;Microsoft 365 Agents SDK&quot;, &quot;microsoft_agents&quot;, &quot;AgentApplication&quot;, &quot;start_agent_process&quot;, &quot;TurnContext&quot;, &quot;Copilot Studio client&quot;, &quot;CloudAdapter&quot;.</span>
+  </span>
+  <span class="r-src">microsoft/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/dispatching-parallel-agents/index.html"
+     data-source="obra-superpowers"
+     data-category="agents"
+     data-search="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies agents agents obra/superpowers">
+  <span>
+    <span class="r-name">dispatching-parallel-agents</span>
+    <span class="r-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add microsoft-azure/entra-agent-id</code>
+  <button type="button" data-copy="npx aidentity add microsoft-azure/entra-agent-id" aria-label="Copy install entra-agent-id">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/microsoft/skills" rel="noopener">microsoft/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Microsoft Corporation</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>agents</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">microsoft-azure/entra-agent-id</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/entra-agent-id/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

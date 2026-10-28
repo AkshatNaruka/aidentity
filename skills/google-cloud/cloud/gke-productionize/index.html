@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gke-productionize — Aidentity</title>
+<meta name="description" content="Orchestrates comprehensive production readiness reviews and assessments for GKE clusters and workloads across scalability, security, reliability, observability, backup/DR, and cost optimization. Use when asked to productionize, prepare, assess, audit, or review a GKE cluster or workload before going live to production. Don&#39;t use for deep-dive single-domain implementation (use specific domain skills like gke-workload-scaling, gke-platform-security, gke-workload-security, gke-service-networking, gke-reliability instead).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-productionize/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="gke-productionize — Aidentity">
+<meta property="og:description" content="Orchestrates comprehensive production readiness reviews and assessments for GKE clusters and workloads across scalability, security, reliability, observability, backup/DR, and cost optimization. Use when asked to productionize, prepare, assess, audit, or review a GKE cluster or workload before going live to production. Don&#39;t use for deep-dive single-domain implementation (use specific domain skills like gke-workload-scaling, gke-platform-security, gke-workload-security, gke-service-networking, gke-reliability instead).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-productionize/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"gke-productionize","description":"Orchestrates comprehensive production readiness reviews and assessments for GKE clusters and workloads across scalability, security, reliability, observability, backup/DR, and cost optimization. Use when asked to productionize, prepare, assess, audit, or review a GKE cluster or workload before going live to production. Don't use for deep-dive single-domain implementation (use specific domain skills like gke-workload-scaling, gke-platform-security, gke-workload-security, gke-service-networking, gke-reliability instead).","url":"https://akshatnaruka.github.io/aidentity/skills/google-cloud/cloud/gke-productionize/","author":{"@type":"Person","name":"Google LLC"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../skills/index.html">Browse</a>
+      <a href="../../../../sources/index.html">Sources</a>
+      <a href="../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../skills/index.html?category=cloud">cloud</a><span>/</span>gke-productionize
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">google/skills · Apache-2.0</p>
+      <h1>gke-productionize</h1>
+      <p class="summary">Orchestrates comprehensive production readiness reviews and assessments for GKE clusters and workloads across scalability, security, reliability, observability, backup/DR, and cost optimization. Use when asked to productionize, prepare, assess, audit, or review a GKE cluster or workload before going live to production. Don&#39;t use for deep-dive single-domain implementation (use specific domain skills like gke-workload-scaling, gke-platform-security, gke-workload-security, gke-service-networking, gke-reliability instead).</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../../skills/index.html?q=cloud">cloud</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>GKE Productionize Skill</h3>
+<p>This skill acts as a high-level orchestrator for preparing a GKE cluster and its</p>
+<p>workloads for production readiness.</p>
+<p>&gt; [!IMPORTANT]</p>
+<p>&gt; This is a <strong>meta-skill</strong> or <strong>orchestrator skill</strong>. You are</p>
+<p>&gt; expected to invoke and run many other specialized skills listed in this</p>
+<p>&gt; document as part of the overall productionization process. Do not attempt to</p>
+<p>&gt; implement all production readiness features directly within this skill;</p>
+<p>&gt; instead, use this skill to assess the environment and then delegate to the</p>
+<p>&gt; specific skills for each domain.</p>
+<h4>Scope</h4>
+<p>This skill is adaptable to:</p>
+<ul>
+<li>A single application (already on Kubernetes or not).</li>
+<li>A set of applications.</li>
+<li>A target cluster.</li>
+</ul>
+<h4>Workflow</h4>
+<h5>1. Discovery Phase</h5>
+<p>Before making recommendations, discover the current state of the environment.</p>
+<h5>Cluster Discovery</h5>
+<p>Run these commands to understand the cluster setup:</p>
+<ul>
+<li>Check cluster details: `gcloud container clusters describe {cluster_name}</li>
+</ul>
+<p>    --location {location} --project {project}`</p>
+<ul>
+<li>Check for Autopilot vs Standard: Look for the following block in the</li>
+</ul>
+<p>    describe output:</p>
+<p>    <pre><code>    autopilot:
+      enabled: true
+    </code></pre></p>
+<ul>
+<li>Check release channel: Look for <code>releaseChannel</code>.</li>
+</ul>
+<h5>Workload Discovery</h5>
+<p>If a specific application is targeted, discover its configuration:</p>
+<ul>
+<li>Get deployment/statefulset details: `kubectl get deployment {app_name} -n</li>
+</ul>
+<p>    {namespace} -o yaml`</p>
+<ul>
+<li>Check for dedicated namespace and labels: `kubectl get namespace {namespace}</li>
+</ul>
+<p>    -o yaml` (Look for Pod Security Standards labels).</p>
+<ul>
+<li>Check for dedicated service account usage: `kubectl get pods -n {namespace}</li>
+</ul>
+<p>    -o</p>
+<p>    custom-columns=&quot;NAME:.metadata.name,SERVICE_ACCOUNT:.spec.serviceAccountName&quot;`</p>
+<ul>
+<li>Check for resource requests and limits.</li>
+<li>Check for liveness, readiness, and startup probes.</li>
+<li>Check for HPA: <code>kubectl get hpa -n {namespace}</code></li>
+<li>Check for PDB: <code>kubectl get pdb -n {namespace}</code></li>
+<li>Check for NetworkPolicies: <code>kubectl get networkpolicy -n {namespace}</code></li>
+</ul>
+<h5>2. Production Readiness Assessment</h5>
+<p>**Before implementation, you MUST run the skills for each relevant specialized</p>
+<p>area listed below and incorporate its guidance into your assessment and plan.</p>
+<p>Failure to do so will result in a non-compliant production configuration.**</p>
+<h5>A. App Onboarding (Pre-Kubernetes)</h5>
+<p>If the application is not yet running on GKE, you MUST run the</p>
+<p><code>gke-app-onboarding</code> skill for planning containerization, image building, and</p>
+<p>basic deployment.</p>
+<h5>B. Scalability &amp; Resource Management</h5>
+<p>Ensure workloads have appropriate resources and autoscaling.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-workload-scaling</code> skill for configuring</li>
+</ul>
+<p>    HPA, VPA, and resource limits.</p>
+<h5>C. Observability</h5>
+<p>Ensure adequate logging and monitoring are in place.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-observability</code> skill for setting up Cloud</li>
+</ul>
+<p>    Logging, Monitoring, and Managed Prometheus.</p>
+<h5>D. Reliability</h5>
+<p>Ensure high availability and graceful degradation.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-reliability</code> skill for configuring</li>
+</ul>
+<p>    regional clusters, PDBs, and health probes.</p>
+<h5>E. Security</h5>
+<p>Harden the cluster and workloads.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-platform-security</code> and</li>
+</ul>
+<p>    <code>gke-workload-security</code> skills for Workload Identity, Network Policies, and</p>
+<p>    Shielded Nodes.</p>
+<ul>
+<li><strong>Namespace Isolation</strong>: Ensure workloads run in dedicated namespaces with</li>
+</ul>
+<p>    Pod Security Standards (PSS) enforced via labels.</p>
+<ul>
+<li><strong>Least Privilege</strong>: Ensure workloads use dedicated ServiceAccounts instead</li>
+</ul>
+<p>    of the <code>default</code> ServiceAccount.</p>
+<h5>F. Backup &amp; Disaster Recovery</h5>
+<p>Ensure stateful data is protected.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-backup-dr</code> skill for configuring Backup</li>
+</ul>
+<p>    for GKE and restore procedures.</p>
+<h5>G. Edge Security &amp; Ingress</h5>
+<p>Secure external access.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-service-networking</code> skill for Gateway API,</li>
+</ul>
+<p>    Ingress, and Cloud Armor.</p>
+<h5>H. Cost Optimization</h5>
+<p>Ensure efficient use of resources.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-cost-optimization</code> skill for strategies on</li>
+</ul>
+<p>    rightsizing, quotas, and Spot VMs.</p>
+<h5>I. Upgrades &amp; Maintenance Posture</h5>
+<p>Ensure a safe, predictable upgrade posture.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-upgrades</code> skill for release channel</li>
+</ul>
+<p>    selection, maintenance windows/exclusions, and node pool upgrade strategy.</p>
+<h5>J. Golden Path Defaults Audit</h5>
+<p>Ensure the cluster configuration matches recommended defaults.</p>
+<ul>
+<li><strong>Action</strong>: You MUST run the <code>gke-golden-path</code> skill to compare the cluster</li>
+</ul>
+<p>    against golden path defaults and report deviations with severity and</p>
+<p>    remediation.</p>
+<h5>3. Production Readiness Scoring</h5>
+<p>After the assessment, provide a summary report with a RAG (Red, Amber, Green)</p>
+<p>status for each area and an overall readiness score. This helps prioritize</p>
+<p>remediation efforts.</p>
+<p>Apply this rubric deterministically so repeated assessments of the same</p>
+<p>environment produce the same result:</p>
+<ol>
+<li><strong>Per-domain criteria</strong>: For each assessed domain (A-J), list the concrete</li>
+</ol>
+<p>    checks performed (from the domain skill&#39;s guidance) and classify each check</p>
+<p>    as <strong>pass</strong>, <strong>fail-critical</strong> (production-blocking, e.g., no resource</p>
+<p>    requests, no backups for stateful data, public control plane in a locked</p>
+<p>    down environment), or <strong>fail-minor</strong> (improvement, e.g., missing VPA</p>
+<p>    recommendations, no Spot usage for batch).</p>
+<ol>
+<li><strong>RAG mapping (per domain)</strong>:</li>
+</ol>
+<ul>
+<li><strong>Red</strong> = one or more fail-critical checks.</li>
+<li><strong>Amber</strong> = no fail-critical, but one or more fail-minor checks.</li>
+<li><strong>Green</strong> = all checks pass.</li>
+</ul>
+<ol>
+<li><strong>Domain score</strong>: Green = 100, Amber = 50, Red = 0.</li>
+<li><strong>Weighted overall score</strong>: weight Security, Reliability, and Backup/DR at</li>
+</ol>
+<p>    2x; all other assessed domains at 1x. Overall score = sum(domain score x</p>
+<p>    weight) / sum(weights), rounded to the nearest integer. Exclude domains</p>
+<p>    that are not applicable (e.g., Backup/DR for fully stateless workloads) from</p>
+<p>    both sums and note the exclusion.</p>
+<ol>
+<li><strong>Readiness verdict</strong>: &gt;= 90 with no Red domains = &quot;Production ready&quot;;</li>
+</ol>
+<p>    70-89 with no Red domains = &quot;Ready with follow-ups&quot;; anything else =</p>
+<p>    &quot;Not production ready&quot;.</p>
+<p>In the report, show the per-domain check lists, RAG status, weights, and the</p>
+<p>computed overall score.</p>
+<h4>Adaptability Guidelines</h4>
+<ul>
+<li><strong>Single App</strong>: Focus on Health Probes, HPA, Resource Limits, PDB, and</li>
+</ul>
+<p>    Workload Identity for that specific app.</p>
+<ul>
+<li><strong>Cluster Wide</strong>: Focus on Cluster Autoscaler, Multi-zonal setup, Release</li>
+</ul>
+<p>    Channels, Maintenance Windows, and default Network Policies.</p>
+<ul>
+<li><strong>Proactive Execution</strong>: Proactively execute relevant skills (e.g.,</li>
+</ul>
+<p>    observability, security, scaling, reliability) to assess and propose</p>
+<p>    improvements, seeking user confirmation before applying state-changing</p>
+<p>    implementations.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Google LLC</strong> in
+        <a href="https://github.com/google/skills" rel="noopener">google/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-alert-configuration/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-alert-configuration configures best-practice alerting policies for ai agents using opentelemetry (otel) metrics, generating output as terraform (.tf) configuration files. use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. don&#39;t use for standard infrastructure monitoring unrelated to ai agents, or when the agent is not instrumented with opentelemetry (for reliability, cost, safety, security alerts). note: reliability, cost, safety, and security alerts use generic otel metrics and work across runtimes (such as cloud run, vertex ai). quality alerts rely on vertex ai online monitors and are strictly bound to vertex ai deployments. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-alert-configuration</span>
+    <span class="r-desc">Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to monitor agent latency, error rates, token usage, and quality metrics. Don&#39;t use for standard infrastructure monitoring unrelated to AI agents, or when the agent is not instrumented with OpenTelemetry (for Reliability, Cost, Safety, Security alerts). NOTE: Reliability, Cost, Safety, and Security alerts use generic OTel metrics and work across runtimes (such as Cloud Run, Vertex AI). Quality alerts rely on Vertex AI Online Monitors and are strictly bound to Vertex AI deployments.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-deploy/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-deploy deploy open models or custom weights from model garden to agent platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. use when asked to actively deploy a model, list the model garden catalog of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. also use when copying and deploying a 1p tuned model. don&#39;t use for pure listing/discovery questions of the form &quot;is x deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. don&#39;t use for public vertex ai deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill). cloud agents cloud devops google/skills">
+  <span>
+    <span class="r-name">agent-platform-deploy</span>
+    <span class="r-desc">Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or clean up resources by undeploying models and deleting endpoints. Use when asked to actively deploy a model, list the Model Garden CATALOG of available models, check if a specific model is deployable (`gcloud ai model-garden models list-deployment-config`), query deployment cost, troubleshoot deployment errors (like quota limits), or undeploy/clean up endpoints. Also use when copying and deploying a 1P Tuned Model. Don&#39;t use for pure listing/discovery questions of the form &quot;is X deployed?&quot;, &quot;list my endpoints&quot;, or &quot;which regions have models running?&quot; — for those use `agent-platform-endpoint-management`. Don&#39;t use for public Vertex AI deployments (use the `vertex-deploy` skill) or for running model evaluations (use the `agent-platform-eval-flywheel` skill).</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-endpoint-management/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-endpoint-management manages agent platform serving endpoints. use when you need to create, list, describe, update, or delete serving endpoints for model deployment on agent platform. also use when troubleshooting endpoint permission, quota, or resource busy errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-endpoint-management</span>
+    <span class="r-desc">Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on Agent Platform. Also use when troubleshooting endpoint permission, quota, or resource busy errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-eval-flywheel/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-eval-flywheel measures and improves the quality of ai models and agents on google cloud using the eval quality flywheel methodology. use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on agent platform eval methodology — including dataset schema, llm-as-judge scoring, and common failure causes. for fine-tuning, use agent-platform-tuning. for general production deployment, use agent-platform-deploy. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-eval-flywheel</span>
+    <span class="r-desc">Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+<a class="row" href="../../../../skills/google-cloud/cloud/agent-platform-inference/index.html"
+     data-source="google-cloud"
+     data-category="cloud"
+     data-search="agent-platform-inference connects to and performs inference with google cloud agent platform genai models, including first-party gemini models and third-party openmaas models (llama, deepseek, qwen, etc.). use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling gemini or openmaas models, authenticate with genai sdk, openai sdk, or legacy agent platform sdk, configure base urls and global/regional endpoints, or troubleshoot 429 resource exhausted (dsq), 400 user validation, or 404 not found errors. don&#39;t use for deploying models to endpoints or for running model evaluations. cloud agents cloud google/skills">
+  <span>
+    <span class="r-name">agent-platform-inference</span>
+    <span class="r-desc">Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don&#39;t use for deploying models to endpoints or for running model evaluations.</span>
+  </span>
+  <span class="r-src">google/skills</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add google-cloud/cloud/gke-productionize</code>
+  <button type="button" data-copy="npx aidentity add google-cloud/cloud/gke-productionize" aria-label="Copy install gke-productionize">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/google/skills" rel="noopener">google/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Google LLC</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>cloud</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">google-cloud/cloud/gke-productionize</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/google-cloud/cloud/gke-productionize/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../skills/index.html">Browse</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>
