@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Aidentity Catalog",
+  "type": "object",
+  "required": ["name", "version", "generated_at", "total", "entries"],
+  "properties": {
+    "name": { "const": "aidentity" },
+    "version": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "total": { "type": "integer" },
+    "by_type": { "type": "object" },
+    "by_source": { "type": "object" },
+    "sources": { "type": "object" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "name", "description", "path", "license"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "enum": ["skill", "tool", "hook", "command", "agent", "prompt", "template", "memory"] },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "category": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string" },
+          "path": { "type": "string" },
+          "source": { "type": "object" },
+          "license": { "type": "string" },
+          "distributable": { "type": "boolean" },
+          "install": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
