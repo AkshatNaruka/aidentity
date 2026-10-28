@@ -433,6 +433,7 @@ function buildHome() {
       <h2>Sources</h2>
       <a class="more" href="sources/index.html">Full provenance →</a>
     </div>
+    <div class="table-scroll">
     <table class="table">
       <thead>
         <tr><th>Repository</th><th>Author</th><th>License</th><th>Skills</th></tr>
@@ -441,15 +442,16 @@ function buildHome() {
         ${sourceList
           .map(
             (source) => `<tr>
-          <td><a href="${source.url}" rel="noopener">${esc(source.repo)}</a></td>
-          <td>${esc(source.author)}</td>
-          <td class="mono">${esc(licenseLabel(source.license))}</td>
-          <td class="mono">${source.count}</td>
+          <td data-label="Repository"><a href="${source.url}" rel="noopener">${esc(source.repo)}</a></td>
+          <td data-label="Author">${esc(source.author)}</td>
+          <td data-label="License" class="mono">${esc(licenseLabel(source.license))}</td>
+          <td data-label="Skills" class="mono">${source.count}</td>
         </tr>`
           )
           .join("\n")}
       </tbody>
     </table>
+    </div>
     <div class="callout">
       <strong>On the proprietary entries.</strong> ${(sourceList.find((source) => source.key === "anthropic-official") || {}).count || 0} skills from
       <a href="https://github.com/anthropics/skills" rel="noopener">anthropics/skills</a> are indexed with their
@@ -667,6 +669,7 @@ function buildSources() {
       We mirror content only where the license allows it, and we re-check every source weekly.
     </p>
 
+    <div class="table-scroll">
     <table class="table" style="margin-top:36px">
       <thead>
         <tr><th>Repository</th><th>License</th><th>Skills</th><th>Hosted</th><th>Checked</th></tr>
@@ -675,19 +678,20 @@ function buildSources() {
         ${sourceList
           .map(
             (source) => `<tr>
-          <td>
+          <td data-label="Repository">
             <a href="${source.url}" rel="noopener">${esc(source.repo)}</a>
             <div class="mono" style="font-size:11px">${esc(source.author)}</div>
           </td>
-          <td class="mono">${esc(licenseLabel(source.license))}</td>
-          <td class="mono">${source.count}</td>
-          <td class="mono">${source.publish === false ? "no — index only" : "yes"}</td>
-          <td class="mono">${esc(source.verified)}</td>
+          <td data-label="License" class="mono">${esc(licenseLabel(source.license))}</td>
+          <td data-label="Skills" class="mono">${source.count}</td>
+          <td data-label="Hosted" class="mono">${source.publish === false ? "no — index only" : "yes"}</td>
+          <td data-label="Checked" class="mono">${esc(source.verified)}</td>
         </tr>`
           )
           .join("\n")}
       </tbody>
     </table>
+    </div>
 
     <div class="callout">
       <strong>Why "index only" exists.</strong> Some upstream repositories do not grant redistribution rights.
