@@ -211,7 +211,7 @@ function scoreRepo(repo, inspection, validations, license, days) {
 }
 
 async function importSource(domain, repo, inspection, license, validations) {
-  const sourceKey = `-`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+  const sourceKey = `${repo.owner.login}-${repo.name}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "aid-discover-"));
   try {
     execFileSync("git", ["clone", "--depth", "1", "--filter=blob:none", repo.clone_url, dir], { stdio: "pipe" });
