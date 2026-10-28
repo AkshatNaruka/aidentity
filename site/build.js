@@ -312,7 +312,7 @@ ${body}
 <footer class="site-foot">
   <div class="wrap">
     <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 — see <a href="${p}about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="${p}skills/index.html">Browse</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
+    <p style="margin:0"><a href="${p}skills/index.html">Browse</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}support/index.html">Support</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="${p}assets/app.js" defer></script>
@@ -1223,6 +1223,48 @@ function buildBundlesPage() {
   write("bundles/index.html", layout({ title: "Bundles", description: "Task-based install sets of AI agent skills.", depth: 1, body, page: "bundles", canonical: SITE + "/bundles/" }));
 }
 
+
+function buildSupport() {
+  const body = `
+<section style="padding-top:44px">
+  <div class="wrap" style="max-width:820px">
+    <p class="kicker">Support</p>
+    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Keep the index verified</h2>
+    <p style="max-width:62ch;color:var(--ink-soft);margin-top:16px">
+      Aidentity is free, the registry is CC0, and every install is open source.
+      If it saved you a search, you can fund the weekly verification, new imports
+      and the site. Nothing is paywalled.
+    </p>
+    <div class="support-grid">
+      <div class="support-card">
+        <h3>Buy Me a Coffee</h3>
+        <p>One-off or recurring support. The fastest option.</p>
+        <a href="https://buymeacoffee.com/narukaakshat" rel="noopener"><img src="../assets/buymeacoffee-qr.png" alt="QR code for buymeacoffee.com/narukaakshat" width="220" height="220" loading="lazy"></a>
+        <a class="btn" href="https://buymeacoffee.com/narukaakshat" rel="noopener">buymeacoffee.com/narukaakshat ↗</a>
+      </div>
+      <div class="support-card">
+        <h3>PayPal</h3>
+        <p>Direct one-off support, no account needed on this site.</p>
+        <a class="btn" href="https://paypal.me/AkshatNaruka007" rel="noopener">paypal.me/AkshatNaruka007 ↗</a>
+        <p class="note" style="font-size:12px;color:var(--muted);margin-top:18px">Both links go straight to the payment provider. No card details touch this site.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:28px">
+      <strong>Prefer contributing?</strong> Adding a skill, fixing a license or reporting a dead link is worth more than money. See <a href="../CONTRIBUTING.md">CONTRIBUTING.md</a>.
+    </div>
+  </div>
+</section>
+`;
+  write("support/index.html", layout({
+    title: "Support",
+    description: "Support Aidentity via Buy Me a Coffee or PayPal. The index stays free and CC0.",
+    depth: 1,
+    body,
+    page: "support",
+    canonical: SITE + "/support/",
+  }));
+}
+
 function buildMachineReadable() {
   write("registry.json", JSON.stringify(registry, null, 2) + "\n");
 
@@ -1289,6 +1331,7 @@ function buildMachineReadable() {
     "/for-agents/",
     "/roles/",
     "/bundles/",
+    "/support/",
     ...skills.map((skill) => `/skills/${skill.id}/`),
   ];
   write(
@@ -1415,7 +1458,7 @@ function buildAssets() {
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#14130f"/><rect x="9" y="9" width="14" height="14" fill="#b0341d"/></svg>`
   );
   // Binary assets are copied, not generated.
-  for (const file of ["og.png", "apple-touch-icon.png"]) {
+  for (const file of ["og.png", "apple-touch-icon.png", "buymeacoffee-qr.png"]) {
     const source = path.join(__dirname, "assets", file);
     if (!fs.existsSync(source)) continue;
     fs.mkdirSync(path.join(OUT, "assets"), { recursive: true });
@@ -1529,6 +1572,7 @@ buildMachineReadable();
 buildForAgents();
 buildForRoles();
 buildBundlesPage();
+buildSupport();
 buildAgentSurface();
 
 const pages = skills.length + 5;

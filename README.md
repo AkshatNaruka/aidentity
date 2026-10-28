@@ -254,6 +254,19 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TE
 
 ---
 
+## Support
+
+Aidentity is free and the registry is CC0. If it saved you time, you can fund the weekly verification and new imports:
+
+- **[Buy Me a Coffee](https://buymeacoffee.com/narukaakshat)**
+- **[PayPal](https://paypal.me/AkshatNaruka007)**
+
+<a href="https://buymeacoffee.com/narukaakshat"><img src="site/assets/buymeacoffee-qr.png" alt="Buy Me a Coffee QR code" width="160"></a>
+
+Nothing is paywalled. Contributing a skill or reporting a dead link is just as useful.
+
+---
+
 ## License
 
 - **Code** (`cli/`, `site/`, `scripts/`) — MIT
