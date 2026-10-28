@@ -1,0 +1,64 @@
+name: Discover skills
+
+on:
+  schedule:
+    - cron: "0 8 * * 2" # Tuesdays 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: "Domain to scan, or all"
+        required: false
+        default: all
+      import:
+        description: "Open a PR with verified skills"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DOMAIN: ${{ inputs.domain || 'all' }}
+      IMPORT: ${{ github.event_name == 'schedule' && 'true' || inputs.import }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Discover and verify
+        run: |
+          if [ "$IMPORT" = "true" ]; then FLAG=--import; else FLAG=--dry-run; fi
+          node scripts/discover-skills.js --domain "$DOMAIN" "$FLAG"
+
+      - name: Open pull request
+        if: env.IMPORT == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No verified candidates this run."
+            exit 0
+          fi
+          branch="auto/discover-$(date -u +%Y%m%d-%H%M)"
+          git config user.name "aidentity-bot"
+          git config user.email "bot@aidentity.dev"
+          git checkout -b "$branch"
+          git add skills registry reports
+          git commit -m "feat(skills): auto-discover ${DOMAIN} skills"
+          git push origin "$branch"
+          gh pr create \
+            --title "Auto-discover: ${DOMAIN} skills" \
+            --body-file reports/discovery-latest.md \
+            --base main \
+            --head "$branch" \
+            --label automated \
+            --label skills
