@@ -5,7 +5,7 @@
 - **Imported:** 2026-10-28
 - **License:** CC BY-SA 4.0 (see `LICENSE`)
 - **Imported skills:** audit-context-building, code-maturity-assessor,
-  secure-workflow-guide, agentic-actions-auditor, supply-chain-risk-auditor,
+  agentic-actions-auditor, supply-chain-risk-auditor,
   second-opinion
 
 These skills are share-alike. Keep the license with any redistribution.

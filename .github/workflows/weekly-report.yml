@@ -1,0 +1,53 @@
+name: Weekly registry report
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate
+        run: node scripts/validate.js --json > /tmp/validation.json || true
+
+      - name: Check upstreams
+        run: node scripts/verify-sources.js --json > /tmp/verify.json || true
+
+      - name: Write report
+        run: node scripts/weekly-report.js /tmp/validation.json /tmp/verify.json
+
+      - name: Open report PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          date=$(date -u +%F)
+          branch="automation/weekly-${date}"
+          git config user.name "aidentity-bot"
+          git config user.email "bot@aidentity.dev"
+          git checkout -b "$branch"
+          git add reports/
+          if git diff --cached --quiet; then
+            echo "No new report."
+            exit 0
+          fi
+          git commit -m "chore: weekly registry report ${date}"
+          git push origin "$branch"
+          gh pr create \
+            --title "Weekly registry report ${date}" \
+            --body-file reports/latest.md \
+            --base main \
+            --head "$branch" \
+            --label automated

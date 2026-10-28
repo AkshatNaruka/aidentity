@@ -4,11 +4,30 @@
 >
 > `npx aidentity add code-review`
 
-**386 skills indexed · 367 installable · 14 sources · re-verified weekly**
+**384 skills indexed · 365 installable · 14 sources · re-verified weekly**
 
 Skills are the new packages. There are thousands of them, spread across dozens of repos, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index.
 
----
+## Sources
+
+| Repository | Skills | License | Hosted |
+|---|---:|---|---|
+| [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
+| [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
+| [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
+| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
+| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
+| [anthropics/skills](https://github.com/anthropics/skills) | 19 | LicenseRef-Proprietary | **no — index only** |
+| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
+| [trailofbits/skills](https://github.com/trailofbits/skills) | 9 | CC-BY-SA-4.0 | yes |
+| [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 8 | Apache-2.0 | yes |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
+| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
+| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
+| [AkshatNaruka/aidentity](https://github.com/AkshatNaruka/aidentity) | 1 | MIT | yes |
+
+> **On the Anthropic entries
 
 ## Why this isn't another awesome-list
 

@@ -38,6 +38,15 @@ jobs:
       - name: License gate
         run: node scripts/check-licenses.js
 
+      - name: Validate skills, bundles and tools
+        run: node scripts/validate.js
+
+      - name: Catalog is current
+        run: node scripts/build-catalog.js --check
+
+      - name: Generated tool docs are current
+        run: node scripts/build-tools-doc.js --check
+
       - name: Notices are current
         run: |
           node scripts/generate-notices.js
