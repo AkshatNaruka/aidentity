@@ -25,7 +25,7 @@ const SKILLS_DIR = path.join(ROOT, "skills");
 const REGISTRY_FILE = path.join(ROOT, "registry", "skills.json");
 const SOURCES_FILE = path.join(ROOT, "registry", "sources.json");
 
-const SPDX_LIKE = /^(MIT|Apache-2\.0|BSD-[23]-Clause|ISC|MPL-2\.0|GPL-[23]\.0(-only|-or-later)?|LGPL-3\.0|AGPL-3\.0|CC0-1\.0|CC-BY-4\.0|Unlicense|LicenseRef-[A-Za-z0-9.-]+)$/;
+const SPDX_LIKE = /^(MIT|Apache-2\.0|BSD-[23]-Clause|ISC|MPL-2\.0|GPL-[23]\.0(-only|-or-later)?|LGPL-3\.0|AGPL-3\.0|CC0-1\.0|CC-BY-4\.0|CC-BY-SA-4\.0|CC-BY-SA-4\.0|Unlicense|LicenseRef-[A-Za-z0-9.-]+)$/;
 
 const problems = [];
 const warnings = [];
