@@ -1,63 +1,71 @@
 # Publishing the CLI
 
-`npx aidentity` needs a published npm package. The npm account uses 2FA, and the
-CLI's browser login defaults to passkeys. If your phone has no passkey, use a
-**granular access token with "Bypass 2FA"** instead. That is the supported path
-for CI and for publishing without a QR code.
+The npm package is **staged, not live**. The token is valid, but npm now restricts
+bypass-2FA tokens for direct publishing: `npm publish` creates a `0.0.0-stage`
+placeholder and expects proof-of-presence (2FA) before releasing the real version.
 
-## Option A — publish from GitHub Actions (recommended)
+There are three ways out. Trusted publishing is the one that needs no OTP at all.
 
-1. Open <https://www.npmjs.com/settings/probiex/tokens>.
-2. **Generate New Token → Granular Access Token**.
-   - Name: `aidentity-publish`
-   - Expiration: 90 days
-   - Permissions: **Read and write**
-   - Packages: **All packages** (or `aidentity`)
-   - Check **Bypass 2FA**
-3. Copy the token.
-4. Add it to the repository:
+## Option A — Trusted publishing (recommended, no OTP)
+
+1. Open the package settings: **https://www.npmjs.com/package/aidentity/settings**
+   (log in on the desktop browser; the QR is only the CLI login).
+2. **Trusted Publishing → Add a publisher → GitHub**:
+   - Organization/user: `AkshatNaruka`
+   - Repository: `aidentity`
+   - Workflow filename: `publish.yml`
+   - Environment: leave empty
+3. Run **Actions → Publish CLI → Run workflow**.
+
+The workflow uses GitHub OIDC (`id-token: write`), not `NPM_TOKEN`. npm verifies
+the repository and workflow, then publishes with provenance. No QR, no OTP, no
+long-lived token.
+
+If the package page has no Trusted Publishing section yet because only the
+placeholder exists, approve the staged version first (Option B), then add it.
+
+## Option B — Approve the staged version with 2FA
+
+The staged version is `0.1.0`; the placeholder is `0.0.0-stage`.
+
+1. Open **https://www.npmjs.com/package/aidentity** and look for **Staged publishes**
+   (or Settings → Publishing access). Approve `0.1.0`.
+2. Or add an authenticator app in **Account → Two-Factor Authentication**, then:
 
    ```bash
-   gh secret set NPM_TOKEN
-   # paste the token when prompted
+   npm stage list
+   npm stage approve <stage-id>
    ```
 
-5. Run **Actions → Publish CLI → Run workflow**. Leave `dry_run` off.
+   The bypass token cannot approve; approval needs a human OTP/passkey/recovery code.
 
-The workflow verifies the registry, license gate and validator before publishing.
+3. If the web login also refuses your passkey, use a **recovery code** on the
+   login screen, or reset 2FA from a signed-in session.
 
-## Option B — publish locally with the token
+## Option C — Disable the publish 2FA requirement
+
+In **Account → Two-Factor Authentication**, turn off “Require 2FA for publishing”,
+then publish with the token. This is the least secure option; turn it back on
+afterwards.
 
 ```bash
-npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
 npm publish --access public
-```
-
-The token bypasses the OTP prompt. Do not commit it; `npm config` writes to
-`~/.npmrc`.
-
-## Why the QR appears
-
-`npm publish` with an interactive login asks for a one-time password. npm's web
-login now prefers passkeys; if the phone has no passkey registered, the QR has
-nothing to complete. A granular token with **Bypass 2FA** is the way around it.
-Adding an authenticator app (TOTP) in npm account settings also works, then:
-
-```bash
-npm publish --access public --otp=123456
 ```
 
 ## Verify
 
 ```bash
-npm view aidentity version
+npm view aidentity version          # expect 0.1.0
 npx -y aidentity --help
 npx -y aidentity add code-review --agent claude --dry-run
 ```
 
-## Switch the docs back
+## If you keep the GitHub install path
 
-After the package is live:
+`npx AkshatNaruka/aidentity add …` works today and is versioned by commit. It is
+a valid permanent fallback, just longer.
+
+## Switch the docs back after publishing
 
 ```bash
 grep -rl "npx AkshatNaruka/aidentity" README.md CONTRIBUTING.md docs opencode site scripts \
@@ -68,8 +76,3 @@ node site/build.js
 ./scripts/check-all.sh
 git add -A && git commit -m "docs: use the published npm package" && git push
 ```
-
-## What ships
-
-`cli/`, `registry/`, `skills/`, `bundles/`, `README.md`, `LICENSE` — about 5 MB
-packed, 18 MB unpacked. No postinstall, no network calls at install time.

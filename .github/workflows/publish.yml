@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write # trusted publishing: npm verifies the workflow via OIDC
 
 jobs:
   publish:
@@ -20,7 +21,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: "https://registry.npmjs.org"
 
       - name: Verify package
         run: |
@@ -28,12 +28,14 @@ jobs:
           node scripts/check-licenses.js
           node scripts/validate.js
 
+      # No NPM_TOKEN. npm exchanges the GitHub OIDC token for a short-lived
+      # publish credential. Requires a Trusted Publisher entry on npmjs.com:
+      # package aidentity -> Settings -> Trusted Publishing -> GitHub
+      # owner AkshatNaruka, repo aidentity, workflow publish.yml.
       - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             npm publish --access public --dry-run
           else
-            npm publish --access public
+            npm publish --access public --provenance
           fi
