@@ -497,3 +497,30 @@ p { margin: 0 0 1em; }
 .bundle-skills li { break-inside: avoid; padding: 4px 0; font-size: 13px; }
 .bundle-skills .mono { color: var(--muted); font-size: 10.5px; }
 @media (max-width: 640px) { .bundle-skills { columns: 1; } }
+
+/* ---------- split section + copyable AI prompt ---------- */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; gap: 36px; } }
+.prompt-block {
+  background: #14130f; color: #efeade; border-left: 3px solid var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  margin-top: 18px;
+}
+.prompt-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; border-bottom: 1px solid #2b2a26;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: #b9b2a0;
+}
+.prompt-head button {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+  text-transform: uppercase; background: rgba(255,255,255,.07); color: #efe9db;
+  border: 1px solid #6f6a5c; padding: 5px 8px; cursor: pointer; border-radius: 2px;
+}
+.prompt-head button:hover { color: #fff; border-color: #fff; }
+.prompt-block pre {
+  margin: 0; padding: 14px; overflow-x: auto;
+  font-family: var(--mono); font-size: 12px; line-height: 1.6;
+  white-space: pre-wrap; overflow-wrap: anywhere; color: #efeade;
+}
+.prompt-block code { color: inherit; background: none; border: 0; padding: 0; }

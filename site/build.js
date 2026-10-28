@@ -130,6 +130,26 @@ const HERO_ART = `
   </g>
 </svg>`;
 
+
+const SETUP_PROMPT = `Set up my agent with Aidentity.
+
+1. Fetch https://akshatnaruka.github.io/aidentity/llms.txt and read it.
+2. Fetch https://akshatnaruka.github.io/aidentity/search.json.
+3. Ask me what I am building. Recommend the closest bundle and up to five skills.
+4. For each skill I approve, run: npx aidentity add <id>
+5. Skip content_url:null and any status other than "stable".
+6. Tell me the license before installing. Never install an index-only skill.`;
+
+function promptBlock(prompt, label = "AI setup prompt") {
+  return `<div class="prompt-block">
+  <div class="prompt-head">
+    <span>${esc(label)}</span>
+    <button type="button" data-copy="${esc(prompt)}" aria-label="Copy ${esc(label)}">copy prompt</button>
+  </div>
+  <pre><code>${esc(prompt)}</code></pre>
+</div>`;
+}
+
 function rotatingCommandBlock(commands) {
   const first = commands[0];
   return `<div class="cmd cmd-rotate" data-commands="${esc(JSON.stringify(commands))}">
@@ -608,10 +628,20 @@ function buildHome() {
 
 <section>
   <div class="wrap">
-    <div class="section-head"><h2>Add a skill</h2></div>
-    <p style="max-width:60ch;color:var(--ink-soft)">One JSON record, one pull request. If it's accurate and correctly licensed, it ships the same day. No editorial committee, no backlog.</p>
-    ${commandBlock("node scripts/build-registry.js && node scripts/check-licenses.js", "validate command")}
-    <p class="hero-links"><a href="${REPO}/blob/main/CONTRIBUTING.md" rel="noopener">Contributing guide →</a></p>
+    <div class="split">
+      <div>
+        <h2>Add a skill</h2>
+        <p style="max-width:60ch;color:var(--ink-soft);margin-top:14px">One JSON record, one pull request. If it's accurate and correctly licensed, it ships the same day. No editorial committee, no backlog.</p>
+        ${commandBlock("./scripts/check-all.sh", "validate command")}
+        <p class="hero-links"><a href="${REPO}/blob/main/CONTRIBUTING.md" rel="noopener">Contributing guide →</a></p>
+      </div>
+      <div>
+        <h2>Set up with your agent</h2>
+        <p style="max-width:60ch;color:var(--ink-soft);margin-top:14px">Copy this prompt into Claude Code, Cursor, Codex or any agent that can fetch a URL. It reads the index, asks what you are building, and installs only what you approve.</p>
+        ${promptBlock(SETUP_PROMPT)}
+        <p class="hero-links"><a href="for-agents/index.html">Agent setup page →</a><a href="llms.txt">llms.txt</a><a href="agent.json">agent.json</a></p>
+      </div>
+    </div>
   </div>
 </section>
 `;
