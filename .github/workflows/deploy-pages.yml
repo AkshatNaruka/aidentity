@@ -51,3 +51,10 @@ jobs:
           user_name: aidentity-bot
           user_email: bot@aidentity.dev
           commit_message: "deploy: ${{ github.sha }}"
+
+      # Give Pages a moment, then tell search engines what changed.
+      - name: Submit to IndexNow
+        continue-on-error: true
+        run: |
+          sleep 20
+          node scripts/indexnow.js

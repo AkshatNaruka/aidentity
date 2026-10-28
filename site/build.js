@@ -25,6 +25,7 @@ const SITE = (() => {
 const BASE = new URL(SITE).pathname.replace(/\/$/, "");
 const REPO = "https://github.com/AkshatNaruka/aidentity";
 const GENERATED = new Date().toISOString().slice(0, 10);
+const INDEXNOW_KEY = "c53fff0269a753a2d4152843dfb58136";
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
 const sources = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "sources.json"), "utf8")).sources;
@@ -963,6 +964,7 @@ ${urls
   );
 
   const aiBots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-Web", "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot", "Bingbot"];
+  write(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY + "\n");
   write(
     "robots.txt",
     [
