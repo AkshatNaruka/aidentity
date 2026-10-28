@@ -32,7 +32,7 @@ Fetch the registry once. Do not scrape the HTML.
     "license": "MIT"
   },
   "distributable": true,
-  "install": "npx AkshatNaruka/aidentity add mattpocock/engineering/code-review"
+  "install": "npx aidentity add mattpocock/engineering/code-review"
 }
 ```
 
@@ -47,10 +47,10 @@ Fetch the registry once. Do not scrape the HTML.
 ## Installing
 
 ```bash
-npx AkshatNaruka/aidentity add <id>                    # auto-detects the agent in cwd
-npx AkshatNaruka/aidentity add <id> --agent cursor     # explicit
-npx AkshatNaruka/aidentity add <id> --global           # into ~/ instead of the project
-npx AkshatNaruka/aidentity add <id> --dry-run          # resolve and print the destination
+npx aidentity add <id>                    # auto-detects the agent in cwd
+npx aidentity add <id> --agent cursor     # explicit
+npx aidentity add <id> --global           # into ~/ instead of the project
+npx aidentity add <id> --dry-run          # resolve and print the destination
 ```
 
 Supported targets: `claude`, `opencode`, `codex`, `cursor`, `copilot`, `gemini`.

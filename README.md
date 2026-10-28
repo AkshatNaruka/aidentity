@@ -10,12 +10,8 @@
 
 **[Browse the index](https://akshatnaruka.github.io/aidentity/)** · **[Read llms.txt](https://akshatnaruka.github.io/aidentity/llms.txt)** · **[Registry JSON](https://akshatnaruka.github.io/aidentity/registry.json)**
 
-> **npm status:** the `aidentity` package is awaiting a 2FA publish. Until then use
-> `npx AkshatNaruka/aidentity add …` — the same CLI, installed straight from this
-> repository. The shorter `npx aidentity add …` works the moment the package is published.
-
 ```bash
-npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
+npx aidentity add mattpocock/engineering/code-review
 ```
 
 Skills are the new packages. There are thousands of them, spread across dozens of repositories, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index: **526 skills from 25 sources, each with its author, license and last verification date**, installable into the agent you already use.
@@ -86,19 +82,19 @@ This is an index, not a fork. Every skill belongs to its author.
 
 ```bash
 # Find something
-npx AkshatNaruka/aidentity search "code review"
+npx aidentity search "code review"
 
 # Install into the agent you are in (auto-detected)
-npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
+npx aidentity add mattpocock/engineering/code-review
 
 # Pick the target explicitly
-npx AkshatNaruka/aidentity add systematic-debugging --agent cursor
+npx aidentity add systematic-debugging --agent cursor
 
 # Install a task bundle
 node scripts/install.js starter-10 --platform claude
 
 # Browse the registry
-npx AkshatNaruka/aidentity list --category testing
+npx aidentity list --category testing
 ```
 
 No config, no account, no vendor lock-in. The skill lands in `.claude/skills/`, `.cursor/skills/`, `.codex/skills/`, `.gemini/skills/`, `.opencode/skills/` or `.github/skills/`.
@@ -137,7 +133,7 @@ Full task router: **[INDEX.md](INDEX.md)** · by role: **[ROLES.md](ROLES.md)** 
 | Prompts | 256 Fabric patterns | [`prompts/`](prompts/) |
 | Memory | patterns + project template | [`memory/`](memory/) |
 
-Machine-readable index: [`registry/catalog.json`](registry/catalog.json) — 463 entries with a `type` field. Nothing in the tables above is hand-maintained; `scripts/build-catalog.js` generates it.
+Machine-readable index: [`registry/catalog.json`](registry/catalog.json) — 595 entries with a `type` field. Nothing in the tables above is hand-maintained; `scripts/build-catalog.js` generates it.
 
 ---
 
@@ -173,7 +169,7 @@ Full provenance: [`registry/skills.json`](registry/skills.json) · [`THIRD_PARTY
 flowchart LR
   A[Upstream repos] -->|scan + verify weekly| B[registry/catalog.json]
   B --> C[Static site + search]
-  B --> D[npx AkshatNaruka/aidentity]
+  B --> D[npx aidentity]
   B --> E[llms.txt / ai.txt]
   C --> F[Browse]
   D --> G[Skill installed in your agent]

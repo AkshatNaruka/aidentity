@@ -90,7 +90,7 @@ Three claims nobody else currently makes together:
 
 `all-ai` is un-Googleable, collides with a thousand repos, and says nothing. Rename **before** launch (GitHub redirects old URLs, and the repo is private, so renaming is free right now).
 
-**Decided: `aidentity`.** Repo `aidentity`, site `aidentity.dev`, CLI `npx AkshatNaruka/aidentity`. Everything in this plan and the generated registry uses that name.
+**Decided: `aidentity`.** Repo `aidentity`, site `aidentity.dev`, CLI `npx aidentity`. Everything in this plan and the generated registry uses that name.
 
 ---
 
@@ -116,7 +116,7 @@ aidentity/
 │   ├── src/pages/skills/[id].astro
 │   ├── src/pages/browse.astro
 │   └── public/llms.txt        # agents can read the registry directly
-├── cli/                       # npx AkshatNaruka/aidentity add|search|list|bundle
+├── cli/                       # npx aidentity add|search|list|bundle
 ├── scripts/
 │   ├── build-registry.js      # ✅ done
 │   ├── verify-sources.js      # weekly: HEAD each source URL, stamp verified_at
@@ -176,10 +176,10 @@ Phase 0 is a hard gate. Nothing ships publicly before it passes.
 
 ### Phase 3 — CLI (2 days) ← this is what makes it a habit
 ```bash
-npx AkshatNaruka/aidentity search code review
-npx AkshatNaruka/aidentity add mattpocock/engineering/code-review   # auto-detects Claude Code / OpenCode / Cursor / Codex
-npx AkshatNaruka/aidentity bundle add ship-a-saas
-npx AkshatNaruka/aidentity verify
+npx aidentity search code review
+npx aidentity add mattpocock/engineering/code-review   # auto-detects Claude Code / OpenCode / Cursor / Codex
+npx aidentity bundle add ship-a-saas
+npx aidentity verify
 ```
 - [ ] Resolve target agent from cwd (`.claude/`, `.opencode/`, `.codex/`, `.cursor/`, `.github/`)
 - [ ] `--dry-run`, `--json` for agents
@@ -206,7 +206,7 @@ npx AkshatNaruka/aidentity verify
 1. **Open 30–50 "good first issue: add a skill"** tasks. Merge every one within 24h. Contributors who get merged become sharers.
 2. **Ask the 6 upstream maintainers for a link.** You are indexing their work with attribution and sending them traffic. Matt Pocock, Jesse Vincent, Addy Osmani, Google, Microsoft — a short, specific DM/issue. This is the single highest-leverage distribution move available to you: their combined audience is enormous, and "we're featured in the index" is an easy yes.
 3. **Seed 5 design partners**: people who will install and post a screenshot on launch day.
-4. **Record a 30-second demo** — terminal, `npx AkshatNaruka/aidentity add`, skill appears, agent uses it. No slides.
+4. **Record a 30-second demo** — terminal, `npx aidentity add`, skill appears, agent uses it. No slides.
 
 ### T-0 (launch day — Tuesday/Wednesday/Thursday, 7–9am PT)
 Pick **one** primary and cross-post:
@@ -324,7 +324,7 @@ The license gate surfaced the Anthropic problem before a lawyer did. That is the
 
 | Decision | Choice |
 |---|---|
-| Name | **aidentity** — repo `aidentity`, site `aidentity.dev`, CLI `npx AkshatNaruka/aidentity` |
+| Name | **aidentity** — repo `aidentity`, site `aidentity.dev`, CLI `npx aidentity` |
 | Anthropic skills | Content deleted; 19 pointer entries in `registry/pointers/anthropic-official.json` |
 | Repository | Rewrite in place, then collapse history to one clean commit before publishing |
 | First build | The site (done) |
@@ -335,7 +335,7 @@ The license gate surfaced the Anthropic problem before a lawyer did. That is the
 2. ✅ **5.6 MB prompt dump removed.** `prompts/` is now 2.1 MB; sources are linked instead.
 3. ✅ **Repo renamed** to `aidentity` (GitHub already redirects `all-ai`).
 4. ⏳ **Force-push blocked:** the active `gh` token lacks the `workflow` scope, so GitHub rejects any push that creates `.github/workflows/*`. Run `gh auth refresh -h github.com -s workflow`, then `git push --force origin main`.
-5. ⏳ **Publish the CLI** (`npm publish`) so `npx AkshatNaruka/aidentity` resolves.
+5. ⏳ **Publish the CLI** (`npm publish`) so `npx aidentity` resolves.
 6. ⏳ **Decide on `prompts/`, `agents/`, `memory/`, `templates/`.** They are real content but outside the registry's maintained surface. If they stay, the README must say so plainly.
 7. ⏳ **Enable Pages → GitHub Actions.** The workflow reads `steps.pages.outputs.base_url` automatically.
 

@@ -475,10 +475,10 @@ function skillBody(skill) {
 
 function buildHome() {
   const heroCommands = [
-    "npx AkshatNaruka/aidentity add code-review",
-    "npx AkshatNaruka/aidentity add expo-router",
-    "npx AkshatNaruka/aidentity add audit-context-building",
-    "npx AkshatNaruka/aidentity add copywriting",
+    "npx aidentity add code-review",
+    "npx aidentity add expo-router",
+    "npx aidentity add audit-context-building",
+    "npx aidentity add copywriting",
   ];
   const featured = startHere.slice(0, 6);
   const topCategories = categoryList;
@@ -961,7 +961,7 @@ function buildAbout() {
       <h3 style="font-size:0.98rem;margin:18px 0 6px">Are the skills free to use?</h3>
       <p>Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. ${registry.total - registry.distributable} skills from Anthropic are indexed with a link only, because their upstream license does not permit redistribution. Every page states its license.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I install one?</h3>
-      <p>Run <span class="mono">npx AkshatNaruka/aidentity add &lt;id&gt;</span>, or copy the folder from <span class="mono">skills/&lt;source&gt;/&lt;name&gt;/</span>. The CLI detects Claude Code, Cursor, Codex, Gemini CLI, OpenCode or Copilot and writes to the right directory.</p>
+      <p>Run <span class="mono">npx aidentity add &lt;id&gt;</span>, or copy the folder from <span class="mono">skills/&lt;source&gt;/&lt;name&gt;/</span>. The CLI detects Claude Code, Cursor, Codex, Gemini CLI, OpenCode or Copilot and writes to the right directory.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">How do you keep the index accurate?</h3>
       <p>CI rebuilds the registry on every change and checks the license policy. A weekly job requests every upstream repository, writes the result to <span class="mono">registry/verified.json</span> and opens a report PR when something is unreachable.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">Can I add a skill?</h3>
@@ -991,7 +991,7 @@ function buildAbout() {
         mainEntity: [
           { "@type": "Question", name: "What is Aidentity?", acceptedAnswer: { "@type": "Answer", text: `Aidentity is a verified index of ${registry.total} AI agent skills with source, author, license and verification data, installable with one command.` } },
           { "@type": "Question", name: "Are the skills free to use?", acceptedAnswer: { "@type": "Answer", text: "Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. Some Anthropic skills are index-only because their license does not permit redistribution. Each page states its license." } },
-          { "@type": "Question", name: "How do I install a skill?", acceptedAnswer: { "@type": "Answer", text: "Run npx AkshatNaruka/aidentity add <id>, or copy the folder from skills/<source>/<name>/. The CLI detects the agent and writes to its skills directory." } },
+          { "@type": "Question", name: "How do I install a skill?", acceptedAnswer: { "@type": "Answer", text: "Run npx aidentity add <id>, or copy the folder from skills/<source>/<name>/. The CLI detects the agent and writes to its skills directory." } },
           { "@type": "Question", name: "How are sources verified?", acceptedAnswer: { "@type": "Answer", text: "CI rebuilds the registry and checks licenses on every change. A weekly job checks every upstream repository and reports dead sources." } }
         ]
       }),
@@ -1207,7 +1207,7 @@ function buildMachineReadable() {
     "",
     `- Aidentity is a verified index of AI agent skills. It is not a fork: each skill belongs to its upstream author.`,
     `- ${registry.total} entries: ${registry.distributable} hosted and installable, ${registry.total - registry.distributable} indexed with an upstream link only.`,
-    `- Install: \`npx AkshatNaruka/aidentity add <id>\` or copy \`skills/<source>/<name>/\`.`,
+    `- Install: \`npx aidentity add <id>\` or copy \`skills/<source>/<name>/\`.`,
     `- Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.`,
     `- Every source is re-checked weekly; \`registry/verified.json\` records the last check.`,
     `- Machine-readable: ${SITE}/registry.json (JSON), ${SITE}/search.json (compact search), ${SITE}/agent.json (manifest), ${SITE}/ai.txt (AI usage), ${SITE}/sitemap.xml (URLs), ${SITE}/feed.xml (RSS).`,
@@ -1217,7 +1217,7 @@ function buildMachineReadable() {
     "1. Fetch `search.json` once and keep it. Filter by `tags`, `category`, `status` and `description`.",
     "2. Fetch `content_url` for the full `SKILL.md` before recommending an install.",
     "3. If `content_url` is null the skill is index-only: link `upstream`, never install it.",
-    "4. Install with `npx AkshatNaruka/aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.",
+    "4. Install with `npx aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.",
     "5. Local agents can run the MCP server: `node cli/mcp.js`.",
     "",
     "## Files",
@@ -1229,7 +1229,7 @@ function buildMachineReadable() {
     "## Install",
     "",
     "```bash",
-    "npx AkshatNaruka/aidentity add <id>",
+    "npx aidentity add <id>",
     "```",
     "",
     "## Skills",
@@ -1453,7 +1453,7 @@ function buildAgentSurface() {
       "Fetch /search.json once and keep it. Filter locally by tags, category, status and description.",
       "Fetch content_url for the full SKILL.md before recommending an install.",
       "Respect distributable: index-only entries (content_url null) must be linked upstream, not installed.",
-      "Install with `npx AkshatNaruka/aidentity add <id>` or by copying the folder from the GitHub repository.",
+      "Install with `npx aidentity add <id>` or by copying the folder from the GitHub repository.",
     ],
   };
   write("agent.json", JSON.stringify(manifest, null, 2) + "\n");

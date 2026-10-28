@@ -34,7 +34,7 @@ The fastest way to contribute is to add one skill. It takes about 30 seconds.
        "license": "MIT"
      },
      "distributable": true,
-     "install": "npx AkshatNaruka/aidentity add author/skill-name"
+     "install": "npx aidentity add author/skill-name"
    }
    ```
 
