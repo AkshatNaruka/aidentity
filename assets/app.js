@@ -36,10 +36,19 @@
       if (ok) {
         done();
       } else {
-        button.textContent = "select";
+        // Last resort: select the command so the user can copy it manually.
+        const code = button.closest(".cmd") && button.closest(".cmd").querySelector("code");
+        if (code && window.getSelection) {
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        button.textContent = "selected";
         window.setTimeout(function () {
           button.textContent = "copy";
-        }, 1600);
+        }, 2000);
       }
     };
 
