@@ -47,6 +47,71 @@ const esc = (value) =>
 
 const up = (depth) => "../".repeat(depth);
 
+const HERO_ART = `
+<svg viewBox="0 0 480 480" role="img" aria-label="A graph of connected agent skills">
+  <defs>
+    <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b0341d" stop-opacity=".30"/>
+      <stop offset="100%" stop-color="#b0341d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="heroLine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b0341d" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#f4f1e8" stop-opacity=".05"/>
+    </linearGradient>
+  </defs>
+  <circle class="glow" cx="240" cy="240" r="212" fill="url(#heroGlow)"/>
+  <g class="ring ring-a" fill="none" stroke="#f4f1e8" stroke-opacity=".16" stroke-dasharray="2 11">
+    <circle cx="240" cy="240" r="198"/>
+  </g>
+  <g class="ring ring-b" fill="none" stroke="#f4f1e8" stroke-opacity=".10" stroke-dasharray="1 9">
+    <circle cx="240" cy="240" r="158"/>
+  </g>
+  <g class="ring ring-c" fill="none" stroke="#b0341d" stroke-opacity=".38" stroke-dasharray="3 14">
+    <circle cx="240" cy="240" r="118"/>
+  </g>
+  <g stroke="#f4f1e8" stroke-opacity=".07">
+    <line x1="240" y1="26" x2="240" y2="62"/><line x1="240" y1="418" x2="240" y2="454"/>
+    <line x1="26" y1="240" x2="62" y2="240"/><line x1="418" y1="240" x2="454" y2="240"/>
+  </g>
+  <g stroke="url(#heroLine)" stroke-width="1">
+    <line x1="240" y1="240" x2="94" y2="142"/><line x1="240" y1="240" x2="386" y2="142"/>
+    <line x1="240" y1="240" x2="386" y2="338"/><line x1="240" y1="240" x2="94" y2="338"/>
+  </g>
+  <g fill="#b0341d">
+    <circle cx="94" cy="142" r="4.5"/><circle cx="386" cy="142" r="4.5"/>
+    <circle cx="386" cy="338" r="4.5"/><circle cx="94" cy="338" r="4.5"/>
+  </g>
+  <g fill="#f4f1e8" font-family="ui-monospace, Menlo, monospace" font-size="9" opacity=".55">
+    <text x="62" y="128">SKILL.md</text>
+    <text x="360" y="128">MCP</text>
+    <text x="360" y="360">CLI</text>
+    <text x="52" y="360">AGENTS</text>
+  </g>
+  <g class="core">
+    <rect x="205" y="205" width="70" height="70" fill="#14130f" stroke="#b0341d" stroke-width="1.5"/>
+    <rect x="221" y="221" width="38" height="38" fill="none" stroke="#f4f1e8" stroke-opacity=".22"/>
+  </g>
+  <circle cx="240" cy="240" r="5" fill="#b0341d"/>
+  <g class="sat">
+    <circle cx="240" cy="44" r="3.5" fill="#f4f1e8"/>
+    <circle cx="436" cy="240" r="3" fill="#b0341d"/>
+    <circle cx="240" cy="436" r="3" fill="#f4f1e8"/>
+  </g>
+  <g class="blink" fill="#b0341d">
+    <circle cx="150" cy="240" r="2"/><circle cx="330" cy="240" r="2"/>
+  </g>
+</svg>`;
+
+function rotatingCommandBlock(commands) {
+  const first = commands[0];
+  return `<div class="cmd cmd-rotate" data-commands="${esc(JSON.stringify(commands))}">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code aria-live="off">${esc(first)}</code>
+  <button type="button" data-copy="${esc(first)}" aria-label="Copy install command">copy</button>
+</div>`;
+}
+
+
 function jsonld(value) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
@@ -380,13 +445,22 @@ function skillBody(skill) {
 // ---------------------------------------------------------------------------
 
 function buildHome() {
+  const heroCommands = [
+    "mattpocock/engineering/code-review",
+    "expo/expo-router",
+    "trailofbits/audit-context-building",
+    "marketingskills/copywriting",
+  ]
+    .filter((id) => skills.some((skill) => skill.id === id))
+    .map((id) => `npx aidentity add ${id}`);
   const featured = startHere.slice(0, 6);
   const topCategories = categoryList.slice(0, 12);
   const distributable = registry.distributable;
 
   const body = `
 <section class="hero">
-  <div class="wrap">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
     <p class="kicker">Agent skills · indexed · verified weekly</p>
     <h1>The index of agent skills that <em>still work</em>.</h1>
     <p class="lede">
@@ -394,13 +468,15 @@ function buildHome() {
       Every entry carries its author, its license, and the date it was last checked. Install any of them into Claude Code, OpenCode, Codex, Cursor,
       Copilot or Gemini CLI with one command.
     </p>
-    ${commandBlock("npx aidentity add mattpocock/engineering/code-review", "install command")}
+    ${rotatingCommandBlock(heroCommands)}
     <p class="hero-links">
       <a href="skills/index.html">Browse all ${registry.total} →</a>
       <a href="sources/index.html">Where they come from</a>
       <a href="${REPO}" rel="noopener">Source on GitHub</a>
     </p>
     ${shareRow(SITE + "/", "Aidentity — the verified index of AI agent skills")}
+    </div>
+    <div class="hero-art" aria-hidden="true">${HERO_ART}</div>
   </div>
 </section>
 
