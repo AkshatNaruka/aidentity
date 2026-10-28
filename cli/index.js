@@ -14,6 +14,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { recommend } = require("./lib/recommend");
 
 const ROOT = path.join(__dirname, "..");
 const REGISTRY = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
@@ -128,6 +129,35 @@ switch (command) {
     break;
   }
 
+  case "recommend": {
+    if (!value) fail("usage: aidentity recommend \"<task>\"");
+    const result = recommend(value, 6);
+    if (result.bundle) {
+      console.log(bold(`bundle: ${result.bundle.name}`) + `  ${dim(result.bundle.slug)}`);
+      console.log(`  ${result.bundle.description}`);
+      console.log(`  ${dim("install:")} ${result.install_bundle}`);
+      console.log("");
+    }
+    if (result.from_bundle.length) {
+      console.log(dim("from the bundle:"));
+      for (const skill of result.from_bundle) {
+        console.log(`${skill.name.padEnd(38)} ${dim(skill.id)}`);
+        console.log(`  ${skill.install || "index only"}`);
+      }
+      console.log("");
+    }
+    if (!result.skills.length) {
+      console.log("No direct matches. Try broader words, or browse: aidentity list");
+      break;
+    }
+    for (const skill of result.skills) {
+      console.log(`${skill.name.padEnd(38)} ${dim(skill.id)}`);
+      console.log(`  ${skill.description.slice(0, 110)}`);
+      console.log(`  ${dim(skill.install || "index only — " + skill.upstream)}`);
+    }
+    break;
+  }
+
   case "info": {
     if (!value) fail("usage: aidentity info <id>");
     printSkill(resolve(value));
@@ -191,6 +221,7 @@ switch (command) {
 
 Usage
   aidentity search <query>              find a skill
+  aidentity recommend "<task>"          bundle + skills for a task
   aidentity info <id>                   show source, license, install path
   aidentity add <id> [options]          install into your agent
   aidentity list                        list everything

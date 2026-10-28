@@ -186,6 +186,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
     <nav class="site-nav" aria-label="Primary">
       <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
       <a href="${p}sources/index.html"${page === "sources" ? ' aria-current="page"' : ""}>Sources</a>
+      <a href="${p}for-agents/index.html"${page === "agents" ? ' aria-current="page"' : ""}>Agents</a>
       <a href="${p}about/index.html"${page === "about" ? ' aria-current="page"' : ""}>About</a>
       <a href="${REPO}" rel="noopener">GitHub</a>
     </nav>
@@ -899,6 +900,133 @@ function buildAbout() {
 // machine-readable + assets
 // ---------------------------------------------------------------------------
 
+
+// ---------------------------------------------------------------------------
+// for agents
+// ---------------------------------------------------------------------------
+
+function buildForAgents() {
+  const body = `
+<section style="padding-top:44px">
+  <div class="wrap" style="max-width:820px">
+    <p class="kicker">For agents</p>
+    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Use Aidentity from an agent</h2>
+    <p style="max-width:64ch;color:var(--ink-soft);margin-top:16px">
+      The index is designed to be read by machines first. Fetch one JSON file, filter it locally,
+      then fetch the full <span class="mono">SKILL.md</span> only for the entries you shortlist.
+      No scraping, no auth, no rate limit beyond GitHub Pages.
+    </p>
+
+    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Endpoints</h2>
+    <div class="table-scroll">
+    <table class="table">
+      <thead><tr><th>File</th><th>What it is</th><th>Size</th></tr></thead>
+      <tbody>
+        <tr><td data-label="File"><a href="../search.json">search.json</a></td><td data-label="What">Compact index: id, name, description, tags, license, install, content URL</td><td data-label="Size">~${Math.round(JSON.stringify(skills).length / 1024)} KB</td></tr>
+        <tr><td data-label="File"><a href="../llms.txt">llms.txt</a></td><td data-label="What">Key facts and every skill with a one-line description</td><td data-label="Size">~${Math.round(JSON.stringify(skills).length / 1024)} KB</td></tr>
+        <tr><td data-label="File"><a href="../llms-full.txt">llms-full.txt</a></td><td data-label="What">Every skill with metadata, install command and instruction URL</td><td data-label="Size">—</td></tr>
+        <tr><td data-label="File"><a href="../registry.json">registry.json</a></td><td data-label="What">Full registry, schema-backed</td><td data-label="Size">—</td></tr>
+        <tr><td data-label="File"><a href="../catalog.json">catalog.json</a></td><td data-label="What">Everything: skills, tools, hooks, commands, agents, rules, templates</td><td data-label="Size">—</td></tr>
+        <tr><td data-label="File"><a href="../bundles.json">bundles.json</a></td><td data-label="What">Task-based sets of 5–15 skills</td><td data-label="Size">—</td></tr>
+        <tr><td data-label="File"><a href="../agent.json">agent.json</a></td><td data-label="What">Manifest: endpoints, counts, usage rules</td><td data-label="Size">tiny</td></tr>
+        <tr><td data-label="File"><a href="../ai.txt">ai.txt</a></td><td data-label="What">Citation and usage preferences</td><td data-label="Size">tiny</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="mcp" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">MCP server</h2>
+    <p style="color:var(--ink-soft);font-size:0.95rem">
+      The repository ships a zero-dependency MCP server. It exposes
+      <span class="mono">search_skills</span>, <span class="mono">recommend</span>,
+      <span class="mono">get_skill</span>, <span class="mono">list_bundles</span> and
+      <span class="mono">install_skill</span>. Install writes are dry-run unless you pass
+      <span class="mono">dry_run: false</span>.
+    </p>
+    ${commandBlock("node cli/mcp.js", "start the MCP server")}
+
+    <details style="margin-top:18px"><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Claude Code</summary>
+    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>claude mcp add aidentity -- node /absolute/path/to/aidentity/cli/mcp.js</code></pre>
+    </details>
+    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Cursor — .cursor/mcp.json</summary>
+    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+  "mcpServers": {
+    "aidentity": {
+      "command": "node",
+      "args": ["/absolute/path/to/aidentity/cli/mcp.js"]
+    }
+  }
+}</code></pre>
+    </details>
+    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Codex — ~/.codex/config.toml</summary>
+    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>[mcp_servers.aidentity]
+command = "node"
+args = ["/absolute/path/to/aidentity/cli/mcp.js"]</code></pre>
+    </details>
+    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Gemini CLI — ~/.gemini/settings.json</summary>
+    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+  "mcpServers": {
+    "aidentity": {
+      "command": "node",
+      "args": ["/absolute/path/to/aidentity/cli/mcp.js"]
+    }
+  }
+}</code></pre>
+    </details>
+    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">OpenCode — opencode.json</summary>
+    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+  "mcp": {
+    "aidentity": {
+      "type": "local",
+      "command": ["node", "/absolute/path/to/aidentity/cli/mcp.js"],
+      "enabled": true
+    }
+  }
+}</code></pre>
+    </details>
+
+    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Prompts that work</h2>
+    <p style="color:var(--ink-soft);font-size:0.95rem">Give these to any agent that can fetch a URL:</p>
+    <pre style="background:var(--ink);color:#efeade;padding:16px;overflow-x:auto;font-size:12px"><code>Fetch https://akshatnaruka.github.io/aidentity/search.json
+Filter for category "testing" and status "stable".
+Return the three best matches with their install commands.
+
+Read https://akshatnaruka.github.io/aidentity/llms.txt
+I am building a Next.js + Supabase SaaS. Which bundle should I install, and why?
+
+Fetch https://akshatnaruka.github.io/aidentity/agent.json
+Store the endpoints. Use search.json for retrieval and content_url for full instructions.</code></pre>
+
+    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Rules agents must follow</h2>
+    <ol style="color:var(--ink-soft);font-size:0.95rem">
+      <li><strong>Check <span class="mono">content_url</span>.</strong> If it is null, the skill is index-only; link upstream, never claim it can be installed.</li>
+      <li><strong>Check <span class="mono">status</span>.</strong> Do not recommend <span class="mono">in-progress</span> or <span class="mono">deprecated</span> entries.</li>
+      <li><strong>Quote the license.</strong> MIT and Apache-2.0 are safe; CC BY-SA is share-alike; proprietary entries need review.</li>
+      <li><strong>Read before recommending.</strong> Fetch the SKILL.md; descriptions are a summary, not the instructions.</li>
+    </ol>
+
+    <div class="callout">
+      <strong>Give this URL to an agent:</strong>
+      <span class="mono">https://akshatnaruka.github.io/aidentity/llms.txt</span> — it starts with the facts an
+      agent needs and links to every machine-readable file.
+    </div>
+  </div>
+</section>
+`;
+
+  write(
+    "for-agents/index.html",
+    layout({
+      title: "Use Aidentity from an agent",
+      description: "Machine-readable endpoints, an MCP server, and prompts for agents that need to find and install AI agent skills.",
+      depth: 1,
+      body,
+      page: "agents",
+      canonical: SITE + "/for-agents/",
+      keywords: "agent skills API, MCP server, AI agent skill search, llms.txt, agent-readable registry",
+    })
+  );
+}
+
 function buildMachineReadable() {
   write("registry.json", JSON.stringify(registry, null, 2) + "\n");
 
@@ -916,7 +1044,15 @@ function buildMachineReadable() {
     `- Install: \`npx aidentity add <id>\` or copy \`skills/<source>/<name>/\`.`,
     `- Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.`,
     `- Every source is re-checked weekly; \`registry/verified.json\` records the last check.`,
-    `- Machine-readable: ${SITE}/registry.json (JSON), ${SITE}/ai.txt (AI usage), ${SITE}/sitemap.xml (URLs), ${SITE}/feed.xml (RSS).`,
+    `- Machine-readable: ${SITE}/registry.json (JSON), ${SITE}/search.json (compact search), ${SITE}/agent.json (manifest), ${SITE}/ai.txt (AI usage), ${SITE}/sitemap.xml (URLs), ${SITE}/feed.xml (RSS).`,
+    "",
+    "## How to use this index",
+    "",
+    "1. Fetch `search.json` once and keep it. Filter by `tags`, `category`, `status` and `description`.",
+    "2. Fetch `content_url` for the full `SKILL.md` before recommending an install.",
+    "3. If `content_url` is null the skill is index-only: link `upstream`, never install it.",
+    "4. Install with `npx aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.",
+    "5. Local agents can run the MCP server: `node cli/mcp.js`.",
     "",
     "## Files",
     "",
@@ -954,6 +1090,7 @@ function buildMachineReadable() {
     "/skills/",
     "/sources/",
     "/about/",
+    "/for-agents/",
     ...skills.map((skill) => `/skills/${skill.id}/`),
   ];
   write(
@@ -971,6 +1108,7 @@ ${urls
 
   const aiBots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-Web", "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot", "Bingbot"];
   write(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY + "\n");
+  write(".nojekyll", "");
   write(
     "robots.txt",
     [
@@ -1087,6 +1225,100 @@ function buildAssets() {
   }
 }
 
+
+// ---------------------------------------------------------------------------
+// agent surface: compact search index, manifest, raw skill files
+// ---------------------------------------------------------------------------
+
+function buildAgentSurface() {
+  const url = (skill) => `${SITE}/skills/${skill.id}/`;
+  const install = (skill) => skill.install || null;
+
+  const search = skills.map((skill) => ({
+    id: skill.id,
+    name: skill.name,
+    description: skill.description,
+    category: skill.category,
+    tags: skill.tags,
+    status: skill.status,
+    license: skill.source.license,
+    source: skill.source.repo,
+    install: install(skill),
+    url: url(skill),
+    content_url: skill.distributable && skill.path ? `${SITE}/skills/${skill.id}/SKILL.md` : null,
+    upstream: skill.upstream ? skill.upstream.url : skill.source.url,
+  }));
+  write("search.json", JSON.stringify({ version: "1.0.0", updated: GENERATED, count: search.length, skills: search }, null, 2) + "\n");
+
+  // Raw skill files so an agent can read the instructions without GitHub.
+  for (const skill of skills) {
+    if (!skill.distributable || !skill.path) continue;
+    const source = path.join(ROOT, skill.path);
+    if (!fs.existsSync(source)) continue;
+    write(`skills/${skill.id}/SKILL.md`, fs.readFileSync(source));
+  }
+
+  // Bundles and the full catalog, served next to the registry.
+  const bundlesFile = path.join(ROOT, "bundles", "bundles.json");
+  if (fs.existsSync(bundlesFile)) write("bundles.json", fs.readFileSync(bundlesFile));
+  const catalogFile = path.join(ROOT, "registry", "catalog.json");
+  if (fs.existsSync(catalogFile)) write("catalog.json", fs.readFileSync(catalogFile));
+
+  const manifest = {
+    name: "aidentity",
+    version: "1.0.0",
+    description: "A verified index of AI agent skills with license, source and install metadata.",
+    updated: GENERATED,
+    counts: { skills: registry.total, installable: registry.distributable, sources: sourceList.length, bundles: 8 },
+    endpoints: {
+      search: `${SITE}/search.json`,
+      registry: `${SITE}/registry.json`,
+      catalog: `${SITE}/catalog.json`,
+      bundles: `${SITE}/bundles.json`,
+      llms: `${SITE}/llms.txt`,
+      llms_full: `${SITE}/llms-full.txt`,
+      ai: `${SITE}/ai.txt`,
+      sitemap: `${SITE}/sitemap.xml`,
+      mcp: `${SITE}/for-agents/#mcp`,
+    },
+    usage: [
+      "Fetch /search.json once and keep it. Filter locally by tags, category, status and description.",
+      "Fetch content_url for the full SKILL.md before recommending an install.",
+      "Respect distributable: index-only entries (content_url null) must be linked upstream, not installed.",
+      "Install with `npx aidentity add <id>` or by copying the folder from the GitHub repository.",
+    ],
+  };
+  write("agent.json", JSON.stringify(manifest, null, 2) + "\n");
+  write(".well-known/agent.json", JSON.stringify(manifest, null, 2) + "\n");
+
+  const full = [
+    "# Aidentity — full index for agents",
+    "",
+    `Generated ${GENERATED}. ${registry.total} skills, ${registry.distributable} installable, ${sourceList.length} sources.`,
+    "",
+    "How to use: read this file to choose; fetch the SKILL.md URL for the full instructions; install with the command.",
+    "",
+  ];
+  for (const skill of skills) {
+    full.push(
+      `## ${skill.name}`,
+      "",
+      `- id: \`${skill.id}\``,
+      `- category: ${skill.category}`,
+      `- license: ${skill.source.license}`,
+      `- status: ${skill.status}`,
+      `- source: ${skill.source.repo}`,
+      `- install: ${skill.install || "not hosted — use upstream"}`,
+      `- page: ${url(skill)}`,
+      skill.distributable ? `- instructions: ${SITE}/skills/${skill.id}/SKILL.md` : `- upstream: ${skill.upstream ? skill.upstream.url : skill.source.url}`,
+      "",
+      skill.description,
+      ""
+    );
+  }
+  write("llms-full.txt", full.join("\n"));
+}
+
 // ---------------------------------------------------------------------------
 
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -1096,6 +1328,8 @@ buildBrowse();
 buildSources();
 buildAbout();
 buildMachineReadable();
+buildForAgents();
+buildAgentSurface();
 
 const pages = skills.length + 5;
 console.log(`Built ${pages} pages → ${path.relative(ROOT, OUT)}`);

@@ -153,12 +153,24 @@ node site/build.js                 # static site
 
 ## For AI assistants
 
-- [`llms.txt`](https://akshatnaruka.github.io/aidentity/llms.txt) — the index in plain text, with key facts first
-- [`ai.txt`](https://akshatnaruka.github.io/aidentity/ai.txt) — citation and usage preferences
-- [`registry.json`](https://akshatnaruka.github.io/aidentity/registry.json) — every entry as structured data
-- [`feed.xml`](https://akshatnaruka.github.io/aidentity/feed.xml) — RSS
+Give an agent one URL: **https://akshatnaruka.github.io/aidentity/llms.txt**
 
-Quoting and citing is allowed. Attribute the page and the upstream author. Do not present an index-only entry as installable.
+| Endpoint | Use |
+|---|---|
+| [`llms.txt`](https://akshatnaruka.github.io/aidentity/llms.txt) | Key facts + one line per skill |
+| [`search.json`](https://akshatnaruka.github.io/aidentity/search.json) | Compact index for local filtering (~350 KB) |
+| [`llms-full.txt`](https://akshatnaruka.github.io/aidentity/llms-full.txt) | Metadata, install and instruction URL per skill |
+| [`agent.json`](https://akshatnaruka.github.io/aidentity/agent.json) | Manifest: endpoints, counts, usage rules |
+| [`registry.json`](https://akshatnaruka.github.io/aidentity/registry.json) | Full registry, CC0 |
+| [`ai.txt`](https://akshatnaruka.github.io/aidentity/ai.txt) | Citation and attribution preferences |
+
+Agents can also run the repo's MCP server:
+
+```bash
+node cli/mcp.js   # search_skills, recommend, get_skill, list_bundles, install_skill
+```
+
+Full instructions: [for-agents](https://akshatnaruka.github.io/aidentity/for-agents/). Quoting and citing is allowed; attribute the page and the upstream author. Do not present an index-only entry as installable.
 
 ---
 

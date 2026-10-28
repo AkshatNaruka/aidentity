@@ -21,6 +21,14 @@ One source of truth. The site, the CLI, and the docs all read it.
 4. **Keep descriptions factual.** What it does and when to use it. No marketing language.
 5. **Run the gate before claiming done.**
 
+## Agent surface
+
+- `search.json`, `llms.txt`, `llms-full.txt`, `agent.json` are generated into the site.
+- `cli/mcp.js` is a zero-dependency MCP server: search, recommend, get, list bundles, install (dry-run by default).
+- `cli/index.js recommend "<task>"` returns a bundle and ranked skills.
+- Raw `SKILL.md` files are published at `/skills/<id>/SKILL.md`.
+- Index-only entries (`distributable: false`) must never be presented as installable.
+
 ## Commands
 
 ```bash
@@ -31,6 +39,8 @@ node scripts/verify-sources.js        # re-check every upstream (writes verified
 node scripts/generate-notices.js      # regenerate THIRD_PARTY_NOTICES.md
 node site/build.js                    # build the static site into site/dist
 node site/serve.js                    # preview at http://localhost:4173
+node cli/mcp.js                       # MCP server (stdio)
+node cli/index.js recommend "<task>"  # bundle + ranked skills
 ```
 
 ## Adding a skill
