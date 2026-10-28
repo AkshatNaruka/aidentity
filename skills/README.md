@@ -6,12 +6,21 @@ This directory holds the skill content we are allowed to redistribute, mirrored 
 
 | Source | Path | Skills | License |
 |---|---|---:|---|
-| Google | [`google-cloud/`](google-cloud/) | 127 | Apache-2.0 |
-| Microsoft | [`microsoft-azure/`](microsoft-azure/) | 61 | MIT |
+| Google LLC | [`google-cloud/`](google-cloud/) | 127 | Apache-2.0 |
+| Microsoft Corporation | [`microsoft-azure/`](microsoft-azure/) | 61 | MIT |
+| Corey Haines | [`marketingskills/`](marketingskills/) | 52 | MIT |
 | Matt Pocock | [`mattpocock/`](mattpocock/) | 37 | MIT |
 | Addy Osmani | [`addyosmani/`](addyosmani/) | 25 | MIT |
+| Expo (650 Industries) | [`expo/`](expo/) | 23 | MIT |
 | Jesse Vincent | [`obra-superpowers/`](obra-superpowers/) | 14 | MIT |
-| This repo | [`repo-scanner/`](repo-scanner/) | 1 | MIT |
+| Affaan Mustafa | [`everything-claude-code/`](everything-claude-code/) | 10 | MIT |
+| Julius Brussee | [`caveman/`](caveman/) | 8 | Apache-2.0 |
+| Trail of Bits | [`trailofbits/`](trailofbits/) | 7 | CC-BY-SA-4.0 |
+| Next Level Builder | [`ui-ux-pro-max/`](ui-ux-pro-max/) | 6 | MIT |
+| Supabase | [`supabase/`](supabase/) | 2 | MIT |
+| codeswithroh | [`tastemaker/`](tastemaker/) | 2 | MIT |
+| haidrrrry | [`haidrrrry-claude-remotion-skill/`](haidrrrry-claude-remotion-skill/) | 1 | MIT |
+| Aidentity contributors | [`repo-scanner/`](repo-scanner/) | 1 | MIT |
 
 Not here: 19 skills from [`anthropics/skills`](https://github.com/anthropics/skills) are indexed in the registry with `distributable: false`. Their upstream license does not permit redistribution, so the registry links to the source instead of hosting a copy.
 

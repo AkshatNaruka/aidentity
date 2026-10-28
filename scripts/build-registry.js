@@ -39,6 +39,7 @@ function loadPointers() {
       ...skill,
       status: skill.status || "stable",
       tags: skill.tags || [],
+      category: categoryFor({ sourceKey: skill.source.key, rest: [], name: skill.name, description: skill.description, tags: skill.tags || [] }),
       distributable: false,
       install: null,
     }));
@@ -160,6 +161,67 @@ function inferTags(name, description) {
   return [...tags].sort().slice(0, 6);
 }
 
+
+// Curated taxonomy. Name matches win over description matches, and nested
+// vendor sources keep their own path taxonomy.
+const SOURCE_CATEGORY = {
+  expo: "mobile",
+  trailofbits: "security",
+  caveman: "context",
+  supabase: "database",
+  "ui-ux-pro-max": "design",
+  tastemaker: "design",
+  "repo-scanner": "tooling",
+};
+
+const NAME_RULES = [
+  ["seo", /\b(seo|backlink|backlinks|schema|programmatic-seo|site-architecture|ai-seo)\b/],
+  ["copywriting", /\b(copywriting|copy-editing|article|newsletter|content-strategy|writing|comms)\b/],
+  ["social", /\b(social|linkedin|twitter|instagram|tiktok|pinterest|reddit|thread|carousel|caption)\b/],
+  ["email", /\b(email|emails|cold-email|sms)\b/],
+  ["ads", /\b(ads|ad-creative|ppc|aso)\b/],
+  ["analytics", /\b(analytics|attribution|ab-testing|conversion)\b/],
+  ["cro", /\b(cro|signup|onboarding|paywall|paywalls|popup|popups|form|forms)\b/],
+  ["pricing", /\b(pricing|offers|churn)\b/],
+  ["growth", /\b(launch|referral|referrals|marketing|community|influencer|public-relations|events|co-marketing|directory|prospecting|revops)\b/],
+  ["video", /\b(video|youtube|ffmpeg|veo|kling|wan|seedance|ugc)\b/],
+  ["motion", /\b(motion|animation|gsap|motion-graphics|lottie)\b/],
+  ["design", /\b(design|ui-ux|brand|theme|canvas|frontend-design|image|illustration|visual|art)\b/],
+  ["frontend", /\b(frontend|react|nextjs|next|css|ui-styling|turbopack|web)\b/],
+  ["mobile", /\b(expo|react-native|ios|android|mobile)\b/],
+  ["database", /\b(postgres|sql|database|cosmos|spanner|alloydb|bigquery|redis)\b/],
+  ["api", /\b(api|mcp|graphql|rest|openapi)\b/],
+  ["security", /\b(security|audit|threat|vulnerab|supply-chain|semgrep|sarif|agentic-actions|hardening)\b/],
+  ["testing", /\b(test|tests|testing|tdd|qa|playwright|cypress|e2e)\b/],
+  ["debugging", /\b(debug|debugging|diagnos|bug|error-recovery)\b/],
+  ["code-review", /\b(code-review|review)\b/],
+  ["planning", /\b(plan|planning|spec|specs|ticket|tickets|roadmap|grill|interview|brainstorm|prototype|breakdown)\b/],
+  ["git", /\b(git|worktree|commit|branch)\b/],
+  ["docs", /\b(doc|docs|adr|adrs|documentation|pdf|docx|pptx|xlsx|coauthor|guide)\b/],
+  ["agents", /\b(agent|agents|subagent|subagents|skill-creator|context-engineering|handoff|orchestrat|mcp-builder)\b/],
+  ["memory", /\b(memory|remember|forget|recall|unified-memory)\b/],
+  ["devops", /\b(ci|cd|deploy|deployment|observability|monitor|shipping|infra|kubernetes|docker|cloud-run|gke)\b/],
+  ["performance", /\b(performance|perf)\b/],
+  ["quality", /\b(eval|benchmark|verification|quality|maturity)\b/],
+  ["context", /\b(caveman|compact|token|context)\b/],
+];
+
+function categoryFor({ sourceKey, rest, name, description, tags }) {
+  if (sourceKey === "google-cloud" && rest[0] === "developers") return "developer-tools";
+  if (sourceKey === "google-cloud" && rest.length > 1 && !STATUS_DIRS.has(rest[0])) return rest[0];
+  if (sourceKey === "microsoft-azure") return "azure";
+  if (SOURCE_CATEGORY[sourceKey]) return SOURCE_CATEGORY[sourceKey];
+  const lowerName = name.toLowerCase();
+  for (const [category, pattern] of NAME_RULES) {
+    if (pattern.test(lowerName)) return category;
+  }
+  const lowerDescription = description.toLowerCase();
+  for (const [category, pattern] of NAME_RULES) {
+    if (pattern.test(lowerDescription)) return category;
+  }
+  return tags[0] || "engineering";
+}
+
 function walk(dir, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name.startsWith(".")) continue;
@@ -197,11 +259,7 @@ function build() {
     const id = slugify(rel.join("/"));
     const tags = inferTags(id, name, description);
 
-    // Nested sources carry their own taxonomy (google-cloud/ads/...).
-    // Flat sources fall back to the strongest inferred tag.
-    const nested = rest.filter((segment) => !STATUS_DIRS.has(segment));
-    const category =
-      rest.length > 1 && !STATUS_DIRS.has(rest[0]) ? rest[0] : tags[0] || "general";
+    const category = categoryFor({ sourceKey, rest, name, description, tags });
 
     skills.push({
       id,

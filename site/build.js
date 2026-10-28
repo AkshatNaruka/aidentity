@@ -477,7 +477,7 @@ function buildHome() {
     "npx AkshatNaruka/aidentity add copywriting",
   ];
   const featured = startHere.slice(0, 6);
-  const topCategories = categoryList.slice(0, 12);
+  const topCategories = categoryList;
   const distributable = registry.distributable;
 
   const body = `
@@ -560,7 +560,7 @@ function buildHome() {
         .map(
           (category) => `<a href="skills/index.html?category=${encodeURIComponent(category.name)}">
         <span class="name">${esc(category.name)}</span>
-        <span class="count">${category.count} skills</span>
+        <span class="count">${category.count} skill${category.count === 1 ? "" : "s"}</span>
       </a>`
         )
         .join("\n")}

@@ -28,12 +28,12 @@ Start from the task, not the folder tree.
 
 | Type | Path | Count |
 |---|---|---:|
-| Skills | [`skills/`](skills/) | 384 (19 pointer-only) |
+| Skills | [`skills/`](skills/) | 395 (19 pointer-only) |
 | Tools | [tools/README.md](tools/README.md) | 12 |
 | Hooks | [hooks/](hooks/) | 4 + settings example |
 | Commands | [`commands/`](commands/) | 5 |
 | Agents | [`agents/`](agents/) | 7 scoped subagents |
-| Bundles | [bundles/](bundles/) | 7 |
+| Bundles | [bundles/](bundles/) | 8 |
 | Prompts | [`prompts/`](prompts/) | 256 Fabric patterns + 5 domain files |
 | Templates | [`templates/`](templates/) | 6 stacks |
 | Memory | [`memory/`](memory/) | Patterns + 10 skills |
