@@ -1,0 +1,98 @@
+name: Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "registry/**"
+      - "skills/**"
+      - "scripts/**"
+      - ".github/workflows/registry.yml"
+  pull_request:
+    paths:
+      - "registry/**"
+      - "skills/**"
+      - "scripts/**"
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC — re-verify upstream sources
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    name: Validate registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Registry is reproducible
+        run: node scripts/build-registry.js --check
+
+      - name: License gate
+        run: node scripts/check-licenses.js
+
+      - name: Notices are current
+        run: |
+          node scripts/generate-notices.js
+          git diff --exit-code THIRD_PARTY_NOTICES.md
+
+  verify:
+    name: Verify upstream sources
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check every upstream repository
+        id: verify
+        continue-on-error: true
+        run: node scripts/verify-sources.js --json
+
+      - name: Commit verification stamp
+        run: |
+          if git diff --quiet registry/verified.json 2>/dev/null; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "aidentity-bot"
+          git config user.email "bot@aidentity.dev"
+          git add registry/verified.json
+          git commit -m "chore: re-verify upstream sources"
+          git push
+
+      - name: Open an issue for dead sources
+        if: steps.verify.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('registry/verified.json', 'utf8'));
+            const dead = Object.entries(report.sources).filter(([, s]) => !s.ok).map(([k]) => k);
+            if (!dead.length) return;
+            const title = `Dead upstream sources: ${dead.join(', ')}`;
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100,
+            });
+            if (existing.some(i => i.title === title)) return;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body: `The weekly verification found unreachable sources:\n\n${dead
+                .map(k => `- \`${k}\` — ${report.sources[k].url} (status ${report.sources[k].status})`)
+                .join('\n')}\n\nFix the URL, archive the entries, or remove them. See \`registry/verified.json\`.`,
+              labels: ['registry', 'automated'],
+            });

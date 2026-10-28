@@ -1,0 +1,30 @@
+name: Broken entry
+description: A skill points at a dead or moved source
+title: "broken: "
+labels: ["bug", "registry"]
+body:
+  - type: input
+    id: id
+    attributes:
+      label: Skill ID
+      placeholder: mattpocock/engineering/code-review
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: What is broken
+      description: The URL that fails, and what it returns.
+      placeholder: https://github.com/… returns 404
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Correct source
+      description: If the upstream moved, link the new location. Otherwise leave blank.
+      placeholder: Now at https://github.com/owner/new-repo
+    validations:
+      required: false

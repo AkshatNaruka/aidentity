@@ -1,0 +1,28 @@
+{
+  "name": "aidentity",
+  "version": "0.1.0",
+  "description": "Install AI agent skills from a verified, machine-readable registry.",
+  "keywords": ["ai", "agents", "skills", "claude-code", "opencode", "codex", "cursor", "mcp"],
+  "homepage": "https://akshatnaruka.github.io/aidentity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkshatNaruka/aidentity.git"
+  },
+  "bugs": "https://github.com/AkshatNaruka/aidentity/issues",
+  "license": "MIT",
+  "bin": {
+    "aidentity": "cli/index.js"
+  },
+  "files": ["cli", "registry/skills.json", "registry/sources.json", "skills", "README.md", "LICENSE"],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node site/build.js",
+    "registry": "node scripts/build-registry.js",
+    "validate": "node scripts/build-registry.js --check && node scripts/check-licenses.js",
+    "notices": "node scripts/generate-notices.js",
+    "verify": "node scripts/verify-sources.js",
+    "serve": "node site/serve.js"
+  }
+}

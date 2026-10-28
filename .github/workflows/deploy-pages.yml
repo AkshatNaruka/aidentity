@@ -1,0 +1,53 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "registry/**"
+      - "skills/**"
+      - "README.md"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # Project Pages URL. Override with a custom domain when you add one.
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build registry and site
+        run: |
+          node scripts/build-registry.js
+          node scripts/check-licenses.js
+          node site/build.js
+
+      # Publishes site/dist to the gh-pages branch. No Actions artifacts, so it
+      # works even when the account's artifact storage quota is exhausted.
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site/dist
+          publish_branch: gh-pages
+          user_name: aidentity-bot
+          user_email: bot@aidentity.dev
+          commit_message: "deploy: ${{ github.sha }}"

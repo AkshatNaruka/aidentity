@@ -1,0 +1,89 @@
+name: Submit a skill
+description: Add one skill to the registry
+title: "skill: "
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One skill per issue. If you can open the pull request yourself, do that instead — see [CONTRIBUTING.md](https://github.com/AkshatNaruka/aidentity/blob/main/CONTRIBUTING.md).
+
+  - type: input
+    id: id
+    attributes:
+      label: Skill ID
+      description: Lowercase, `author/skill-name`. Must be globally unique.
+      placeholder: mattpocock/engineering/code-review
+    validations:
+      required: true
+
+  - type: input
+    id: upstream
+    attributes:
+      label: Upstream URL
+      description: Link to the repository (or the exact file) that contains the skill.
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: License
+      description: The upstream license. If it does not permit redistribution, say so — it becomes a pointer entry.
+      options:
+        - MIT
+        - Apache-2.0
+        - BSD
+        - CC0
+        - CC BY
+        - Proprietary / all rights reserved
+        - Not stated
+        - Other (explain below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Two sentences. What it does, and when to use it. No marketing.
+      placeholder: Conducts a two-axis code review of the diff since a fixed point. Use before merging a branch or PR.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - engineering
+        - testing
+        - code-review
+        - debugging
+        - security
+        - documentation
+        - planning
+        - design
+        - frontend
+        - devops
+        - cloud
+        - azure
+        - ads
+        - analytics
+        - agents
+        - prompts
+        - memory
+        - other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: The upstream license permits redistribution, or I understand this will be a pointer entry only.
+          required: true
+        - label: The skill is not already in the registry.
+          required: true

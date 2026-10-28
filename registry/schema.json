@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aidentity.dev/registry/schema.json",
+  "title": "Aidentity Registry",
+  "description": "Machine-readable index of AI agent skills, prompts and tools.",
+  "type": "object",
+  "required": ["name", "version", "generated_at", "total", "skills"],
+  "properties": {
+    "name": { "const": "aidentity" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "generated_at": { "type": "string", "format": "date" },
+    "total": { "type": "integer", "minimum": 0 },
+    "distributable": { "type": "integer", "minimum": 0 },
+    "by_source": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/skill" }
+    }
+  },
+  "definitions": {
+    "skill": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "category",
+        "status",
+        "path",
+        "source",
+        "distributable",
+        "install"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Globally unique, stable identifier. Never reused.",
+          "pattern": "^[a-z0-9]+(?:[-/][a-z0-9]+)*$"
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "category": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "status": { "enum": ["stable", "in-progress", "deprecated"] },
+        "path": {
+          "type": ["string", "null"],
+          "description": "Local path when hosted. Null for pointer entries."
+        },
+        "upstream": {
+          "type": "object",
+          "description": "Present on pointer entries: where the content actually lives.",
+          "required": ["repo", "url", "path"],
+          "properties": {
+            "repo": { "type": "string" },
+            "url": { "type": "string", "format": "uri" },
+            "path": { "type": "string" }
+          }
+        },
+        "source": {
+          "type": "object",
+          "required": ["key", "repo", "url", "author", "license"],
+          "properties": {
+            "key": { "type": "string" },
+            "repo": { "type": "string" },
+            "url": { "type": "string", "format": "uri" },
+            "author": { "type": "string" },
+            "license": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        },
+        "distributable": {
+          "type": "boolean",
+          "description": "False when content is indexed but not redistributed (license restriction)."
+        },
+        "install": {
+          "type": ["string", "null"],
+          "description": "Install command. Null when the skill is not hosted and must be fetched upstream."
+        }
+      }
+    }
+  }
+}
