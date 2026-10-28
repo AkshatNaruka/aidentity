@@ -46,6 +46,24 @@ const esc = (value) =>
 
 const up = (depth) => "../".repeat(depth);
 
+function jsonld(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
+function shareRow(url, title) {
+  const u = encodeURIComponent(url);
+  const t = encodeURIComponent(title);
+  return `<div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=${t}&url=${u}" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=${u}&t=${t}" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=${u}&title=${t}" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="${esc(url)}">copy link</button>
+</div>`;
+}
+
+
 function write(file, contents) {
   const target = path.join(OUT, file);
   fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -112,12 +130,13 @@ if (startHere.length < 6) {
 // layout
 // ---------------------------------------------------------------------------
 
-function layout({ title, description, depth, body, page, canonical, jsonld }) {
+function layout({ title, description, depth, body, page, canonical, jsonld, ogType = "website", keywords = "" }) {
   const p = up(depth);
   const fullTitle = title ? `${title} — Aidentity` : "Aidentity — the verified index of agent skills";
   const metaDescription =
     description ||
     "A verified, machine-readable index of AI agent skills. One ID, one command, works in every coding agent.";
+  const ogImage = `${SITE}/assets/og.png`;
 
   return `<!doctype html>
 <html lang="en">
@@ -126,15 +145,29 @@ function layout({ title, description, depth, body, page, canonical, jsonld }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(metaDescription)}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
 <link rel="canonical" href="${esc(canonical || SITE + "/")}">
-<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${esc(fullTitle)}">
 <meta property="og:description" content="${esc(metaDescription)}">
 <meta property="og:url" content="${esc(canonical || SITE + "/")}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${ogImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(fullTitle)}">
+<meta name="twitter:description" content="${esc(metaDescription)}">
+<meta name="twitter:image" content="${ogImage}">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="${p}assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${p}assets/apple-touch-icon.png">
+<link rel="manifest" href="${p}manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="${p}feed.xml">
 <link rel="stylesheet" href="${p}assets/style.css">
 ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
 </head>
@@ -157,7 +190,7 @@ ${body}
 <footer class="site-foot">
   <div class="wrap">
     <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 — see <a href="${p}about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="${p}skills/index.html">Browse</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a></p>
+    <p style="margin:0"><a href="${p}skills/index.html">Browse</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="${p}assets/app.js" defer></script>
@@ -359,6 +392,7 @@ function buildHome() {
       <a href="sources/index.html">Where they come from</a>
       <a href="${REPO}" rel="noopener">Source on GitHub</a>
     </p>
+    ${shareRow(SITE + "/", "Aidentity — the verified index of AI agent skills")}
   </div>
 </section>
 
@@ -473,7 +507,40 @@ function buildHome() {
 
   write(
     "index.html",
-    layout({ title: null, depth: 0, body, page: "home", canonical: SITE + "/" })
+    layout({
+      title: null,
+      depth: 0,
+      body,
+      page: "home",
+      canonical: SITE + "/",
+      keywords: "AI agent skills, Claude Code skills, Codex skills, Cursor skills, OpenCode skills, agent skills registry",
+      jsonld: jsonld({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": SITE + "/#website",
+            url: SITE + "/",
+            name: "Aidentity",
+            description: "A verified index of AI agent skills with licenses, sources and one-command install.",
+            inLanguage: "en",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: SITE + "/skills/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          { "@type": "Organization", "@id": SITE + "/#organization", name: "Aidentity", url: SITE + "/", sameAs: [REPO] },
+          {
+            "@type": "CollectionPage",
+            "@id": SITE + "/#collection",
+            name: "Agent skills index",
+            isPartOf: { "@id": SITE + "/#website" },
+            mainEntity: { "@type": "ItemList", numberOfItems: registry.total }
+          }
+        ]
+      }),
+    })
   );
 }
 
@@ -548,6 +615,7 @@ function buildBrowse() {
 function skillPage(skill) {
   const depth = 1 + skill.id.split("/").length;
   const p = up(depth);
+  const pageUrl = `${SITE}/skills/${skill.id}/`;
   const relatedPool = skills.filter((other) => other.id !== skill.id);
   const related = [
     ...relatedPool.filter((other) => other.category === skill.category),
@@ -620,6 +688,7 @@ function skillPage(skill) {
           <div><dt>Checked</dt><dd>${verifiedOn(skill.source.key)}</dd></div>
           <div><dt>ID</dt><dd class="mono" style="font-size:11px">${esc(skill.id)}</dd></div>
         </dl>
+        ${shareRow(pageUrl, `${skill.name} — AI agent skill`)}
         ${
           skill.distributable
             ? `<a class="btn" href="${REPO}/blob/main/${esc(skill.path)}" rel="noopener">View file ↗</a>`
@@ -632,25 +701,43 @@ function skillPage(skill) {
 </div>
 `;
 
-  const jsonld = JSON.stringify({
+  const pageJsonLd = jsonld({
     "@context": "https://schema.org",
-    "@type": "TechArticle",
-    headline: skill.name,
-    description: skill.description,
-    url: `${SITE}/skills/${skill.id}/`,
-    author: { "@type": "Person", name: skill.source.author },
-    license: skill.source.license,
-    isPartOf: { "@type": "WebSite", name: "Aidentity", url: SITE },
-  }).replace(/</g, "\\u003c");
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Skills", item: `${SITE}/skills/` },
+          { "@type": "ListItem", position: 2, name: skill.category, item: `${SITE}/skills/?category=${encodeURIComponent(skill.category)}` },
+          { "@type": "ListItem", position: 3, name: skill.name, item: pageUrl }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        headline: skill.name,
+        description: skill.description,
+        url: pageUrl,
+        mainEntityOfPage: pageUrl,
+        dateModified: GENERATED,
+        author: { "@type": "Person", name: skill.source.author },
+        license: skill.source.license,
+        isPartOf: { "@id": `${SITE}/#website` },
+        publisher: { "@id": `${SITE}/#organization` },
+        keywords: [skill.category, ...skill.tags, "AI agent skill", "SKILL.md"].join(", ")
+      }
+    ]
+  });
 
   return layout({
-    title: skill.name,
+    title: `${skill.name} — ${skill.category === skill.name ? "AI agent skill" : `${skill.category} AI agent skill`}`,
     description: skill.description,
     depth,
     body,
     page: "skill",
-    canonical: `${SITE}/skills/${skill.id}/`,
-    jsonld,
+    canonical: pageUrl,
+    ogType: "article",
+    keywords: [skill.name, skill.category, ...skill.tags, "AI agent skill", "SKILL.md", "install"].join(", "),
+    jsonld: pageJsonLd,
   });
 }
 
@@ -757,6 +844,18 @@ function buildAbout() {
       <a href="../registry.json">registry.json</a> · <a href="../llms.txt">llms.txt</a> ·
       <a href="../sitemap.xml">sitemap.xml</a>.</p>
 
+      <h2 id="faq" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Questions</h2>
+      <h3 style="font-size:0.98rem;margin:18px 0 6px">What is Aidentity?</h3>
+      <p>Aidentity is a verified index of ${registry.total} AI agent skills. Each entry records its source repository, author, license, category and last verification date. You install any hosted skill with one command.</p>
+      <h3 style="font-size:0.98rem;margin:18px 0 6px">Are the skills free to use?</h3>
+      <p>Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. ${registry.total - registry.distributable} skills from Anthropic are indexed with a link only, because their upstream license does not permit redistribution. Every page states its license.</p>
+      <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I install one?</h3>
+      <p>Run <span class="mono">npx aidentity add &lt;id&gt;</span>, or copy the folder from <span class="mono">skills/&lt;source&gt;/&lt;name&gt;/</span>. The CLI detects Claude Code, Cursor, Codex, Gemini CLI, OpenCode or Copilot and writes to the right directory.</p>
+      <h3 style="font-size:0.98rem;margin:18px 0 6px">How do you keep the index accurate?</h3>
+      <p>CI rebuilds the registry on every change and checks the license policy. A weekly job requests every upstream repository, writes the result to <span class="mono">registry/verified.json</span> and opens a report PR when something is unreachable.</p>
+      <h3 style="font-size:0.98rem;margin:18px 0 6px">Can I add a skill?</h3>
+      <p>Yes. One JSON record and a pull request. CI validates the schema, the license and that the source resolves. See the contributing guide.</p>
+
       <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Contributing</h2>
       <p>One JSON record per pull request. CI validates the schema, the license, and that the source resolves.
       Maintainers review within a day.</p>
@@ -775,6 +874,16 @@ function buildAbout() {
       body,
       page: "about",
       canonical: SITE + "/about/",
+      jsonld: jsonld({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+          { "@type": "Question", name: "What is Aidentity?", acceptedAnswer: { "@type": "Answer", text: `Aidentity is a verified index of ${registry.total} AI agent skills with source, author, license and verification data, installable with one command.` } },
+          { "@type": "Question", name: "Are the skills free to use?", acceptedAnswer: { "@type": "Answer", text: "Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. Some Anthropic skills are index-only because their license does not permit redistribution. Each page states its license." } },
+          { "@type": "Question", name: "How do I install a skill?", acceptedAnswer: { "@type": "Answer", text: "Run npx aidentity add <id>, or copy the folder from skills/<source>/<name>/. The CLI detects the agent and writes to its skills directory." } },
+          { "@type": "Question", name: "How are sources verified?", acceptedAnswer: { "@type": "Answer", text: "CI rebuilds the registry and checks licenses on every change. A weekly job checks every upstream repository and reports dead sources." } }
+        ]
+      }),
     })
   );
 }
@@ -792,6 +901,15 @@ function buildMachineReadable() {
     "> A verified, machine-readable index of AI agent skills. One ID, one command, works in every coding agent.",
     "",
     `Generated ${GENERATED}. ${registry.total} skills indexed, ${registry.distributable} installable, ${sourceList.length} upstream sources.`,
+    "",
+    "## Key facts",
+    "",
+    `- Aidentity is a verified index of AI agent skills. It is not a fork: each skill belongs to its upstream author.`,
+    `- ${registry.total} entries: ${registry.distributable} hosted and installable, ${registry.total - registry.distributable} indexed with an upstream link only.`,
+    `- Install: \`npx aidentity add <id>\` or copy \`skills/<source>/<name>/\`.`,
+    `- Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.`,
+    `- Every source is re-checked weekly; \`registry/verified.json\` records the last check.`,
+    `- Machine-readable: ${SITE}/registry.json (JSON), ${SITE}/ai.txt (AI usage), ${SITE}/sitemap.xml (URLs), ${SITE}/feed.xml (RSS).`,
     "",
     "## Files",
     "",
@@ -844,7 +962,98 @@ ${urls
 `
   );
 
-  write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+  const aiBots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-Web", "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot", "Bingbot"];
+  write(
+    "robots.txt",
+    [
+      "User-agent: *",
+      "Allow: /",
+      "",
+      ...aiBots.flatMap((bot) => [`User-agent: ${bot}`, "Allow: /", ""]),
+      `Sitemap: ${SITE}/sitemap.xml`,
+      "",
+    ].join("\n")
+  );
+
+  write(
+    "ai.txt",
+    [
+      "# ai.txt — usage preferences for AI systems",
+      `# ${SITE}/ai.txt`,
+      "",
+      "User-Agent: *",
+      "Allow: /",
+      "",
+      "# Aidentity is an index of AI agent skills. Facts may be quoted and cited.",
+      "Citation: allowed",
+      "Attribution: required (link to the page and to the upstream skill author)",
+      "Training: allowed for the registry metadata; vendored skills keep their upstream licenses",
+      "",
+      `LLMs: ${SITE}/llms.txt`,
+      `Registry: ${SITE}/registry.json`,
+      `Sitemap: ${SITE}/sitemap.xml`,
+      "",
+      "# Do not present an index-only entry as installable. Check `distributable` in the registry.",
+      "",
+    ].join("\n")
+  );
+
+  write(
+    "manifest.webmanifest",
+    JSON.stringify(
+      {
+        name: "Aidentity",
+        short_name: "Aidentity",
+        description: "A verified index of AI agent skills.",
+        start_url: "./",
+        display: "browser",
+        background_color: "#f7f4ed",
+        theme_color: "#14130f",
+        icons: [{ src: "assets/favicon.svg", sizes: "any", type: "image/svg+xml" }],
+      },
+      null,
+      2
+    ) + "\n"
+  );
+
+  const xml = (value) =>
+    String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const feedItems = skills.slice(0, 50).map((skill) => `    <item>
+      <title>${xml(skill.name)} — ${xml(skill.category)} AI agent skill</title>
+      <link>${SITE}/skills/${skill.id}/</link>
+      <guid>${SITE}/skills/${skill.id}/</guid>
+      <description>${xml(skill.description)}</description>
+      <pubDate>${new Date(GENERATED + "T00:00:00Z").toUTCString()}</pubDate>
+      <author>${xml(skill.source.author)}</author>
+    </item>`).join("\n");
+  write(
+    "feed.xml",
+    `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Aidentity — AI agent skills</title>
+    <link>${SITE}/</link>
+    <description>A verified index of AI agent skills, with license and source for every entry.</description>
+    <language>en</language>
+    <lastBuildDate>${new Date(GENERATED + "T00:00:00Z").toUTCString()}</lastBuildDate>
+    <atom:link href="${SITE}/feed.xml" rel="self" type="application/rss+xml"/>
+${feedItems}
+  </channel>
+</rss>
+`
+  );
+
+  const badgeLabel = `${registry.total} skills`;
+  write(
+    "badge.svg",
+    `<svg xmlns="http://www.w3.org/2000/svg" width="224" height="44" viewBox="0 0 224 44" role="img" aria-label="aidentity: ${badgeLabel}">
+  <rect width="224" height="44" fill="#14130f"/>
+  <rect x="12" y="14" width="10" height="10" fill="#b0341d"/>
+  <text x="30" y="26" fill="#f4f1e8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12">aidentity</text>
+  <text x="212" y="26" text-anchor="end" fill="#b9b2a0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">${badgeLabel}</text>
+</svg>
+`
+  );
 
   write(
     "404.html",
@@ -861,6 +1070,13 @@ function buildAssets() {
     "assets/favicon.svg",
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#14130f"/><rect x="9" y="9" width="14" height="14" fill="#b0341d"/></svg>`
   );
+  // Binary assets are copied, not generated.
+  for (const file of ["og.png", "apple-touch-icon.png"]) {
+    const source = path.join(__dirname, "assets", file);
+    if (!fs.existsSync(source)) continue;
+    fs.mkdirSync(path.join(OUT, "assets"), { recursive: true });
+    fs.copyFileSync(source, path.join(OUT, "assets", file));
+  }
 }
 
 // ---------------------------------------------------------------------------

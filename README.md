@@ -1,62 +1,32 @@
 # Aidentity
 
-> **The verified index of agent skills.** One ID. One command. Works in every coding agent.
->
-> `npx aidentity add code-review`
+**The verified index of AI agent skills.** One ID, one command, works in every coding agent.
 
-**394 skills indexed · 375 installable · 15 sources · re-verified weekly**
+[![skills](https://img.shields.io/badge/skills-394-b0341d?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
+[![installable](https://img.shields.io/badge/installable-375-2c6243?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
+[![sources](https://img.shields.io/badge/sources-15-14130f?style=flat-square)](https://akshatnaruka.github.io/aidentity/sources/)
+[![license](https://img.shields.io/badge/license-MIT%20%2B%20CC0-14130f?style=flat-square)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-b0341d?style=flat-square)](CONTRIBUTING.md)
 
-Skills are the new packages. There are thousands of them, spread across dozens of repos, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index.
+**[Browse the index](https://akshatnaruka.github.io/aidentity/)** · **[Read llms.txt](https://akshatnaruka.github.io/aidentity/llms.txt)** · **[Registry JSON](https://akshatnaruka.github.io/aidentity/registry.json)**
 
-## Sources
+```bash
+npx aidentity add mattpocock/engineering/code-review
+```
 
-| Repository | Skills | License | Hosted |
-|---|---:|---|---|
-| [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
-| [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
-| [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
-| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
-| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
-| [anthropics/skills](https://github.com/anthropics/skills) | 19 | LicenseRef-Proprietary | **no — index only** |
-| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
-| [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | 10 | MIT | yes |
-| [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 8 | Apache-2.0 | yes |
-| [trailofbits/skills](https://github.com/trailofbits/skills) | 7 | CC-BY-SA-4.0 | yes |
-| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
-| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
-| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
-| [AkshatNaruka/aidentity](https://github.com/AkshatNaruka/aidentity) | 1 | MIT | yes |
+Skills are the new packages. There are thousands of them, spread across dozens of repositories, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index: **394 skills from 15 sources, each with its author, license and last verification date**, installable into the agent you already use.
 
-> **On the Anthropic entries|---|---|
-| [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
-| [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
-| [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
-| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
-| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
-| [anthropics/skills](https://github.com/anthropics/skills) | 19 | LicenseRef-Proprietary | **no — index only** |
-| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
-| [trailofbits/skills](https://github.com/trailofbits/skills) | 9 | CC-BY-SA-4.0 | yes |
-| [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 8 | Apache-2.0 | yes |
-| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
-| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
-| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
-| [AkshatNaruka/aidentity](https://github.com/AkshatNaruka/aidentity) | 1 | MIT | yes |
+---
 
-> **On the Anthropic entries
+## Why this exists
 
-## Why this isn't another awesome-list
+| Problem | What Aidentity does |
+|---|---|
+| **Links rot silently** | CI re-checks every upstream weekly and records the result. Dead sources are flagged, not ignored. |
+| **Licenses are invisible** | Every entry states its license and origin. Content we cannot redistribute is indexed as a pointer, not copied. |
+| **Every agent invents its own folder** | One skill ID installs into Claude Code, Cursor, Codex, Gemini CLI, OpenCode and Copilot. |
 
-| | Awesome lists | Aidentity |
-|---|---|---|
-| Format | Markdown you scroll | Registry + search + machine-readable JSON |
-| Install | Copy-paste by hand | `npx aidentity add <id>` into Claude Code, OpenCode, Codex, Cursor, Copilot, Gemini CLI |
-| Freshness | Silently rots | Weekly CI re-checks every source; dead entries flagged |
-| License | Unstated | Every entry states its license and origin |
-| For agents | Unreadable | `registry/skills.json` + `llms.txt` |
-
-Every entry carries its upstream repo, author, license, status (`stable` / `in-progress` / `deprecated`) and a `verified_at` date. If we can't verify it, we don't list it.
+This is an index, not a fork. Every skill belongs to its author.
 
 ---
 
@@ -66,44 +36,56 @@ Every entry carries its upstream repo, author, license, status (`stable` / `in-p
 # Find something
 npx aidentity search "code review"
 
-# Install into whichever agent you're in (auto-detected)
+# Install into the agent you are in (auto-detected)
 npx aidentity add mattpocock/engineering/code-review
 
-# Or pick the target explicitly
+# Pick the target explicitly
 npx aidentity add systematic-debugging --agent cursor
 
-# See what's in the registry
+# Install a task bundle
+node scripts/install.js starter-10 --platform claude
+
+# Browse the registry
 npx aidentity list --category testing
 ```
 
-No config. No account. No vendor lock-in — the skill lands in `.claude/skills/`, `.opencode/skills/`, `.codex/skills/`, `.cursor/skills/`, `.github/skills/` or `.gemini/skills/` depending on where you are.
+No config, no account, no vendor lock-in. The skill lands in `.claude/skills/`, `.cursor/skills/`, `.codex/skills/`, `.gemini/skills/`, `.opencode/skills/` or `.github/skills/`.
 
 ---
 
-## Browse
+## Start here
 
-- **[Browse the index](https://akshatnaruka.github.io/aidentity)** — search, filter by category / source / license
-- **[Registry](registry/skills.json)** — the raw data, CC0
-- **[Sources](https://akshatnaruka.github.io/aidentity/sources/)** — provenance and license for every upstream
-- **[llms.txt](https://akshatnaruka.github.io/aidentity/llms.txt)** — the same index, written for agents
+| I want to… | Use |
+|---|---|
+| **Install a sensible default set** | `starter-10` — 10 skills that improve almost any codebase |
+| **Build a web app** | `web-app` — design direction, frontend, API, Postgres, CRO, CI, launch |
+| **Build a mobile app** | `mobile-app` — Expo Router, native UI, animation, EAS releases |
+| **Write content / SEO / launch copy** | `content-creator` — copywriting, editing, SEO, social, video, email, ads |
+| **Audit security before shipping** | `security-review` — audit context, supply chain, agentic actions, second opinion |
+| **Work with data or AI** | `data-ai` — Postgres, BigQuery AI, context engineering, evals, observability |
+| **Set up CI / deploy / cloud** | `devops` — CI, shipping, observability, Cloud Run, GKE |
+| **Work on GCP or Azure specifically** | `cloud` — optional 11-skill megapack |
+
+Full task router: **[INDEX.md](INDEX.md)**. Bundles: **[bundles/](bundles/)**.
 
 ---
 
 ## What's inside
 
-| Directory | What it is |
-|---|---|
-| `registry/` | The data spine: `skills.json`, `sources.json`, `pointers/`, `verified.json`, `schema.json` |
-| `skills/` | Vendored skills from redistributable sources, each with its upstream `LICENSE` |
-| `cli/` | `aidentity` — search, install, list |
-| `site/` | Zero-dependency static site generator → GitHub Pages |
-| `prompts/` | 256 Fabric patterns (MIT) plus original domain prompts |
-| `agents/` | Agent definitions and free-model routing configs |
-| `memory/` | Memory patterns and integration notes |
-| `templates/` | Project templates (Next.js, React, Python, Go, Rust) |
-| `references/` | Curated links to the wider ecosystem |
-| `scripts/` | Registry builder, license gate, upstream verifier, notices generator |
-| `docs/` | Setup, routing, best practices, and the open-source plan |
+| Type | Count | Where |
+|---|---:|---|
+| Skills | **394** (375 installable, 19 index-only) | [`skills/`](skills/) · [registry](registry/skills.json) |
+| MCP tools | 12 | [`tools/README.md`](tools/README.md) |
+| Hooks | 4 | [`hooks/`](hooks/) |
+| Slash commands | 5 | [`commands/`](commands/) |
+| Subagents | 7 scoped | [`agents/`](agents/) |
+| Bundles | 8 | [`bundles/`](bundles/) |
+| Language rules | 5 | [`rules/`](rules/) |
+| Templates | 3 real stacks | [`templates/`](templates/) |
+| Prompts | 256 Fabric patterns | [`prompts/`](prompts/) |
+| Memory | patterns + project template | [`memory/`](memory/) |
+
+Machine-readable index: [`registry/catalog.json`](registry/catalog.json) — 463 entries with a `type` field. Nothing in the tables above is hand-maintained; `scripts/build-catalog.js` generates it.
 
 ---
 
@@ -111,24 +93,25 @@ No config. No account. No vendor lock-in — the skill lands in `.claude/skills/
 
 | Repository | Skills | License | Hosted |
 |---|---:|---|---|
-| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
-| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
-| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
 | [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
 | [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
-| [anthropics/skills](https://github.com/anthropics/skills) | 19 | LicenseRef-Proprietary | **no — index only** |
-| [AkshatNaruka/aidentity](https://github.com/AkshatNaruka/aidentity) | 1 | MIT | yes |
-| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
-| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
-| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
-| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
 | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
+| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
+| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
+| [anthropics/skills](https://github.com/anthropics/skills) | 19 | Proprietary | **no — index only** |
+| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
+| [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | 10 | MIT | yes |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 8 | Apache-2.0 | yes |
-| [trailofbits/skills](https://github.com/trailofbits/skills) | 9 | CC-BY-SA-4.0 | yes |
+| [trailofbits/skills](https://github.com/trailofbits/skills) | 7 | CC-BY-SA-4.0 | yes |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
+| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
+| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
+| `repo-scanner` (this repo) | 1 | MIT | yes |
 
-> **On the Anthropic entries:** those skills ship under a license that does not permit redistribution. We index them — name, description, origin, upstream link — but we do not host the content. If that changes upstream, they become installable here automatically.
+> **On the Anthropic entries:** those skills ship under a license that does not permit redistribution. They are indexed with a name, description and upstream link, but the content is not hosted here. If that changes upstream, they become installable automatically.
 
-Full provenance for every file is in [`registry/skills.json`](registry/skills.json) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+Full provenance: [`registry/skills.json`](registry/skills.json) · [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -136,39 +119,77 @@ Full provenance for every file is in [`registry/skills.json`](registry/skills.js
 
 ```mermaid
 flowchart LR
-  A[Upstream repos] -->|scan + verify weekly| B[registry/skills.json]
+  A[Upstream repos] -->|scan + verify weekly| B[registry/catalog.json]
   B --> C[Static site + search]
   B --> D[npx aidentity]
-  B --> E[llms.txt / agents]
-  C --> F[You browse]
+  B --> E[llms.txt / ai.txt]
+  C --> F[Browse]
   D --> G[Skill installed in your agent]
 ```
 
-Nothing is scraped at runtime. The registry is built by CI, validated against a JSON Schema, and served as static files.
-
 ```bash
-# Rebuild the registry
-node scripts/build-registry.js
+node scripts/build-registry.js     # skills
+node scripts/build-catalog.js      # unified catalog
+node scripts/check-licenses.js     # legal gate
+node scripts/validate.js           # frontmatter, bundles, links
+node site/build.js                 # static site
+```
 
-# Enforce the license policy
-node scripts/check-licenses.js
+---
 
-# Build the site
-node site/build.js && node site/serve.js
+## FAQ
+
+**Is this another awesome list?** No. It is a generated registry with schema validation, a license gate, weekly upstream checks and an install CLI. The site and README are views of the same data.
+
+**Are the skills free?** Most are MIT or Apache-2.0. Trail of Bits content is CC BY-SA 4.0. 19 Anthropic skills are index-only. Every page states the license before you install.
+
+**How do you keep it accurate?** CI rebuilds the registry and checks the license policy on every change. A weekly job requests every upstream, writes `registry/verified.json`, and opens a report PR when a source is unreachable.
+
+**Can I add a skill?** Yes — one JSON record per pull request. See [CONTRIBUTING.md](CONTRIBUTING.md). CI validates the schema, the license and that the source resolves.
+
+**Does it work with my agent?** Claude Code, Cursor, Codex, Gemini CLI, OpenCode and GitHub Copilot. The registry is plain JSON, so anything that can read a file can use it.
+
+---
+
+## For AI assistants
+
+- [`llms.txt`](https://akshatnaruka.github.io/aidentity/llms.txt) — the index in plain text, with key facts first
+- [`ai.txt`](https://akshatnaruka.github.io/aidentity/ai.txt) — citation and usage preferences
+- [`registry.json`](https://akshatnaruka.github.io/aidentity/registry.json) — every entry as structured data
+- [`feed.xml`](https://akshatnaruka.github.io/aidentity/feed.xml) — RSS
+
+Quoting and citing is allowed. Attribute the page and the upstream author. Do not present an index-only entry as installable.
+
+---
+
+## Share
+
+If this saved you a search:
+
+- [Share on X](https://x.com/intent/tweet?text=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20394%20AI%20agent%20skills.%20One%20command%2C%20six%20agents.&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
+- [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
+- [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&t=Aidentity%20%E2%80%94%20the%20verified%20index%20of%20AI%20agent%20skills)
+- [Post to Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&title=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20394%20AI%20agent%20skills)
+
+Embed the badge:
+
+```markdown
+[![aidentity](https://akshatnaruka.github.io/aidentity/badge.svg)](https://akshatnaruka.github.io/aidentity/)
 ```
 
 ---
 
 ## Contributing
 
-Adding a skill is one JSON record and a pull request — usually under 30 seconds of work.
+Adding a skill is one JSON record and a pull request — usually under 30 seconds.
 
 ```bash
 node scripts/build-registry.js
 node scripts/check-licenses.js
+node scripts/validate.js
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TEMPLATE/submit-skill.yml) issue form. We merge fast: if your entry is accurate and correctly licensed, it ships the same day.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TEMPLATE/submit-a-skill.yml) form. We merge fast: if your entry is accurate and correctly licensed, it ships the same day.
 
 ---
 
@@ -176,7 +197,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TE
 
 - **Code** (`cli/`, `site/`, `scripts/`) — MIT
 - **Registry data** (`registry/*.json`) — CC0 1.0. Use it for anything.
-- **Original writing** (`docs/`) — CC BY 4.0
+- **Original writing** (`docs/`, `rules/`, `bundles/`) — CC BY 4.0
 - **Vendored skills** — their upstream licenses, preserved per directory
 
 Aidentity is an index, not a fork. Every skill belongs to its author.
