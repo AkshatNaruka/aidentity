@@ -17,25 +17,37 @@
       }, 1400);
     };
 
+    const fallback = function () {
+      const field = document.createElement("textarea");
+      field.value = value;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      field.setSelectionRange(0, value.length);
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch (error) {
+        ok = false;
+      }
+      document.body.removeChild(field);
+      if (ok) {
+        done();
+      } else {
+        button.textContent = "select";
+        window.setTimeout(function () {
+          button.textContent = "copy";
+        }, 1600);
+      }
+    };
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(value).then(done).catch(function () {});
+      navigator.clipboard.writeText(value).then(done).catch(fallback);
       return;
     }
-
-    const field = document.createElement("textarea");
-    field.value = value;
-    field.setAttribute("readonly", "");
-    field.style.position = "fixed";
-    field.style.opacity = "0";
-    document.body.appendChild(field);
-    field.select();
-    try {
-      document.execCommand("copy");
-      done();
-    } catch (error) {
-      /* no-op */
-    }
-    document.body.removeChild(field);
+    fallback();
   });
 
   // --- browse filtering ---------------------------------------------------
