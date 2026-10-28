@@ -48,6 +48,14 @@ const DOMAINS = {
   product: ["product management agent skill"],
   development: ["software engineering agent skill", "coding agent skill", "refactoring agent skill"],
   ai: ["llm agent skill", "rag agent skill", "ai engineering skill"],
+  finance: ["financial analysis agent skill", "equity research agent skill"],
+  quant: ["quantitative trading agent skill", "backtesting agent skill"],
+  corporate: ["business report agent skill", "excel agent skill", "office productivity skill"],
+  music: ["music production agent skill", "lyric writing agent skill"],
+  architecture: ["software architecture agent skill", "architecture diagram agent skill"],
+  "project-management": ["scrum agent skill", "agile sprint agent skill"],
+  film: ["screenwriting agent skill", "film production agent skill"],
+  news: ["journalism agent skill", "newsroom agent skill"],
 };
 
 const DOMAIN_KEYWORDS = {
@@ -66,7 +74,19 @@ const DOMAIN_KEYWORDS = {
   product: ["product", "roadmap", "prd", "discovery"],
   development: ["engineering", "coding", "refactor", "software", "code review"],
   ai: ["llm", "rag", "ai", "agent", "eval", "prompt"],
+  finance: ["finance", "financial", "equity", "investment", "valuation", "earnings", "portfolio", "banking"],
+  quant: ["quant", "quantitative", "trading", "backtest", "derivative", "volatility", "arbitrage", "cointegration", "fixed-income"],
+  corporate: ["excel", "spreadsheet", "budget", "invoice", "business", "report", "deck", "kpi", "contract", "office"],
+  music: ["music", "audio", "song", "lyric", "mastering", "album", "suno", "ableton", "sound"],
+  architecture: ["architecture", "architect", "system-design", "c4", "diagram", "archify"],
+  "project-management": ["scrum", "sprint", "agile", "backlog", "kanban", "retrospective", "standup"],
+  film: ["film", "screenwriting", "screenplay", "storyboard", "cinematography", "story"],
+  news: ["journalism", "newsroom", "news", "editorial", "reporting", "data journalism"],
 };
+
+// Niche roles do not have 100-star repositories. Lower the bar where the
+// domain itself is the quality signal, and keep the other filters.
+const MIN_STARS = { "project-management": 1, film: 1, news: 1, support: 1, legal: 1, education: 1 };
 
 const INJECTION = [
   /ignore (all )?(previous|prior) instructions/i,
@@ -156,7 +176,8 @@ function verifyRepo(repo, sources, domain) {
   if (repo.archived) reasons.push("archived");
   if (repo.fork) reasons.push("fork");
   if (!ALLOWED_LICENSES.has(license)) reasons.push(`license ${license || "none"}`);
-  if (repo.stargazers_count < args.minStars) reasons.push(`${repo.stargazers_count} stars`);
+  const minStars = MIN_STARS[domain] ?? args.minStars;
+  if (repo.stargazers_count < minStars) reasons.push(`${repo.stargazers_count} stars`);
   const days = (Date.now() - new Date(repo.pushed_at).getTime()) / 86400000;
   if (days > 180) reasons.push(`${Math.round(days)} days since push`);
   if (existingSource(repo, sources)) reasons.push("already imported");
@@ -220,13 +241,16 @@ async function importSource(domain, repo, inspection, license, validations) {
   const sourceKey = `${repo.owner.login}-${repo.name}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "aid-discover-"));
   try {
-    execFileSync("git", ["clone", "--depth", "1", "--filter=blob:none", repo.clone_url, dir], { stdio: "pipe" });
+    const chosen = validations.slice(0, args.maxSkills);
+    // Sparse checkout keeps huge repos (archify, genoffice) from downloading
+    // assets the selected skills do not need.
+    execFileSync("git", ["clone", "--depth", "1", "--filter=blob:none", "--sparse", repo.clone_url, dir], { stdio: "pipe" });
+    execFileSync("git", ["-C", dir, "sparse-checkout", "set", ...chosen.map((skill) => skill.dir)], { stdio: "pipe" });
     const sha = execFileSync("git", ["-C", dir, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 
-    const licenseFile = ["LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING"].find((name) => fs.existsSync(path.join(dir, name)));
-    if (!licenseFile) return { ok: false, reason: "no license file" };
-
-    const chosen = validations.slice(0, args.maxSkills);
+    const licenseName = ["LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING"].find((name) => inspection.paths.includes(name));
+    const licenseText = licenseName ? await raw(repo.full_name, sha, licenseName) : null;
+    if (!licenseText) return { ok: false, reason: "no license file" };
     const target = path.join(ROOT, "skills", sourceKey);
     fs.mkdirSync(target, { recursive: true });
     for (const skill of chosen) {
@@ -234,7 +258,7 @@ async function importSource(domain, repo, inspection, license, validations) {
       if (!fs.existsSync(from)) continue;
       fs.cpSync(from, path.join(target, path.basename(skill.dir)), { recursive: true });
     }
-    fs.copyFileSync(path.join(dir, licenseFile), path.join(target, "LICENSE"));
+    fs.writeFileSync(path.join(target, "LICENSE"), licenseText);
 
     const scripts = inspection.paths.filter((file) =>
       chosen.some((skill) => file.startsWith(`${skill.dir}/`)) && /\.(sh|py|js|ts)$/.test(file)

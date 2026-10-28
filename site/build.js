@@ -28,6 +28,9 @@ const GENERATED = new Date().toISOString().slice(0, 10);
 const INDEXNOW_KEY = "c53fff0269a753a2d4152843dfb58136";
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
+const bundlesData = fs.existsSync(path.join(ROOT, "bundles", "bundles.json"))
+  ? JSON.parse(fs.readFileSync(path.join(ROOT, "bundles", "bundles.json"), "utf8")).bundles
+  : [];
 const sources = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "sources.json"), "utf8")).sources;
 const verified = fs.existsSync(path.join(ROOT, "registry", "verified.json"))
   ? JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "verified.json"), "utf8"))
@@ -276,6 +279,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
     <nav class="site-nav" aria-label="Primary">
       <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
       <a href="${p}sources/index.html"${page === "sources" ? ' aria-current="page"' : ""}>Sources</a>
+      <a href="${p}roles/index.html"${page === "roles" ? ' aria-current="page"' : ""}>Roles</a>
       <a href="${p}for-agents/index.html"${page === "agents" ? ' aria-current="page"' : ""}>Agents</a>
       <a href="${p}about/index.html"${page === "about" ? ' aria-current="page"' : ""}>About</a>
       <a href="${REPO}" rel="noopener">GitHub</a>
@@ -1126,6 +1130,69 @@ Store the endpoints. Use search.json for retrieval and content_url for full inst
   );
 }
 
+
+function buildForRoles() {
+  const roleFile = path.join(ROOT, "roles", "roles.json");
+  if (!fs.existsSync(roleFile)) return;
+  const roles = JSON.parse(fs.readFileSync(roleFile, "utf8")).roles;
+  const counts = Object.fromEntries(categoryList.map((category) => [category.name, category.count]));
+  const cards = roles.map((role) => {
+    const categories = role.categories.filter((name) => counts[name] > 0);
+    const bundles = (role.bundles || []).filter((slug) => bundlesData.some((bundle) => bundle.slug === slug));
+    return `<article class="role-card">
+      <h3>${esc(role.name)}</h3>
+      <p>${esc(role.description)}</p>
+      <div class="tags">
+        ${categories.map((name) => `<a class="tag" href="../skills/index.html?category=${encodeURIComponent(name)}">${esc(name)} · ${counts[name]}</a>`).join(" ")}
+        ${bundles.map((slug) => `<a class="tag ok" href="../bundles/#${slug}">${esc(slug)} bundle</a>`).join(" ")}
+      </div>
+    </article>`;
+  }).join("\n");
+
+  const body = `
+<section style="padding-top:44px">
+  <div class="wrap">
+    <p class="kicker">By role</p>
+    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">What do you do?</h2>
+    <p style="max-width:62ch;color:var(--ink-soft);margin-top:14px">
+      Start from the job, not the folder. Each role links to the categories that matter
+      and to a bundle that installs a working set in one command.
+    </p>
+    <div class="role-grid">${cards}</div>
+  </div>
+</section>
+`;
+  write("roles/index.html", layout({
+    title: "Skills by role",
+    description: "Find AI agent skills by role: engineer, architect, designer, finance, quant, music, film, marketing, legal and more.",
+    depth: 1,
+    body,
+    page: "roles",
+    canonical: SITE + "/roles/",
+    keywords: "AI skills by role, finance agent skills, quant skills, scrum skills, music skills, film skills",
+  }));
+}
+
+
+function buildBundlesPage() {
+  const cards = bundlesData.map((bundle) => {
+    const skills = bundle.skills.map((id) => registry.skills.find((skill) => skill.id === id)).filter(Boolean);
+    return `<article class="bundle" id="${bundle.slug}">
+      <h3>${esc(bundle.name)} <span class="mono" style="font-size:11px;color:var(--muted)">${esc(bundle.slug)}</span></h3>
+      <p>${esc(bundle.description)}</p>
+      <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>node scripts/install.js ${esc(bundle.slug)} --platform claude</code><button type="button" data-copy="node scripts/install.js ${esc(bundle.slug)} --platform claude">copy</button></div>
+      <ul class="bundle-skills">${skills.map((skill) => `<li><a href="../skills/${skill.id}/">${esc(skill.name)}</a> <span class="mono">${esc(skill.source.license)}</span></li>`).join("")}</ul>
+    </article>`;
+  }).join("\n");
+  const body = `<section style="padding-top:44px"><div class="wrap" style="max-width:900px">
+    <p class="kicker">Bundles</p>
+    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Install a working set</h2>
+    <p style="max-width:62ch;color:var(--ink-soft);margin-top:14px">Five to fifteen skills, chosen for a task. Smaller than loading the whole index, larger than guessing.</p>
+    ${cards}
+  </div></section>`;
+  write("bundles/index.html", layout({ title: "Bundles", description: "Task-based install sets of AI agent skills.", depth: 1, body, page: "bundles", canonical: SITE + "/bundles/" }));
+}
+
 function buildMachineReadable() {
   write("registry.json", JSON.stringify(registry, null, 2) + "\n");
 
@@ -1190,6 +1257,8 @@ function buildMachineReadable() {
     "/sources/",
     "/about/",
     "/for-agents/",
+    "/roles/",
+    "/bundles/",
     ...skills.map((skill) => `/skills/${skill.id}/`),
   ];
   write(
@@ -1428,6 +1497,8 @@ buildSources();
 buildAbout();
 buildMachineReadable();
 buildForAgents();
+buildForRoles();
+buildBundlesPage();
 buildAgentSurface();
 
 const pages = skills.length + 5;

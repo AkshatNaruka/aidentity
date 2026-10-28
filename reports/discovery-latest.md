@@ -1,9 +1,9 @@
 # Skill discovery — 2026-10-28
 
-Mode: dry run · domains: specs
+Mode: import · domains: news
 
 | Domain | Repo | Stars | License | Skills | Result | Notes |
 |---|---|---:|---|---:|---|---|
-| specs | [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | 48633 | MIT | 10 | candidate | mentions network/install commands |
+| news | [emmapbingham/agentic-newsroom](https://github.com/emmapbingham/agentic-newsroom) | 1 | MIT | 4 | imported | — |
 
 Candidates pass: permissive license, pushed within 180 days, not archived, ≥ min stars, valid SKILL.md frontmatter, no prompt-injection shapes.

@@ -2,8 +2,8 @@
 
 **The verified index of AI agent skills.** One ID, one command, works in every coding agent.
 
-[![skills](https://img.shields.io/badge/skills-395-b0341d?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
-[![installable](https://img.shields.io/badge/installable-376-2c6243?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
+[![skills](https://img.shields.io/badge/skills-526-b0341d?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
+[![installable](https://img.shields.io/badge/installable-507-2c6243?style=flat-square)](https://akshatnaruka.github.io/aidentity/skills/)
 [![sources](https://img.shields.io/badge/sources-15-14130f?style=flat-square)](https://akshatnaruka.github.io/aidentity/sources/)
 [![license](https://img.shields.io/badge/license-MIT%20%2B%20CC0-14130f?style=flat-square)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-b0341d?style=flat-square)](CONTRIBUTING.md)
@@ -18,12 +18,39 @@
 npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
 ```
 
-Skills are the new packages. There are thousands of them, spread across dozens of repositories, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index: **395 skills from 16 sources, each with its author, license and last verification date**, installable into the agent you already use.
+Skills are the new packages. There are thousands of them, spread across dozens of repositories, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index: **526 skills from 25 sources, each with its author, license and last verification date**, installable into the agent you already use.
 
 ## Sources
 
 | Repository | Skills | License | Hosted |
 |---|---:|---|---|
+| [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
+| [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
+| [OpenSenseNova/SenseNova-Skills](https://github.com/OpenSenseNova/SenseNova-Skills) | 59 | MIT | yes |
+| [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | 37 | MIT | yes |
+| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | 25 | MIT | yes |
+| [expo/skills](https://github.com/expo/skills) | 23 | MIT | yes |
+| [anthropics/skills](https://github.com/anthropics/skills) | 19 | LicenseRef-Proprietary | **no — index only** |
+| [abrahamFerga/scrum-skills](https://github.com/abrahamFerga/scrum-skills) | 17 | MIT | yes |
+| [obra/superpowers](https://github.com/obra/superpowers) | 14 | MIT | yes |
+| [agentii-ai/agentii-investment-intelligence](https://github.com/agentii-ai/agentii-investment-intelligence) | 12 | Apache-2.0 | yes |
+| [agiprolabs/claude-trading-skills](https://github.com/agiprolabs/claude-trading-skills) | 12 | MIT | yes |
+| [jtydhr88/lyric-writing-skills](https://github.com/jtydhr88/lyric-writing-skills) | 12 | MIT | yes |
+| [jtydhr88/screenwriting-skills](https://github.com/jtydhr88/screenwriting-skills) | 12 | MIT | yes |
+| [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | 10 | MIT | yes |
+| [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 8 | Apache-2.0 | yes |
+| [trailofbits/skills](https://github.com/trailofbits/skills) | 7 | CC-BY-SA-4.0 | yes |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 6 | MIT | yes |
+| [emmapbingham/agentic-newsroom](https://github.com/emmapbingham/agentic-newsroom) | 4 | MIT | yes |
+| [lukedj78/dev-flow](https://github.com/lukedj78/dev-flow) | 2 | MIT | yes |
+| [supabase/agent-skills](https://github.com/supabase/agent-skills) | 2 | MIT | yes |
+| [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | 2 | MIT | yes |
+| [Agents365-ai/drawio-skill](https://github.com/Agents365-ai/drawio-skill) | 1 | MIT | yes |
+| [haidrrrry/claude-remotion-skill](https://github.com/haidrrrry/claude-remotion-skill) | 1 | MIT | yes |
+| [AkshatNaruka/aidentity](https://github.com/AkshatNaruka/aidentity) | 1 | MIT | yes |
+
+> **On the Anthropic|---|---|
 | [google/skills](https://github.com/google/skills) | 127 | Apache-2.0 | yes |
 | [microsoft/skills](https://github.com/microsoft/skills) | 61 | MIT | yes |
 | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | 52 | MIT | yes |
@@ -91,7 +118,7 @@ No config, no account, no vendor lock-in. The skill lands in `.claude/skills/`, 
 | **Set up CI / deploy / cloud** | `devops` — CI, shipping, observability, Cloud Run, GKE |
 | **Work on GCP or Azure specifically** | `cloud` — optional 11-skill megapack |
 
-Full task router: **[INDEX.md](INDEX.md)**. Bundles: **[bundles/](bundles/)**.
+Full task router: **[INDEX.md](INDEX.md)** · by role: **[ROLES.md](ROLES.md)** · bundles: **[bundles/](bundles/)**.
 
 ---
 
@@ -99,7 +126,7 @@ Full task router: **[INDEX.md](INDEX.md)**. Bundles: **[bundles/](bundles/)**.
 
 | Type | Count | Where |
 |---|---:|---|
-| Skills | **395** (376 installable, 19 index-only) | [`skills/`](skills/) · [registry](registry/skills.json) |
+| Skills | **526** (507 installable, 19 index-only) | [`skills/`](skills/) · [registry](registry/skills.json) |
 | MCP tools | 12 | [`tools/README.md`](tools/README.md) |
 | Hooks | 4 | [`hooks/`](hooks/) |
 | Slash commands | 5 | [`commands/`](commands/) |
@@ -204,10 +231,10 @@ Full instructions: [for-agents](https://akshatnaruka.github.io/aidentity/for-age
 If this saved you a search, star the repo so the weekly verification keeps running — and share it with one person who is setting up an agent.
 
 - [Star the repo](https://github.com/AkshatNaruka/aidentity)
-- [Share on X](https://x.com/intent/tweet?text=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20395%20AI%20agent%20skills.%20One%20command%2C%20six%20agents.&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
+- [Share on X](https://x.com/intent/tweet?text=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20526%20AI%20agent%20skills.%20One%20command%2C%20six%20agents.&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
 - [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
 - [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&t=Aidentity%20%E2%80%94%20the%20verified%20index%20of%20AI%20agent%20skills)
-- [Post to Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&title=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20395%20AI%20agent%20skills)
+- [Post to Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&title=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20526%20AI%20agent%20skills)
 
 Embed the badge:
 

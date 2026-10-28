@@ -8,17 +8,26 @@ This directory holds the skill content we are allowed to redistribute, mirrored 
 |---|---|---:|---|
 | Google LLC | [`google-cloud/`](google-cloud/) | 127 | Apache-2.0 |
 | Microsoft Corporation | [`microsoft-azure/`](microsoft-azure/) | 61 | MIT |
+| OpenSenseNova | [`opensensenova-sensenova-skills/`](opensensenova-sensenova-skills/) | 59 | MIT |
 | Corey Haines | [`marketingskills/`](marketingskills/) | 52 | MIT |
 | Matt Pocock | [`mattpocock/`](mattpocock/) | 37 | MIT |
 | Addy Osmani | [`addyosmani/`](addyosmani/) | 25 | MIT |
 | Expo (650 Industries) | [`expo/`](expo/) | 23 | MIT |
+| abrahamFerga | [`abrahamferga-scrum-skills/`](abrahamferga-scrum-skills/) | 17 | MIT |
 | Jesse Vincent | [`obra-superpowers/`](obra-superpowers/) | 14 | MIT |
+| agentii-ai | [`agentii-ai-agentii-investment-intelligence/`](agentii-ai-agentii-investment-intelligence/) | 12 | Apache-2.0 |
+| agiprolabs | [`agiprolabs-claude-trading-skills/`](agiprolabs-claude-trading-skills/) | 12 | MIT |
+| jtydhr88 | [`jtydhr88-lyric-writing-skills/`](jtydhr88-lyric-writing-skills/) | 12 | MIT |
+| jtydhr88 | [`jtydhr88-screenwriting-skills/`](jtydhr88-screenwriting-skills/) | 12 | MIT |
 | Affaan Mustafa | [`everything-claude-code/`](everything-claude-code/) | 10 | MIT |
 | Julius Brussee | [`caveman/`](caveman/) | 8 | Apache-2.0 |
 | Trail of Bits | [`trailofbits/`](trailofbits/) | 7 | CC-BY-SA-4.0 |
 | Next Level Builder | [`ui-ux-pro-max/`](ui-ux-pro-max/) | 6 | MIT |
+| emmapbingham | [`emmapbingham-agentic-newsroom/`](emmapbingham-agentic-newsroom/) | 4 | MIT |
+| lukedj78 | [`lukedj78-dev-flow/`](lukedj78-dev-flow/) | 2 | MIT |
 | Supabase | [`supabase/`](supabase/) | 2 | MIT |
 | codeswithroh | [`tastemaker/`](tastemaker/) | 2 | MIT |
+| Agents365-ai | [`agents365-ai-drawio-skill/`](agents365-ai-drawio-skill/) | 1 | MIT |
 | haidrrrry | [`haidrrrry-claude-remotion-skill/`](haidrrrry-claude-remotion-skill/) | 1 | MIT |
 | Aidentity contributors | [`repo-scanner/`](repo-scanner/) | 1 | MIT |
 

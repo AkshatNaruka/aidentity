@@ -28,7 +28,7 @@ Start from the task, not the folder tree.
 
 | Type | Path | Count |
 |---|---|---:|
-| Skills | [`skills/`](skills/) | 395 (19 pointer-only) |
+| Skills | [`skills/`](skills/) | 526 (19 pointer-only) |
 | Tools | [tools/README.md](tools/README.md) | 12 |
 | Hooks | [hooks/](hooks/) | 4 + settings example |
 | Commands | [`commands/`](commands/) | 5 |
