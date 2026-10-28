@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>position-sizing — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Trade sizing methods including fixed fractional, volatility-adjusted, Kelly criterion, and liquidity-constrained sizing">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="position-sizing, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="position-sizing — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Trade sizing methods including fixed fractional, volatility-adjusted, Kelly criterion, and liquidity-constrained sizing">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="position-sizing — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Trade sizing methods including fixed fractional, volatility-adjusted, Kelly criterion, and liquidity-constrained sizing">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"position-sizing","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/"}]},{"@type":"TechArticle","headline":"position-sizing","description":"Trade sizing methods including fixed fractional, volatility-adjusted, Kelly criterion, and liquidity-constrained sizing","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>position-sizing
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>position-sizing</h1>
+      <p class="summary">Trade sizing methods including fixed fractional, volatility-adjusted, Kelly criterion, and liquidity-constrained sizing</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Position Sizing</h3>
+<p>Position sizing is the single most important risk management decision in trading. Your entry signal determines direction; your position size determines survival. A mediocre strategy with proper sizing will outperform a great strategy with reckless sizing over any meaningful time horizon.</p>
+<p><strong>Core principle</strong>: Size determines survival, not entries. Two traders with the same signals but different sizing will have wildly different outcomes. The one who sizes conservatively survives drawdowns and compounds capital; the one who oversizes blows up.</p>
+<h4>Methods Covered</h4>
+<table><thead><tr><th>Method</th><th>Best For</th><th>Key Input</th></tr></thead><tbody>
+<tr><td>Fixed Fractional</td><td>General trading, most recommended</td><td>Account risk %</td></tr>
+<tr><td>Volatility-Adjusted</td><td>Volatile markets, multi-asset</td><td>ATR or realized vol</td></tr>
+<tr><td>Kelly Criterion</td><td>Quantified edge with track record</td><td>Win rate + payoff ratio</td></tr>
+<tr><td>Liquidity-Constrained</td><td>Low-liquidity Solana tokens</td><td>Pool depth</td></tr>
+<tr><td>Anti-Martingale</td><td>Trend-following strategies</td><td>Recent P&amp;L streak</td></tr>
+</tbody></table>
+<hr>
+<h4>1. Fixed Fractional Sizing</h4>
+<p>The most recommended method for most traders. Risk a fixed percentage of your account on each trade.</p>
+<h5>Formula</h5>
+<p><pre><code>risk_amount = account_value * risk_percentage
+price_risk_per_unit = entry_price - stop_loss_price
+position_size_units = risk_amount / price_risk_per_unit
+position_value = position_size_units * entry_price</code></pre></p>
+<h5>Risk Tiers</h5>
+<table><thead><tr><th>Tier</th><th>Risk Per Trade</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>Conservative</td><td>0.5–1%</td><td>New strategies, drawdown recovery</td></tr>
+<tr><td>Standard</td><td>1–2%</td><td>Most traders, proven strategies</td></tr>
+<tr><td>Aggressive</td><td>3–5%</td><td>High-conviction setups with strong, measured edge</td></tr>
+</tbody></table>
+<h5>Example</h5>
+<p><pre><code>account = 10_000  # $10,000 or 100 SOL
+risk_pct = 0.02   # 2%
+entry = 1.50
+stop_loss = 1.30
+
+risk_amount = account * risk_pct          # $200
+price_risk = entry - stop_loss            # $0.20
+position_units = risk_amount / price_risk # 1,000 tokens
+position_value = position_units * entry   # $1,500</code></pre></p>
+<p>With this sizing, if the stop loss is hit, you lose exactly 2% of your account regardless of the token&#39;s price or volatility.</p>
+<hr>
+<h4>2. Volatility-Adjusted Sizing</h4>
+<p>Scale position size inversely with volatility. When volatility is high, take smaller positions; when low, take larger positions. This normalizes the dollar risk across different market conditions.</p>
+<h5>Formula</h5>
+<p><pre><code>adjusted_size = base_size * (target_vol / current_vol)</code></pre></p>
+<p>Where:</p>
+<ul>
+<li><code>target_vol</code>: your desired daily portfolio volatility (e.g., 2%)</li>
+<li><code>current_vol</code>: the token&#39;s current daily volatility (from ATR or realized vol)</li>
+</ul>
+<h5>Using ATR</h5>
+<p><pre><code>atr_14 = 0.12          # 14-period ATR
+close_price = 1.50
+daily_vol_pct = atr_14 / close_price  # 8%
+
+target_daily_vol = account * 0.02      # $200 target daily move
+position_size = target_daily_vol / atr_14  # 1,667 units</code></pre></p>
+<p>This automatically reduces exposure in volatile markets and increases it in calm ones.</p>
+<hr>
+<h4>3. Kelly Criterion</h4>
+<p>The mathematically optimal fraction of capital to risk, maximizing long-term growth rate. Derived from maximizing expected logarithmic utility.</p>
+<h5>Formula</h5>
+<p><pre><code>f* = (p * b - q) / b</code></pre></p>
+<p>Where:</p>
+<ul>
+<li><code>p</code> = win rate (probability of winning trade)</li>
+<li><code>q</code> = 1 - p (probability of losing trade)</li>
+<li><code>b</code> = average win / average loss (payoff ratio)</li>
+<li><code>f*</code> = optimal fraction of capital to risk</li>
+</ul>
+<p>Equivalent form: <code>f* = (p * (b + 1) - 1) / b</code></p>
+<h5>Critical Rule: NEVER Use Full Kelly</h5>
+<p>Full Kelly assumes perfect knowledge of your edge. In practice, edge estimates are noisy. Always use fractional Kelly:</p>
+<table><thead><tr><th>Fraction</th><th>Use Case</th><th>Notes</th></tr></thead><tbody>
+<tr><td>0.25x Kelly</td><td>Conservative, recommended default</td><td>Robust to edge estimation error</td></tr>
+<tr><td>0.50x Kelly</td><td>Moderate, for well-measured edges</td><td>Still significant drawdown risk</td></tr>
+<tr><td>1.0x Kelly</td><td>Never in practice</td><td>Theoretical maximum, catastrophic if edge is overestimated</td></tr>
+</tbody></table>
+<h5>Example</h5>
+<p><pre><code>win_rate = 0.55       # 55% win rate
+avg_win = 2.0         # Average win is 2x the average loss
+avg_loss = 1.0
+payoff_ratio = avg_win / avg_loss  # b = 2.0
+
+kelly = (win_rate * payoff_ratio - (1 - win_rate)) / payoff_ratio
+# kelly = (0.55 * 2.0 - 0.45) / 2.0 = 0.325 = 32.5%
+
+quarter_kelly = kelly * 0.25  # 8.1% — use this
+half_kelly = kelly * 0.50     # 16.25%</code></pre></p>
+<p><strong>If Kelly is negative, you have no edge. Do not trade.</strong></p>
+<p>See <code>references/sizing_formulas.md</code> for the full mathematical derivation.</p>
+<hr>
+<h4>4. Liquidity-Constrained Sizing</h4>
+<p>Critical for Solana tokens. Even if your risk model says you can take a large position, the pool may not support it without unacceptable slippage.</p>
+<h5>Formula (Constant-Product AMM)</h5>
+<p><pre><code>slippage ≈ trade_size / pool_liquidity
+max_trade = pool_liquidity * max_slippage_pct</code></pre></p>
+<h5>Rules of Thumb</h5>
+<table><thead><tr><th>Constraint</th><th>Guideline</th></tr></thead><tbody>
+<tr><td>Max single trade</td><td>2% of pool liquidity</td></tr>
+<tr><td>Max position</td><td>5% of pool liquidity</td></tr>
+<tr><td>Minimum pool depth</td><td>10x your desired position size</td></tr>
+</tbody></table>
+<h5>Example</h5>
+<p><pre><code>pool_sol = 500          # 500 SOL in pool
+max_slippage = 0.02     # 2% max slippage
+
+max_trade_sol = pool_sol * max_slippage  # 10 SOL
+# For a $150 SOL price, that&#39;s $1,500 max per trade</code></pre></p>
+<p><strong>Always check all pools</strong>, not just the largest. Aggregate liquidity across Raydium, Orca, and Meteora for the full picture. See the <code>liquidity-analysis</code> skill for pool depth assessment.</p>
+<hr>
+<h4>5. Anti-Martingale Sizing</h4>
+<p>Increase size after wins, decrease after losses. This is the opposite of the gambler&#39;s fallacy (Martingale). The logic: winning streaks may indicate your strategy is in sync with the market; losing streaks may indicate regime change.</p>
+<h5>Implementation</h5>
+<p><pre><code>def anti_martingale_size(
+    base_size: float,
+    consecutive_wins: int,
+    consecutive_losses: int,
+    scale_factor: float = 0.25,
+    max_multiplier: float = 2.0,
+    min_multiplier: float = 0.5,
+) -&gt; float:
+    if consecutive_losses &gt; 0:
+        multiplier = max(min_multiplier, 1.0 - consecutive_losses * scale_factor)
+    elif consecutive_wins &gt; 0:
+        multiplier = min(max_multiplier, 1.0 + consecutive_wins * scale_factor)
+    else:
+        multiplier = 1.0
+    return base_size * multiplier</code></pre></p>
+<p>Use conservatively. After 3+ consecutive losses, reducing size by 50% protects capital during drawdowns.</p>
+<hr>
+<h4>Position Sizing Ladder</h4>
+<p>Combine all methods and take the most conservative result:</p>
+<p><pre><code>1. Calculate Kelly size          → theoretical max based on edge
+2. Calculate fixed fractional    → risk-based size
+3. Calculate volatility-adjusted → vol-normalized size
+4. Calculate liquidity-constrained max → market-based ceiling
+5. Final size = min(all four)    → binding constraint wins</code></pre></p>
+<p>The binding constraint tells you what is limiting your size:</p>
+<ul>
+<li><strong>Kelly-bound</strong>: your edge is small, size accordingly</li>
+<li><strong>Risk-bound</strong>: standard risk management is the limit</li>
+<li><strong>Volatility-bound</strong>: market is too volatile for larger size</li>
+<li><strong>Liquidity-bound</strong>: pool cannot absorb more without slippage</li>
+</ul>
+<hr>
+<h4>Account-Level Limits</h4>
+<p>Individual position sizing is necessary but not sufficient. You also need portfolio-level constraints:</p>
+<table><thead><tr><th>Limit</th><th>Guideline</th><th>Rationale</th></tr></thead><tbody>
+<tr><td>Max single position</td><td>10% of portfolio</td><td>Diversification floor</td></tr>
+<tr><td>Max correlated exposure</td><td>25% of portfolio</td><td>Correlated assets move together</td></tr>
+<tr><td>Max total exposure</td><td>50–80% of portfolio</td><td>Cash reserve for opportunities/margin</td></tr>
+<tr><td>Max positions</td><td>5–10 concurrent</td><td>Attention and management bandwidth</td></tr>
+</tbody></table>
+<hr>
+<h4>PumpFun / Meme Token Sizing</h4>
+<p>PumpFun and early-stage meme tokens require special sizing discipline:</p>
+<ul>
+<li><strong>Very small positions</strong>: 0.1–1 SOL per trade due to extreme risk</li>
+<li><strong>Scale with bonding curve fill %</strong>: smaller when early (high rug risk), slightly larger when proven (graduated to Raydium)</li>
+<li><strong>Never size based on expected return</strong> — size based on acceptable total loss</li>
+<li><strong>Treat as lottery tickets</strong>: expect most to go to zero</li>
+<li><strong>Position limit</strong>: no more than 5–10% of portfolio across all meme positions combined</li>
+</ul>
+<p><pre><code># PumpFun sizing example
+account_sol = 100
+meme_budget = account_sol * 0.05   # 5 SOL total for memes
+per_trade = meme_budget / 10       # 0.5 SOL each, 10 shots</code></pre></p>
+<hr>
+<h4>Integration with Other Skills</h4>
+<table><thead><tr><th>Skill</th><th>Integration</th></tr></thead><tbody>
+<tr><td><code>risk-management</code></td><td>Portfolio-level limits, drawdown rules</td></tr>
+<tr><td><code>liquidity-analysis</code></td><td>Pool depth data for liquidity constraints</td></tr>
+<tr><td><code>kelly-criterion</code></td><td>Deeper Kelly math, edge estimation</td></tr>
+<tr><td><code>exit-strategies</code></td><td>Stop loss placement affects fixed fractional sizing</td></tr>
+<tr><td><code>volatility-modeling</code></td><td>Better vol estimates for volatility-adjusted sizing</td></tr>
+<tr><td><code>slippage-modeling</code></td><td>Precise slippage estimates for liquidity constraints</td></tr>
+</tbody></table>
+<hr>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/sizing_formulas.md</code> — Mathematical derivations for all sizing methods with worked examples</li>
+<li><code>references/practical_guide.md</code> — Sizing by account size, token type, and common mistakes</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/size_calculator.py</code> — Calculates position size using all methods, shows binding constraint</li>
+<li><code>scripts/portfolio_sizer.py</code> — Portfolio risk dashboard with per-position risk and available budget</li>
+</ul>
+<hr>
+<h4>Quick Reference</h4>
+<p><pre><code># Minimal fixed fractional sizing — copy-paste starter
+def calc_position_size(
+    account: float, risk_pct: float, entry: float, stop: float
+) -&gt; float:
+    &quot;&quot;&quot;Return number of units to buy.&quot;&quot;&quot;
+    risk_amount = account * risk_pct
+    price_risk = abs(entry - stop)
+    if price_risk == 0:
+        return 0.0
+    return risk_amount / price_risk</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/position-sizing</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/position-sizing" aria-label="Copy install position-sizing">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/position-sizing</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=position-sizing%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fposition-sizing%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fposition-sizing%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fposition-sizing%2F&t=position-sizing%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fposition-sizing%2F&title=position-sizing%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/position-sizing/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/position-sizing/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

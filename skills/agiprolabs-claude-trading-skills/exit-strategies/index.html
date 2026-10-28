@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>exit-strategies — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="exit-strategies, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="exit-strategies — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="exit-strategies — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"exit-strategies","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/"}]},{"@type":"TechArticle","headline":"exit-strategies","description":"Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>exit-strategies
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>exit-strategies</h1>
+      <p class="summary">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Exit Strategies</h3>
+<p>Entries are easy, exits are everything. A mediocre entry with a disciplined exit will</p>
+<p>outperform a perfect entry with no exit plan. This skill covers systematic, rule-based</p>
+<p>exit methods for crypto and Solana token trading.</p>
+<h4>Why Exits Matter</h4>
+<ul>
+<li><strong>Entries</strong> determine _if_ you participate. <strong>Exits</strong> determine _how much_ you keep.</li>
+<li>Most traders spend 90% of effort on entries and 10% on exits — invert this.</li>
+<li>Without defined exits you rely on emotion, which guarantees inconsistency.</li>
+<li>Every trade should have <strong>three exits defined before entry</strong>: stop loss, take profit,</li>
+</ul>
+<p>  and trailing stop.</p>
+<h4>Exit Categories</h4>
+<h5>1. Stop Loss — Risk Management Exits</h5>
+<p>Predefined price level where you close the position to cap downside.</p>
+<table><thead><tr><th>Method</th><th>Description</th><th>Best For</th></tr></thead><tbody>
+<tr><td>Fixed percentage</td><td>Exit at entry − X%</td><td>Simple setups, beginners</td></tr>
+<tr><td>ATR-based</td><td>Entry − ATR(14) × multiplier</td><td>Volatility-adaptive</td></tr>
+<tr><td>Support level</td><td>Below nearest swing low</td><td>Technically defined risk</td></tr>
+<tr><td>Maximum loss</td><td>Absolute SOL/USD cap</td><td>Account protection</td></tr>
+</tbody></table>
+<p><strong>ATR-based stop (recommended default):</strong></p>
+<p><pre><code>import pandas_ta as ta
+
+atr = df.ta.atr(length=14)
+stop_loss = entry_price - (atr.iloc[-1] * 2.0)  # 2x ATR below entry</code></pre></p>
+<p>Multiplier guide:</p>
+<ul>
+<li><strong>1.5×</strong> — Tight. High win rate needed. Good for scalps.</li>
+<li><strong>2.0×</strong> — Standard. Balances noise filtering with risk.</li>
+<li><strong>3.0×</strong> — Wide. For swing trades in volatile conditions.</li>
+</ul>
+<p>See <code>references/stop_loss_methods.md</code> for complete methodology.</p>
+<h5>2. Take Profit — Target Exits</h5>
+<p>Predefined levels where you lock in gains.</p>
+<p><strong>Fixed risk/reward targets:</strong></p>
+<p><pre><code>risk = entry_price - stop_loss_price
+tp_2r = entry_price + (risk * 2)  # 2:1 R:R
+tp_3r = entry_price + (risk * 3)  # 3:1 R:R
+tp_5r = entry_price + (risk * 5)  # 5:1 R:R</code></pre></p>
+<p><strong>Scaled exit framework (recommended for meme/PumpFun tokens):</strong></p>
+<table><thead><tr><th>Tranche</th><th>Size</th><th>Target</th><th>Action After</th></tr></thead><tbody>
+<tr><td>1</td><td>25%</td><td>2× risk</td><td>Move stop to breakeven</td></tr>
+<tr><td>2</td><td>25%</td><td>3–5× risk</td><td>Trail remainder</td></tr>
+<tr><td>3</td><td>25%</td><td>5–10× risk</td><td>Tighten trail</td></tr>
+<tr><td>4</td><td>25%</td><td>Trailing stop</td><td>Moonbag — let it ride</td></tr>
+</tbody></table>
+<p><strong>Market cap milestone exits:</strong></p>
+<p>For PumpFun and meme tokens where R:R ratios are less meaningful:</p>
+<p><pre><code>milestones = [
+    {&quot;mcap&quot;: 50_000,  &quot;sell_pct&quot;: 0.25, &quot;label&quot;: &quot;Cover cost&quot;},
+    {&quot;mcap&quot;: 100_000, &quot;sell_pct&quot;: 0.25, &quot;label&quot;: &quot;Lock profit&quot;},
+    {&quot;mcap&quot;: 500_000, &quot;sell_pct&quot;: 0.25, &quot;label&quot;: &quot;Major profit&quot;},
+    # Hold 25% as moonbag with trailing stop
+]</code></pre></p>
+<p>See <code>references/take_profit_strategies.md</code> for full methodology including Fibonacci</p>
+<p>extension targets and volume-based exits.</p>
+<h5>3. Trailing Stop — Trend-Following Exits</h5>
+<p>Dynamic stops that follow price upward but never move down.</p>
+<p><strong>Percentage trailing:</strong></p>
+<p><pre><code>def percentage_trailing_stop(
+    current_price: float,
+    highest_since_entry: float,
+    trail_pct: float = 0.10,
+) -&gt; tuple[float, bool]:
+    &quot;&quot;&quot;Return (stop_level, triggered).&quot;&quot;&quot;
+    highest = max(highest_since_entry, current_price)
+    stop = highest * (1 - trail_pct)
+    return stop, current_price &lt;= stop</code></pre></p>
+<p><strong>ATR trailing (Chandelier Exit):</strong></p>
+<p><pre><code>def chandelier_exit(
+    highs: list[float],
+    atr_value: float,
+    multiplier: float = 2.5,
+    lookback: int = 22,
+) -&gt; float:
+    &quot;&quot;&quot;Highest high over lookback minus ATR * multiplier.&quot;&quot;&quot;
+    highest_high = max(highs[-lookback:])
+    return highest_high - (atr_value * multiplier)</code></pre></p>
+<p><strong>EMA trailing:</strong></p>
+<p><pre><code># Exit when close &lt; EMA for M consecutive bars
+ema = df.ta.ema(length=20)
+below_ema = df[&quot;close&quot;] &lt; ema
+consecutive_below = below_ema.rolling(3).sum() == 3  # 3 bars below</code></pre></p>
+<p>Typical EMA periods: 10 (scalp), 20 (day trade), 50 (swing).</p>
+<p>See <code>references/trailing_stops.md</code> for Parabolic SAR, SuperTrend, and step trailing.</p>
+<h5>4. Time-Based Exits</h5>
+<p>Exit if the trade hasn&#39;t moved in your favor within a defined window.</p>
+<p><pre><code>bars_since_entry = current_bar - entry_bar
+if bars_since_entry &gt; max_hold_bars and current_pnl &lt;= 0:
+    exit_reason = &quot;time_stop&quot;</code></pre></p>
+<p>Guidelines:</p>
+<ul>
+<li><strong>Scalp</strong>: 5–15 minutes</li>
+<li><strong>Day trade</strong>: 4–8 hours</li>
+<li><strong>Swing</strong>: 3–5 days</li>
+<li><strong>PumpFun snipe</strong>: 2–10 minutes (token-specific)</li>
+</ul>
+<p>Time stops prevent capital from sitting in dead trades.</p>
+<h5>5. Signal-Based Exits</h5>
+<p>Exit when the indicator that generated the entry signal reverses.</p>
+<p><pre><code># RSI reversal exit
+rsi = df.ta.rsi(length=14)
+if position == &quot;long&quot; and rsi.iloc[-1] &gt; 70:
+    exit_reason = &quot;rsi_overbought&quot;
+
+# MACD crossover exit
+macd = df.ta.macd()
+if macd[&quot;MACDs_12_26_9&quot;].iloc[-1] &lt; macd[&quot;MACDh_12_26_9&quot;].iloc[-1]:
+    exit_reason = &quot;macd_bearish_cross&quot;</code></pre></p>
+<p>Signal exits work well when combined with trailing stops — the signal triggers</p>
+<p>tightening the trail rather than an immediate full exit.</p>
+<h5>6. Liquidity-Based Exits</h5>
+<p>Exit when volume or liquidity deteriorates, signaling reduced ability to exit cleanly.</p>
+<p><pre><code>recent_vol = df[&quot;volume&quot;].rolling(10).mean().iloc[-1]
+baseline_vol = df[&quot;volume&quot;].rolling(50).mean().iloc[-1]
+
+if recent_vol &lt; baseline_vol * 0.3:  # Volume dropped to 30% of baseline
+    exit_reason = &quot;liquidity_deterioration&quot;</code></pre></p>
+<p>Critical for low-cap Solana tokens where liquidity can evaporate rapidly.</p>
+<h4>PumpFun-Specific Exit Rules</h4>
+<p>PumpFun tokens have unique dynamics requiring specialized exit logic.</p>
+<h5>Pre-Graduation Exits</h5>
+<p>Tokens on the bonding curve before reaching 85 SOL fill:</p>
+<p><pre><code>bonding_fill_pct = current_fill_sol / 85.0
+
+if bonding_fill_pct &gt; 0.90:
+    # Near graduation — decide: hold through or exit before
+    # Graduation creates volatility spike, both up and down
+    pass
+
+if bonding_fill_pct &lt; 0.50 and time_since_entry &gt; 300:  # 5 min
+    exit_reason = &quot;stalled_bonding_curve&quot;</code></pre></p>
+<h5>Volume Decay Exits</h5>
+<p><pre><code>buy_vol_1m = get_buy_volume(token, &quot;1m&quot;)
+buy_vol_5m = get_buy_volume(token, &quot;5m&quot;) / 5  # Normalize to per-minute
+
+if buy_vol_1m &lt; buy_vol_5m * 0.3:
+    exit_reason = &quot;buy_volume_decay&quot;</code></pre></p>
+<h5>Time Decay for PumpFun</h5>
+<p>Most PumpFun tokens that will succeed show momentum within the first few minutes:</p>
+<table><thead><tr><th>Timeframe</th><th>Action</th></tr></thead><tbody>
+<tr><td>0–2 min</td><td>Hold — too early to judge</td></tr>
+<tr><td>2–5 min</td><td>Exit if no 2× from entry</td></tr>
+<tr><td>5–10 min</td><td>Exit if no 3× from entry</td></tr>
+<tr><td>10+ min</td><td>Should be trailing, not hoping</td></tr>
+</tbody></table>
+<h4>Combining Exit Rules</h4>
+<p>A complete exit plan layers multiple rules. Here is a recommended template:</p>
+<p><pre><code>exit_plan = {
+    &quot;hard_stop&quot;: {
+        &quot;type&quot;: &quot;fixed_percentage&quot;,
+        &quot;value&quot;: 0.20,  # -20% max loss
+        &quot;priority&quot;: 1,   # Checked first, always honored
+    },
+    &quot;atr_stop&quot;: {
+        &quot;type&quot;: &quot;atr_trailing&quot;,
+        &quot;multiplier&quot;: 2.5,
+        &quot;atr_length&quot;: 14,
+        &quot;priority&quot;: 2,
+    },
+    &quot;take_profit&quot;: {
+        &quot;type&quot;: &quot;scaled&quot;,
+        &quot;tranches&quot;: [
+            {&quot;at_rr&quot;: 2, &quot;sell_pct&quot;: 0.25},
+            {&quot;at_rr&quot;: 4, &quot;sell_pct&quot;: 0.25},
+            {&quot;at_rr&quot;: 8, &quot;sell_pct&quot;: 0.25},
+        ],
+        &quot;priority&quot;: 3,
+    },
+    &quot;time_stop&quot;: {
+        &quot;type&quot;: &quot;max_bars&quot;,
+        &quot;value&quot;: 50,
+        &quot;condition&quot;: &quot;if_not_profitable&quot;,
+        &quot;priority&quot;: 4,
+    },
+}</code></pre></p>
+<p><strong>Priority hierarchy</strong>: Hard stop &gt; ATR trailing &gt; Take profit &gt; Time stop.</p>
+<p>The hard stop is always active and never overridden. The ATR trailing stop activates</p>
+<p>after the first take-profit tranche fills. The time stop only fires if the trade is</p>
+<p>not yet profitable.</p>
+<h4>Common Exit Mistakes</h4>
+<table><thead><tr><th>Mistake</th><th>Problem</th><th>Fix</th></tr></thead><tbody>
+<tr><td>No stop loss</td><td>Unlimited downside</td><td>Always define max loss before entry</td></tr>
+<tr><td>Moving stops wider</td><td>Increases risk after the fact</td><td>Never move stops away from price</td></tr>
+<tr><td>Not taking profits</td><td>Winners become losers</td><td>Use scaled exits</td></tr>
+<tr><td>All-or-nothing exits</td><td>Leaves money on the table or exits too early</td><td>Scale out in tranches</td></tr>
+<tr><td>Round-number stops</td><td>Cluster with other traders, get hunted</td><td>Offset by small random amount</td></tr>
+<tr><td>Too-tight stops</td><td>Stopped out by normal volatility</td><td>Use ATR-based stops</td></tr>
+<tr><td>Hoping instead of trailing</td><td>Gives back profits</td><td>Activate trail after first TP</td></tr>
+<tr><td>Ignoring liquidity</td><td>Cannot exit at intended price</td><td>Check spread and depth before sizing</td></tr>
+</tbody></table>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong><code>position-sizing</code></strong> — Size the position based on the stop loss distance.</li>
+</ul>
+<p>  <code>position_size = (account_risk * account_balance) / (entry - stop_loss)</code></p>
+<ul>
+<li><strong><code>risk-management</code></strong> — Exits are the mechanism that enforces risk limits.</li>
+<li><strong><code>pandas-ta</code></strong> — Use ATR, EMA, RSI, MACD for signal-based and trailing exits.</li>
+<li><strong><code>slippage-modeling</code></strong> — Estimate execution cost of the exit to set realistic targets.</li>
+<li><strong><code>liquidity-analysis</code></strong> — Verify exit liquidity before entering a position.</li>
+</ul>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/stop_loss_methods.md</code> — Complete stop loss methodology and anti-patterns</li>
+<li><code>references/take_profit_strategies.md</code> — Scaled exits, R:R targets, Fibonacci extensions</li>
+<li><code>references/trailing_stops.md</code> — Trailing stop implementations and parameter guidance</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/exit_simulator.py</code> — Simulate and compare exit strategies on synthetic price data</li>
+<li><code>scripts/stop_loss_calculator.py</code> — Calculate stop levels, position sizes, and R:R targets</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/mev-analysis/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="mev-analysis mev exposure assessment, sandwich attack detection, and protection strategies for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">mev-analysis</span>
+    <span class="r-desc">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/exit-strategies</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/exit-strategies" aria-label="Copy install exit-strategies">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/exit-strategies</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=exit-strategies%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fexit-strategies%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fexit-strategies%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fexit-strategies%2F&t=exit-strategies%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fexit-strategies%2F&title=exit-strategies%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/exit-strategies/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/exit-strategies/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

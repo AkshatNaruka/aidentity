@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>risk-management — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="risk-management, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="risk-management — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="risk-management — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"risk-management","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/"}]},{"@type":"TechArticle","headline":"risk-management","description":"Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>risk-management
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>risk-management</h1>
+      <p class="summary">Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Risk Management</h3>
+<p>Portfolio-level risk controls for crypto and Solana trading. This skill provides frameworks for drawdown management, exposure limits, circuit breakers, and crypto-specific risk considerations.</p>
+<h4>Risk Management Hierarchy</h4>
+<p>Every decision must respect this priority order:</p>
+<ol>
+<li><strong>Survival</strong> — Never risk account ruin. No single trade, day, or week should threaten your ability to continue trading.</li>
+<li><strong>Capital preservation</strong> — Protect what you have. Losses compound geometrically; recovery requires outsized gains.</li>
+<li><strong>Growth</strong> — Only after survival and preservation are secured, pursue returns.</li>
+</ol>
+<p>Violating this hierarchy (chasing growth at the expense of survival) is the primary cause of account blowups.</p>
+<h4>Portfolio-Level Controls</h4>
+<h5>1. Maximum Drawdown Limits</h5>
+<p>Halt trading when portfolio drawdown from equity peak reaches a threshold:</p>
+<table><thead><tr><th>Account Type</th><th>Max Drawdown</th><th>Action</th></tr></thead><tbody>
+<tr><td>Conservative</td><td>-15%</td><td>Full stop, review all strategies</td></tr>
+<tr><td>Moderate</td><td>-20%</td><td>Full stop, reduce to minimum size on recovery</td></tr>
+<tr><td>Aggressive</td><td>-25%</td><td>Full stop, mandatory cooling period</td></tr>
+</tbody></table>
+<p>Recovery math makes this critical: a -20% drawdown requires +25% to recover. A -50% drawdown requires +100%. See <code>references/drawdown_management.md</code> for the full recovery table.</p>
+<h5>2. Daily Loss Limits</h5>
+<p>Stop opening new positions after daily P&amp;L (realized + unrealized) hits:</p>
+<ul>
+<li><strong>Conservative</strong>: -3% of account</li>
+<li><strong>Moderate</strong>: -4% of account</li>
+<li><strong>Aggressive</strong>: -5% of account</li>
+</ul>
+<p>Reset at midnight UTC. Three consecutive days hitting the daily limit triggers a weekly halt.</p>
+<h5>3. Weekly Loss Limits</h5>
+<p>Reduce size or halt after weekly P&amp;L reaches:</p>
+<ul>
+<li><strong>Reduce size by 50%</strong>: -5% weekly loss</li>
+<li><strong>Minimum size only</strong>: -7% weekly loss</li>
+<li><strong>Full halt</strong>: -10% weekly loss</li>
+</ul>
+<h5>4. Concentration Limits</h5>
+<p>Maximum allocation to any single dimension:</p>
+<table><thead><tr><th>Dimension</th><th>Max Concentration</th></tr></thead><tbody>
+<tr><td>Single token (blue chip)</td><td>10% of account</td></tr>
+<tr><td>Single token (mid-cap)</td><td>5%</td></tr>
+<tr><td>Single token (small-cap)</td><td>2%</td></tr>
+<tr><td>Single token (PumpFun/micro)</td><td>0.5%</td></tr>
+<tr><td>Single sector/narrative</td><td>30%</td></tr>
+<tr><td>Single strategy</td><td>40%</td></tr>
+</tbody></table>
+<h5>5. Exposure Limits</h5>
+<p>Total deployed capital constraints:</p>
+<ul>
+<li><strong>Normal conditions</strong>: 50–80% deployed, 20–50% cash reserve</li>
+<li><strong>Elevated risk</strong>: 30–50% deployed</li>
+<li><strong>Drawdown &gt;10%</strong>: 20–30% deployed</li>
+<li><strong>Max concurrent positions</strong>: 5–10 depending on account size</li>
+</ul>
+<h5>6. Correlation Management</h5>
+<p>Crypto assets correlate &gt;0.7 during sell-offs. Effective diversification requires:</p>
+<ul>
+<li>Treat all meme tokens as a single correlated bucket</li>
+<li>Limit total meme exposure to one position-size equivalent</li>
+<li>Diversify across <em>strategies</em> (trend, mean-reversion, scalp), not just tokens</li>
+<li>Monitor rolling correlation and reduce when correlations spike</li>
+</ul>
+<p>See <code>references/exposure_limits.md</code> for detailed limits by token type and strategy.</p>
+<h4>Drawdown Management</h4>
+<h5>Response Framework</h5>
+<table><thead><tr><th>Drawdown</th><th>Status</th><th>Response</th></tr></thead><tbody>
+<tr><td>0–5%</td><td>Normal</td><td>Continue trading at full size</td></tr>
+<tr><td>5–10%</td><td>Caution</td><td>Reduce position sizes by 25–50%</td></tr>
+<tr><td>10–15%</td><td>Warning</td><td>Minimum position sizes only</td></tr>
+<tr><td>15–20%</td><td>Critical</td><td>Halt new trades, manage existing positions only</td></tr>
+<tr><td>&gt;20%</td><td>Emergency</td><td>Full stop, review everything before resuming</td></tr>
+</tbody></table>
+<h5>Recovery Requirements</h5>
+<table><thead><tr><th>Loss</th><th>Required Gain to Recover</th></tr></thead><tbody>
+<tr><td>-5%</td><td>+5.3%</td></tr>
+<tr><td>-10%</td><td>+11.1%</td></tr>
+<tr><td>-15%</td><td>+17.6%</td></tr>
+<tr><td>-20%</td><td>+25.0%</td></tr>
+<tr><td>-30%</td><td>+42.9%</td></tr>
+<tr><td>-40%</td><td>+66.7%</td></tr>
+<tr><td>-50%</td><td>+100.0%</td></tr>
+</tbody></table>
+<p>The asymmetry accelerates rapidly. Managing small drawdowns prevents them from becoming catastrophic. See <code>references/drawdown_management.md</code> for the full framework.</p>
+<h4>Circuit Breakers</h4>
+<p>Automated controls that restrict trading when conditions are met:</p>
+<h5>Time-Based</h5>
+<ul>
+<li>No trading for 24 hours after hitting daily loss limit</li>
+<li>48-hour cooling period after weekly loss limit</li>
+<li>Mandatory weekly review day (no new positions)</li>
+</ul>
+<h5>Loss-Based</h5>
+<ul>
+<li>3 consecutive losses → reduce size 50%</li>
+<li>5 consecutive losses → minimum size only</li>
+<li>7 consecutive losses → halt 24 hours, full review</li>
+</ul>
+<h5>Volatility-Based</h5>
+<ul>
+<li>Portfolio volatility &gt;2× rolling average → reduce exposure 50%</li>
+<li>Market-wide liquidation events → pause all new entries</li>
+<li>Individual token volatility spike → exit or tighten stops</li>
+</ul>
+<h5>Emotional (Self-Assessed)</h5>
+<ul>
+<li>Recognize tilt: anger after losses, urge to &quot;make it back&quot;</li>
+<li>FOMO: rushing entries without proper analysis</li>
+<li>Overconfidence: increasing size after a win streak without justification</li>
+</ul>
+<p>See <code>references/circuit_breakers.md</code> for implementation details.</p>
+<h4>Risk Metrics</h4>
+<h5>Value at Risk (VaR)</h5>
+<p>95th-percentile daily loss estimate using historical returns:</p>
+<p><pre><code>import numpy as np
+
+def historical_var(returns: list[float], confidence: float = 0.95) -&gt; float:
+    &quot;&quot;&quot;Calculate historical VaR at given confidence level.&quot;&quot;&quot;
+    sorted_returns = sorted(returns)
+    index = int((1 - confidence) * len(sorted_returns))
+    return abs(sorted_returns[index])
+
+# Example: 95% VaR of 3.2% means on 95% of days, loss won&#39;t exceed 3.2%</code></pre></p>
+<h5>Expected Shortfall (CVaR)</h5>
+<p>Average loss in the worst (1 - confidence)% of scenarios:</p>
+<p><pre><code>def expected_shortfall(returns: list[float], confidence: float = 0.95) -&gt; float:
+    &quot;&quot;&quot;Average loss beyond VaR threshold.&quot;&quot;&quot;
+    sorted_returns = sorted(returns)
+    index = int((1 - confidence) * len(sorted_returns))
+    tail = sorted_returns[:index]
+    return abs(sum(tail) / len(tail)) if tail else 0.0</code></pre></p>
+<h5>Maximum Drawdown</h5>
+<p><pre><code>def max_drawdown(equity_curve: list[float]) -&gt; float:
+    &quot;&quot;&quot;Peak-to-trough decline as a fraction.&quot;&quot;&quot;
+    peak = equity_curve[0]
+    max_dd = 0.0
+    for value in equity_curve:
+        peak = max(peak, value)
+        dd = (peak - value) / peak
+        max_dd = max(max_dd, dd)
+    return max_dd</code></pre></p>
+<h5>Additional Metrics</h5>
+<ul>
+<li><strong>Win/loss streak tracking</strong>: Detect hot/cold streaks for circuit breaker logic</li>
+<li><strong>Rolling Sharpe ratio</strong>: 30-day rolling risk-adjusted returns</li>
+<li><strong>Calmar ratio</strong>: Annualized return / max drawdown</li>
+<li><strong>Sortino ratio</strong>: Return / downside deviation (penalizes only negative volatility)</li>
+</ul>
+<h4>Crypto-Specific Risks</h4>
+<h5>Smart Contract Risk</h5>
+<ul>
+<li>Never allocate &gt;5% of account to a single unaudited protocol</li>
+<li>Diversify across audited protocols for yield strategies</li>
+<li>Monitor exploit databases and social channels for emerging threats</li>
+</ul>
+<h5>Rug Pull Risk</h5>
+<ul>
+<li>Size inversely with token age: newer tokens get smaller positions</li>
+<li>Verify: locked liquidity, renounced mint authority, holder distribution</li>
+<li>Cross-reference with <code>token-holder-analysis</code> skill for red flags</li>
+</ul>
+<h5>Bridge and Custody Risk</h5>
+<ul>
+<li>Don&#39;t hold &gt;20% on any single platform or bridge</li>
+<li>Self-custody the majority of trading capital</li>
+<li>Budget for bridge fees and delays in execution planning</li>
+</ul>
+<h5>MEV and Execution Risk</h5>
+<ul>
+<li>Budget 1–3% for MEV/slippage on Solana DEX trades</li>
+<li>Use priority fees during congestion</li>
+<li>See <code>slippage-modeling</code> skill for detailed cost estimation</li>
+</ul>
+<h5>Correlation Spikes</h5>
+<ul>
+<li>In crashes, crypto correlations approach 1.0</li>
+<li>Your &quot;diversified&quot; portfolio may behave as one position</li>
+<li>Stress-test portfolio assuming all positions drop simultaneously</li>
+</ul>
+<h4>PumpFun Risk Framework</h4>
+<p>PumpFun and similar meme token platforms require a distinct risk approach:</p>
+<h5>Core Principle</h5>
+<p>Treat every PumpFun trade as a potential 100% loss. Size accordingly.</p>
+<h5>Position Limits</h5>
+<ul>
+<li><strong>Per-token maximum</strong>: 0.1–0.5 SOL</li>
+<li><strong>Daily PumpFun budget</strong>: Fixed allocation (e.g., 2 SOL/day)</li>
+<li><strong>Never exceed budget</strong>: When daily allocation is gone, stop</li>
+</ul>
+<h5>Tracking</h5>
+<ul>
+<li>Track PumpFun P&amp;L separately from main portfolio</li>
+<li>Calculate PumpFun win rate and expectancy independently</li>
+<li>Don&#39;t let PumpFun losses affect main portfolio risk limits</li>
+</ul>
+<h5>Risk Adjustments</h5>
+<ul>
+<li>No stop-losses on PumpFun (assume 100% loss at entry)</li>
+<li>Take profits aggressively: 2×, 3×, 5× partial exits</li>
+<li>Time-based exit: close within hours, not days</li>
+</ul>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong><code>position-sizing</code></strong>: Use risk limits from this skill to constrain position sizes</li>
+<li><strong><code>exit-strategies</code></strong>: Circuit breakers override exit strategies (forced exits)</li>
+<li><strong><code>portfolio-analytics</code></strong>: Feed portfolio metrics back for risk assessment</li>
+<li><strong><code>liquidity-analysis</code></strong>: Adjust position limits based on available liquidity</li>
+<li><strong><code>slippage-modeling</code></strong>: Factor execution costs into risk calculations</li>
+</ul>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/drawdown_management.md</code> — Drawdown math, response framework, causes, and remediation</li>
+<li><code>references/exposure_limits.md</code> — Position limits by token type, portfolio limits, correlation management</li>
+<li><code>references/circuit_breakers.md</code> — Implementation details for all circuit breaker types</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/risk_dashboard.py</code> — Portfolio risk dashboard with limit checking and color-coded status</li>
+<li><code>scripts/drawdown_analyzer.py</code> — Equity curve drawdown analysis with response recommendations</li>
+</ul>
+<h4>Quick Start</h4>
+<p><pre><code># Run the risk dashboard with demo data
+python scripts/risk_dashboard.py --demo
+
+# Analyze drawdowns on a demo equity curve
+python scripts/drawdown_analyzer.py --demo</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/risk-management</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/risk-management" aria-label="Copy install risk-management">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/risk-management</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=risk-management%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Frisk-management%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Frisk-management%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Frisk-management%2F&t=risk-management%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Frisk-management%2F&title=risk-management%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/risk-management/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/risk-management/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

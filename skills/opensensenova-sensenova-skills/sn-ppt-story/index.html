@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sn-ppt-story — agents AI agent skill — Aidentity</title>
+<meta name="description" content="当前 PPT 任务已由 sn-ppt-entry 建好 DECK_DIR（task_pack.json 与 info_pack.json 已写入）后，必须由本 skill 将 query、全部用户材料与已完成 Research 编排为唯一可编辑的 outline.md 时使用。本 skill 是 entry…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="sn-ppt-story, agents, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sn-ppt-story — agents AI agent skill — Aidentity">
+<meta property="og:description" content="当前 PPT 任务已由 sn-ppt-entry 建好 DECK_DIR（task_pack.json 与 info_pack.json 已写入）后，必须由本 skill 将 query、全部用户材料与已完成 Research 编排为唯一可编辑的 outline.md 时使用。本 skill 是 entry…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sn-ppt-story — agents AI agent skill — Aidentity">
+<meta name="twitter:description" content="当前 PPT 任务已由 sn-ppt-entry 建好 DECK_DIR（task_pack.json 与 info_pack.json 已写入）后，必须由本 skill 将 query、全部用户材料与已完成 Research 编排为唯一可编辑的 outline.md 时使用。本 skill 是 entry…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://akshatnaruka.github.io/aidentity/skills/?category=agents"},{"@type":"ListItem","position":3,"name":"sn-ppt-story","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/"}]},{"@type":"TechArticle","headline":"sn-ppt-story","description":"当前 PPT 任务已由 sn-ppt-entry 建好 DECK_DIR（task_pack.json 与 info_pack.json 已写入）后，必须由本 skill 将 query、全部用户材料与已完成 Research 编排为唯一可编辑的 outline.md 时使用。本 skill 是 entry → 出口（standard / dazzle / creative）之间的强制中间环节：不允许执行 Agent 跳过本 skill 直接依据 task_pack / info_pack 即兴编写大纲，不允许出口 skill 代写或改写大纲；前置产物缺失时停止并返回 sn-ppt-entry 补齐，不得自行补做研究。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"agents, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=agents">agents</a><span>/</span>sn-ppt-story
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>sn-ppt-story</h1>
+      <p class="summary">当前 PPT 任务已由 sn-ppt-entry 建好 DECK_DIR（task_pack.json 与 info_pack.json 已写入）后，必须由本 skill 将 query、全部用户材料与已完成 Research 编排为唯一可编辑的 outline.md 时使用。本 skill 是 entry → 出口（standard / dazzle / creative）之间的强制中间环节：不允许执行 Agent 跳过本 skill 直接依据 task_pack / info_pack 即兴编写大纲，不允许出口 skill 代写或改写大纲；前置产物缺失时停止并返回 sn-ppt-entry 补齐，不得自行补做研究。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>sn-ppt-story</h3>
+<p>把 query、全部用户材料和已经完成的研究综合成一份清楚、完整、可直接修改的</p>
+<p><code>outline.md</code>。Story 统一管理内容理解和页面叙事，不生成页面，不自行开展外部研究。</p>
+<h4>输入边界</h4>
+<p>只接受 Entry 传入的绝对 <code>DECK_DIR</code>。开始前读取：</p>
+<ul>
+<li><code>&lt;DECK_DIR&gt;/task_pack.json</code></li>
+<li><code>&lt;DECK_DIR&gt;/info_pack.json</code></li>
+<li><code>info_pack.raw_documents</code> 指向的完整 <code>raw_documents.json</code>（存在时）</li>
+<li><code>info_pack.research_report</code> 指向的 Research 主报告（存在时）</li>
+<li>用户明确要求读取的其他源文件</li>
+<li>当前 <code>&lt;DECK_DIR&gt;/outline.md</code>（修改或继续任务时）</li>
+</ul>
+<p>用户材料是事实来源，query 是任务目标，Research 是外部证据补充。三者冲突时明确区分</p>
+<p>“用户要求”“材料事实”“外部证据”和“推断”，不得用顺畅文案掩盖冲突。</p>
+<p><code>task_pack.state.research.required == true</code> 时，Story 开始前必须已有</p>
+<p><code>info_pack.research_report</code> 指向的可读报告。缺失时停止并返回 Entry 完成</p>
+<p><code>task_pack.state.research.executor</code> 指定的证据路径；不得先写 outline 再补研究。Standard</p>
+<p>默认读取 Entry 写入的定向搜索摘要，Deep 默认读取 <code>sn-deep-research</code> 的完整报告，Story</p>
+<p>不把 Standard 自动升级为 Deep。</p>
+<h4>输出和状态</h4>
+<ul>
+<li>唯一用户叙事文件：<code>&lt;DECK_DIR&gt;/outline.md</code></li>
+<li>不创建 <code>outline_v2.md</code>、story spec、页面 JSON 或另一份并行大纲。</li>
+<li>开始时把 <code>task_pack.state.current_stage</code> 更新为 <code>story</code>，状态更新为 <code>storytelling</code>。</li>
+<li>完成时把 <code>story</code> 加入 <code>completed_stages</code>，把 outline 绝对路径写入</li>
+</ul>
+<p>  <code>state.artifacts.outline</code>，把 <code>task_pack.params.page_count</code> 同步为当前连续页数，状态更新为</p>
+<p>  <code>story_ready</code>。</p>
+<ul>
+<li>修改现有大纲时覆盖同一文件，并清晰标记哪些下游页面需要重新生产；不要清除</li>
+</ul>
+<p>  Research 和材料解析的完成状态。</p>
+<h4>工作方法</h4>
+<h5>1. 完整理解</h5>
+<p>阅读与任务相关的全部内容，而不是只看标题、摘要或开头。材料较长时可以分段读取，</p>
+<p>但最终综合必须覆盖：</p>
+<ul>
+<li>可以直接使用的事实、数据、案例、定义和结论；</li>
+<li>Markdown/DOCX 表格及文档内图片所承载的信息；</li>
+<li>多份材料的重复、冲突、时效和口径差异；</li>
+<li>受众真正需要做出的理解、判断或行动；</li>
+<li>仍然缺少证据、只能作为推断或需要弱化表达的内容。</li>
+</ul>
+<p><code>document_digest</code> 是索引和辅助，不替代原文。决定性数字、专有名词、时间、单位和引用</p>
+<p>必须回到原材料或 Research 主报告核对。</p>
+<h5>2. 先确定整套 Story</h5>
+<p>在排页前明确：</p>
+<ol>
+<li>谁在什么场景下向谁表达；</li>
+<li>演示希望受众理解、相信或决定什么；</li>
+<li>全套唯一的核心观点；</li>
+<li>采用什么论证路径，为什么按这个顺序；</li>
+<li>最后一页应留下什么结论或行动方向。</li>
+</ol>
+<p>不要把材料目录机械改成页面目录。内容应形成连续推进，例如“建立背景 -&gt; 暴露关键矛盾</p>
+<p>-&gt; 给出判断框架 -&gt; 用证据验证 -&gt; 落到方案或行动”，具体结构由任务决定。</p>
+<h5>3. 再规划逐页逻辑</h5>
+<p>每页只承担一个主要任务，并明确：</p>
+<ul>
+<li>页面标题；</li>
+<li>受众看完必须记住的完整结论；</li>
+<li>支撑结论的事实、数据、案例和自然语言来源；</li>
+<li>它如何承接上一页并推动下一页；</li>
+<li>信息之间的关系和建议的表达方式。</li>
+</ul>
+<p>页面表达只描述用户能理解的意图，例如“用统一维度对比三种方案”或“用趋势图说明拐点”。</p>
+<p>不要写像素、坐标、HTML 节点、组件 ID、内部页型代码或出口实现细节。</p>
+<h5>4. 做三轮 Story 自审</h5>
+<p>这不是模型评测，也不产生测试文件。写入前在当前上下文中连续复读三次：</p>
+<ol>
+<li><strong>证据审查</strong>：决定性结论是否有材料或 Research 支持，事实/推断/待确认是否清楚。</li>
+<li><strong>逻辑审查</strong>：是否存在结论先于依据、页面重复、因果跳跃、前后矛盾或最后没有落点。</li>
+<li><strong>演示审查</strong>：每页是否只有一个主要任务，页数是否合理，标题和结论是否让用户一眼</li>
+</ol>
+<p>   看懂，整体思路是否能独立概括全套。</p>
+<p>发现问题直接改 <code>outline.md</code> 草稿，不生成审查报告。</p>
+<h4><code>outline.md</code> 格式</h4>
+<p>只用普通 Markdown 和少量标题层级：</p>
+<p><pre><code># 演示标题
+
+## 整体思路
+
+说明受众、场景、目标、核心观点、叙事路径及最终落点。
+
+## 第 1 页：页面标题
+
+### 这一页要说明什么
+
+一句完整、明确、可验证的结论。
+
+### 内容与依据
+
+- 需要呈现的事实、数据、论点或案例。
+- 来源用自然语言说明，例如“来自 planning_plan.md 的 Presentation Skill 部分”。
+- 只能推断或仍缺证据时明确写“推断”或“待补充”。
+
+### 前后关系
+
+说明本页如何承接上一页并推动下一页；封面可说明它如何设定问题。
+
+### 页面表达
+
+说明信息关系、视觉重点和建议表达方式。
+
+## 第 2 页：页面标题
+...</code></pre></p>
+<p>硬约束：</p>
+<ul>
+<li><code>## 第 N 页</code> 的顺序就是最终页序，编号连续。</li>
+<li>开头必须有“整体思路”，单独阅读它就能明白全局逻辑。</li>
+<li>每页必须有“这一页要说明什么”，不能只写宽泛主题。</li>
+<li>用户指定页数时遵守；材料明显无法支撑时先说明，不用空页凑数。</li>
+<li>不自动添加用户未要求且叙事不需要的目录、过渡、行动或结束页。</li>
+<li>不把设计丰富度误写成 Story 复杂度；Story 对所有出口相同。</li>
+</ul>
+<h4>新建与修改</h4>
+<h5>新建</h5>
+<ol>
+<li>读取全部输入和 Research。</li>
+<li>确定整体 Story。</li>
+<li>完成逐页编排。</li>
+<li>做三轮自审。</li>
+<li>写入唯一 <code>outline.md</code> 并更新 <code>task_pack.json</code>。</li>
+<li>返回路径、页数和一行叙事摘要。</li>
+</ol>
+<h5>修改</h5>
+<p>磁盘上的 <code>outline.md</code> 是唯一基线：</p>
+<ul>
+<li>先完整读取，再修改；</li>
+<li>局部要求只改相关页面及保持逻辑连续所必需的相邻内容；</li>
+<li>用户调换页序后保留该顺序，只修正承接关系；</li>
+<li>用户删除页面或观点后，不用同义措辞补回；</li>
+<li>用户明确写下的标题、结论和原文尽量原样保留；</li>
+<li>新事实需要 Research 时返回 Entry，Research 完成后再改；</li>
+<li>新证据与用户修改冲突时保留磁盘版本，报告冲突并等待决定，不擅自覆盖。</li>
+</ul>
+<h4>与出口的契约</h4>
+<p>所有出口必须在开始和恢复时重新读取当前 <code>outline.md</code>。它决定：</p>
+<ul>
+<li>整体目标、受众、核心观点和叙事路径；</li>
+<li>最终页数、页序和页面标题；</li>
+<li>每页角色、核心结论、必须出现的事实与内容关系。</li>
+</ul>
+<p>出口可以补逐字文案、视觉系统、素材、版式、动画和实现细节，但不能重新研究、另写内容</p>
+<p>大纲、恢复用户删除的内容或改变核心结论。出口发现事实不足时应停止相关页面，返回</p>
+<p>Entry/Story 说明缺口。</p>
+<h4>不得做</h4>
+<ul>
+<li>不调用外部模型客户端或第二套 API。</li>
+<li>不直接搜索网页；外部证据由 Entry 在 Story 之前完成：Standard 使用定向普通搜索，</li>
+</ul>
+<p>  Deep 使用 <code>sn-deep-research</code>。</p>
+<ul>
+<li>不生成 HTML、图片、渲染图或 PPTX。</li>
+<li>不创建细碎跨 Skill spec。</li>
+<li>不把未经支持的数字写成事实。</li>
+<li>不把 Story 变成某个出口的视觉模板选择器。</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="agents"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. agents  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/using-agent-skills/index.html"
+     data-source="addyosmani"
+     data-category="agents"
+     data-search="using-agent-skills discovers and invokes agent skills. use when starting a session or when you need to discover which skill applies to the current task. this is the meta-skill that governs how all other skills are discovered and invoked. agents agents addyosmani/agent-skills">
+  <span>
+    <span class="r-name">using-agent-skills</span>
+    <span class="r-desc">Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/skill-creator/index.html"
+     data-source="anthropic-official"
+     data-category="agents"
+     data-search="skill-creator create new skills, modify and improve existing skills, and measure skill performance. use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill&#39;s description for better triggering accuracy. agents  anthropics/skills">
+  <span>
+    <span class="r-name">skill-creator</span>
+    <span class="r-desc">Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill&#39;s description for better triggering accuracy.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/in-progress/claude-handoff/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="claude-handoff hand the current conversation off to a fresh background agent that picks up the work immediately. agents  mattpocock/skills">
+  <span>
+    <span class="r-name">claude-handoff</span>
+    <span class="r-desc">Hand the current conversation off to a fresh background agent that picks up the work immediately.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/productivity/handoff/index.html"
+     data-source="mattpocock"
+     data-category="agents"
+     data-search="handoff compact the current conversation into a handoff document for another agent to pick up. agents  mattpocock/skills">
+  <span>
+    <span class="r-name">handoff</span>
+    <span class="r-desc">Compact the current conversation into a handoff document for another agent to pick up.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-story</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-story" aria-label="Copy install sn-ppt-story">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>agents</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-ppt-story</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=sn-ppt-story%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-story%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-story%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-story%2F&t=sn-ppt-story%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-story%2F&title=sn-ppt-story%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-story/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-ppt-story/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sn-ppt-entry — corporate AI agent skill — Aidentity</title>
+<meta name="description" content="Use when a user asks to create a presentation, slide deck, PPT, or PPTX from a query and optional files, or to resume an existing SenseNova presentation task.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="sn-ppt-entry, corporate, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sn-ppt-entry — corporate AI agent skill — Aidentity">
+<meta property="og:description" content="Use when a user asks to create a presentation, slide deck, PPT, or PPTX from a query and optional files, or to resume an existing SenseNova presentation task.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sn-ppt-entry — corporate AI agent skill — Aidentity">
+<meta name="twitter:description" content="Use when a user asks to create a presentation, slide deck, PPT, or PPTX from a query and optional files, or to resume an existing SenseNova presentation task.">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"corporate","item":"https://akshatnaruka.github.io/aidentity/skills/?category=corporate"},{"@type":"ListItem","position":3,"name":"sn-ppt-entry","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/"}]},{"@type":"TechArticle","headline":"sn-ppt-entry","description":"Use when a user asks to create a presentation, slide deck, PPT, or PPTX from a query and optional files, or to resume an existing SenseNova presentation task.","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"corporate, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=corporate">corporate</a><span>/</span>sn-ppt-entry
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>sn-ppt-entry</h1>
+      <p class="summary">Use when a user asks to create a presentation, slide deck, PPT, or PPTX from a query and optional files, or to resume an existing SenseNova presentation task.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>sn-ppt-entry</h3>
+<p>统一接收 PPT 生成请求，建立唯一任务目录，准备材料。Standard 先完成定向外部证据补充，</p>
+<p>Deep 先完成完整 Research，<strong>下一步必须调用 <code>sn-ppt-story</code> 生成公共 <code>outline.md</code></strong>，再按 <code>choices.output</code> 分发到 <code>sn-ppt-standard</code>、<code>sn-ppt-dazzle</code> 或 <code>sn-ppt-creative</code>。</p>
+<p>这是一套 Skill 的入口，不是独立运行时。文本理解、视觉理解和推理使用宿主 Agent</p>
+<p>已有能力。普通搜索、图片搜索和图片生成优先使用宿主原生工具；原生能力不存在或实际</p>
+<p>调用不可用时，才使用 PPT 整包自带的 <code>sn-ppt-tools</code>。不得要求用户另外配置模型客户端，</p>
+<p>不得调用 <code>model_client.py</code>、<code>stage.py</code> 或为本流程再造 CLI 调度层。</p>
+<h4>Box-Agent 兼容入口</h4>
+<p>在 Box-Agent 中，从本次加载的 Skill 提示取得 Entry 的绝对 Skill Root，记为</p>
+<p><code>&lt;ENTRY_SKILL_ROOT&gt;</code>。Entry 的所有确定性脚本都必须使用</p>
+<p><code>python &quot;&lt;ENTRY_SKILL_ROOT&gt;/scripts/&lt;name&gt;.py&quot;</code> 调用；禁止使用 <code>$SKILL_DIR</code>、当前工作目录</p>
+<p>或相对的 <code>skills/</code> 路径。所有任务产物仍必须写入同一个绝对 <code>$DECK_DIR</code>，并在调用 Story</p>
+<p>和出口 Skill 时逐字复用该路径。</p>
+<h4>三个独立选择</h4>
+<h5>执行深度</h5>
+<ul>
+<li><code>draft</code>：尽快形成可看的方向稿。默认不做外部事实搜索，大纲完成后直接生产。</li>
+<li><code>standard</code>：质量和等待时间平衡。Story 前由 Entry 做定向外部搜索和证据补充，不运行</li>
+</ul>
+<p>  完整 <code>sn-deep-research</code>；生成前让用户看 <code>outline.md</code>。</p>
+<ul>
+<li><code>deep</code>：先完成 <code>sn-deep-research</code>，再生成正式 <code>outline.md</code>；生成前让用户确认。</li>
+</ul>
+<p>Entry 根据任务复杂度、事实时效性、材料完整度和用户措辞推荐一档，同时展示</p>
+<p>Draft / Standard / Deep。用户可以覆盖；用户未覆盖时采用推荐，不为这个选择增加一轮</p>
+<p>阻塞问答。</p>
+<h5>输出格式</h5>
+<ul>
+<li><code>static_html</code> -&gt; <code>sn-ppt-standard</code></li>
+<li><code>dynamic_html</code> -&gt; <code>sn-ppt-dazzle</code></li>
+<li><code>creative</code> -&gt; <code>sn-ppt-creative</code></li>
+</ul>
+<p>用户提供已有 PPTX、模板或半成品并要求修改时，直接进入 <code>sn-ppt-edit</code>，不是先走生成</p>
+<p>出口。Static HTML 仍由 <code>sn-ppt-standard</code> 自己后处理（默认导出 PPTX）。Entry 只负责路由、验证真实文件并登记 artifact。</p>
+<h5>设计丰富度</h5>
+<ul>
+<li><code>restrained</code>（克制）：政企、学术、法务、财务或明确要求简洁。</li>
+<li><code>rich</code>（丰富）：默认，适合多数业务汇报、产品介绍和正式演示。</li>
+<li><code>high_creative</code>（高创意）：发布会、品牌传播、创意提案或明确要求强视觉。</li>
+</ul>
+<p>用户明确指定时直接采用；否则结合场景、受众、输出格式和措辞推荐。显示当前选择与</p>
+<p>三档名称，但不单独阻塞。用户在生成前、确认大纲时或后续修改中覆盖时，更新同一份</p>
+<p><code>task_pack.json</code>。丰富度只决定视觉投入，不改变事实标准和 Story 遵循要求。</p>
+<h4>唯一目录规则</h4>
+<p>新任务的输出位置沿用已经验证稳定的原 Entry 规则，不得重新推断：</p>
+<ol>
+<li>先执行 <code>pwd -P</code>，把该命令<strong>实际返回的完整绝对路径</strong>逐字记为 <code>workspace_root</code>。宿主显示的</li>
+</ol>
+<p>   session workspace、repo 根或其他路径标签都不能替代这次 <code>pwd -P</code> 的结果；尤其不得自行</p>
+<p>   删除返回路径末尾的 <code>output</code>、<code>workspace</code> 等目录名。</p>
+<ol>
+<li>唯一父目录是 <code>&lt;workspace_root&gt;/ppt_decks/</code>。</li>
+<li>目录名是 <code>&lt;topic_concise&gt;_&lt;YYYYMMDD_HHMMSS&gt;</code>。</li>
+<li>创建后在同一条命令中用 <code>pwd -P</code>/绝对化结果回显 <code>deck_dir</code>，立即写入</li>
+</ol>
+<p>   <code>task_pack.deck_dir</code>，此后全链路只逐字复用该值，禁止根据框架 workspace 信息重新拼接。</p>
+<ol>
+<li>不使用用户 home 根、Skill 目录、repo 根、<code>/tmp</code>、另一个 workspace 或</li>
+</ol>
+<p>   <code>PPT_DECK_ROOT</code>。</p>
+<ol>
+<li>不能创建 <code>&lt;workspace_root&gt;/ppt_decks/</code> 时停止并报告权限问题，不换地方继续。</li>
+</ol>
+<p>Box-Agent 的文件工具相对根通常是 <code>&lt;session_workspace&gt;/output</code>，而会话元数据中的 workspace</p>
+<p>可能是它的父目录。两者不是同一路径。创建 <code>task_pack.json</code>、<code>info_pack.json</code>、<code>outline.md</code></p>
+<p>和后续产物时必须全部使用上述同一个 <code>deck_dir</code>；每次文件工具返回的绝对落盘路径都要位于</p>
+<p>该目录。若返回路径不一致，立即停止并修正路径，不得在两个 <code>ppt_decks/</code> 之间继续。JSON 和</p>
+<p>Markdown 直接用文件工具写入，不要用 <code>execute_code</code> 内嵌一个重新推导的绝对路径。</p>
+<p>已有任务必须复用已有 <code>task_pack.json</code> 中的绝对 <code>deck_dir</code>；继续任务不得新建目录。</p>
+<p>所有 Skill 安装目录只读。</p>
+<h4><code>task_pack.json</code></h4>
+<p>创建目录后立即写入，并在每个阶段边界原地更新。它在任务完成后仍然保留，用于进度</p>
+<p>展示、任务中断恢复和后续编辑。保持字段少而稳定：</p>
+<p><pre><code>{
+  &quot;schema_version&quot;: &quot;ppt_task_v2&quot;,
+  &quot;deck_id&quot;: &quot;topic_20260729_143015&quot;,
+  &quot;deck_dir&quot;: &quot;/absolute/workspace/ppt_decks/topic_20260729_143015&quot;,
+  &quot;workspace_root&quot;: &quot;/absolute/workspace&quot;,
+  &quot;ppt_mode&quot;: &quot;standard&quot;,
+  &quot;params&quot;: {
+    &quot;role&quot;: &quot;...&quot;,
+    &quot;audience&quot;: &quot;...&quot;,
+    &quot;scene&quot;: &quot;...&quot;,
+    &quot;page_count&quot;: 8,
+    &quot;language&quot;: &quot;zh-Hans&quot;,
+    &quot;image_source&quot;: &quot;auto&quot;,
+    &quot;infographic_source&quot;: &quot;echarts&quot;
+  },
+  &quot;request&quot;: {
+    &quot;query&quot;: &quot;...&quot;,
+    &quot;source_files&quot;: []
+  },
+  &quot;choices&quot;: {
+    &quot;execution_depth&quot;: &quot;standard&quot;,
+    &quot;output&quot;: &quot;static_html&quot;,
+    &quot;design_richness&quot;: &quot;rich&quot;,
+    &quot;static_postprocess&quot;: [&quot;pptx&quot;]
+  },
+  &quot;state&quot;: {
+    &quot;status&quot;: &quot;preparing&quot;,
+    &quot;current_stage&quot;: &quot;entry&quot;,
+    &quot;completed_stages&quot;: [],
+    &quot;research&quot;: {
+      &quot;required&quot;: false,
+      &quot;executor&quot;: null,
+      &quot;mode&quot;: null
+    },
+    &quot;capabilities&quot;: {},
+    &quot;artifacts&quot;: {},
+    &quot;last_error&quot;: null,
+    &quot;updated_at&quot;: &quot;ISO-8601&quot;
+  },
+  &quot;created_at&quot;: &quot;ISO-8601&quot;
+}</code></pre></p>
+<p>当 <code>choices.output</code> 是 <code>static_html</code> 时，<code>ppt_mode</code> 必须是 <code>standard</code>，<code>static_postprocess</code></p>
+<p>默认必须是 <code>[&quot;pptx&quot;]</code>。只有用户明确说“只要 HTML”或“不要 PPTX”时才写 <code>[]</code>。</p>
+<p>其他输出出口的后处理字段写 <code>[]</code>，不触发 Static 后处理。</p>
+<p><code>ppt_mode</code> 是旧出口的兼容字段：</p>
+<table><thead><tr><th><code>choices.output</code></th><th><code>ppt_mode</code></th></tr></thead><tbody>
+<tr><td><code>static_html</code></td><td><code>standard</code></td></tr>
+<tr><td><code>dynamic_html</code></td><td><code>dazzle</code></td></tr>
+<tr><td><code>creative</code></td><td><code>creative</code></td></tr>
+</tbody></table>
+<p>阶段更新只修改相关字段，不重写用户选择和历史完成项。开始阶段时写</p>
+<p><code>current_stage/status/updated_at</code>；完成时把阶段加入 <code>completed_stages</code> 并把真实产物的</p>
+<p>绝对路径写入 <code>artifacts</code>；失败时写 <code>last_error</code>。文件系统中的真实产物优先于过时的状态</p>
+<p>字段。</p>
+<h4><code>info_pack.json</code></h4>
+<p>只承载材料和事实信息，不复制运行状态：</p>
+<p><pre><code>{
+  &quot;user_query&quot;: &quot;...&quot;,
+  &quot;user_assets&quot;: {
+    &quot;reference_images&quot;: [],
+    &quot;reference_image_captions&quot;: {},
+    &quot;reference_docs&quot;: [],
+    &quot;reference_docs_failed&quot;: []
+  },
+  &quot;document_digest&quot;: {
+    &quot;topic_summary&quot;: &quot;...&quot;,
+    &quot;key_sections&quot;: [],
+    &quot;key_points&quot;: [],
+    &quot;data_highlights&quot;: [],
+    &quot;conflicts&quot;: [],
+    &quot;open_questions&quot;: [],
+    &quot;inherited_tables&quot;: [],
+    &quot;inherited_images&quot;: []
+  },
+  &quot;raw_documents&quot;: &quot;/absolute/deck/raw_documents.json&quot;,
+  &quot;research_report&quot;: null
+}</code></pre></p>
+<p><code>document_digest</code> 由宿主 Agent 阅读完整材料后直接写入，不通过额外模型 API。数字、专有</p>
+<p>名词、时间、单位和材料间冲突必须保真。上传图片和文档内图片继续遵守“一张图片只理解</p>
+<p>一次”的原有能力：宿主 Agent 用原生视觉能力读取后，把上传图片说明缓存到</p>
+<p><code>reference_image_captions[absolute_path]</code>，把文档内图片说明缓存到</p>
+<p><code>raw_documents.documents[].inherited_images[].visual_summary</code>。已有缓存且图片未变时跳过，</p>
+<p>下游统一读取缓存；不创建独立 caption 服务。</p>
+<h4>可选搜索与图像能力</h4>
+<p>把当前 Skill 的同级目录解析为 skills 根，并固定：</p>
+<p><pre><code>PPT_TOOLS_DIR = &lt;skills root&gt;/sn-ppt-tools</code></pre></p>
+<p>开始需要某项能力时读取</p>
+<p><code>&lt;PPT_TOOLS_DIR&gt;/references/capability-policy.md</code>，按</p>
+<p><code>native -&gt; bundled -&gt; none</code> 选择。<code>sn-ppt-tools</code> 是 PPT 整包的一部分，不做“是否安装”</p>
+<p>判断，也不扫描其他仓库。只把每类能力的来源、状态、非敏感错误摘要和更新时间写入</p>
+<p><code>task_pack.state.capabilities</code>；不得记录 key 或 Authorization header。</p>
+<p>媒体能力都不是 Entry 的强制前置。缺失时按 policy 继续；只有 Creative 已被明确选择且</p>
+<p>原生、内置生图都不可用时，暂停 Creative 出口并保留全部前置产物，不自动切换出口。</p>
+<p>需要用户处理配置时只提示运行 <code>sn-ppt-doctor</code>；不要在 Entry 重复变量清单。Doctor 会显示</p>
+<p>Hermes/OpenClaw 实际读取的用户级 <code>.env</code>、缺失项和配置模板。</p>
+<h4>新任务流程</h4>
+<ol>
+<li><strong>进入和识别</strong>：回显已经进入 Entry。提取角色、受众、场景、页数、语言、附件、</li>
+</ol>
+<p>   明确的设计要求，以及用户是否明确要求 Static 只交付 HTML。已经提供的信息不再询问。</p>
+<ol>
+<li><strong>路由已有 PPTX</strong>：若任务是编辑、优化、续写或模板填充，交给 <code>sn-ppt-edit</code>。若是从零生成，继续本流程。</li>
+<li><strong>推荐三个选择</strong>：确定执行深度、输出格式和设计丰富度。只有输出意图确实无法判断且会产生完全不同交付物时才询问；其他情况先给推荐并继续。</li>
+<li><strong>建立固定目录</strong>：严格按“唯一目录规则”创建目录和初始 <code>task_pack.json</code>。</li>
+<li><strong>解析附件</strong>：对 PDF、DOCX、MD、TXT 执行：</li>
+</ol>
+<p>   <pre><code>   python &quot;&lt;ENTRY_SKILL_ROOT&gt;/scripts/parse_user_docs.py&quot; \
+     --files &lt;absolute paths...&gt; \
+     --output &quot;&lt;deck_dir&gt;/raw_documents.json&quot; \
+     --asset-dir &quot;&lt;deck_dir&gt;/source_assets&quot;
+   </code></pre></p>
+<p>   Markdown 表格与本地图片引用、DOCX 表格与内嵌图片、PDF 文本、<code>inherited_images</code> 以及按需生成的 <code>page_visuals</code> 都要保留；<code>page_visuals[].path</code> 必须是 <code>$DECK_DIR/source_assets/</code> 下的绝对路径，并随<code>raw_documents.json</code> 一起交接。未生成页图时，Figure 页裁切任务必须返回 <code>blocked</code>。一份文件失败时记录到 <code>reference_docs_failed</code>，继续处理其他文件。</p>
+<ol>
+<li><strong>理解全部材料</strong>：读取 <code>raw_documents.json</code> 中全部正文、表格和图片索引；必要时分段</li>
+</ol>
+<p>   阅读，但不得只读开头。用宿主 Agent 原生视觉能力逐张理解相关上传图片和文档内图片，</p>
+<p>   按上述兼容字段缓存，失败项记录后继续。再生成 <code>document_digest</code>，写</p>
+<p>   <code>info_pack.json</code>。Story 和出口不得重复理解已有缓存的图片，除非文件变化或当前任务确实</p>
+<p>   需要重新核对视觉细节。</p>
+<ol>
+<li><strong>启动生成进度工作台</strong>：<code>task_pack.json</code> 和 <code>info_pack.json</code> 都已存在后，立即调用</li>
+</ol>
+<p>   <code>sn-ppt-workbench/scripts/open_workbench.py</code>，始终传入当前任务的绝对 <code>deck_dir</code> 和可用的</p>
+<p>   同会话智能体参数。启动成功后立即向用户提供返回的 <code>generation_url</code>（固定为</p>
+<p>   <code>/progress</code>）；启动失败或返回 <code>skipped</code> 时简要说明原因并继续生成，不得因此阻塞</p>
+<p>   Research、Story 或页面生产。不得在此步骤运行 npm、构建 Workbench 或切换任务目录。</p>
+<ol>
+<li><strong>决定外部证据路径</strong>：</li>
+</ol>
+<ul>
+<li>Draft：默认跳过，写 <code>required=false</code>、<code>executor=null</code>、<code>mode=null</code>。用户明确要求核查</li>
+</ul>
+<p>     某个事实时，可直接用普通搜索完成该核查，但不为 Draft 启动完整 Deep Research。</p>
+<ul>
+<li>Standard：默认写 <code>required=true</code>、<code>executor=entry</code>、<code>mode=null</code>。不得因为“用户材料</li>
+</ul>
+<p>     看起来足够”而跳过；只要用户未禁止联网且普通搜索可用，就必须在 Story 前执行至少一次</p>
+<p>     真实普通搜索。</p>
+<ul>
+<li>Deep：写 <code>required=true</code>、<code>executor=sn-deep-research</code>；默认 <code>mode=normal</code>，复杂、</li>
+</ul>
+<p>     多维、争议、高时效或高风险任务使用 <code>heavy</code>。<code>quick / normal / heavy</code> 只属于</p>
+<p>     <code>sn-deep-research</code>，不用于描述 Standard。</p>
+<ul>
+<li>用户明确禁止外部搜索或要求只使用给定材料时，不联网，写 <code>required=false</code>、</li>
+</ul>
+<p>     <code>executor=null</code>、<code>mode=null</code> 和 <code>skipped_reason=user_forbidden</code>，只做材料内证据审计。</p>
+<ol>
+<li><strong>完成外部证据补充</strong>：先按可选能力规则确定普通搜索来源：宿主原生网页搜索可用时</li>
+</ol>
+<p>   直接使用；否则调用 <code>&lt;PPT_TOOLS_DIR&gt;/scripts/web_search.py</code>。</p>
+<ul>
+<li>Standard 由 Entry 当前 Agent 做定向搜索，不调用 <code>sn-deep-research</code>，不做 scout、</li>
+</ul>
+<p>     多维拆解、补研循环或完整研究报告编排。搜索目标只来自用户 query、材料中的时效性风险、</p>
+<p>     关键事实和会影响叙事的明显缺口；优先官方和一手来源，记录标题、URL、日期、支持的结论</p>
+<p>     及未解决限制。停止条件是 Story 所需关键证据已经覆盖或缺口已经明确，不为扩写而漫游。</p>
+<p>     把简洁结果写到 <code>&lt;deck_dir&gt;/research/report.md</code>。</p>
+<ul>
+<li>Deep 把普通搜索来源、绝对 <code>report_dir=&lt;deck_dir&gt;/research</code> 和当前任务材料交给</li>
+</ul>
+<p>     <code>sn-deep-research</code>，按 <code>mode=normal|heavy</code> 完整运行。<code>sn-ppt-tools</code> 只作为搜索能力</p>
+<p>     fallback，不是另一套 Research 流程。</p>
+<ul>
+<li>两条路径完成后都把同一个 <code>&lt;deck_dir&gt;/research/report.md</code> 写入</li>
+</ul>
+<p>     <code>info_pack.research_report</code> 和 <code>task_pack.state.artifacts.research_report</code>，再进入 Story。</p>
+<ul>
+<li>原生与内置搜索都不可用时，不伪造 Research，也不阻塞 PPT：把</li>
+</ul>
+<p>     <code>state.research.required=false</code>、<code>state.research.executor=null</code>、</p>
+<p>     <code>state.research.skipped_reason=search_unavailable</code> 和</p>
+<p>     <code>info_pack.document_digest.open_questions</code> 中的事实覆盖限制写清楚，然后直接进入</p>
+<p>     Story。</p>
+<ul>
+<li>搜索能力存在但 Research 本身尚未完成时，仍不得先写正式大纲。</li>
+</ul>
+<ol>
+<li><strong>调用 Story</strong>：把同一 <code>deck_dir</code> 交给 <code>sn-ppt-story</code>。Story 读取 query、</li>
+</ol>
+<p>   <code>info_pack.json</code>、<code>raw_documents.json</code> 和已有 Research，生成唯一</p>
+<p>   <code>&lt;deck_dir&gt;/outline.md</code>。</p>
+<ol>
+<li><strong>大纲交互</strong>：Draft 默认继续生产，同时告知大纲路径；Standard / Deep 展示一行整体</li>
+</ol>
+<p>    叙事和路径，等待用户修改或确认。继续前重新读取磁盘上的 <code>outline.md</code>，不能使用聊天</p>
+<p>    中的旧副本。</p>
+<ol>
+<li><strong>出口分发</strong>：Story 已完成且当前磁盘 <code>outline.md</code> 已按本档位确认后，按</li>
+</ol>
+<p>    <code>choices.output</code> 调用唯一对应 Skill：<code>static_html</code> 调用 <code>sn-ppt-standard</code>，</p>
+<p>    <code>dynamic_html</code> 调用 <code>sn-ppt-dazzle</code>，<code>creative</code> 调用 <code>sn-ppt-creative</code>。始终传绝对</p>
+<p>    <code>deck_dir</code>。不得绕过 Story 把原始 query 直接交给任一出口；三个出口都只做表达与产物生产，不 再研究、重排页面或重写 Story。</p>
+<ol>
+<li><strong>后处理和收尾</strong>：Static HTML 默认在页面完成后由 <code>sn-ppt-standard</code> 内置 exporter（<code>scripts/export_pptx/html_to_pptx.mjs</code>）导出 PPTX；该出口<strong>必须同时交付 <code>present.html</code> 和 PPTX 两个产物，缺一即技术故障</strong>（用户明确要求只要 HTML 时，PPTX 可缺、<code>present.html</code> 仍必须存在）。PPTX <strong>只能</strong>由该内置 exporter 生成：禁止用 python-pptx、自写脚本或宿主原生工具替代。Entry 最终把各出口生成的真实产物写回 <code>task_pack.state.artifacts</code>；转换失败保留已有 HTML 产物、状态置 <code>partial</code> 并如实说明，不得另起炉灶补产出或伪造 PPTX 路径。</li>
+</ol>
+<h4>恢复规则</h4>
+<p>当用户提供 deck 目录，或当前目录下存在明确的任务包时：</p>
+<ol>
+<li>读取 <code>task_pack.json</code>、<code>info_pack.json</code> 和磁盘实际文件。</li>
+<li>当前 <code>outline.md</code> 存在时，以磁盘版本为 Story 真相。</li>
+<li>Research 报告、outline、页面、渲染图和最终产物存在时，不因状态字段滞后而重做。</li>
+<li>从最早一个“必要产物确实缺失”的阶段继续。</li>
+<li>用户修改 outline 后，只失效 Story 之后受影响的页面及其派生 PPTX；Research 和材料解析不自动重跑；若 HTML、PNG、讲稿、播放器均完整而仅 PPTX 缺失，只重跑对应出口的 exporter。</li>
+<li>不创建 <code>task_pack_v2.json</code>、<code>outline_v2.md</code> 或第二个 deck 目录。</li>
+</ol>
+<h4>进度反馈</h4>
+<p>超过约 30 秒的工作必须让用户看到进度。至少在以下边界各回显一句：</p>
+<ul>
+<li>已识别任务与三个选择；</li>
+<li>已建立 <code>deck_dir</code>；</li>
+<li>附件解析开始/完成；</li>
+<li>生成进度工作台已启动并提供 <code>/progress</code>，或说明非阻塞的跳过原因；</li>
+<li>Research 开始/完成或明确跳过；</li>
+<li>Story 开始/<code>outline.md</code> 已生成；</li>
+<li>等待确认或已进入出口；</li>
+<li>页面生产进度；页面完成后回显 <code>present.html</code>、PNG、讲稿和播放器的真实路径。</li>
+<li>后处理与最终产物；PPTX 失败时保留 HTML、PNG、讲稿和播放器，状态为 <code>partial</code>，不得伪造 PPTX 路径，并把失败原因写入 <code>task_pack.state.last_error</code>。</li>
+</ul>
+<p>进度以用户能理解的阶段描述为主，不暴露内部 prompt、模型调用或细碎状态字段。</p>
+<h4>硬规则</h4>
+<ol>
+<li>原有能力没有被明确删除时必须保留。</li>
+<li>不在 Entry 生成页面、图片或视觉方案。</li>
+<li>不允许出口自行搜索或重新决定页序、标题和核心结论。</li>
+<li>不静默切换输出格式或设计档位。</li>
+<li>可选搜索或图像能力失败时最多尝试原生一次、内置一次；随后执行 policy 的无工具路径。</li>
+<li>不用 mock 数字冒充事实；缺口应回到 Research/Story 或明确标示。</li>
+<li>不因 Static 默认的 PPTX 后处理失败删除可用的 HTML、图片或 PPTX。</li>
+<li>不新增外部模型客户端、额外 API 配置、通用状态机或大型调度脚本。</li>
+<li>Workbench 启动是生成流程的最佳努力辅助能力；失败不得改变输出选择或中止生成。</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/marketingskills/lead-magnets/index.html"
+     data-source="marketingskills"
+     data-category="corporate"
+     data-search="lead-magnets when the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;pdf download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should i give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; use this for planning what to create and how to distribute it. for interactive tools as lead magnets, see free-tools. for writing the actual content, see copywriting. for the email sequence after capture, see emails. corporate  coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">lead-magnets</span>
+    <span class="r-desc">When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. Also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;PDF download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;Notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should I give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; Use this for planning what to create and how to distribute it. For interactive tools as lead magnets, see free-tools. For writing the actual content, see copywriting. For the email sequence after capture, see emails.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/wizard/index.html"
+     data-source="mattpocock"
+     data-category="corporate"
+     data-search="wizard generate an interactive bash wizard that walks a human through steps only they can perform. use when provisioning infrastructure, setting up credentials or ci secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. don&#39;t invoke this for steps the agent can perform itself. corporate  mattpocock/skills">
+  <span>
+    <span class="r-name">wizard</span>
+    <span class="r-desc">Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don&#39;t invoke this for steps the agent can perform itself.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="sn-da-excel-workflow excel 数据分析多步编排器。覆盖：(1) 读取多 sheet excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 sheet 统计聚合，(6) 导出 excel/csv 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / excel 报告 / 生成报表 / analyze excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-excel-workflow</span>
+    <span class="r-desc">Excel 数据分析多步编排器。覆盖：(1) 读取多 Sheet Excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 Parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 Sheet 统计聚合，(6) 导出 Excel/CSV 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：Excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / Excel 报告 / 生成报表 / analyze Excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 Sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 Excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/category-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="large-file-parquet-analysis-and-highlight 当excel文件总行数超过1万行时，通过转换为parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为excel并对特定行进行高亮标注。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">large-file-parquet-analysis-and-highlight</span>
+    <span class="r-desc">当Excel文件总行数超过1万行时，通过转换为Parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为Excel并对特定行进行高亮标注。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/duplicate-value-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="excel-conditional-comparison-and-large-file-processing 对比excel多表中的特定系数并对异常值进行颜色标记。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">excel-conditional-comparison-and-large-file-processing</span>
+    <span class="r-desc">对比Excel多表中的特定系数并对异常值进行颜色标记。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-entry</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-entry" aria-label="Copy install sn-ppt-entry">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>corporate</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-ppt-entry</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=sn-ppt-entry%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-entry%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-entry%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-entry%2F&t=sn-ppt-entry%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-entry%2F&title=sn-ppt-entry%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-entry/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-ppt-entry/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

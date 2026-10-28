@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vectorbt — quant AI agent skill — Aidentity</title>
+<meta name="description" content="High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="vectorbt, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vectorbt — quant AI agent skill — Aidentity">
+<meta property="og:description" content="High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="vectorbt — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"vectorbt","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/"}]},{"@type":"TechArticle","headline":"vectorbt","description":"High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>vectorbt
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>vectorbt</h1>
+      <p class="summary">High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Vectorized Backtesting with vectorbt</h3>
+<h4>Overview</h4>
+<p>vectorbt is a Python library for <strong>vectorized backtesting</strong> — running strategy simulations using NumPy/pandas array operations instead of bar-by-bar loops. This makes it 100–1000x faster than event-driven frameworks (backtrader, zipline), enabling parameter optimization across thousands of combinations in seconds.</p>
+<p><strong>Key strengths:</strong></p>
+<ul>
+<li>Blazing speed via NumPy vectorization</li>
+<li>Built-in parameter grid search and optimization</li>
+<li>50+ built-in performance metrics (Sharpe, Sortino, Calmar, max drawdown, profit factor)</li>
+<li>Rich plotting (equity curves, drawdowns, trade markers, heatmaps)</li>
+<li>Native pandas integration — your data stays in DataFrames throughout</li>
+</ul>
+<h4>Installation</h4>
+<p><pre><code>uv pip install vectorbt pandas numpy</code></pre></p>
+<p>vectorbt pulls in pandas, NumPy, and Plotly automatically. For technical indicators, also install pandas-ta:</p>
+<p><pre><code>uv pip install vectorbt pandas-ta</code></pre></p>
+<h4>Core Concepts</h4>
+<h5>1. Signals — Boolean Entry/Exit Arrays</h5>
+<p>Strategies in vectorbt are expressed as boolean pandas Series (or arrays) indicating where to enter and exit positions:</p>
+<p><pre><code>import vectorbt as vbt
+import pandas as pd
+
+# Entry: buy when fast EMA crosses above slow EMA
+entries = fast_ema &gt; slow_ema
+# Exit: sell when fast EMA crosses below slow EMA
+exits = fast_ema &lt; slow_ema</code></pre></p>
+<p>vectorbt resolves conflicting signals automatically (you can&#39;t enter while already in a position).</p>
+<h5>2. Portfolio — The Backtesting Engine</h5>
+<p><code>vbt.Portfolio.from_signals()</code> is the primary backtesting function. It takes price data and entry/exit signals, simulates trades, and computes performance:</p>
+<p><pre><code>pf = vbt.Portfolio.from_signals(
+    close=close_prices,
+    entries=entries,
+    exits=exits,
+    init_cash=10_000,
+    fees=0.003,       # 0.3% per trade
+    slippage=0.005,   # 0.5% slippage
+    freq=&quot;1h&quot;,        # hourly data
+)</code></pre></p>
+<h5>3. Metrics — Built-in Performance Analysis</h5>
+<p><pre><code># Full stats summary
+print(pf.stats())
+
+# Individual metrics
+print(f&quot;Total Return: {pf.total_return():.2%}&quot;)
+print(f&quot;Sharpe Ratio: {pf.sharpe_ratio():.3f}&quot;)
+print(f&quot;Max Drawdown: {pf.max_drawdown():.2%}&quot;)
+print(f&quot;Win Rate:     {pf.trades.win_rate():.2%}&quot;)</code></pre></p>
+<h5>4. Parameter Optimization — Grid Search in Seconds</h5>
+<p>Pass arrays instead of scalars to test many parameter combos simultaneously:</p>
+<p><pre><code>import numpy as np
+
+fast_periods = np.arange(5, 25, 2)   # 10 values
+slow_periods = np.arange(20, 60, 5)  # 8 values
+
+fast_ma = vbt.MA.run(close, fast_periods, short_name=&quot;fast&quot;)
+slow_ma = vbt.MA.run(close, slow_periods, short_name=&quot;slow&quot;)
+
+# This creates 80 parameter combinations automatically
+entries = fast_ma.ma_crossed_above(slow_ma)
+exits = fast_ma.ma_crossed_below(slow_ma)</code></pre></p>
+<h4>Basic Workflow</h4>
+<h5>Step 1: Load OHLCV Data</h5>
+<p><pre><code>import pandas as pd
+
+# From CSV
+df = pd.read_csv(&quot;ohlcv.csv&quot;, parse_dates=[&quot;timestamp&quot;], index_col=&quot;timestamp&quot;)
+close = df[&quot;close&quot;]
+
+# From Yahoo Finance (traditional markets)
+btc = vbt.YFData.download(&quot;BTC-USD&quot;, start=&quot;2023-01-01&quot;, end=&quot;2025-01-01&quot;)
+close = btc.get(&quot;Close&quot;)</code></pre></p>
+<p>For Solana tokens, fetch data via the <code>birdeye-api</code> skill and load into a DataFrame.</p>
+<h5>Step 2: Compute Indicators</h5>
+<p><pre><code>import pandas_ta as ta
+
+# Using pandas-ta (see pandas-ta skill)
+df.ta.ema(length=12, append=True)
+df.ta.ema(length=26, append=True)
+df.ta.rsi(length=14, append=True)
+df.ta.bbands(length=20, std=2, append=True)
+
+# Or using vectorbt built-ins
+rsi = vbt.RSI.run(close, window=14)
+bbands = vbt.BBANDS.run(close, window=20, alpha=2)</code></pre></p>
+<h5>Step 3: Generate Entry/Exit Signals</h5>
+<p><pre><code># EMA crossover
+entries = df[&quot;EMA_12&quot;] &gt; df[&quot;EMA_26&quot;]
+exits = df[&quot;EMA_12&quot;] &lt; df[&quot;EMA_26&quot;]
+
+# RSI mean reversion
+entries = rsi.rsi_below(30)
+exits = rsi.rsi_above(70)</code></pre></p>
+<h5>Step 4: Run Backtest</h5>
+<p><pre><code>pf = vbt.Portfolio.from_signals(
+    close=close,
+    entries=entries,
+    exits=exits,
+    init_cash=10_000,
+    fees=0.003,
+    slippage=0.005,
+    size=0.95,               # use 95% of available cash
+    size_type=&quot;percent&quot;,
+    freq=&quot;1h&quot;,
+)</code></pre></p>
+<h5>Step 5: Analyze Results</h5>
+<p><pre><code># Summary statistics
+print(pf.stats())
+
+# Trade-level analysis
+trades = pf.trades.records_readable
+print(f&quot;\nTrade count: {len(trades)}&quot;)
+print(f&quot;Avg holding period: {trades[&#39;Duration&#39;].mean()}&quot;)
+
+# Equity curve
+pf.plot().show()
+
+# Drawdown chart
+pf.drawdowns.plot().show()</code></pre></p>
+<h4>Key Portfolio Parameters</h4>
+<table><thead><tr><th>Parameter</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>close</code></td><td>Price series (pd.Series or DataFrame)</td><td><code>df[&quot;close&quot;]</code></td></tr>
+<tr><td><code>entries</code></td><td>Boolean entry signals</td><td><code>fast &gt; slow</code></td></tr>
+<tr><td><code>exits</code></td><td>Boolean exit signals</td><td><code>fast &lt; slow</code></td></tr>
+<tr><td><code>init_cash</code></td><td>Starting capital</td><td><code>10_000</code></td></tr>
+<tr><td><code>fees</code></td><td>Fee per trade (fraction)</td><td><code>0.003</code> (0.3%)</td></tr>
+<tr><td><code>slippage</code></td><td>Slippage per trade (fraction)</td><td><code>0.005</code> (0.5%)</td></tr>
+<tr><td><code>size</code></td><td>Position size</td><td><code>0.95</code></td></tr>
+<tr><td><code>size_type</code></td><td>How to interpret size</td><td><code>&quot;percent&quot;</code>, <code>&quot;amount&quot;</code>, <code>&quot;value&quot;</code></td></tr>
+<tr><td><code>freq</code></td><td>Data frequency</td><td><code>&quot;1h&quot;</code>, <code>&quot;4h&quot;</code>, <code>&quot;1d&quot;</code></td></tr>
+<tr><td><code>direction</code></td><td>Trade direction</td><td><code>&quot;both&quot;</code>, <code>&quot;longonly&quot;</code>, <code>&quot;shortonly&quot;</code></td></tr>
+<tr><td><code>accumulate</code></td><td>Allow adding to positions</td><td><code>False</code></td></tr>
+<tr><td><code>sl_stop</code></td><td>Stop-loss level (fraction)</td><td><code>0.05</code> (5%)</td></tr>
+<tr><td><code>tp_stop</code></td><td>Take-profit level (fraction)</td><td><code>0.10</code> (10%)</td></tr>
+</tbody></table>
+<h4>Performance Metrics</h4>
+<h5>Returns</h5>
+<ul>
+<li><code>total_return()</code> — cumulative return over the period</li>
+<li><code>annualized_return()</code> — annualized compound return</li>
+<li><code>daily_returns()</code> — Series of daily returns</li>
+</ul>
+<h5>Risk</h5>
+<ul>
+<li><code>max_drawdown()</code> — maximum peak-to-trough decline</li>
+<li><code>annualized_volatility()</code> — annualized standard deviation of returns</li>
+<li><code>value_at_risk()</code> — VaR at specified confidence level</li>
+</ul>
+<h5>Risk-Adjusted</h5>
+<ul>
+<li><code>sharpe_ratio()</code> — excess return per unit volatility</li>
+<li><code>sortino_ratio()</code> — excess return per unit downside deviation</li>
+<li><code>calmar_ratio()</code> — annualized return / max drawdown</li>
+<li><code>omega_ratio()</code> — probability-weighted gain/loss ratio</li>
+</ul>
+<h5>Trade Statistics</h5>
+<ul>
+<li><code>trades.win_rate()</code> — fraction of profitable trades</li>
+<li><code>trades.profit_factor()</code> — gross profit / gross loss</li>
+<li><code>trades.expectancy()</code> — average P&amp;L per trade</li>
+<li><code>trades.avg_winning_trade()</code> — mean profit on winners</li>
+<li><code>trades.avg_losing_trade()</code> — mean loss on losers</li>
+<li><code>trades.count()</code> — total number of completed trades</li>
+</ul>
+<h4>Parameter Optimization</h4>
+<h5>Grid Search</h5>
+<p><pre><code>fast_windows = [5, 8, 12, 15, 20]
+slow_windows = [20, 26, 30, 40, 50]
+
+# Run all 25 combos at once
+fast_ma = vbt.MA.run(close, fast_windows, short_name=&quot;fast&quot;)
+slow_ma = vbt.MA.run(close, slow_windows, short_name=&quot;slow&quot;)
+
+entries = fast_ma.ma_crossed_above(slow_ma)
+exits = fast_ma.ma_crossed_below(slow_ma)
+
+pf = vbt.Portfolio.from_signals(close, entries, exits, fees=0.003)
+
+# Find best params by Sharpe
+sharpe = pf.sharpe_ratio()
+best_idx = sharpe.idxmax()
+print(f&quot;Best params: {best_idx}, Sharpe: {sharpe[best_idx]:.3f}&quot;)</code></pre></p>
+<h5>Walk-Forward Validation</h5>
+<p>Always validate optimized parameters on out-of-sample data:</p>
+<p><pre><code># Split: 70% train, 30% test
+split_idx = int(len(close) * 0.7)
+train_close = close.iloc[:split_idx]
+test_close = close.iloc[split_idx:]
+
+# Optimize on training data
+# ... (run grid search on train_close)
+
+# Validate best params on test data
+# ... (run single backtest on test_close with best params)</code></pre></p>
+<p>See <code>references/optimization_guide.md</code> for detailed walk-forward methodology and overfitting prevention.</p>
+<h4>Crypto-Specific Considerations</h4>
+<h5>24/7 Markets</h5>
+<p>Crypto markets never close. Use hourly or minute-based frequencies, not business-day frequencies:</p>
+<p><pre><code># Correct for crypto
+pf = vbt.Portfolio.from_signals(close, entries, exits, freq=&quot;1h&quot;)
+
+# Wrong — business days assume market closures
+# pf = vbt.Portfolio.from_signals(close, entries, exits, freq=&quot;1B&quot;)</code></pre></p>
+<h5>Realistic Fees</h5>
+<p>DEX swaps on Solana typically cost 0.25–1% including AMM fees. CEX spot fees are 0.05–0.1%.</p>
+<p><pre><code># Solana DEX (conservative)
+pf = vbt.Portfolio.from_signals(close, entries, exits, fees=0.005)
+
+# CEX spot
+pf = vbt.Portfolio.from_signals(close, entries, exits, fees=0.001)</code></pre></p>
+<h5>Slippage</h5>
+<p>Low-liquidity tokens can have 1–5% slippage. Always model this:</p>
+<p><pre><code># High-liquidity (SOL, ETH): 0.1–0.5%
+pf = vbt.Portfolio.from_signals(close, entries, exits, slippage=0.003)
+
+# Low-liquidity memecoins: 1–3%
+pf = vbt.Portfolio.from_signals(close, entries, exits, slippage=0.02)</code></pre></p>
+<h5>Short History</h5>
+<p>Many tokens have less than 1 year of data. Be cautious about annualizing metrics from short samples.</p>
+<h4>Common Strategy Patterns</h4>
+<h5>EMA Crossover</h5>
+<p><pre><code>fast = vbt.MA.run(close, 12, short_name=&quot;fast&quot;)
+slow = vbt.MA.run(close, 26, short_name=&quot;slow&quot;)
+entries = fast.ma_crossed_above(slow)
+exits = fast.ma_crossed_below(slow)</code></pre></p>
+<h5>RSI Mean Reversion</h5>
+<p><pre><code>rsi = vbt.RSI.run(close, 14)
+entries = rsi.rsi_crossed_below(30)
+exits = rsi.rsi_crossed_above(70)</code></pre></p>
+<h5>Bollinger Band Breakout</h5>
+<p><pre><code>bb = vbt.BBANDS.run(close, window=20, alpha=2)
+entries = close &gt; bb.upper
+exits = close &lt; bb.lower</code></pre></p>
+<h5>Stop-Loss and Take-Profit</h5>
+<p><pre><code>pf = vbt.Portfolio.from_signals(
+    close, entries, exits,
+    sl_stop=0.05,    # 5% stop-loss
+    tp_stop=0.10,    # 10% take-profit
+)</code></pre></p>
+<h4>Related Skills</h4>
+<ul>
+<li><strong>pandas-ta</strong> — Technical indicator computation (feeds vectorbt signals)</li>
+<li><strong>birdeye-api</strong> — Fetch Solana token OHLCV data for backtesting</li>
+<li><strong>trading-visualization</strong> — Advanced chart generation for backtest results</li>
+<li><strong>portfolio-analytics</strong> — Deeper portfolio-level risk/return analysis</li>
+<li><strong>position-sizing</strong> — Optimal position sizing methodology</li>
+<li><strong>risk-management</strong> — Portfolio-level risk guardrails</li>
+<li><strong>regime-detection</strong> — Market regime awareness for adaptive strategies</li>
+</ul>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/api_guide.md</code> — Complete vectorbt API reference for Portfolio, indicators, plotting, and data loading</li>
+<li><code>references/optimization_guide.md</code> — Grid search, walk-forward validation, overfitting prevention, and optimization best practices</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/backtest_example.py</code> — Three-strategy backtest comparison using synthetic data (EMA crossover, RSI mean reversion, Bollinger breakout)</li>
+<li><code>scripts/parameter_sweep.py</code> — EMA crossover parameter grid search with walk-forward validation</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/vectorbt</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/vectorbt" aria-label="Copy install vectorbt">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/vectorbt</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=vectorbt%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fvectorbt%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fvectorbt%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fvectorbt%2F&t=vectorbt%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fvectorbt%2F&title=vectorbt%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/vectorbt/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/vectorbt/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

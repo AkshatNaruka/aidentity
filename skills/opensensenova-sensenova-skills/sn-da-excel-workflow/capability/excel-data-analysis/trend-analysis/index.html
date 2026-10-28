@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>trend-analysis — engineering AI agent skill — Aidentity</title>
+<meta name="description" content="基于多维度数据进行分级评估与趋势预测，通过设定差异化增长率计算预测值，并生成对比可视化图表，适用于绩效评估、目标设定等场景。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="trend-analysis, engineering, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="trend-analysis — engineering AI agent skill — Aidentity">
+<meta property="og:description" content="基于多维度数据进行分级评估与趋势预测，通过设定差异化增长率计算预测值，并生成对比可视化图表，适用于绩效评估、目标设定等场景。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="trend-analysis — engineering AI agent skill — Aidentity">
+<meta name="twitter:description" content="基于多维度数据进行分级评估与趋势预测，通过设定差异化增长率计算预测值，并生成对比可视化图表，适用于绩效评估、目标设定等场景。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"engineering","item":"https://akshatnaruka.github.io/aidentity/skills/?category=engineering"},{"@type":"ListItem","position":3,"name":"trend-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/"}]},{"@type":"TechArticle","headline":"trend-analysis","description":"基于多维度数据进行分级评估与趋势预测，通过设定差异化增长率计算预测值，并生成对比可视化图表，适用于绩效评估、目标设定等场景。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"engineering, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../../skills/index.html?category=engineering">engineering</a><span>/</span>trend-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>trend-analysis</h1>
+      <p class="summary">基于多维度数据进行分级评估与趋势预测，通过设定差异化增长率计算预测值，并生成对比可视化图表，适用于绩效评估、目标设定等场景。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>Step1 加载数据并配置环境，设置中文字体以确保可视化图表正常显示。</p>
+<p><pre><code>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings(&#39;ignore&#39;)
+
+# 设置中文字体，优先使用 WenQuanYi Zen Hei，备选 SimHei 和 DejaVu Sans
+plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;WenQuanYi Zen Hei&#39;, &#39;SimHei&#39;, &#39;DejaVu Sans&#39;]
+plt.rcParams[&#39;axes.unicode_minus&#39;] = False
+
+# 加载数据文件
+file_path = &#39;your_data.xlsx&#39;
+df = pd.read_excel(file_path)
+
+print(f&quot;数据形状: {df.shape}&quot;)
+df.head()</code></pre></p>
+<p>Step2 基于数据表现划分等级并设定差异化增长率，计算预测结果。</p>
+<p><pre><code># 定义通用列名
+group_col = &#39;分组列名&#39;  # 示例：&#39;部门&#39;、&#39;产品线&#39;
+target_col = &#39;目标数值列名&#39;  # 示例：&#39;销售额&#39;、&#39;产量&#39;
+
+# 计算各维度的总值并排序
+performance_data = df.groupby(group_col, as_index=False)[target_col].sum().sort_values(by=target_col, ascending=False)
+
+# 划分等级（前30%为高，后30%为低，其余为中等）
+n = len(performance_data)
+high_perf_threshold = int(0.3 * n)
+low_perf_threshold = int(0.7 * n)
+
+performance_data[&#39;等级&#39;] = &#39;中等&#39;
+performance_data.loc[:high_perf_threshold-1, &#39;等级&#39;] = &#39;高&#39;
+performance_data.loc[low_perf_threshold:, &#39;等级&#39;] = &#39;低&#39;
+
+# 设定预测增长率映射字典
+growth_rate_map = {
+    &#39;高&#39;: 0.10,   # 10% 增长率
+    &#39;中等&#39;: 0.08, # 8% 增长率
+    &#39;低&#39;: 0.15    # 15% 增长率
+}
+performance_data[&#39;预测增长率&#39;] = performance_data[&#39;等级&#39;].map(growth_rate_map)
+
+# 计算预测值 = 当前值 × (1 + 增长率)，保留两位小数
+performance_data[&#39;预测值&#39;] = (performance_data[target_col] * (1 + performance_data[&#39;预测增长率&#39;])).round(2)
+performance_data[[group_col, target_col, &#39;预测增长率&#39;, &#39;预测值&#39;]].head()</code></pre></p>
+<p>Step3 综合分析预测结果，计算整体趋势指标并生成结论。</p>
+<p><pre><code># 计算整体指标
+current_total = performance_data[target_col].sum()
+forecast_total = performance_data[&#39;预测值&#39;].sum()
+growth_rate_total = (forecast_total - current_total) / current_total if current_total != 0 else 0
+
+print(f&quot;当前总计: {current_total:,.2f}&quot;)
+print(f&quot;预测总计: {forecast_total:,.2f}&quot;)
+print(f&quot;整体增长率: {growth_rate_total:.2%}&quot;)
+
+# 输出趋势结论
+if growth_rate_total &gt; 0.1:
+    conclusion = &quot;整体趋势向好，预计实现显著增长。&quot;
+elif growth_rate_total &gt; 0:
+    conclusion = &quot;整体呈温和增长态势。&quot;
+else:
+    conclusion = &quot;整体面临压力，需重点关注低绩效部分。&quot;
+
+print(f&quot;趋势结论：{conclusion}&quot;)</code></pre></p>
+<p>Step4 可视化展示预测结果，通过横向柱状图对比当前与预测值，并标注等级与数值。</p>
+<p><pre><code># 设置图形大小与高分辨率
+plt.figure(figsize=(12, 8), dpi=100)
+
+# 横向柱状图：当前与预测值对比
+x_pos = np.arange(len(performance_data))
+width = 0.35
+
+plt.barh(x_pos - width/2, performance_data[target_col], width, label=&#39;当前值&#39;, color=&#39;skyblue&#39;, edgecolor=&#39;black&#39;, alpha=0.8)
+plt.barh(x_pos + width/2, performance_data[&#39;预测值&#39;], width, label=&#39;预测值&#39;, color=&#39;lightcoral&#39;, edgecolor=&#39;black&#39;, alpha=0.8)
+
+# 添加数值标签
+for i, (current, forecast) in enumerate(zip(performance_data[target_col], performance_data[&#39;预测值&#39;])):
+    plt.text(current, i - width/2, f&quot; {current:,.0f}&quot;, va=&#39;center&#39;, fontsize=9, color=&#39;black&#39;)
+    plt.text(forecast, i + width/2, f&quot; {forecast:,.0f}&quot;, va=&#39;center&#39;, fontsize=9, color=&#39;black&#39;)
+
+# 添加等级标签到 Y 轴
+for i, level in enumerate(performance_data[&#39;等级&#39;]):
+    plt.text(0, i, f&quot;({level}) &quot;, va=&#39;center&#39;, ha=&#39;right&#39;, fontsize=9, color=&#39;gray&#39;, transform=plt.gca().get_yaxis_transform())
+
+# 设置标题与标签
+plt.xlabel(f&#39;{target_col}&#39;)
+plt.ylabel(f&#39;{group_col}&#39;)
+plt.title(f&#39;各{group_col}当前与预测{target_col}对比&#39;, fontsize=14, fontweight=&#39;bold&#39;)
+plt.yticks(x_pos, performance_data[group_col])
+plt.legend()
+plt.grid(axis=&#39;x&#39;, linestyle=&#39;--&#39;, alpha=0.5)
+
+# 调整布局并显示
+plt.tight_layout()
+plt.show()</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/in-progress/setup-ts-deep-modules/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="setup-ts-deep-modules wire dependency-cruiser into a typescript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. user-invoked. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">setup-ts-deep-modules</span>
+    <span class="r-desc">Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/productivity/to-questionnaire/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="to-questionnaire turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">to-questionnaire</span>
+    <span class="r-desc">Turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis" aria-label="Copy install trend-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>engineering</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=trend-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-analysis%2Ftrend-analysis%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-analysis%2Ftrend-analysis%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-analysis%2Ftrend-analysis%2F&t=trend-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-analysis%2Ftrend-analysis%2F&title=trend-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-analysis/trend-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../../skills/index.html">Browse</a> · <a href="../../../../../../sources/index.html">Sources</a> · <a href="../../../../../../about/index.html">About</a> · <a href="../../../../../../registry.json">registry.json</a> · <a href="../../../../../../llms.txt">llms.txt</a> · <a href="../../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../../assets/app.js" defer></script>
+</body>
+</html>

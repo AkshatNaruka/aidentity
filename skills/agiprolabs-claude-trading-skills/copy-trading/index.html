@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>copy-trading — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="copy-trading, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="copy-trading — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="copy-trading — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"copy-trading","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/"}]},{"@type":"TechArticle","headline":"copy-trading","description":"Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>copy-trading
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>copy-trading</h1>
+      <p class="summary">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Copy Trading</h3>
+<p>Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading. Identify profitable wallets on-chain, evaluate whether their edge is real and replicable, monitor their activity in real time, and execute proportionally-sized trades with independent risk controls.</p>
+<h4>What Copy Trading Means on Solana</h4>
+<p>Copy trading is the practice of monitoring one or more wallets that have demonstrated consistent profitability and replicating their trades in your own wallet. On Solana, every DEX swap is publicly visible on-chain within seconds, making it technically feasible to detect and follow any wallet&#39;s activity.</p>
+<h5>How It Differs from TradFi Copy Trading</h5>
+<table><thead><tr><th>Dimension</th><th>TradFi (eToro, etc.)</th><th>Solana On-Chain</th></tr></thead><tbody>
+<tr><td>Data source</td><td>Platform-reported P&amp;L</td><td>Verifiable on-chain transactions</td></tr>
+<tr><td>Latency</td><td>Minutes to hours</td><td>Seconds (websocket) to sub-second (gRPC)</td></tr>
+<tr><td>Front-running risk</td><td>Low</td><td>High (MEV bots, sandwich attacks)</td></tr>
+<tr><td>Trade cost</td><td>Commissions + spread</td><td>Gas + slippage + priority fees</td></tr>
+<tr><td>Capacity</td><td>High (large-cap equities)</td><td>Low (micro-cap tokens have thin liquidity)</td></tr>
+<tr><td>Signal decay</td><td>Slow</td><td>Fast (PumpFun tokens move in minutes)</td></tr>
+<tr><td>Transparency</td><td>Partial (delayed reporting)</td><td>Full (every transaction is public)</td></tr>
+</tbody></table>
+<p>The core tradeoff: Solana provides perfect transparency but introduces execution risk. The wallet you copy got a price that no longer exists by the time you trade.</p>
+<h4>The Copy-Trade Pipeline</h4>
+<h5>Stage 1 — Discovery</h5>
+<p>Find wallets with strong track records. Sources include:</p>
+<ul>
+<li><strong>SolanaTracker Top Traders</strong>: <code>GET /top-traders/{token}</code> returns the highest-PnL wallets for any token</li>
+<li><strong>Birdeye Trader Rankings</strong>: wallet-level P&amp;L leaderboards by token or globally</li>
+<li><strong>On-chain leaderboards</strong>: community-built dashboards (GMGN, Cielo, Arkham)</li>
+<li><strong>Social signals</strong>: wallets shared on Twitter/X or Telegram alpha groups</li>
+<li><strong>Your own analysis</strong>: run <code>token-holder-analysis</code> on a token that performed well, then profile the top holders</li>
+</ul>
+<p>See <code>references/wallet_discovery.md</code> for detailed source documentation and scoring methodology.</p>
+<h5>Stage 2 — Evaluation</h5>
+<p>Every discovered wallet must pass quantitative evaluation before it enters a copy list. Use the <code>wallet-profiling</code> skill for deep behavioral analysis, then apply copy-trade-specific criteria.</p>
+<p><strong>Minimum thresholds:</strong></p>
+<table><thead><tr><th>Metric</th><th>Minimum</th><th>Why</th></tr></thead><tbody>
+<tr><td>Trade count (30d)</td><td>&gt;= 50</td><td>Statistical significance</td></tr>
+<tr><td>Win rate</td><td>&gt;= 55%</td><td>Edge above random</td></tr>
+<tr><td>Profit factor</td><td>&gt;= 1.5</td><td>Wins meaningfully exceed losses</td></tr>
+<tr><td>Last active</td><td>Within 7 days</td><td>Still trading, not abandoned</td></tr>
+<tr><td>Distinct tokens traded</td><td>&gt;= 10</td><td>Not a one-token wonder</td></tr>
+<tr><td>Max single-trade % of total PnL</td><td>&lt; 40%</td><td>Not reliant on one lucky hit</td></tr>
+<tr><td>Bot probability</td><td>&lt; 30%</td><td>Human-like timing patterns</td></tr>
+</tbody></table>
+<p>Run <code>scripts/evaluate_wallet.py</code> for a comprehensive copy-trade suitability assessment.</p>
+<h5>Stage 3 — Filtering</h5>
+<p>After evaluation, apply additional filters:</p>
+<ul>
+<li><strong>Consistency check</strong>: rolling 7-day win rate should not swing below 40% in any period</li>
+<li><strong>Style compatibility</strong>: understand whether the wallet is a sniper, scalper, or swing trader — your infrastructure must match their speed</li>
+<li><strong>Size compatibility</strong>: if they trade 500 SOL per position and you have 10 SOL total, proportional sizing may be too small to cover fees</li>
+<li><strong>Sybil check</strong>: use the <code>sybil-detection</code> skill to verify the wallet is not part of a wash-trading cluster</li>
+</ul>
+<h5>Stage 4 — Monitoring</h5>
+<p>Once a wallet passes evaluation and filtering, set up real-time monitoring.</p>
+<p><strong>Monitoring approaches (fastest to simplest):</strong></p>
+<ol>
+<li><strong>Yellowstone gRPC</strong>: sub-second latency, streams all transactions for subscribed wallets</li>
+<li><strong>Helius Enhanced WebSocket</strong>: near-real-time with parsed transaction data</li>
+<li><strong>Polling via RPC</strong>: <code>getSignaturesForAddress</code> every 5-10 seconds — simple but slower</li>
+</ol>
+<p>See <code>references/execution_strategy.md</code> for implementation details on each approach.</p>
+<h5>Stage 5 — Execution</h5>
+<p>When a monitored wallet executes a swap:</p>
+<ol>
+<li><strong>Detect</strong> the transaction (via monitoring infrastructure)</li>
+<li><strong>Parse</strong> the trade: token address, direction (buy/sell), size</li>
+<li><strong>Validate</strong> the token: check liquidity, holder distribution, honeypot risk</li>
+<li><strong>Size</strong> the position: proportional to your portfolio, not theirs</li>
+<li><strong>Execute</strong> via Jupiter aggregator with appropriate slippage tolerance</li>
+<li><strong>Record</strong> the copy trade with attribution to the source wallet</li>
+</ol>
+<h5>Stage 6 — Risk Management</h5>
+<p>Copy trades require independent risk controls that do not depend on the copied wallet&#39;s behavior.</p>
+<p>See <code>references/risk_framework.md</code> for the complete framework.</p>
+<p><strong>Key limits:</strong></p>
+<table><thead><tr><th>Control</th><th>Recommended Value</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Max allocation per wallet</td><td>10-20% of portfolio</td><td>Diversification across signal sources</td></tr>
+<tr><td>Max concurrent copy positions</td><td>3-5</td><td>Prevent overexposure</td></tr>
+<tr><td>Per-trade stop loss</td><td>-15% to -25%</td><td>Independent downside protection</td></tr>
+<tr><td>Daily copy-trade loss limit</td><td>-5% of portfolio</td><td>Circuit breaker</td></tr>
+<tr><td>Weekly copy-trade loss limit</td><td>-10% of portfolio</td><td>Longer-term circuit breaker</td></tr>
+</tbody></table>
+<h4>Wallet Scoring for Copy Suitability</h4>
+<p>Composite score from 0-100 based on weighted criteria:</p>
+<p><pre><code>copy_score = (
+    trade_count_score * 0.15 +
+    win_rate_score * 0.20 +
+    profit_factor_score * 0.25 +
+    consistency_score * 0.20 +
+    recency_score * 0.10 +
+    human_probability_score * 0.10
+)</code></pre></p>
+<p><strong>Component calculations:</strong></p>
+<ul>
+<li><strong>Trade count score</strong>: <code>min(trade_count / 200, 1.0) * 100</code> — maxes out at 200 trades</li>
+<li><strong>Win rate score</strong>: <code>max((win_rate - 0.40) / 0.30, 0) * 100</code> — scaled from 40% to 70%</li>
+<li><strong>Profit factor score</strong>: <code>min((pf - 1.0) / 3.0, 1.0) * 100</code> — scaled from 1.0 to 4.0</li>
+<li><strong>Consistency score</strong>: <code>(1.0 - std_dev_of_rolling_win_rate) * 100</code> — lower variance = higher score</li>
+<li><strong>Recency score</strong>: <code>max(1.0 - days_since_last_trade / 14, 0) * 100</code> — decays over 14 days</li>
+<li><strong>Human probability score</strong>: <code>(1.0 - bot_probability) * 100</code></li>
+</ul>
+<p><strong>Interpretation:</strong></p>
+<table><thead><tr><th>Score</th><th>Rating</th><th>Action</th></tr></thead><tbody>
+<tr><td>80-100</td><td>Excellent</td><td>Strong copy-trade candidate</td></tr>
+<tr><td>60-79</td><td>Good</td><td>Suitable with monitoring</td></tr>
+<tr><td>40-59</td><td>Marginal</td><td>Proceed with caution, reduce allocation</td></tr>
+<tr><td>0-39</td><td>Poor</td><td>Do not copy</td></tr>
+</tbody></table>
+<h4>Position Sizing for Copy Trades</h4>
+<p>Three approaches, from simplest to most nuanced:</p>
+<h5>Fixed Amount</h5>
+<p>Use a constant SOL amount per copy trade (e.g., 0.5 SOL). Simple but ignores the wallet&#39;s conviction level.</p>
+<h5>Proportional</h5>
+<p>Match the copied wallet&#39;s allocation as a percentage of their estimated portfolio:</p>
+<p><pre><code>your_size = (their_trade_size / their_estimated_portfolio) * your_portfolio</code></pre></p>
+<p>Requires estimating their total portfolio, which can be imprecise.</p>
+<h5>Confidence-Scaled</h5>
+<p>Base amount multiplied by your confidence in the wallet:</p>
+<p><pre><code>your_size = base_amount * (copy_score / 100) * conviction_multiplier</code></pre></p>
+<p>Where <code>conviction_multiplier</code> is higher for wallets with longer track records.</p>
+<h4>Anti-Patterns to Avoid</h4>
+<h5>Copying Bots</h5>
+<p>Bots have sub-second execution and often use MEV strategies. You cannot match their latency. By the time you detect their trade, the opportunity is gone or you become the exit liquidity. Use the bot probability score to filter these out.</p>
+<h5>Survivorship Bias</h5>
+<p>A wallet with 1000% returns from one PumpFun token is not necessarily skilled. Look for wallets with consistent performance across many tokens, not outlier wins. The max-single-trade-PnL filter catches this.</p>
+<h5>Blind Following</h5>
+<p>Never copy a trade without understanding what the token is. At minimum, run basic safety checks: liquidity depth, holder concentration, contract verification. A 2-second check can prevent buying a honeypot.</p>
+<h5>No Independent Exits</h5>
+<p>The copied wallet may have information you do not have. They may exit for reasons unrelated to the trade. Always maintain your own stop loss. Never rely solely on mirroring their exit.</p>
+<h5>Correlation Risk</h5>
+<p>If you copy 5 wallets and they all buy the same token, you have 5x the intended exposure. Track aggregate position across all copy sources and enforce portfolio-level limits.</p>
+<h5>Ignoring Capacity</h5>
+<p>A wallet profiting on tokens with $50K daily volume cannot be copied at scale. If your trade is 10% of daily volume, you will move the price against yourself.</p>
+<h4>Integration with Other Skills</h4>
+<table><thead><tr><th>Skill</th><th>How It Integrates</th></tr></thead><tbody>
+<tr><td><code>wallet-profiling</code></td><td>Deep behavioral analysis of candidate wallets</td></tr>
+<tr><td><code>sybil-detection</code></td><td>Verify wallet is not part of a wash-trading ring</td></tr>
+<tr><td><code>token-holder-analysis</code></td><td>Safety check tokens before copying a buy</td></tr>
+<tr><td><code>liquidity-analysis</code></td><td>Verify sufficient liquidity to enter/exit</td></tr>
+<tr><td><code>helius-api</code></td><td>WebSocket monitoring and transaction parsing</td></tr>
+<tr><td><code>jupiter-api</code> / <code>jupiter-swap</code></td><td>Trade execution via aggregator</td></tr>
+<tr><td><code>slippage-modeling</code></td><td>Estimate execution cost of the copy trade</td></tr>
+<tr><td><code>position-sizing</code></td><td>Portfolio-aware sizing for copy positions</td></tr>
+<tr><td><code>risk-management</code></td><td>Portfolio-level risk controls</td></tr>
+</tbody></table>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/wallet_discovery.md</code> — Sources and methods for finding copy-trade candidates</li>
+<li><code>references/execution_strategy.md</code> — Monitoring infrastructure and execution approaches</li>
+<li><code>references/risk_framework.md</code> — Portfolio-level risk controls for copy trading</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/evaluate_wallet.py</code> — Comprehensive copy-trade suitability scoring for a wallet</li>
+<li><code>scripts/monitor_wallet.py</code> — Real-time wallet transaction monitoring with trade alerts</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/mev-analysis/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="mev-analysis mev exposure assessment, sandwich attack detection, and protection strategies for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">mev-analysis</span>
+    <span class="r-desc">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/copy-trading</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/copy-trading" aria-label="Copy install copy-trading">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/copy-trading</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=copy-trading%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fcopy-trading%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fcopy-trading%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fcopy-trading%2F&t=copy-trading%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fcopy-trading%2F&title=copy-trading%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/copy-trading/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/copy-trading/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

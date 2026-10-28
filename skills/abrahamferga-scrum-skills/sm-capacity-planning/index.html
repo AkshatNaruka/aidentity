@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sm-capacity-planning — project-management AI agent skill — Aidentity</title>
+<meta name="description" content="Calculates team capacity for the upcoming Sprint by accounting for team size, Sprint length, planned time off, ceremony overhead, and individual focus fact…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="sm-capacity-planning, project-management, planning, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sm-capacity-planning — project-management AI agent skill — Aidentity">
+<meta property="og:description" content="Calculates team capacity for the upcoming Sprint by accounting for team size, Sprint length, planned time off, ceremony overhead, and individual focus fact…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sm-capacity-planning — project-management AI agent skill — Aidentity">
+<meta name="twitter:description" content="Calculates team capacity for the upcoming Sprint by accounting for team size, Sprint length, planned time off, ceremony overhead, and individual focus fact…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"project-management","item":"https://akshatnaruka.github.io/aidentity/skills/?category=project-management"},{"@type":"ListItem","position":3,"name":"sm-capacity-planning","item":"https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/"}]},{"@type":"TechArticle","headline":"sm-capacity-planning","description":"Calculates team capacity for the upcoming Sprint by accounting for team size, Sprint length, planned time off, ceremony overhead, and individual focus factors. Outputs total developer-days available and a recommended story point commitment range. Use when a Scrum Master or team says things like \"plan our capacity\", \"how many points can we commit to\", \"capacity for next sprint\", \"how much can we take on\", or \"account for holidays in the sprint\". Do not use for sprint planning facilitation — use sprint-planning for that. Do not use for velocity analysis — use sm-velocity-review for that.","url":"https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/","dateModified":"2026-10-28","author":{"@type":"Person","name":"abrahamFerga"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"project-management, planning, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=project-management">project-management</a><span>/</span>sm-capacity-planning
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">abrahamFerga/scrum-skills · MIT</p>
+      <h1>sm-capacity-planning</h1>
+      <p class="summary">Calculates team capacity for the upcoming Sprint by accounting for team size, Sprint length, planned time off, ceremony overhead, and individual focus factors. Outputs total developer-days available and a recommended story point commitment range. Use when a Scrum Master or team says things like &quot;plan our capacity&quot;, &quot;how many points can we commit to&quot;, &quot;capacity for next sprint&quot;, &quot;how much can we take on&quot;, or &quot;account for holidays in the sprint&quot;. Do not use for sprint planning facilitation — use sprint-planning for that. Do not use for velocity analysis — use sm-velocity-review for that.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=planning">planning</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Sprint Capacity Planning</h3>
+<h4>Purpose</h4>
+<p>Committing more than the team can actually deliver erodes trust, demoralises Developers, and makes velocity data meaningless. Committing too little wastes Sprint potential and frustrates the Product Owner. This skill does the arithmetic so the team can make an honest commitment.</p>
+<hr>
+<h4>Tool detection</h4>
+<ol>
+<li>Check for active <code>mcp__azure-devops__*</code> tools → <code>$PM_TOOL = ado</code></li>
+<li>Check for active <code>mcp__jira__*</code> tools → <code>$PM_TOOL = jira</code></li>
+<li>If neither → <code>$PM_TOOL = manual</code></li>
+</ol>
+<hr>
+<h4>Step 1 — Get Sprint parameters</h4>
+<p>Collect or detect the following:</p>
+<p><strong>Sprint dates</strong></p>
+<ul>
+<li><strong>ADO:</strong> use <code>work_list_team_iterations</code> or <code>work_list_iterations</code> to find the next iteration and its start/end dates</li>
+<li><strong>Jira:</strong> use the sprint listing tool to find the upcoming sprint</li>
+<li><strong>Manual:</strong> ask <em>&quot;What are the start and end dates for the next Sprint?&quot;</em></li>
+</ul>
+<p>Calculate <code>$WORKING_DAYS</code> — the number of working days between start and end (exclude weekends by default; ask about public holidays in the team&#39;s locale).</p>
+<p><strong>Focus factor</strong></p>
+<p>The percentage of working time a developer realistically spends on sprint work (excluding email, meetings outside Scrum, interruptions). Default: <strong>70%</strong>. Ask if the team has a known different value.</p>
+<hr>
+<h4>Step 2 — Get team members</h4>
+<ul>
+<li><strong>ADO:</strong> use <code>work_get_team_capacity</code> or <code>work_get_iteration_capacities</code> for the upcoming iteration; read each team member and their planned days off</li>
+<li><strong>Jira:</strong> use the team/member listing tool or ask manually</li>
+<li><strong>Manual:</strong> ask <em>&quot;Who is on the team this Sprint? List each person.&quot;</em></li>
+</ul>
+<p>For each team member, ask (or read from the tool):</p>
+<ul>
+<li>Days off during the Sprint (vacation, sick, training, public holidays)</li>
+<li>Reduced availability (part-time, shared with another team, on-call rotation)</li>
+</ul>
+<hr>
+<h4>Step 3 — Calculate capacity</h4>
+<p>For each team member:</p>
+<p><pre><code>Available days = $WORKING_DAYS − days_off − reduced_availability_days
+Focus hours = available_days × hours_per_day × focus_factor
+
+Default: hours_per_day = 8, focus_factor = 0.70</code></pre></p>
+<p><strong>Ceremony overhead</strong> — subtract the time the team spends in Scrum ceremonies:</p>
+<table><thead><tr><th>Ceremony</th><th>Typical duration</th></tr></thead><tbody>
+<tr><td>Sprint Planning</td><td>2–4 hours (scale with Sprint length)</td></tr>
+<tr><td>Daily Scrums</td><td>15 min × working days</td></tr>
+<tr><td>Sprint Review</td><td>1–2 hours</td></tr>
+<tr><td>Retrospective</td><td>1–2 hours</td></tr>
+</tbody></table>
+<p>Subtract ceremony hours from total focus hours to get <strong>net development hours</strong> per person.</p>
+<p><strong>Team total:</strong></p>
+<p><pre><code>Total developer-hours = sum of net development hours across all team members
+Total developer-days  = total developer-hours ÷ hours_per_day</code></pre></p>
+<hr>
+<h4>Step 4 — Derive the story point range</h4>
+<p>Use the team&#39;s recent velocity to convert developer-days into story points.</p>
+<p>Ask: <em>&quot;What is the team&#39;s average velocity over the last 3 Sprints?&quot;</em> (or fetch from <code>sm-velocity-review</code> if available).</p>
+<p><pre><code>Reference velocity = average story points completed per Sprint
+Reference capacity = average developer-days in those Sprints
+
+Points per developer-day = reference_velocity ÷ reference_capacity
+
+Recommended commitment = total_developer_days × points_per_developer_day</code></pre></p>
+<p>Present as a range: <code>recommended × 0.85</code> to <code>recommended × 1.00</code> — the lower end accounts for uncertainty; the upper end is the ceiling.</p>
+<p>If velocity data is not available, skip the point conversion and output developer-days only. Note that the team should track velocity for 2–3 Sprints before committing to point-based planning.</p>
+<hr>
+<h4>Step 5 — Present the capacity summary</h4>
+<p><pre><code>Sprint Capacity — [SPRINT NAME] — [DATE RANGE]
+
+Team: [N] developers
+Working days: [N]
+Focus factor: [X]%
+
+┌─────────────────────┬───────────┬──────────┬──────────────┐
+│ Developer           │ Days off  │ Net days │ Net hours    │
+├─────────────────────┼───────────┼──────────┼──────────────┤
+│ [Name]              │ [N]       │ [N]      │ [N]          │
+│ [Name]              │ [N]       │ [N]      │ [N]          │
+│ [Name]              │ [N]       │ [N]      │ [N]          │
+└─────────────────────┴───────────┴──────────┴──────────────┘
+
+Ceremony overhead: [N] hours
+Total team capacity: [N] developer-days / [N] hours
+
+Recommended commitment: [N–N] story points
+(based on [N]-point average velocity over last [N] Sprints)
+
+⚠ Flags:
+  - [Any individual with &lt; 50% availability — flag for PO awareness]
+  - [Any Sprint significantly shorter than normal due to holidays]</code></pre></p>
+<hr>
+<h4>Step 6 — Offer to save to ADO</h4>
+<p>Ask: <em>&quot;Should I save this capacity plan to ADO for the team&#39;s iteration?&quot;</em></p>
+<p>If yes, use <code>work_update_team_capacity</code> or equivalent to record each team member&#39;s days off and capacity in the iteration. This feeds burn-down charts automatically.</p>
+<hr>
+<h4>Guardrails</h4>
+<ul>
+<li>Never use 100% capacity as the commitment ceiling — humans are not machines and Scrum accounts for uncertainty.</li>
+<li>Never assume every team member works the same hours — ask about part-time, shared, or on-call arrangements.</li>
+<li>If a team member has more than 40% of the Sprint as days off, flag it to the Product Owner — the committed scope may need to shrink.</li>
+<li>Capacity is an input to Sprint Planning, not the Sprint Goal. The team commits to the Sprint Goal; capacity just bounds what is achievable.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>abrahamFerga</strong> in
+        <a href="https://github.com/abrahamFerga/scrum-skills" rel="noopener">abrahamFerga/scrum-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/abrahamferga-scrum-skills/audit-backlog-ado/index.html"
+     data-source="abrahamferga-scrum-skills"
+     data-category="project-management"
+     data-search="audit-backlog-ado audits the azure devops product backlog for hygiene, story quality, and refinement readiness — identifying items that are too large, missing acceptance criteria, stale, unestimated, or out of priority order. use when a scrum master or product owner says things like &quot;audit the backlog&quot;, &quot;is the backlog healthy&quot;, &quot;review the backlog before refinement&quot;, &quot;clean up the backlog&quot;, &quot;check backlog hygiene&quot;, or &quot;prepare the backlog for planning&quot;. do not use for individual story audits — use audit-user-story for that. do not use for sprint planning or velocity review. project-management  abrahamferga/scrum-skills">
+  <span>
+    <span class="r-name">audit-backlog-ado</span>
+    <span class="r-desc">Audits the Azure DevOps product backlog for hygiene, story quality, and refinement readiness — identifying items that are too large, missing acceptance criteria, stale, unestimated, or out of priority order. Use when a Scrum Master or Product Owner says things like &quot;audit the backlog&quot;, &quot;is the backlog healthy&quot;, &quot;review the backlog before refinement&quot;, &quot;clean up the backlog&quot;, &quot;check backlog hygiene&quot;, or &quot;prepare the backlog for planning&quot;. Do not use for individual story audits — use audit-user-story for that. Do not use for sprint planning or velocity review.</span>
+  </span>
+  <span class="r-src">abrahamFerga/scrum-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/abrahamferga-scrum-skills/audit-sprint-ado/index.html"
+     data-source="abrahamferga-scrum-skills"
+     data-category="project-management"
+     data-search="audit-sprint-ado audits a completed or in-progress azure devops sprint against scrum and ado best practices — checks sprint goal presence, work item hygiene, state transitions, field completeness, capacity tracking, and definition of done compliance. surfaces findings with severity levels and offers to post a summary to the ado wiki or add comments to specific work items. use when anyone says things like &quot;audit our sprint in ado&quot;, &quot;review the sprint in azure devops&quot;, &quot;check our ado sprint health&quot;, &quot;are our work items following best practices&quot;, or &quot;sprint health check&quot;. don&#39;t use for jira, sprint planning, daily scrum, or retrospective. requires an azure devops mcp connection. project-management  abrahamferga/scrum-skills">
+  <span>
+    <span class="r-name">audit-sprint-ado</span>
+    <span class="r-desc">Audits a completed or in-progress Azure DevOps sprint against Scrum and ADO best practices — checks Sprint Goal presence, work item hygiene, state transitions, field completeness, capacity tracking, and Definition of Done compliance. Surfaces findings with severity levels and offers to post a summary to the ADO wiki or add comments to specific work items. Use when anyone says things like &quot;audit our sprint in ADO&quot;, &quot;review the sprint in Azure DevOps&quot;, &quot;check our ADO sprint health&quot;, &quot;are our work items following best practices&quot;, or &quot;sprint health check&quot;. Don&#39;t use for Jira, Sprint Planning, Daily Scrum, or Retrospective. Requires an Azure DevOps MCP connection.</span>
+  </span>
+  <span class="r-src">abrahamFerga/scrum-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/abrahamferga-scrum-skills/audit-sprint-jira/index.html"
+     data-source="abrahamferga-scrum-skills"
+     data-category="project-management"
+     data-search="audit-sprint-jira audits a completed or in-progress jira sprint against scrum and jira best practices — checks sprint goal presence, issue hygiene, workflow transitions, field completeness, story point coverage, and sub-task consistency. surfaces findings with severity levels and offers to add comments to specific issues or export a summary report. use when anyone says things like &quot;audit our sprint in jira&quot;, &quot;review the jira sprint&quot;, &quot;check our jira sprint health&quot;, &quot;are our issues following best practices&quot;, or &quot;sprint health check in jira&quot;. don&#39;t use for azure devops — use audit-sprint-ado instead. don&#39;t use for sprint planning, daily scrum, or retrospective. requires a jira mcp connection. project-management  abrahamferga/scrum-skills">
+  <span>
+    <span class="r-name">audit-sprint-jira</span>
+    <span class="r-desc">Audits a completed or in-progress Jira sprint against Scrum and Jira best practices — checks Sprint Goal presence, issue hygiene, workflow transitions, field completeness, story point coverage, and sub-task consistency. Surfaces findings with severity levels and offers to add comments to specific issues or export a summary report. Use when anyone says things like &quot;audit our sprint in Jira&quot;, &quot;review the Jira sprint&quot;, &quot;check our Jira sprint health&quot;, &quot;are our issues following best practices&quot;, or &quot;sprint health check in Jira&quot;. Don&#39;t use for Azure DevOps — use audit-sprint-ado instead. Don&#39;t use for Sprint Planning, Daily Scrum, or Retrospective. Requires a Jira MCP connection.</span>
+  </span>
+  <span class="r-src">abrahamFerga/scrum-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/abrahamferga-scrum-skills/audit-sprint-retrospective-ado/index.html"
+     data-source="abrahamferga-scrum-skills"
+     data-category="project-management"
+     data-search="audit-sprint-retrospective-ado reads an azure devops retrospective — from the ado retrospectives extension board, a wiki page, or retro-tagged work items — and produces a structured summary of what the team said, identifies patterns and recurring themes, audits whether action items are properly tracked as work items with owners, and generates concrete suggestions. use when anyone says things like &quot;summarize our retro&quot;, &quot;audit the retrospective in ado&quot;, &quot;what were the action items from the retro&quot;, &quot;review the team&#39;s retrospective board&quot;, &quot;check our retro follow-up&quot;, or &quot;did we capture everything from the retro&quot;. don&#39;t use for facilitating a retrospective in real time, jira projects, or general scrum questions. project-management  abrahamferga/scrum-skills">
+  <span>
+    <span class="r-name">audit-sprint-retrospective-ado</span>
+    <span class="r-desc">Reads an Azure DevOps retrospective — from the ADO Retrospectives extension board, a wiki page, or retro-tagged work items — and produces a structured summary of what the team said, identifies patterns and recurring themes, audits whether action items are properly tracked as work items with owners, and generates concrete suggestions. Use when anyone says things like &quot;summarize our retro&quot;, &quot;audit the retrospective in ADO&quot;, &quot;what were the action items from the retro&quot;, &quot;review the team&#39;s retrospective board&quot;, &quot;check our retro follow-up&quot;, or &quot;did we capture everything from the retro&quot;. Don&#39;t use for facilitating a retrospective in real time, Jira projects, or general Scrum questions.</span>
+  </span>
+  <span class="r-src">abrahamFerga/scrum-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/abrahamferga-scrum-skills/audit-user-story/index.html"
+     data-source="abrahamferga-scrum-skills"
+     data-category="project-management"
+     data-search="audit-user-story audits an existing user story against scrum best practices — checks invest criteria, story format, acceptance criteria quality, and definition of ready compliance. raises findings with clear severity levels and offers to post the audit as a comment on the work item for the product owner or pm to act on. use when anyone says things like &quot;audit this story&quot;, &quot;review this user story&quot;, &quot;is this story ready&quot;, &quot;check this pbi&quot;, &quot;does this story meet best practices&quot;, or pastes a story and asks for feedback. don&#39;t use for creating new stories, sprint planning, or general scrum questions. works with ado, jira, or a pasted story. project-management  abrahamferga/scrum-skills">
+  <span>
+    <span class="r-name">audit-user-story</span>
+    <span class="r-desc">Audits an existing user story against Scrum best practices — checks INVEST criteria, story format, acceptance criteria quality, and Definition of Ready compliance. Raises findings with clear severity levels and offers to post the audit as a comment on the work item for the Product Owner or PM to act on. Use when anyone says things like &quot;audit this story&quot;, &quot;review this user story&quot;, &quot;is this story ready&quot;, &quot;check this PBI&quot;, &quot;does this story meet best practices&quot;, or pastes a story and asks for feedback. Don&#39;t use for creating new stories, sprint planning, or general Scrum questions. Works with ADO, Jira, or a pasted story.</span>
+  </span>
+  <span class="r-src">abrahamFerga/scrum-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add abrahamferga-scrum-skills/sm-capacity-planning</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add abrahamferga-scrum-skills/sm-capacity-planning" aria-label="Copy install sm-capacity-planning">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/abrahamFerga/scrum-skills" rel="noopener">abrahamFerga/scrum-skills</a></dd></div>
+          <div><dt>Author</dt><dd>abrahamFerga</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>project-management</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">abrahamferga-scrum-skills/sm-capacity-planning</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=sm-capacity-planning%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fabrahamferga-scrum-skills%2Fsm-capacity-planning%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fabrahamferga-scrum-skills%2Fsm-capacity-planning%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fabrahamferga-scrum-skills%2Fsm-capacity-planning%2F&t=sm-capacity-planning%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fabrahamferga-scrum-skills%2Fsm-capacity-planning%2F&title=sm-capacity-planning%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/abrahamferga-scrum-skills/sm-capacity-planning/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/abrahamferga-scrum-skills/sm-capacity-planning/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

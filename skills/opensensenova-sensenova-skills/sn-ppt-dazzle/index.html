@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sn-ppt-dazzle — corporate AI agent skill — Aidentity</title>
+<meta name="description" content="需要把演示 / 幻灯片 / PPT / slides 做成单文件 HTML 动态 deck（动效、跨页过渡、键盘翻页、1280×720）时使用。本 skill 非入口：使用前必须先确认 sn-ppt-entry 与 sn-ppt-story 两个前置 skill 可用，依次执行 entry（建 DECK_DI…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="sn-ppt-dazzle, corporate, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sn-ppt-dazzle — corporate AI agent skill — Aidentity">
+<meta property="og:description" content="需要把演示 / 幻灯片 / PPT / slides 做成单文件 HTML 动态 deck（动效、跨页过渡、键盘翻页、1280×720）时使用。本 skill 非入口：使用前必须先确认 sn-ppt-entry 与 sn-ppt-story 两个前置 skill 可用，依次执行 entry（建 DECK_DI…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sn-ppt-dazzle — corporate AI agent skill — Aidentity">
+<meta name="twitter:description" content="需要把演示 / 幻灯片 / PPT / slides 做成单文件 HTML 动态 deck（动效、跨页过渡、键盘翻页、1280×720）时使用。本 skill 非入口：使用前必须先确认 sn-ppt-entry 与 sn-ppt-story 两个前置 skill 可用，依次执行 entry（建 DECK_DI…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"corporate","item":"https://akshatnaruka.github.io/aidentity/skills/?category=corporate"},{"@type":"ListItem","position":3,"name":"sn-ppt-dazzle","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/"}]},{"@type":"TechArticle","headline":"sn-ppt-dazzle","description":"需要把演示 / 幻灯片 / PPT / slides 做成单文件 HTML 动态 deck（动效、跨页过渡、键盘翻页、1280×720）时使用。本 skill 非入口：使用前必须先确认 sn-ppt-entry 与 sn-ppt-story 两个前置 skill 可用，依次执行 entry（建 DECK_DIR / task_pack.json）→ story（生成 outline.md）完成后才可开始；前置缺失或未完成时停止并回报，严禁绕过（如改用生图+手写 HTML 等方式）。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"corporate, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=corporate">corporate</a><span>/</span>sn-ppt-dazzle
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>sn-ppt-dazzle</h1>
+      <p class="summary">需要把演示 / 幻灯片 / PPT / slides 做成单文件 HTML 动态 deck（动效、跨页过渡、键盘翻页、1280×720）时使用。本 skill 非入口：使用前必须先确认 sn-ppt-entry 与 sn-ppt-story 两个前置 skill 可用，依次执行 entry（建 DECK_DIR / task_pack.json）→ story（生成 outline.md）完成后才可开始；前置缺失或未完成时停止并回报，严禁绕过（如改用生图+手写 HTML 等方式）。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>sn-ppt-dazzle：单 HTML 炫彩演示 deck</h3>
+<p>你要交付的不是一份&quot;幻灯片&quot;，而是一场在浏览器里上演的<strong>动态视觉演出</strong>：持续运行的动态背景、每页的入场编排、页间的过渡特效、键盘可交互——同时排版严谨、内容真实、零控制台报错。</p>
+<h4>0. Entry / Story 输入契约（最高优先级）</h4>
+<p>本 Skill 不是用户请求入口，不直接接收裸 query 或附件创建新任务。只接受</p>
+<p><code>sn-ppt-entry</code> 传入的绝对 <code>DECK_DIR</code>，并且必须已经存在：</p>
+<ul>
+<li><code>&lt;DECK_DIR&gt;/task_pack.json</code>；</li>
+<li><code>&lt;DECK_DIR&gt;/info_pack.json</code>；</li>
+<li><code>&lt;DECK_DIR&gt;/outline.md</code>；</li>
+<li><code>task_pack.choices.output == &quot;dynamic_html&quot;</code>，或旧任务的 <code>ppt_mode == &quot;dazzle&quot;</code>。</li>
+</ul>
+<p>任一条件不满足时停止并返回 <code>sn-ppt-entry</code> 补齐，不自行新建 deck 目录、不从 query 绕过 <code>sn-ppt-story</code>。</p>
+<p>开始和恢复时都 <strong>重新读取<code>read_file</code>磁盘上的当前 <code>outline.md</code></strong>，不得使用<code>sn-ppt-story</code> 的 write_file 返回内容或对话上下文中的 outline；<code>outline.md</code>是 Dazzle 的唯一内容输入并固定：</p>
+<ul>
+<li>最终页数、页序和标题；</li>
+<li>每页核心结论、内容依据、上屏内容边界和前后关系；</li>
+<li>用户明确保留、删除或修改的内容。</li>
+</ul>
+<p>Dazzle 仍按本文后续六阶段决定风格 family、动态背景、版式、素材、动画和实现细节，但不得</p>
+<p>合并、拆分、增删或重排 outline 页面，不得改变标题和核心结论的含义，不得恢复用户删除的</p>
+<p>内容，也不得自行 Research 或补造事实。事实不足时停止相关页面并返回 Entry / Story。</p>
+<p><code>DECK_DIR</code> 只能取 <code>task_pack.deck_dir</code> 的绝对路径，所有任务产物都写入该目录。当前 Skill</p>
+<p>目录只读并记为 <code>SKILL_ROOT</code>；references 和渲染脚本只从 <code>SKILL_ROOT</code> 读取。</p>
+<h4>1. 产物与边界</h4>
+<ul>
+<li>最终产物：<code>&lt;DECK_DIR&gt;/deck.html</code>（如用了生成图则外加 <code>&lt;DECK_DIR&gt;/assets/</code>，图片在 HTML 中仍用相对路径 <code>assets/img_NN.png</code> 引用；没有生成图时 <code>deck.html</code> 就是唯一演示交付物）。</li>
+<li>画布 <strong>1280×720（16:9）</strong>，固定设计画布 + JS 等比缩放适配屏幕（见 §4 契约）。</li>
+<li>CSS / JS 全部内联在 <code>&lt;style&gt;</code> / <code>&lt;script&gt;</code>。允许 CDN：<strong>Three.js r128</strong>、GSAP、ECharts、D3、Google Fonts。<strong>禁止外链图片 URL</strong>（图片只能来自 assets/ 下的本地文件）。</li>
+<li><code>DECK_DIR</code> 内文件：<code>plan.md</code>（你的规划）、<code>deck.html</code>、<code>assets/</code>（可选）、<code>shots/</code>（渲染截图输出）。</li>
+</ul>
+<p>只在现有阶段边界同步 <code>task_pack.json</code>，不改变后续阶段的执行内容：</p>
+<ul>
+<li>进入阶段 1：<code>current_stage=&quot;output.dynamic_html.plan&quot;</code>、<code>status=&quot;generating&quot;</code>；<code>plan.md</code></li>
+</ul>
+<p>  完成后把绝对路径写入 <code>state.artifacts.plan</code>。</p>
+<ul>
+<li>进入阶段 3：<code>current_stage=&quot;output.dynamic_html.build&quot;</code>；阶段 4 每完成并看图确认一页，把</li>
+</ul>
+<p>  页号追加到 <code>state.artifacts.dynamic_pages_completed</code>。</p>
+<ul>
+<li>阶段 6 完成：把 <code>deck.html</code>、<code>shots/</code>、<code>shots/render.json</code> 和可用的</li>
+</ul>
+<p>  <code>shots/contact_sheet.png</code> 的绝对路径分别写入 <code>state.artifacts.deck_html</code>、<code>shots</code>、</p>
+<p>  <code>render_manifest</code>、<code>contact_sheet</code>；把 <code>dynamic_html</code> 加入 <code>completed_stages</code>。全部页面通过时</p>
+<p>  写 <code>current_stage=&quot;complete&quot;</code>、<code>status=&quot;completed&quot;</code>；仍有已如实报告的缺陷时写</p>
+<p>  <code>status=&quot;partial&quot;</code> 和 <code>last_error</code>，保留全部可用产物。</p>
+<h4>2. 工作流（六阶段）</h4>
+<p><strong>必须先渲后看：只读代码不算自检。</strong> 渲染统一用 bash 执行 skill 自带脚本：</p>
+<p><pre><code>python &quot;$SKILL_ROOT/scripts/render_deck.py&quot; &quot;$DECK_DIR/deck.html&quot; &quot;$DECK_DIR/shots/&quot; --page N  # 渲染第 N 页
+python &quot;$SKILL_ROOT/scripts/render_deck.py&quot; &quot;$DECK_DIR/deck.html&quot; &quot;$DECK_DIR/shots/&quot; --all     # 全部页 + contact_sheet.png</code></pre></p>
+<p>成功时 stdout 每行一个 PNG 路径（告警以 <code>[console]/[static]/[blank]/[nav]</code> 前缀打在路径之前）；渲染元数据写 <code>$DECK_DIR/shots/render.json</code>（console_errors / static_pages / blank_pages / 页数 / 导航方式）。截图后用 <code>vision_analyze</code> 查看。</p>
+<h5>阶段 0 —— 读取 outline.md 与定调</h5>
+<p><strong>第一步必须是完整读取<code>read_file</code>当前 <code>outline.md</code>，不得先生成 plan.md 或 deck.html。</strong></p>
+<p><code>task_pack.request.query</code> 只补充场景和用户明确风格偏好，不能覆盖</p>
+<p>outline 的内容决定：</p>
+<ul>
+<li>页数、页序、标题和每页核心结论：严格取自连续的 <code>## 第 N 页</code>，不得再按 8–12 页自行决定。</li>
+<li>语言、受众和场景：优先取 outline；outline 未明确时读取 <code>task_pack.params</code> 和<code>task_pack.request.query</code>，不得改变 outline 内容。</li>
+<li><strong>先判使用场景的庄重度</strong>（§3 场景适配），据此圈定风格候选域与动画密度档。</li>
+<li><strong>风格必须点名</strong>：读取 <code>$SKILL_ROOT/references/style-families.md</code>，选定一个与主题、场景都契合的 family（outline 或 <code>task_pack.request.query</code> 带了风格倾向则在其方向内落到具体 family）。</li>
+<li>读取 <code>$SKILL_ROOT/references/fancy-cookbook.md</code>，为本 deck 挑 2–3 个技法配方（全局背景选一种、入场编排选一种、过渡/彩蛋按需）。</li>
+<li><strong>定一个&quot;招牌视觉&quot;</strong>：每个 deck 要有一处配得上题材的招牌手法。<strong>选最贴本题材的技术——CSS/SVG/Canvas-2D/shader/代码 3D 平权，有创意、有题材绑定就是满分 fancy</strong>（纯 CSS 几何、Canvas-2D 概念可视化也能很惊艳）。<strong>fancy ≠ 3D</strong>，评判看&quot;有想法 vs 平庸套路&quot;，不是用没用 3D。<strong>分清 3D/shader 的两种用法</strong>：① <strong>灵动背景层</strong>（shader 流场 / 节点球 / Fresnel 辉光球 / 粒子流 / 3D 氛围层）——背景默认就该&quot;活&quot;（持续微动），这类背景层<strong>对任何题材都可用、科技抽象数据网络类尤其加分，不算&quot;硬套 3D&quot;</strong>，鼓励上；② <strong>沉浸漫游场景</strong>（把整套 deck 架在可巡游的 3D 世界 + 翻页相机运镜）——这个才只给有空间主体的题材（建筑、天体、地形地貌等；分子晶体、实体产品三维也算）。<strong>别为&quot;避免 3D&quot;把背景做成静态死平面。两种坍缩都要防</strong>：别不分题材默认&quot;canvas 粒子背景+编辑排版&quot;，也别默认&quot;沉浸漫游+翻页相机翻转&quot;——都是套路。</li>
+</ul>
+<h5>阶段 1 —— 写 plan.md</h5>
+<p><strong>第二步必须是写plan.md，不得先生成 deck.html。</strong></p>
+<p>一次 write_file 写出完整规划，包含：</p>
+<ol>
+<li><strong>场景判断</strong>：本 deck 用于什么场景、庄重度档位（庄重/自由/题材）、动画密度档位、为何选这个 family——把适配理由写明白。</li>
+<li><strong>设计系统</strong>：family 名；精确 palette（<code>--bg / --ink / --accent / --accent-2</code> 的 hex）；display + body 字体（含中文字体兜底）；全局背景层方案（<strong>CSS/Canvas-2D 程序化纹理 / 粒子流场 / shader 噪声 / 代码搭 3D 场景 / 每页多场景，按招牌视觉选一</strong>——别条件反射默认某一种）；通用过渡方案。</li>
+</ol>
+<p>2b. <strong>招牌视觉（必填一行）</strong>：本 deck 的招牌手法 + 为何契合题材/场景；选了 3D/沉浸/shader 要写明用什么搭。<strong>定了就必须真做出来</strong>（见 §5 招牌兑现）。</p>
+<ol>
+<li><strong>页序表</strong>：<strong>与 <code>outline.md</code> 的页面逐页一一对应</strong>，每页一行 <code>NN | 页型 | 一句话内容 | 本页 fancy 手法 | 版面骨架</code>；NN、顺序、一句话结论必须服从 outline。页型从：封面 / 议程 / 观点 / 数据 / 对比 / 流程 / 案例 / 架构 / 时间线 / 总结 中选，相邻页不重复同一页型；fancy 手法不要超过 2 页雷同。<strong>「版面骨架」一栏先想清楚这页怎么分区、主视觉摆哪、余量留给谁</strong>（如&quot;左叙事右大图 / 居中单 hero / 四等卡一行 / 满屏场景 / 上标题下两栏对比&quot;）——分几区不限，但要让留白是有意的构图、不是排完剩下的边角料（见 §7 布局与留白）；并列项预想好怎么等高对齐。布局在 plan 里想透，初稿就少返工。</li>
+<li><strong>素材清单</strong>（如需）：逐页判断&quot;摄影刚需&quot;（§6），需要的写出生图 prompt 草稿与用途。<strong>同组并列对象（N 枚卡片 / 一排同类）整组决策</strong>：把 N 个成员列全，整组选&quot;全真实图&quot;或&quot;全代码绘制&quot;——选真图就 N 个各列一行，绝不能页序表写 4 枚卡片、清单只列 2 张（见 §6）。</li>
+</ol>
+<p>规划自检：页数、页序、标题、核心结论和依据是否逐页对应当前 outline？palette 是不是精确 hex？有没有滑回暖米黄/奶油底？页型有变化吗？内容是否只使用 outline 已支持的真实主体与真实数据、没有占位词或新增事实？</p>
+<h5>阶段 2 —— 生成素材（仅当确需真实图片）</h5>
+<p>按 §6 的纪律生图：生成 → <code>vision_analyze</code> 核对（内容对不对 / 色调搭不搭 / 有无文字水印）→ 不合格改 prompt 重生，<strong>绝不硬用</strong>；确切路径记入 plan.md。没有摄影刚需的 deck 跳过本阶段（多数 deck 应该跳过）。</p>
+<h5>阶段 3 —— 写全局骨架 shell（只写骨架，不写页面内容）</h5>
+<p>一次 write_file 写出<strong>完整可运行但页面为空</strong>的 <code>$DECK_DIR/deck.html</code> 骨架（结构契约见 §4）：</p>
+<ul>
+<li>head（Google Fonts / CDN）→ <code>:root</code> design tokens → 全部基础 CSS（.deck/.slide/.active/导航 UI/通用 keyframes 库/通用过渡）→ <code>#bg-layer</code> 全局动态背景（<strong>完整实现并运行</strong>，不是占位）→ N 个空 <code>&lt;section class=&quot;slide&quot;&gt;</code>（仅含 <code>&lt;!-- SLIDE NN: 页型 + 一句话 --&gt;</code> 注释，<strong>不写任何真实内容</strong>；封面页可先放最小标题文字保证 smoke 有内容可看，其余页一律保持空）→ 导航控制器 JS → 页码 + 进度条。</li>
+</ul>
+<p><strong>硬性纪律：骨架这一次 write_file 里，除封面外的 section 必须是空的（只有注释）。不要在骨架阶段就把多页内容一次性写满</strong>——那会让一整批未经单页验证的页面同时落地，错误跨页累积、后面更难收拾，也丢掉了逐页&quot;渲染即验证&quot;的全部价值。</p>
+<p>然后 smoke 验证：<code>render --page 1</code> + 看图——封面可见、页码/进度条在、背景层在动（看 stdout 的 [static] 与 [console]）、零报错。骨架不过关先修骨架，再进入逐页填充。</p>
+<h5>阶段 4 —— 逐页填充（一页一个循环，不要跳步）</h5>
+<p>按页序<strong>一页一页</strong>来，每页走完一个完整的&quot;填充→渲染→看图&quot;小循环再进入下一页：</p>
+<ol>
+<li><code>edit</code> 把<strong>该一页</strong>的空 section 替换为完整内容（页内样式可放 section 内 <code>&lt;style&gt;</code> 或按 <code>#sNN</code> 前缀写进全局 style；页内 JS 一律注册到 <code>window.slideInits[N]</code>，见 §4）。<strong>一次 edit 只填一页</strong>，不要一次 edit 灌进多页内容。</li>
+<li><code>render --page N</code> → <code>vision_analyze</code> 该页截图，按 §5 清单自检。<strong>先渲后看是硬要求</strong>——不渲染就接着填下一页是不允许的。</li>
+<li>有硬伤 → 最小修改 → 重渲重看，<strong>每页最多 3 轮</strong>。通过的页不再回看，进入下一页。</li>
+</ol>
+<p>为什么坚持逐页：每页在落地的当下就被单独看过、确认无溢出/遮挡/报错，问题在最便宜的时候被发现和修掉；这也是这条技能要教给模型的核心节奏——增量构建 + 即时验证，而非一次写完赌它对。</p>
+<h5>阶段 5 —— 全局复审</h5>
+<p><code>render --all</code> → 先看 <strong>contact_sheet.png</strong> 一图扫全局：风格有无漂移、相邻页有无雷同、页码连续性、背景全套统一；再核对 render.json：<strong>console_errors 必须为空</strong>；static_pages 逐页核对是否&quot;静得有理由&quot;（§5）。发现问题：单页问题 edit 该 section、只看该页大图；<strong>跨页/系统性问题才改 <code>:root</code> token 或共享骨架——但 token / 共享 CSS 会波及所有页（含逐页阶段早已通过、不再回看的前面页），改完必须 <code>render --all</code> 复扫全部页确认没把别的页带歪，绝不能只看原问题页。</strong> 全局性的版面 token 调整最适合在这一步做（这里本就 render --all）。行有余力，此时可给关键页加页面级专属过渡/彩蛋增强。</p>
+<h5>阶段 6 —— 收尾</h5>
+<p>收尾前必须已做过阶段⑤全局复审（<code>render --all</code> + 看 contact_sheet），且<strong>最后一次 edit 之后必须再渲染验证过</strong>——没验证就收尾不允许。然后一段简短文字总结：页数、风格 family、最得意的 1–2 个 fancy 点、<strong>如实报告遗留问题</strong>（还有哪页有什么没修掉）。<strong>谎报&quot;全部通过&quot;而实际有硬伤 = 整条产出作废。</strong> 禁止&quot;谢谢聆听/感谢观看&quot;式收尾页套话。</p>
+<h4>3. 场景适配：fancy 的边界</h4>
+<p><strong>fancy 是执行质量与视觉冲击的拉满，不是风格的出格。</strong> 给毕业答辩配赛博朋克霓虹，和给发布会配灰白模板，是同一种失败。阶段 0 先把场景庄重度判清楚：</p>
+<table><thead><tr><th>档位</th><th>典型场景</th><th>风格候选域</th><th>动画密度</th></tr></thead><tbody>
+<tr><td><strong>庄重档</strong></td><td>学术答辩、政企汇报、医疗/金融/法务报告</td><td>深色商务、编辑杂志、数据仪表盘等沉稳系（<strong>禁瑞士极简/国际主义排版</strong>）</td><td><strong>演示级</strong>：克制深邃的背景微动效 + 精致入场编排 + 数据动画（count-up / draw-in），页面落定后静帧为常态；禁霓虹故障、粒子轰炸、强干扰特效</td></tr>
+<tr><td><strong>自由档</strong></td><td>产品发布会、创意提案、科技分享、个人作品</td><td>dazzle 簇放开：赛博、沉浸 3D、极繁、孟菲斯……</td><td><strong>秀场级</strong>：跨页过渡特效、粒子 / 3D / shader、戏剧化编排放手做</td></tr>
+<tr><td><strong>题材档</strong></td><td>文旅、儿童教育、文化艺术、美食</td><td>跟着题材气质走（文化→东方美学、儿童→明快插画……）</td><td>介于两档之间，动效形式贴合题材隐喻</td></tr>
+</tbody></table>
+<ul>
+<li>庄重档发力点：排印张力、数据可视化做满（真实数据 + 动画入场）、深邃背景层次（缓慢渐变流动、低调几何微动、克制 shader 噪声）、过渡干净利落。<strong>克制 ≠ 低野心</strong>——同样要有招牌记忆点，用精致而非喧闹实现；绝不上霓虹/故障/赛博/3D 奇观。</li>
+<li><strong>题材档按题材选技术</strong>：<strong>有空间主体的题材</strong>（建筑、天体、地形地貌等）可把空间用代码搭成 <strong>3D 漫游场景</strong>&quot;演出来&quot;（如紫禁城漫游级）；<strong>其余题材</strong>别硬套 3D 漫游场景——但<strong>灵动的 3D/shader 背景层（shader 流场 / 节点球 / 粒子流等）该用就用</strong>，前景按题材选最贴的 CSS/SVG/Canvas-2D 表达；背景别做成静态死平面。</li>
+<li>plan.md 必须写明档位与理由；优先使用 outline 中的场景，未明确时再用 <code>task_pack.request.query</code> 里的场景词（&quot;答辩&quot;&quot;路演&quot;&quot;组会&quot;）判断。</li>
+</ul>
+<h4>4. deck 架构契约（骨架必须满足）</h4>
+<p><pre><code>&lt;body&gt;
+  &lt;div id=&quot;bg-layer&quot;&gt;&lt;/div&gt;            ← 全局动态背景层（canvas/Three.js/CSS 动画）
+  &lt;div class=&quot;stage&quot;&gt;                  ← 居中容器，position:fixed; inset:0; flex 居中
+    &lt;div class=&quot;deck&quot; id=&quot;deck&quot;&gt;       ← 固定 1280×720 设计画布，overflow:hidden
+      &lt;section class=&quot;slide active&quot; data-slide=&quot;1&quot;&gt;…&lt;/section&gt;
+      &lt;section class=&quot;slide&quot; data-slide=&quot;2&quot;&gt;…&lt;/section&gt;
+      …
+      &lt;div class=&quot;hud&quot;&gt;页码 + 进度条&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre></p>
+<ol>
+<li><strong>design tokens</strong>：所有颜色 / 字体 / 间距 / 字号阶梯在 <code>:root</code> 定义，全文只用 <code>var()</code> 引用，不写散落的裸 hex / 裸数值。</li>
+</ol>
+<ul>
+<li>颜色字体：<code>--bg/--ink/--accent/--accent-2/--font-display/--font-body</code>。</li>
+<li><strong>版面 token（骨架期就定、全页共享 → 改一处全页生效，这是&quot;改根因、不逐页打地鼠&quot;的地基）</strong>：安全边距 <code>--safe-x/--safe-y</code>（如 64/56px，内容不越此边距，HUD/页码可贴边）；成体系的间距档 <code>--gap-s/-m/-l</code>（如 12/24/48，元素间留白只从这组取，别随手写散值，留白才有节奏）；最小可读字号 <code>--fs-min</code>（约 20–22px，正文/标注永不缩到它以下来塞内容——宁可拆页/删内容）。巨字用 <code>clamp(min, Nvw, max)</code> 兼顾戏剧性与上界、防出界。<strong>这些版面 token 在骨架期就要定准并保持稳定</strong>，逐页填充都在其约束内工作；中途若必须改 token，它会牵连所有页（含前面已过的页），须按 §5 修复纪律全局重验。</li>
+</ul>
+<ol>
+<li><strong>固定画布 + 等比缩放</strong>（根治溢出/裁切/比例失真）：<code>.deck{position:relative;width:1280px;height:720px;overflow:hidden}</code>，内容一律按 1280×720 用 px 布局与定字号；JS <code>fitDeck()</code> 按 <code>Math.min(innerWidth/1280, innerHeight/720)</code> 缩放 deck，监听 resize。<strong>绝不混用单位</strong>（最忌 deck 按 vh 定尺寸、字号按 vw 定——letterbox 屏下字体撑爆画布）。</li>
+<li><strong>一次只显示一页</strong>：<code>.slide{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none}</code>，<code>.slide.active</code> 三项全开。<strong>非当前页必须彻底不可见</strong>（只切 opacity 不切 visibility 会互相透叠）；任一时刻有且仅有一页 active；给单页加自定义样式时<strong>绝不要改 position</strong>（脱离堆叠会把该页压成 0 高、canvas 黑屏）。</li>
+<li><strong>导航控制器</strong>（骨架期写完整）：</li>
+</ol>
+<ul>
+<li>键盘 ArrowRight/Left、Space、PageDown/Up 翻页；<code>window.addEventListener(&#39;load&#39;, () =&gt; window.focus())</code> 抢焦点（iframe 内键盘可用的前提）。</li>
+<li>翻页时把 <code>.active</code> 切到目标页（渲染脚本靠 <code>.active</code> 类识别当前页，这是硬契约）、更新页码与进度条、对目标页调用 <code>window.slideInits[N]</code>（见第 6 条）、派发 <code>slidechange</code> 事件。</li>
+<li><strong>必须支持 URL 参数直跳</strong>：<code>new URLSearchParams(location.search).get(&#39;slide&#39;)</code> → 初始化时直接跳到第 N 页（1-based）。渲染脚本靠它做单页 O(1) 渲染，缺失会显著拖慢自检并在 stderr 告警。</li>
+</ul>
+<ol>
+<li><strong>全局背景层</strong>：<code>#bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}</code>，deck 容器 <code>z-index:1</code>。背景动画<strong>骨架期完整实现</strong>；复审期只准调参（颜色/密度/速度），不要重写。事件监听挂 <code>window</code>（背景层不可交互），尺寸用 <code>window.innerWidth/Height</code> + resize 监听。</li>
+</ol>
+<p>5b. <strong>背景-前景易读性（全屏 3D / 重动态背景必守）</strong>：<strong>别靠全局压暗背景救正文</strong>——会同时杀死封面/章节页的 3D。改用：</p>
+<ul>
+<li><strong>按页型分级</strong>：封面/章节页放开背景；内容/数据页让背景局部退让——降该页粒子/高光（微尘 <code>opacity→~.25</code>、减弱 glow），相机别把 3D 主体摆在前景图解同象限。</li>
+<li><strong>前景图解自带底板</strong>（页内有 SVG 图解 / canvas / 密集小字 / 数据表）：首选<strong>软边径向 scrim</strong>——<code>radial-gradient(70% 70% at 50% 50%, rgba(&lt;bg&gt;,.85), rgba(&lt;bg&gt;,.55) 60%, transparent)</code>（用 <code>--bg</code> 同色），中心托住、边缘渐隐、3D 仍从四周透出、不切硬框；密集页用<strong>卡片 + <code>backdrop-filter:blur(6px)</code></strong>。<strong>绝不裸 <code>&lt;svg&gt;&lt;g stroke&gt;</code> 直接挂 <code>.slide</code></strong>（背景会从笔画缝隙透上来吞掉正文；详见 fancy-cookbook「背景-前景分离 scrim」）。</li>
+<li>描线 <code>stroke-opacity ≥ .5</code>、线宽 ≥ 1.2px；淡色文字/细线只在已有 scrim 处用。</li>
+</ul>
+<ol>
+<li><strong>per-slide JS 惰性注册</strong>：页内脚本一律写成 <code>window.slideInits = window.slideInits || {}; slideInits[N] = () =&gt; {…}</code>，由导航控制器在该页激活时调用（已初始化的做幂等保护）。<strong>禁止顶层立即执行的代码去摸其他页（或尚未填充的空 section）的 DOM</strong>——这是空骨架阶段渲染不报错、逐页填充互不踩踏的关键。</li>
+</ol>
+<ul>
+<li><strong>骨架的 <code>&lt;head&gt;</code> 顶部（任何页内 <code>&lt;script&gt;</code> 之前）必须预置一行 <code>window.slideInits = window.slideInits || {};</code></strong>——保证任何页内脚本执行时它必已存在，根治&quot;页内 script 早于主控制器执行 → <code>Cannot set properties of undefined</code>&quot;的时序坑；且 <code>goto()</code>/<code>?slide=N</code> 直跳要在所有 <code>slideInits[N]</code> 注册之后才调用。</li>
+</ul>
+<ol>
+<li><strong>入场动画契约</strong>（动画与截图自检不再矛盾的官方解法）：每页入场编排总时长 <strong>≤2s</strong>，全部入场动画必须 <code>animation-fill-mode: forwards</code>（或 both），<strong>最终态 = 完整内容</strong>（渲染脚本在 ~2.6s 截图，截到的就是最终态）。持续型动画（背景粒子、呼吸光效、HUD 滚动）不受 2s 限制。禁止停在 boot/loading/打字机未完成态。</li>
+<li><strong>通用过渡</strong>归导航控制器、骨架期写好：class 驱动（<code>.slide.leaving</code> / <code>.slide.active</code> + transition/keyframes），默认给一套有戏剧性的编排（位移 + 透明度 + 模糊/裁切的组合，配 cubic-bezier 缓动）。页面级专属过渡（粒子重构、shader wipe 等）是复审期的可选增强。</li>
+<li><strong>性能预算</strong>：动画只动 transform / opacity / filter（不动 layout 属性）；canvas 粒子总数与 Three.js draw call 克制（见 §8 粒子参数表）；持续动画用 requestAnimationFrame 且页面不可见时无须暂停（渲染检查依赖动态可见）。</li>
+</ol>
+<h4>5. 渲染自检清单</h4>
+<p>每页 <code>render --page N</code> + <code>vision_analyze</code> 后对照：</p>
+<p><strong>必修——每页都要做到位，口径是&quot;配得上 fancy 第一目标&quot;，不是&quot;过线就收手&quot;。下面 1–12 是&quot;读不了 / 看不懂&quot;类硬问题，最先清零：</strong></p>
+<ol>
+<li>溢出 / 裁切——内容越过 1280×720 画布或容器边；巨字被裁半截；固定小盒文字撑破。<code>overflow:hidden</code> 会<strong>静默裁切不露白边</strong>——别以为没出血就没事，主动核对页脚/页码/正文首末行/图表轴标签有没有被切掉。</li>
+<li>遮挡压盖——装饰元素 / 大数字 / 浮层压住正文；<strong>SVG/Canvas 内部装饰线、光晕、连线画在文字之上</strong>（绘制顺序问题：文字要最后画、或给文字加描边/底板托住，见 §7 第 6 条）；负字距导致字形粘连（中文大标题尤其）。</li>
+<li>占位残留 / 空壳——空图表容器、KPI 全 0、只有表头没有数据行、坐标轴没曲线。</li>
+<li>破图破表——img / canvas / Three.js / ECharts 没真正渲出来（黑块、空白区）。</li>
+<li>中文豆腐块——字体没加载（中文必须 Google Fonts 引入并放进所有显示中文的 font-family 链）。</li>
+<li>对比不足——文字在其背景<strong>或所压的插画 / 线条 / 渐变</strong>上看不清；深色风格同样要保证可读。</li>
+<li>配色出界——palette 之外的颜色乱入（ECharts 默认色、生成图跑色未调和）。</li>
+<li><strong>console error ≠ 0</strong>——看 stdout 的 <code>[console]</code> 行与 render.json；JS 报错常意味着后续动画/翻页全挂。</li>
+<li>入场动画未到最终态——截图里文字半透明 / 位移中途（说明动画 &gt;2s 或缺 fill-mode: forwards）。</li>
+<li><strong>网格底纹背景</strong>——出现方格纸 / 蓝图网格 / 透视网格地面（地平线网格）/ 规则点阵 / Three.js GridHelper 作为背景，<strong>一律算硬伤要删掉</strong>（见 §7 第 10 条）。</li>
+<li><strong>前景裸压动态背景</strong>——含 SVG 图解 / 密集标注小字 / 数据表的内容页，前景没有 scrim 软底板或 <code>backdrop-filter</code> 卡片、直接浮在 3D / 粒子背景上导致正文或图解看不清，<strong>算硬伤</strong>。修法见 §4 第 5b 条：给前景加软边径向 scrim 或卡片底板 + 降该页背景密度，<strong>不要全局压暗背景</strong>。</li>
+<li><strong>同组图源混用</strong>——一组并列同类对象（一组美食 / 物产 / 展品 / 人物…）里部分用真实生成图、部分用 SVG 代码绘制，图文风格断裂，<strong>算硬伤</strong>（见 §6：整组统一，缺图补生或整组改代码）。</li>
+</ol>
+<p><strong>招牌兑现（硬纪律）</strong>：plan.md 第 2b 条定的招牌视觉必须在 deck 里<strong>真正实现</strong>。<strong>严禁把它降级充数</strong>——定了&quot;代码 3D 场景 / immersive_3d / 沉浸&quot;，deck 就必须真有 Three.js 3D 场景（几何体 + 光照 + 相机运动），用 2D canvas 粒子假装&quot;沉浸感&quot;是不合格的；要么把它补成真 3D，要么诚实地把 plan 改成你真做出来的模式（不要谎报）。<strong>用 3D 当招牌时，自检必须看&quot;3D 主体本身能不能认出是什么&quot;</strong>（不是只看 2D 覆盖层）——暗底 + fog 容易把 3D 主体糊成黑块、内容全靠 2D 层硬扛，那是招牌名存实亡；糊了就加轮廓光/提亮/减 fog/换机位。</p>
+<p><strong>[static] 是信号不是硬伤</strong>：stdout 出现 <code>[static] page N</code> 表示该页在采样窗口内无可见动态。自问：这是<strong>有意识的设计</strong>（庄重档的数据密集页、节奏上的安静页），还是偷懒？静得有理由 → 忽略并继续；说不出理由 → 按本页的密度档位补恰当的动态（背景微动 / 数据动画），<strong>不是无脑堆粒子</strong>。</p>
+<p><strong>版面卫生（同样必修，别当&quot;软伤&quot;跳过）</strong>：留白、对齐、层级、字距和上面的出界/遮挡一样要修到位——</p>
+<ul>
+<li><strong>留白失衡</strong>：余量渗漏成单边 / 单角的意外死白（说不出理由的空白就是 bug）；内容钉在顶上、底部塌空；并列栏 / 卡片不等高造出锯齿白。按 §7「布局与留白」修：余量要么摊匀、要么有意聚拢，并列项对齐到共同基线 / 等高。</li>
+<li><strong>对齐错位</strong>：同页元素没对齐到共同网格 / 基线；混用居中与左对齐。</li>
+<li><strong>层级混乱</strong>：视觉重量没主次，该跳出来的没跳出来。</li>
+<li><strong>字距</strong>：中文大标题负字距粘连，或全大写小标签该放宽没放宽。</li>
+</ul>
+<p><strong>只有纯主观的边际优化（某处呼吸再大一点更舒服、某个缓动再顺一点）才是&quot;有余量再打磨&quot;。</strong> 把版面卫生当软伤一跳，正是 deck 显得&quot;AI 糙&quot;的主因——它和读不读得清同等重要。</p>
+<p><strong>deck 级自评（全局复审时）</strong>：</p>
+<ul>
+<li><strong>招牌视觉野心</strong>：招牌是否配得上题材、是否平庸套路？<strong>两种套路都算不合格</strong>：无脑&quot;粒子背景+编辑排版&quot;，或不分题材硬套&quot;沉浸漫游+相机翻转&quot;。2D/CSS 有创意=满分；关键是技术选得贴题。<strong>再查背景是不是&quot;活&quot;的</strong>——退化成纯静态渐变就是丢分（除非前景自带持续动态，如极繁拼贴）；灵动的 3D/shader 背景层适用于任何题材、别因&quot;非空间&quot;就不敢上。</li>
+<li>整套至少有 <strong>2–3 个高光记忆页</strong>（戏剧性的封面、惊艳的数据页、出人意料的过渡……）；允许安静页存在制造节奏——<strong>页页高潮 = 没有高潮</strong>；风格 / 配色 / 字体全套一致不漂移。</li>
+</ul>
+<p><strong>修复纪律</strong>：每页最多 3 轮 edit→render→看图，每轮只做能消除问题的最小修改；<strong>禁止用&quot;删掉动画 / 背景 / 特效&quot;换取过检</strong>——修复是修 bug 不是降级，确需移除某特效必须在收尾总结里说明理由；3 轮后仍有残留就保留最好一版并如实记录。<strong>同一毛病多页复发（留白 / 对齐 / 字距 / 间距系统性偏），改 <code>:root</code> token 或共享骨架这个根因，别逐页 edit 打地鼠</strong>——既改得准、又省返工与上下文。<strong>但务必记住共享 token / CSS 的爆炸半径是全局的，会改动所有页（含前面早已通过、不再回看的页）</strong>：阶段4 逐页填充时优先用 <code>#sNN</code> 页内覆盖做<strong>局部</strong>修复，不要因为某一页就动共享 token；确属系统性、非动 token 不可时，<strong>改完必须 <code>render --all</code> 复验之前通过的页有没有被带歪</strong>（别只看当前页就放行）——这类全局改最好攒到阶段5全局复审一并做（那里本就 render --all）。最稳的做法是阶段3 骨架期把版面 token 定准，让逐页填充都在固定约束内工作、根本不需要中途改它。</p>
+<h4>6. 配图与生图（image_generate 可用时）</h4>
+<p><strong>默认代码绘制。</strong> 图表 / 数据可视化 / 抽象概念 / 几何装饰 / 图标 / UI 元素<strong>严禁生图</strong>——这些用 SVG / Canvas / CSS 画，这是本 skill 的看家本领。生图用于<strong>需要真实图片的场景</strong>：真实实物、自然风光、食物等等。<strong>名家艺术画作、真实人物肖像尤其必须生图，严禁用 SVG/CSS 代码模仿</strong>——代码硬画写实人脸 / 名画必然失真崩坏。要不要用、用几张，由内容的写实刚需自行判断（不刻意凑数，也不为省事回避）；确需的图在阶段 2 一次性生成。</p>
+<ul>
+<li><strong>prompt 模板</strong>（每张都要带上 palette 与质感词，锁住色系）：</li>
+</ul>
+<p><code>&quot;&lt;主体描述&gt;, &lt;构图/视角&gt;, &lt;palette 色名词&gt; palette, low saturation, editorial photography, &lt;光线/情绪词&gt;, no text, no watermark&quot;</code></p>
+<p>其中 palette 色名词来自 plan.md 配色（如 &quot;deep navy and muted gold&quot;）；同一 deck 的所有图复用同一组色彩短语。宽高比按用途选（全页背景 16:9，半幅配图 4:3 / 3:4）。</p>
+<ul>
+<li><strong>生成后必核对</strong>：<code>vision_analyze</code> 看内容是否对、色调是否贴 palette、有无文字/水印/多余人物；跑色就改 prompt 重生，救不回再用 CSS 压色罩（duotone / 半透明主色叠层）。</li>
+<li><strong>嵌入时二次调和</strong>：<code>filter: saturate(.85) contrast(1.05)</code> 微调 + 用 <code>--bg</code> 的 rgba 做渐变蒙版（文字侧深、画面侧浅）+ 暗角，把图收进 deck 色域；文字区必须保证可读。</li>
+<li><strong>鼓励 fancy 化用法</strong>：生成图不只是 <code>&lt;img&gt;</code> 平铺——clip-path 异形裁切、mask-image 做 reveal 入场（遵守 ≤2s + forwards）、mix-blend-mode 与背景层融合、作为 Three.js 纹理。让真实图片也成为视觉特效的一部分。</li>
+<li><strong>同组并列对象图源必须整组一致（硬规则）</strong>：同页里网格 / 卡片墙 / 一排同类的对等同类项（一组美食 / 物产 / 展品 / 人物 / logo / 产品…），<strong>要么全真实图、要么全代码绘制，禁止同组混用</strong>。决定生图就为该组每个成员都生；做不到全员就整组退回代码——不许&quot;有图用 <code>&lt;img&gt;</code>、缺图用 <code>&lt;svg&gt;</code> 顶&quot;（组内图文割裂比整组代码更伤）。渲染该组前先确认成员图片都已就位，缺谁补生谁或整组改代码。<strong>自检</strong>：每组 N 个成员，要么 N 张真图全到、要么 0 张全代码；页序表&quot;N 枚卡片&quot;= 素材清单该组图片行数。</li>
+</ul>
+<p>（若工具列表里没有 image_generate，跳过本节，一切视觉均代码绘制。）</p>
+<h4>7. 美学底线（反 AI slop）与绚哲学</h4>
+<p>每一份 deck 都必须有性格、有立场，绝不能是套路化的 AI 设计：</p>
+<ol>
+<li><strong>字体</strong>：禁止默认 Inter / Roboto / Arial / Open Sans / Lato / Space Grotesk / 系统字体；display + body 搭配、与主题契合；不要言必复古衬线、不要反复用 Fraunces / Cormorant / Playfair。font-family 末尾必须带通用兜底（sans-serif / serif / monospace）；数字 / 数据读数用确含数字字形的等宽字体（JetBrains Mono / IBM Plex Mono 等）。<strong>中文大标题必须用含完整中文字形的字体（Noto Sans SC 800/900 等），要冲击力就叠多层 text-shadow / <code>-webkit-text-stroke</code> 描边</strong>——英文 display 字体（Bowlby / Bangers）和多数 ZCOOL 装饰体中文字符集不全，套上去大标题会缺字/破碎。</li>
+</ol>
+<p>1b. <strong>渲染安全（字符/图标）</strong>：① 数学公式禁用花体 <code>𝒩</code> 与组合 Unicode（<code>ε̂</code>/<code>ε̃</code>），无头渲染成豆腐块——改 <code>&lt;sub&gt;/&lt;sup&gt;</code> 或纯 ASCII；② 核心图标 / 品类符号用 SVG，<strong>不用 emoji</strong>（emoji 字体常缺失 → 整片空白）。</p>
+<ol>
+<li><strong>配色</strong>：明确主色 + 尖锐重音、hex 精确、非平均分布；禁紫粉渐变白底 / 通用蓝绿渐变 / 无聊灰阶。</li>
+<li><strong>反米黄</strong>：除非 outline 或 <code>task_pack.request.query</code> 明确要求，禁止暖米黄 / 奶油 / 宣纸 / 象牙（#FBF7F0 #F5F1EA #ECE3D0 这类 R&gt;G&gt;B 暖白）做主背景，禁止做旧纸张 / 茶渍噪点 / 复古手稿基调。干净的纯深色 / 冷白 / 饱和品牌色都完全 OK。</li>
+<li><strong>中文字体覆盖</strong>：含中文必须 Google Fonts 引入中文字体（Noto Sans SC / Noto Serif SC / ZCOOL XiaoWei / Smiley Sans / LXGW WenKai 等按风格选）并放进所有显示中文的元素的 font-family 链；禁止只依赖 PingFang SC / Microsoft YaHei。整页语言自然统一，不做中英并行两套文本。</li>
+<li><strong>形态贴合</strong>：deck 是幻灯片不是网页应用——禁止浏览器式顶栏 / 侧边导航 / 贯穿全场的常驻控制台外壳（LIVE FEED / SESSION / VERSION / 脉冲指示灯这类 app 状态件）；元数据只放页脚或封面。</li>
+<li><strong>内容真正画出来</strong>：图表用 outline“内容与依据”中已有的真实数值直接画出图元；首屏即呈现真实内容；hero / 封面严禁&quot;巨幅纯色块只配一两个字&quot;——要有清晰主标题 + 说明文案 + 视觉焦点。内容要有 outline 已支持的真实主体与真实数据，严禁为填满页面编造数字；证据不足时返回 Entry / Story，不使用占位词冒充完成。</li>
+</ol>
+<ul>
+<li><strong>装饰永不压盖正文</strong>：HTML 层用 z-index 阶梯（背景 0 / 内容 1–10 / 浮层 20 / HUD 50），装饰绝对元素 <code>pointer-events:none</code> 且 z-index 低于同区文字。<strong>SVG / Canvas 内部没有 z-index，只认绘制顺序——文字必须最后画（在装饰线、光晕、连线、节点之上）</strong>；若文字不可避免压在图形 / 插画上，给它加 <code>paint-order:stroke</code> + 与底色同色的浅描边，或垫一块半透明圆角底板 / 径向 halo 托住，确保任何角度都读得清（这正是&quot;插画里小字被线条吃掉&quot;的根治法）。</li>
+</ul>
+<ol>
+<li><strong>布局与留白（留白是构图的一部分，不是排完剩下的边角料）</strong>——不绑固定模板，按这几条判据排，任意区数 / 任意版式都适用：</li>
+</ol>
+<ul>
+<li><strong>先划安全区，区内自由构图</strong>：内容不越 <code>--safe-x/-y</code>（§4），这是唯一硬边框；框内分几区随题材定（1 区 hero / 2 栏 / 3–4 卡 / 拼贴 / 满屏场景都行），别套死&quot;几区&quot;模板。</li>
+<li><strong>每块余量都要有归属</strong>：空白要么成体系地分布在元素之间（间距只从 <code>--gap-*</code> 档取，节奏统一），要么有意聚成一处做呼吸 / 强调；<strong>禁止余量渗漏成单边或单角的意外死白</strong>。自检视角：把空白当成一个看不见的块——它该有位置感和理由，说不出理由就是 bug。</li>
+<li><strong>并列项对齐到共同基线 / 等高</strong>：一排卡片 / 两栏内容用 <code>align-items:stretch</code> 或等高配方，消除&quot;一栏比另一栏矮&quot;造出的锯齿死白；别用 <code>flex-start</code> 放任不齐。</li>
+<li><strong>内容量驱动密度</strong>：撑不满 → 放大主体 / 加呼吸 / 合并页，<strong>不是钉在顶上塌出底白</strong>（禁单个 <code>margin-top:auto</code> 钉底；满屏 flex 列用 <code>justify-content</code> 摊匀纵向余量）；撑破 → 拆页或降到 <code>--fs-min</code>，不是硬塞到溢出。</li>
+<li><strong>不溢出的硬底</strong>：固定容器 <code>overflow:hidden + 子 min-width:0</code>，或 <code>fit-content</code> / 允许换行，预留 ≥15% 余量；超大 display 标题设 max-width 允许换行、禁 <code>white-space:nowrap</code> 硬撑；<code>line-height&lt;1</code> 的巨字按墨迹盒实算高度、与邻块留 ≥24px。</li>
+</ul>
+<ol>
+<li><strong>覆盖层与光标</strong>：canvas 拖尾淡出用 <code>clearRect</code> 或 <code>destination-out</code>，严禁低 alpha <code>fillRect</code> 整屏铺（累积成不透明遮罩盖住正文）；自定义光标 z-index 不高于正文且 <code>pointer-events:none</code>。</li>
+<li><strong>不可遗忘点</strong>：整套 deck 至少 2–3 处让人记住的细节——戏剧性开场、独特的数据动画、出人意料的过渡或彩蛋。</li>
+<li><strong>禁网格底纹背景</strong>：方格纸 / 蓝图网格 / 透视网格地面（地平线网格）/ 规则点阵，以及 Three.js <code>GridHelper</code>——<strong>一律不用做背景</strong>，这是被严重滥用的 AI 套路，哪怕低透明度单层也不行。需要纵深/质感请用：渐变光晕、shader 噪声、粒子流场、径向暗角。（<strong>只禁&quot;当背景平铺的视觉网格&quot;</strong>；CSS Grid 布局即 <code>display:grid</code> 的版面排布不受影响。）</li>
+<li><strong>不走套路充数</strong>：别不分题材默认&quot;canvas 粒子背景+编辑排版&quot;，也别不分题材默认&quot;沉浸漫游+相机翻转&quot;——两种都是套路。按题材选最贴的技术（见 §0 招牌视觉），2D/CSS 有创意同样满分；但灵动背景层（3D/shader/粒子流）广泛适用，别把背景做成静态死平面。</li>
+</ol>
+<p><strong>绚哲学——尽可能绚，但绚得其所</strong>：在场景档位允许的密度内做满视觉表现力——持续微动的背景、视差 / 磁吸 / 扰动的鼠标响应、形变 / 光晕的 hover、backdrop-filter / mix-blend-mode / mask-image / clip-path、preserve-3d 空间深度、粒子与程序化纹理、staggered reveal、大字号排印张力（字距不得让字形粘连）。<strong>该上重型就上、别因难调试回避</strong>：<strong>3D/shader 灵动背景层（广泛适用，尤其科技/抽象/数据/网络）</strong>、代码搭 3D 漫游场景（空间主体题材）、多场景沉浸、极繁拼贴都是加分项；但重型手法要<strong>服务题材</strong>，不是为炫而炫——2D/CSS 把题材表达透了同样是顶级 fancy。背景默认就该持续微动，纯静态渐变是丢分。绚 ≠ 杂乱：再密集也要层级清晰、配色有立场、贴合场景档位。</p>
+<h4>8. 工程避坑（常见 bug，写代码前过一遍）</h4>
+<ol>
+<li><strong>JS 函数引用顺序</strong>：顶层立即执行的主控函数不要直接调用尚未注册的全局函数；对可能未定义的加 <code>if (typeof fn === &#39;function&#39;)</code> 防御——首行 ReferenceError 会杀掉后续全部脚本（翻页/动画全挂）。</li>
+<li><strong>Three.js 锁 r128</strong>：<code>https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js</code>（UMD 全局最稳）；OrbitControls 用 <code>three@0.128.0/examples/js/</code>，不要 r150+ 的路径（已废弃）。<code>ShaderMaterial({vertexColors:true})</code> 会自动注入 <code>attribute vec3 color</code>，vertexShader 里不要再声明一遍（redefinition → 粒子全黑）。</li>
+<li><strong>Canvas / Three.js 尺寸与 DPI</strong>：<code>renderer.setPixelRatio(devicePixelRatio)</code>；<code>setSize(w, h)</code> 不传第三参数；取尺寸用父元素 <code>getBoundingClientRect()</code>（canvas 自身初始可能为 0）并用 ResizeObserver 监听。</li>
+<li><strong>粒子参数速查</strong>（球面 starfield、相机 z≈400、AdditiveBlending）：偏暗 3000 粒 / sz 0.5–2.5 / 投影系数 300 / alpha 1.0 / 遮罩 0.85；适中 7000 / 1.2–4 / 550 / 1.3 / 0.78；偏亮 12000+ / 2–6 / 700 / 1.8 / 0.4。原则：封面要震撼（透明背景 + 多彩 + 高 alpha），内容页要背景化（半透明遮罩 + 冷色单调）。</li>
+<li><strong>ECharts 配色</strong>：所有系列色从 <code>:root</code> token 取，禁用 ECharts 默认色板；图表初始化放进 <code>slideInits[N]</code>，容器要有确定尺寸。</li>
+<li><strong>键盘事件</strong>：监听挂 <code>window</code>；<code>load</code> 时 <code>window.focus()</code> 抢焦点（deck 常被嵌 iframe 预览）。</li>
+<li><strong>增量填充的幂等</strong>：<code>slideInits[N]</code> 内做&quot;已初始化&quot;保护（重复激活不重复建 canvas / 不重复绑监听）。</li>
+<li><strong>代码搭 3D 场景</strong>（选了沉浸 3D 招牌时）：用参数化几何体（Box/Plane/Cone/Torus/Sphere 组合）拼出真实场景 + Ambient/Directional/Point 三类光，全 deck 共用一个常驻场景、每页一个相机机位、翻页时相机沿弧线 lerp 巡游（注视点必须同步插值）。完整范例见 <code>fancy-cookbook.md</code>「代码搭建 3D 场景」+「单一 3D 世界相机航点运镜」。骨架期就把场景与相机搭起来跑通，逐页只调机位与该页 HTML。</li>
+<li><strong>避开封面调试黑洞</strong>：你看不到 DOM/console、只能靠截图猜，所以<strong>封面/hero 的视觉主体优先用大 SVG</strong>；Three.js 用在背景（粒子/星场/上面的场景模板），别在封面现搓未验证的自定义几何（极易陷进猜谜式长链返工）。<strong>大图 hero 用 <code>&lt;img&gt;</code> + <code>object-fit</code> 而非 <code>background-image</code></strong>——无头渲染里大图 <code>background-image</code> 常在截图时还没解码出来、整页近黑。</li>
+</ol>
+<h4>9. references</h4>
+<ul>
+<li><code>references/style-families.md</code> —— 风格家族库：气质 / 适用与禁用场景 / palette 示例 / 字体方向 / 该风格下 fancy 怎么发力。阶段 0 必读。</li>
+<li><code>references/fancy-cookbook.md</code> —— 技法配方：入场动画 / 跨页过渡 / 全局背景 / 交互彩蛋，含核心代码模式与参数安全范围。阶段 0 选型时读。</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/marketingskills/lead-magnets/index.html"
+     data-source="marketingskills"
+     data-category="corporate"
+     data-search="lead-magnets when the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;pdf download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should i give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; use this for planning what to create and how to distribute it. for interactive tools as lead magnets, see free-tools. for writing the actual content, see copywriting. for the email sequence after capture, see emails. corporate  coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">lead-magnets</span>
+    <span class="r-desc">When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. Also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;PDF download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;Notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should I give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; Use this for planning what to create and how to distribute it. For interactive tools as lead magnets, see free-tools. For writing the actual content, see copywriting. For the email sequence after capture, see emails.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/wizard/index.html"
+     data-source="mattpocock"
+     data-category="corporate"
+     data-search="wizard generate an interactive bash wizard that walks a human through steps only they can perform. use when provisioning infrastructure, setting up credentials or ci secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. don&#39;t invoke this for steps the agent can perform itself. corporate  mattpocock/skills">
+  <span>
+    <span class="r-name">wizard</span>
+    <span class="r-desc">Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don&#39;t invoke this for steps the agent can perform itself.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="sn-da-excel-workflow excel 数据分析多步编排器。覆盖：(1) 读取多 sheet excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 sheet 统计聚合，(6) 导出 excel/csv 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / excel 报告 / 生成报表 / analyze excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-excel-workflow</span>
+    <span class="r-desc">Excel 数据分析多步编排器。覆盖：(1) 读取多 Sheet Excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 Parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 Sheet 统计聚合，(6) 导出 Excel/CSV 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：Excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / Excel 报告 / 生成报表 / analyze Excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 Sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 Excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/category-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="large-file-parquet-analysis-and-highlight 当excel文件总行数超过1万行时，通过转换为parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为excel并对特定行进行高亮标注。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">large-file-parquet-analysis-and-highlight</span>
+    <span class="r-desc">当Excel文件总行数超过1万行时，通过转换为Parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为Excel并对特定行进行高亮标注。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/duplicate-value-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="excel-conditional-comparison-and-large-file-processing 对比excel多表中的特定系数并对异常值进行颜色标记。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">excel-conditional-comparison-and-large-file-processing</span>
+    <span class="r-desc">对比Excel多表中的特定系数并对异常值进行颜色标记。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-dazzle</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-ppt-dazzle" aria-label="Copy install sn-ppt-dazzle">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>corporate</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-ppt-dazzle</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=sn-ppt-dazzle%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-dazzle%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-dazzle%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-dazzle%2F&t=sn-ppt-dazzle%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-ppt-dazzle%2F&title=sn-ppt-dazzle%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-ppt-dazzle/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

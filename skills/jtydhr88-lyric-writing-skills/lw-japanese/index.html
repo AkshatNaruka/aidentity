@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lw-japanese — music AI agent skill — Aidentity</title>
+<meta name="description" content="The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="lw-japanese, music, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lw-japanese — music AI agent skill — Aidentity">
+<meta property="og:description" content="The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="lw-japanese — music AI agent skill — Aidentity">
+<meta name="twitter:description" content="The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"music","item":"https://akshatnaruka.github.io/aidentity/skills/?category=music"},{"@type":"ListItem","position":3,"name":"lw-japanese","item":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/"}]},{"@type":"TechArticle","headline":"lw-japanese","description":"The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and the long vowel each take a beat, a palatalized pair takes one; one kana per note is the default, and the same melody remaps itself when the words change; every word carries a pitch-accent contour, and a melody that fights it gets the line heard as a different sentence; fuwari, the mapping of kana to notes; bunsetsu segmentation and where a line may break; ji-amari and ji-tarazu as deliberate mismatch; the four ways to fix a melody when the counts do not fit; why Japanese rhyme is weak and how shichigo-cho slips in unnoticed; the lyrics-first and music-first routes; and the iron rule for English words inside a Japanese song. Use when writing or checking Japanese lyrics, fitting kana to an existing melody, counting morae, when a sung line is misheard as another word, or when the words will not sit on the notes. 日文作词、日语歌词、モーラ、拍数、符割り、字余り、字足らず、音高重音、七五調。","url":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/","dateModified":"2026-10-28","author":{"@type":"Person","name":"jtydhr88"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"music, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=music">music</a><span>/</span>lw-japanese
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">jtydhr88/lyric-writing-skills · MIT</p>
+      <h1>lw-japanese</h1>
+      <p class="summary">The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and the long vowel each take a beat, a palatalized pair takes one; one kana per note is the default, and the same melody remaps itself when the words change; every word carries a pitch-accent contour, and a melody that fights it gets the line heard as a different sentence; fuwari, the mapping of kana to notes; bunsetsu segmentation and where a line may break; ji-amari and ji-tarazu as deliberate mismatch; the four ways to fix a melody when the counts do not fit; why Japanese rhyme is weak and how shichigo-cho slips in unnoticed; the lyrics-first and music-first routes; and the iron rule for English words inside a Japanese song. Use when writing or checking Japanese lyrics, fitting kana to an existing melody, counting morae, when a sung line is misheard as another word, or when the words will not sit on the notes. 日文作词、日语歌词、モーラ、拍数、符割り、字余り、字足らず、音高重音、七五調。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>日文词的モーラ与符割り（Japanese Mora &amp; Note-Mapping）</h3>
+<p>&gt; <strong>中文靠字调，英文靠重音，日文靠拍数（モーラ）。这是三套约束，谁也顶替不了谁。</strong></p>
+<p>&gt; 中文的调走错，听到的是<strong>另一个字</strong>；英文的重音落错，听到的是<strong>一句被念错的话</strong>；</p>
+<p>&gt; <strong>日文的拍算错或音高重音顶反了，听到的是另一句话</strong>——</p>
+<p>&gt; 「雨が晴れて虹の橋が架かり」会被听成「飴が腫れて2時の端が係」（高山博《旋律法 増補版》p.192）。</p>
+<p>&gt; ★ <strong>整句意思散架，而歌手唱得完全正确。</strong></p>
+<p>★ <strong>本 skill 只管一件事：日文的拍数、音高重音与符割り怎么和音乐咬合。</strong></p>
+<p>押韵的通用原理去 <code>lw-rhyme</code>，立意去 <code>lw-song-intent</code>，结构去 <code>lw-structure</code>。</p>
+<h4>按任务读哪几节</h4>
+<table><thead><tr><th>你要做的</th><th>读</th></tr></thead><tbody>
+<tr><td><strong>一行词到底怎么数长度</strong></td><td>★ §1（<strong>数モーラ，不数假名、不数音节</strong>）</td></tr>
+<tr><td>促音・撥音・長音・拗音各占几拍、配什么音符</td><td>★ §1.2</td></tr>
+<tr><td>唱出来被听成别的词</td><td>★ §2 音高重音 ＋ §1.2 的連母音与拉长</td></tr>
+<tr><td>假名怎么落到音符上 / 一字多音怎么处理</td><td>★ §3 符割り</td></tr>
+<tr><td>一句该在哪断、哪里不能断</td><td>§4 分節</td></tr>
+<tr><td>字数和格子对不上，要不要硬改</td><td>★ §5 字余り／字足らず（<strong>故意的</strong>）＋ §6 四种修正法（<strong>改旋律那侧</strong>）</td></tr>
+<tr><td>日文怎么押韵 / 为什么写出来&quot;太日本&quot;</td><td>§7</td></tr>
+<tr><td>先写词还是先写曲</td><td>§8（与 <code>lw-workflow</code> §1 的术语对应）</td></tr>
+<tr><td>日文歌里要塞英文词</td><td>★ §9（<strong>铁律</strong>）</td></tr>
+<tr><td>填 LYR-SPEC 的 <code>prosody.*</code></td><td>§10</td></tr>
+<tr><td><strong>实唱例、谱例级的处理、韻与英文的 NG/OK 对照</strong></td><td>★ [reference.md](reference.md)</td></tr>
+</tbody></table>
+<h4>边界</h4>
+<table><thead><tr><th>不归这里</th><th>归哪</th></tr></thead><tbody>
+<tr><td><strong>中文的倒字、依字行腔</strong></td><td>★ <code>lw-tone-check</code>（<strong>不许拿音高重音那套顶替</strong>——见 §2.4）</td></tr>
+<tr><td><strong>十三辙、平仄、中文字数与顿</strong></td><td>★ <code>lw-mandarin</code></td></tr>
+<tr><td><strong>粤语的协音与九声</strong></td><td>★ <code>lw-cantonese</code></td></tr>
+<tr><td><strong>英文词的重音与节拍对齐</strong></td><td>★ <code>lw-english</code>（本 skill 只管 §9 那一条：<strong>英文进到日文歌里时的音节↔音符换算</strong>）</td></tr>
+<tr><td>押韵的通用原理：韵式、意外度、故意不押</td><td><code>lw-rhyme</code>（本 skill 只讲<strong>日文的韵为什么弱</strong>，见 §7.1）</td></tr>
+<tr><td>这首歌要说什么</td><td><code>lw-song-intent</code></td></tr>
+<tr><td>段落功能、hook 与标题放哪、行数与平衡</td><td><code>lw-structure</code></td></tr>
+<tr><td>意象、具体名词、object writing</td><td><code>lw-imagery</code></td></tr>
+<tr><td>人称、视角、时间锚点、留白</td><td><code>lw-narrative</code></td></tr>
+<tr><td>旋律本身怎么写、最高音定在哪、曲式小节数</td><td><strong>作曲编曲</strong></td></tr>
+<tr><td><strong>那些字该怎么唱</strong>（气声、力度、咬字、演唱指导）</td><td><strong>声音</strong>（录音与演唱指导）</td></tr>
+<tr><td>和声堆叠、话筒摆位</td><td><strong>声音</strong>（录音）</td></tr>
+<tr><td>人声录音、修音、混音</td><td><strong>声音</strong>（录音、混音）</td></tr>
+</tbody></table>
+<hr>
+<h4>1. ★ モーラ（拍）——日文的计数单位</h4>
+<h5>1.1 为什么不是&quot;音节&quot;，也不是&quot;假名&quot;</h5>
+<p>&gt; <strong>日文计数的单位是モーラ（拍），一拍配一个音符是默认对应。</strong></p>
+<p>&gt; <strong>符割り的理想是「一音一字」（一个音符一个假名）</strong>（谷口尚久《プロの曲作りが分かる本》p.58）。</p>
+<p><strong>先把三种数法分开</strong>：同一个概念，</p>
+<p><strong>「フ・リ・ー」的假名数 3、モーラ数 ★ 3</strong>（長音「ー」<strong>自己占一拍</strong>），</p>
+<p><strong>而英文 &quot;free&quot; 的音节数 ★ 1</strong>。</p>
+<p>★★ <strong>日文 3 拍，英文 1 音节</strong>——这条差别在《プロの曲作りが分かる本》p.62 里被点名为最大的坑：</p>
+<p><strong>&quot;free&quot; 不能拆成 &quot;f-ree&quot; 唱两个音</strong>（没有元音核的地方放不了旋律音）；</p>
+<p><strong>而外来语「フリー」是 3 モーラ，拆得开。</strong></p>
+<p>同理「フリーダム」是 <strong>5 モーラ</strong>，而 &quot;freedom&quot; 是 <strong>2 个音节</strong>（free-dom）。</p>
+<p>&gt; ★ <strong>后果</strong>：<strong>日文一行的&quot;长度&quot;＝モーラ数</strong>，而且它和你写出来的假名数<strong>几乎总是相等</strong>，</p>
+<p>&gt; 所以日文比英文好数——<strong>但前提是你按下面 §1.2 的规则数过特殊拍</strong>。</p>
+<p>★★ <strong>本 skill 的第一个动作，也是最便宜的那个</strong>：</p>
+<p><strong>把词按朗读的节奏记成一条纯节奏谱（只有时值，没有音高）。</strong></p>
+<p>★ <strong>词自己就有&quot;歌词的时间&quot;</strong>——朗读一句话自然产生节奏与抑扬；</p>
+<p><strong>只按字数把词塞进旋律，两种时间必然打架</strong>（《旋律法 増補版》p.190）。</p>
+<p>&gt; <strong>先把词的那条节奏写下来，再去看旋律的那条</strong>，</p>
+<p>&gt; 后面 §2 到 §6 全部是这两条线的对齐工作。</p>
+<p><strong>失效条件</strong>：符割り会把相邻的假名并成一个音（§3.2 的「ありがとう」「こんにちは」），</p>
+<p><strong>那时唱出来的音符数少于モーラ数</strong>。</p>
+<p>★ <strong>数 <code>prosody.sections[].syllables</code> 要数&quot;实际唱出来的音&quot;，不是数纸面上的假名。</strong></p>
+<h5>1.2 ★★ 特殊拍：各占几拍、配什么音符</h5>
+<p><strong>这一节是本 skill 最需要机械执行的一张表。</strong></p>
+<p>《旋律法 増補版》p.193 把它叫做<strong>単語のリズム（词自带的节奏）</strong>，</p>
+<p>并给了警告：<strong>无视词自带的节奏，唱起来吃力、像机器，极端时听不懂</strong>——</p>
+<p>「飛行機に乗って」会被唱成听起来像「ひこきに、のて」的东西。</p>
+<p>★ 各特殊拍占几拍、配什么音符的全表在 [reference.md](reference.md) §10。</p>
+<h5>1.3 ★ 三种语言的计数单位：一张表说清分界</h5>
+<table><thead><tr><th>维度</th><th>中文（<code>lw-mandarin</code>）</th><th>英文（<code>lw-english</code>）</th><th>★ <strong>日文（本 skill）</strong></th></tr></thead><tbody>
+<tr><td><strong>计数单位</strong></td><td><strong>字 ＝ 音节</strong>，一字一音</td><td>★ <strong>重音数</strong>，不是音节总数</td><td>★ <strong>モーラ（拍）</strong>，不是假名数也不是音节数</td></tr>
+<tr><td><strong>出问题的层</strong></td><td><strong>音节层</strong>——调走错听成<strong>另一个字</strong></td><td><strong>句子层</strong>——重音落错换了<strong>一句话的所指</strong></td><td>★ <strong>词与词之间</strong>——音高重音顶反、拍算错、断句错位，<strong>整句被重新切成另一串词</strong></td></tr>
+<tr><td><strong>约束的机制</strong></td><td>每个字自带一个<strong>调型</strong></td><td>多音节词自带一个<strong>重音位置</strong></td><td>★ 每个词自带一条<strong>高低型（音高重音）</strong>＋一串<strong>拍</strong></td></tr>
+<tr><td><strong>能不能程序判定</strong></td><td>★ <strong>能</strong>（倒字可算）</td><td>不能全自动</td><td>★ <strong>半能</strong>——拍数可数，音高重音可查辞典，<strong>落位要人判</strong></td></tr>
+<tr><td><strong>弱位能放什么</strong></td><td>轻声字、虚字</td><td>功能词、非重读音节</td><td>★ <strong>助词、无重音的假名</strong>（→ §8.3）</td></tr>
+<tr><td><strong>最高音落点</strong></td><td>开口音，调型不与旋律打架</td><td>重读音节，元音开放</td><td>★ <strong>不能是无声音、不能是撥音 ん</strong>（§1.2）</td></tr>
+</tbody></table>
+<p>★★ <strong>三条纪律</strong>：</p>
+<p><strong>① 日文词不要用&quot;倒字&quot;那套查</strong>——日语不是每个音节一个调型，是<strong>每个词一条高低型</strong>，</p>
+<p>拿逐字调型去查会把整词的轮廓拆碎 → §2。</p>
+<p><strong>② 日文词不要用&quot;重音数&quot;去数行长</strong>——日文没有英文那种&quot;一个词五个音节只贡献一个重音&quot;的压缩，</p>
+<p><strong>日文的拍几乎是均等的</strong>，数拍就是数长度。</p>
+<p><strong>③ 日文歌里混英文的那一段，两套分别过一遍</strong>——日文那半数モーラ，英文那半按音节数（§9）。</p>
+<hr>
+<h4>2. ★ イントネーション（音高重音）</h4>
+<h5>2.1 规则本身</h5>
+<p>&gt; <strong>每个词都有固有的音高与强弱轮廓。</strong></p>
+<p>&gt; <strong>原则：旋律的升、降、强弱，要与歌词的音高重音相符。</strong></p>
+<p>&gt; （高山博《旋律法 増補版》p.191–192）</p>
+<p><strong>不相符的后果</strong>：听众光靠耳朵抓不住意思，这首歌变成&quot;<strong>词传不出来</strong>&quot;的歌；</p>
+<p>极端情况下<strong>被听成完全另一句话</strong>（开头的「飴が腫れて…」）。</p>
+<p><strong>依据哪一套</strong>：音高重音按<strong>標準語（标准语）</strong>；</p>
+<p>★ <strong>注意標準語 ≠ 東京方言</strong>；拿不准查<strong>アクセント辞典（音高重音辞典）</strong>（《旋律法 増補版》p.192）。</p>
+<p><strong>自检动作</strong>：把一行词<strong>说</strong>出来（不是唱），把每个词的高低走向画成折线；</p>
+<p>再把旋律的走向画成折线；<strong>两条折线的升降方向逐处比对</strong>。</p>
+<p>★ 反向的地方就是风险点——不是每一处都要改，但<strong>每一处都要知道它在那儿</strong>。</p>
+<h5>2.2 故意偏离是手法，不是错</h5>
+<p>&quot;故意不按音高重音走&quot;是表现手段：<strong>它造出一个&quot;语言的钩子&quot;，抓住注意力、表达大的情绪</strong>；</p>
+<p>★ <strong>把助词顶到高音上，可以把情绪一级一级地推上去</strong>（《旋律法 増補版》p.192）。</p>
+<p>&gt; <strong>前提有三条，缺一条就变成事故</strong>：</p>
+<p>&gt; ① <strong>相邻的词的音高重音是正确的</strong>（周围正确，偏离才听得出是故意的）；</p>
+<p>&gt; ② <strong>整体意思仍然传达得出来</strong>；</p>
+<p>&gt; ③ ★ <strong>容易听错的音节要给旋律高潮让路</strong>——</p>
+<p>&gt; 也就是说：<strong>要偏离，就偏离在不会引起误听的那个词上。</strong></p>
+<p><strong>失效条件</strong>：整段都偏离 → 不是钩子，是词传不出来。</p>
+<p><strong>自检动作</strong>：数一数一段里故意偏离的处数。★ <strong>超过两处，先还原一处再说。</strong></p>
+<h5>2.3 语尾的升降决定这句话是什么句子</h5>
+<p><strong>語尾の上行</strong>（句尾上行）＝ 疑问、呼吁、未决、希望；</p>
+<p><strong>語尾の下行</strong>（句尾下行）＝ 回答、结论、断定、认命。（《旋律法 増補版》p.193。）</p>
+<p>★ <strong>这是段落之间的接口</strong>：主歌句尾上行 → 副歌来&quot;回答&quot;；</p>
+<p>副歌句尾下行 → 这一段<strong>关上了</strong>，后面再堆情绪会显得多余。</p>
+<p><strong>与 <code>lw-narrative</code> 的 <code>withholding</code> 连着用</strong>：要&quot;停在难受里&quot;，就<strong>别让最后一句下行</strong>。</p>
+<h5>2.4 ★ 与中文倒字的分界（<strong>这一格必须记清</strong>）</h5>
+<table><thead><tr><th></th><th>中文倒字</th><th>日文音高重音冲突</th></tr></thead><tbody>
+<tr><td><strong>约束挂在哪</strong></td><td>★ <strong>挂在每一个字上</strong>——字调是音位</td><td>★ <strong>挂在每一个词上</strong>——是词内的高低型</td></tr>
+<tr><td><strong>错了会怎样</strong></td><td>那<strong>一个字</strong>被听成另一个字</td><td>★ <strong>那一串词被重新切开</strong>，整句变成另一句</td></tr>
+<tr><td><strong>改法</strong></td><td>换字／改旋律走向／加衬字</td><td>换词／调整旋律升降／<strong>改分節</strong>（§4）</td></tr>
+<tr><td><strong>归哪</strong></td><td><code>lw-tone-check</code> ＋ <code>lw-mandarin</code></td><td><strong>本 skill</strong></td></tr>
+</tbody></table>
+<p>★★ <strong>不许互相顶替</strong>：</p>
+<p>拿倒字那套逐字查日文，<strong>会把整词的高低型拆碎</strong>，查不出真正的问题；</p>
+<p>拿日文这套整词查中文，<strong>会漏掉单字的倒字</strong>。</p>
+<p><strong>中日混写的一行，两套各过一遍。</strong></p>
+<hr>
+<h4>3. ★ 符割り（假名对音符的分配）</h4>
+<h5>3.1 理想与现实</h5>
+<p>&gt; <strong>理想是「一音一字」——一个音符一个假名。</strong></p>
+<p>&gt; （《プロの曲作りが分かる本》p.58）</p>
+<p><strong>现实是近年流行&quot;多塞字造速度感&quot;</strong>，而对这股风潮的判断很直接：</p>
+<p><strong>词作者如果是无意识地这么写，录音现场会乱成一团，事后吃亏的是词作者本人。</strong></p>
+<p>&gt; ★ <strong>读法</strong>：<strong>多塞字可以，但必须是&quot;你知道自己在做什么&quot;的多塞字</strong>——</p>
+<p>&gt; 那就是 §5 的字余り，它有代价、有位置选择、有效果。</p>
+<p>&gt; <strong>无意识的多塞字不是字余り，是没数清拍。</strong></p>
+<h5>3.2 ★★ 同一条旋律会因为换了词而自动改变符割り</h5>
+<p><strong>这是本节最值钱的一条</strong>——同一条旋律「ソラファファ」配六个四假名词</p>
+<p>（《プロの曲作りが分かる本》p.59）：</p>
+<ul>
+<li><strong>あきかぜ</strong> ＝ ★ 标准的一音一字</li>
+<li><strong>そよかぜ</strong> ＝ そ→よ 接近复元音化，<strong>よ 被吸收</strong></li>
+<li><strong>きたかぜ</strong> ＝ き 被读短，<strong>重音移到 た</strong></li>
+<li><strong>ありがとう</strong> ＝ ★ <strong>とう 两个假名并成一个音</strong></li>
+<li><strong>さようなら</strong> ＝ ★ <strong>う 被省略</strong>（实唱成 さよなら）</li>
+<li><strong>こんにちは</strong> ＝ ★ <strong>こん 并成一个音</strong></li>
+</ul>
+<p>&gt; ★★ <strong>四个假名不等于四个音。</strong></p>
+<p>&gt; 日文的音在唱的时候是<strong>有弹性的</strong>：会吸收、会并音、会省略、会缩短。</p>
+<p>&gt; <strong>写词与填词时必须预判这种弹性</strong>（《プロの曲作りが分かる本》p.59）。</p>
+<p><strong>自检动作（必须做）</strong>：把每一行<strong>按你想要的速度唱一遍</strong>，</p>
+<p>数<strong>唱出来几个音</strong>，而不是数纸面上几个假名。</p>
+<p>★ <strong>两个数不一样时，<code>prosody.sections[].syllables</code> 填唱出来的那个</strong>，</p>
+<p>并在 <code>note</code> 里写明哪两个假名并了音。</p>
+<h5>3.3 最好的保险：让词作者自己唱一遍</h5>
+<p>&gt; ★ <strong>让词作者用自己的声音把词唱一遍录下来发过去。录音环境差、声音小，都不要紧。</strong></p>
+<p>&gt; 否则这首词会带着错误的符割り流传出去。（《プロの曲作りが分かる本》p.58–59）</p>
+<p>★ <strong>落到本库</strong>：这条对应 <code>prosody.sections[].notes</code> 与 <code>melody_contour</code> 那几格——</p>
+<p><strong>符割り的意图必须以某种形式被记下来，光有文字的词稿传不出去。</strong></p>
+<h5>3.4 一字多音与多字一音</h5>
+<table><thead><tr><th>情况</th><th>日文怎么处理</th><th>代价</th></tr></thead><tbody>
+<tr><td><strong>多字一音</strong>（并音）</td><td>§3.2 的「とう」「こん」——<strong>自然发生，不必抵抗</strong></td><td>★ 行长的数会比假名数少，<strong>必须重数</strong></td></tr>
+<tr><td><strong>一字多音</strong>（一个假名跨几个音高）</td><td>★ 这就是 §5 的<strong>字足らず</strong>——把一个拍拉长、跨多个音高咬</td><td>拉过头，意思退到背景，段落变成スキャット（无词吟唱）那样的器乐感</td></tr>
+<tr><td><strong>強拍上该放什么</strong></td><td>★ 放<strong>实词的重音拍</strong>；下跳与弱位放<strong>助词或无重音的假名</strong>（→ §8.3）</td><td>助词顶上强拍 → 整句的重心跑到没有内容的地方</td></tr>
+</tbody></table>
+<hr>
+<h4>4. 分節（语节）与气口</h4>
+<h5>4.1 规则</h5>
+<p>日语歌词由<strong>词＋助词</strong>构成<strong>分節</strong>结构。</p>
+<p>&gt; ★ <strong>歌词的分節与旋律的分節一致时，词好懂。</strong></p>
+<p>&gt; （《旋律法 増補版》p.197）</p>
+<p><strong>错位的后果</strong>：意思传不出来，甚至变成另一句——</p>
+<p>「君が来るまで待ってる」时机切错，<strong>和「君が車で待ってる」分不出来</strong>。</p>
+<p>★ <strong>在本库里，分行就是分節</strong>：</p>
+<p><code>lw-workflow</code> 的 LYR-SPEC 定义 §1.8 说明<strong>分行不是排版，是指令</strong>，唱的人把换行当乐句边界读。</p>
+<p><strong>日文词的一行必须同时是：一个说得通的分節组 ＋ 一口气唱得完 ＋ 与 <code>syllables</code> 的数对得上。</strong></p>
+<h5>4.2 故意错位：三种强调法</h5>
+<p><strong>前提（缺一不可）</strong>：<strong>意思保得住</strong>，<strong>音高重音与强弱位置被尊重</strong>（《旋律法 増補版》p.198）。</p>
+<table><thead><tr><th>手法</th><th>效果</th></tr></thead><tbody>
+<tr><td><strong>在助词前断开</strong></td><td>把听众吊住，一级一级推上去</td></tr>
+<tr><td><strong>在词的中间切开</strong></td><td>造张力，把注意力拽过来</td></tr>
+</tbody></table>
+<p><strong>三种强调法</strong>（例：「私はここで」）：<strong>① 拉长「わたしー」造 タメ（憋住的张力）</strong>；</p>
+<p><strong>② 把「わ・た・し」一拍一拍切开</strong>；<strong>③ 只把「わ」不自然地孤立出来</strong>，猛地把听众惊醒。</p>
+<p>&gt; ★ <strong>原理一句话</strong>：<strong>要强调哪个词，就把它切得更开——它自己会浮上来。</strong></p>
+<p>（《旋律法 増補版》p.198；实例细节见 [reference.md](reference.md) §2。）</p>
+<h5>4.3 全面错位：整首用均等音符唱</h5>
+<p>⚠ <strong>先纠正一个容易读出来的误解</strong>：</p>
+<p><strong>分節不一致不是罕见的特技，是常态</strong>——</p>
+<p><strong>全曲处处让语言与旋律乐句完全一致本来就做不到，实践中常常让音乐性的乐句优先于语言分節</strong></p>
+<p>（[reference.md](reference.md) §2.3）。</p>
+<p>★ <strong>所以要问的不是&quot;能不能不一致&quot;，是&quot;这一段不一致到第几档&quot;。</strong></p>
+<p><strong>做法</strong>：整首用均等的八分音符唱，<strong>让乐句的切分压过语言的分節</strong>。</p>
+<p><strong>效果</strong>：一心一意／恳切——&quot;<strong>即便如此，我也必须把这些词唱出来</strong>&quot;（《旋律法 増補版》p.199）。</p>
+<p>&gt; <strong>两条代价</strong>：</p>
+<p>&gt; ① ★ <strong>必须用音高的运动把词的分節重新保住</strong>（歌詞の分節を音高の運動で確保），否则意思糊掉；</p>
+<p>&gt; ② <strong>用过头，词的意思退到很后面，甚至变得滑稽。</strong></p>
+<p><strong>自检动作</strong>：整段均等音符的段落，把词<strong>只按音高的高低</strong>读一遍，</p>
+<p>★ <strong>听不出词是在哪儿分开的 → 把音高改到能分开为止，或者放弃这一手。</strong></p>
+<hr>
+<h4>5. ★★ 字余り／字足らず——故意的不匹配</h4>
+<p><strong>日文词里最像&quot;反对称&quot;的一手，直接接 LYR-SPEC 的 <code>asymmetry</code>。</strong></p>
+<h5>5.1 字余り（字多了）</h5>
+<p><strong>定义</strong>：词比旋律装得下的多 → 特定的词被<strong>急促地提前咬出来</strong>。</p>
+<p><strong>效果</strong>：<strong>喘不过气的拼命感与紧迫感</strong>（切実／恳切）（《旋律法 増補版》p.203）。</p>
+<p>★★ <strong>关键不在&quot;多了几个字&quot;，在&quot;挤在哪儿&quot;</strong>（四选一，实例见 [reference.md](reference.md) §3.1）：</p>
+<table><thead><tr><th>挤压位置</th><th>效果与代价</th></tr></thead><tbody>
+<tr><td>★ <strong>乐句开头</strong></td><td>★ <strong>势头最强</strong>，造出&quot;向前栽&quot;的冲劲；印象极强，最容易做作</td></tr>
+<tr><td><strong>乐句中间</strong></td><td>势头 ＋ 强调它后面的词；★ <strong>分節容易被听错</strong></td></tr>
+<tr><td><strong>分節的边界上</strong></td><td>★ <strong>最规矩最顺</strong>，但<strong>没有势头</strong>——等于白挤</td></tr>
+<tr><td><strong>乐句末尾</strong></td><td>像匆匆收尾，词&quot;<strong>溢出来</strong>&quot;；通常是缺点，除非你要的正是那个狼狈</td></tr>
+</tbody></table>
+<p><strong>加强的办法</strong>：★ <strong>把字余り的节奏型在整个乐句里重复</strong>，&quot;拼命向前&quot;的感觉会被坐实。</p>
+<p>★ <strong>反过来选装置</strong>：要<strong>疾走感</strong>就去找字余り，要<strong>酸楚、阴翳</strong>就去找字足らず</p>
+<p>（[reference.md](reference.md) §3.3 的情绪对照）。</p>
+<p>&gt; ⚠ <strong>三条警告</strong>（《旋律法 増補版》p.205）：</p>
+<p>&gt; ① <strong>印象极强、极易做作</strong>；</p>
+<p>&gt; ② ★ <strong>被挤压强调的那个词如果得不到共鸣，整句滑向滑稽</strong>；</p>
+<p>&gt; ③ ★ <strong>过了头，连续的等值音符把旋律性推到背景，旋律变得&quot;像说话&quot;</strong>——</p>
+<p>&gt; 反过来，<strong>叙述性的段落可以故意利用这一点</strong>。</p>
+<p><strong>自检动作</strong>：每一处字余り问两句——<strong>&quot;挤在哪儿&quot;</strong>和<strong>&quot;被挤出来强调的是哪个词&quot;</strong>。</p>
+<p>★ 第二个问题答不上来 → 那不是字余り，是没数清拍，回 §1.1 重数。</p>
+<h5>5.2 字足らず（字少了）</h5>
+<p><strong>定义</strong>：词不够填满旋律 → 特定的词被<strong>拉长、跨多个音高咬出来</strong>。</p>
+<p><strong>效果</strong>：那个词<strong>特别引人注意</strong>，可以把很深的情绪唱进长音里（《旋律法 増補版》p.206）。</p>
+<p>&gt; <strong>副作用</strong>：★ <strong>拉过头，意思退到背景，段落带上スキャット（无词吟唱）那样的器乐性。</strong></p>
+<p><strong>自检动作（硬的）</strong>：被拉长的那个拍，<strong>逐条对 §1.2</strong>——</p>
+<p>★ <strong>不能是无声音</strong>（拉长等于拉一段气音）、★ <strong>不能是撥音 ん</strong>（唱不响也唱不长），</p>
+<p>★ <strong>最好是一个真的長音或一个开放元音。</strong></p>
+<h5>5.3 ★ 接到本库的 <code>asymmetry</code></h5>
+<p><code>asymmetry.short_line</code> 填<strong>字足らず的那一行</strong>（写明哪个词被拉长、拉过几个音高）；</p>
+<p><strong>反向用</strong>则填<strong>字余り的那一行</strong>（写明<strong>挤在乐句的哪个位置</strong>，§5.1 四选一）。</p>
+<p>★★ <strong>本库的纪律在这里同样成立：每一处不对称都要说得出理由。</strong></p>
+<p>日文的便宜在于<strong>字余り／字足らず自带一套现成的效果说明</strong>——</p>
+<p>挤在句头是冲劲，拉长是深情。<strong>选了哪种效果，就把那个词写进字段。</strong></p>
+<hr>
+<h4>6. ★ 音节数不合时的四种修正法（改旋律那侧）</h4>
+<p><strong>这四条是曲先（＝本库的先曲后词）时的标准动作</strong>（《旋律法 増補版》p.201）：</p>
+<table><thead><tr><th>#</th><th>情况</th><th>怎么改</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>音符数 &lt; 拍数</strong>（词太多）</td><td>★ <strong>细分音符时值</strong>，或在乐句前后<strong>追加音符</strong></td></tr>
+<tr><td>2</td><td><strong>音符数 &gt; 拍数</strong>（词太少）</td><td>★ <strong>把几个时值合并成长音</strong></td></tr>
+<tr><td>3</td><td><strong>数对得上，但节奏不合</strong></td><td>改时值／改节奏，<strong>重新分组</strong></td></tr>
+<tr><td>4</td><td>★ <strong>旋律走向与音高重音不合</strong></td><td><strong>在尊重分節的前提下</strong>调整音高与节奏</td></tr>
+</tbody></table>
+<p>★ <strong>字余り／字足らず的四种挤压位置实例在 [reference.md](reference.md) §3。</strong></p>
+<h5>6.1 「留余地」的修正法</h5>
+<p>&gt; ★ <strong>不要一上来就把旋律做细——留出修正的余地，在与词的对话里把它磨出来。</strong></p>
+<p>&gt; （《旋律法 増補版》p.202）</p>
+<p><strong>一稿只固定关键词的位置</strong>，其余大致摆着；<strong>二稿按词分开／合并音符</strong>；</p>
+<p><strong>三稿调音高重音、把关键词放到旋律的最高点、把拍与词对齐收尾</strong>。</p>
+<p>★ <strong>带实例的三稿法在 [reference.md](reference.md) §7。</strong></p>
+<h5>6.2 ⚠ 这四法有一个必须守住的上限</h5>
+<p>&gt; ★★ <strong>这些操作会破坏重复与对比这类结构效果。</strong></p>
+<p>&gt; <strong>如果一个重复结构为了迁就词被毁掉了——回头改词。</strong></p>
+<p>&gt; （《旋律法 増補版》p.203）</p>
+<p><strong>这条是本 skill 与作曲编曲的分界线上最要紧的一句</strong>：</p>
+<p><strong>改旋律是本 skill 建议的动作，但改到把曲式结构改坏，就越界了。</strong></p>
+<p>★ <strong>结构层面的判断归 <code>lw-structure</code>（词的段落）与作曲编曲（曲式）；本 skill 只负责在这里喊停</strong>——写一条消息给 <code>music</code>（<code>lw-workflow</code> §6.2）。</p>
+<p><strong>自检动作</strong>：每做完一轮四法修正，把<strong>同名段落的两遍并排看</strong>——</p>
+<p>★ <strong>原本一样的地方还一样吗</strong>？不一样了，且不是你有意变的 → <strong>回头改词。</strong></p>
+<hr>
+<h4>7. 韻与七五調</h4>
+<h5>7.1 韻（日文的押韵）为什么弱</h5>
+<p><strong>定义</strong>：<strong>韻 ＝ 重复含有特定音节的词，给歌词以节奏感</strong>（《旋律法 増補版》p.207）。</p>
+<p>它包括两种：</p>
+<ul>
+<li><strong>完全同音的重复</strong>：海（うみ）／産み（うみ）</li>
+<li>★ <strong>元音组合相同的重复</strong>：海（う-み）／国（く-に）＝ <strong>u-i 韻</strong></li>
+</ul>
+<p><strong>頭韻</strong>放在分節的<strong>开头</strong>，<strong>脚韻</strong>放在分節的<strong>末尾</strong>；押韵这件事本身叫 <strong>韻を踏む</strong>。</p>
+<p>&gt; ★★ <strong>日文的韵为什么天然比中英文弱</strong>（★ <strong>这是本库的读法，不是原书的原话</strong>）：</p>
+<p>&gt; ① 日文押的是<strong>元音序列</strong>，<strong>辅音完全不用管</strong>——中文的辙要韵母整体相同，英文的韵要元音＋尾辅音都对上；</p>
+<p>&gt; ② 日文只有<strong>五个元音</strong>，两三个元音的组合<strong>门槛低得多</strong>；</p>
+<p>&gt; ③ ★ <strong>原书给的唯一一条警告不是&quot;押不上&quot;，是&quot;押太长会显得生硬、像早就安排好的&quot;</strong>——</p>
+<p>&gt; <strong>可见日文的问题从来不是找不到韵。</strong></p>
+<p>&gt; <strong>后果</strong>：日文词里&quot;押韵&quot;不是结构的主梁，<strong>顶多是纹理</strong>；想靠韵撑住段落，会撑不住。</p>
+<p>★ <strong>押韵的通用原理（韵式、意外度、故意不押）一律去 <code>lw-rhyme</code></strong>；</p>
+<p>本 skill 只负责告诉你<strong>在日文里它的杠杆比你以为的短</strong>。</p>
+<h5>7.2 韵怎么配旋律</h5>
+<p>★ <strong>押韵的位置上，节奏与拍位完全相同，而音高的运动每次不同</strong>——韵会让旋律的节奏自然凝聚。</p>
+<p>⚠ <strong>警告</strong>：★ <strong>韵拖得太长会显得生硬、像早就安排好的</strong>——</p>
+<p><strong>让节奏以外的元素（音高等）流动变化</strong>，把自由感救回来。</p>
+<p>★ <strong>说唱的用法</strong>：<strong>不押韵的部分剥掉音高（接近念白），押韵的部分用跳进跳出来</strong>（flow 归 <code>lw-rap</code>）。</p>
+<p>（《旋律法 増補版》p.207–208；实例与&quot;强调韵&quot;的做法见 [reference.md](reference.md) §4。）</p>
+<h5>7.3 ★★ 七五調与&quot;日本节奏警报&quot;</h5>
+<p><strong>可以故意用的传统格</strong>：<strong>七五調</strong>（七拍与五拍交替）、<strong>俳句 5-7-5</strong>、<strong>和歌 5-7-5-7-7</strong>、</p>
+<p><strong>三三七拍子</strong>、<strong>祭囃子（庙会囃子）的节奏</strong>——用它们<strong>唤起日本味</strong>是一手正当的手法</p>
+<p>（《旋律法 増補版》p.208）。</p>
+<p>&gt; ⚠⚠ <strong>反向警告，这才是本节的重点</strong>：</p>
+<p>&gt; ★ <strong>这些句型对日本人的耳朵太熟，会在你没注意的时候自己溜进来</strong>，</p>
+<p>&gt; 造出<strong>无意间很日本</strong>的旋律。</p>
+<p>&gt; ★ <strong>写 rap 这类节奏驱动的东西时尤其要盯</strong>——</p>
+<p>&gt; 七五調的节奏和「生麦生米生卵」那种绕口令节奏<strong>都会无意识地冒出来</strong>。</p>
+<p>★★ <strong>这条在本库里的位置</strong>：</p>
+<p><strong>它就是日文版的&quot;辙口只挑最顺的那几个&quot;</strong>（<code>lw-mandarin</code> §2.8、LYR-LINT 第 8 条）。</p>
+<p><strong>同一种病</strong>：语言自己最顺的那个模子，不选它反而要费力。</p>
+<p><strong>自检动作（当 lint 第 8 条的日文替代跑）</strong>：</p>
+<p>把每一行的<strong>拍数列出来</strong>，看有没有 7-5-7-5、5-7-5、3-3-7 的串。</p>
+<p>★ <strong>有 → 问一句&quot;我是故意的吗&quot;</strong>。答不上来就打散：<strong>改一行的拍数</strong>即可。</p>
+<hr>
+<h4>8. 詞先／曲先：两条流程</h4>
+<h5>8.1 ★ 术语对应</h5>
+<p>★ <strong>詞先（しせん）＝ 本库的「先词后曲」；曲先（きょくせん）＝ 本库的「先曲后词」。</strong></p>
+<p>对应之后，<strong><code>lw-workflow</code> §2／§3 的两张阶段表原样适用</strong>，本节只补日文这一侧的差别。</p>
+<h5>8.2 詞先（先词后曲）</h5>
+<p><strong>做法</strong>：先写词，<strong>然后一边唱着词一边构思旋律</strong>——</p>
+<p>★ <strong>字数、音符数、音高重音、音高的节奏会自然对齐</strong>（《旋律法 増補版》p.200）。</p>
+<p><strong>两条更省事的半詞先做法</strong>：</p>
+<ul>
+<li>★ <strong>整首不必都詞先</strong>：<strong>只把 catchphrase 的部分（比如副歌开头）詞先</strong>，已经很有效；</li>
+<li>★★ <strong>甚至只预先定下促音的位置</strong>就已经划算——</li>
+</ul>
+<p>  把「ずっと」「もっと」「きっと」嵌在乐句的开头，</p>
+<p>  <strong>利用促音与長音来设计乐句，能得到词曲紧紧焊在一起的强表现</strong>。</p>
+<p>&gt; ★ <strong>这一条是日文独有的便宜</strong>：</p>
+<p>&gt; 中文先词后曲最怕的是&quot;词定稿了才发现倒字&quot;（<code>lw-workflow</code> §3 的最大陷阱）；</p>
+<p>&gt; <strong>日文可以只锁住促音／長音的骨架，把别的都留给旋律</strong>——</p>
+<p>&gt; <strong>骨架锁住了，词曲的咬合就已经成立，改词的余地还全在。</strong></p>
+<p><strong>自检动作</strong>：先词后曲的日文词，写完先标两样：</p>
+<p>★ <strong>每一行促音落在第几拍</strong>、<strong>每一行長音落在第几拍</strong>。</p>
+<p>这两列写进 <code>prosody.sections[].stress_positions</code>（§10）交出去当旋律约束，比交一份字数表有用得多。</p>
+<h5>8.3 曲先（先曲后词）：按旋律类型填词</h5>
+<p><strong>总原则</strong>：旋律先，词后填；词出来的阶段，<strong>按词的音高重音去操作和修正旋律</strong>（用 §6 的四法）。</p>
+<p>★★ <strong>但曲先不等于&quot;旋律写完再想词&quot;</strong>：</p>
+<p><strong>即使先写曲，也要预先设想旋律开头、サビ的キメ（决定性段落）等关键位置的词</strong>——</p>
+<p>★ <strong>这些预置词不必是完整的句子，单词就行</strong>，</p>
+<p><strong>旋律像&quot;虫蛀&quot;一样这里一块那里一块地带着词成形，是常见且现实的做法</strong>。</p>
+<p><strong>优先挑含促音・長音・撥音的词</strong>（「ずっと」「もっと」「きっと」「イコーヨ」）——</p>
+<p>理由与 §8.2 完全相同：<strong>这些拍一旦定下，词曲的咬合就已经成立。</strong></p>
+<p>（[reference.md](reference.md) §8。）</p>
+<p><strong>① 同音反复型的旋律</strong>（rap 风，常出现在 A メロ／平歌）：</p>
+<ul>
+<li>它有确定的音高——相对于调性通常是 <strong>主音或属音（1 度或 5 度）</strong>；</li>
+<li><strong>乐句末尾常常向下跳一个纯四度</strong>；</li>
+<li>★ <strong>向下跳的地方咬字必然弱 → 那里放助词或没有重音的假名</strong>，听上去就干净；</li>
+<li>★ 摇摆节奏「タタタタ→タッカタッカ」里，<strong>「カ」的位置同样适合放无重音的假名</strong>。</li>
+</ul>
+<p>（谷口尚久《プロの曲作りが分かる本》p.60。）</p>
+<p><strong>② 副歌（サビ）的填词</strong>：</p>
+<p>&gt; 套路是<strong>选普遍性强的词、说大事的词</strong>，让副歌&quot;听起来像副歌&quot;——</p>
+<p>&gt; ★ <strong>但不打破套路，不会生出有意思的东西。</strong>（同上）</p>
+<p>⚠ <strong>&quot;普遍性强的词&quot;正是本库 <code>imagery.forbidden</code> 要拉黑的那一类</strong>，冲突是真的。</p>
+<p>★ <strong>调和口径</strong>：<strong>副歌概括的是意思，不是把具体名词都换成大词</strong>（同 <code>lw-mandarin</code> §6.4）。</p>
+<p><strong>失效条件</strong>：前半句只在你确实需要一首&quot;标准品&quot;时成立；<strong>本库的默认立场是打破套路那一侧。</strong></p>
+<hr>
+<h4>9. ★★ 英文词混进日文歌：铁律</h4>
+<p><strong>日文作词里最容易翻车、也最好检查的一节。</strong></p>
+<h5>9.1 铁律本身</h5>
+<p>&gt; ★★ <strong>最大的坑：英文的音节数与音符数对不上。</strong></p>
+<p>&gt; （《プロの曲作りが分かる本》p.62）</p>
+<ul>
+<li><strong>free ＝ ★ 1 个音节</strong>：★ <strong>不能</strong>拆成 &quot;f-ree&quot; 唱两个音——<strong>没有元音核的地方放不了旋律音</strong></li>
+<li><strong>「フリー」＝ ★ 3 拍</strong>：★ <strong>拆得开</strong></li>
+<li><strong>freedom ＝ 2 个音节</strong>（free-dom）：能放 2 个音 ／ <strong>「フリーダム」＝ 5 拍</strong>：能拆</li>
+</ul>
+<p>★ <strong>可操作的一条</strong>：<strong>词典标了英文的音节划分点——填词时就去查。</strong></p>
+<p>（英文自己那一侧的重音与拍数规则在 <code>lw-english</code>；<strong>本 skill 只管这个换算</strong>。）</p>
+<h5>9.2 ★ 把英文词译成日文 ≈ 重写一首词</h5>
+<p>&gt; <strong>英文一个词用 1–2 个音节就交付完整的意思，同样的音符数承载的信息量大得多；</strong></p>
+<p>&gt; ★ <strong>直译过来必然音节不够。</strong></p>
+<p>&gt; （《プロの曲作りが分かる本》p.62）</p>
+<p><strong>两条出路</strong>：</p>
+<ol>
+<li>★ <strong>省く力（删减的力量）</strong>——删到字里行间留出空隙；</li>
+<li>★ <strong>干脆意译（＝从零重想）</strong>。</li>
+</ol>
+<p>★★ <strong>这与 <code>lw-english</code> §6 第 6 条是同一条规律的两个方向</strong>：</p>
+<p>英文→日文<strong>音节不够，要删</strong>；中文→英文<strong>音节撑爆，要重写</strong>。</p>
+<p><strong>共同的结论：跨语言的词不能翻，只能重写。</strong></p>
+<h5>9.3 ★ 日文独有的一个调节阀</h5>
+<p>&gt; <strong>同一个概念，作为英文只能占 1–2 个音；作为片假名外来语能伸缩到 3–5 个。</strong></p>
+<p>&gt; ★ <strong>需要更多音符就把它日语化，需要更少音符就把它英语化。</strong></p>
+<p>⚠ <strong>代价</strong>：片假名英语与真英语的<strong>语感完全不同</strong>——</p>
+<p><strong>换的是语域，不只是拍数。</strong> 换之前先问这一段的语域允不允许。</p>
+<p>★ <strong>NG／OK 的实例对照在 [reference.md](reference.md) §5。</strong></p>
+<h5>9.4 旋律本来就带英文 scratch 词的时候</h5>
+<p><strong>场景</strong>：海外买来的曲子，常常带着英文的仮歌（guide vocal）。</p>
+<p>★ <strong>每个音硬塞一个日文假名，会把气氛彻底毁掉。</strong></p>
+<p><strong>四条对策</strong>（促音感的音配顿挫的日文词／强辅音配强辅音／<strong>把八分拆成十六分增加音数</strong>／</p>
+<p><strong>高音长音（白玉）处干脆用英文</strong>）★ <strong>在 [reference.md](reference.md) §6</strong>。</p>
+<p><strong>フェイク（即兴加花）</strong>：本质是即兴，原则上<strong>交给歌手自由发挥</strong>；</p>
+<p>⚠ ★ <strong>让非英语母语的歌手唱夹英文的 Fake 行不通</strong>——</p>
+<p>要那个味道，就<strong>事先为这位歌手设计英文</strong>，或<strong>先让他唱出好唱的音节再换上发音相近的英文词</strong></p>
+<p>（《プロの曲作りが分かる本》p.62–63；细节见 [reference.md](reference.md) §6.1）。</p>
+<p>★ <strong>边界</strong>：<strong>Fake 具体怎么唱、怎么录</strong>归<strong>声音</strong>（录音与演唱指导）；</p>
+<p><strong>本 skill 只负责&quot;哪些音节可以交出去即兴，哪些不能&quot;。</strong></p>
+<hr>
+<h4>10. 与 LYR-SPEC 的字段对应</h4>
+<table><thead><tr><th>字段</th><th>日文词怎么填</th></tr></thead><tbody>
+<tr><td><code>meta.language</code></td><td><code>日文</code></td></tr>
+<tr><td><code>prosody.sections[].syllables</code></td><td>★★ <strong>填モーラ数（拍数），且按&quot;唱出来几个音&quot;数</strong>（§1.1、§3.2）。并音的地方在 <code>note</code> 里写明</td></tr>
+<tr><td><code>prosody.sections[].stress_positions</code></td><td>★ 日文这一格填<strong>音高重音的高低型</strong>，以及<strong>促音与長音落在第几拍</strong>（§8.2）</td></tr>
+<tr><td><code>prosody.sections[].peak_syllable</code></td><td>★ <strong>不能是无声音、不能是撥音 ん</strong>；最好是長音或开放元音（§1.2、§5.2）</td></tr>
+<tr><td><code>prosody.sections[].melody_contour</code></td><td>与<strong>音高重音</strong>、<strong>语尾升降</strong>的关系写这里（§2.1、§2.3）</td></tr>
+<tr><td><code>prosody.sections[].notes</code></td><td>○ 有音高序列时，用它核对 §2.1 的折线比对与 §1.2 的撥音离和弦音</td></tr>
+<tr><td><code>lyrics[].lines</code></td><td>★ <strong>分行 ＝ 分節 ＝ 气口</strong>（§4.1）。故意错位的地方在 <code>note</code> 里写理由（§4.2）</td></tr>
+<tr><td><code>asymmetry.short_line</code></td><td>★ <strong>字余り／字足らず</strong>，写明挤压位置或拉长的词（§5.3）</td></tr>
+<tr><td><code>asymmetry.unrhymed</code></td><td>日文的韵本来就弱，<strong>故意不押要写得比中英文更明确</strong>（§7.1）</td></tr>
+<tr><td><code>rhyme.che</code></td><td>★ <strong>日文没有辙口</strong>。这一格填<strong>元音组合</strong>（如 u-i）＋ <strong>頭韻／脚韻</strong>（§7.1）</td></tr>
+<tr><td><code>checks.self_audit</code></td><td>§11 的清单逐条过</td></tr>
+</tbody></table>
+<p>⚠ <strong>两条 lint 的日文替代</strong>：</p>
+<ul>
+<li><strong>第 7 条</strong>（倒字率／协音违例）★ <strong>对日文不适用</strong>——改跑 §2.1 的<strong>音高重音折线比对</strong>与 §1.2 的<strong>特殊拍检查</strong>；</li>
+<li><strong>第 8 条</strong>（辙口不许只用一两个宽辙）★ 改跑 §7.3 的<strong>七五調警报</strong>：<strong>列出每行拍数，查有没有 7-5／5-7-5／3-3-7 的串</strong>。</li>
+</ul>
+<p>★ 其余八条（<code>intent</code> 四项、具体名词、各段字数、<code>asymmetry</code>、<code>withholding</code>、<code>pov</code>＋<code>tense_anchor</code>、韵脚意外度、副歌不许原样重复）<strong>日文全部照常适用</strong>。</p>
+<hr>
+<h4>11. 收工自检</h4>
+<ul>
+<li>[ ] ★★ 每一行<strong>数过モーラ</strong>，且数的是<strong>唱出来的音</strong>，不是纸面假名（§1.1、§3.2）</li>
+<li>[ ] ★ <strong>拗音没有被多数一拍</strong>；<strong>促音、撥音、長音各算了一拍</strong>，<strong>促音配了休止</strong>（§1.2）</li>
+<li>[ ] ★ <strong>单独给音符的撥音 ん 是短的、弱的</strong>；落在强拍长音上的 ん <strong>离开了和弦音</strong>（§1.2）</li>
+<li>[ ] ★ <strong>无声音的拍配的是短音符</strong>；<strong>最高音与长音下面没有无声音</strong>（§1.2、§5.2）</li>
+<li>[ ] ★ <strong>相同元音相连的地方，插了休止或改了音高</strong>（§1.2）</li>
+<li>[ ] ★ <strong>每一个长音符下面，要么是真的長音，要么是分節的末尾</strong>（§1.2）</li>
+<li>[ ] ★★ <strong>音高重音的折线与旋律折线比对过</strong>；反向的地方<strong>每一处都是知情的</strong>（§2.1）</li>
+<li>[ ] 故意偏离音高重音的地方<strong>不超过两处</strong>，且<strong>周围的词是正确的</strong>（§2.2）</li>
+<li>[ ] 段尾的<strong>升降</strong>与这一段是&quot;提问&quot;还是&quot;回答&quot;一致（§2.3）</li>
+<li>[ ] ★ <strong>没有拿中文倒字那套逐字查日文</strong>（§2.4）</li>
+<li>[ ] ★ 每一行<strong>唱过一遍</strong>，符割り的并音与省略都记下来了（§3.2、§3.3）</li>
+<li>[ ] <strong>下跳与弱位上放的是助词或无重音的假名</strong>，没有助词顶上强拍（§3.4、§8.3）</li>
+<li>[ ] ★ <strong>分行 ＝ 分節</strong>；故意错位的地方说得出理由，且<strong>意思保得住</strong>（§4.1、§4.2）</li>
+<li>[ ] 均等音符的段落，<strong>用音高把分節重新保住了</strong>（§4.3）</li>
+<li>[ ] ★★ 每一处<strong>字余り说得出&quot;挤在哪儿&quot;和&quot;强调哪个词&quot;</strong>（§5.1）</li>
+<li>[ ] ★ 每一处<strong>字足らず被拉长的那个拍经得起拉</strong>（不是无声音、不是 ん）（§5.2）</li>
+<li>[ ] ★ 四法修正之后，<strong>同名段落的重复结构没有被改坏</strong>（§6.2）</li>
+<li>[ ] ★★ <strong>拍数列出来查过七五調／5-7-5／3-3-7</strong>；有的话<strong>是故意的</strong>（§7.3）</li>
+<li>[ ] 先词后曲的话，<strong>促音与長音的位置写进了 <code>stress_positions</code> 交出去</strong>（§8.2）</li>
+<li>[ ] ★ 混进来的英文<strong>按音节数查过词典</strong>，没有把单音节词拆成两个音（§9.1）</li>
+<li>[ ] ★ 英文那部分<strong>不是从日文/中文翻过去的</strong>（§9.2）</li>
+<li>[ ] <code>rhyme.che</code> 填的是<strong>元音组合＋頭韻/脚韻</strong>，不是辙口（§7.1、§10）</li>
+</ul>
+<hr>
+<h4>附：来源</h4>
+<ul>
+<li><strong>主干</strong>：直接引自两本原书的歌词—旋律咬合内容——</li>
+</ul>
+<p>  高山博《ポピュラー音楽作曲のための旋律法 増補版》第7章「歌詞」（p.189–214）：</p>
+<p>  两种时间的咬合、イントネーション与標準語、単語のリズム（長音／促音／撥音／無声音／連母音）、</p>
+<p>  分節与三种强调法、音节数修正四法与留余地三稿法、字余り／字足らず、</p>
+<p>  韻（頭韻／脚韻、元音组合的韻）与七五調的&quot;日本节奏警报&quot;（→ 本 skill §7）；</p>
+<p>  谷口尚久《プロの曲作りが分かる本》3-6～3-8（p.58–63）：</p>
+<p>  符割り与&quot;同一条旋律六个词&quot;、按旋律类型填词、英文音节铁律、フェイク与仮歌。</p>
+<ul>
+<li><strong>实例与谱例级的处理</strong>：<strong>[reference.md](reference.md)</strong>，其中标出两本原书各自的章节与页码——</li>
+</ul>
+<p>  《ポピュラー音楽作曲のための旋律法 増補版》第7章「歌詞」、</p>
+<p>  《プロの曲作りが分かる本》3-6～3-8（谷口尚久，书页 058–063）。</p>
+<ul>
+<li>⚠ <strong>三处需要标明的口径</strong>：</li>
+</ul>
+<p>  ① <strong>拗音占一拍</strong>是モーラ计数的基础规则，与主干材料中「フリー＝3」「フリーダム＝5」的算法一致，</p>
+<p>  <strong>主干材料未单独列举拗音</strong>，此处按同一套计数法补齐并标出；</p>
+<p>  ② 原书数拍时用的词是「音節」，本 skill 统一用 <strong>モーラ（拍）</strong>，<strong>避免与英文的 syllable 混淆</strong>（§1.1）；</p>
+<p>  ③ §7.1「日文的韵为什么弱」是<strong>本库从材料推出的读法</strong>，原书只给了&quot;押太长会生硬&quot;这一条警告。</p>
+<ul>
+<li>⚠ <strong>本 skill 只适用于日语。</strong></li>
+</ul>
+<p>  中文见 <code>lw-mandarin</code> 与 <code>lw-tone-check</code>，粤语见 <code>lw-cantonese</code>，英文见 <code>lw-english</code>——</p>
+<p>  ★ <strong>三套约束不可互相顶替</strong>（§1.3）。</p>
+<ul>
+<li><strong>一律出库</strong>：演唱指导与咬字、人声录音、话筒与摆位、修音、和声堆叠与人声混音 → <strong>声音</strong>（录音与演唱指导、混音）；</li>
+</ul>
+<p>  旋律与曲式 → <strong>作曲编曲</strong>。</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>jtydhr88</strong> in
+        <a href="https://github.com/jtydhr88/lyric-writing-skills" rel="noopener">jtydhr88/lyric-writing-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-case-studies/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-case-studies the case layer - how to take a finished lyric apart and what three working lyricists say about their own habits (案例与拆解). a fixed twelve-row worksheet for dissecting any song, keyed to the library&#39;s own fields so every finding lands in a skill instead of staying an impression; the rule that a real lyric is read from the middle outward, not from the theme down; what yao qian, zhang li and hong yuan each say about opening lines, restraint, revision, rhyme width, colloquial versus literary diction and how much to leave the composer, plus the four places they openly disagree and how to pick a side; worked dissections of songs the sources analyse in full, including one song two of them discuss independently; and the failure patterns they name - flat, scattered, overlong, bland, blunt, bare, stuffed. use when studying a lyric you admire, when you need a real example of a technique, when a draft feels wrong and you want a model to compare against, or when asked to critique a song. 案例、拆解、词评、作品分析、词人自述、改稿对照。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-case-studies</span>
+    <span class="r-desc">The case layer - how to take a finished lyric apart and what three working lyricists say about their own habits (案例与拆解). A fixed twelve-row worksheet for dissecting any song, keyed to the library&#39;s own fields so every finding lands in a skill instead of staying an impression; the rule that a real lyric is read from the middle outward, not from the theme down; what Yao Qian, Zhang Li and Hong Yuan each say about opening lines, restraint, revision, rhyme width, colloquial versus literary diction and how much to leave the composer, plus the four places they openly disagree and how to pick a side; worked dissections of songs the sources analyse in full, including one song two of them discuss independently; and the failure patterns they name - flat, scattered, overlong, bland, blunt, bare, stuffed. Use when studying a lyric you admire, when you need a real example of a technique, when a draft feels wrong and you want a model to compare against, or when asked to critique a song. 案例、拆解、词评、作品分析、词人自述、改稿对照。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-chinese-style/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-chinese-style the chinese-style layer for lyric writing (中国风歌词). what makes a lyric read as 中国风 rather than merely decorated - the vocabulary families it draws on (place, dynasty, object, craft, plant), the sixteen rhetorical devices fang wen-shan catalogues inside his own lyrics, each with a book example and a failure condition, why every image must belong to one material world and how one out-of-period object breaks it, the four grades of borrowing from classical verse and where borrowing becomes copying, what to do when the listener will not catch the allusion, what the words promise the arrangement when they name an instrument, and the three ways this style usually dies - ornament with no event, images unrelated to what the song says, and archaism for its own sake. use when writing or auditing a 中国风 or 古风 lyric, when a draft is full of beautiful old words but says nothing, when checking an allusion, when images from different eras collide, or when the words name an instrument. 中国风、古风、典故、化用、文字游戏、修辞、意象成套、方文山、穿帮。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-chinese-style</span>
+    <span class="r-desc">The Chinese-style layer for lyric writing (中国风歌词). What makes a lyric read as 中国风 rather than merely decorated - the vocabulary families it draws on (place, dynasty, object, craft, plant), the sixteen rhetorical devices Fang Wen-shan catalogues inside his own lyrics, each with a book example and a failure condition, why every image must belong to one material world and how one out-of-period object breaks it, the four grades of borrowing from classical verse and where borrowing becomes copying, what to do when the listener will not catch the allusion, what the words promise the arrangement when they name an instrument, and the three ways this style usually dies - ornament with no event, images unrelated to what the song says, and archaism for its own sake. Use when writing or auditing a 中国风 or 古风 lyric, when a draft is full of beautiful old words but says nothing, when checking an allusion, when images from different eras collide, or when the words name an instrument. 中国风、古风、典故、化用、文字游戏、修辞、意象成套、方文山、穿帮。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-english/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-english the english language layer for lyric writing (英文词的重音与节拍对齐). word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence&#39;s intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and &#39;em do to the count; why the, of and and must not land on a downbeat; and the mistakes a chinese-speaking writer makes in english. use when writing or checking english lyrics, fitting english words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-english</span>
+    <span class="r-desc">The English language layer for lyric writing (英文词的重音与节拍对齐). Word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence&#39;s intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and &#39;em do to the count; why the, of and and must not land on a downbeat; and the mistakes a Chinese-speaking writer makes in English. Use when writing or checking English lyrics, fitting English words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-imagery/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-imagery the imagery layer - how to find concrete nouns and make them a system (意象与具体名词). object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct ai fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when lyr-lint check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-imagery</span>
+    <span class="r-desc">The imagery layer - how to find concrete nouns and make them a system (意象与具体名词). Object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct AI fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. Use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when LYR-LINT check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-korean/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-korean the korean language layer for lyric writing (韩文词的音节与받침). one hangul block is one syllable is one note by default - unlike japanese, a final consonant takes no beat of its own. the batchim (받침, syllable-final consonant) is the subject here; single and double batchim, the seven representative finals, and why a syllable closing on a stop is the wrong place for a long note, a phrase-end hold or a section peak. liaison (연음) moves a batchim onto the next block, so the sung syllable boundary is not the written one, which moves every breath, caesura and rhyme landing. plus the sound changes that rewrite a line between paper and voice (nasalization, tensification, aspiration, palatalization, elision, insertion, vowel harmony); why korean has no tone and no word stress; how korean rhyme differs from the mandarin che. use when writing or checking korean lyrics, fitting hangul to a melody, counting syllables, or picking a word for a held note. 韩文作词、韩语歌词、받침、收音、连音、音变、音节数、k-pop 填词。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-korean</span>
+    <span class="r-desc">The Korean language layer for lyric writing (韩文词的音节与받침). One hangul block is one syllable is one note by default - unlike Japanese, a final consonant takes no beat of its own. The batchim (받침, syllable-final consonant) is the subject here; single and double batchim, the seven representative finals, and why a syllable closing on a stop is the wrong place for a long note, a phrase-end hold or a section peak. Liaison (연음) moves a batchim onto the next block, so the sung syllable boundary is not the written one, which moves every breath, caesura and rhyme landing. Plus the sound changes that rewrite a line between paper and voice (nasalization, tensification, aspiration, palatalization, elision, insertion, vowel harmony); why Korean has no tone and no word stress; how Korean rhyme differs from the Mandarin che. Use when writing or checking Korean lyrics, fitting hangul to a melody, counting syllables, or picking a word for a held note. 韩文作词、韩语歌词、받침、收音、连音、音变、音节数、K-pop 填词。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add jtydhr88-lyric-writing-skills/lw-japanese</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add jtydhr88-lyric-writing-skills/lw-japanese" aria-label="Copy install lw-japanese">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/jtydhr88/lyric-writing-skills" rel="noopener">jtydhr88/lyric-writing-skills</a></dd></div>
+          <div><dt>Author</dt><dd>jtydhr88</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>music</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">jtydhr88-lyric-writing-skills/lw-japanese</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=lw-japanese%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-japanese%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-japanese%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-japanese%2F&t=lw-japanese%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-japanese%2F&title=lw-japanese%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-japanese/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/jtydhr88-lyric-writing-skills/lw-japanese/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

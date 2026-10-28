@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>regime-detection — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="regime-detection, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="regime-detection — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="regime-detection — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"regime-detection","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/"}]},{"@type":"TechArticle","headline":"regime-detection","description":"Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>regime-detection
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>regime-detection</h1>
+      <p class="summary">Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Regime Detection</h3>
+<p>Identify the current market regime so you can pick the right strategy, size positions correctly, and avoid deploying trend-following logic in a ranging market (or vice versa).</p>
+<h4>Why Regime Detection Matters</h4>
+<p>Every strategy has a &quot;home regime.&quot; A momentum strategy prints money in a clean uptrend but bleeds in a choppy range. A mean-reversion grid thrives in low-volatility consolidation but gets steamrolled by a trending breakout. Regime detection tells you <strong>which playbook to use right now</strong>.</p>
+<p>Key benefits:</p>
+<ul>
+<li><strong>Strategy selection</strong>: Route signals to the right strategy for the current environment</li>
+<li><strong>Position sizing</strong>: Reduce exposure in hostile regimes, increase in favorable ones</li>
+<li><strong>Stop adaptation</strong>: Wider stops in high-vol regimes, tighter in low-vol trends</li>
+<li><strong>Drawdown control</strong>: Sit out &quot;danger zone&quot; regimes (high vol + no trend)</li>
+</ul>
+<h4>Core Regime Dimensions</h4>
+<p>Two orthogonal axes define the four-quadrant regime model:</p>
+<table><thead><tr><th></th><th>Low Volatility</th><th>High Volatility</th></tr></thead><tbody>
+<tr><td><strong>Trending</strong></td><td>Q1: Clean trend — best for trend following</td><td>Q2: Volatile trend — momentum with caution</td></tr>
+<tr><td><strong>Ranging</strong></td><td>Q3: Quiet range — mean-reversion paradise</td><td>Q4: Choppy chaos — reduce or sit out</td></tr>
+</tbody></table>
+<p>A third dimension — <strong>mean-reversion tendency</strong> (Hurst exponent) — refines Q3 by telling you how reliably price reverts.</p>
+<h4>Simple Approaches (No ML Required)</h4>
+<h5>1. ATR Volatility Percentile</h5>
+<p>Rank the current ATR against its own recent history to get a 0–100 percentile score.</p>
+<p><pre><code>import pandas as pd
+import numpy as np
+
+def atr_percentile(
+    high: pd.Series, low: pd.Series, close: pd.Series,
+    atr_period: int = 14, lookback: int = 100
+) -&gt; pd.Series:
+    &quot;&quot;&quot;ATR percentile rank over a rolling window.&quot;&quot;&quot;
+    tr = pd.concat([
+        high - low,
+        (high - close.shift(1)).abs(),
+        (low - close.shift(1)).abs()
+    ], axis=1).max(axis=1)
+    atr = tr.rolling(atr_period).mean()
+    return atr.rolling(lookback).apply(
+        lambda x: pd.Series(x).rank(pct=True).iloc[-1], raw=False
+    )</code></pre></p>
+<ul>
+<li><strong>&lt; 25th percentile</strong> → Low volatility regime</li>
+<li><strong>25th–75th</strong> → Normal volatility</li>
+<li><strong>&gt; 75th percentile</strong> → High volatility regime</li>
+</ul>
+<h5>2. ADX Trend Strength</h5>
+<p>ADX above 25 signals a trending market; below 20 signals a range.</p>
+<p><pre><code>def compute_adx(
+    high: pd.Series, low: pd.Series, close: pd.Series,
+    period: int = 14
+) -&gt; pd.Series:
+    &quot;&quot;&quot;Average Directional Index.&quot;&quot;&quot;
+    plus_dm = high.diff().clip(lower=0)
+    minus_dm = (-low.diff()).clip(lower=0)
+    # Zero out when the other is larger
+    plus_dm[plus_dm &lt; minus_dm] = 0
+    minus_dm[minus_dm &lt; plus_dm] = 0
+
+    tr = pd.concat([
+        high - low,
+        (high - close.shift(1)).abs(),
+        (low - close.shift(1)).abs()
+    ], axis=1).max(axis=1)
+
+    atr = tr.ewm(span=period, adjust=False).mean()
+    plus_di = 100 * plus_dm.ewm(span=period, adjust=False).mean() / atr
+    minus_di = 100 * minus_dm.ewm(span=period, adjust=False).mean() / atr
+    dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di)
+    return dx.ewm(span=period, adjust=False).mean()</code></pre></p>
+<h5>3. EMA Slope + Price Position</h5>
+<p><pre><code>def trend_direction(close: pd.Series, period: int = 20) -&gt; pd.Series:
+    &quot;&quot;&quot;Returns +1 (uptrend), -1 (downtrend), 0 (neutral).&quot;&quot;&quot;
+    ema = close.ewm(span=period, adjust=False).mean()
+    slope = ema.diff(5)  # 5-bar slope
+    above = (close &gt; ema).astype(int)
+    direction = pd.Series(0, index=close.index)
+    direction[(slope &gt; 0) &amp; (above == 1)] = 1
+    direction[(slope &lt; 0) &amp; (above == 0)] = -1
+    return direction</code></pre></p>
+<h5>4. Bollinger Band Width Percentile</h5>
+<p>BB width (upper - lower) / middle as a volatility proxy. A &quot;squeeze&quot; (low percentile) often precedes a breakout.</p>
+<p><pre><code>def bb_width_percentile(
+    close: pd.Series, period: int = 20,
+    std_dev: float = 2.0, lookback: int = 100
+) -&gt; pd.Series:
+    &quot;&quot;&quot;Bollinger Band width percentile.&quot;&quot;&quot;
+    sma = close.rolling(period).mean()
+    std = close.rolling(period).std()
+    width = (2 * std_dev * std) / sma
+    return width.rolling(lookback).apply(
+        lambda x: pd.Series(x).rank(pct=True).iloc[-1], raw=False
+    )</code></pre></p>
+<h4>Statistical Approaches</h4>
+<h5>Rolling Hurst Exponent</h5>
+<p>The Hurst exponent H classifies time series behavior:</p>
+<ul>
+<li><strong>H &lt; 0.4</strong> → Mean-reverting (anti-persistent)</li>
+<li><strong>0.4 ≤ H ≤ 0.6</strong> → Random walk (no exploitable structure)</li>
+<li><strong>H &gt; 0.6</strong> → Trending (persistent)</li>
+</ul>
+<p>Computed via the Rescaled Range (R/S) method. See <code>references/methodology.md</code> for the full derivation.</p>
+<p><pre><code>def hurst_exponent(series: pd.Series, max_lag: int = 50) -&gt; float:
+    &quot;&quot;&quot;Estimate Hurst exponent using R/S method.&quot;&quot;&quot;
+    lags = range(2, max_lag)
+    rs_values = []
+    for lag in lags:
+        chunks = [series.iloc[i:i+lag] for i in range(0, len(series) - lag, lag)]
+        rs_list = []
+        for chunk in chunks:
+            if len(chunk) &lt; lag:
+                continue
+            mean_val = chunk.mean()
+            devs = chunk - mean_val
+            cumdev = devs.cumsum()
+            r = cumdev.max() - cumdev.min()
+            s = chunk.std(ddof=1)
+            if s &gt; 0:
+                rs_list.append(r / s)
+        if rs_list:
+            rs_values.append(np.mean(rs_list))
+        else:
+            rs_values.append(np.nan)
+    valid = [(l, r) for l, r in zip(lags, rs_values) if not np.isnan(r)]
+    if len(valid) &lt; 5:
+        return 0.5
+    log_lags = np.log([v[0] for v in valid])
+    log_rs = np.log([v[1] for v in valid])
+    coeffs = np.polyfit(log_lags, log_rs, 1)
+    return coeffs[0]</code></pre></p>
+<h5>Change-Point Detection (CUSUM)</h5>
+<p>Detects abrupt shifts in mean or variance of a return series.</p>
+<p><pre><code>def cusum_test(
+    returns: pd.Series, threshold: float = 2.0
+) -&gt; list[int]:
+    &quot;&quot;&quot;CUSUM change-point detection on returns.
+
+    Returns indices where regime changes are detected.
+    &quot;&quot;&quot;
+    mean_r = returns.mean()
+    std_r = returns.std()
+    if std_r == 0:
+        return []
+    s_pos, s_neg = 0.0, 0.0
+    changes = []
+    for i, r in enumerate(returns):
+        z = (r - mean_r) / std_r
+        s_pos = max(0, s_pos + z - 0.5)
+        s_neg = max(0, s_neg - z - 0.5)
+        if s_pos &gt; threshold or s_neg &gt; threshold:
+            changes.append(i)
+            s_pos, s_neg = 0.0, 0.0
+    return changes</code></pre></p>
+<h5>Hidden Markov Models</h5>
+<p>For 2–3 state regime models using <code>hmmlearn</code>. This is optional — all core functionality works with numpy/pandas only.</p>
+<p><pre><code># Optional: requires `uv pip install hmmlearn`
+from hmmlearn import hmm
+
+def fit_hmm_regimes(
+    returns: np.ndarray, n_states: int = 2, n_iter: int = 100
+) -&gt; tuple[np.ndarray, object]:
+    &quot;&quot;&quot;Fit a Gaussian HMM to return series.&quot;&quot;&quot;
+    X = returns.reshape(-1, 1)
+    model = hmm.GaussianHMM(
+        n_components=n_states, covariance_type=&quot;full&quot;, n_iter=n_iter
+    )
+    model.fit(X)
+    states = model.predict(X)
+    return states, model</code></pre></p>
+<p>See <code>references/methodology.md</code> for details on feature selection and state interpretation.</p>
+<h4>Crypto-Specific Considerations</h4>
+<h5>Regime Speed</h5>
+<p>Crypto regimes change <strong>much faster</strong> than equities:</p>
+<table><thead><tr><th>Parameter</th><th>Equities</th><th>Crypto (large cap)</th><th>Crypto (micro cap / PumpFun)</th></tr></thead><tbody>
+<tr><td>ATR lookback</td><td>100–200 bars</td><td>50–100 bars</td><td>20–50 bars</td></tr>
+<tr><td>ADX period</td><td>14–28</td><td>10–14</td><td>7–10</td></tr>
+<tr><td>Regime persistence</td><td>Weeks–months</td><td>Days–weeks</td><td>Hours–days</td></tr>
+<tr><td>Hurst window</td><td>200+ bars</td><td>100 bars</td><td>50 bars</td></tr>
+</tbody></table>
+<h5>Volume as a Regime Signal</h5>
+<p>In crypto, volume confirms regime quality:</p>
+<ul>
+<li><strong>High volume + trend</strong> → Strong conviction, ride it</li>
+<li><strong>Low volume + trend</strong> → Drift, unreliable, reduce size</li>
+<li><strong>High volume + range</strong> → Distribution or accumulation, watch for breakout</li>
+<li><strong>Low volume + range</strong> → Dead market, skip</li>
+</ul>
+<h5>PumpFun Micro-Regimes</h5>
+<p>New token launches follow a stereotyped sequence:</p>
+<ol>
+<li><strong>Launch pump</strong> (minutes): Vertical move, extreme vol, no mean-reversion</li>
+<li><strong>First dump</strong> (minutes–hours): Profit-taking, high vol, trending down</li>
+<li><strong>Consolidation</strong> (hours–days): Low vol range, potential mean-reversion</li>
+<li><strong>Second wave or death</strong>: Either breaks out again (new trend) or fades to zero</li>
+</ol>
+<p>Each micro-regime lasts minutes to hours. Use 1-minute bars with 20–50 bar windows.</p>
+<h4>Combined Regime Classification</h4>
+<p><pre><code>def classify_regime(
+    vol_percentile: float, adx: float, hurst: float,
+    trend_dir: int
+) -&gt; dict[str, str]:
+    &quot;&quot;&quot;Classify into the 4-quadrant model.&quot;&quot;&quot;
+    vol_regime = (
+        &quot;low&quot; if vol_percentile &lt; 0.30
+        else &quot;high&quot; if vol_percentile &gt; 0.70
+        else &quot;normal&quot;
+    )
+    trend_regime = (
+        &quot;trending&quot; if adx &gt; 25
+        else &quot;ranging&quot; if adx &lt; 20
+        else &quot;transitional&quot;
+    )
+    direction = (
+        &quot;up&quot; if trend_dir &gt; 0
+        else &quot;down&quot; if trend_dir &lt; 0
+        else &quot;neutral&quot;
+    )
+    mr_regime = (
+        &quot;mean_reverting&quot; if hurst &lt; 0.4
+        else &quot;trending&quot; if hurst &gt; 0.6
+        else &quot;random&quot;
+    )
+    return {
+        &quot;volatility&quot;: vol_regime,
+        &quot;trend&quot;: trend_regime,
+        &quot;direction&quot;: direction,
+        &quot;mean_reversion&quot;: mr_regime,
+        &quot;quadrant&quot;: f&quot;{vol_regime}_vol_{trend_regime}&quot;,
+    }</code></pre></p>
+<h4>Strategy Adaptation</h4>
+<p>See <code>references/strategy_adaptation.md</code> for the full regime-strategy matrix.</p>
+<p>Quick reference:</p>
+<table><thead><tr><th>Current Regime</th><th>Action</th></tr></thead><tbody>
+<tr><td>Low vol + trending up</td><td>Full size trend-following, tight stops</td></tr>
+<tr><td>High vol + trending</td><td>Half size momentum, wide stops</td></tr>
+<tr><td>Low vol + ranging</td><td>Mean-reversion / grid strategies</td></tr>
+<tr><td>High vol + ranging</td><td>Reduce to 25% size or sit out</td></tr>
+<tr><td>Regime transition</td><td>Flatten or reduce to minimum size</td></tr>
+</tbody></table>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong><code>pandas-ta</code></strong>: Compute ATR, ADX, Bollinger Bands, EMAs</li>
+<li><strong><code>volatility-modeling</code></strong>: Advanced vol forecasting (GARCH, realized vol)</li>
+<li><strong><code>strategy-framework</code></strong>: Route signals through regime filter before execution</li>
+<li><strong><code>position-sizing</code></strong>: Scale position size by regime volatility</li>
+<li><strong><code>risk-management</code></strong>: Adjust portfolio risk limits per regime</li>
+</ul>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/methodology.md</code> — Detailed math for Hurst exponent, HMM, change-point detection, and volatility estimation methods</li>
+<li><code>references/strategy_adaptation.md</code> — Full regime-strategy matrix with position sizing, stop adaptation, and PumpFun micro-regime playbook</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/detect_regime.py</code> — Compute regime indicators on live or demo data, classify into 4-quadrant model</li>
+<li><code>scripts/regime_backtest.py</code> — Compare regime-adaptive vs static strategy on synthetic data with clear regime transitions</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/regime-detection</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/regime-detection" aria-label="Copy install regime-detection">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/regime-detection</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=regime-detection%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fregime-detection%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fregime-detection%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fregime-detection%2F&t=regime-detection%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fregime-detection%2F&title=regime-detection%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/regime-detection/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/regime-detection/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>backtrader — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="backtrader, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="backtrader — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="backtrader — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"backtrader","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/"}]},{"@type":"TechArticle","headline":"backtrader","description":"Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>backtrader
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>backtrader</h1>
+      <p class="summary">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Backtrader</h3>
+<p>Backtrader is a Python event-driven backtesting framework that processes data bar-by-bar, simulating realistic execution with a built-in broker, order management, and position tracking. Unlike vectorized frameworks (vectorbt, pandas), backtrader walks through history one bar at a time, firing callbacks that let you implement complex order logic that depends on previous fills, partial executions, and conditional brackets.</p>
+<h4>Event-Driven vs Vectorized</h4>
+<table><thead><tr><th>Aspect</th><th>Backtrader (event-driven)</th><th>vectorbt (vectorized)</th></tr></thead><tbody>
+<tr><td>Execution model</td><td>Bar-by-bar callbacks</td><td>Whole-array operations</td></tr>
+<tr><td>Speed</td><td>Slower (Python loop)</td><td>Fast (NumPy/Numba)</td></tr>
+<tr><td>Order types</td><td>Market, limit, stop, stop-limit, bracket, OCO</td><td>Market only (native)</td></tr>
+<tr><td>Realism</td><td>Built-in broker with commission, slippage, margin</td><td>Manual slippage modeling</td></tr>
+<tr><td>Multi-timeframe</td><td>Native resampledata</td><td>Manual alignment</td></tr>
+<tr><td>Best for</td><td>Complex strategies, bracket orders, portfolio</td><td>Fast parameter sweeps, simple signals</td></tr>
+</tbody></table>
+<p><strong>Use backtrader when you need:</strong></p>
+<ul>
+<li>Bracket orders (entry + stop loss + take profit as a unit)</li>
+<li>Stop-limit or trailing stop orders</li>
+<li>Order-dependent logic (scale in after first fill, cancel if not filled in N bars)</li>
+<li>Multi-timeframe strategies (daily signals, hourly execution)</li>
+<li>Realistic commission and slippage modeling</li>
+</ul>
+<p><strong>Use vectorbt when you need:</strong></p>
+<ul>
+<li>Fast parameter optimization over thousands of combinations</li>
+<li>Simple long/short signals without complex order management</li>
+<li>Quick prototyping and statistical analysis of results</li>
+</ul>
+<hr>
+<h4>Core Concepts</h4>
+<p>Backtrader has five core objects that interact through an event loop:</p>
+<h5>1. Cerebro (the engine)</h5>
+<p>The central orchestrator. You add strategies, data feeds, analyzers, and sizers to Cerebro, then call <code>run()</code>.</p>
+<p><pre><code>import backtrader as bt
+
+cerebro = bt.Cerebro()
+cerebro.addstrategy(MyStrategy, fast_period=10, slow_period=30)
+cerebro.adddata(data_feed)
+cerebro.broker.setcash(100_000)
+cerebro.broker.setcommission(commission=0.003)  # 0.3%
+cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name=&quot;sharpe&quot;)
+cerebro.addanalyzer(bt.analyzers.DrawDown, _name=&quot;drawdown&quot;)
+cerebro.run()</code></pre></p>
+<h5>2. Strategy (your logic)</h5>
+<p>A Strategy subclass contains all trading logic. Key methods:</p>
+<ul>
+<li><code>__init__()</code> — Define indicators. Runs once before backtesting starts.</li>
+<li><code>next()</code> — Called on every bar. Place orders here.</li>
+<li><code>notify_order(order)</code> — Called when order status changes (submitted, accepted, completed, canceled, margin, expired).</li>
+<li><code>notify_trade(trade)</code> — Called when a trade opens or closes. Access P&amp;L here.</li>
+</ul>
+<p><pre><code>class EMACrossover(bt.Strategy):
+    params = (
+        (&quot;fast_period&quot;, 10),
+        (&quot;slow_period&quot;, 30),
+    )
+
+    def __init__(self) -&gt; None:
+        self.ema_fast = bt.ind.EMA(period=self.p.fast_period)
+        self.ema_slow = bt.ind.EMA(period=self.p.slow_period)
+        self.crossover = bt.ind.CrossOver(self.ema_fast, self.ema_slow)
+
+    def next(self) -&gt; None:
+        if not self.position:
+            if self.crossover &gt; 0:
+                self.buy()
+        elif self.crossover &lt; 0:
+            self.close()</code></pre></p>
+<h5>3. Data Feed</h5>
+<p>Backtrader data feeds provide OHLCV lines. The most common approach is loading from a pandas DataFrame:</p>
+<p><pre><code>import pandas as pd
+
+df = pd.DataFrame({
+    &quot;open&quot;: [...], &quot;high&quot;: [...], &quot;low&quot;: [...],
+    &quot;close&quot;: [...], &quot;volume&quot;: [...],
+}, index=pd.DatetimeIndex([...]))
+
+data = bt.feeds.PandasData(dataname=df)
+cerebro.adddata(data)</code></pre></p>
+<p>For CSV files:</p>
+<p><pre><code>data = bt.feeds.GenericCSVData(
+    dataname=&quot;ohlcv.csv&quot;,
+    dtformat=&quot;%Y-%m-%d&quot;,
+    openinterest=-1,  # no open interest column
+)</code></pre></p>
+<h5>4. Broker</h5>
+<p>The built-in broker simulates order execution with configurable cash, commission, and slippage.</p>
+<p><pre><code>cerebro.broker.setcash(100_000)
+cerebro.broker.setcommission(commission=0.003)  # 0.3% per trade
+
+# Cheat-on-open: execute at the open of the signal bar (avoids lookahead)
+cerebro.broker.set_coo(True)</code></pre></p>
+<h5>5. Analyzers</h5>
+<p>Analyzers compute performance metrics after the backtest completes.</p>
+<p><pre><code>cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name=&quot;sharpe&quot;,
+                    riskfreerate=0.0, annualize=True, timeframe=bt.TimeFrame.Days)
+cerebro.addanalyzer(bt.analyzers.DrawDown, _name=&quot;drawdown&quot;)
+cerebro.addanalyzer(bt.analyzers.TradeAnalyzer, _name=&quot;trades&quot;)
+cerebro.addanalyzer(bt.analyzers.Returns, _name=&quot;returns&quot;)
+
+results = cerebro.run()
+strat = results[0]
+
+sharpe = strat.analyzers.sharpe.get_analysis()
+dd = strat.analyzers.drawdown.get_analysis()
+trades = strat.analyzers.trades.get_analysis()</code></pre></p>
+<hr>
+<h4>Order Types</h4>
+<p>Backtrader supports complex order types critical for realistic crypto backtesting.</p>
+<h5>Market Order</h5>
+<p><pre><code>self.buy()  # market buy
+self.sell()  # market sell
+self.close()  # close current position</code></pre></p>
+<h5>Limit Order</h5>
+<p><pre><code>self.buy(exectype=bt.Order.Limit, price=95.0)
+self.sell(exectype=bt.Order.Limit, price=105.0)</code></pre></p>
+<h5>Stop Order</h5>
+<p>Triggers a market order when price reaches the stop level:</p>
+<p><pre><code>self.sell(exectype=bt.Order.Stop, price=90.0)  # stop loss</code></pre></p>
+<h5>Stop-Limit Order</h5>
+<p>Triggers a limit order when price reaches the stop level:</p>
+<p><pre><code>self.buy(exectype=bt.Order.StopLimit, price=100.0, plimit=101.0)</code></pre></p>
+<h5>Bracket Order</h5>
+<p>Entry + stop loss + take profit as an atomic unit. If the stop fills, the take profit is canceled (and vice versa).</p>
+<p><pre><code>self.buy_bracket(
+    price=100.0,           # entry limit
+    stopprice=95.0,        # stop loss
+    limitprice=110.0,      # take profit
+    exectype=bt.Order.Limit,
+    stopexec=bt.Order.Stop,
+    limitexec=bt.Order.Limit,
+)</code></pre></p>
+<p>See <code>references/strategy_patterns.md</code> for bracket order patterns with ATR-based stops.</p>
+<hr>
+<h4>Position Sizing (Sizers)</h4>
+<p>Sizers determine how many units to buy/sell per order.</p>
+<p><pre><code># Fixed size
+cerebro.addsizer(bt.sizers.FixedSize, stake=100)
+
+# Percent of portfolio
+cerebro.addsizer(bt.sizers.PercentSizer, percents=95)
+
+# All available cash
+cerebro.addsizer(bt.sizers.AllInSizer, percents=95)</code></pre></p>
+<p>Custom sizer:</p>
+<p><pre><code>class RiskSizer(bt.Sizer):
+    params = ((&quot;risk_pct&quot;, 0.02),)
+
+    def _getsizing(self, comminfo, cash, data, isbuy):
+        risk_amount = cash * self.p.risk_pct
+        atr = self.strategy.atr[0]
+        if atr &lt;= 0:
+            return 0
+        size = risk_amount / atr
+        return int(size)</code></pre></p>
+<hr>
+<h4>Crypto Considerations</h4>
+<h5>24/7 Markets</h5>
+<p>Crypto trades around the clock. When using daily bars, there are no weekends to skip. Set the session times or use <code>sessionstart</code>/<code>sessionend</code> if analyzing specific windows.</p>
+<h5>High Fees</h5>
+<p>DEX swaps on Solana typically cost 0.25-0.30% per trade. Set commission accordingly:</p>
+<p><pre><code>cerebro.broker.setcommission(commission=0.003)  # 0.3% round trip per side</code></pre></p>
+<h5>Fractional Sizing</h5>
+<p>Crypto allows fractional units. Backtrader supports this natively -- no special config needed.</p>
+<h5>Slippage</h5>
+<p>For realistic simulation, enable cheat-on-open and add slippage:</p>
+<p><pre><code>cerebro.broker.set_coo(True)
+cerebro.broker.set_slippage_perc(0.001)  # 0.1% slippage</code></pre></p>
+<h5>Volatile Data</h5>
+<p>Crypto OHLCV data often has extreme wicks. Use ATR-based stops rather than fixed percentage stops to adapt to volatility.</p>
+<hr>
+<h4>Multi-Timeframe</h4>
+<p>Backtrader can resample data to multiple timeframes within a single strategy:</p>
+<p><pre><code>data_1h = bt.feeds.PandasData(dataname=df_1h)
+cerebro.adddata(data_1h)
+
+# Resample 1h to daily
+cerebro.resampledata(data_1h, timeframe=bt.TimeFrame.Days, compression=1)</code></pre></p>
+<p>Access in strategy:</p>
+<p><pre><code>def __init__(self):
+    self.ema_1h = bt.ind.EMA(self.datas[0], period=20)    # hourly
+    self.ema_daily = bt.ind.EMA(self.datas[1], period=20)  # daily</code></pre></p>
+<hr>
+<h4>Custom Indicators</h4>
+<p><pre><code>class SpreadIndicator(bt.Indicator):
+    lines = (&quot;spread&quot;, &quot;zscore&quot;,)
+    params = ((&quot;period&quot;, 20),)
+
+    def __init__(self):
+        mean = bt.ind.SMA(self.data, period=self.p.period)
+        std = bt.ind.StdDev(self.data, period=self.p.period)
+        self.lines.spread = self.data - mean
+        self.lines.zscore = self.lines.spread / std</code></pre></p>
+<hr>
+<h4>Plotting</h4>
+<p>Backtrader includes matplotlib-based plotting:</p>
+<p><pre><code>cerebro.plot(style=&quot;candlestick&quot;, volume=True)</code></pre></p>
+<p>For headless environments, save to file:</p>
+<p><pre><code>import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+figs = cerebro.plot(style=&quot;candlestick&quot;)
+figs[0][0].savefig(&quot;backtest_result.png&quot;, dpi=150)</code></pre></p>
+<hr>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong>pandas-ta</strong>: Compute indicators externally, add as data feed columns. See <code>references/api_guide.md</code> for adding extra lines.</li>
+<li><strong>trading-visualization</strong>: Export trade log from <code>notify_trade</code> and plot with the visualization skill.</li>
+<li><strong>position-sizing</strong>: Use the <code>position-sizing</code> skill for Kelly or volatility-targeting sizers.</li>
+<li><strong>risk-management</strong>: Apply portfolio-level guardrails from the <code>risk-management</code> skill as strategy filters.</li>
+<li><strong>slippage-modeling</strong>: Use slippage estimates from the <code>slippage-modeling</code> skill to configure <code>set_slippage_perc</code>.</li>
+</ul>
+<hr>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/api_guide.md</code> — Cerebro, Strategy, Broker, Analyzer, Data Feed API reference</li>
+<li><code>references/strategy_patterns.md</code> — Reusable strategy patterns: crossover, mean reversion, multi-timeframe, custom indicators</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/backtest_strategy.py</code> — Complete EMA crossover backtest with analyzers and synthetic data</li>
+<li><code>scripts/bracket_orders.py</code> — Bracket order demonstration with RSI entry and ATR-based stops</li>
+</ul>
+<hr>
+<h4>Quick Start</h4>
+<p><pre><code>uv pip install backtrader pandas numpy matplotlib
+python scripts/backtest_strategy.py --demo
+python scripts/bracket_orders.py --demo</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/mev-analysis/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="mev-analysis mev exposure assessment, sandwich attack detection, and protection strategies for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">mev-analysis</span>
+    <span class="r-desc">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/backtrader</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/backtrader" aria-label="Copy install backtrader">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/backtrader</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=backtrader%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fbacktrader%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fbacktrader%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fbacktrader%2F&t=backtrader%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fbacktrader%2F&title=backtrader%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/backtrader/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/backtrader/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

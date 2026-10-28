@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lw-mandarin — music AI agent skill — Aidentity</title>
+<meta name="description" content="The Mandarin language layer for lyric writing (普通话作词的语言层). What Chinese as a language adds to the job; tone is phonemic, so the melody that enters a syllab…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="lw-mandarin, music, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lw-mandarin — music AI agent skill — Aidentity">
+<meta property="og:description" content="The Mandarin language layer for lyric writing (普通话作词的语言层). What Chinese as a language adds to the job; tone is phonemic, so the melody that enters a syllab…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="lw-mandarin — music AI agent skill — Aidentity">
+<meta name="twitter:description" content="The Mandarin language layer for lyric writing (普通话作词的语言层). What Chinese as a language adds to the job; tone is phonemic, so the melody that enters a syllab…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"music","item":"https://akshatnaruka.github.io/aidentity/skills/?category=music"},{"@type":"ListItem","position":3,"name":"lw-mandarin","item":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/"}]},{"@type":"TechArticle","headline":"lw-mandarin","description":"The Mandarin language layer for lyric writing (普通话作词的语言层). What Chinese as a language adds to the job; tone is phonemic, so the melody that enters a syllable can change which word is heard; one character is one syllable, so syllable count is character count; the thirteen rhyme families (十三辙) with their finals, example characters, wide-versus-narrow reach and loudness grades; how to pick a rhyme family, when to switch, and which families borrow from each other; level-and-oblique (平仄) and how much looser a lyric is than classical verse; the two- and three-character feet that make a Chinese line scan; and what makes a line easy or hard to sing. Use when writing or checking Mandarin lyrics, when choosing or changing a rhyme family, when a line is a tongue-twister or a high note lands on a closed vowel, when someone asks what 十三辙 is, or when LYR-LINT check 8 says the song sits on one or two wide families. 普通话、中文作词、十三辙、辙口、韵部、平仄、字调、易唱、绕口、开口音闭口音、什么是十三辙。","url":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/","dateModified":"2026-10-28","author":{"@type":"Person","name":"jtydhr88"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"music, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=music">music</a><span>/</span>lw-mandarin
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">jtydhr88/lyric-writing-skills · MIT</p>
+      <h1>lw-mandarin</h1>
+      <p class="summary">The Mandarin language layer for lyric writing (普通话作词的语言层). What Chinese as a language adds to the job; tone is phonemic, so the melody that enters a syllable can change which word is heard; one character is one syllable, so syllable count is character count; the thirteen rhyme families (十三辙) with their finals, example characters, wide-versus-narrow reach and loudness grades; how to pick a rhyme family, when to switch, and which families borrow from each other; level-and-oblique (平仄) and how much looser a lyric is than classical verse; the two- and three-character feet that make a Chinese line scan; and what makes a line easy or hard to sing. Use when writing or checking Mandarin lyrics, when choosing or changing a rhyme family, when a line is a tongue-twister or a high note lands on a closed vowel, when someone asks what 十三辙 is, or when LYR-LINT check 8 says the song sits on one or two wide families. 普通话、中文作词、十三辙、辙口、韵部、平仄、字调、易唱、绕口、开口音闭口音、什么是十三辙。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>普通话作词的语言层（Mandarin）</h3>
+<p>&gt; <strong>这个 skill 回答一个问题：中文这门语言，给作词加了哪些别的语言没有的约束。</strong></p>
+<p>&gt; 十三辙、平仄、字数与顿、易唱性都在这里。</p>
+<p>&gt; ★ <strong>倒字的判定与修正不在这里</strong>——那是 <code>lw-tone-check</code>，本 skill 只讲它的<strong>语言学原理与后果</strong>。</p>
+<h4>按任务读哪几节</h4>
+<table><thead><tr><th>任务</th><th>读</th></tr></thead><tbody>
+<tr><td>中文和英文写词到底差在哪</td><td>§1</td></tr>
+<tr><td><strong>什么是十三辙</strong></td><td>§2.1 ＋ <code>reference.md</code> §1</td></tr>
+<tr><td>这首歌该押哪个辙</td><td>★ §2.3–§2.5</td></tr>
+<tr><td>给戏里的角色写唱段，辙怎么选</td><td>§2.5 末 ＋ <code>reference.md</code> §7</td></tr>
+<tr><td>戏腔、戏曲段落的十三辙和普通话的有什么不同</td><td><code>reference.md</code> §1.5</td></tr>
+<tr><td>中途想换辙</td><td>§2.6</td></tr>
+<tr><td>韵脚差一点点，能不能算押上</td><td>§2.7 通韵</td></tr>
+<tr><td><strong>为什么老是押那几个辙不行</strong></td><td>★ §2.8</td></tr>
+<tr><td>平仄要不要管</td><td>§3</td></tr>
+<tr><td>一句写几个字、怎么断</td><td>§4</td></tr>
+<tr><td>唱不上去 / 绕口</td><td>§5</td></tr>
+<tr><td>标题放哪、口语到什么程度</td><td>§6</td></tr>
+</tbody></table>
+<h4>边界</h4>
+<table><thead><tr><th>不归这里</th><th>归哪</th></tr></thead><tbody>
+<tr><td><strong>倒字的判定方法与五种改法</strong></td><td>★ <code>lw-tone-check</code>（本 skill 只讲原理与语言约束）</td></tr>
+<tr><td><strong>粤语的协音与九声</strong></td><td>★ <code>lw-cantonese</code>（<strong>不许用普通话这套顶替</strong>——粤语是硬约束且写作顺序反转）</td></tr>
+<tr><td>押韵的通用原理：韵式、家族韵、意外度、故意不押</td><td><code>lw-rhyme</code>（<strong>本 skill 只管中文的韵表本身</strong>）</td></tr>
+<tr><td>中国风的词汇、典故、意象</td><td><code>lw-chinese-style</code></td></tr>
+<tr><td>这首歌要说什么</td><td><code>lw-song-intent</code></td></tr>
+<tr><td>段落功能、hook 与标题放在第几句</td><td><code>lw-structure</code>（★ §6 只给中文这一侧的惯例）</td></tr>
+<tr><td>旋律本身怎么写、怎么改</td><td><strong>作曲编曲</strong></td></tr>
+<tr><td>那些字该怎么唱（气声、力度、咬字录音）</td><td><strong>声音</strong>（录音与演唱指导）</td></tr>
+<tr><td>戏曲唱词的曲牌格律、板式句格</td><td><strong>剧作</strong>（戏曲编剧）。本 skill 只借韵：戏曲的十三辙读法见 <code>reference.md</code> §1.5，唱词选韵的三好见 <code>reference.md</code> §7；依字行腔见 <code>lw-tone-check</code> §1</td></tr>
+</tbody></table>
+<hr>
+<h4>1. ★ 中文作词与英文作词的根本差别</h4>
+<h5>1.1 字调是音位——换调等于换字</h5>
+<p><strong>英文的重音只改变&quot;听起来自不自然&quot;，中文的调改变&quot;是哪个字&quot;。</strong></p>
+<p>普通话四声加轻声，调是<strong>辨义</strong>的：李忠勇 p0103 举的例子是「小鸡」与「消极」、「保卫」与「包围」——</p>
+<p><strong>没有调的差别就分不出意思</strong>。</p>
+<p>&gt; <strong>后果</strong>：旋律在中文里不是纯装饰。</p>
+<p>&gt; 它给每个字一个音高走向，而那个走向会<strong>和字自己的调打架</strong>，</p>
+<p>&gt; 打输了，听众听到的就是另一个字。这就是<strong>倒字</strong>。</p>
+<p>★ <strong>判定与修正一律去 <code>lw-tone-check</code>。</strong> 本 skill 只负责让你知道<strong>这件事为什么存在</strong>。</p>
+<p><strong>实务上的预防动作</strong>（不是检测，是写的时候就省掉麻烦）：</p>
+<p>李忠勇 p0103 的建议是——写分节歌时，<strong>各节相同位置的重要顿逗处、韵脚、尾字，尽量用同一声调的字</strong>，</p>
+<p>「这样可以给谱曲时造成方便，避免谱曲后产生突出的&quot;倒字&quot;现象」（李忠勇 p0103）。</p>
+<p>&gt; <strong>失效条件</strong>：先曲后词时旋律已定，这条用不上，直接走 <code>lw-tone-check</code>。</p>
+<p>&gt; 只在<strong>先词后曲</strong>、或写多段词一曲多用时才有效。</p>
+<h5>1.2 一字一音节——字数就是音节数</h5>
+<p>中文一个字就是一个音节，<strong>数字数就等于数音节</strong>，不需要像英文那样先查词典的音节划分。</p>
+<p>所以 <code>prosody.sections[].syllables</code> 在中文里可以直接由词稿数出来。</p>
+<p>★ <strong>代价</strong>：中文没有英文那种&quot;一个词跨两拍&quot;的弹性。</p>
+<p><strong>一行多一个字就是多一个音</strong>，改字数就是改旋律。</p>
+<p>这是&quot;先词后曲时字数句式能反过来约束小节数 <code>form[].bars</code>&quot;的原因。</p>
+<p><strong>自检动作</strong>：每行逐字数一遍，与 <code>prosody.sections[].syllables</code> 对齐；</p>
+<p>衬字（&quot;哎&quot;&quot;呀&quot;&quot;哟&quot;）<strong>要数进去</strong>，它们同样占音。</p>
+<h5>1.3 从这两条推出的三条约束</h5>
+<table><thead><tr><th>#</th><th>约束</th><th>为什么</th><th>去哪查</th></tr></thead><tbody>
+<tr><td>1</td><td>每段最高音、每句首字、大跳落点这三类位置的字<strong>要挑调</strong></td><td>这是倒字最容易发生的地方</td><td><code>lw-tone-check</code> §2.3</td></tr>
+<tr><td>2</td><td>韵脚字与拖长的字<strong>要挑韵母</strong>（开口音好唱）</td><td>长音与高音落在闭口音上唱不响</td><td>§5.1</td></tr>
+<tr><td>3</td><td>全曲的<strong>辙</strong>要先定，因为它反过来决定你能用哪些词</td><td>选定辙之后&quot;合适的字眼会一个个自动跳到你面前来&quot;（吴颂今 p0092–p0093）</td><td>§2.5</td></tr>
+</tbody></table>
+<hr>
+<h4>2. 辙口与韵部</h4>
+<h5>2.1 什么是十三辙</h5>
+<p><strong>押韵</strong>：把同一个韵的字放在句子末尾，使之产生声音回环的和谐感；因为放在句末，所以叫<strong>韵脚</strong>（吴颂今 p0087）。</p>
+<p><strong>只与韵母有关，与声母无关</strong>（吴颂今 p0087）。</p>
+<p><strong>辙</strong>本指车轮轧下的痕迹，「合辙是比喻用韵好似按照车辙归类的意思。合辙和押韵的含义相同，<strong>辙是韵的通俗称呼</strong>」（李忠勇 p0089）。</p>
+<p>把普通话里韵母相同或近似的字归成十三类，就是<strong>十三辙</strong>，</p>
+<p>在戏曲、曲艺唱词与歌词创作中也叫「十三道辙」或「十三韵目」（李忠勇 p0090）。</p>
+<p>&gt; <strong>听得出差别的最小例子</strong>（李忠勇 p0090）：同样四句话，</p>
+<p>&gt; 尾字韵母各是 o／a／ou／i 的那版「念起来不顺口，不好听，也不易记」；</p>
+<p>&gt; 把一、二、四句尾字都改成押 an 的字，「读起来就比较协调、动听了」。</p>
+<p>★ <strong>完整的十三辙表（辙名、韵母、例字）在 <code>reference.md</code> §1。</strong></p>
+<p>两家的转写并排放着，<strong>名称与归类有出入的地方都标了出处</strong>，不要只记一家。</p>
+<h5>2.2 十三个辙的名字</h5>
+<p>发花、梭波（梭坡）、乜斜、一七、灰堆、怀来、姑苏、由求（油求）、遥条、言前、人辰、江阳、中东。</p>
+<p>另有<strong>儿化小辙</strong>（er），「在歌词创作中很少见」（李忠勇 p0092）。</p>
+<p><strong>记忆口诀</strong>（吴颂今 p0089、p0244）：</p>
+<ul>
+<li>「红旗挥舞新叶秀，花儿万朵朝阳开」——每个字对一个辙（党永庵）</li>
+<li>「中华多奇才，创伟业，含笑谱春秋」（邬大为）</li>
+<li>「月下一哨兵镇守在山冈多威武」「小佳人扭捏出房来东西南北坐」（吴颂今 p0099、p0244）</li>
+</ul>
+<p>★ <strong>口诀是干什么用的</strong>：写词时脑子里要能<strong>随时点出还剩哪些辙没用</strong>。</p>
+<p>记不住十三个，就会永远在最顺的那三四个里打转——那正是 §2.8 说的事。</p>
+<h5>2.3 宽辙与窄辙</h5>
+<ul>
+<li><strong>宽辙</strong>：包含的字多、词多，押韵容易（李忠勇 p0098）</li>
+<li><strong>窄辙</strong>：反之，「韵字都比较少，可用的词汇不多，写起来难度比较大」（吴颂今 p0094）</li>
+</ul>
+<table><thead><tr><th></th><th>吴颂今 p0090、p0094 举的</th><th>李忠勇 p0097 举的</th></tr></thead><tbody>
+<tr><td><strong>宽</strong></td><td>中东、江阳、言前、人辰</td><td>江阳、中东、言前、人辰、发花、遥条、怀来（字少但常用）、梭坡、一七</td></tr>
+<tr><td><strong>窄</strong></td><td>乜斜、梭波、灰堆</td><td>灰堆、乜斜、姑苏（字多但不常用）、油求</td></tr>
+</tbody></table>
+<p>⚠ <strong>两家不一致，且不是小分歧</strong>：梭波辙、一七辙、由求辙在两家里正好相反。</p>
+<p><strong>并排保留</strong>：诗词格律一路与流行歌词实务一路对&quot;宽窄&quot;的口径本来就不同，</p>
+<p><strong>实际用法</strong>：以&quot;你这首歌的题材里，这个辙有多少可用的实词&quot;为准，不要背表。</p>
+<h5>2.4 响度与情绪</h5>
+<p>两家都把辙按发音响亮程度分三级，<strong>但分法不同</strong>：</p>
+<table><thead><tr><th>级</th><th>吴颂今 p0089</th><th>李忠勇 p0097</th></tr></thead><tbody>
+<tr><td><strong>洪亮</strong></td><td>江阳、中东、发花、人辰、言前</td><td>江阳、中东、言前、人辰、发花</td></tr>
+<tr><td><strong>柔和</strong></td><td>由求、怀来、遥条、梭波</td><td>遥条、怀来、梭坡、油求</td></tr>
+<tr><td><strong>细微</strong></td><td>乜斜、灰堆、姑苏、一七</td><td>灰堆、乜斜、姑苏、一七</td></tr>
+</tbody></table>
+<p><strong>吴颂今 p0089 给了十三个辙各自的一个形容词</strong>（江阳＝响亮、中东＝高昂、言前＝宽广、人辰＝清扬、发花＝欢喜……），</p>
+<p>完整一列在 <code>reference.md</code> §2。</p>
+<p>⚠ <strong>李忠勇 p0098 提了一条相反的警告，比上面那张表重要</strong>：</p>
+<p>「各类辙韵发音的响亮程度是一个客观存在，但它们本身<strong>并无任何表情意义</strong>，</p>
+<p>只有当它们用于歌词中、用于表达思想感情时，才具有表情意义。」</p>
+<p>&gt; ★ <strong>怎么用这对矛盾</strong>：响度是物理事实，<strong>情绪是你赋予的</strong>。</p>
+<p>&gt; 「江阳＝豪迈」只是统计上的习惯，不是规律。</p>
+<p>&gt; <strong>自检动作</strong>：如果你选辙的唯一理由是&quot;这个辙听起来比较壮&quot;，</p>
+<p>&gt; 换一个同响度的辙再写两句，看是不是一样成立——一样成立，说明你还没真的选。</p>
+<h5>2.5 怎么选辙：四条可操作的路</h5>
+<table><thead><tr><th>#</th><th>方法</th><th>出处与例</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>按内容与情绪选</strong>：热烈奔放用刚洪韵，细致委婉用细柔韵</td><td>吴颂今 p0093：热烈明朗雄壮→江阳、中东、发花；柔和舒缓→遥条；缠绵细腻→灰堆、姑苏</td></tr>
+<tr><td>2</td><td>★ <strong>按关键词的韵选</strong></td><td>吴颂今 p0094：《吐鲁番的葡萄熟了》抓住&quot;葡萄&quot;的&quot;萄&quot;→遥条韵；《十五的月亮》抓住&quot;思念&quot;的&quot;念&quot;→言前韵</td></tr>
+<tr><td>3</td><td>★ <strong>按标题最后一个字的韵选</strong></td><td>吴颂今 p0094：《太湖美》押灰堆、《东方红》押中东、《小草》押遥条、《我的中国心》押人辰</td></tr>
+<tr><td>4</td><td><strong>按题材里出现最多的字词选</strong></td><td>李忠勇 p0096：「通常应从作品的内容出发，选择这一题材中用得最多的字、词作为歌词的韵辙」</td></tr>
+</tbody></table>
+<p>★ <strong>第 2、3 条是最省事的两条</strong>，因为它们让<strong>你最想写的那个词</strong>天然落在韵脚上，</p>
+<p>不用为了押韵去牺牲它。</p>
+<p>&gt; <strong>失效条件</strong>：标题字落在窄辙（乜斜、灰堆）上时第 3 条会把你锁死。</p>
+<p>&gt; 这时改用第 2 条，抓副歌里那个非出现不可的词。</p>
+<p>★ <strong>给戏里的角色写唱段时，另有两条路</strong>：按人物性格定韵、按重点句定韵；外加宽韵险韵怎么取舍、同字韵什么时候成立——</p>
+<p>陆军的&quot;唱词三好&quot;，见 <code>reference.md</code> §7。</p>
+<h5>2.6 换辙（转韵）</h5>
+<p><strong>定义</strong>：由一个辙换到另一个辙叫<strong>转韵</strong>或<strong>换韵</strong>（李忠勇 p0098）。</p>
+<p>「较多见于<strong>歌词段落之间或分节歌词的分节之间</strong>」（李忠勇 p0098）。</p>
+<p><strong>换辙的技巧（这条是硬的）</strong>：</p>
+<p>「使新旧韵界限鲜明，通常要在<strong>转韵段落的第一句尾字</strong>明确出现选定的新辙，构成<strong>新的起韵</strong>」（李忠勇 p0099）。</p>
+<p><strong>换辙的时机</strong>：</p>
+<table><thead><tr><th>时机</th><th>依据</th></tr></thead><tbody>
+<tr><td>段落之间、分节之间</td><td>李忠勇 p0098</td></tr>
+<tr><td>词太长、内容太多，一个辙找不到那么多合适的字</td><td>吴颂今 p0095</td></tr>
+<tr><td>情绪明显换了一档（叙述→抒情、压抑→释放）</td><td>李忠勇 p0100 评《游击队歌》：「转韵自然……有力地配合歌词内容」</td></tr>
+<tr><td>分节歌里一节一换（民歌常见的<strong>连续转韵</strong>）</td><td>李忠勇 p0099；《山丹丹开花红艳艳》一段一换：灰堆→江阳→怀来→梭波→言前（吴颂今 p0095–p0096）</td></tr>
+</tbody></table>
+<p><strong>换到什么程度算多</strong>：李忠勇 p0100 记的两个实例——</p>
+<p>《游击队歌》十六句用了人辰→一七→言前→遥条→一七五段；</p>
+<p>另一首十六句用五个韵（灰堆→江阳→怀来→梭坡→言前）。</p>
+<p>★ <strong>十六句换四五次是有先例的</strong>，不是错。</p>
+<p>&gt; <strong>自检动作</strong>：换辙之后，<strong>新段第一句的尾字有没有立刻把新辙亮出来</strong>。</p>
+<p>&gt; 没亮出来，听众会以为你只是没押上。</p>
+<h5>2.7 通韵：差一点点算不算押上</h5>
+<p><strong>定义</strong>：十三辙里有些辙之间可以彼此沟通借用，叫<strong>通韵</strong>（李忠勇 p0101）。</p>
+<p>「通韵给用韵、组词、造句带来许多方便」（李忠勇 p0101）。</p>
+<p><strong>三种情况</strong>（李忠勇 p0102，实例见 <code>reference.md</code> §3）：</p>
+<ol>
+<li><strong>主要元音相同或近似、收音不同</strong>：人辰（in/en）⇄ 中东（ing/eng）——「进」与「京」、「深」与「升」</li>
+<li><strong>发音部位接近、收音相同</strong>：一七（i）⇄ 灰堆（ei）；由求（ou）⇄ 姑苏（u）。李忠勇 p0102 注明「前者较后者更常见」</li>
+<li><strong>方言影响</strong>：怀来常纳入乜斜的字（如「界」）；南方多省把「街、解、鞋」读进怀来；乜斜的「约、乐、角、雀」也常纳入梭波</li>
+</ol>
+<p>&gt; ★ <strong>通韵是权利，不是借口</strong>。</p>
+<p>&gt; 它的用处是让你在窄辙里还能写下去；</p>
+<p>&gt; <strong>失效条件</strong>：如果你每一段都要靠通韵才押得上，说明选错辙了，回 §2.5 重选。</p>
+<h5>2.8 ★★ 为什么&quot;只挑最顺的辙&quot;是 AI 指纹</h5>
+<p><strong>这一节是本 skill 对 LYR-LINT 第 8 条的解释。</strong></p>
+<p>吴颂今 p0094 的原话是「为了便于写作，<strong>可以多选用比较宽的韵</strong>」——</p>
+<p>这是对人的建议，因为人写词费力。</p>
+<p><strong>但机器不费力。</strong> 机器把这条建议执行到底的结果，是<strong>每一首歌都押江阳、中东、言前、人辰</strong>。</p>
+<p>&gt; <strong>症状</strong>：一整首歌只有一两个辙，而且一定是那四个最宽的；</p>
+<p>&gt; 换辙从不发生；窄辙一次也没出现过。</p>
+<p><strong>三个反制动作</strong>：</p>
+<ol>
+<li><strong>写完把每段的辙列出来</strong>，填进 <code>rhyme.che</code>。<strong>只有一两个 → 这就是 lint 第 8 条要报的数。</strong></li>
+<li>★ <strong>至少让一个段落落在非最宽的辙上</strong>——遥条、怀来、梭波、一七都行。窄不是缺点，窄是<strong>声音上的转折</strong>。</li>
+<li><strong>检查韵脚字本身</strong>：全是&quot;光/亮/长/想/望&quot;这种最高频韵字，属于 <code>lw-rhyme</code> 管的&quot;意外度&quot;，一并去看。</li>
+</ol>
+<p>⚠ <strong>这条不是&quot;必须多换辙&quot;</strong>。</p>
+<p>一韵到底是成立的写法——黄霑：「我自己一贯的写法是<strong>一韵到底</strong>，能押韵便押韵」（吴颂今 p0088）；</p>
+<p>《征服》整首押姑苏韵一韵到底（吴颂今 p0093）。</p>
+<p>★ <strong>关键是&quot;你选了它&quot;还是&quot;它是最省事的那个&quot;</strong>。一韵到底而选了<strong>窄辙</strong>，恰恰是最强的选择。</p>
+<h5>2.9 押韵的四条禁忌</h5>
+<table><thead><tr><th>#</th><th>禁忌</th><th>出处</th><th>失效条件</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>不许因韵害意</strong>：为了押韵颠倒常用词序、生造词汇</td><td>吴颂今 p0096（&quot;神怡心旷&quot;&quot;挂肚牵肠&quot;被倒过来，「听起来十分别扭」）；李忠勇 p0093（&quot;腰酸&quot;改&quot;酸腰&quot;与&quot;拴腰&quot;谐音，<strong>造成误听</strong>）</td><td>★ 变动词序<strong>不影响词意</strong>时是合法的：「光荣」作「荣光」、「山河」作「河山」（李忠勇 p0093）</td></tr>
+<tr><td>2</td><td><strong>不用轻声字和虚字押韵</strong>：呢、吗、啦、了、啊</td><td>吴颂今 p0096：字音轻，「显得软弱无力」</td><td>有意识地反复用同一个虚字取风趣效果时另当别论（吴颂今 p0097 的《东北人都是活雷锋》&quot;了&quot;字）</td></tr>
+<tr><td>3</td><td><strong>避免重韵</strong>：同一个字反复押</td><td>吴颂今 p0097：「会让人觉得作者辞藻贫乏」</td><td>为特定艺术效果故意重复时例外（同上）</td></tr>
+<tr><td>4</td><td><strong>不押韵要是有意识的</strong></td><td>吴颂今 p0097：「不押韵的前提，是你已经完全掌握了押韵的技巧和方法」；《大刀进行曲》通篇不太讲究押韵而不损感染力</td><td>—</td></tr>
+</tbody></table>
+<p>★ 第 4 条与 <code>lw-rhyme</code> 的 <code>deliberate_breaks</code>、<code>asymmetry.unrhymed</code> 是同一件事的两头：</p>
+<p><strong>故意不押要写进字段，写不出理由的就不是故意的。</strong></p>
+<hr>
+<h4>3. 平仄</h4>
+<h5>3.1 平仄是什么</h5>
+<p>「诗人把四声分为平仄两大类，<strong>平就是平声，仄就是上、去、入三声</strong>」；</p>
+<p>「仄按字义解释，就是<strong>不平</strong>的意思」（王力《诗词格律》p0023）。</p>
+<p>分类的根据是<strong>声音的形状</strong>（王力 p0023）：</p>
+<table><thead><tr><th></th><th>是哪些</th><th>形状</th></tr></thead><tbody>
+<tr><td><strong>平</strong></td><td>平声（今音的阴平、阳平）</td><td><strong>没有升降，较长</strong></td></tr>
+<tr><td><strong>仄</strong></td><td>上、去、入</td><td><strong>有升降</strong>（入声也可能微升或微降），<strong>较短</strong></td></tr>
+</tbody></table>
+<p><strong>为什么要分</strong>：「让这两类声调互相交错，就能使声调多样化，而不至于单调……</p>
+<p><strong>没有平仄就没有诗词格律</strong>」（王力 p0206）。</p>
+<p><strong>两条交错规则</strong>（王力 p0023）：</p>
+<ol>
+<li>平仄在<strong>本句</strong>中是<strong>交替</strong>的</li>
+<li>平仄在<strong>对句</strong>中是<strong>对立</strong>的</li>
+</ol>
+<p>节奏点落在<strong>偶数位</strong>上，所以有口诀「一三五不论，二四六分明」（王力 p0127）。</p>
+<p>⚠ 王力 p0141 引王夫之的反驳：这口诀「<strong>不可恃为典要</strong>」——第三字换个平仄，句子就&quot;语蹇而戾于听&quot;。</p>
+<h5>3.2 今音与古音：差在一个入声</h5>
+<p>古代四声是平、上、去、入；普通话是阴平、阳平、上声、去声（王力 p0021、p0206）。</p>
+<p><strong>差别全在入声</strong>：北方话与西南话里<strong>入声已经消失</strong>，派进了新四声。</p>
+<table><thead><tr><th>入声字今天读什么</th><th>王力 p0021</th></tr></thead><tbody>
+<tr><td>变<strong>去声</strong>的最多</td><td></td></tr>
+<tr><td>其次是<strong>阳平</strong></td><td></td></tr>
+<tr><td>变<strong>上声</strong>的最少</td><td></td></tr>
+<tr><td>西南方言（湖北到云南）<strong>一律变阳平</strong></td><td></td></tr>
+</tbody></table>
+<p>&gt; ★ <strong>对普通话作词的后果，只有一句话</strong>：</p>
+<p>&gt; <strong>按今音的四声处理就够了。</strong></p>
+<p>&gt; 因为入声派进上声、去声的部分<strong>仍然是仄</strong>，不影响判断；</p>
+<p>&gt; 只有<strong>派进阴平、阳平的那一部分</strong>会让你把仄当成平——</p>
+<p>&gt; 而那只在你要按古韵写古诗体、对仗时才要紧（→ <code>lw-chinese-style</code>）。</p>
+<p><strong>两条省事的辨别法</strong>（王力 p0025）：</p>
+<ul>
+<li>「凡<strong>韵尾是 -n 或 -ng</strong> 的字，<strong>不会是入声字</strong>」</li>
+<li>「入声问题是辨别平仄的<strong>唯一障碍</strong>」——查表即可，常用入声字表见 <code>reference.md</code> §5.4</li>
+</ul>
+<h5>3.3 ★ 一字两读：写词时必须先定读音</h5>
+<p>同一个字有两种意义、往往词性也不同时，会有两种读音（王力 p0022）：</p>
+<table><thead><tr><th>字</th><th>平声时</th><th>仄声时</th></tr></thead><tbody>
+<tr><td>为</td><td>动词</td><td>介词（去声）</td></tr>
+<tr><td>思</td><td>动词，思念</td><td>名词，思想情怀（去声）</td></tr>
+<tr><td>骑</td><td>动词，骑马</td><td>名词，骑兵（去声）</td></tr>
+<tr><td>教、令</td><td>动词，使、让</td><td>名词，教化／命令（去声）</td></tr>
+<tr><td>看、望、叹</td><td>本读平声</td><td>后变去声，<strong>意义词性不变</strong>（王力 p0023）</td></tr>
+</tbody></table>
+<p>★ <strong>这不是考据，这是倒字检查的前提</strong>：</p>
+<p><strong>同一个字读阴平还是去声，调型完全相反。</strong></p>
+<p>你在词里写「思」，是名词还是动词，决定了它该配什么走向的旋律。</p>
+<p><strong>自检动作</strong>：词里出现这类字，在 <code>note</code> 里注明读音；不注明，<code>lw-tone-check</code> 会判错。</p>
+<h5>3.4 ★★ 歌词里的平仄松到什么程度</h5>
+<p><strong>这一节是本 skill 最需要并排两种说法的地方。</strong></p>
+<table><thead><tr><th></th><th>诗词格律（王力）</th><th>流行歌词实务（吴颂今、李忠勇、尤静波）</th></tr></thead><tbody>
+<tr><td><strong>平仄格式</strong></td><td>有固定格式：五律七律各四式，粘对、孤平、拗救都有规矩（王力 p0037–p0049）</td><td>★ <strong>没有格式</strong>。三本教材都不给歌词开平仄谱</td></tr>
+<tr><td><strong>韵</strong></td><td>今体诗<strong>限用平声韵</strong>，依平水韵（王力 p0196）</td><td>按十三辙，<strong>平仄都能押</strong>（§2）</td></tr>
+<tr><td><strong>对仗</strong></td><td>律诗中两联必须对仗（王力 p0026）</td><td>「现代很多歌词佳作都<strong>不拘泥押韵、对仗</strong>」（吴颂今 p0098）</td></tr>
+<tr><td><strong>严格程度</strong></td><td>「一首词没有按照平仄的规则来写，<strong>就不成其为词了</strong>」（王力 p0139）</td><td>「现代歌词的创作对于韵律的要求<strong>没有严格的规定，相对比较自由</strong>」（尤静波 p0071）</td></tr>
+</tbody></table>
+<p>★ <strong>但两边有一个共同的底</strong>——王力 p0138 的原话：</p>
+<p>&gt; 「<strong>格律是为诗人服务的，不能反过来成为格律的奴隶。</strong>」</p>
+<p>他举的例子是毛泽东《沁园春·雪》里「成吉思汗」——「吉」是入声（仄）、「汗」读平声，全不合谱，</p>
+<p>「是人名，是一个整体，<strong>何必再拘泥平仄</strong>」（王力 p0138）；</p>
+<p>《念奴娇·昆仑》叠用三个「一截」，「那就<strong>不妨略为突破形式</strong>」（王力 p0139）。</p>
+<p>&gt; <strong>所以写流行歌词时，平仄的正确用法是：</strong></p>
+<p>&gt; <strong>不排格式，只在两个地方用它——§3.5 的句尾，和 §1.1 的分节歌对位。</strong></p>
+<p><strong>失效条件</strong>：写<strong>古诗体</strong>歌词（吴颂今 p0076 列为五种体式之一，「多用文言文成篇」，讲究格律、对仗、平仄）时这一节作废，按 [reference.md](reference.md) §6 的脚型、孤平与拗救走，并去 <code>lw-chinese-style</code>。</p>
+<h5>3.5 ★ 句尾字的平仄与旋律收束</h5>
+<p><strong>这是平仄在流行歌词里唯一一条硬的、可操作的用法。</strong></p>
+<p>李忠勇 p0103 只给了一条规则：</p>
+<p>&gt; <strong>「在两句成双的唱词中，平声字用于下句，仄声字用于上句。」</strong></p>
+<p><strong>为什么成立</strong>（接王力 p0023 的定义）：</p>
+<p>平声<strong>没有升降、较长</strong> → 适合拖住、收住；</p>
+<p>仄声<strong>有升降、较短</strong>（去声&quot;哀远道&quot;、入声&quot;短促急收藏&quot;，《分四声法》歌诀，王力 p0022）→ 适合悬着、催下一句。</p>
+<table><thead><tr><th>位置</th><th>用</th><th>听感</th></tr></thead><tbody>
+<tr><td><strong>上句尾</strong>（问、起、未完）</td><td><strong>仄</strong></td><td>悬着，要下句来接</td></tr>
+<tr><td><strong>下句尾</strong>（答、收、段落结束）</td><td><strong>平</strong></td><td>落定，能拖长</td></tr>
+</tbody></table>
+<p>★ <strong>和 §5.1 合起来用</strong>：</p>
+<p><strong>段落最后一个字的最优解 = 平声 ＋ 开口音。</strong></p>
+<p>（既拖得住，又唱得响。）</p>
+<p>&gt; <strong>失效条件</strong>：</p>
+<p>&gt; - <strong>先曲后词</strong>时旋律的收束形态已经定了，这条只能用来<strong>挑字</strong>，不能用来改句</p>
+<p>&gt; - <strong>粤语无效</strong>（→ <code>lw-cantonese</code>）</p>
+<p>&gt; - 故意要&quot;停在难受里&quot;的段落（<code>narrative.withholding</code>），<strong>上句的仄声尾就是对的</strong>，不要收平</p>
+<p><strong>自检动作</strong>：把每段的<strong>最后两句尾字</strong>标出平仄。</p>
+<p>下句尾是仄声而这一段又是收束段 → <strong>念一遍</strong>，听着是不是没落地；是的话换字。</p>
+<hr>
+<h5>3.6 ★ 倒字什么时候不算问题：从宽五条</h5>
+<p><code>lw-tone-check</code> 查出风险之后，需要一个&quot;可以放过&quot;的依据，否则每一处风险都会被改掉，词就被改平了。</p>
+<p>薛範给了八条，三条从严在 <code>lw-tone-check</code> §3，<strong>五条从宽在这里</strong>（黄志华《文字声律与粤语歌创作》附录 p0107–0108）：</p>
+<table><thead><tr><th>#</th><th>从宽</th><th>为什么</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>弱拍上的语助词、虚字、轻读字</strong></td><td>听众本来就不在那里辨字</td></tr>
+<tr><td>2</td><td><strong>节奏短急且旋律平稳或级进的；或节奏舒缓、拖腔抒情的</strong></td><td>前者字过得太快，后者长音能把字调唱回来（→ <code>lw-tone-check</code> §5.3）</td></tr>
+<tr><td>3</td><td><strong>单个字</strong>，即不是双字词组、不是四字成语的</td><td>没有前后字给它定调，误听空间小</td></tr>
+<tr><td>4</td><td><strong>反复咏唱的词语，只要有一次是正字</strong></td><td>听众已经在前面记住它了</td></tr>
+<tr><td>5</td><td><strong>分节歌的个别处</strong>（一段旋律配两段以上的词）</td><td>绝大多数做到正字即可，个别处宽大处理（→ §1.1 的分节歌对位）</td></tr>
+</tbody></table>
+<p><strong>用法</strong>：先按 <code>lw-tone-check</code> 标出风险位，再拿这五条逐个问。<strong>落在五条之内的放过并记一句理由</strong>，落在从严三条之内的必改。</p>
+<p>配合 [reference.md](reference.md) §5 那张走向表选字。</p>
+<h4>4. 中文句法：字数、顿、长短句</h4>
+<h5>4.1 一句能有多少字</h5>
+<p>「每句从一个字到<strong>十个字左右</strong>，不能再多了」（吴颂今 p0053）。</p>
+<p>最常见的是<strong>奇数句</strong>：三字、五字、七字（吴颂今 p0054）；</p>
+<p>李忠勇 p0034 说得更硬：「常见的歌词句式多为<strong>七字句和五字句</strong>……其他各种，常常是七字、五字基本句式的变体」。</p>
+<h5>4.2 ★ 顿（音组）——中文句子的真实节奏单位</h5>
+<p>「由读音长短和强弱造成的顿歇，一般叫做<strong>音组</strong>（又称音步或顿逗）」（李忠勇 p0033）。</p>
+<p>&gt; ★★ <strong>这是本节最重要的一条</strong>：</p>
+<p>&gt; <strong>两句字数一样，顿不一样，节奏就完全不同。</strong></p>
+<p>&gt; 「不仅应该了解音节数目，还要了解由<strong>音组划分</strong>而形成的句式节奏特点」（李忠勇 p0034）。</p>
+<p><strong>中文的顿基本上是二字顿和三字顿</strong>，七字句的标准切法是 <strong>2+2+3</strong>（句头、句腰、句尾），</p>
+<p>「这种句式在歌词、快板、唱词中运用最广泛」（李忠勇 p0035）。</p>
+<p><strong>各字数的常见切法一览在 <code>reference.md</code> §4</strong>，这里只留最常用的几条：</p>
+<table><thead><tr><th>字数</th><th>常见音组</th></tr></thead><tbody>
+<tr><td>五字</td><td>2+3（标准）／3+2</td></tr>
+<tr><td>六字</td><td>2+2+2／3+3</td></tr>
+<tr><td>七字</td><td><strong>2+2+3（标准）</strong>／3+2+2／2+3+2</td></tr>
+<tr><td>八字</td><td>2+2+2+2／3+2+3</td></tr>
+</tbody></table>
+<p>★ <strong>八字句常常就是七字句的扩充</strong>：李忠勇 p0039 举的三句八字句，「如果去掉各句的第二个字，则是 2+2+3 的七字句」。</p>
+<p><strong>自检动作</strong>：把每句按顿画竖线。</p>
+<p><strong>如果整首歌每句都切在同一个位置，就是 <code>asymmetry</code> 该出手的地方</strong>（<code>lw-structure</code>）。</p>
+<h5>4.3 长短句与等长句</h5>
+<p>句式的组合分两类（吴颂今 p0055）：</p>
+<ul>
+<li><strong>等长句</strong>：每句字数相等，如律诗、绝句</li>
+<li><strong>长短句</strong>：每句字数不等而富有变化，如宋词、元曲、戏曲词牌</li>
+</ul>
+<p><strong>什么时候用哪种</strong>（李忠勇 p0046）：</p>
+<table><thead><tr><th>风格</th><th>句式</th><th>效果</th></tr></thead><tbody>
+<tr><td>战斗性强、进行曲</td><td><strong>多用短句</strong></td><td>简洁、明快、灵活、有力</td></tr>
+<tr><td>叙事性、说唱风</td><td><strong>多用长句</strong></td><td>精确明晰、气势畅达</td></tr>
+</tbody></table>
+<p>★ <strong>混合使用比单一句式更常见</strong>（李忠勇 p0043）：</p>
+<p>「一首词中过多地使用某种单一的句式，容易使歌词节奏<strong>流于平板单调</strong>」，</p>
+<p>混合句式「能在均衡、对称的基础上获得节奏的多样性」。</p>
+<p>&gt; <strong>失效条件</strong>：分节歌（一个曲调配多段词）<strong>反过来</strong>——</p>
+<p>&gt; 「各个段落宜用<strong>音组基本一致</strong>，音节大致相等的句式来写作」（李忠勇 p0047）；</p>
+<p>&gt; 吴颂今 p0059 加了第三条：各段相应位置的<strong>词句感情色彩要相对统一</strong>，</p>
+<p>&gt; 「尽量避免反义词或对立的情绪出现在同一位置上」。</p>
+<p>&gt; ★ <strong>这与 LYR-LINT 第 3 条&quot;各段字数不许完全相同&quot;不矛盾</strong>：</p>
+<p>&gt; lint 查的是主歌与副歌之间、全曲各段之间；这里说的是<strong>同一段曲调的第一遍与第二遍</strong>。</p>
+<h5>4.4 垛句：打破整齐的那一手</h5>
+<p><strong>定义</strong>：打破一首词的基本格式，在其中插入一连串二字、三字、四字词汇或短分句构成的变化句式，叫<strong>垛句</strong>（李忠勇 p0041），</p>
+<p>在民间音乐中也称「加滚」「赶句」「一串铃」（李忠勇 p0041）；吴颂今 p0054 称<strong>垛字句</strong>。</p>
+<p><strong>作用</strong>：「<strong>突破基本句式的平衡、对称</strong>，给音乐节奏、旋律带来伸展、变化的可能」（李忠勇 p0041），</p>
+<p>「动力性强，很适于表现急促、紧张、激烈或风趣、轻快、活跃的内容和情绪」（李忠勇 p0041）。</p>
+<p>★ <strong>这是中文词里现成的反对称装置</strong>，直接可以填进 <code>asymmetry.short_line</code> 的反面——</p>
+<p>一行突然变长，比一行突然变短更少见，也更有效。</p>
+<h5>4.5 虚词与衬词：&quot;的地得&quot;该不该唱</h5>
+<p><strong>衬词</strong>：在基本内容之外插入的衬托性字、词甚至整句，可能用在句前、句中、句末（李忠勇 p0083）。</p>
+<p>包括语气／劳动／呼唤类（啊、嘿、哟、哎）、拟声类、以及有明确意义的<strong>衬句</strong>（李忠勇 p0084）。</p>
+<p><strong>判定一个字是不是衬字的办法</strong>（李忠勇 p0036）：</p>
+<p><strong>去掉它，内容不受影响</strong> → 它是衬字，句式该按去掉它之后的字数算。</p>
+<table><thead><tr><th>问题</th><th>答</th></tr></thead><tbody>
+<tr><td>虚词占不占音</td><td>★ <strong>占</strong>。它照样要唱，照样进 <code>syllables</code></td></tr>
+<tr><td>虚词能不能改善句子</td><td>能。加虚字「可以使歌词语言<strong>更接近口语化</strong>，给各音组带来节奏上的变化」（李忠勇 p0036）</td></tr>
+<tr><td>虚词能不能押韵</td><td>★ <strong>不能</strong>（§2.9 第 2 条）</td></tr>
+<tr><td>虚词多了会怎样</td><td>「不可主次不分、<strong>喧宾夺主</strong>地使用衬词」（李忠勇 p0085）</td></tr>
+</tbody></table>
+<p>&gt; <strong>自检动作</strong>：把每句里的&quot;的、地、得、着、了&quot;逐个划掉念一遍。</p>
+<p>&gt; <strong>划掉更顺的，就删掉</strong>；划掉之后句子站不住的，才留着。</p>
+<hr>
+<h4>5. 易唱性</h4>
+<h5>5.1 ★ 开口音与闭口音：决定高音和长音能不能唱响</h5>
+<ul>
+<li><strong>开口韵</strong>：发音时嘴巴打开、比较响亮，如江阳、发花、中东。适合豪迈、雄壮、欢快（吴颂今 p0090）</li>
+<li><strong>闭口韵</strong>：发音时嘴巴不完全张开、不那么响亮，如灰堆、乜斜、姑苏。适合细腻、缠绵（吴颂今 p0090）</li>
+</ul>
+<p>★★ <strong>最实用的一条来自歌手那一侧</strong>（吴颂今 p0098 词友杂谈，&quot;巴腾&quot;）：</p>
+<p>&gt; 「我一般会考虑<strong>每句最后一个字</strong>……因为很多情况下，最后一个字需要<strong>延长时值</strong>，</p>
+<p>&gt; 所以用<strong>开口音</strong>的字比较好唱。同样，<strong>出现高音的地方</strong>也要注意这个问题。」</p>
+<p><strong>这条直接对上 <code>prosody.sections[].peak_syllable</code></strong>：</p>
+<table><thead><tr><th>位置</th><th>该用什么</th></tr></thead><tbody>
+<tr><td>每段<strong>最高音</strong>落的那个字</td><td><strong>开口音</strong>（a／ang／ai／ao 这类）</td></tr>
+<tr><td>每句<strong>拖长</strong>的尾字</td><td><strong>开口音</strong></td></tr>
+<tr><td>气声、弱唱、收尾的地方</td><td>闭口音反而对</td></tr>
+</tbody></table>
+<p>&gt; <strong>失效条件</strong>：整首歌都挑开口音，就变成了另一种单调（也把辙锁死在最宽的那几个上，见 §2.8）。</p>
+<p>&gt; <strong>只查高音与长音那几个字</strong>，其余不必管。</p>
+<h5>5.2 绕口：连续同声母／同韵母</h5>
+<p>中文的绕口来自<strong>相邻字的声母或韵母连成一串</strong>（&quot;四十四只石狮子&quot;是极端例）。</p>
+<p>教材层面给的判据是听觉的：</p>
+<p>歌词必须「<strong>一听就懂</strong>」（吴颂今 p0030、李忠勇 p0056），「词不能用<strong>拗口</strong>的词语」（吴颂今 p0098，&quot;流浪歌手&quot;）。</p>
+<p><strong>自检动作</strong>（三步，不需要工具）：</p>
+<ol>
+<li>按正常语速<strong>念</strong>全词一遍——<strong>卡住的地方就是绕口的地方</strong>，不用分析原因</li>
+<li>卡住处看是不是三个以上相邻字同声母（z/c/s、zh/ch/sh、j/q/x 最容易）或同韵母</li>
+<li>换字。中文同义词极多，<strong>换字永远是第一选项</strong>（与 <code>lw-tone-check</code> §6 第 1 条同一条原则）</li>
+</ol>
+<p>★ <strong>另一种绕口是谐音误听</strong>，比纯生理绕口更危险：</p>
+<p>李忠勇 p0093 的&quot;酸腰&quot;与&quot;拴腰&quot;——唱出来是<strong>另一个词</strong>。</p>
+<p><strong>自检动作</strong>：把每句<strong>念给没看过词的人听</strong>，让对方复述。复述错了就是误听。</p>
+<h5>5.3 入声字</h5>
+<p>普通话里的入声已经<strong>派入四声</strong>，没有独立的调类。</p>
+<p>写普通话词时按<strong>今音的四声</strong>处理即可；平仄见 §3。</p>
+<p>★ <strong>例外</strong>：写<strong>粤语</strong>词时入声是活的（→ <code>lw-cantonese</code>）；</p>
+<p>写<strong>古诗体</strong>歌词而要按古韵对仗时，见 §3 与 <code>lw-chinese-style</code>。</p>
+<hr>
+<h4>6. 中文流行歌词的实务惯例</h4>
+<h5>6.1 篇幅：中文歌词有硬上限</h5>
+<table><thead><tr><th>项</th><th>数</th><th>出处</th></tr></thead><tbody>
+<tr><td>一首歌的时长</td><td>三四分钟，「六分钟到头，再长的歌就没法唱了」</td><td>吴颂今 p0024、p0064</td></tr>
+<tr><td>全词行数</td><td>★ <strong>十来二十行</strong>左右</td><td>吴颂今 p0064</td></tr>
+<tr><td>每段行数</td><td>二至十行</td><td>吴颂今 p0035</td></tr>
+<tr><td>一段体分节歌的段数</td><td>「能用两段唱完就不要写成三段」，多于三段「就嫌太长了」</td><td>吴颂今 p0059</td></tr>
+</tbody></table>
+<p>★ <strong>为什么要短</strong>：「写歌词不要写得太&quot;满&quot;太&quot;实&quot;，应该<strong>留有充分的余地，让音乐去补充和发挥</strong>」（吴颂今 p0065）。</p>
+<p>&gt; <strong>自检动作</strong>：数一遍总行数。<strong>超过二十行，先问哪一段可以整段删掉</strong>，再问改哪个字。</p>
+<h5>6.2 口语化到什么程度</h5>
+<p>歌词是<strong>听觉艺术</strong>，必须「一听就懂」，即时共鸣（吴颂今 p0025）；</p>
+<p>语言要「更加口语化，更加深入浅出」「更加浅近直白、流利自然」（吴颂今 p0025）。</p>
+<p>黄霑：「写作流行歌词，对象是年轻人，所以<strong>首要是浅</strong>，绝对不能深……一切以<strong>听得明白，唱得清楚</strong>作准则」（吴颂今 p0033）。</p>
+<p><strong>与诗分界的八条差别</strong>（吴颂今 p0024–p0026）：体裁、主体意识、使用功能、篇幅、段落结构、语言风格、文学色彩、主题表达。</p>
+<p>★ <strong>最要紧的是第 8 条</strong>：诗把主题藏在字里行间，</p>
+<p>歌词的主题「一般都是<strong>直截了当</strong>明确地唱出来」，因为「听众在聆听演唱的时候，思维只能随着歌声流动，<strong>根本没有时间去回味思考</strong>」（吴颂今 p0026）。</p>
+<p>&gt; ⚠ <strong>口语化不等于白开水</strong>。</p>
+<p>&gt; 吴颂今 p0023 同时要求「不至于把歌词写成一杯&quot;白开水&quot;」；</p>
+<p>&gt; 李忠勇 p0011 的口径是「<strong>少而精</strong>」——「用尽可能少的文字去说明丰富的内容……力避<strong>赘字累句</strong>和<strong>奇言丽语</strong>的堆砌」。</p>
+<p>&gt; <strong>两头都要躲</strong>：晦涩要躲，堆砌辞藻也要躲。</p>
+<p><strong>失效条件</strong>：古诗体、中国风歌词不适用这一条（→ <code>lw-chinese-style</code>）；</p>
+<p>吴颂今 p0076 把<strong>古诗体</strong>单列为一种体式，「多用文言文成篇」，讲究意境与含蓄。</p>
+<h5>6.3 标题与副歌</h5>
+<ul>
+<li>副歌「往往是歌曲的高潮所在，直接唱出作品的主题思想，许多歌曲的<strong>题目、记忆点、流行句式往往都处在副歌部分</strong>」（吴颂今 p0060）</li>
+<li>★ <strong>有些词作家习惯从副歌开始下笔</strong>，「常常获得可喜的成功」（吴颂今 p0060）</li>
+<li><strong>标题的最后一个字常常就是全曲的辙</strong>（§2.5 第 3 条）</li>
+<li>副歌是重复最多的段落：「重复或变化重复，是流行歌曲传播的<strong>最重要因素之一</strong>」（吴颂今 p0060）</li>
+</ul>
+<p>★ <strong>三条连起来是一套动作</strong>：</p>
+<p><strong>先定标题 → 标题末字定辙 → 副歌先写 → 标题落在副歌里。</strong></p>
+<p>⚠ 但 LYR-LINT 第 10 条要求副歌各遍<strong>文本不许完全相同</strong>——</p>
+<p>&quot;重复&quot;指的是<strong>旋律与句式</strong>的重复，不是要你把三遍词原样复制。</p>
+<h5>6.4 主歌与副歌要分工</h5>
+<p>「主歌与副歌的对比十分明显，<strong>绝对不能写成一个样</strong>。在内容安排上主歌和副歌一定要有<strong>分工</strong>，从不同的角度来诠释主题」（吴颂今 p0061）。</p>
+<p>李忠勇 p0048 的说法是：主歌带&quot;分述&quot;性质，副歌带&quot;总结&quot;性质。</p>
+<p>★ <strong>中文这一侧的具体分工</strong>：<strong>主歌具体，副歌概括</strong>。</p>
+<p>主歌「擅长有声有色的具体描写，有血有肉的细致描述」（吴颂今 p0060）；</p>
+<p>副歌「集中概括全曲中心思想」（吴颂今 p0060）。</p>
+<p>&gt; ⚠ <strong>和 <code>lw-imagery</code> 的冲突要当心</strong>：</p>
+<p>&gt; &quot;副歌概括&quot;很容易被写成&quot;副歌全是抽象词&quot;。</p>
+<p>&gt; <strong>正确的读法</strong>：副歌概括的是<strong>意思</strong>，不是把具体名词都换成&quot;梦想/远方/时光&quot;。</p>
+<p>&gt; 具体名词的下限由 LYR-LINT 第 2 条管。</p>
+<h5>6.5 押韵位置的中文惯例</h5>
+<p><strong>首句起韵，逢双押韵</strong>（吴颂今 p0091；李忠勇 p0094）：</p>
+<p>第一句先定韵，之后二、四、六、八句押韵，「一三五不论，二四六押韵」（吴颂今 p0092）。</p>
+<p>★ <strong>吴颂今 p0091 用起承转合解释四句一段的押韵</strong>：</p>
+<p>起句定韵 → 承句继续押 → <strong>转句可以不押</strong> → 合句押回来，「圆满地结束一个段落」。</p>
+<table><thead><tr><th>变体</th><th>说明</th></tr></thead><tbody>
+<tr><td>通篇句尾都押</td><td>适于<strong>短小</strong>的歌词（李忠勇 p0093）</td></tr>
+<tr><td>隔句押（单数句不押，双数句押）</td><td>最常见（李忠勇 p0094）</td></tr>
+<tr><td>首句不押、单数句都不押、双数句句句押</td><td>《篱笆墙的影子》（吴颂今 p0092）</td></tr>
+<tr><td>奇数句的段落</td><td>「最后一句重复上一个双句的韵脚」（李忠勇 p0095）</td></tr>
+<tr><td>多段词</td><td>「两段歌词最好押同一个韵」（吴颂今 p0092）</td></tr>
+</tbody></table>
+<p>★ <strong>第三句（转句）不押是中文四句段的天然留白口</strong>，</p>
+<p>直接可以填进 <code>asymmetry.unrhymed</code>——<strong>而且它有出处，不是为破坏而破坏</strong>。</p>
+<hr>
+<h4>7. 与 LYR-SPEC 的字段对应</h4>
+<table><thead><tr><th>字段</th><th>本 skill 的哪一节</th></tr></thead><tbody>
+<tr><td><code>rhyme.che</code></td><td>★ §2 全部。<strong>辙名直接写中文辙名</strong>（如&quot;言前&quot;），换辙的分段写清楚</td></tr>
+<tr><td><code>rhyme.deliberate_breaks</code></td><td>§6.5 的转句不押；判据在 <code>lw-rhyme</code></td></tr>
+<tr><td><code>prosody.sections[].syllables</code></td><td>§1.2、§4.1——<strong>中文按字数数，衬字算数</strong></td></tr>
+<tr><td><code>prosody.sections[].peak_syllable</code></td><td>★ §5.1 开口音 ＋ <code>lw-tone-check</code> 的调型</td></tr>
+<tr><td><code>asymmetry.short_line</code></td><td>§4.4 垛句（反过来用：突然变长）</td></tr>
+<tr><td><code>asymmetry.unrhymed</code></td><td>§6.5 转句</td></tr>
+<tr><td><code>checks.computed</code> 里的辙口分布</td><td>★ §2.8——<strong>LYR-LINT 第 8 条只报数，不判过/不过</strong></td></tr>
+</tbody></table>
+<hr>
+<h4>8. 用完必过</h4>
+<ul>
+<li>[ ] <code>rhyme.che</code> 填了<strong>具体辙名</strong>，不是&quot;押韵了&quot;</li>
+<li>[ ] ★ 全曲的辙<strong>列得出来</strong>，且<strong>不是只有一两个最宽的</strong>（§2.8）</li>
+<li>[ ] 选辙的理由说得出来：内容／关键词／标题末字／题材高频字（§2.5）</li>
+<li>[ ] 换辙的地方，<strong>新段第一句尾字亮出了新辙</strong>（§2.6）</li>
+<li>[ ] 韵脚里<strong>没有轻声字和虚字</strong>，没有重韵（§2.9）</li>
+<li>[ ] 没有为了押韵<strong>颠倒成语词序</strong>（§2.9 第 1 条）</li>
+<li>[ ] 每句按<strong>顿</strong>画过竖线，不是每句都切在同一处（§4.2）</li>
+<li>[ ] ★ <strong>最高音和拖长的尾字是开口音</strong>（§5.1）</li>
+<li>[ ] 全词<strong>念过一遍</strong>，没有卡住的地方；念给人听过，没有被听错（§5.2）</li>
+<li>[ ] &quot;的地得&quot;逐个划掉试过，留下的是必要的（§4.5）</li>
+<li>[ ] 总行数在<strong>十来二十行</strong>（§6.1）</li>
+<li>[ ] ★ <strong>倒字去 <code>lw-tone-check</code> 查过</strong>——本 skill 不负责那个</li>
+<li>[ ] ★ <strong>如果是粤语，以上关于辙与四声的全部作废</strong>，去 <code>lw-cantonese</code></li>
+</ul>
+<hr>
+<h4>附：来源</h4>
+<ul>
+<li>吴颂今《歌词写作十八讲》——十三辙表与记忆口诀（p0088–p0089）、押韵九法（p0091–p0097）、句式与音节（p0053–p0056）、歌词与诗的八条差别（p0024–p0026）、篇幅与曲式（p0057–p0065）</li>
+<li>李忠勇、何福琼《歌词写作常识》——普通话十三辙韵母表（p0091–p0092）、响度与宽窄分级（p0097–p0098）、转韵（p0098–p0099）、通韵（p0101–p0102）、声调与四声（p0102–p0103）、音组与句式（p0033–p0045）、段式（p0047–p0053）、衬词（p0083–p0085）</li>
+<li>⚠ <strong>两家的辙名与分级有出入</strong>（梭波/梭坡、由求/油求；宽窄与响度分级不一致），</li>
+</ul>
+<p>  正文与 <code>reference.md</code> <strong>并排保留并各标出处</strong>，不做合并。</p>
+<ul>
+<li>刘吉典《京剧音乐概论》——京剧的十三辙与普通话十三辙的出入（p0169–p0171），见 <code>reference.md</code> §1.5</li>
+<li>陆军《编剧理论与技法》——戏曲唱词的三好：选韵、结构编织、布局（p0315–p0328），见 <code>reference.md</code> §7</li>
+<li>同一个问题在戏曲里的老版本（依字行腔）写在 <code>lw-tone-check</code> §1。</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>jtydhr88</strong> in
+        <a href="https://github.com/jtydhr88/lyric-writing-skills" rel="noopener">jtydhr88/lyric-writing-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-case-studies/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-case-studies the case layer - how to take a finished lyric apart and what three working lyricists say about their own habits (案例与拆解). a fixed twelve-row worksheet for dissecting any song, keyed to the library&#39;s own fields so every finding lands in a skill instead of staying an impression; the rule that a real lyric is read from the middle outward, not from the theme down; what yao qian, zhang li and hong yuan each say about opening lines, restraint, revision, rhyme width, colloquial versus literary diction and how much to leave the composer, plus the four places they openly disagree and how to pick a side; worked dissections of songs the sources analyse in full, including one song two of them discuss independently; and the failure patterns they name - flat, scattered, overlong, bland, blunt, bare, stuffed. use when studying a lyric you admire, when you need a real example of a technique, when a draft feels wrong and you want a model to compare against, or when asked to critique a song. 案例、拆解、词评、作品分析、词人自述、改稿对照。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-case-studies</span>
+    <span class="r-desc">The case layer - how to take a finished lyric apart and what three working lyricists say about their own habits (案例与拆解). A fixed twelve-row worksheet for dissecting any song, keyed to the library&#39;s own fields so every finding lands in a skill instead of staying an impression; the rule that a real lyric is read from the middle outward, not from the theme down; what Yao Qian, Zhang Li and Hong Yuan each say about opening lines, restraint, revision, rhyme width, colloquial versus literary diction and how much to leave the composer, plus the four places they openly disagree and how to pick a side; worked dissections of songs the sources analyse in full, including one song two of them discuss independently; and the failure patterns they name - flat, scattered, overlong, bland, blunt, bare, stuffed. Use when studying a lyric you admire, when you need a real example of a technique, when a draft feels wrong and you want a model to compare against, or when asked to critique a song. 案例、拆解、词评、作品分析、词人自述、改稿对照。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-chinese-style/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-chinese-style the chinese-style layer for lyric writing (中国风歌词). what makes a lyric read as 中国风 rather than merely decorated - the vocabulary families it draws on (place, dynasty, object, craft, plant), the sixteen rhetorical devices fang wen-shan catalogues inside his own lyrics, each with a book example and a failure condition, why every image must belong to one material world and how one out-of-period object breaks it, the four grades of borrowing from classical verse and where borrowing becomes copying, what to do when the listener will not catch the allusion, what the words promise the arrangement when they name an instrument, and the three ways this style usually dies - ornament with no event, images unrelated to what the song says, and archaism for its own sake. use when writing or auditing a 中国风 or 古风 lyric, when a draft is full of beautiful old words but says nothing, when checking an allusion, when images from different eras collide, or when the words name an instrument. 中国风、古风、典故、化用、文字游戏、修辞、意象成套、方文山、穿帮。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-chinese-style</span>
+    <span class="r-desc">The Chinese-style layer for lyric writing (中国风歌词). What makes a lyric read as 中国风 rather than merely decorated - the vocabulary families it draws on (place, dynasty, object, craft, plant), the sixteen rhetorical devices Fang Wen-shan catalogues inside his own lyrics, each with a book example and a failure condition, why every image must belong to one material world and how one out-of-period object breaks it, the four grades of borrowing from classical verse and where borrowing becomes copying, what to do when the listener will not catch the allusion, what the words promise the arrangement when they name an instrument, and the three ways this style usually dies - ornament with no event, images unrelated to what the song says, and archaism for its own sake. Use when writing or auditing a 中国风 or 古风 lyric, when a draft is full of beautiful old words but says nothing, when checking an allusion, when images from different eras collide, or when the words name an instrument. 中国风、古风、典故、化用、文字游戏、修辞、意象成套、方文山、穿帮。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-english/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-english the english language layer for lyric writing (英文词的重音与节拍对齐). word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence&#39;s intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and &#39;em do to the count; why the, of and and must not land on a downbeat; and the mistakes a chinese-speaking writer makes in english. use when writing or checking english lyrics, fitting english words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-english</span>
+    <span class="r-desc">The English language layer for lyric writing (英文词的重音与节拍对齐). Word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence&#39;s intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and &#39;em do to the count; why the, of and and must not land on a downbeat; and the mistakes a Chinese-speaking writer makes in English. Use when writing or checking English lyrics, fitting English words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-imagery/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-imagery the imagery layer - how to find concrete nouns and make them a system (意象与具体名词). object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct ai fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when lyr-lint check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-imagery</span>
+    <span class="r-desc">The imagery layer - how to find concrete nouns and make them a system (意象与具体名词). Object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct AI fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. Use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when LYR-LINT check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-japanese/index.html"
+     data-source="jtydhr88-lyric-writing-skills"
+     data-category="music"
+     data-search="lw-japanese the japanese language layer for lyric writing (日文词的モーラ与符割り). the counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and the long vowel each take a beat, a palatalized pair takes one; one kana per note is the default, and the same melody remaps itself when the words change; every word carries a pitch-accent contour, and a melody that fights it gets the line heard as a different sentence; fuwari, the mapping of kana to notes; bunsetsu segmentation and where a line may break; ji-amari and ji-tarazu as deliberate mismatch; the four ways to fix a melody when the counts do not fit; why japanese rhyme is weak and how shichigo-cho slips in unnoticed; the lyrics-first and music-first routes; and the iron rule for english words inside a japanese song. use when writing or checking japanese lyrics, fitting kana to an existing melody, counting morae, when a sung line is misheard as another word, or when the words will not sit on the notes. 日文作词、日语歌词、モーラ、拍数、符割り、字余り、字足らず、音高重音、七五調。 music  jtydhr88/lyric-writing-skills">
+  <span>
+    <span class="r-name">lw-japanese</span>
+    <span class="r-desc">The Japanese language layer for lyric writing (日文词的モーラ与符割り). The counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and the long vowel each take a beat, a palatalized pair takes one; one kana per note is the default, and the same melody remaps itself when the words change; every word carries a pitch-accent contour, and a melody that fights it gets the line heard as a different sentence; fuwari, the mapping of kana to notes; bunsetsu segmentation and where a line may break; ji-amari and ji-tarazu as deliberate mismatch; the four ways to fix a melody when the counts do not fit; why Japanese rhyme is weak and how shichigo-cho slips in unnoticed; the lyrics-first and music-first routes; and the iron rule for English words inside a Japanese song. Use when writing or checking Japanese lyrics, fitting kana to an existing melody, counting morae, when a sung line is misheard as another word, or when the words will not sit on the notes. 日文作词、日语歌词、モーラ、拍数、符割り、字余り、字足らず、音高重音、七五調。</span>
+  </span>
+  <span class="r-src">jtydhr88/lyric-writing-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add jtydhr88-lyric-writing-skills/lw-mandarin</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add jtydhr88-lyric-writing-skills/lw-mandarin" aria-label="Copy install lw-mandarin">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/jtydhr88/lyric-writing-skills" rel="noopener">jtydhr88/lyric-writing-skills</a></dd></div>
+          <div><dt>Author</dt><dd>jtydhr88</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>music</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">jtydhr88-lyric-writing-skills/lw-mandarin</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=lw-mandarin%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-mandarin%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-mandarin%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-mandarin%2F&t=lw-mandarin%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-mandarin%2F&title=lw-mandarin%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-mandarin/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/jtydhr88-lyric-writing-skills/lw-mandarin/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

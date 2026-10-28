@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ppt-analysis — social AI agent skill — Aidentity</title>
+<meta name="description" content="PPT (.pptx/.ppt) 全量解析。覆盖：所有 slide 文本/表格/图表提取、嵌入图片 caption、纯图片 slide 渲染识别、数据标签提取。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="ppt-analysis, social, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ppt-analysis — social AI agent skill — Aidentity">
+<meta property="og:description" content="PPT (.pptx/.ppt) 全量解析。覆盖：所有 slide 文本/表格/图表提取、嵌入图片 caption、纯图片 slide 渲染识别、数据标签提取。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ppt-analysis — social AI agent skill — Aidentity">
+<meta name="twitter:description" content="PPT (.pptx/.ppt) 全量解析。覆盖：所有 slide 文本/表格/图表提取、嵌入图片 caption、纯图片 slide 渲染识别、数据标签提取。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"social","item":"https://akshatnaruka.github.io/aidentity/skills/?category=social"},{"@type":"ListItem","position":3,"name":"ppt-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/"}]},{"@type":"TechArticle","headline":"ppt-analysis","description":"PPT (.pptx/.ppt) 全量解析。覆盖：所有 slide 文本/表格/图表提取、嵌入图片 caption、纯图片 slide 渲染识别、数据标签提取。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"social, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../skills/index.html?category=social">social</a><span>/</span>ppt-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>ppt-analysis</h1>
+      <p class="summary">PPT (.pptx/.ppt) 全量解析。覆盖：所有 slide 文本/表格/图表提取、嵌入图片 caption、纯图片 slide 渲染识别、数据标签提取。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>PPT Analysis — .pptx / .ppt</h3>
+<h4>Environment</h4>
+<p><pre><code>from pptx import Presentation
+from pptx.util import Inches
+import os, subprocess, json
+
+# python-pptx is available
+# For .ppt (old binary format): convert via libreoffice
+def load_pptx(path):
+    if path.lower().endswith(&#39;.ppt&#39;):
+        import subprocess
+        out_dir = os.path.dirname(path)
+        subprocess.run(
+            [&#39;libreoffice&#39;, &#39;--headless&#39;, &#39;--convert-to&#39;, &#39;pptx&#39;, &#39;--outdir&#39;, out_dir, path],
+            check=True, capture_output=True
+        )
+        path = path.rsplit(&#39;.&#39;, 1)[0] + &#39;.pptx&#39;
+    return Presentation(path), path</code></pre></p>
+<hr>
+<h4>Core Method 1: Full Text Extraction (ALL slides)</h4>
+<p><pre><code>def extract_all_slides_text(pptx_path):
+    &quot;&quot;&quot;
+    Extract text from every slide: text frames, tables, chart titles.
+    For slides with no extractable text, flag them for image captioning.
+    &quot;&quot;&quot;
+    prs, _ = load_pptx(pptx_path)
+    slides_data = []
+
+    for slide_num, slide in enumerate(prs.slides, start=1):
+        slide_texts = []
+        has_text = False
+
+        for shape in slide.shapes:
+            # Text frame (most common)
+            if shape.has_text_frame:
+                for para in shape.text_frame.paragraphs:
+                    text = para.text.strip()
+                    if text:
+                        slide_texts.append(text)
+                        has_text = True
+
+            # Table
+            if shape.has_table:
+                tbl = shape.table
+                for row in tbl.rows:
+                    row_text = &#39;\t&#39;.join(cell.text.strip() for cell in row.cells)
+                    if row_text.strip():
+                        slide_texts.append(row_text)
+                        has_text = True
+
+            # Chart title
+            if shape.shape_type == 3:  # MSO_SHAPE_TYPE.CHART
+                try:
+                    if shape.chart.has_title:
+                        title = shape.chart.chart_title.text_frame.text
+                        slide_texts.append(f&quot;[Chart: {title}]&quot;)
+                        has_text = True
+                except Exception:
+                    pass
+
+        slides_data.append({
+            &#39;slide&#39;: slide_num,
+            &#39;text&#39;: &#39;\n&#39;.join(slide_texts),
+            &#39;has_text&#39;: has_text,
+            &#39;needs_caption&#39;: not has_text  # flag image-only slides
+        })
+
+    print(f&quot;Total slides: {len(slides_data)}&quot;)
+    image_only = sum(1 for s in slides_data if s[&#39;needs_caption&#39;])
+    print(f&quot;Slides with text: {len(slides_data) - image_only}, image-only: {image_only}&quot;)
+    return slides_data</code></pre></p>
+<hr>
+<h4>Core Method 2: Table Extraction (Structured)</h4>
+<p><pre><code>import pandas as pd
+
+def extract_pptx_tables(pptx_path):
+    &quot;&quot;&quot;Extract all tables from all slides as DataFrames.&quot;&quot;&quot;
+    prs, _ = load_pptx(pptx_path)
+    all_tables = []
+
+    for slide_num, slide in enumerate(prs.slides, start=1):
+        for shape in slide.shapes:
+            if not shape.has_table:
+                continue
+            tbl = shape.table
+            rows = []
+            for row in tbl.rows:
+                rows.append([cell.text.strip() for cell in row.cells])
+
+            if not rows:
+                continue
+
+            # Use first row as header
+            try:
+                df = pd.DataFrame(rows[1:], columns=rows[0])
+            except Exception:
+                df = pd.DataFrame(rows)
+
+            all_tables.append({&#39;slide&#39;: slide_num, &#39;df&#39;: df})
+            print(f&quot;  Slide {slide_num}: table {df.shape[0]}r × {df.shape[1]}c&quot;)
+            print(df.head(3).to_string())
+
+    return all_tables</code></pre></p>
+<hr>
+<h4>Core Method 3: Chart Data Extraction</h4>
+<p><code>python-pptx</code> can read Chart data when it&#39;s stored as embedded Excel data.</p>
+<p>If that fails, fall back to captioning the slide image.</p>
+<p><pre><code>def extract_chart_data(pptx_path):
+    &quot;&quot;&quot;
+    Extract data series from Chart shapes.
+    Returns list of {slide, chart_title, series_name, categories, values}.
+    &quot;&quot;&quot;
+    prs, _ = load_pptx(pptx_path)
+    charts = []
+
+    for slide_num, slide in enumerate(prs.slides, start=1):
+        for shape in slide.shapes:
+            if shape.shape_type != 3:  # not a chart
+                continue
+            try:
+                chart = shape.chart
+                title = chart.chart_title.text_frame.text if chart.has_title else f&quot;Chart_S{slide_num}&quot;
+
+                for plot in chart.plots:
+                    for series in plot.series:
+                        try:
+                            categories = [str(pt.label) for pt in series.data_labels] if hasattr(series, &#39;data_labels&#39;) else []
+                            values = [pt.value for pt in series.values] if hasattr(series, &#39;values&#39;) else []
+                            # Alternative: use xChart data
+                            if not values:
+                                values = list(series.values)
+                        except Exception as e:
+                            values = []
+                            categories = []
+
+                        charts.append({
+                            &#39;slide&#39;: slide_num,
+                            &#39;chart_title&#39;: title,
+                            &#39;series&#39;: getattr(series, &#39;name&#39;, &#39;&#39;),
+                            &#39;categories&#39;: categories,
+                            &#39;values&#39;: values
+                        })
+            except Exception as e:
+                print(f&quot;  Slide {slide_num}: chart extraction failed ({e}) — will use caption&quot;)
+
+    return charts</code></pre></p>
+<hr>
+<h4>Core Method 4: Render Image-Only Slides → Caption</h4>
+<p>When a slide has no extractable text (pure image/screenshot slides):</p>
+<p><pre><code>import fitz  # PyMuPDF can also render PPTX via LibreOffice conversion
+
+CAPTION = &quot;/path/to/skills/sn-da-image-caption/scripts/caption.py&quot;
+
+def caption_image_slides(pptx_path, slides_data, prompt=None):
+    &quot;&quot;&quot;
+    For slides flagged as &#39;needs_caption&#39;, render to PNG and caption.
+    Uses LibreOffice to convert PPTX to PDF first, then renders pages.
+    &quot;&quot;&quot;
+    image_slides = [s for s in slides_data if s[&#39;needs_caption&#39;]]
+    if not image_slides:
+        print(&quot;No image-only slides to caption.&quot;)
+        return slides_data
+
+    # Convert PPTX → PDF (preserves slide visuals)
+    out_dir = &quot;/tmp&quot;
+    r = subprocess.run(
+        [&#39;libreoffice&#39;, &#39;--headless&#39;, &#39;--convert-to&#39;, &#39;pdf&#39;, &#39;--outdir&#39;, out_dir, pptx_path],
+        capture_output=True, text=True
+    )
+    pdf_name = os.path.basename(pptx_path).rsplit(&#39;.&#39;, 1)[0] + &#39;.pdf&#39;
+    pdf_path = os.path.join(out_dir, pdf_name)
+
+    if not os.path.exists(pdf_path):
+        print(f&quot;LibreOffice conversion failed: {r.stderr[:200]}&quot;)
+        return slides_data
+
+    # Render each image-only slide
+    doc = fitz.open(pdf_path)
+    for s in image_slides:
+        page_idx = s[&#39;slide&#39;] - 1  # 0-indexed
+        if page_idx &gt;= len(doc):
+            continue
+        page = doc[page_idx]
+        mat = fitz.Matrix(150/72, 150/72)
+        pix = page.get_pixmap(matrix=mat)
+        img_path = f&quot;/tmp/slide_{s[&#39;slide&#39;]}.png&quot;
+        pix.save(img_path)
+
+        # Caption the slide image
+        cmd = [&quot;python3&quot;, CAPTION, img_path, &quot;--json&quot;]
+        p = prompt or &quot;提取幻灯片中所有文字、数值和表格内容，保持结构，Markdown格式输出。&quot;
+        cmd += [&quot;--prompt&quot;, p]
+        cr = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        if cr.returncode == 0:
+            desc = json.loads(cr.stdout).get(&quot;description&quot;, &quot;&quot;)
+            s[&#39;text&#39;] = desc
+            s[&#39;needs_caption&#39;] = False
+            print(f&quot;  Slide {s[&#39;slide&#39;]}: captioned ({len(desc)} chars)&quot;)
+        else:
+            print(f&quot;  Slide {s[&#39;slide&#39;]}: caption failed — {cr.stderr[:80]}&quot;)
+
+    doc.close()
+    return slides_data</code></pre></p>
+<hr>
+<h4>Common Patterns</h4>
+<h5>Keyword search across all slides</h5>
+<p><pre><code>def find_in_pptx(pptx_path, keyword, slides_data=None):
+    &quot;&quot;&quot;Find keyword across all slides (after text extraction + captioning).&quot;&quot;&quot;
+    if slides_data is None:
+        slides_data = extract_all_slides_text(pptx_path)
+
+    results = []
+    for s in slides_data:
+        if keyword in s.get(&#39;text&#39;, &#39;&#39;):
+            idx = s[&#39;text&#39;].find(keyword)
+            context = s[&#39;text&#39;][max(0, idx-100):idx+200]
+            results.append({&#39;slide&#39;: s[&#39;slide&#39;], &#39;context&#39;: context})
+
+    print(f&quot;&#39;{keyword}&#39; found in {len(results)} slides: {[r[&#39;slide&#39;] for r in results]}&quot;)
+    return results</code></pre></p>
+<h5>Time-line / process extraction from PPT</h5>
+<p><pre><code>def extract_timeline(pptx_path, date_pattern=r&#39;\d{4}[年/\-]\d{1,2}&#39;):
+    &quot;&quot;&quot;Extract date-tagged events from slide text.&quot;&quot;&quot;
+    import re
+    slides_data = extract_all_slides_text(pptx_path)
+    events = []
+    for s in slides_data:
+        for line in s[&#39;text&#39;].split(&#39;\n&#39;):
+            if re.search(date_pattern, line):
+                events.append({&#39;slide&#39;: s[&#39;slide&#39;], &#39;event&#39;: line.strip()})
+    return events</code></pre></p>
+<h5>Statistics from PPT tables (e.g., 录用占比)</h5>
+<p><pre><code>def compute_ratio_from_pptx_table(pptx_path, numerator_col, denominator_col):
+    &quot;&quot;&quot;Example: compute ratio = col_A / col_B for all rows.&quot;&quot;&quot;
+    tables = extract_pptx_tables(pptx_path)
+    for item in tables:
+        df = item[&#39;df&#39;]
+        # Try to find columns (flexible matching)
+        num_col = next((c for c in df.columns if numerator_col in c), None)
+        den_col = next((c for c in df.columns if denominator_col in c), None)
+        if num_col and den_col:
+            df[num_col] = pd.to_numeric(df[num_col].str.replace(&#39;人&#39;, &#39;&#39;).str.strip(), errors=&#39;coerce&#39;)
+            df[den_col] = pd.to_numeric(df[den_col].str.replace(&#39;人&#39;, &#39;&#39;).str.strip(), errors=&#39;coerce&#39;)
+            df[&#39;ratio&#39;] = (df[num_col] / df[den_col] * 100).round(0).astype(str) + &#39;%&#39;
+            print(df[[&#39;slide&#39; if &#39;slide&#39; in df.columns else df.columns[0], num_col, den_col, &#39;ratio&#39;]].to_string())</code></pre></p>
+<hr>
+<h4>Full Workflow Example</h4>
+<p><pre><code>pptx_path = &quot;/mnt/data/report.pptx&quot;
+
+# 1. Extract text from all slides
+slides_data = extract_all_slides_text(pptx_path)
+
+# 2. Caption image-only slides
+slides_data = caption_image_slides(pptx_path, slides_data)
+
+# 3. Combine all text for analysis
+all_text = &#39;\n\n&#39;.join(
+    f&quot;[Slide {s[&#39;slide&#39;]}]\n{s[&#39;text&#39;]}&quot;
+    for s in slides_data if s.get(&#39;text&#39;)
+)
+
+# 4. Search or analyze
+results = find_in_pptx(pptx_path, &#39;录用占比&#39;, slides_data)
+
+# 5. Extract tables if needed
+tables = extract_pptx_tables(pptx_path)</code></pre></p>
+<hr>
+<h4>Pitfalls</h4>
+<table><thead><tr><th>Pitfall</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Skip slides with no text → miss chart data</td><td>Flag <code>needs_caption</code>, render &amp; caption (Method 4)</td></tr>
+<tr><td><code>shape.chart.plots[0].series</code> fails → no data</td><td>Catch exception, fall back to captioning the slide</td></tr>
+<tr><td>Table columns misread (企业名 vs 岗位名)</td><td>Print headers + first 3 rows before computing; verify column meaning</td></tr>
+<tr><td>Only read first N slides</td><td>Always <code>for slide in prs.slides</code> — no index limit</td></tr>
+<tr><td><code>.ppt</code> format → <code>python-pptx</code> can&#39;t open</td><td>Convert to <code>.pptx</code> via libreoffice first</td></tr>
+<tr><td>PPT has overlapping text boxes → garbled order</td><td>Sort shapes by top-left position: <code>sorted(slide.shapes, key=lambda s: (s.top, s.left))</code></td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../skills/marketingskills/social/index.html"
+     data-source="marketingskills"
+     data-category="social"
+     data-search="social when the user wants help creating, scheduling, or optimizing social media content for linkedin, twitter/x, instagram, tiktok, or facebook, or wants to do social listening and engagement triage. also use when the user mentions &#39;linkedin post,&#39; &#39;twitter thread,&#39; &#39;social media,&#39; &#39;content calendar,&#39; &#39;social scheduling,&#39; &#39;engagement,&#39; &#39;viral content,&#39; &#39;what should i post,&#39; &#39;repurpose this content,&#39; &#39;tweet ideas,&#39; &#39;linkedin carousel,&#39; &#39;social media strategy,&#39; &#39;grow my following,&#39; &#39;tiktok video,&#39; &#39;reels,&#39; &#39;shorts,&#39; &#39;video script,&#39; &#39;video hook,&#39; &#39;short-form video,&#39; &#39;create a reel,&#39; &#39;social listening,&#39; &#39;brand mentions,&#39; &#39;competitor monitoring,&#39; &#39;top posts to comment on,&#39; &#39;find people asking for,&#39; &#39;carousel,&#39; &#39;slide-by-slide,&#39; or &#39;document post.&#39; use this for social content, repurposing, scheduling, video scripts, and listening. posts avoid ai tells like &#39;it&#39;s not x, it&#39;s y&#39; reveals and broetry. for broader content strategy, see content-strategy. for paid ads, see ad-creative. for earned media, see public-relations. social  coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">social</span>
+    <span class="r-desc">When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twitter/X, Instagram, TikTok, or Facebook, or wants to do social listening and engagement triage. Also use when the user mentions &#39;LinkedIn post,&#39; &#39;Twitter thread,&#39; &#39;social media,&#39; &#39;content calendar,&#39; &#39;social scheduling,&#39; &#39;engagement,&#39; &#39;viral content,&#39; &#39;what should I post,&#39; &#39;repurpose this content,&#39; &#39;tweet ideas,&#39; &#39;LinkedIn carousel,&#39; &#39;social media strategy,&#39; &#39;grow my following,&#39; &#39;TikTok video,&#39; &#39;Reels,&#39; &#39;Shorts,&#39; &#39;video script,&#39; &#39;video hook,&#39; &#39;short-form video,&#39; &#39;create a reel,&#39; &#39;social listening,&#39; &#39;brand mentions,&#39; &#39;competitor monitoring,&#39; &#39;top posts to comment on,&#39; &#39;find people asking for,&#39; &#39;carousel,&#39; &#39;slide-by-slide,&#39; or &#39;document post.&#39; Use this for social content, repurposing, scheduling, video scripts, and listening. Posts avoid AI tells like &#39;it&#39;s not X, it&#39;s Y&#39; reveals and broetry. For broader content strategy, see content-strategy. For paid ads, see ad-creative. For earned media, see public-relations.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/opensensenova-sensenova-skills/sn-da-image-caption/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="social"
+     data-search="sn-da-image-caption 图片理解与数据提取 skill。当图片文件（.png/.jpg/.jpeg/.gif/.webp/.bmp）是主要输入且用户需要理解、提取数据或分析图片内容时使用。提供预配置的 caption 脚本（scripts/caption.py），通过 vision 模型将图片转为文本描述，无需额外配置 api key。覆盖：(1) 通过 scripts/caption.py 对图表/表格/截图/流程图进行 caption，(2) 将 caption 文本解析为结构化 dataframe，(3) 基于提取数据重新生成可视化图表，(4) 导出为 excel/csv。**遇到以下任一情况就主动使用本 skill，不要自行猜测图片内容**：①用户出现触发词：图片分析 / 图表提取 / 表格识别 / ocr / 图片描述 / 截图分析 / 图表数据 / 提取图片中的数据 / 图片转表格 / 识别图片 / image caption / extract data from image / chart analysis / table ocr；②用户上传或指定了图片文件（.png / .jpg / .jpeg / .gif / .webp / .bmp）并要求理解、提取数据或分析内容；③任务需要从图表截图、表格截图、ui 截图、流程图中提取结构化信息；④用户要求将图片中的数据转为 excel/csv 或重新生成可视化图表。仅不用于：图片编辑（裁剪、滤镜、缩放）、图片生成、不含数据的风景/人物照片描述。 social  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-image-caption</span>
+    <span class="r-desc">图片理解与数据提取 skill。当图片文件（.png/.jpg/.jpeg/.gif/.webp/.bmp）是主要输入且用户需要理解、提取数据或分析图片内容时使用。提供预配置的 caption 脚本（scripts/caption.py），通过 vision 模型将图片转为文本描述，无需额外配置 API Key。覆盖：(1) 通过 scripts/caption.py 对图表/表格/截图/流程图进行 caption，(2) 将 caption 文本解析为结构化 DataFrame，(3) 基于提取数据重新生成可视化图表，(4) 导出为 Excel/CSV。**遇到以下任一情况就主动使用本 skill，不要自行猜测图片内容**：①用户出现触发词：图片分析 / 图表提取 / 表格识别 / OCR / 图片描述 / 截图分析 / 图表数据 / 提取图片中的数据 / 图片转表格 / 识别图片 / image caption / extract data from image / chart analysis / table OCR；②用户上传或指定了图片文件（.png / .jpg / .jpeg / .gif / .webp / .bmp）并要求理解、提取数据或分析内容；③任务需要从图表截图、表格截图、UI 截图、流程图中提取结构化信息；④用户要求将图片中的数据转为 Excel/CSV 或重新生成可视化图表。仅不用于：图片编辑（裁剪、滤镜、缩放）、图片生成、不含数据的风景/人物照片描述。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="sn-da-excel-workflow excel 数据分析多步编排器。覆盖：(1) 读取多 sheet excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 sheet 统计聚合，(6) 导出 excel/csv 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / excel 报告 / 生成报表 / analyze excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-excel-workflow</span>
+    <span class="r-desc">Excel 数据分析多步编排器。覆盖：(1) 读取多 Sheet Excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 Parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 Sheet 统计聚合，(6) 导出 Excel/CSV 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：Excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / Excel 报告 / 生成报表 / analyze Excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 Sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 Excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/category-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="large-file-parquet-analysis-and-highlight 当excel文件总行数超过1万行时，通过转换为parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为excel并对特定行进行高亮标注。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">large-file-parquet-analysis-and-highlight</span>
+    <span class="r-desc">当Excel文件总行数超过1万行时，通过转换为Parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为Excel并对特定行进行高亮标注。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/duplicate-value-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="excel-conditional-comparison-and-large-file-processing 对比excel多表中的特定系数并对异常值进行颜色标记。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">excel-conditional-comparison-and-large-file-processing</span>
+    <span class="r-desc">对比Excel多表中的特定系数并对异常值进行颜色标记。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis" aria-label="Copy install ppt-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>social</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=ppt-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fppt-analysis%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fppt-analysis%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fppt-analysis%2F&t=ppt-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fppt-analysis%2F&title=ppt-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/ppt-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../skills/index.html">Browse</a> · <a href="../../../../../sources/index.html">Sources</a> · <a href="../../../../../about/index.html">About</a> · <a href="../../../../../registry.json">registry.json</a> · <a href="../../../../../llms.txt">llms.txt</a> · <a href="../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../assets/app.js" defer></script>
+</body>
+</html>

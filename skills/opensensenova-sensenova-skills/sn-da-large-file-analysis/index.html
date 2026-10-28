@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sn-da-large-file-analysis — corporate AI agent skill — Aidentity</title>
+<meta name="description" content="万行以上 Excel 数据集的高性能分析引擎。提供 openpyxl read_only 流式读取（iter_rows 支持 10 万行以上）、Parquet 转换加速、内存优化、分块处理和大文件写入模式。**遇到以下任一情况就主动使用本 skill**：①数据行数 ≥ 10k（由 sn-da-excel-w…">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="sn-da-large-file-analysis, corporate, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sn-da-large-file-analysis — corporate AI agent skill — Aidentity">
+<meta property="og:description" content="万行以上 Excel 数据集的高性能分析引擎。提供 openpyxl read_only 流式读取（iter_rows 支持 10 万行以上）、Parquet 转换加速、内存优化、分块处理和大文件写入模式。**遇到以下任一情况就主动使用本 skill**：①数据行数 ≥ 10k（由 sn-da-excel-w…">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sn-da-large-file-analysis — corporate AI agent skill — Aidentity">
+<meta name="twitter:description" content="万行以上 Excel 数据集的高性能分析引擎。提供 openpyxl read_only 流式读取（iter_rows 支持 10 万行以上）、Parquet 转换加速、内存优化、分块处理和大文件写入模式。**遇到以下任一情况就主动使用本 skill**：①数据行数 ≥ 10k（由 sn-da-excel-w…">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"corporate","item":"https://akshatnaruka.github.io/aidentity/skills/?category=corporate"},{"@type":"ListItem","position":3,"name":"sn-da-large-file-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/"}]},{"@type":"TechArticle","headline":"sn-da-large-file-analysis","description":"万行以上 Excel 数据集的高性能分析引擎。提供 openpyxl read_only 流式读取（iter_rows 支持 10 万行以上）、Parquet 转换加速、内存优化、分块处理和大文件写入模式。**遇到以下任一情况就主动使用本 skill**：①数据行数 ≥ 10k（由 sn-da-excel-workflow 的行数评估步骤触发）；②用户出现触发词：大文件 / 大数据量 / 性能优化 / 内存不足 / OOM / 百万行 / 十万行 / 流式读取 / Parquet / 分块处理 / large file / big data / streaming read / chunked processing；③直接使用 pd.read_excel() 导致超时或内存溢出；④用户明确要求对大规模数据集进行高性能处理。仅不用于：小于 10k 行的常规 Excel 分析（使用 sn-da-excel-workflow 即可）。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"corporate, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=corporate">corporate</a><span>/</span>sn-da-large-file-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>sn-da-large-file-analysis</h1>
+      <p class="summary">万行以上 Excel 数据集的高性能分析引擎。提供 openpyxl read_only 流式读取（iter_rows 支持 10 万行以上）、Parquet 转换加速、内存优化、分块处理和大文件写入模式。**遇到以下任一情况就主动使用本 skill**：①数据行数 ≥ 10k（由 sn-da-excel-workflow 的行数评估步骤触发）；②用户出现触发词：大文件 / 大数据量 / 性能优化 / 内存不足 / OOM / 百万行 / 十万行 / 流式读取 / Parquet / 分块处理 / large file / big data / streaming read / chunked processing；③直接使用 pd.read_excel() 导致超时或内存溢出；④用户明确要求对大规模数据集进行高性能处理。仅不用于：小于 10k 行的常规 Excel 分析（使用 sn-da-excel-workflow 即可）。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Large Scale Excel Analysis Skill</h3>
+<h4>Mandatory Rules</h4>
+<p>&gt; <strong>When total rows &gt;= 10,000, you MUST use the methods in this skill.</strong></p>
+<table><thead><tr><th>Data Scale</th><th>Read Strategy</th><th>Reason</th></tr></thead><tbody>
+<tr><td>&lt; 10k rows</td><td><code>pd.read_excel()</code> directly</td><td>No memory pressure</td></tr>
+<tr><td>10k–100k rows</td><td><code>pd.read_excel()</code> → convert to Parquet → <code>pd.read_parquet()</code> for analysis</td><td>Avoid repeated slow reads</td></tr>
+<tr><td>100k–1M rows</td><td><strong>openpyxl <code>read_only</code> + <code>iter_rows</code> streaming</strong> → Parquet</td><td><code>pd.read_excel()</code> will OOM or timeout</td></tr>
+<tr><td>&gt; 1M rows</td><td>Streaming read + <strong>multi-sheet split</strong> (Excel max 1,048,576 rows per sheet)</td><td>Must chunk</td></tr>
+</tbody></table>
+<p><strong>Prohibited:</strong></p>
+<ul>
+<li>Do NOT use <code>pd.read_excel()</code> to fully load 100k+ row files</li>
+<li>Do NOT search for fonts with <code>fc-list</code>, <code>find ... fonts</code>, or install packages with <code>pip install</code></li>
+<li>Do NOT use <code>df.iterrows()</code> on large DataFrames (use <code>itertuples()</code> or vectorized ops)</li>
+<li>Do NOT use <code>df.apply(lambda...)</code> for operations that can be vectorized</li>
+</ul>
+<hr>
+<h4>Environment Setup</h4>
+<p><pre><code>import pandas as pd
+import numpy as np
+import os
+import gc
+
+pd.options.mode.copy_on_write = True
+
+# CJK font setup (fixed paths — do NOT search for fonts)
+# ⚠️ Copy this block as-is. Do NOT use fc-list, find, subprocess, or glob to locate fonts.
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+_FONT_PATHS = [
+    &#39;/mnt/afs_agents/SimHei.ttf&#39;,
+    &#39;/mnt/afs_agents/mnt/data/SimHei.ttf&#39;,
+    os.path.expanduser(&#39;~/.fonts/SimHei.ttf&#39;),
+    &#39;/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc&#39;,
+    &#39;/usr/share/fonts/SimHei.ttf&#39;,
+]
+for _p in _FONT_PATHS:
+    if os.path.exists(_p):
+        fm.fontManager.addfont(_p)
+        matplotlib.rcParams[&#39;font.family&#39;] = fm.FontProperties(fname=_p).get_name()
+        break
+matplotlib.rcParams[&#39;axes.unicode_minus&#39;] = False</code></pre></p>
+<hr>
+<h4>Core Method 1: Inspect File Structure (Without Loading Data)</h4>
+<p>Before any operation on a large file, inspect sheets and row counts <strong>without loading data into memory</strong>:</p>
+<p><pre><code>import openpyxl
+
+def inspect_excel(file_path):
+    &quot;&quot;&quot;Stream-inspect Excel structure. Returns {sheet_name: {rows, columns}}.&quot;&quot;&quot;
+    wb = openpyxl.load_workbook(file_path, read_only=True, data_only=True)
+    info = {}
+    for name in wb.sheetnames:
+        ws = wb[name]
+        row_count = 0
+        header = None
+        for i, row in enumerate(ws.iter_rows(values_only=True)):
+            if i == 0:
+                header = [str(c) if c is not None else f&quot;Col_{j}&quot; for j, c in enumerate(row)]
+            else:
+                row_count += 1
+        info[name] = {&quot;rows&quot;: row_count, &quot;columns&quot;: header}
+    wb.close()
+    return info
+
+# Usage
+file_info = inspect_excel(file_path)
+for sheet, meta in file_info.items():
+    print(f&quot;Sheet &#39;{sheet}&#39;: {meta[&#39;rows&#39;]} rows, {len(meta[&#39;columns&#39;])} cols&quot;)
+    print(f&quot;  Columns: {meta[&#39;columns&#39;][:10]}...&quot;)
+total_rows = sum(m[&#39;rows&#39;] for m in file_info.values())
+print(f&quot;Total rows: {total_rows}&quot;)</code></pre></p>
+<hr>
+<h4>Core Method 2: Streaming Read → Parquet (100k+ Rows)</h4>
+<p>For 100k+ row files, <strong>never</strong> use <code>pd.read_excel()</code>. Use openpyxl streaming → Parquet:</p>
+<p><pre><code>import openpyxl
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+def stream_excel_to_parquet(excel_path, parquet_path, sheet_name=None, chunk_size=50000):
+    &quot;&quot;&quot;Stream Excel rows to Parquet with constant memory usage.
+
+    All columns are cast to string to avoid cross-chunk schema mismatches
+    (Excel mixed-type columns may be all-None in some chunks, causing PyArrow
+    to infer null type instead of string). Convert numeric columns after loading
+    Parquet with pd.to_numeric() as needed.
+    &quot;&quot;&quot;
+    wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
+    ws = wb[sheet_name] if sheet_name else wb.active
+
+    header = None
+    writer = None
+    chunk_rows = []
+    total_written = 0
+
+    def _flush(rows):
+        nonlocal writer
+        table = pa.table({
+            col: pa.array(
+                [str(r[idx]) if r[idx] is not None else None for r in rows],
+                type=pa.string(),
+            )
+            for idx, col in enumerate(header)
+        })
+        if writer is None:
+            writer = pq.ParquetWriter(parquet_path, table.schema)
+        writer.write_table(table)
+
+    for i, row in enumerate(ws.iter_rows(values_only=True)):
+        if i == 0:
+            header = [str(c) if c is not None else f&quot;Col_{j}&quot; for j, c in enumerate(row)]
+            continue
+
+        chunk_rows.append(list(row))
+
+        if len(chunk_rows) &gt;= chunk_size:
+            _flush(chunk_rows)
+            total_written += len(chunk_rows)
+            print(f&quot;  Written {total_written:,} rows...&quot;)
+            chunk_rows = []
+            gc.collect()
+
+    if chunk_rows:
+        _flush(chunk_rows)
+        total_written += len(chunk_rows)
+
+    if writer:
+        writer.close()
+    wb.close()
+    print(f&quot;Done: {total_written:,} rows -&gt; {parquet_path}&quot;)
+    return total_written</code></pre></p>
+<hr>
+<h4>Core Method 3: Medium File Parquet Conversion (10k–100k Rows)</h4>
+<p>For 10k–100k rows, <code>pd.read_excel()</code> won&#39;t OOM, but Parquet is much faster for repeated analysis:</p>
+<p><pre><code>def convert_excel_to_parquet(excel_path, parquet_path, sheet_name=0):
+    &quot;&quot;&quot;Medium file: pd.read_excel -&gt; Parquet cache.&quot;&quot;&quot;
+    if os.path.exists(parquet_path):
+        print(f&quot;Cache exists: {parquet_path}&quot;)
+        return
+    df = pd.read_excel(excel_path, sheet_name=sheet_name)
+    df.columns = df.columns.astype(str)
+    df.to_parquet(parquet_path, engine=&#39;pyarrow&#39;, compression=&#39;snappy&#39;)
+    row_count = len(df)
+    del df
+    gc.collect()
+    print(f&quot;Converted {row_count:,} rows -&gt; {parquet_path}&quot;)</code></pre></p>
+<hr>
+<h4>Core Method 4: Memory Optimization (Type Downcasting)</h4>
+<p>After loading Parquet, further reduce memory footprint:</p>
+<p><pre><code>def optimize_dtypes(df):
+    &quot;&quot;&quot;Auto-downcast numeric types + convert low-cardinality strings to Category.
+    Typically saves 50-80% memory.&quot;&quot;&quot;
+    start_mb = df.memory_usage(deep=True).sum() / 1024**2
+
+    for col in df.select_dtypes(include=[&#39;int64&#39;, &#39;int32&#39;]).columns:
+        c_min, c_max = df[col].min(), df[col].max()
+        if c_min &gt;= np.iinfo(np.int8).min and c_max &lt;= np.iinfo(np.int8).max:
+            df[col] = df[col].astype(np.int8)
+        elif c_min &gt;= np.iinfo(np.int16).min and c_max &lt;= np.iinfo(np.int16).max:
+            df[col] = df[col].astype(np.int16)
+        elif c_min &gt;= np.iinfo(np.int32).min and c_max &lt;= np.iinfo(np.int32).max:
+            df[col] = df[col].astype(np.int32)
+
+    for col in df.select_dtypes(include=[&#39;float64&#39;]).columns:
+        df[col] = df[col].astype(np.float32)
+
+    for col in df.select_dtypes(include=[&#39;object&#39;, &#39;string&#39;]).columns:
+        if df[col].nunique() / max(len(df), 1) &lt; 0.5:
+            df[col] = df[col].astype(&#39;category&#39;)
+
+    end_mb = df.memory_usage(deep=True).sum() / 1024**2
+    print(f&quot;Memory: {start_mb:.1f} MB -&gt; {end_mb:.1f} MB (saved {(1 - end_mb/start_mb)*100:.0f}%)&quot;)
+    return df</code></pre></p>
+<hr>
+<h4>Core Method 5: Large File Writing</h4>
+<p><pre><code>def write_large_excel(df, output_path, sheet_name=&quot;Sheet1&quot;):
+    &quot;&quot;&quot;Auto-select write strategy based on data size.&quot;&quot;&quot;
+    total_cells = len(df) * len(df.columns)
+
+    if len(df) &gt; 1_000_000:
+        csv_path = output_path.rsplit(&#39;.&#39;, 1)[0] + &#39;.csv&#39;
+        df.to_csv(csv_path, index=False)
+        print(f&quot;Over 1M rows — exported as CSV: {csv_path}&quot;)
+        return csv_path
+
+    if total_cells &gt; 50_000:
+        from openpyxl import Workbook
+        from openpyxl.cell import WriteOnlyCell
+
+        wb = Workbook(write_only=True)
+        ws = wb.create_sheet(title=sheet_name)
+        ws.append(list(df.columns))
+        for idx, row in enumerate(df.itertuples(index=False)):
+            ws.append([None if pd.isna(v) else v for v in row])
+            if (idx + 1) % 100_000 == 0:
+                print(f&quot;  Written {idx + 1:,} rows...&quot;)
+        wb.save(output_path)
+        wb.close()
+        print(f&quot;write_only mode: {len(df):,} rows -&gt; {output_path}&quot;)
+    else:
+        df.to_excel(output_path, index=False, sheet_name=sheet_name)
+        print(f&quot;Standard write: {len(df):,} rows -&gt; {output_path}&quot;)
+    return output_path</code></pre></p>
+<hr>
+<h4>Example 1: 100k-Row Table — Column Distribution + Chart</h4>
+<p><strong>Scenario</strong>: User has a 100k-row sales Excel file and wants regional sales distribution with a bar chart.</p>
+<p><pre><code>import pandas as pd
+import os, gc
+
+excel_path = &quot;sales_100k.xlsx&quot;
+parquet_path = &quot;sales_100k.parquet&quot;
+
+# === Step 1: Inspect structure ===
+file_info = inspect_excel(excel_path)
+total_rows = sum(m[&#39;rows&#39;] for m in file_info.values())
+print(f&quot;Total rows: {total_rows}&quot;)
+
+# === Step 2: Choose read strategy by row count ===
+if total_rows &gt;= 100_000:
+    stream_excel_to_parquet(excel_path, parquet_path)
+else:
+    convert_excel_to_parquet(excel_path, parquet_path)
+
+# === Step 3: Load Parquet + optimize memory ===
+df = pd.read_parquet(parquet_path)
+df = optimize_dtypes(df)
+print(f&quot;Shape: {df.shape}&quot;)
+print(df.head(3))
+
+# === Step 4: Analysis ===
+region_sales = df.groupby(&#39;Region&#39;)[&#39;Sales&#39;].sum().sort_values(ascending=False)
+print(region_sales)
+
+# === Step 5: Visualization ===
+fig, ax = plt.subplots(figsize=(10, 6))
+region_sales.plot(kind=&#39;bar&#39;, ax=ax, color=&#39;#4C72B0&#39;)
+ax.set_title(&#39;Sales by Region&#39;)
+ax.set_ylabel(&#39;Sales&#39;)
+plt.tight_layout()
+plt.savefig(&#39;region_sales.png&#39;, dpi=150, bbox_inches=&#39;tight&#39;)
+plt.show()
+
+# === Step 6: Cleanup ===
+del df
+gc.collect()</code></pre></p>
+<hr>
+<h4>Example 2: 1M-Row Table — Streaming Read + Filter + Export</h4>
+<p><strong>Scenario</strong>: User has a 1M-row transaction log and wants records with amount &gt; 10,000 exported.</p>
+<p><pre><code>import pandas as pd
+import os, gc
+
+excel_path = &quot;transactions_1m.xlsx&quot;
+parquet_path = &quot;transactions_1m.parquet&quot;
+
+# === Step 1: Stream to Parquet (1M rows — MUST use streaming, never pd.read_excel) ===
+stream_excel_to_parquet(excel_path, parquet_path, chunk_size=50000)
+
+# === Step 2: Load only needed columns (saves memory) ===
+df = pd.read_parquet(parquet_path, columns=[&#39;TransactionID&#39;, &#39;Amount&#39;, &#39;Date&#39;, &#39;Type&#39;])
+df = optimize_dtypes(df)
+print(f&quot;Shape: {df.shape}, Memory: {df.memory_usage(deep=True).sum()/1024**2:.1f} MB&quot;)
+
+# === Step 3: Vectorized filtering (never use apply/iterrows) ===
+mask = df[&#39;Amount&#39;] &gt; 10000
+high_value = df[mask].copy()
+print(f&quot;Filtered: {len(high_value):,} / {len(df):,} rows&quot;)
+
+# === Step 4: Export ===
+output_path = write_large_excel(high_value, &#39;high_value_transactions.xlsx&#39;)
+
+# === Step 5: Cleanup ===
+del df, high_value
+gc.collect()</code></pre></p>
+<hr>
+<h4>Vectorized Operations Cheat Sheet</h4>
+<p>On large files, <strong>never use slow operations</strong> — use vectorized alternatives:</p>
+<table><thead><tr><th>Slow (Prohibited)</th><th>Fast (Use This)</th></tr></thead><tbody>
+<tr><td><code>df.apply(lambda x: x*2)</code></td><td><code>df[&#39;col&#39;] * 2</code></td></tr>
+<tr><td><code>df.iterrows()</code></td><td><code>df.itertuples(index=False)</code></td></tr>
+<tr><td><code>for i in range(len(df)): df.iloc[i]</code></td><td>Vectorized boolean indexing <code>df[mask]</code></td></tr>
+<tr><td><code>df[&#39;a&#39;].map(lambda x: &#39;Y&#39; if x&gt;0 else &#39;N&#39;)</code></td><td><code>np.where(df[&#39;a&#39;]&gt;0, &#39;Y&#39;, &#39;N&#39;)</code></td></tr>
+<tr><td><code>df.groupby(&#39;a&#39;).apply(custom_func)</code></td><td><code>df.groupby(&#39;a&#39;).agg({&#39;b&#39;:&#39;sum&#39;,&#39;c&#39;:&#39;mean&#39;})</code></td></tr>
+</tbody></table>
+<hr>
+<h4>Memory Estimation</h4>
+<p>Estimate memory before loading to avoid OOM:</p>
+<p><pre><code>Estimated MB ≈ rows × cols × 8 / 1024² (numeric columns)
+Estimated MB ≈ rows × cols × 50 / 1024² (with text columns)</code></pre></p>
+<table><thead><tr><th>Rows</th><th>20 cols (numeric)</th><th>20 cols (with text)</th></tr></thead><tbody>
+<tr><td>100k</td><td>~15 MB</td><td>~95 MB</td></tr>
+<tr><td>500k</td><td>~76 MB</td><td>~477 MB</td></tr>
+<tr><td>1M</td><td>~153 MB</td><td>~953 MB</td></tr>
+</tbody></table>
+<p>When estimated memory exceeds 80% of available RAM, use <strong>column-selective loading</strong> (<code>pd.read_parquet(columns=[...])</code>) or chunked processing.</p>
+<hr>
+<h4>Best Practices</h4>
+<ol>
+<li><strong>Parquet is king</strong>: For any file &gt;= 10k rows, convert to Parquet before analysis. Parquet supports columnar reads, compressed storage, and loads 10-50x faster than xlsx.</li>
+<li><strong>Streaming is the safety net</strong>: For 100k+ rows, always use openpyxl <code>read_only</code> + <code>iter_rows</code>. Never <code>pd.read_excel()</code> for full load.</li>
+<li><strong>Release memory promptly</strong>: <code>del df; gc.collect()</code> after every intermediate DataFrame.</li>
+<li><strong>Excel row limit</strong>: Max 1,048,576 rows per sheet. Auto-split to multiple sheets or export as CSV when exceeded.</li>
+<li><strong>Use write_only for output</strong>: Files with &gt;50k cells must use <code>openpyxl Workbook(write_only=True)</code>.</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/marketingskills/lead-magnets/index.html"
+     data-source="marketingskills"
+     data-category="corporate"
+     data-search="lead-magnets when the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;pdf download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should i give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; use this for planning what to create and how to distribute it. for interactive tools as lead magnets, see free-tools. for writing the actual content, see copywriting. for the email sequence after capture, see emails. corporate  coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">lead-magnets</span>
+    <span class="r-desc">When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. Also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;PDF download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;Notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should I give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; Use this for planning what to create and how to distribute it. For interactive tools as lead magnets, see free-tools. For writing the actual content, see copywriting. For the email sequence after capture, see emails.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/wizard/index.html"
+     data-source="mattpocock"
+     data-category="corporate"
+     data-search="wizard generate an interactive bash wizard that walks a human through steps only they can perform. use when provisioning infrastructure, setting up credentials or ci secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. don&#39;t invoke this for steps the agent can perform itself. corporate  mattpocock/skills">
+  <span>
+    <span class="r-name">wizard</span>
+    <span class="r-desc">Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don&#39;t invoke this for steps the agent can perform itself.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="sn-da-excel-workflow excel 数据分析多步编排器。覆盖：(1) 读取多 sheet excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 sheet 统计聚合，(6) 导出 excel/csv 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / excel 报告 / 生成报表 / analyze excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-excel-workflow</span>
+    <span class="r-desc">Excel 数据分析多步编排器。覆盖：(1) 读取多 Sheet Excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 Parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 Sheet 统计聚合，(6) 导出 Excel/CSV 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：Excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / Excel 报告 / 生成报表 / analyze Excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 Sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 Excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/category-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="large-file-parquet-analysis-and-highlight 当excel文件总行数超过1万行时，通过转换为parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为excel并对特定行进行高亮标注。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">large-file-parquet-analysis-and-highlight</span>
+    <span class="r-desc">当Excel文件总行数超过1万行时，通过转换为Parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为Excel并对特定行进行高亮标注。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/duplicate-value-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="excel-conditional-comparison-and-large-file-processing 对比excel多表中的特定系数并对异常值进行颜色标记。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">excel-conditional-comparison-and-large-file-processing</span>
+    <span class="r-desc">对比Excel多表中的特定系数并对异常值进行颜色标记。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-large-file-analysis</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-large-file-analysis" aria-label="Copy install sn-da-large-file-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>corporate</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-large-file-analysis</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=sn-da-large-file-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-large-file-analysis%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-large-file-analysis%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-large-file-analysis%2F&t=sn-da-large-file-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-large-file-analysis%2F&title=sn-da-large-file-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-large-file-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

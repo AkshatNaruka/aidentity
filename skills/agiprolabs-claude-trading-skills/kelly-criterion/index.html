@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kelly-criterion — quant AI agent skill — Aidentity</title>
+<meta name="description" content="Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="kelly-criterion, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kelly-criterion — quant AI agent skill — Aidentity">
+<meta property="og:description" content="Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="kelly-criterion — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"kelly-criterion","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/"}]},{"@type":"TechArticle","headline":"kelly-criterion","description":"Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>kelly-criterion
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>kelly-criterion</h1>
+      <p class="summary">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Kelly Criterion — Optimal Bet Sizing</h3>
+<p>The Kelly criterion is the mathematically optimal bet size that maximizes long-term geometric growth of capital. Developed by John Kelly at Bell Labs in 1956, it answers a precise question: given a known edge, what fraction of your bankroll should you risk to maximize the compounding rate?</p>
+<p><strong>Core insight</strong>: Betting too small leaves growth on the table. Betting too large increases ruin risk and actually <em>reduces</em> long-term growth. Kelly finds the exact optimum between these extremes.</p>
+<p><strong>Practical insight</strong>: You should almost never use full Kelly. Estimation error in your edge means full Kelly will overbets in practice. Use fractional Kelly (0.25x to 0.5x) for real trading.</p>
+<hr>
+<h4>The Kelly Formula</h4>
+<p>For a binary outcome (win or lose):</p>
+<p><pre><code>f* = (p * b - q) / b</code></pre></p>
+<p>Where:</p>
+<ul>
+<li><code>f*</code> = optimal fraction of bankroll to bet</li>
+<li><code>p</code> = probability of winning</li>
+<li><code>q</code> = probability of losing (1 - p)</li>
+<li><code>b</code> = payoff ratio (average win / average loss)</li>
+</ul>
+<p><strong>Equivalent forms</strong>:</p>
+<p><pre><code>f* = p - q / b
+f* = p - (1 - p) / b
+f* = (p * b - (1 - p)) / b</code></pre></p>
+<p><strong>Edge</strong> = <code>p * b - q</code> = expected value per unit risked. Kelly only makes sense when edge &gt; 0. If edge is zero or negative, the optimal bet is zero — do not trade.</p>
+<h5>Quick Reference</h5>
+<table><thead><tr><th>Win Rate</th><th>Payoff 1:1</th><th>Payoff 1.5:1</th><th>Payoff 2:1</th><th>Payoff 3:1</th></tr></thead><tbody>
+<tr><td>40%</td><td>-20%</td><td>-6.7%</td><td>10%</td><td>20%</td></tr>
+<tr><td>45%</td><td>-10%</td><td>3.3%</td><td>15%</td><td>25%</td></tr>
+<tr><td>50%</td><td>0%</td><td>16.7%</td><td>25%</td><td>33.3%</td></tr>
+<tr><td>55%</td><td>10%</td><td>18.3%</td><td>27.5%</td><td>35%</td></tr>
+<tr><td>60%</td><td>20%</td><td>26.7%</td><td>35%</td><td>40%</td></tr>
+</tbody></table>
+<p><em>Values are full Kelly fraction. In practice, use 0.25x to 0.5x of these numbers.</em></p>
+<hr>
+<h4>Why Use Fractional Kelly</h4>
+<p>Full Kelly assumes you know <code>p</code> and <code>b</code> exactly. You never do. Here is why fractional Kelly is essential:</p>
+<h5>1. Estimation Error</h5>
+<p>Your win rate estimate from 100 trades has a standard error of roughly ±5%. If your true win rate is 55% but you estimate 60%, full Kelly will overbets by ~50%, which <em>reduces</em> long-term growth below what half Kelly would achieve.</p>
+<h5>2. Variance and Drawdowns</h5>
+<p>Full Kelly has extremely high variance. Expected maximum drawdown for full Kelly is roughly 50-80% of account. This is psychologically devastating and practically dangerous (margin calls, inability to continue trading).</p>
+<table><thead><tr><th>Kelly Fraction</th><th>Relative Growth Rate</th><th>Approximate Max Drawdown</th></tr></thead><tbody>
+<tr><td>1.0x (full)</td><td>100%</td><td>50-80%</td></tr>
+<tr><td>0.5x (half)</td><td>~75%</td><td>25-40%</td></tr>
+<tr><td>0.25x (quarter)</td><td>~50%</td><td>12-20%</td></tr>
+<tr><td>0.1x (tenth)</td><td>~25%</td><td>5-10%</td></tr>
+</tbody></table>
+<h5>3. Asymmetry of Over vs. Under Betting</h5>
+<p>Overbetting by 2x (betting at 2*f*) produces <strong>zero</strong> long-term growth — the same as not trading at all. Underbetting by 2x (betting at 0.5*f*) still captures ~75% of the optimal growth rate. The penalty for overbetting is catastrophically worse than for underbetting.</p>
+<h5>Recommended Fractions</h5>
+<table><thead><tr><th>Fraction</th><th>When to Use</th></tr></thead><tbody>
+<tr><td>0.10x Kelly</td><td>Very uncertain edge, new strategy, &lt; 30 trades in sample</td></tr>
+<tr><td>0.25x Kelly</td><td>Moderate confidence, 30-100 trades, reasonable Sharpe</td></tr>
+<tr><td>0.50x Kelly</td><td>High confidence, 100+ trades, consistent performance</td></tr>
+<tr><td>1.00x Kelly</td><td>Never recommended in practice</td></tr>
+</tbody></table>
+<hr>
+<h4>Estimating Your Edge</h4>
+<p>Kelly requires two inputs: win rate (<code>p</code>) and payoff ratio (<code>b</code>). Both must be estimated from data.</p>
+<h5>Minimum Data Requirements</h5>
+<ul>
+<li><strong>50 trades minimum</strong> for any Kelly calculation. Below this, estimation error dominates.</li>
+<li><strong>100+ trades preferred</strong> for half Kelly sizing.</li>
+<li><strong>200+ trades</strong> before considering aggressive fractions.</li>
+</ul>
+<h5>Calculation from Trade History</h5>
+<p><pre><code>wins = [t for t in trades if t &gt; 0]
+losses = [t for t in trades if t &lt; 0]
+
+win_rate = len(wins) / len(trades)               # p
+payoff_ratio = mean(wins) / abs(mean(losses))     # b
+edge = win_rate * payoff_ratio - (1 - win_rate)   # should be &gt; 0
+
+kelly_full = (win_rate * payoff_ratio - (1 - win_rate)) / payoff_ratio</code></pre></p>
+<h5>Conservative Estimation</h5>
+<p>Use the <strong>lower bound of a Wilson confidence interval</strong> for win rate rather than the point estimate:</p>
+<p><pre><code>import math
+
+def wilson_lower(wins: int, total: int, z: float = 1.96) -&gt; float:
+    &quot;&quot;&quot;Lower bound of Wilson score interval (95% confidence).&quot;&quot;&quot;
+    p = wins / total
+    denominator = 1 + z**2 / total
+    centre = p + z**2 / (2 * total)
+    spread = z * math.sqrt((p * (1 - p) + z**2 / (4 * total)) / total)
+    return (centre - spread) / denominator</code></pre></p>
+<p>Using the lower bound of the confidence interval for win rate automatically builds in conservatism, reducing the risk of overbetting due to sampling luck.</p>
+<h5>Edge Strength Classification</h5>
+<table><thead><tr><th>Edge Value</th><th>Classification</th><th>Notes</th></tr></thead><tbody>
+<tr><td>&lt; 0</td><td>Negative edge</td><td>Do not trade this strategy</td></tr>
+<tr><td>0 - 0.02</td><td>No meaningful edge</td><td>Transaction costs likely exceed edge</td></tr>
+<tr><td>0.02 - 0.10</td><td>Marginal edge</td><td>Conservative fractions only</td></tr>
+<tr><td>0.10 - 0.20</td><td>Good edge</td><td>Standard fractions appropriate</td></tr>
+<tr><td>&gt; 0.20</td><td>Excellent edge</td><td>Rare; verify not overfitting or temporary</td></tr>
+</tbody></table>
+<hr>
+<h4>Multi-Bet Kelly (Simultaneous Positions)</h4>
+<p>When holding multiple positions simultaneously:</p>
+<h5>Independent Bets</h5>
+<p>If bets are uncorrelated, each can be sized at its individual Kelly fraction. However, the <strong>sum of all Kelly fractions</strong> should not exceed 1.0 (total portfolio). If it does, scale each proportionally:</p>
+<p><pre><code>kelly_fractions = [0.15, 0.10, 0.12, 0.08]  # individual Kelly fractions
+total = sum(kelly_fractions)  # 0.45
+if total &gt; 1.0:
+    scale = 1.0 / total
+    kelly_fractions = [f * scale for f in kelly_fractions]</code></pre></p>
+<h5>Correlated Bets</h5>
+<p>Correlated positions (e.g., multiple SOL memecoins) are effectively one larger bet. Reduce each position proportionally to the correlation:</p>
+<p><pre><code># Simple correlation adjustment
+def adjust_for_correlation(kelly_fractions: list, avg_correlation: float) -&gt; list:
+    &quot;&quot;&quot;Reduce Kelly fractions based on average inter-position correlation.&quot;&quot;&quot;
+    n = len(kelly_fractions)
+    # Effective number of independent bets
+    n_eff = n / (1 + (n - 1) * avg_correlation)
+    scale = n_eff / n
+    return [f * scale for f in kelly_fractions]</code></pre></p>
+<p>In crypto, meme token positions often have correlations of 0.5-0.8 with each other (they all dump together in risk-off). Treat them as partially one bet.</p>
+<h5>Portfolio Kelly Cap</h5>
+<p>Regardless of individual calculations, enforce a hard cap: <strong>total Kelly allocation should never exceed 1.0</strong> (100% of portfolio). A practical maximum is 0.6-0.8 to leave cash buffer for drawdowns and new opportunities.</p>
+<hr>
+<h4>PumpFun / Meme Token Kelly</h4>
+<p>Meme token trading presents specific challenges for Kelly:</p>
+<ol>
+<li><strong>Edge is hard to estimate</strong>: Win rates and payoff ratios shift rapidly with market regime.</li>
+<li><strong>Fat tails dominate</strong>: A few large winners and many small losers. Standard Kelly assumes thin tails.</li>
+<li><strong>Correlation spikes in drawdowns</strong>: All meme tokens can dump simultaneously.</li>
+</ol>
+<h5>Practical Adjustments</h5>
+<ul>
+<li>Use <strong>0.1x to 0.25x Kelly</strong> maximum for meme tokens.</li>
+<li>Cap absolute position size at <strong>2-5% of portfolio</strong> regardless of Kelly output.</li>
+<li>Recalculate edge weekly — stale estimates are dangerous.</li>
+<li>If Kelly suggests &gt; 30%, your edge estimate is almost certainly wrong. Use 5% maximum.</li>
+</ul>
+<p><pre><code>def meme_kelly(win_rate: float, payoff_ratio: float, account: float) -&gt; float:
+    &quot;&quot;&quot;Conservative Kelly for high-uncertainty meme token trades.&quot;&quot;&quot;
+    kelly_full = (win_rate * payoff_ratio - (1 - win_rate)) / payoff_ratio
+    kelly_conservative = kelly_full * 0.15  # 0.15x fractional
+    max_fraction = 0.05                     # hard cap at 5%
+    return min(max(kelly_conservative, 0), max_fraction) * account</code></pre></p>
+<hr>
+<h4>When Kelly Does Not Work</h4>
+<p>Kelly optimality relies on assumptions that are often violated:</p>
+<table><thead><tr><th>Assumption</th><th>Reality</th><th>Impact</th></tr></thead><tbody>
+<tr><td>Known edge (p, b)</td><td>Estimated from noisy data</td><td>Overbetting risk</td></tr>
+<tr><td>Independent bets</td><td>Correlated positions</td><td>Ruin risk increases</td></tr>
+<tr><td>Binary outcomes</td><td>Continuous P&amp;L distribution</td><td>Formula approximation</td></tr>
+<tr><td>Stationary edge</td><td>Edge changes over time</td><td>Stale sizing</td></tr>
+<tr><td>No transaction costs</td><td>Slippage, fees, MEV</td><td>Effective edge lower</td></tr>
+<tr><td>Unlimited divisibility</td><td>Minimum position sizes</td><td>Rounding needed</td></tr>
+</tbody></table>
+<h5>Mitigations</h5>
+<ol>
+<li><strong>Use fractional Kelly</strong> (addresses estimation error)</li>
+<li><strong>Adjust for correlation</strong> (addresses dependence)</li>
+<li><strong>Use continuous Kelly</strong> for non-binary returns (see <code>references/kelly_derivation.md</code>)</li>
+<li><strong>Recalculate regularly</strong> (addresses non-stationarity)</li>
+<li><strong>Subtract estimated costs</strong> from edge before calculating Kelly</li>
+</ol>
+<hr>
+<h4>Continuous Kelly (For Portfolio Returns)</h4>
+<p>When returns are continuous rather than binary win/lose:</p>
+<p><pre><code>f* = (μ - r) / σ²</code></pre></p>
+<p>Where:</p>
+<ul>
+<li><code>μ</code> = expected return of the strategy</li>
+<li><code>r</code> = risk-free rate (often 0 for crypto)</li>
+<li><code>σ²</code> = variance of returns</li>
+</ul>
+<p>This is equivalent to <code>Sharpe² / (2 * σ)</code> when the Sharpe ratio is computed as <code>(μ - r) / σ</code>.</p>
+<p>Use this form when you have a return stream rather than discrete win/loss trades. See <code>references/kelly_derivation.md</code> for the full derivation.</p>
+<hr>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong><code>position-sizing</code></strong>: Kelly provides the optimal fraction; position-sizing translates that into units. Use Kelly as one input, then apply liquidity and volatility constraints from position-sizing.</li>
+<li><strong><code>risk-management</code></strong>: Kelly sizing must respect portfolio-level risk limits. If Kelly suggests 10% per trade but your risk policy caps at 5%, the cap wins.</li>
+<li><strong><code>strategy-framework</code></strong>: Document your Kelly parameters (fraction used, sample size, recalculation frequency) as part of strategy specification.</li>
+<li><strong><code>regime-detection</code></strong>: Recalculate Kelly when regime changes. Edge in a trending market differs from edge in a ranging market.</li>
+</ul>
+<hr>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/kelly_derivation.md</code> — Full mathematical derivation of Kelly criterion, fractional Kelly growth rates, continuous Kelly, and multi-outcome Kelly</li>
+<li><code>references/practical_kelly.md</code> — Edge estimation from trading data, confidence intervals, worked examples, common pitfalls, and danger zones</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/kelly_calculator.py</code> — Kelly calculator from win rate, payoff ratio, and account size. Prints fractional Kelly recommendations and sensitivity analysis. Dependencies: none.</li>
+<li><code>scripts/kelly_from_trades.py</code> — Estimate Kelly from a list of trade P&amp;L values. Computes confidence intervals, rolling stability analysis, and recommended fraction. Dependencies: numpy.</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/mev-analysis/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="mev-analysis mev exposure assessment, sandwich attack detection, and protection strategies for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">mev-analysis</span>
+    <span class="r-desc">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/kelly-criterion</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/kelly-criterion" aria-label="Copy install kelly-criterion">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/kelly-criterion</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=kelly-criterion%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fkelly-criterion%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fkelly-criterion%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fkelly-criterion%2F&t=kelly-criterion%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fkelly-criterion%2F&title=kelly-criterion%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/kelly-criterion/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/kelly-criterion/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

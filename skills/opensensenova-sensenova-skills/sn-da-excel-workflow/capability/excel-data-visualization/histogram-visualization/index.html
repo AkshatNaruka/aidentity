@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>statistical-distribution-and-outlier-analysis — engineering AI agent skill — Aidentity</title>
+<meta name="description" content="执行数值型数据的分布分析与异常值检测，支持通过正则表达式从文本中提取误差项并生成高分辨率的箱线图与直方图报告。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="statistical-distribution-and-outlier-analysis, engineering, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="statistical-distribution-and-outlier-analysis — engineering AI agent skill — Aidentity">
+<meta property="og:description" content="执行数值型数据的分布分析与异常值检测，支持通过正则表达式从文本中提取误差项并生成高分辨率的箱线图与直方图报告。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="statistical-distribution-and-outlier-analysis — engineering AI agent skill — Aidentity">
+<meta name="twitter:description" content="执行数值型数据的分布分析与异常值检测，支持通过正则表达式从文本中提取误差项并生成高分辨率的箱线图与直方图报告。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"engineering","item":"https://akshatnaruka.github.io/aidentity/skills/?category=engineering"},{"@type":"ListItem","position":3,"name":"statistical-distribution-and-outlier-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/"}]},{"@type":"TechArticle","headline":"statistical-distribution-and-outlier-analysis","description":"执行数值型数据的分布分析与异常值检测，支持通过正则表达式从文本中提取误差项并生成高分辨率的箱线图与直方图报告。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"engineering, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../../skills/index.html?category=engineering">engineering</a><span>/</span>statistical-distribution-and-outlier-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>statistical-distribution-and-outlier-analysis</h1>
+      <p class="summary">执行数值型数据的分布分析与异常值检测，支持通过正则表达式从文本中提取误差项并生成高分辨率的箱线图与直方图报告。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>Step 1 加载数据并进行预处理，配置中文字体与环境参数</p>
+<p><pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import re
+
+# 设置中文字体，兼容不同环境
+plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;, &#39;WenQuanYi Zen Hei&#39;, &#39;DejaVu Sans&#39;]
+plt.rcParams[&#39;axes.unicode_minus&#39;] = False
+
+# 加载数据并处理合并单元格
+file_path = &#39;input_data.xlsx&#39;
+df = pd.read_excel(file_path)
+df.ffill(inplace=True) # 处理可能的合并单元格空值
+
+# 统一重命名列名以便于程序化处理
+original_columns = df.columns.tolist()
+df.columns = [f&#39;col_{i+1}&#39; for i in range(df.shape[1])]
+
+print(f&quot;数据形状: {df.shape}&quot;)
+print(f&quot;原始列映射: {dict(zip(df.columns, original_columns))}&quot;)</code></pre></p>
+<p>Step 2 生成多子图箱线图，直观展示各维度数据的分布特征与统计量</p>
+<p><pre><code># 计算子图布局
+num_cols = len(df.columns)
+rows = (num_cols + 2) // 3
+fig, axes = plt.subplots(rows, 3, figsize=(18, 5 * rows))
+fig.suptitle(&#39;数据分布维度分析&#39;, fontsize=16, fontweight=&#39;bold&#39;)
+axes_flat = axes.flatten()
+
+for i, column in enumerate(df.columns):
+    data_series = df[column].dropna()
+    if pd.api.types.is_numeric_dtype(data_series):
+        axes_flat[i].boxplot(data_series, patch_artist=True,
+                            boxprops=dict(facecolor=&#39;lightblue&#39;, alpha=0.7),
+                            medianprops=dict(color=&#39;red&#39;, linewidth=2))
+        
+        stats = data_series.describe()
+        axes_flat[i].set_title(f&#39;{column} (n={len(data_series)})&#39;, fontsize=12)
+        axes_flat[i].text(0.05, 0.95, f&#39;均值: {stats[&quot;mean&quot;]:.2f}\n中位数: {stats[&quot;50%&quot;]:.2f}&#39;,
+                         transform=axes_flat[i].transAxes, verticalalignment=&#39;top&#39;,
+                         bbox=dict(boxstyle=&#39;round&#39;, facecolor=&#39;white&#39;, alpha=0.8))
+    axes_flat[i].grid(True, alpha=0.3)
+
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+output_path = &#39;individual_boxplots.png&#39;
+plt.savefig(output_path, dpi=300, bbox_inches=&#39;tight&#39;)
+plt.show()</code></pre></p>
+<p>Step 3 执行异常值检测算法，计算四分位距（IQR）并生成统计报告</p>
+<p><pre><code>analysis_results = []
+
+for col in df.columns:
+    data = df[col].dropna()
+    if not pd.api.types.is_numeric_dtype(data):
+        continue
+        
+    Q1 = data.quantile(0.25)
+    Q3 = data.quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    outliers = data[(data &lt; lower_bound) | (data &gt; upper_bound)]
+    
+    analysis_results.append({
+        &#39;维度&#39;: col,
+        &#39;样本量&#39;: len(data),
+        &#39;异常值数量&#39;: len(outliers),
+        &#39;偏度&#39;: round(data.skew(), 3),
+        &#39;峰度&#39;: round(data.kurtosis(), 3),
+        &#39;范围&#39;: f&quot;{data.min():.2f} ~ {data.max():.2f}&quot;
+    })
+
+report_df = pd.DataFrame(analysis_results)
+print(&quot;=== 数据质量与分布报告 ===&quot;)
+print(report_df.to_string(index=False))</code></pre></p>
+<p>Step 4 使用正则表达式从文本列中提取误差值（±模式）并进行量化分析</p>
+<p><pre><code># 假设 target_col 包含类似 &quot;10.5 ± 0.2&quot; 的文本
+target_col = df.columns[0] 
+text_data = df[target_col].astype(str).str.cat(sep=&#39; &#39;)
+
+# 正则表达式提取 ± 后面的数值
+error_pattern = r&#39;±(\d+\.?\d*)&#39;
+extracted_errors = [float(val) for val in re.findall(error_pattern, text_data)]
+
+if extracted_errors:
+    print(f&quot;提取到误差样本量: {len(extracted_errors)}&quot;)
+    print(f&quot;误差均值: {np.mean(extracted_errors):.4f}&quot;)
+else:
+    print(&quot;未在指定列中检测到符合 ± 模式的误差数据&quot;)</code></pre></p>
+<p>Step 5 绘制误差分布直方图，并标注核心统计参考线</p>
+<p><pre><code>if extracted_errors:
+    plt.figure(figsize=(10, 6))
+    # 自动计算 bins 数量
+    n, bins, patches = plt.hist(extracted_errors, bins=&#39;auto&#39;, color=&#39;skyblue&#39;, 
+                                edgecolor=&#39;black&#39;, alpha=0.7)
+    
+    # 在柱体上方标注频次
+    for i in range(len(n)):
+        if n[i] &gt; 0:
+            plt.text(bins[i] + (bins[i+1]-bins[i])/2, n[i] + 0.1, 
+                    str(int(n[i])), ha=&#39;center&#39;, va=&#39;bottom&#39;, fontweight=&#39;bold&#39;)
+
+    # 添加均值参考线
+    mean_val = np.mean(extracted_errors)
+    plt.axvline(mean_val, color=&#39;red&#39;, linestyle=&#39;--&#39;, linewidth=2, 
+                label=f&#39;误差均值: {mean_val:.3f}&#39;)
+    
+    plt.title(&#39;误差项分布特征直方图&#39;, fontsize=14)
+    plt.xlabel(&#39;误差量级&#39;, fontsize=12)
+    plt.ylabel(&#39;出现频次&#39;, fontsize=12)
+    plt.legend()
+    plt.grid(axis=&#39;y&#39;, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig(&#39;error_distribution_histogram.png&#39;, dpi=300)
+    plt.show()</code></pre></p>
+<p>Step 6 导出分析摘要并生成下载链接</p>
+<p><pre><code>summary_file = &#39;analysis_summary.csv&#39;
+report_df.to_csv(summary_file, index=False, encoding=&#39;utf_8_sig&#39;)
+
+from IPython.display import FileLink
+print(&quot;分析完成，点击下方链接下载报告：&quot;)
+display(FileLink(summary_file))
+display(FileLink(&#39;individual_boxplots.png&#39;))</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/in-progress/setup-ts-deep-modules/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="setup-ts-deep-modules wire dependency-cruiser into a typescript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. user-invoked. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">setup-ts-deep-modules</span>
+    <span class="r-desc">Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/productivity/to-questionnaire/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="to-questionnaire turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">to-questionnaire</span>
+    <span class="r-desc">Turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization" aria-label="Copy install statistical-distribution-and-outlier-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>engineering</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=statistical-distribution-and-outlier-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-visualization%2Fhistogram-visualization%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-visualization%2Fhistogram-visualization%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-visualization%2Fhistogram-visualization%2F&t=statistical-distribution-and-outlier-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-visualization%2Fhistogram-visualization%2F&title=statistical-distribution-and-outlier-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-visualization/histogram-visualization/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../../skills/index.html">Browse</a> · <a href="../../../../../../sources/index.html">Sources</a> · <a href="../../../../../../about/index.html">About</a> · <a href="../../../../../../registry.json">registry.json</a> · <a href="../../../../../../llms.txt">llms.txt</a> · <a href="../../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../../assets/app.js" defer></script>
+</body>
+</html>

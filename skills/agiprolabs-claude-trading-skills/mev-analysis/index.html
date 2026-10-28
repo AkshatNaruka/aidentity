@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mev-analysis — quant AI agent skill — Aidentity</title>
+<meta name="description" content="MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="mev-analysis, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mev-analysis — quant AI agent skill — Aidentity">
+<meta property="og:description" content="MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="mev-analysis — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"mev-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/"}]},{"@type":"TechArticle","headline":"mev-analysis","description":"MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>mev-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>mev-analysis</h1>
+      <p class="summary">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>MEV Analysis for Solana DEX Trading</h3>
+<p>Maximal Extractable Value (MEV) is the profit that validators and searchers can extract by reordering, inserting, or censoring transactions within a block. On Solana DEXes, MEV primarily manifests as sandwich attacks against swaps, cross-DEX arbitrage, and liquidation extraction. This skill covers detection, estimation, and protection strategies.</p>
+<h4>What Is MEV on Solana?</h4>
+<p>MEV occurs when someone with transaction ordering power profits at other traders&#39; expense. On Solana, the MEV supply chain works as follows:</p>
+<ol>
+<li><strong>You submit a swap</strong> through an RPC endpoint</li>
+<li><strong>Searchers observe</strong> your transaction (via RPC forwarding, block engine access, or leader TPU sniffing)</li>
+<li><strong>Searcher constructs a profitable bundle</strong> (e.g., sandwich your swap)</li>
+<li><strong>Bundle submitted to Jito block engine</strong> with a tip to the validator</li>
+<li><strong>Validator includes the bundle</strong> in the block, earning the tip</li>
+<li><strong>You receive worse execution</strong>; the searcher profits the difference</li>
+</ol>
+<h5>How Solana MEV Differs from Ethereum</h5>
+<table><thead><tr><th>Aspect</th><th>Ethereum</th><th>Solana</th></tr></thead><tbody>
+<tr><td>Block time</td><td>12 seconds</td><td>~400ms slots</td></tr>
+<tr><td>Mempool</td><td>Public mempool</td><td>No mempool (but tx visible in transit)</td></tr>
+<tr><td>Ordering</td><td>Proposer-builder separation (PBS)</td><td>Jito block engine (~85%+ validators)</td></tr>
+<tr><td>Bundle system</td><td>Flashbots bundles</td><td>Jito bundles with tips</td></tr>
+<tr><td>MEV cost</td><td>Gas priority fees</td><td>Jito tips (SOL)</td></tr>
+<tr><td>Latency pressure</td><td>Moderate</td><td>Extreme (sub-100ms decisions)</td></tr>
+</tbody></table>
+<p>Key Solana-specific factors:</p>
+<ul>
+<li><strong>No public mempool</strong>: Transactions flow RPC → TPU → Leader, but searchers tap into this flow via Jito&#39;s block engine and modified validators</li>
+<li><strong>Known leader schedule</strong>: The leader (block producer) schedule is known ~2 epochs ahead, letting searchers target specific leaders</li>
+<li><strong>Jito dominance</strong>: ~85%+ of validators run the Jito-modified client, making Jito bundles the primary MEV vector</li>
+<li><strong>Speed</strong>: 400ms slots mean MEV bots must operate in microseconds, favoring co-located infrastructure</li>
+</ul>
+<h4>MEV Types on Solana</h4>
+<h5>1. Sandwich Attacks</h5>
+<p>The most common MEV attack against retail traders.</p>
+<p><strong>Mechanics:</strong></p>
+<p><pre><code>1. Attacker sees your pending swap: Buy 10 SOL worth of TOKEN_X
+2. Front-run:  Attacker buys TOKEN_X first  → price rises
+3. Your swap:  You buy TOKEN_X at higher price → worse execution
+4. Back-run:   Attacker sells TOKEN_X         → profits the difference</code></pre></p>
+<p><strong>Your loss</strong> = price impact from front-run + attacker&#39;s profit margin</p>
+<p><strong>Attacker profit</strong> = your_loss - jito_tip - transaction_fees</p>
+<p><strong>Risk factors:</strong></p>
+<ul>
+<li>Trade size: Larger trades = more profitable to sandwich</li>
+<li>Token liquidity: Illiquid tokens = easier price manipulation</li>
+<li>Slippage setting: Wide slippage = more room for the attacker</li>
+<li>Pool type: CPMM pools more vulnerable than CLMM pools at concentrated ranges</li>
+</ul>
+<h5>2. Arbitrage (Cross-DEX)</h5>
+<p>Searchers capture price discrepancies between DEXes.</p>
+<p><pre><code>Pool A: TOKEN_X = 1.00 USDC
+Pool B: TOKEN_X = 1.02 USDC
+→ Buy on A, sell on B, profit 0.02 USDC per token (minus fees)</code></pre></p>
+<p>This is generally <strong>beneficial</strong> to the market — it equalizes prices across venues. However, your trade may trigger the arbitrage opportunity that the searcher captures.</p>
+<h5>3. Liquidation Extraction</h5>
+<p>When DeFi positions (Solend, Marginfi, Kamino) become undercollateralized, searchers race to liquidate them and claim the liquidation bonus (typically 5-10%).</p>
+<h5>4. JIT (Just-In-Time) Liquidity</h5>
+<p>Searchers add concentrated liquidity to a CLMM pool just before a large swap and remove it immediately after, earning swap fees without sustained impermanent loss exposure. This is a sophisticated MEV form that can actually <strong>improve</strong> execution for the swapper.</p>
+<h5>5. Back-Running</h5>
+<p>Trading immediately after a large swap that moved the price, capturing the reversion. Less harmful than sandwiching because it does not worsen your execution — it profits from the market response to your trade.</p>
+<h4>Estimating MEV Exposure</h4>
+<p>Estimate your MEV risk before executing a trade:</p>
+<p><pre><code>import httpx
+
+def estimate_mev_risk(
+    trade_size_sol: float,
+    pool_liquidity_usd: float,
+    slippage_bps: int,
+    token_daily_volume_usd: float,
+) -&gt; dict:
+    &quot;&quot;&quot;Estimate sandwich attack profitability for a given trade.
+
+    Returns risk assessment with estimated cost and recommendations.
+    &quot;&quot;&quot;
+    # Trade as percentage of pool liquidity
+    sol_price = 150.0  # approximate; fetch live price in production
+    trade_usd = trade_size_sol * sol_price
+    trade_pct_of_pool = (trade_usd / pool_liquidity_usd) * 100
+
+    # Estimated price impact from constant-product AMM
+    # price_impact ≈ trade_size / pool_liquidity (simplified)
+    price_impact_bps = int(trade_pct_of_pool * 100)
+
+    # Sandwich profitability: attacker captures portion of slippage headroom
+    # Rough model: sandwich_profit ≈ 0.5 * slippage_headroom * trade_size
+    slippage_headroom_bps = slippage_bps - price_impact_bps
+    if slippage_headroom_bps &lt; 0:
+        slippage_headroom_bps = 0
+
+    sandwich_profit_usd = (slippage_headroom_bps / 10000) * trade_usd * 0.5
+    jito_tip_cost = 0.001 * sol_price  # ~0.001 SOL typical tip
+    tx_fees = 0.000015 * sol_price * 2  # two transactions for sandwich
+
+    net_mev_profit = sandwich_profit_usd - jito_tip_cost - tx_fees
+    is_profitable_to_sandwich = net_mev_profit &gt; 0.10  # $0.10 minimum
+
+    # Volume ratio indicates MEV bot attention level
+    volume_ratio = trade_usd / max(token_daily_volume_usd, 1)
+
+    risk_level = &quot;LOW&quot;
+    if is_profitable_to_sandwich and trade_pct_of_pool &gt; 1.0:
+        risk_level = &quot;HIGH&quot;
+    elif is_profitable_to_sandwich or trade_pct_of_pool &gt; 0.5:
+        risk_level = &quot;MEDIUM&quot;
+
+    return {
+        &quot;risk_level&quot;: risk_level,
+        &quot;trade_pct_of_pool&quot;: round(trade_pct_of_pool, 2),
+        &quot;estimated_price_impact_bps&quot;: price_impact_bps,
+        &quot;slippage_headroom_bps&quot;: slippage_headroom_bps,
+        &quot;estimated_sandwich_cost_usd&quot;: round(max(net_mev_profit, 0), 2),
+        &quot;is_profitable_to_sandwich&quot;: is_profitable_to_sandwich,
+        &quot;recommendations&quot;: _get_recommendations(
+            risk_level, trade_size_sol, slippage_bps, trade_pct_of_pool
+        ),
+    }
+
+
+def _get_recommendations(
+    risk_level: str,
+    trade_size_sol: float,
+    slippage_bps: int,
+    trade_pct_of_pool: float,
+) -&gt; list[str]:
+    &quot;&quot;&quot;Generate protection recommendations based on risk assessment.&quot;&quot;&quot;
+    recs = []
+    if risk_level == &quot;HIGH&quot;:
+        recs.append(&quot;Use Jito bundle with 0.001-0.005 SOL tip&quot;)
+        recs.append(&quot;Use private/protected RPC endpoint&quot;)
+    if trade_pct_of_pool &gt; 2.0:
+        n_splits = max(2, int(trade_pct_of_pool))
+        recs.append(f&quot;Split into {n_splits} trades over 2-5 minutes&quot;)
+    if slippage_bps &gt; 100:
+        recs.append(f&quot;Reduce slippage from {slippage_bps}bps to 50-100bps&quot;)
+    if risk_level in (&quot;MEDIUM&quot;, &quot;HIGH&quot;):
+        recs.append(&quot;Enable Jupiter dynamic slippage / MEV protection&quot;)
+    if not recs:
+        recs.append(&quot;Standard execution is likely safe for this trade size&quot;)
+    return recs</code></pre></p>
+<h4>MEV Protection Strategies</h4>
+<h5>Strategy 1: Tight Slippage Settings</h5>
+<p>Set <code>slippageBps</code> as low as feasible. Sandwich profit is bounded by your slippage tolerance.</p>
+<table><thead><tr><th>Token Liquidity</th><th>Recommended Slippage</th></tr></thead><tbody>
+<tr><td>&gt; $5M pool</td><td>50 bps (0.5%)</td></tr>
+<tr><td>$1M - $5M pool</td><td>100 bps (1%)</td></tr>
+<tr><td>$100K - $1M pool</td><td>150-200 bps</td></tr>
+<tr><td>&lt; $100K pool</td><td>200-500 bps (high risk)</td></tr>
+</tbody></table>
+<p><strong>Trade-off:</strong> Too-tight slippage causes failed transactions, costing you fees with no execution.</p>
+<h5>Strategy 2: Jito Bundles</h5>
+<p>Submit your swap as a Jito bundle with a priority tip:</p>
+<p><pre><code>import httpx
+
+JITO_BLOCK_ENGINE = &quot;https://mainnet.block-engine.jito.wtf&quot;
+
+async def submit_jito_bundle(
+    signed_transactions: list[str],
+    tip_lamports: int = 1_000_000,  # 0.001 SOL
+) -&gt; str:
+    &quot;&quot;&quot;Submit a transaction bundle to Jito block engine.
+
+    Args:
+        signed_transactions: Base64-encoded signed transactions.
+        tip_lamports: Tip amount in lamports (1 SOL = 1e9 lamports).
+
+    Returns:
+        Bundle ID for tracking.
+    &quot;&quot;&quot;
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f&quot;{JITO_BLOCK_ENGINE}/api/v1/bundles&quot;,
+            json={
+                &quot;jsonrpc&quot;: &quot;2.0&quot;,
+                &quot;id&quot;: 1,
+                &quot;method&quot;: &quot;sendBundle&quot;,
+                &quot;params&quot;: [signed_transactions],
+            },
+            timeout=10.0,
+        )
+        resp.raise_for_status()
+        result = resp.json()
+        return result.get(&quot;result&quot;, &quot;&quot;)</code></pre></p>
+<p><strong>Tip guidelines:</strong></p>
+<ul>
+<li>Normal priority: 0.0001 - 0.001 SOL</li>
+<li>High priority: 0.001 - 0.01 SOL</li>
+<li>Urgent (volatile market): 0.01 - 0.05 SOL</li>
+</ul>
+<h5>Strategy 3: Private/Protected RPCs</h5>
+<p>Send transactions through endpoints that do not expose them to searchers:</p>
+<ul>
+<li><strong>Jito bundles</strong> (described above)</li>
+<li><strong>Helius priority fee API</strong> with staked connections</li>
+<li><strong>QuickNode</strong> private transaction submission</li>
+<li><strong>Direct TPU forwarding</strong> (requires infrastructure)</li>
+</ul>
+<h5>Strategy 4: Trade Splitting</h5>
+<p>For large trades (&gt; 1% of pool liquidity), split execution:</p>
+<p><pre><code>def compute_split_plan(
+    total_sol: float,
+    pool_liquidity_usd: float,
+    sol_price: float = 150.0,
+    max_pct_per_trade: float = 0.5,
+) -&gt; list[dict]:
+    &quot;&quot;&quot;Compute a trade splitting plan to minimize MEV exposure.&quot;&quot;&quot;
+    total_usd = total_sol * sol_price
+    trade_pct = (total_usd / pool_liquidity_usd) * 100
+
+    if trade_pct &lt;= max_pct_per_trade:
+        return [{&quot;sol_amount&quot;: total_sol, &quot;delay_seconds&quot;: 0}]
+
+    n_splits = max(2, int(trade_pct / max_pct_per_trade) + 1)
+    per_trade = total_sol / n_splits
+    delay = 30  # seconds between trades
+
+    return [
+        {&quot;sol_amount&quot;: round(per_trade, 4), &quot;delay_seconds&quot;: i * delay}
+        for i in range(n_splits)
+    ]</code></pre></p>
+<h5>Strategy 5: Jupiter MEV Protection</h5>
+<p>Jupiter v6 includes built-in MEV protection features:</p>
+<ul>
+<li><strong>Dynamic slippage</strong>: Automatically adjusts slippage to minimize sandwich window</li>
+<li><strong>Priority fee estimation</strong>: Sets appropriate compute unit price</li>
+<li><strong>Transaction landing optimization</strong>: Retry logic with increasing priority</li>
+</ul>
+<p>Enable via Jupiter API:</p>
+<p><pre><code>params = {
+    &quot;inputMint&quot;: &quot;So11111111111111111111111111111111111111112&quot;,
+    &quot;outputMint&quot;: token_mint,
+    &quot;amount&quot;: str(amount_lamports),
+    &quot;slippageBps&quot;: &quot;50&quot;,
+    &quot;dynamicSlippage&quot;: &quot;true&quot;,        # Auto-adjust slippage
+    &quot;prioritizationFeeLamports&quot;: &quot;auto&quot;,  # Auto priority fee
+}</code></pre></p>
+<h4>Detecting Sandwich Attacks</h4>
+<p>After a trade, check whether you were sandwiched:</p>
+<ol>
+<li><strong>Fetch your transaction</strong> and identify the slot</li>
+<li><strong>Fetch all transactions in that slot</strong> involving the same token</li>
+<li><strong>Look for the pattern</strong>:</li>
+</ol>
+<ul>
+<li>Transaction A: Buy TOKEN_X (before your tx in slot ordering)</li>
+<li>Your transaction: Buy TOKEN_X (worse price than expected)</li>
+<li>Transaction B: Sell TOKEN_X (after your tx, same signer as A)</li>
+</ul>
+<ol>
+<li><strong>Verify</strong>: Signer of A and B is the same wallet (the attacker)</li>
+<li><strong>Estimate cost</strong>: Difference between your expected and actual execution price</li>
+</ol>
+<p>See <code>scripts/sandwich_detector.py</code> for a working implementation.</p>
+<p><strong>Known MEV indicators:</strong></p>
+<ul>
+<li>Transaction signer has thousands of transactions per day</li>
+<li>Same-slot buy-then-sell of the same token around your swap</li>
+<li>Signer interacts with Jito tip program frequently</li>
+<li>Wallet has no token holdings (just in-and-out)</li>
+</ul>
+<h4>Integration with Other Skills</h4>
+<ul>
+<li><strong><code>slippage-modeling</code></strong>: Use slippage estimates to set protective limits</li>
+<li><strong><code>liquidity-analysis</code></strong>: Pool liquidity determines MEV vulnerability</li>
+<li><strong><code>jupiter-api</code></strong>: Jupiter&#39;s MEV protection features and swap execution</li>
+<li><strong><code>solana-onchain</code></strong>: On-chain transaction analysis for sandwich detection</li>
+<li><strong><code>helius-api</code></strong>: Transaction parsing and historical analysis</li>
+</ul>
+<h4>Files</h4>
+<h5>References</h5>
+<ul>
+<li><code>references/solana_mev_mechanics.md</code> — Solana block production, Jito block engine, MEV supply chain, and transaction flow paths</li>
+<li><code>references/protection_strategies.md</code> — Detailed protection strategies with implementation guidance, cost-benefit analysis, and decision matrix</li>
+</ul>
+<h5>Scripts</h5>
+<ul>
+<li><code>scripts/sandwich_detector.py</code> — Detects sandwich attacks around a given transaction signature using on-chain data</li>
+<li><code>scripts/mev_risk_estimator.py</code> — Estimates MEV exposure for a planned trade based on token liquidity, trade size, and slippage settings</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/fixed-income/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="fixed-income [stub] bond pricing, yield curves, duration and convexity analysis, and defi lending rate modeling quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">fixed-income</span>
+    <span class="r-desc">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/mev-analysis</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/mev-analysis" aria-label="Copy install mev-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/mev-analysis</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=mev-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fmev-analysis%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fmev-analysis%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fmev-analysis%2F&t=mev-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Fmev-analysis%2F&title=mev-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/mev-analysis/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/mev-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

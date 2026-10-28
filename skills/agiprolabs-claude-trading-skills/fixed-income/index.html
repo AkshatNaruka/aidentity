@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fixed-income — quant AI agent skill — Aidentity</title>
+<meta name="description" content="[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="fixed-income, quant, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fixed-income — quant AI agent skill — Aidentity">
+<meta property="og:description" content="[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="fixed-income — quant AI agent skill — Aidentity">
+<meta name="twitter:description" content="[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"quant","item":"https://akshatnaruka.github.io/aidentity/skills/?category=quant"},{"@type":"ListItem","position":3,"name":"fixed-income","item":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/"}]},{"@type":"TechArticle","headline":"fixed-income","description":"[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling","url":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/","dateModified":"2026-10-28","author":{"@type":"Person","name":"agiprolabs"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"quant, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../roles/index.html">Roles</a>
+      <a href="../../../for-agents/index.html">Agents</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=quant">quant</a><span>/</span>fixed-income
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">agiprolabs/claude-trading-skills · MIT</p>
+      <h1>fixed-income</h1>
+      <p class="summary">[STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Fixed Income</h3>
+<p>&gt; <strong>Status: STUB</strong> — This skill provides a basic bond calculator and an overview of planned capabilities. Full implementation is awaiting community contribution.</p>
+<p>Fixed income analysis bridges traditional bond mathematics with DeFi lending rate modeling. Bond pricing fundamentals — present value of cash flows, yield curves, duration, and convexity — translate directly to analyzing DeFi lending protocols where depositors earn variable or fixed rates on crypto assets.</p>
+<p>On Solana, lending protocols like Marginfi, Kamino, and Solend offer variable-rate lending/borrowing. Understanding term structure and rate dynamics helps optimize yield farming strategies and compare opportunities across protocols.</p>
+<p>This skill is informational and analytical only. It does not provide financial advice or trading recommendations.</p>
+<hr>
+<h4>Current Capabilities</h4>
+<p>This stub includes a working bond calculator with price, yield-to-maturity, duration, and convexity computations. See <code>scripts/bond_calculator.py</code> for the implementation.</p>
+<p><pre><code>def bond_price(
+    face: float, coupon_rate: float, ytm: float, periods: int, freq: int = 2
+) -&gt; float:
+    &quot;&quot;&quot;Calculate bond price as present value of all cash flows.
+
+    Args:
+        face: Face (par) value of the bond.
+        coupon_rate: Annual coupon rate (decimal, e.g., 0.05 for 5%).
+        ytm: Yield to maturity (annual, decimal).
+        periods: Number of coupon periods remaining.
+        freq: Coupon frequency per year (2 = semi-annual).
+
+    Returns:
+        Bond price (dirty price).
+    &quot;&quot;&quot;
+    coupon = face * coupon_rate / freq
+    y = ytm / freq
+    pv_coupons = sum(coupon / (1 + y) ** t for t in range(1, periods + 1))
+    pv_face = face / (1 + y) ** periods
+    return pv_coupons + pv_face</code></pre></p>
+<p>Run the demo:</p>
+<p><pre><code>python scripts/bond_calculator.py --demo</code></pre></p>
+<hr>
+<h4>Planned Capabilities</h4>
+<p>When fully implemented, this skill will cover:</p>
+<h5>Bond Pricing</h5>
+<table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody>
+<tr><td>Clean/Dirty Price</td><td>Price excluding/including accrued interest</td></tr>
+<tr><td>Accrued Interest</td><td>Interest earned since last coupon date</td></tr>
+<tr><td>Day Count Conventions</td><td>30/360, ACT/360, ACT/365, ACT/ACT</td></tr>
+<tr><td>Zero-Coupon Bonds</td><td>Discount bonds with no periodic coupons</td></tr>
+</tbody></table>
+<h5>Yield Measures</h5>
+<table><thead><tr><th>Yield Measure</th><th>Use Case</th></tr></thead><tbody>
+<tr><td>Yield to Maturity (YTM)</td><td>Total return if held to maturity</td></tr>
+<tr><td>Current Yield</td><td>Annual coupon / price</td></tr>
+<tr><td>Yield to Call</td><td>Return if called at first call date</td></tr>
+<tr><td>Spread to Benchmark</td><td>Credit risk premium over risk-free rate</td></tr>
+</tbody></table>
+<h5>Duration and Convexity</h5>
+<table><thead><tr><th>Metric</th><th>Measures</th></tr></thead><tbody>
+<tr><td>Macaulay Duration</td><td>Weighted average time to cash flows</td></tr>
+<tr><td>Modified Duration</td><td>Price sensitivity to yield changes</td></tr>
+<tr><td>Effective Duration</td><td>Duration for bonds with embedded options</td></tr>
+<tr><td>Convexity</td><td>Second-order price sensitivity</td></tr>
+<tr><td>Dollar Duration (DV01)</td><td>Dollar change per 1bp yield move</td></tr>
+</tbody></table>
+<h5>Yield Curve Construction</h5>
+<table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+<tr><td>Bootstrap</td><td>Extract spot rates from par bond prices</td></tr>
+<tr><td>Nelson-Siegel</td><td>Parametric model with level, slope, curvature</td></tr>
+<tr><td>Nelson-Siegel-Svensson</td><td>Extended model with additional curvature term</td></tr>
+<tr><td>Cubic Spline</td><td>Non-parametric interpolation</td></tr>
+</tbody></table>
+<h5>DeFi Lending Rate Analysis</h5>
+<table><thead><tr><th>Protocol</th><th>Chain</th><th>Type</th></tr></thead><tbody>
+<tr><td>Marginfi</td><td>Solana</td><td>Variable rate</td></tr>
+<tr><td>Kamino</td><td>Solana</td><td>Variable rate</td></tr>
+<tr><td>Solend</td><td>Solana</td><td>Variable rate</td></tr>
+<tr><td>Aave</td><td>Ethereum/Multi</td><td>Variable + stable rate</td></tr>
+<tr><td>Compound</td><td>Ethereum</td><td>Variable rate</td></tr>
+</tbody></table>
+<p>Planned DeFi features:</p>
+<ul>
+<li>Lending rate time series analysis</li>
+<li>Supply/borrow APY comparison across protocols</li>
+<li>Utilization rate impact on lending rates</li>
+<li>Fixed vs variable rate comparison (when fixed-rate protocols available)</li>
+<li>Rate arbitrage opportunity detection</li>
+</ul>
+<hr>
+<h4>Prerequisites</h4>
+<p><pre><code># For full implementation
+uv pip install numpy scipy
+
+# For visualization
+uv pip install matplotlib</code></pre></p>
+<p>The included <code>scripts/bond_calculator.py</code> uses only the Python standard library and runs without any dependencies.</p>
+<hr>
+<h4>Use Cases</h4>
+<h5>Yield Farming Comparison</h5>
+<p>Compare DeFi lending rates across protocols using fixed income analytics. Annualize variable rates, compute effective yields accounting for compounding frequency, and identify the most capital-efficient opportunities.</p>
+<h5>Lending Rate Analysis</h5>
+<p>Track lending rates over time to understand rate dynamics. Identify periods of rate compression (low utilization) vs rate expansion (high utilization) to time deposits optimally.</p>
+<h5>Rate Arbitrage</h5>
+<p>Borrow at lower rates on one protocol and lend at higher rates on another. Duration and convexity concepts help assess the risk of rate changes during the arbitrage holding period.</p>
+<h5>Risk Assessment</h5>
+<p>Use duration to estimate how lending positions change in value as rates move. Higher duration means greater sensitivity to rate changes.</p>
+<hr>
+<h4>Quick Reference: Bond Pricing Formulas</h4>
+<p><strong>Bond price (present value of cash flows):</strong></p>
+<p><pre><code>P = Σ [C / (1+y)^t] + F / (1+y)^n
+    t=1..n
+
+Where:
+  C = periodic coupon payment = Face * coupon_rate / frequency
+  y = periodic yield = YTM / frequency
+  F = face value
+  n = total number of periods</code></pre></p>
+<p><strong>Macaulay Duration:</strong></p>
+<p><pre><code>D_mac = (1/P) * Σ [t * C / (1+y)^t] + (n * F) / ((1+y)^n * P)</code></pre></p>
+<p><strong>Modified Duration:</strong></p>
+<p><pre><code>D_mod = D_mac / (1 + y)</code></pre></p>
+<p><strong>Convexity:</strong></p>
+<p><pre><code>Convexity = (1/P) * Σ [t*(t+1) * C / (1+y)^(t+2)] + [n*(n+1)*F] / [(1+y)^(n+2) * P]</code></pre></p>
+<p><strong>Price change approximation:</strong></p>
+<p><pre><code>ΔP/P ≈ -D_mod * Δy + 0.5 * Convexity * (Δy)²</code></pre></p>
+<hr>
+<h4>Files</h4>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>references/planned_features.md</code></td><td>Planned features, bond formulas, DeFi protocols, and implementation priorities</td></tr>
+<tr><td><code>scripts/bond_calculator.py</code></td><td>Bond price, YTM, duration, and convexity calculator</td></tr>
+</tbody></table>
+<hr>
+<h4>Contributing</h4>
+<p>This skill is a stub awaiting full implementation. To contribute:</p>
+<ol>
+<li>Implement yield curve bootstrapping from market data</li>
+<li>Add Nelson-Siegel yield curve fitting</li>
+<li>Build DeFi lending rate data fetcher (Marginfi, Kamino APIs)</li>
+<li>Add day count convention support for accurate accrued interest</li>
+<li>Create rate comparison dashboard across protocols</li>
+</ol>
+<p>See <code>references/planned_features.md</code> for the full feature list and implementation priorities.</p>
+<hr>
+<p><em>This skill provides analytical tools and mathematical models for informational purposes only. It does not constitute financial advice. Fixed income and DeFi lending involve risk of loss.</em></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>agiprolabs</strong> in
+        <a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/agiprolabs-claude-trading-skills/backtrader/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="backtrader event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">backtrader</span>
+    <span class="r-desc">Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/copy-trading/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="copy-trading wallet evaluation, monitoring, and copy-trade strategy design for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">copy-trading</span>
+    <span class="r-desc">Wallet evaluation, monitoring, and copy-trade strategy design for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/exit-strategies/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="exit-strategies systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">exit-strategies</span>
+    <span class="r-desc">Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/kelly-criterion/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="kelly-criterion kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">kelly-criterion</span>
+    <span class="r-desc">Kelly criterion optimal sizing with fractional variants, edge estimation, and practical application for crypto trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/agiprolabs-claude-trading-skills/mev-analysis/index.html"
+     data-source="agiprolabs-claude-trading-skills"
+     data-category="quant"
+     data-search="mev-analysis mev exposure assessment, sandwich attack detection, and protection strategies for solana dex trading quant  agiprolabs/claude-trading-skills">
+  <span>
+    <span class="r-name">mev-analysis</span>
+    <span class="r-desc">MEV exposure assessment, sandwich attack detection, and protection strategies for Solana DEX trading</span>
+  </span>
+  <span class="r-src">agiprolabs/claude-trading-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/fixed-income</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add agiprolabs-claude-trading-skills/fixed-income" aria-label="Copy install fixed-income">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/agiprolabs/claude-trading-skills" rel="noopener">agiprolabs/claude-trading-skills</a></dd></div>
+          <div><dt>Author</dt><dd>agiprolabs</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>quant</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">agiprolabs-claude-trading-skills/fixed-income</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=fixed-income%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Ffixed-income%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Ffixed-income%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Ffixed-income%2F&t=fixed-income%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fagiprolabs-claude-trading-skills%2Ffixed-income%2F&title=fixed-income%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/agiprolabs-claude-trading-skills/fixed-income/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/agiprolabs-claude-trading-skills/fixed-income/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a> · <a href="../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

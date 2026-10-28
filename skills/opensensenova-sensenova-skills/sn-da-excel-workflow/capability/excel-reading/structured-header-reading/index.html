@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>excel-large-file-processing-and-cleaning — corporate AI agent skill — Aidentity</title>
+<meta name="description" content="读取多 sheet Excel 文件，动态识别目标列进行统计，并使用正则清洗文本字段提取中文字符，最终输出标准化 Excel 文件。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="excel-large-file-processing-and-cleaning, corporate, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="excel-large-file-processing-and-cleaning — corporate AI agent skill — Aidentity">
+<meta property="og:description" content="读取多 sheet Excel 文件，动态识别目标列进行统计，并使用正则清洗文本字段提取中文字符，最终输出标准化 Excel 文件。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="excel-large-file-processing-and-cleaning — corporate AI agent skill — Aidentity">
+<meta name="twitter:description" content="读取多 sheet Excel 文件，动态识别目标列进行统计，并使用正则清洗文本字段提取中文字符，最终输出标准化 Excel 文件。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"corporate","item":"https://akshatnaruka.github.io/aidentity/skills/?category=corporate"},{"@type":"ListItem","position":3,"name":"excel-large-file-processing-and-cleaning","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/"}]},{"@type":"TechArticle","headline":"excel-large-file-processing-and-cleaning","description":"读取多 sheet Excel 文件，动态识别目标列进行统计，并使用正则清洗文本字段提取中文字符，最终输出标准化 Excel 文件。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"corporate, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../../skills/index.html?category=corporate">corporate</a><span>/</span>excel-large-file-processing-and-cleaning
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>excel-large-file-processing-and-cleaning</h1>
+      <p class="summary">读取多 sheet Excel 文件，动态识别目标列进行统计，并使用正则清洗文本字段提取中文字符，最终输出标准化 Excel 文件。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Skill Steps</h3>
+<p>&gt; This sub-skill covers one capability of the Excel workflow. For reading/counting/Parquet optimization, see the parent workflow SKILL.md.</p>
+<p>Step1 文本字段清洗，使用正则表达式提取纯中文字符（过滤数字、特殊符号等）。</p>
+<p><pre><code>import re
+
+def extract_chinese(text):
+    if pd.isna(text):
+        return text
+    # 仅保留 Unicode 中文字符范围
+    chinese_chars = re.findall(r&#39;[一-龥]&#39;, str(text))
+    cleaned = &#39;&#39;.join(chinese_chars)
+    return cleaned if cleaned else &#39;&#39;
+
+clean_col = &#39;目标清洗列&#39; # 占位示例，如&#39;收货人&#39;
+if clean_col in df.columns:
+    df[clean_col] = df[clean_col].apply(extract_chinese)</code></pre></p>
+<p>Step2 动态模糊匹配列名，并统计该列中特定值的数量。</p>
+<p><pre><code># 动态查找包含特定关键字的列
+keyword = &#39;type&#39;
+target_val = &#39;varchar&#39;
+target_col = next((col for col in df.columns if keyword in str(col).lower()), None)
+
+total_target_count = 0
+details = []
+
+if target_col is not None:
+    # 忽略大小写和首尾空格进行匹配
+    mask = df[target_col].astype(str).str.lower().str.strip() == target_val
+    count = mask.sum()
+    total_target_count += count
+    
+    if count &gt; 0:
+        details.append({
+            &#39;sheet&#39;: target_sheet,
+            &#39;target_count&#39;: count,
+            &#39;total_rows&#39;: len(df)
+        })
+
+print(f&quot;{&#39;=&#39;*50}&quot;)
+print(f&quot;匹配列 &#39;{target_col}&#39; 中值为 &#39;{target_val}&#39; 的总数: {total_target_count}&quot;)
+print(f&quot;{&#39;=&#39;*50}&quot;)
+for detail in details:
+    print(f&quot;  {detail[&#39;sheet&#39;]}: {detail[&#39;target_count&#39;]} 个匹配项 (共 {detail[&#39;total_rows&#39;]} 行)&quot;)</code></pre></p>
+<p>Step3 将清洗和处理后的数据保存为 Excel，并输出文件大小与下载链接。</p>
+<p><pre><code>output_path = &quot;/mnt/data/cleaned_data_output.xlsx&quot;
+df.to_excel(output_path, index=False)
+
+file_size = os.path.getsize(output_path)
+print(f&quot;清洗后的数据已保存至: {output_path}&quot;)
+print(f&quot;文件大小: {file_size} 字节&quot;)
+# 生成标准下载链接格式
+print(f&quot;下载链接: sandbox:{output_path}&quot;)</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../../skills/marketingskills/lead-magnets/index.html"
+     data-source="marketingskills"
+     data-category="corporate"
+     data-search="lead-magnets when the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;pdf download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should i give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; use this for planning what to create and how to distribute it. for interactive tools as lead magnets, see free-tools. for writing the actual content, see copywriting. for the email sequence after capture, see emails. corporate  coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">lead-magnets</span>
+    <span class="r-desc">When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation. Also use when the user mentions &quot;lead magnet,&quot; &quot;gated content,&quot; &quot;content upgrade,&quot; &quot;downloadable,&quot; &quot;ebook,&quot; &quot;cheat sheet,&quot; &quot;checklist,&quot; &quot;template download,&quot; &quot;opt-in,&quot; &quot;freebie,&quot; &quot;PDF download,&quot; &quot;resource library,&quot; &quot;content offer,&quot; &quot;email capture content,&quot; &quot;Notion template,&quot; &quot;spreadsheet template,&quot; &quot;what should I give away for emails,&quot; &quot;course as a skill,&quot; or &quot;package our content as an agent skill.&quot; Use this for planning what to create and how to distribute it. For interactive tools as lead magnets, see free-tools. For writing the actual content, see copywriting. For the email sequence after capture, see emails.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/engineering/wizard/index.html"
+     data-source="mattpocock"
+     data-category="corporate"
+     data-search="wizard generate an interactive bash wizard that walks a human through steps only they can perform. use when provisioning infrastructure, setting up credentials or ci secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. don&#39;t invoke this for steps the agent can perform itself. corporate  mattpocock/skills">
+  <span>
+    <span class="r-name">wizard</span>
+    <span class="r-desc">Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don&#39;t invoke this for steps the agent can perform itself.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="sn-da-excel-workflow excel 数据分析多步编排器。覆盖：(1) 读取多 sheet excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 sheet 统计聚合，(6) 导出 excel/csv 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / excel 报告 / 生成报表 / analyze excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">sn-da-excel-workflow</span>
+    <span class="r-desc">Excel 数据分析多步编排器。覆盖：(1) 读取多 Sheet Excel 文件并统计行数，(2) 大文件检测（≥10k 行自动 Parquet 优化），(3) 数据清洗（缺失值、文本标准化、无效字符），(4) 条件筛选与分类提取，(5) 跨 Sheet 统计聚合，(6) 导出 Excel/CSV 并提供下载链接。覆盖从数据读取到报告生成全流程，按步骤编排 capability 子 skill。**遇到以下任一情况就主动使用本 skill，不要自行写几行 pandas 就回答**：①用户出现触发词：Excel 分析 / 表格分析 / 数据分析 / 数据清洗 / 数据统计 / 数据筛选 / 数据可视化 / 数据导出 / 汇总统计 / 透视表 / 分组统计 / 交叉分析 / 趋势分析 / 对比分析 / 异常值检测 / 去重 / 缺失值处理 / Excel 报告 / 生成报表 / analyze Excel / data analysis / data cleaning / pivot table；②用户上传或指定了 .xlsx / .xls / .csv 文件并要求分析、清洗、统计或可视化；③任务涉及多 Sheet 读取、条件筛选、分类汇总、图表生成中的任意一项；④用户要求导出带格式的 Excel 报告或下载链接。仅不用于：不涉及表格数据的纯文本处理、图片分析（使用 sn-da-image-caption）、单个公式计算的简单问答。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/category-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="large-file-parquet-analysis-and-highlight 当excel文件总行数超过1万行时，通过转换为parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为excel并对特定行进行高亮标注。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">large-file-parquet-analysis-and-highlight</span>
+    <span class="r-desc">当Excel文件总行数超过1万行时，通过转换为Parquet格式提升读取性能，提取目标指标并计算最大值，最后将结果输出为Excel并对特定行进行高亮标注。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-cell-coloring/duplicate-value-coloring/index.html"
+     data-source="opensensenova-sensenova-skills"
+     data-category="corporate"
+     data-search="excel-conditional-comparison-and-large-file-processing 对比excel多表中的特定系数并对异常值进行颜色标记。 corporate  opensensenova/sensenova-skills">
+  <span>
+    <span class="r-name">excel-conditional-comparison-and-large-file-processing</span>
+    <span class="r-desc">对比Excel多表中的特定系数并对异常值进行颜色标记。</span>
+  </span>
+  <span class="r-src">OpenSenseNova/SenseNova-Skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading" aria-label="Copy install excel-large-file-processing-and-cleaning">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>corporate</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=excel-large-file-processing-and-cleaning%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-reading%2Fstructured-header-reading%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-reading%2Fstructured-header-reading%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-reading%2Fstructured-header-reading%2F&t=excel-large-file-processing-and-cleaning%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-reading%2Fstructured-header-reading%2F&title=excel-large-file-processing-and-cleaning%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-reading/structured-header-reading/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../../skills/index.html">Browse</a> · <a href="../../../../../../sources/index.html">Sources</a> · <a href="../../../../../../about/index.html">About</a> · <a href="../../../../../../registry.json">registry.json</a> · <a href="../../../../../../llms.txt">llms.txt</a> · <a href="../../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>condition-filtering-and-large-file-optimization — engineering AI agent skill — Aidentity</title>
+<meta name="description" content="根据数据规模动态选择处理策略。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="condition-filtering-and-large-file-optimization, engineering, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="condition-filtering-and-large-file-optimization — engineering AI agent skill — Aidentity">
+<meta property="og:description" content="根据数据规模动态选择处理策略。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="condition-filtering-and-large-file-optimization — engineering AI agent skill — Aidentity">
+<meta name="twitter:description" content="根据数据规模动态选择处理策略。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"engineering","item":"https://akshatnaruka.github.io/aidentity/skills/?category=engineering"},{"@type":"ListItem","position":3,"name":"condition-filtering-and-large-file-optimization","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/"}]},{"@type":"TechArticle","headline":"condition-filtering-and-large-file-optimization","description":"根据数据规模动态选择处理策略。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"engineering, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../../skills/index.html?category=engineering">engineering</a><span>/</span>condition-filtering-and-large-file-optimization
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>condition-filtering-and-large-file-optimization</h1>
+      <p class="summary">根据数据规模动态选择处理策略。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>condition_filtering</h3>
+<p>&gt; <strong>Note</strong>: This sub-skill covers one step of the Excel analysis workflow. For the full pipeline (file reading, row counting, large-file optimization, export), see the parent workflow SKILL.md.</p>
+<p>Step1 执行多维度数据清洗与条件筛选，包含列名自动识别、RGB 颜色过滤、前缀匹配及正则提取。</p>
+<p><pre><code># 1. 自动识别同义列名并筛选非空值
+target_cols = [&#39;域名&#39;, &#39;缩写&#39;, &#39;code&#39;, &#39;domain&#39;]
+for col in target_cols:
+    if col in df.columns:
+        df = df[df[col].notna()]
+        break
+
+# 2. 基于数值通道的精确筛选（如 RGB 颜色过滤）
+# 技巧：多条件组合筛选时使用 &amp; 符号
+if all(c in df.columns for c in [&#39;Red&#39;, &#39;Green&#39;, &#39;Blue&#39;]):
+    df = df[(df[&#39;Red&#39;] == 0) &amp; (df[&#39;Green&#39;] == 0) &amp; (df[&#39;Blue&#39;] == 0)]
+
+# 3. 基于字符串前缀筛选并进行数值转换计算
+if &#39;编号&#39; in df.columns:
+    # 筛选特定前缀的项目
+    df = df[df[&#39;编号&#39;].astype(str).str.startswith(&#39;TXL3&#39;)]
+    # 技巧：使用 errors=&#39;coerce&#39; 处理无法转换的脏数据
+    df[&#39;val_a&#39;] = pd.to_numeric(df[&#39;技工&#39;], errors=&#39;coerce&#39;)
+    df[&#39;val_b&#39;] = pd.to_numeric(df[&#39;普工&#39;], errors=&#39;coerce&#39;)
+    df[&#39;total_val&#39;] = df[&#39;val_a&#39;] + df[&#39;val_b&#39;]
+    avg_val = df[&#39;total_val&#39;].mean()
+
+# 4. 基于特定分类值的筛选与统计
+if &#39;钢筋级别&#39; in df.columns:
+    sub_df = df[df[&#39;钢筋级别&#39;] == &#39;Ⅱ&#39;].copy()
+    sub_df[&#39;target_val&#39;] = pd.to_numeric(sub_df[&#39;屈服荷载&#39;], errors=&#39;coerce&#39;)
+    avg_target = sub_df[&#39;target_val&#39;].mean()
+
+# 5. 正则表达式匹配提取特定字段
+if &#39;命令&#39; in df.columns:
+    pattern = r&#39;--pct-&#39;
+    matched_df = df[df[&#39;命令&#39;].astype(str).str.contains(pattern, na=False)]
+    # 提取关键列保留追溯性
+    extracted_data = matched_df[[&#39;NO&#39;, &#39;命令&#39;, &#39;说明&#39;]].copy()</code></pre></p>
+<p>Step2 将处理结果保存至 Excel，并对输出文件进行样式美化（如全行标红），最后生成下载链接。</p>
+<p><pre><code>from openpyxl.styles import PatternFill
+
+output_path = &quot;filtered_result.xlsx&quot;
+
+with pd.ExcelWriter(output_path, engine=&#39;openpyxl&#39;) as writer:
+    if &#39;total_val&#39; in df.columns:
+        df.to_excel(writer, sheet_name=&#39;统计结果&#39;, index=False)
+    if &#39;extracted_data&#39; in locals():
+        extracted_data.to_excel(writer, sheet_name=&#39;正则提取&#39;, index=False)
+
+# 技巧：使用 openpyxl 进行后期样式加工，突出显示关键结果
+wb = openpyxl.load_workbook(output_path)
+red_fill = PatternFill(start_color=&#39;FFFF0000&#39;, end_color=&#39;FFFF0000&#39;, fill_type=&#39;solid&#39;)
+
+for sheet_name in wb.sheetnames:
+    ws = wb[sheet_name]
+    for row in ws.iter_rows(min_row=2):  # 跳过表头
+        for cell in row:
+            cell.fill = red_fill
+
+wb.save(output_path)
+
+# 输出标准下载链接格式
+print(f&quot;[下载结果文件](sandbox:{output_path})&quot;)</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/addyosmani/incremental-implementation/index.html"
+     data-source="addyosmani"
+     data-category="engineering"
+     data-search="incremental-implementation delivers changes incrementally. use when implementing any feature or change that touches more than one file. use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step. engineering  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">incremental-implementation</span>
+    <span class="r-desc">Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you&#39;re about to write a large amount of code at once, or when a task feels too big to land in one step.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/engineering/ask-matt/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="ask-matt ask which skill or flow fits your situation. a router over the skills in this repo. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">ask-matt</span>
+    <span class="r-desc">Ask which skill or flow fits your situation. A router over the skills in this repo.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/in-progress/setup-ts-deep-modules/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="setup-ts-deep-modules wire dependency-cruiser into a typescript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. user-invoked. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">setup-ts-deep-modules</span>
+    <span class="r-desc">Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../../skills/mattpocock/productivity/to-questionnaire/index.html"
+     data-source="mattpocock"
+     data-category="engineering"
+     data-search="to-questionnaire turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in. engineering  mattpocock/skills">
+  <span>
+    <span class="r-name">to-questionnaire</span>
+    <span class="r-desc">Turn a decision you can&#39;t fully answer into a questionnaire for someone else to fill in.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering" aria-label="Copy install condition-filtering-and-large-file-optimization">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>engineering</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=condition-filtering-and-large-file-optimization%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-filtering%2Fcondition-filtering%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-filtering%2Fcondition-filtering%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-filtering%2Fcondition-filtering%2F&t=condition-filtering-and-large-file-optimization%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-excel-workflow%2Fcapability%2Fexcel-data-filtering%2Fcondition-filtering%2F&title=condition-filtering-and-large-file-optimization%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-excel-workflow/capability/excel-data-filtering/condition-filtering/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../../skills/index.html">Browse</a> · <a href="../../../../../../sources/index.html">Sources</a> · <a href="../../../../../../about/index.html">About</a> · <a href="../../../../../../registry.json">registry.json</a> · <a href="../../../../../../llms.txt">llms.txt</a> · <a href="../../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../../assets/app.js" defer></script>
+</body>
+</html>

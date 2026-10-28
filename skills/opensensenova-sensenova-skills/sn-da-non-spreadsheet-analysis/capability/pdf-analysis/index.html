@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pdf-analysis — docs AI agent skill — Aidentity</title>
+<meta name="description" content="PDF 文档解析。自动区分文字型 PDF 与扫描型 PDF，覆盖：文本/表格提取、多页全量扫描、嵌入图表 caption、单位感知数值计算。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Akshat Naruka">
+<meta name="keywords" content="pdf-analysis, docs, AI agent skill, SKILL.md, install">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/">
+<meta property="og:site_name" content="Aidentity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pdf-analysis — docs AI agent skill — Aidentity">
+<meta property="og:description" content="PDF 文档解析。自动区分文字型 PDF 与扫描型 PDF，覆盖：文本/表格提取、多页全量扫描、嵌入图表 caption、单位感知数值计算。">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/">
+<meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="pdf-analysis — docs AI agent skill — Aidentity">
+<meta name="twitter:description" content="PDF 文档解析。自动区分文字型 PDF 与扫描型 PDF，覆盖：文本/表格提取、多页全量扫描、嵌入图表 caption、单位感知数值计算。">
+<meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../../../assets/apple-touch-icon.png">
+<link rel="manifest" href="../../../../../manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../../../feed.xml">
+<link rel="stylesheet" href="../../../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"docs","item":"https://akshatnaruka.github.io/aidentity/skills/?category=docs"},{"@type":"ListItem","position":3,"name":"pdf-analysis","item":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/"}]},{"@type":"TechArticle","headline":"pdf-analysis","description":"PDF 文档解析。自动区分文字型 PDF 与扫描型 PDF，覆盖：文本/表格提取、多页全量扫描、嵌入图表 caption、单位感知数值计算。","url":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/","dateModified":"2026-10-28","author":{"@type":"Person","name":"OpenSenseNova"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"docs, AI agent skill, SKILL.md"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../../../skills/index.html">Browse</a>
+      <a href="../../../../../sources/index.html">Sources</a>
+      <a href="../../../../../roles/index.html">Roles</a>
+      <a href="../../../../../for-agents/index.html">Agents</a>
+      <a href="../../../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../../../skills/index.html">Skills</a><span>/</span><a href="../../../../../skills/index.html?category=docs">docs</a><span>/</span>pdf-analysis
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">OpenSenseNova/SenseNova-Skills · MIT</p>
+      <h1>pdf-analysis</h1>
+      <p class="summary">PDF 文档解析。自动区分文字型 PDF 与扫描型 PDF，覆盖：文本/表格提取、多页全量扫描、嵌入图表 caption、单位感知数值计算。</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>PDF Analysis</h3>
+<h4>Step 0 — Detect PDF type (text vs scanned)</h4>
+<p><strong>Critical first step</strong>: determine whether the PDF has extractable text or is a scanned image.</p>
+<p>Never skip this — using the wrong parser wastes time and produces empty results.</p>
+<p><pre><code>import fitz  # PyMuPDF
+
+def detect_pdf_type(pdf_path, sample_pages=3):
+    &quot;&quot;&quot;
+    Returns &#39;text&#39; if PDF has extractable text, &#39;scanned&#39; if image-based.
+    Checks first N pages (or all if fewer).
+    &quot;&quot;&quot;
+    doc = fitz.open(pdf_path)
+    total_chars = 0
+    pages_checked = min(sample_pages, len(doc))
+
+    for i in range(pages_checked):
+        page = doc[i]
+        text = page.get_text(&quot;text&quot;)
+        total_chars += len(text.strip())
+
+    doc.close()
+    avg_chars = total_chars / max(pages_checked, 1)
+    pdf_type = &#39;text&#39; if avg_chars &gt; 50 else &#39;scanned&#39;
+    print(f&quot;PDF type: {pdf_type} (avg {avg_chars:.0f} chars/page, checked {pages_checked} pages)&quot;)
+    return pdf_type</code></pre></p>
+<hr>
+<h4>Core Method 1: Text PDF — Full Text Extraction (ALL pages)</h4>
+<p><pre><code>import fitz
+
+def extract_text_pdf(pdf_path):
+    &quot;&quot;&quot;Extract text from all pages of a text-based PDF.&quot;&quot;&quot;
+    doc = fitz.open(pdf_path)
+    total_pages = len(doc)
+    print(f&quot;Total pages: {total_pages}&quot;)
+
+    all_text = []
+    for i, page in enumerate(doc):
+        text = page.get_text(&quot;text&quot;).strip()
+        if text:
+            all_text.append(f&quot;=== Page {i+1} ===\n{text}&quot;)
+        else:
+            print(f&quot;  Page {i+1}: no text (may be image — will caption later)&quot;)
+
+    doc.close()
+    return &#39;\n\n&#39;.join(all_text)
+
+# ⚠️ MUST iterate ALL pages — never stop at page 1
+full_text = extract_text_pdf(pdf_path)
+print(f&quot;Total text length: {len(full_text)} chars&quot;)</code></pre></p>
+<hr>
+<h4>Core Method 2: Text PDF — Table Extraction</h4>
+<p>For PDFs with tables, <code>pdfplumber</code> gives better table structure than <code>fitz</code>:</p>
+<p><pre><code>import pdfplumber
+import pandas as pd
+
+def extract_tables_pdf(pdf_path):
+    &quot;&quot;&quot;Extract all tables from all pages as DataFrames.&quot;&quot;&quot;
+    all_tables = []
+    with pdfplumber.open(pdf_path) as pdf:
+        print(f&quot;Total pages: {len(pdf.pages)}&quot;)
+        for i, page in enumerate(pdf.pages):
+            tables = page.extract_tables()
+            for j, tbl in enumerate(tables):
+                if not tbl:
+                    continue
+                # First row as header
+                df = pd.DataFrame(tbl[1:], columns=tbl[0])
+                # Clean: strip whitespace, replace None
+                df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+                df = df.dropna(how=&#39;all&#39;).reset_index(drop=True)
+                all_tables.append({&#39;page&#39;: i+1, &#39;table_idx&#39;: j, &#39;df&#39;: df})
+                print(f&quot;  Page {i+1}, Table {j}: {df.shape[0]}r × {df.shape[1]}c&quot;)
+                print(df.head(3))
+    return all_tables
+
+# Verify table alignment after extraction:
+# Print column headers and first 3 rows to confirm row/col mapping is correct</code></pre></p>
+<hr>
+<h4>Core Method 3: Scanned PDF — OCR via Caption</h4>
+<p>For scanned PDFs (image-based pages), render each page as PNG and caption:</p>
+<p><pre><code>import fitz
+import subprocess, json, os
+
+CAPTION = &quot;/path/to/skills/sn-da-image-caption/scripts/caption.py&quot;
+
+def extract_scanned_pdf(pdf_path, prompt=None, dpi=150):
+    &quot;&quot;&quot;Render each page as image, then caption for text extraction.&quot;&quot;&quot;
+    doc = fitz.open(pdf_path)
+    total_pages = len(doc)
+    print(f&quot;Scanned PDF: {total_pages} pages, captioning each...&quot;)
+
+    all_text = []
+    for i, page in enumerate(doc):
+        # Render page to PNG
+        mat = fitz.Matrix(dpi/72, dpi/72)
+        pix = page.get_pixmap(matrix=mat)
+        img_path = f&quot;/tmp/pdf_page_{i+1}.png&quot;
+        pix.save(img_path)
+
+        # Caption the page image
+        cmd = [&quot;python3&quot;, CAPTION, img_path, &quot;--json&quot;]
+        if prompt:
+            cmd += [&quot;--prompt&quot;, prompt]
+        else:
+            cmd += [&quot;--prompt&quot;, &quot;提取页面中所有文字和表格内容，保持原始结构，Markdown格式输出。&quot;]
+
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        if r.returncode == 0:
+            desc = json.loads(r.stdout).get(&quot;description&quot;, &quot;&quot;)
+            all_text.append(f&quot;=== Page {i+1} ===\n{desc}&quot;)
+            print(f&quot;  Page {i+1}: {len(desc)} chars extracted&quot;)
+        else:
+            print(f&quot;  Page {i+1}: caption failed — {r.stderr[:100]}&quot;)
+
+    doc.close()
+    return &#39;\n\n&#39;.join(all_text)
+
+# Usage for scanned invoice PDFs, bank statements, org charts, etc.
+text = extract_scanned_pdf(pdf_path)</code></pre></p>
+<hr>
+<h4>Core Method 4: Hybrid PDF (mixed text + image pages)</h4>
+<p><pre><code>def extract_hybrid_pdf(pdf_path, text_prompt=None, image_prompt=None):
+    &quot;&quot;&quot;Handle PDFs where some pages have text, others are scanned.&quot;&quot;&quot;
+    doc_fitz = fitz.open(pdf_path)
+    all_text = []
+
+    for i, page in enumerate(doc_fitz):
+        raw_text = page.get_text(&quot;text&quot;).strip()
+
+        if len(raw_text) &gt; 50:
+            # Text page — use directly
+            all_text.append(f&quot;=== Page {i+1} (text) ===\n{raw_text}&quot;)
+        else:
+            # Image page — render and caption
+            mat = fitz.Matrix(150/72, 150/72)
+            pix = page.get_pixmap(matrix=mat)
+            img_path = f&quot;/tmp/hybrid_page_{i+1}.png&quot;
+            pix.save(img_path)
+
+            cmd = [&quot;python3&quot;, CAPTION, img_path, &quot;--json&quot;]
+            prompt = image_prompt or &quot;提取页面中所有文字和表格内容，Markdown格式输出。&quot;
+            cmd += [&quot;--prompt&quot;, prompt]
+
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+            if r.returncode == 0:
+                desc = json.loads(r.stdout).get(&quot;description&quot;, &quot;&quot;)
+                all_text.append(f&quot;=== Page {i+1} (image→caption) ===\n{desc}&quot;)
+            else:
+                all_text.append(f&quot;=== Page {i+1} (caption failed) ===&quot;)
+
+    doc_fitz.close()
+    return &#39;\n\n&#39;.join(all_text)</code></pre></p>
+<hr>
+<h4>Core Method 5: Extract Embedded Images / Charts from PDF</h4>
+<p><pre><code>import fitz
+
+def extract_pdf_images(pdf_path, min_width=100, min_height=100):
+    &quot;&quot;&quot;Extract all embedded images from a PDF (charts, diagrams, photos).&quot;&quot;&quot;
+    doc = fitz.open(pdf_path)
+    image_paths = []
+
+    for page_num, page in enumerate(doc):
+        for img_idx, img in enumerate(page.get_images(full=True)):
+            xref = img[0]
+            base = doc.extract_image(xref)
+            img_bytes = base[&quot;image&quot;]
+            ext = base[&quot;ext&quot;]
+
+            img_path = f&quot;/tmp/pdf_img_p{page_num+1}_{img_idx}.{ext}&quot;
+            with open(img_path, &#39;wb&#39;) as f:
+                f.write(img_bytes)
+
+            # Only keep images above size threshold (skip icons/logos)
+            from PIL import Image
+            with Image.open(img_path) as im:
+                w, h = im.size
+            if w &gt;= min_width and h &gt;= min_height:
+                image_paths.append({&#39;page&#39;: page_num+1, &#39;path&#39;: img_path, &#39;size&#39;: (w, h)})
+                print(f&quot;  Page {page_num+1}, img {img_idx}: {w}×{h} → {img_path}&quot;)
+
+    doc.close()
+    return image_paths
+
+# After extracting, caption each image:
+# for img_info in image_paths:
+#     caption_image(img_info[&#39;path&#39;], prompt=&quot;提取图表数据，Markdown 表格输出。&quot;)</code></pre></p>
+<hr>
+<h4>Common Patterns</h4>
+<h5>Multi-invoice / multi-document PDF (发票汇总)</h5>
+<p><pre><code># When PDF contains multiple invoices (one per page):
+tables_by_page = extract_tables_pdf(pdf_path)
+invoices = []
+for item in tables_by_page:
+    df = item[&#39;df&#39;]
+    # Find key fields (flexible column name matching)
+    for col in df.columns:
+        if &#39;金额&#39; in str(col) or &#39;amount&#39; in str(col).lower():
+            invoices.append({&#39;page&#39;: item[&#39;page&#39;], &#39;amount_col&#39;: col, &#39;data&#39;: df})
+            break
+print(f&quot;Found {len(invoices)} pages with amount data&quot;)</code></pre></p>
+<h5>Numeric extraction with unit awareness</h5>
+<p><pre><code>import re
+
+def extract_number_with_unit(text_snippet):
+    &quot;&quot;&quot;
+    Extract value and unit from text like &#39;1,760 千港元&#39; or &#39;95,975,196,217.52元&#39;.
+    Returns (numeric_value, unit_string).
+    &quot;&quot;&quot;
+    # Remove thousands separator
+    text_snippet = text_snippet.replace(&#39;,&#39;, &#39;&#39;)
+    match = re.search(r&#39;([\d\.]+)\s*(千|万|亿|百万)?\s*(元|港元|美元|人民币|%|percent)?&#39;, text_snippet)
+    if not match:
+        return None, None
+    value = float(match.group(1))
+    multiplier_map = {&#39;千&#39;: 1000, &#39;万&#39;: 10000, &#39;亿&#39;: 1e8, &#39;百万&#39;: 1e6}
+    mult = multiplier_map.get(match.group(2), 1)
+    unit = match.group(3) or &#39;&#39;
+    return value * mult, f&quot;{match.group(2) or &#39;&#39;}{unit}&quot;
+
+# Always verify unit matches what the question asks:
+# &quot;多几多&quot; in HKD → answer in 千港元 if source says 千港元</code></pre></p>
+<h5>Long document keyword search</h5>
+<p><pre><code>def find_in_pdf(pdf_path, keyword, context_chars=200):
+    &quot;&quot;&quot;Search for keyword across all pages, return context snippets.&quot;&quot;&quot;
+    text = extract_text_pdf(pdf_path)
+    results = []
+    start = 0
+    while True:
+        idx = text.find(keyword, start)
+        if idx &lt; 0:
+            break
+        snippet = text[max(0, idx-context_chars//2): idx+context_chars]
+        results.append({&#39;pos&#39;: idx, &#39;context&#39;: snippet})
+        start = idx + 1
+    print(f&quot;Found &#39;{keyword}&#39; {len(results)} times&quot;)
+    return results</code></pre></p>
+<hr>
+<h4>Pitfalls</h4>
+<table><thead><tr><th>Pitfall</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Use <code>pdfplumber</code> on scanned PDF → empty result</td><td>Detect type first (Method 0); use OCR path for scanned</td></tr>
+<tr><td>Only read page 1, miss remaining invoices/data</td><td>Always <code>for page in doc</code> — never index <code>[0]</code> only</td></tr>
+<tr><td>Table columns misaligned after extraction</td><td>Print headers + first 3 rows to verify before computing</td></tr>
+<tr><td>Report number as % when question asks absolute value</td><td>Read question carefully; <code>extract_number_with_unit()</code> preserves context</td></tr>
+<tr><td>Chart data embedded as image → pdfplumber returns nothing</td><td>Extract images (Method 5), then caption each</td></tr>
+<tr><td>Long doc loses cross-page context</td><td>Use <code>find_in_pdf()</code> for keyword search across full text</td></tr>
+<tr><td><code>.pdf</code> contains multiple scanned docs (zip of PDFs)</td><td>Check if input is dir or archive; unzip first</td></tr>
+</tbody></table></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>OpenSenseNova</strong> in
+        <a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../../../skills/addyosmani/documentation-and-adrs/index.html"
+     data-source="addyosmani"
+     data-category="docs"
+     data-search="documentation-and-adrs records decisions and documentation. use when making architectural decisions, changing public apis, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase. docs documentation addyosmani/agent-skills">
+  <span>
+    <span class="r-name">documentation-and-adrs</span>
+    <span class="r-desc">Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/addyosmani/source-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="docs"
+     data-search="source-driven-development grounds every implementation decision in official documentation. use when you want authoritative, source-cited code free from outdated patterns. use when building with any framework or library where correctness matters. docs  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">source-driven-development</span>
+    <span class="r-desc">Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when building with any framework or library where correctness matters.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../../../skills/anthropic-official/academy-guide/index.html"
+     data-source="anthropic-official"
+     data-category="docs"
+     data-search="academy-guide stop and check this skill before finishing any reply to a question about how to use claude or a claude product — it recommends matching courses, tutorials, and use cases from claude academy (academy.claude.com), anthropic&#39;s learning hub. trigger on: &quot;how do i&quot;, &quot;how can i&quot;, &quot;getting started with&quot;, &quot;what can claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, mcp; requests about rolling claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. this skill composes with other skills: after consulting product documentation to answer how a claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an academy recommendation belong together. only recommend on a strong match; never invent academy content. docs  anthropics/skills">
+  <span>
+    <span class="r-name">academy-guide</span>
+    <span class="r-desc">Stop and check this skill before finishing any reply to a question about how to use Claude or a Claude product — it recommends matching courses, tutorials, and use cases from Claude Academy (academy.claude.com), Anthropic&#39;s learning hub. Trigger on: &quot;how do I&quot;, &quot;how can I&quot;, &quot;getting started with&quot;, &quot;what can Claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, MCP; requests about rolling Claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. Use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. This skill composes with other skills: after consulting product documentation to answer how a Claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an Academy recommendation belong together. Only recommend on a strong match; never invent Academy content.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../../../skills/anthropic-official/doc-coauthoring/index.html"
+     data-source="anthropic-official"
+     data-category="docs"
+     data-search="doc-coauthoring guide users through a structured workflow for co-authoring documentation. use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. this workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks. docs  anthropics/skills">
+  <span>
+    <span class="r-name">doc-coauthoring</span>
+    <span class="r-desc">Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../../../skills/anthropic-official/docx/index.html"
+     data-source="anthropic-official"
+     data-category="docs"
+     data-search="docx use this skill whenever the user wants to create, read, edit, or manipulate word documents (.docx files) or word templates (.dotx files). triggers include: any mention of &#39;word doc&#39;, &#39;word document&#39;, &#39;.docx&#39;, &#39;.dotx&#39;, or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. also use when extracting or reorganizing content from .docx or .dotx files, inserting or replacing images in documents, performing find-and-replace in word files, working with tracked changes or comments, or converting content into a polished word document. if the user asks for a &#39;report&#39;, &#39;memo&#39;, &#39;letter&#39;, &#39;template&#39;, or similar deliverable as a word or .docx file, use this skill. do not use for pdfs, spreadsheets, google docs, or general coding tasks unrelated to document generation. docs  anthropics/skills">
+  <span>
+    <span class="r-name">docx</span>
+    <span class="r-desc">Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files) or Word templates (.dotx files). Triggers include: any mention of &#39;Word doc&#39;, &#39;word document&#39;, &#39;.docx&#39;, &#39;.dotx&#39;, or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx or .dotx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a &#39;report&#39;, &#39;memo&#39;, &#39;letter&#39;, &#39;template&#39;, or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis</code>
+  <button type="button" data-copy="npx AkshatNaruka/aidentity add opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis" aria-label="Copy install pdf-analysis">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/OpenSenseNova/SenseNova-Skills" rel="noopener">OpenSenseNova/SenseNova-Skills</a></dd></div>
+          <div><dt>Author</dt><dd>OpenSenseNova</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>docs</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis</dd></div>
+        </dl>
+        <div class="share">
+  <span class="share-label">Share</span>
+  <a href="https://x.com/intent/tweet?text=pdf-analysis%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fpdf-analysis%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fpdf-analysis%2F" rel="noopener" target="_blank">LinkedIn</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fpdf-analysis%2F&t=pdf-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fopensensenova-sensenova-skills%2Fsn-da-non-spreadsheet-analysis%2Fcapability%2Fpdf-analysis%2F&title=pdf-analysis%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/">copy link</button>
+</div>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/opensensenova-sensenova-skills/sn-da-non-spreadsheet-analysis/capability/pdf-analysis/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../../../skills/index.html">Browse</a> · <a href="../../../../../sources/index.html">Sources</a> · <a href="../../../../../about/index.html">About</a> · <a href="../../../../../registry.json">registry.json</a> · <a href="../../../../../llms.txt">llms.txt</a> · <a href="../../../../../feed.xml">RSS</a></p>
+  </div>
+</footer>
+<script src="../../../../../assets/app.js" defer></script>
+</body>
+</html>
