@@ -10,8 +10,12 @@
 
 **[Browse the index](https://akshatnaruka.github.io/aidentity/)** · **[Read llms.txt](https://akshatnaruka.github.io/aidentity/llms.txt)** · **[Registry JSON](https://akshatnaruka.github.io/aidentity/registry.json)**
 
+> **npm status:** the `aidentity` package is awaiting a 2FA publish. Until then use
+> `npx AkshatNaruka/aidentity add …` — the same CLI, installed straight from this
+> repository. The shorter `npx aidentity add …` works the moment the package is published.
+
 ```bash
-npx aidentity add mattpocock/engineering/code-review
+npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
 ```
 
 Skills are the new packages. There are thousands of them, spread across dozens of repositories, with no search, no install path, no license clarity, and no way to tell which ones still work. Aidentity is the missing index: **394 skills from 15 sources, each with its author, license and last verification date**, installable into the agent you already use.
@@ -34,19 +38,19 @@ This is an index, not a fork. Every skill belongs to its author.
 
 ```bash
 # Find something
-npx aidentity search "code review"
+npx AkshatNaruka/aidentity search "code review"
 
 # Install into the agent you are in (auto-detected)
-npx aidentity add mattpocock/engineering/code-review
+npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
 
 # Pick the target explicitly
-npx aidentity add systematic-debugging --agent cursor
+npx AkshatNaruka/aidentity add systematic-debugging --agent cursor
 
 # Install a task bundle
 node scripts/install.js starter-10 --platform claude
 
 # Browse the registry
-npx aidentity list --category testing
+npx AkshatNaruka/aidentity list --category testing
 ```
 
 No config, no account, no vendor lock-in. The skill lands in `.claude/skills/`, `.cursor/skills/`, `.codex/skills/`, `.gemini/skills/`, `.opencode/skills/` or `.github/skills/`.
@@ -121,7 +125,7 @@ Full provenance: [`registry/skills.json`](registry/skills.json) · [`THIRD_PARTY
 flowchart LR
   A[Upstream repos] -->|scan + verify weekly| B[registry/catalog.json]
   B --> C[Static site + search]
-  B --> D[npx aidentity]
+  B --> D[npx AkshatNaruka/aidentity]
   B --> E[llms.txt / ai.txt]
   C --> F[Browse]
   D --> G[Skill installed in your agent]

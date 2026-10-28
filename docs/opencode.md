@@ -12,7 +12,7 @@ Quick reference:
 | Local | `registry/skills.json` |
 | Schema | `registry/schema.json` |
 | LLM index | `https://akshatnaruka.github.io/aidentity/llms.txt` |
-| Install | `npx aidentity add <id>` |
+| Install | `npx AkshatNaruka/aidentity add <id>` |
 
 ## Why the registry exists
 
@@ -28,7 +28,7 @@ curl -s https://akshatnaruka.github.io/aidentity/registry.json > skills.json
 jq '.skills[] | select(.id == "mattpocock/engineering/code-review")' skills.json
 
 # install
-npx aidentity add mattpocock/engineering/code-review
+npx AkshatNaruka/aidentity add mattpocock/engineering/code-review
 ```
 
 Agents should respect `distributable: false` (indexed, not hosted) and `status` (`in-progress`, `deprecated`) when recommending.

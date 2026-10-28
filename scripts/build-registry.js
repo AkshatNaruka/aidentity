@@ -220,7 +220,7 @@ function build() {
         ...(source.note ? { note: source.note } : {}),
       },
       distributable: source.publish !== false,
-      install: source.publish === false ? null : `npx aidentity add ${id}`,
+      install: source.publish === false ? null : `npx AkshatNaruka/aidentity add ${id}`,
     });
   }
 

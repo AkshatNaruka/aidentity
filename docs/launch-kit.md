@@ -23,7 +23,7 @@ channel with the same text on the same morning.
 > verification date. CI re-checks every source weekly. Content whose license
 > forbids redistribution (19 Anthropic skills) is indexed with a link, not copied.
 >
-> Install: `npx aidentity add <id>`. It detects the agent and writes to its skills
+> Install: `npx AkshatNaruka/aidentity add <id>`. It detects the agent and writes to its skills
 > directory. There are 8 task bundles if you don't want to pick individually.
 >
 > The registry is CC0 JSON; the code is MIT. I'd like feedback on the license
@@ -43,7 +43,7 @@ Do not ask for upvotes. Answer every comment for two hours.
 1. Agent skills are the new packages. There is no index.
 2. 394 skills, 15 repos, six agents, four different folder conventions.
 3. So I built one: stable IDs, licenses, authors, last-verified dates.
-4. `npx aidentity add <id>` — auto-detects Claude Code, Cursor, Codex, Gemini, OpenCode, Copilot.
+4. `npx AkshatNaruka/aidentity add <id>` — auto-detects Claude Code, Cursor, Codex, Gemini, OpenCode, Copilot.
 5. 19 Anthropic skills are indexed but not hosted. Their license forbids it. Every index should say this out loud.
 6. Registry is CC0 JSON: `registry.json`. Site: link. Feedback welcome.
 
