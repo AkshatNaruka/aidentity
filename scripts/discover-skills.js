@@ -45,6 +45,8 @@ const DOMAINS = {
   mobile: ["expo agent skill", "react native agent skill"],
   backend: ["api design agent skill"],
   product: ["product management agent skill"],
+  development: ["software engineering agent skill", "coding agent skill", "refactoring agent skill"],
+  ai: ["llm agent skill", "rag agent skill", "ai engineering skill"],
 };
 
 const DOMAIN_KEYWORDS = {
@@ -60,6 +62,8 @@ const DOMAIN_KEYWORDS = {
   mobile: ["mobile", "expo", "react native", "ios", "android"],
   backend: ["api", "backend", "graphql", "rest"],
   product: ["product", "roadmap", "prd", "discovery"],
+  development: ["engineering", "coding", "refactor", "software", "code review"],
+  ai: ["llm", "rag", "ai", "agent", "eval", "prompt"],
 };
 
 const INJECTION = [
