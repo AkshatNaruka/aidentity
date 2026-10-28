@@ -134,9 +134,15 @@ if (startHere.length < 6) {
 function layout({ title, description, depth, body, page, canonical, jsonld, ogType = "website", keywords = "" }) {
   const p = up(depth);
   const fullTitle = title ? `${title} — Aidentity` : "Aidentity — the verified index of agent skills";
-  const metaDescription =
+  const rawDescription =
     description ||
     "A verified, machine-readable index of AI agent skills. One ID, one command, works in every coding agent.";
+  const metaDescription = rawDescription.replace(/\s+/g, " ").trim();
+  // Search results truncate around 160 characters; keep the full text in the body.
+  const shortDescription =
+    metaDescription.length > 158
+      ? metaDescription.slice(0, 155).replace(/[,.;:\s]+$/, "") + "…"
+      : metaDescription;
   const ogImage = `${SITE}/assets/og.png`;
 
   return `<!doctype html>
@@ -145,7 +151,7 @@ function layout({ title, description, depth, body, page, canonical, jsonld, ogTy
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(fullTitle)}</title>
-<meta name="description" content="${esc(metaDescription)}">
+<meta name="description" content="${esc(shortDescription)}">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
 ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
@@ -153,7 +159,7 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${esc(fullTitle)}">
-<meta property="og:description" content="${esc(metaDescription)}">
+<meta property="og:description" content="${esc(shortDescription)}">
 <meta property="og:url" content="${esc(canonical || SITE + "/")}">
 <meta property="og:image" content="${ogImage}">
 <meta property="og:image:width" content="1200">
@@ -161,7 +167,7 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
 <meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(fullTitle)}">
-<meta name="twitter:description" content="${esc(metaDescription)}">
+<meta name="twitter:description" content="${esc(shortDescription)}">
 <meta name="twitter:image" content="${ogImage}">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
