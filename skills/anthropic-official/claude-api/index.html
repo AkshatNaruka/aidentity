@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>claude-api — general AI agent skill — Aidentity</title>
+<title>claude-api — api AI agent skill — Aidentity</title>
 <meta name="description" content="Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIG…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
-<meta name="keywords" content="claude-api, general, AI agent skill, SKILL.md, install">
+<meta name="keywords" content="claude-api, api, AI agent skill, SKILL.md, install">
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="claude-api — general AI agent skill — Aidentity">
+<meta property="og:title" content="claude-api — api AI agent skill — Aidentity">
 <meta property="og:description" content="Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIG…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
@@ -19,7 +19,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="claude-api — general AI agent skill — Aidentity">
+<meta name="twitter:title" content="claude-api — api AI agent skill — Aidentity">
 <meta name="twitter:description" content="Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIG…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -29,7 +29,7 @@
 <link rel="manifest" href="../../../manifest.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
 <link rel="stylesheet" href="../../../assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"general","item":"https://akshatnaruka.github.io/aidentity/skills/?category=general"},{"@type":"ListItem","position":3,"name":"claude-api","item":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/"}]},{"@type":"TechArticle","headline":"claude-api","description":"Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIGGER — read BEFORE opening the target file; don't skip because it \"looks like a one-liner\" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens). SKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).","url":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/","dateModified":"2026-10-28","author":{"@type":"Person","name":"Anthropic, PBC"},"license":"LicenseRef-Proprietary","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"general, AI agent skill, SKILL.md"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"api","item":"https://akshatnaruka.github.io/aidentity/skills/?category=api"},{"@type":"ListItem","position":3,"name":"claude-api","item":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/"}]},{"@type":"TechArticle","headline":"claude-api","description":"Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIGGER — read BEFORE opening the target file; don't skip because it \"looks like a one-liner\" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens). SKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).","url":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/anthropic-official/claude-api/","dateModified":"2026-10-28","author":{"@type":"Person","name":"Anthropic, PBC"},"license":"LicenseRef-Proprietary","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"api, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -49,7 +49,7 @@
 
 <div class="wrap">
   <nav class="crumbs" aria-label="Breadcrumb">
-    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>claude-api
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=api">api</a><span>/</span>claude-api
   </nav>
 
   <article class="detail">
@@ -76,60 +76,60 @@
 
       <h2>Related</h2>
       <div class="rows">
-        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
-     data-source="addyosmani"
-     data-category="general"
-     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+        <a class="row" href="../../../skills/anthropic-official/mcp-builder/index.html"
+     data-source="anthropic-official"
+     data-category="api"
+     data-search="mcp-builder guide for creating high-quality mcp (model context protocol) servers that enable llms to interact with external services through well-designed tools. use when building mcp servers to integrate external apis or services, whether in python (fastmcp) or node/typescript (mcp sdk). api  anthropics/skills">
   <span>
-    <span class="r-name">code-simplification</span>
-    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+    <span class="r-name">mcp-builder</span>
+    <span class="r-desc">Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).</span>
   </span>
-  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/research/index.html"
+     data-source="mattpocock"
+     data-category="api"
+     data-search="research investigate a question against high-trust primary sources and capture the findings as a markdown file in the repo. use when the user wants a topic researched, docs or api facts gathered, or reading legwork delegated to a background agent. api  mattpocock/skills">
+  <span>
+    <span class="r-name">research</span>
+    <span class="r-desc">Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
   <span class="r-lic">MIT</span>
 </a>
-<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
-     data-source="addyosmani"
-     data-category="general"
-     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+<a class="row" href="../../../skills/anthropic-official/academy-guide/index.html"
+     data-source="anthropic-official"
+     data-category="docs"
+     data-search="academy-guide stop and check this skill before finishing any reply to a question about how to use claude or a claude product — it recommends matching courses, tutorials, and use cases from claude academy (academy.claude.com), anthropic&#39;s learning hub. trigger on: &quot;how do i&quot;, &quot;how can i&quot;, &quot;getting started with&quot;, &quot;what can claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, mcp; requests about rolling claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. this skill composes with other skills: after consulting product documentation to answer how a claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an academy recommendation belong together. only recommend on a strong match; never invent academy content. docs  anthropics/skills">
   <span>
-    <span class="r-name">constraint-driven-development</span>
-    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+    <span class="r-name">academy-guide</span>
+    <span class="r-desc">Stop and check this skill before finishing any reply to a question about how to use Claude or a Claude product — it recommends matching courses, tutorials, and use cases from Claude Academy (academy.claude.com), Anthropic&#39;s learning hub. Trigger on: &quot;how do I&quot;, &quot;how can I&quot;, &quot;getting started with&quot;, &quot;what can Claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, MCP; requests about rolling Claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. Use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. This skill composes with other skills: after consulting product documentation to answer how a Claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an Academy recommendation belong together. Only recommend on a strong match; never invent Academy content.</span>
   </span>
-  <span class="r-src">addyosmani/agent-skills</span>
-  <span class="r-lic">MIT</span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
 </a>
-<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
-     data-source="addyosmani"
-     data-category="general"
-     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+<a class="row" href="../../../skills/anthropic-official/algorithmic-art/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="algorithmic-art creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. create original algorithmic art rather than copying existing artists&#39; work to avoid copyright violations. design  anthropics/skills">
   <span>
-    <span class="r-name">context-engineering</span>
-    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+    <span class="r-name">algorithmic-art</span>
+    <span class="r-desc">Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists&#39; work to avoid copyright violations.</span>
   </span>
-  <span class="r-src">addyosmani/agent-skills</span>
-  <span class="r-lic">MIT</span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
 </a>
-<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
-     data-source="addyosmani"
-     data-category="general"
-     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+<a class="row" href="../../../skills/anthropic-official/brand-guidelines/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="brand-guidelines applies anthropic&#39;s official brand colors and typography to any sort of artifact that may benefit from having anthropic&#39;s look-and-feel. use it when brand colors or style guidelines, visual formatting, or company design standards apply. design  anthropics/skills">
   <span>
-    <span class="r-name">doubt-driven-development</span>
-    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+    <span class="r-name">brand-guidelines</span>
+    <span class="r-desc">Applies Anthropic&#39;s official brand colors and typography to any sort of artifact that may benefit from having Anthropic&#39;s look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply.</span>
   </span>
-  <span class="r-src">addyosmani/agent-skills</span>
-  <span class="r-lic">MIT</span>
-</a>
-<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
-     data-source="addyosmani"
-     data-category="general"
-     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
-  <span>
-    <span class="r-name">idea-refine</span>
-    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
-  </span>
-  <span class="r-src">addyosmani/agent-skills</span>
-  <span class="r-lic">MIT</span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
 </a>
       </div>
     </div>
@@ -143,7 +143,7 @@
           <div><dt>Source</dt><dd><a href="https://github.com/anthropics/skills" rel="noopener">anthropics/skills</a></dd></div>
           <div><dt>Author</dt><dd>Anthropic, PBC</dd></div>
           <div><dt>License</dt><dd>Proprietary</dd></div>
-          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Category</dt><dd>api</dd></div>
           <div><dt>Status</dt><dd>stable</dd></div>
           <div><dt>Checked</dt><dd>2026-10-28</dd></div>
           <div><dt>ID</dt><dd class="mono" style="font-size:11px">anthropic-official/claude-api</dd></div>
