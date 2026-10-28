@@ -48,7 +48,7 @@ const DOMAINS = {
 };
 
 const DOMAIN_KEYWORDS = {
-  video: ["video", "film", "media", "remotion", "ffmpeg"],
+  video: ["video", "film", "media", "remotion", "ffmpeg", "animation", "render", "blender", "audio", "3d"],
   design: ["design", "ui", "ux", "figma", "frontend"],
   specs: ["spec", "planning", "prd", "requirements", "roadmap"],
   testing: ["test", "qa", "playwright", "cypress"],
@@ -211,7 +211,7 @@ function scoreRepo(repo, inspection, validations, license, days) {
 }
 
 async function importSource(domain, repo, inspection, license, validations) {
-  const sourceKey = repo.name.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+  const sourceKey = `-`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "aid-discover-"));
   try {
     execFileSync("git", ["clone", "--depth", "1", "--filter=blob:none", repo.clone_url, dir], { stdio: "pipe" });
@@ -300,10 +300,16 @@ async function main() {
       const inspection = await inspectRepo(entry.repo);
       if (!inspection || !inspection.skills.length) continue;
       const validations = [];
-      for (const skill of inspection.skills.slice(0, args.maxSkills)) {
+      for (const skill of inspection.skills.slice(0, args.maxSkills * 3)) {
         const checked = await validateSkill(entry.repo, skill, knownNames);
-        if (checked.ok) validations.push({ ...skill, ...checked });
+        if (!checked.ok) continue;
+        const haystack = `${skill.name} ${checked.description}`.toLowerCase();
+        const relevance = DOMAIN_KEYWORDS[domain].filter((keyword) => haystack.includes(keyword)).length;
+        validations.push({ ...skill, ...checked, relevance });
       }
+      validations.sort((a, b) => b.relevance - a.relevance || b.score - a.score);
+      const relevant = validations.filter((skill) => skill.relevance > 0);
+      if (relevant.length) validations.splice(0, validations.length, ...relevant);
       if (!validations.length) continue;
       const score = scoreRepo(entry.repo, inspection, validations, entry.license, entry.days);
       if (!best || score > best.score) {
