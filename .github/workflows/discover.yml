@@ -1,9 +1,7 @@
 name: Discover skills
 
 on:
-  schedule:
-    - cron: "0 8 * * 2" # Tuesdays 08:00 UTC
-  workflow_dispatch:
+  workflow_dispatch: # manual only
     inputs:
       domain:
         description: "Domain to scan, or all"
@@ -24,7 +22,7 @@ jobs:
     timeout-minutes: 25
     env:
       DOMAIN: ${{ inputs.domain || 'all' }}
-      IMPORT: ${{ github.event_name == 'schedule' && 'true' || inputs.import }}
+      IMPORT: ${{ inputs.import }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4

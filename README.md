@@ -202,7 +202,7 @@ node scripts/check-licenses.js
 node scripts/validate.js
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TEMPLATE/submit-a-skill.yml) form. We merge fast: if your entry is accurate and correctly licensed, it ships the same day.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [submit-a-skill](.github/ISSUE_TEMPLATE/submit-a-skill.yml) form. Prefer a PR? Run `./scripts/check-all.sh` first — that is exactly what CI runs. No GitHub Actions minutes are required: manual submissions are the primary path and are reviewed locally.
 
 ---
 

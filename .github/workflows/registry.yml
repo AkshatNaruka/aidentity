@@ -13,9 +13,7 @@ on:
       - "registry/**"
       - "skills/**"
       - "scripts/**"
-  schedule:
-    - cron: "0 6 * * 1" # Mondays 06:00 UTC — re-verify upstream sources
-  workflow_dispatch:
+  workflow_dispatch: # manual only: Actions minutes are opt-in
 
 permissions:
   contents: read
@@ -54,7 +52,7 @@ jobs:
 
   verify:
     name: Verify upstream sources
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -4,8 +4,9 @@ Weekly automation that finds, verifies and imports agent skills.
 
 ## What runs
 
-`.github/workflows/discover.yml` every Tuesday at 08:00 UTC, or manually with a
-domain and an import toggle.
+`.github/workflows/discover.yml` on manual dispatch. Scheduled runs are disabled
+so the repository does not depend on Actions minutes; run it locally or trigger
+it from the Actions tab when you want a new batch.
 
 `scripts/discover-skills.js`:
 

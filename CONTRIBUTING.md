@@ -1,5 +1,9 @@
 # Contributing to Aidentity
 
+> **Automation is optional.** You can submit through the issue form or a pull
+> request; a maintainer runs the same checks locally. No GitHub Actions minutes
+> are required. See [manual submission](docs/manual-submission.md).
+
 The fastest way to contribute is to add one skill. It takes about 30 seconds.
 
 ## Add a skill
@@ -37,8 +41,7 @@ The fastest way to contribute is to add one skill. It takes about 30 seconds.
 3. **Validate**
 
    ```bash
-   node scripts/check-licenses.js
-   node scripts/build-registry.js --check
+   ./scripts/check-all.sh
    ```
 
 4. **Open a PR.** One skill per PR. Don't reformat the whole file.
