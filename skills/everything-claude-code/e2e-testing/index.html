@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e2e-testing — Aidentity</title>
+<meta name="description" content="Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/e2e-testing/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="e2e-testing — Aidentity">
+<meta property="og:description" content="Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/e2e-testing/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"e2e-testing","description":"Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI.","url":"https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/e2e-testing/","author":{"@type":"Person","name":"Affaan Mustafa"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=testing">testing</a><span>/</span>e2e-testing
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">affaan-m/everything-claude-code · MIT</p>
+      <h1>e2e-testing</h1>
+      <p class="summary">Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=testing">testing</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>E2E Testing Patterns</h3>
+<p>Comprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.</p>
+<h4>Test File Organization</h4>
+<p><pre><code>tests/
+├── e2e/
+│   ├── auth/
+│   │   ├── login.spec.ts
+│   │   ├── logout.spec.ts
+│   │   └── register.spec.ts
+│   ├── features/
+│   │   ├── browse.spec.ts
+│   │   ├── search.spec.ts
+│   │   └── create.spec.ts
+│   └── api/
+│       └── endpoints.spec.ts
+├── fixtures/
+│   ├── auth.ts
+│   └── data.ts
+└── playwright.config.ts</code></pre></p>
+<h4>Page Object Model (POM)</h4>
+<p><pre><code>import { Page, Locator } from &#39;@playwright/test&#39;
+
+export class ItemsPage {
+  readonly page: Page
+  readonly searchInput: Locator
+  readonly itemCards: Locator
+  readonly createButton: Locator
+
+  constructor(page: Page) {
+    this.page = page
+    this.searchInput = page.locator(&#39;[data-testid=&quot;search-input&quot;]&#39;)
+    this.itemCards = page.locator(&#39;[data-testid=&quot;item-card&quot;]&#39;)
+    this.createButton = page.locator(&#39;[data-testid=&quot;create-btn&quot;]&#39;)
+  }
+
+  async goto() {
+    await this.page.goto(&#39;/items&#39;)
+    await this.page.waitForLoadState(&#39;networkidle&#39;)
+  }
+
+  async search(query: string) {
+    await this.searchInput.fill(query)
+    await this.page.waitForResponse(resp =&gt; resp.url().includes(&#39;/api/search&#39;))
+    await this.page.waitForLoadState(&#39;networkidle&#39;)
+  }
+
+  async getItemCount() {
+    return await this.itemCards.count()
+  }
+}</code></pre></p>
+<h4>Test Structure</h4>
+<p><pre><code>import { test, expect } from &#39;@playwright/test&#39;
+import { ItemsPage } from &#39;../../pages/ItemsPage&#39;
+
+test.describe(&#39;Item Search&#39;, () =&gt; {
+  let itemsPage: ItemsPage
+
+  test.beforeEach(async ({ page }) =&gt; {
+    itemsPage = new ItemsPage(page)
+    await itemsPage.goto()
+  })
+
+  test(&#39;should search by keyword&#39;, async ({ page }) =&gt; {
+    await itemsPage.search(&#39;test&#39;)
+
+    const count = await itemsPage.getItemCount()
+    expect(count).toBeGreaterThan(0)
+
+    await expect(itemsPage.itemCards.first()).toContainText(/test/i)
+    await page.screenshot({ path: &#39;artifacts/search-results.png&#39; })
+  })
+
+  test(&#39;should handle no results&#39;, async ({ page }) =&gt; {
+    await itemsPage.search(&#39;xyznonexistent123&#39;)
+
+    await expect(page.locator(&#39;[data-testid=&quot;no-results&quot;]&#39;)).toBeVisible()
+    expect(await itemsPage.getItemCount()).toBe(0)
+  })
+})</code></pre></p>
+<h4>Playwright Configuration</h4>
+<p><pre><code>import { defineConfig, devices } from &#39;@playwright/test&#39;
+
+export default defineConfig({
+  testDir: &#39;./tests/e2e&#39;,
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [
+    [&#39;html&#39;, { outputFolder: &#39;playwright-report&#39; }],
+    [&#39;junit&#39;, { outputFile: &#39;playwright-results.xml&#39; }],
+    [&#39;json&#39;, { outputFile: &#39;playwright-results.json&#39; }]
+  ],
+  use: {
+    baseURL: process.env.BASE_URL || &#39;http://localhost:3000&#39;,
+    trace: &#39;on-first-retry&#39;,
+    screenshot: &#39;only-on-failure&#39;,
+    video: &#39;retain-on-failure&#39;,
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
+  },
+  projects: [
+    { name: &#39;chromium&#39;, use: { ...devices[&#39;Desktop Chrome&#39;] } },
+    { name: &#39;firefox&#39;, use: { ...devices[&#39;Desktop Firefox&#39;] } },
+    { name: &#39;webkit&#39;, use: { ...devices[&#39;Desktop Safari&#39;] } },
+    { name: &#39;mobile-chrome&#39;, use: { ...devices[&#39;Pixel 5&#39;] } },
+  ],
+  webServer: {
+    command: &#39;npm run dev&#39;,
+    url: &#39;http://localhost:3000&#39;,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
+  },
+})</code></pre></p>
+<h4>Flaky Test Patterns</h4>
+<h5>Quarantine</h5>
+<p><pre><code>test(&#39;flaky: complex search&#39;, async ({ page }) =&gt; {
+  test.fixme(true, &#39;Flaky - Issue #123&#39;)
+  // test code...
+})
+
+test(&#39;conditional skip&#39;, async ({ page }) =&gt; {
+  test.skip(process.env.CI, &#39;Flaky in CI - Issue #123&#39;)
+  // test code...
+})</code></pre></p>
+<h5>Identify Flakiness</h5>
+<p><pre><code>npx playwright test tests/search.spec.ts --repeat-each=10
+npx playwright test tests/search.spec.ts --retries=3</code></pre></p>
+<h5>Common Causes &amp; Fixes</h5>
+<p><strong>Race conditions:</strong></p>
+<p><pre><code>// Bad: assumes element is ready
+await page.click(&#39;[data-testid=&quot;button&quot;]&#39;)
+
+// Good: auto-wait locator
+await page.locator(&#39;[data-testid=&quot;button&quot;]&#39;).click()</code></pre></p>
+<p><strong>Network timing:</strong></p>
+<p><pre><code>// Bad: arbitrary timeout
+await page.waitForTimeout(5000)
+
+// Good: wait for specific condition
+await page.waitForResponse(resp =&gt; resp.url().includes(&#39;/api/data&#39;))</code></pre></p>
+<p><strong>Animation timing:</strong></p>
+<p><pre><code>// Bad: click during animation
+await page.click(&#39;[data-testid=&quot;menu-item&quot;]&#39;)
+
+// Good: wait for stability
+await page.locator(&#39;[data-testid=&quot;menu-item&quot;]&#39;).waitFor({ state: &#39;visible&#39; })
+await page.waitForLoadState(&#39;networkidle&#39;)
+await page.locator(&#39;[data-testid=&quot;menu-item&quot;]&#39;).click()</code></pre></p>
+<h4>Artifact Management</h4>
+<h5>Screenshots</h5>
+<p><pre><code>await page.screenshot({ path: &#39;artifacts/after-login.png&#39; })
+await page.screenshot({ path: &#39;artifacts/full-page.png&#39;, fullPage: true })
+await page.locator(&#39;[data-testid=&quot;chart&quot;]&#39;).screenshot({ path: &#39;artifacts/chart.png&#39; })</code></pre></p>
+<h5>Traces</h5>
+<p><pre><code>await browser.startTracing(page, {
+  path: &#39;artifacts/trace.json&#39;,
+  screenshots: true,
+  snapshots: true,
+})
+// ... test actions ...
+await browser.stopTracing()</code></pre></p>
+<h5>Video</h5>
+<p><pre><code>// In playwright.config.ts
+use: {
+  video: &#39;retain-on-failure&#39;,
+  videosPath: &#39;artifacts/videos/&#39;
+}</code></pre></p>
+<h4>CI/CD Integration</h4>
+<p><pre><code># .github/workflows/e2e.yml
+name: E2E Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
+        env:
+          BASE_URL: ${{ vars.STAGING_URL }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30</code></pre></p>
+<h4>Test Report Template</h4>
+<p><pre><code># E2E Test Report
+
+**Date:** YYYY-MM-DD HH:MM
+**Duration:** Xm Ys
+**Status:** PASSING / FAILING
+
+## Summary
+- Total: X | Passed: Y (Z%) | Failed: A | Flaky: B | Skipped: C
+
+## Failed Tests
+
+### test-name
+**File:** `tests/e2e/feature.spec.ts:45`
+**Error:** Expected element to be visible
+**Screenshot:** artifacts/failed.png
+**Recommended Fix:** [description]
+
+## Artifacts
+- HTML Report: playwright-report/index.html
+- Screenshots: artifacts/*.png
+- Videos: artifacts/videos/*.webm
+- Traces: artifacts/*.zip</code></pre></p>
+<h4>Wallet / Web3 Testing</h4>
+<p><pre><code>test(&#39;wallet connection&#39;, async ({ page, context }) =&gt; {
+  // Mock wallet provider
+  await context.addInitScript(() =&gt; {
+    window.ethereum = {
+      isMetaMask: true,
+      request: async ({ method }) =&gt; {
+        if (method === &#39;eth_requestAccounts&#39;)
+          return [&#39;0x1234567890123456789012345678901234567890&#39;]
+        if (method === &#39;eth_chainId&#39;) return &#39;0x1&#39;
+      }
+    }
+  })
+
+  await page.goto(&#39;/&#39;)
+  await page.locator(&#39;[data-testid=&quot;connect-wallet&quot;]&#39;).click()
+  await expect(page.locator(&#39;[data-testid=&quot;wallet-address&quot;]&#39;)).toContainText(&#39;0x1234&#39;)
+})</code></pre></p>
+<h4>Financial / Critical Flow Testing</h4>
+<p><pre><code>test(&#39;trade execution&#39;, async ({ page }) =&gt; {
+  // Skip on production — real money
+  test.skip(process.env.NODE_ENV === &#39;production&#39;, &#39;Skip on production&#39;)
+
+  await page.goto(&#39;/markets/test-market&#39;)
+  await page.locator(&#39;[data-testid=&quot;position-yes&quot;]&#39;).click()
+  await page.locator(&#39;[data-testid=&quot;trade-amount&quot;]&#39;).fill(&#39;1.0&#39;)
+
+  // Verify preview
+  const preview = page.locator(&#39;[data-testid=&quot;trade-preview&quot;]&#39;)
+  await expect(preview).toContainText(&#39;1.0&#39;)
+
+  // Confirm and wait for blockchain
+  await page.locator(&#39;[data-testid=&quot;confirm-trade&quot;]&#39;).click()
+  await page.waitForResponse(
+    resp =&gt; resp.url().includes(&#39;/api/trade&#39;) &amp;&amp; resp.status() === 200,
+    { timeout: 30000 }
+  )
+
+  await expect(page.locator(&#39;[data-testid=&quot;trade-success&quot;]&#39;)).toBeVisible()
+})</code></pre></p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Affaan Mustafa</strong> in
+        <a href="https://github.com/affaan-m/everything-claude-code" rel="noopener">affaan-m/everything-claude-code</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">browser-testing-with-devtools</span>
+    <span class="r-desc">Tests in real browsers via Chrome DevTools MCP. Use when building or debugging anything that runs in a browser. Use when you need to inspect the DOM, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. Requires the chrome-devtools MCP server to be configured.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/test-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="testing"
+     data-search="test-driven-development drives development with tests. use when implementing any logic, fixing any bug, or changing any behavior. use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality. testing testing addyosmani/agent-skills">
+  <span>
+    <span class="r-name">test-driven-development</span>
+    <span class="r-desc">Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you&#39;re about to modify existing functionality.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/webapp-testing/index.html"
+     data-source="anthropic-official"
+     data-category="testing"
+     data-search="webapp-testing toolkit for interacting with and testing local web applications using playwright. supports verifying frontend functionality, debugging ui behavior, capturing browser screenshots, and viewing browser logs. testing testing anthropics/skills">
+  <span>
+    <span class="r-name">webapp-testing</span>
+    <span class="r-desc">Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/marketingskills/ab-testing/index.html"
+     data-source="marketingskills"
+     data-category="testing"
+     data-search="ab-testing when the user wants to plan, design, or implement an a/b test or experiment, or build a growth experimentation program. also use when the user mentions &quot;a/b test,&quot; &quot;split test,&quot; &quot;experiment,&quot; &quot;test this change,&quot; &quot;variant copy,&quot; &quot;multivariate test,&quot; &quot;hypothesis,&quot; &quot;should i test this,&quot; &quot;which version is better,&quot; &quot;test two versions,&quot; &quot;statistical significance,&quot; &quot;how long should i run this test,&quot; &quot;growth experiments,&quot; &quot;experiment velocity,&quot; &quot;experiment backlog,&quot; &quot;ice score,&quot; &quot;experimentation program,&quot; or &quot;experiment playbook.&quot; use this whenever someone is comparing two approaches and wants to measure which performs better, or when they want to build a systematic experimentation practice. for tracking implementation, see analytics. for page-level conversion optimization, see cro. testing testing coreyhaines31/marketingskills">
+  <span>
+    <span class="r-name">ab-testing</span>
+    <span class="r-desc">When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions &quot;A/B test,&quot; &quot;split test,&quot; &quot;experiment,&quot; &quot;test this change,&quot; &quot;variant copy,&quot; &quot;multivariate test,&quot; &quot;hypothesis,&quot; &quot;should I test this,&quot; &quot;which version is better,&quot; &quot;test two versions,&quot; &quot;statistical significance,&quot; &quot;how long should I run this test,&quot; &quot;growth experiments,&quot; &quot;experiment velocity,&quot; &quot;experiment backlog,&quot; &quot;ICE score,&quot; &quot;experimentation program,&quot; or &quot;experiment playbook.&quot; Use this whenever someone is comparing two approaches and wants to measure which performs better, or when they want to build a systematic experimentation practice. For tracking implementation, see analytics. For page-level conversion optimization, see cro.</span>
+  </span>
+  <span class="r-src">coreyhaines31/marketingskills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/tdd/index.html"
+     data-source="mattpocock"
+     data-category="testing"
+     data-search="tdd test-driven development. use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests. testing testing mattpocock/skills">
+  <span>
+    <span class="r-name">tdd</span>
+    <span class="r-desc">Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions &quot;red-green-refactor&quot;, or wants integration tests.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add everything-claude-code/e2e-testing</code>
+  <button type="button" data-copy="npx aidentity add everything-claude-code/e2e-testing" aria-label="Copy install e2e-testing">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/affaan-m/everything-claude-code" rel="noopener">affaan-m/everything-claude-code</a></dd></div>
+          <div><dt>Author</dt><dd>Affaan Mustafa</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>testing</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">everything-claude-code/e2e-testing</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/everything-claude-code/e2e-testing/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

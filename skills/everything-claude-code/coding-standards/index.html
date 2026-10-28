@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>coding-standards — Aidentity</title>
+<meta name="description" content="Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns. Use when reviewing code quality or naming with no framework-specific skill that applies.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/coding-standards/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="coding-standards — Aidentity">
+<meta property="og:description" content="Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns. Use when reviewing code quality or naming with no framework-specific skill that applies.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/coding-standards/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"coding-standards","description":"Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns. Use when reviewing code quality or naming with no framework-specific skill that applies.","url":"https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/coding-standards/","author":{"@type":"Person","name":"Affaan Mustafa"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>coding-standards
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">affaan-m/everything-claude-code · MIT</p>
+      <h1>coding-standards</h1>
+      <p class="summary">Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns. Use when reviewing code quality or naming with no framework-specific skill that applies.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Coding Standards &amp; Best Practices</h3>
+<p>Baseline coding conventions applicable across projects.</p>
+<p>This skill is the shared floor, not the detailed framework playbook.</p>
+<ul>
+<li>Use <code>frontend-patterns</code> for React, state, forms, rendering, and UI architecture.</li>
+<li>Use <code>backend-patterns</code> or <code>api-design</code> for repository/service layers, endpoint design, validation, and server-specific concerns.</li>
+<li>Use <code>rules/common/coding-style.md</code> when you need the shortest reusable rule layer instead of a full skill walkthrough.</li>
+</ul>
+<h4>When to Activate</h4>
+<ul>
+<li>Starting a new project or module</li>
+<li>Reviewing code for quality and maintainability</li>
+<li>Refactoring existing code to follow conventions</li>
+<li>Enforcing naming, formatting, or structural consistency</li>
+<li>Setting up linting, formatting, or type-checking rules</li>
+<li>Onboarding new contributors to coding conventions</li>
+</ul>
+<h4>Scope Boundaries</h4>
+<p>Activate this skill for:</p>
+<ul>
+<li>descriptive naming</li>
+<li>immutability defaults</li>
+<li>readability, KISS, DRY, and YAGNI enforcement</li>
+<li>error-handling expectations and code-smell review</li>
+</ul>
+<p>Do not use this skill as the primary source for:</p>
+<ul>
+<li>React composition, hooks, or rendering patterns</li>
+<li>backend architecture, API design, or database layering</li>
+<li>domain-specific framework guidance when a narrower ECC skill already exists</li>
+</ul>
+<h4>Code Quality Principles</h4>
+<h5>1. Readability First</h5>
+<ul>
+<li>Code is read more than written</li>
+<li>Clear variable and function names</li>
+<li>Self-documenting code preferred over comments</li>
+<li>Consistent formatting</li>
+</ul>
+<h5>2. KISS (Keep It Simple, Stupid)</h5>
+<ul>
+<li>Simplest solution that works</li>
+<li>Avoid over-engineering</li>
+<li>No premature optimization</li>
+<li>Easy to understand &gt; clever code</li>
+</ul>
+<h5>3. DRY (Don&#39;t Repeat Yourself)</h5>
+<ul>
+<li>Extract common logic into functions</li>
+<li>Create reusable components</li>
+<li>Share utilities across modules</li>
+<li>Avoid copy-paste programming</li>
+</ul>
+<h5>4. YAGNI (You Aren&#39;t Gonna Need It)</h5>
+<ul>
+<li>Don&#39;t build features before they&#39;re needed</li>
+<li>Avoid speculative generality</li>
+<li>Add complexity only when required</li>
+<li>Start simple, refactor when needed</li>
+</ul>
+<h4>TypeScript/JavaScript Standards</h4>
+<h5>Variable Naming</h5>
+<p><pre><code>// PASS: GOOD: Descriptive names
+const marketSearchQuery = &#39;election&#39;
+const isUserAuthenticated = true
+const totalRevenue = 1000
+
+// FAIL: BAD: Unclear names
+const q = &#39;election&#39;
+const flag = true
+const x = 1000</code></pre></p>
+<h5>Function Naming</h5>
+<p><pre><code>// PASS: GOOD: Verb-noun pattern
+async function fetchMarketData(marketId: string) { }
+function calculateSimilarity(a: number[], b: number[]) { }
+function isValidEmail(email: string): boolean { }
+
+// FAIL: BAD: Unclear or noun-only
+async function market(id: string) { }
+function similarity(a, b) { }
+function email(e) { }</code></pre></p>
+<h5>Immutability Pattern (CRITICAL)</h5>
+<p><pre><code>// PASS: ALWAYS use spread operator
+const updatedUser = {
+  ...user,
+  name: &#39;New Name&#39;
+}
+
+const updatedArray = [...items, newItem]
+
+// FAIL: NEVER mutate directly
+user.name = &#39;New Name&#39;  // BAD
+items.push(newItem)     // BAD</code></pre></p>
+<h5>Error Handling</h5>
+<p><pre><code>// PASS: GOOD: Comprehensive error handling
+async function fetchData(url: string) {
+  try {
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error(&#39;Fetch failed:&#39;, error)
+    throw new Error(&#39;Failed to fetch data&#39;)
+  }
+}
+
+// FAIL: BAD: No error handling
+async function fetchData(url) {
+  const response = await fetch(url)
+  return response.json()
+}</code></pre></p>
+<h5>Async/Await Best Practices</h5>
+<p><pre><code>// PASS: GOOD: Parallel execution when possible
+const [users, markets, stats] = await Promise.all([
+  fetchUsers(),
+  fetchMarkets(),
+  fetchStats()
+])
+
+// FAIL: BAD: Sequential when unnecessary
+const users = await fetchUsers()
+const markets = await fetchMarkets()
+const stats = await fetchStats()</code></pre></p>
+<h5>Type Safety</h5>
+<p><pre><code>// PASS: GOOD: Proper types
+interface Market {
+  id: string
+  name: string
+  status: &#39;active&#39; | &#39;resolved&#39; | &#39;closed&#39;
+  created_at: Date
+}
+
+function getMarket(id: string): Promise&lt;Market&gt; {
+  // Implementation
+}
+
+// FAIL: BAD: Using &#39;any&#39;
+function getMarket(id: any): Promise&lt;any&gt; {
+  // Implementation
+}</code></pre></p>
+<h4>React Best Practices</h4>
+<h5>Component Structure</h5>
+<p><pre><code>// PASS: GOOD: Functional component with types
+interface ButtonProps {
+  children: React.ReactNode
+  onClick: () =&gt; void
+  disabled?: boolean
+  variant?: &#39;primary&#39; | &#39;secondary&#39;
+}
+
+export function Button({
+  children,
+  onClick,
+  disabled = false,
+  variant = &#39;primary&#39;
+}: ButtonProps) {
+  return (
+    &lt;button
+      onClick={onClick}
+      disabled={disabled}
+      className={`btn btn-${variant}`}
+    &gt;
+      {children}
+    &lt;/button&gt;
+  )
+}
+
+// FAIL: BAD: No types, unclear structure
+export function Button(props) {
+  return &lt;button onClick={props.onClick}&gt;{props.children}&lt;/button&gt;
+}</code></pre></p>
+<h5>Custom Hooks</h5>
+<p><pre><code>// PASS: GOOD: Reusable custom hook
+export function useDebounce&lt;T&gt;(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState&lt;T&gt;(value)
+
+  useEffect(() =&gt; {
+    const handler = setTimeout(() =&gt; {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () =&gt; clearTimeout(handler)
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+// Usage
+const debouncedQuery = useDebounce(searchQuery, 500)</code></pre></p>
+<h5>State Management</h5>
+<p><pre><code>// PASS: GOOD: Proper state updates
+const [count, setCount] = useState(0)
+
+// Functional update for state based on previous state
+setCount(prev =&gt; prev + 1)
+
+// FAIL: BAD: Direct state reference
+setCount(count + 1)  // Can be stale in async scenarios</code></pre></p>
+<h5>Conditional Rendering</h5>
+<p><pre><code>// PASS: GOOD: Clear conditional rendering
+{isLoading &amp;&amp; &lt;Spinner /&gt;}
+{error &amp;&amp; &lt;ErrorMessage error={error} /&gt;}
+{data &amp;&amp; &lt;DataDisplay data={data} /&gt;}
+
+// FAIL: BAD: Ternary hell
+{isLoading ? &lt;Spinner /&gt; : error ? &lt;ErrorMessage error={error} /&gt; : data ? &lt;DataDisplay data={data} /&gt; : null}</code></pre></p>
+<h4>API Design Standards</h4>
+<h5>REST API Conventions</h5>
+<p><pre><code>GET    /api/markets              # List all markets
+GET    /api/markets/:id          # Get specific market
+POST   /api/markets              # Create new market
+PUT    /api/markets/:id          # Update market (full)
+PATCH  /api/markets/:id          # Update market (partial)
+DELETE /api/markets/:id          # Delete market
+
+# Query parameters for filtering
+GET /api/markets?status=active&amp;limit=10&amp;offset=0</code></pre></p>
+<h5>Response Format</h5>
+<p><pre><code>// PASS: GOOD: Consistent response structure
+interface ApiResponse&lt;T&gt; {
+  success: boolean
+  data?: T
+  error?: string
+  meta?: {
+    total: number
+    page: number
+    limit: number
+  }
+}
+
+// Success response
+return NextResponse.json({
+  success: true,
+  data: markets,
+  meta: { total: 100, page: 1, limit: 10 }
+})
+
+// Error response
+return NextResponse.json({
+  success: false,
+  error: &#39;Invalid request&#39;
+}, { status: 400 })</code></pre></p>
+<h5>Input Validation</h5>
+<p><pre><code>import { z } from &#39;zod&#39;
+
+// PASS: GOOD: Schema validation
+const CreateMarketSchema = z.object({
+  name: z.string().min(1).max(200),
+  description: z.string().min(1).max(2000),
+  endDate: z.string().datetime(),
+  categories: z.array(z.string()).min(1)
+})
+
+export async function POST(request: Request) {
+  const body = await request.json()
+
+  try {
+    const validated = CreateMarketSchema.parse(body)
+    // Proceed with validated data
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({
+        success: false,
+        error: &#39;Validation failed&#39;,
+        details: error.errors
+      }, { status: 400 })
+    }
+  }
+}</code></pre></p>
+<h4>File Organization</h4>
+<h5>Project Structure</h5>
+<p><pre><code>src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── markets/           # Market pages
+│   └── (auth)/           # Auth pages (route groups)
+├── components/            # React components
+│   ├── ui/               # Generic UI components
+│   ├── forms/            # Form components
+│   └── layouts/          # Layout components
+├── hooks/                # Custom React hooks
+├── lib/                  # Utilities and configs
+│   ├── api/             # API clients
+│   ├── utils/           # Helper functions
+│   └── constants/       # Constants
+├── types/                # TypeScript types
+└── styles/              # Global styles</code></pre></p>
+<h5>File Naming</h5>
+<p><pre><code>components/Button.tsx          # PascalCase for components
+hooks/useAuth.ts              # camelCase with &#39;use&#39; prefix
+lib/formatDate.ts             # camelCase for utilities
+types/market.types.ts         # camelCase with .types suffix</code></pre></p>
+<h4>Comments &amp; Documentation</h4>
+<h5>When to Comment</h5>
+<p><pre><code>// PASS: GOOD: Explain WHY, not WHAT
+// Use exponential backoff to avoid overwhelming the API during outages
+const delay = Math.min(1000 * Math.pow(2, retryCount), 30000)
+
+// Deliberately using mutation here for performance with large arrays
+items.push(newItem)
+
+// FAIL: BAD: Stating the obvious
+// Increment counter by 1
+count++
+
+// Set name to user&#39;s name
+name = user.name</code></pre></p>
+<h5>JSDoc for Public APIs</h5>
+<p><pre><code>/**
+ * Searches markets using semantic similarity.
+ *
+ * @param query - Natural language search query
+ * @param limit - Maximum number of results (default: 10)
+ * @returns Array of markets sorted by similarity score
+ * @throws {Error} If OpenAI API fails or Redis unavailable
+ *
+ * @example
+ * </code></pre>typescript</p>
+<ul>
+<li>const results = await searchMarkets(&#39;election&#39;, 5)</li>
+<li>console.log(results[0].name) // &quot;Trump vs Biden&quot;</li>
+<li><pre><code> */
+export async function searchMarkets(
+  query: string,
+  limit: number = 10
+): Promise&lt;Market[]&gt; {
+  // Implementation
+}</code></pre></li>
+</ul>
+<h4>Performance Best Practices</h4>
+<h5>Memoization</h5>
+<p><pre><code>import { useMemo, useCallback } from &#39;react&#39;
+
+// PASS: GOOD: Memoize expensive computations
+// Copy before sorting - Array.prototype.sort mutates in place
+const sortedMarkets = useMemo(() =&gt; {
+  return [...markets].sort((a, b) =&gt; b.volume - a.volume)
+}, [markets])
+
+// PASS: GOOD: Memoize callbacks
+const handleSearch = useCallback((query: string) =&gt; {
+  setSearchQuery(query)
+}, [])</code></pre></p>
+<h5>Lazy Loading</h5>
+<p><pre><code>import { lazy, Suspense } from &#39;react&#39;
+
+// PASS: GOOD: Lazy load heavy components
+const HeavyChart = lazy(() =&gt; import(&#39;./HeavyChart&#39;))
+
+export function Dashboard() {
+  return (
+    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+      &lt;HeavyChart /&gt;
+    &lt;/Suspense&gt;
+  )
+}</code></pre></p>
+<h5>Database Queries</h5>
+<p><pre><code>// PASS: GOOD: Select only needed columns
+const { data } = await supabase
+  .from(&#39;markets&#39;)
+  .select(&#39;id, name, status&#39;)
+  .limit(10)
+
+// FAIL: BAD: Select everything
+const { data } = await supabase
+  .from(&#39;markets&#39;)
+  .select(&#39;*&#39;)</code></pre></p>
+<h4>Testing Standards</h4>
+<h5>Test Structure (AAA Pattern)</h5>
+<p><pre><code>test(&#39;calculates similarity correctly&#39;, () =&gt; {
+  // Arrange
+  const vector1 = [1, 0, 0]
+  const vector2 = [0, 1, 0]
+
+  // Act
+  const similarity = calculateCosineSimilarity(vector1, vector2)
+
+  // Assert
+  expect(similarity).toBe(0)
+})</code></pre></p>
+<h5>Test Naming</h5>
+<p><pre><code>// PASS: GOOD: Descriptive test names
+test(&#39;returns empty array when no markets match query&#39;, () =&gt; { })
+test(&#39;throws error when OpenAI API key is missing&#39;, () =&gt; { })
+test(&#39;falls back to substring search when Redis unavailable&#39;, () =&gt; { })
+
+// FAIL: BAD: Vague test names
+test(&#39;works&#39;, () =&gt; { })
+test(&#39;test search&#39;, () =&gt; { })</code></pre></p>
+<h4>Code Smell Detection</h4>
+<p>Watch for these anti-patterns:</p>
+<h5>1. Long Functions</h5>
+<p><pre><code>// FAIL: BAD: Function &gt; 50 lines
+function processMarketData() {
+  // 100 lines of code
+}
+
+// PASS: GOOD: Split into smaller functions
+function processMarketData() {
+  const validated = validateData()
+  const transformed = transformData(validated)
+  return saveData(transformed)
+}</code></pre></p>
+<h5>2. Deep Nesting</h5>
+<p><pre><code>// FAIL: BAD: 5+ levels of nesting
+if (user) {
+  if (user.isAdmin) {
+    if (market) {
+      if (market.isActive) {
+        if (hasPermission) {
+          // Do something
+        }
+      }
+    }
+  }
+}
+
+// PASS: GOOD: Early returns
+if (!user) return
+if (!user.isAdmin) return
+if (!market) return
+if (!market.isActive) return
+if (!hasPermission) return
+
+// Do something</code></pre></p>
+<h5>3. Magic Numbers</h5>
+<p><pre><code>// FAIL: BAD: Unexplained numbers
+if (retryCount &gt; 3) { }
+setTimeout(callback, 500)
+
+// PASS: GOOD: Named constants
+const MAX_RETRIES = 3
+const DEBOUNCE_DELAY_MS = 500
+
+if (retryCount &gt; MAX_RETRIES) { }
+setTimeout(callback, DEBOUNCE_DELAY_MS)</code></pre></p>
+<p><strong>Remember</strong>: Code quality is not negotiable. Clear, maintainable code enables rapid development and confident refactoring.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Affaan Mustafa</strong> in
+        <a href="https://github.com/affaan-m/everything-claude-code" rel="noopener">affaan-m/everything-claude-code</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add everything-claude-code/coding-standards</code>
+  <button type="button" data-copy="npx aidentity add everything-claude-code/coding-standards" aria-label="Copy install coding-standards">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/affaan-m/everything-claude-code" rel="noopener">affaan-m/everything-claude-code</a></dd></div>
+          <div><dt>Author</dt><dd>Affaan Mustafa</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">everything-claude-code/coding-standards</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/everything-claude-code/coding-standards/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>
