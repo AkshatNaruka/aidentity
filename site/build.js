@@ -383,8 +383,8 @@ function buildHome() {
     <p class="kicker">Agent skills · indexed · verified weekly</p>
     <h1>The index of agent skills that <em>still work</em>.</h1>
     <p class="lede">
-      ${registry.total} skills from ${sourceList.length} sources. Every entry carries its author, its license,
-      and the date it was last checked. Install any of them into Claude Code, OpenCode, Codex, Cursor,
+      Aidentity is a verified index of ${registry.total} AI agent skills from ${sourceList.length} sources.
+      Every entry carries its author, its license, and the date it was last checked. Install any of them into Claude Code, OpenCode, Codex, Cursor,
       Copilot or Gemini CLI with one command.
     </p>
     ${commandBlock("npx aidentity add mattpocock/engineering/code-review", "install command")}

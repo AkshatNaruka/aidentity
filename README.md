@@ -164,8 +164,9 @@ Quoting and citing is allowed. Attribute the page and the upstream author. Do no
 
 ## Share
 
-If this saved you a search:
+If this saved you a search, star the repo so the weekly verification keeps running — and share it with one person who is setting up an agent.
 
+- [Star the repo](https://github.com/AkshatNaruka/aidentity)
 - [Share on X](https://x.com/intent/tweet?text=Aidentity%20%E2%80%94%20a%20verified%20index%20of%20394%20AI%20agent%20skills.%20One%20command%2C%20six%20agents.&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
 - [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F)
 - [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2F&t=Aidentity%20%E2%80%94%20the%20verified%20index%20of%20AI%20agent%20skills)
