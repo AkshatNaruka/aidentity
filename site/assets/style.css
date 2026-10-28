@@ -37,6 +37,10 @@
 
 * { box-sizing: border-box; }
 
+/* Author display rules beat the UA [hidden] rule. Without this, filtered
+   rows stay visible even though the JS sets .hidden = true. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
