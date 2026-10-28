@@ -945,10 +945,10 @@ function buildForAgents() {
     ${commandBlock("node cli/mcp.js", "start the MCP server")}
 
     <details style="margin-top:18px"><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Claude Code</summary>
-    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>claude mcp add aidentity -- node /absolute/path/to/aidentity/cli/mcp.js</code></pre>
+    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>claude mcp add aidentity -- node /absolute/path/to/aidentity/cli/mcp.js</code></pre>
     </details>
     <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Cursor — .cursor/mcp.json</summary>
-    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
   "mcpServers": {
     "aidentity": {
       "command": "node",
@@ -958,12 +958,12 @@ function buildForAgents() {
 }</code></pre>
     </details>
     <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Codex — ~/.codex/config.toml</summary>
-    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>[mcp_servers.aidentity]
+    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>[mcp_servers.aidentity]
 command = "node"
 args = ["/absolute/path/to/aidentity/cli/mcp.js"]</code></pre>
     </details>
     <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Gemini CLI — ~/.gemini/settings.json</summary>
-    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
   "mcpServers": {
     "aidentity": {
       "command": "node",
@@ -973,7 +973,7 @@ args = ["/absolute/path/to/aidentity/cli/mcp.js"]</code></pre>
 }</code></pre>
     </details>
     <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">OpenCode — opencode.json</summary>
-    <pre style="background:var(--ink);color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
+    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
   "mcp": {
     "aidentity": {
       "type": "local",
@@ -986,7 +986,7 @@ args = ["/absolute/path/to/aidentity/cli/mcp.js"]</code></pre>
 
     <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Prompts that work</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">Give these to any agent that can fetch a URL:</p>
-    <pre style="background:var(--ink);color:#efeade;padding:16px;overflow-x:auto;font-size:12px"><code>Fetch https://akshatnaruka.github.io/aidentity/search.json
+    <pre style="background:#14130f;color:#efeade;padding:16px;overflow-x:auto;font-size:12px"><code>Fetch https://akshatnaruka.github.io/aidentity/search.json
 Filter for category "testing" and status "stable".
 Return the three best matches with their install commands.
 
