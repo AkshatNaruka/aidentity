@@ -11,6 +11,7 @@ Start from the task, not the folder tree.
 | **Audit security before shipping** | [`security-review`](bundles/bundles.json) bundle: audit context, supply chain, agentic actions, second opinion |
 | **Work with data or AI** | [`data-ai`](bundles/bundles.json) bundle: Postgres, BigQuery AI, context engineering, evals, observability |
 | **Set up CI / deploy / cloud** | [`devops`](bundles/bundles.json) bundle: CI, shipping, observability, Cloud Run, GKE |
+| **Work on GCP or Azure specifically** | [`cloud`](bundles/bundles.json) megapack (optional, 11 skills) |
 | **Plan before coding** | `/plan` command · `agents/planner.md` · [`grill-with-docs`](skills/mattpocock/engineering/grill-with-docs/SKILL.md) |
 | **Review a diff** | `/review` command · `agents/reviewer.md` · [`code-review`](skills/mattpocock/engineering/code-review/SKILL.md) |
 | **Debug a hard bug** | `agents/debugger.md` · [`systematic-debugging`](skills/obra-superpowers/systematic-debugging/SKILL.md) · [`diagnosing-bugs`](skills/mattpocock/engineering/diagnosing-bugs/SKILL.md) |

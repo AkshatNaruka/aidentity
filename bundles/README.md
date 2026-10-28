@@ -11,6 +11,7 @@ Small, task-based install sets. A bundle is 5–15 skills — enough to be usefu
 | [`security-review`](bundles.json) | 8 | Auditing before release |
 | [`data-ai`](bundles.json) | 5 | Postgres, analytics, context engineering, evals |
 | [`devops`](bundles.json) | 6 | CI, deploy, cloud runtime, supply chain |
+| [`cloud`](bundles.json) | 11 | Optional megapack: GCP / Azure product skills, only when the project runs there |
 
 ## Install
 

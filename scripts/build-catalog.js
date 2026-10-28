@@ -112,6 +112,7 @@ if (fs.existsSync(toolsFile)) {
 
 // --- hooks / commands / agents / prompts / templates ------------------------
 const DIRS = {
+  rule: ["rules", (f) => f.endsWith(".md") && !/README/i.test(f)],
   hook: ["hooks", (f) => f.endsWith(".md") || f.endsWith(".sh") || f.endsWith(".js")],
   command: ["commands", (f) => f.endsWith(".md")],
   agent: ["agents", (f) => f.endsWith(".md") && !/README/i.test(f)],
