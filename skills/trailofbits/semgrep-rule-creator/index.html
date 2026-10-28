@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>semgrep-rule-creator — Aidentity</title>
+<meta name="description" content="Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/trailofbits/semgrep-rule-creator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="semgrep-rule-creator — Aidentity">
+<meta property="og:description" content="Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/trailofbits/semgrep-rule-creator/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"semgrep-rule-creator","description":"Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.","url":"https://akshatnaruka.github.io/aidentity/skills/trailofbits/semgrep-rule-creator/","author":{"@type":"Person","name":"Trail of Bits"},"license":"CC-BY-SA-4.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>semgrep-rule-creator
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">trailofbits/skills · CC-BY-SA-4.0</p>
+      <h1>semgrep-rule-creator</h1>
+      <p class="summary">Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Semgrep Rule Creator</h3>
+<p>Create production-quality Semgrep rules with proper testing and validation.</p>
+<h4>When to Use</h4>
+<p><strong>Ideal scenarios:</strong></p>
+<ul>
+<li>Writing Semgrep rules for specific bug patterns</li>
+<li>Writing rules to detect security vulnerabilities in your codebase</li>
+<li>Writing taint mode rules for data flow vulnerabilities</li>
+<li>Writing rules to enforce coding standards</li>
+</ul>
+<h4>When NOT to Use</h4>
+<p>Do NOT use this skill for:</p>
+<ul>
+<li>Running existing Semgrep rulesets</li>
+<li>General static analysis without custom rules (use <code>static-analysis</code> skill)</li>
+</ul>
+<h4>Rationalizations to Reject</h4>
+<p>When writing Semgrep rules, reject these common shortcuts:</p>
+<ul>
+<li><strong>&quot;The pattern looks complete&quot;</strong> → Still run <code>semgrep --test --config &lt;rule-id&gt;.yaml &lt;rule-id&gt;.&lt;ext&gt;</code> to verify. Untested rules have hidden false positives/negatives.</li>
+<li><strong>&quot;It matches the vulnerable case&quot;</strong> → Matching vulnerabilities is half the job. Verify safe cases don&#39;t match (false positives break trust).</li>
+<li><strong>&quot;Taint mode is overkill for this&quot;</strong> → If data flows from user input to a dangerous sink, taint mode gives better precision than pattern matching.</li>
+<li><strong>&quot;One test is enough&quot;</strong> → Include edge cases: different coding styles, sanitized inputs, safe alternatives, and boundary conditions.</li>
+<li><strong>&quot;I&#39;ll optimize the patterns first&quot;</strong> → Write correct patterns first, optimize after all tests pass. Premature optimization causes regressions.</li>
+<li><strong>&quot;The AST dump is too complex&quot;</strong> → The AST reveals exactly how Semgrep sees code. Skipping it leads to patterns that miss syntactic variations.</li>
+</ul>
+<h4>Anti-Patterns</h4>
+<p><strong>Too broad</strong> - matches everything, useless for detection:</p>
+<p><pre><code># BAD: Matches any function call
+pattern: $FUNC(...)
+
+# GOOD: Specific dangerous function
+pattern: eval(...)</code></pre></p>
+<p><strong>Missing safe cases in tests</strong> - leads to undetected false positives:</p>
+<p><pre><code># BAD: Only tests vulnerable case
+# ruleid: my-rule
+dangerous(user_input)
+
+# GOOD: Include safe cases to verify no false positives
+# ruleid: my-rule
+dangerous(user_input)
+
+# ok: my-rule
+dangerous(sanitize(user_input))
+
+# ok: my-rule
+dangerous(&quot;hardcoded_safe_value&quot;)</code></pre></p>
+<p><strong>Overly specific patterns</strong> - misses variations:</p>
+<p><pre><code># BAD: Only matches exact format
+pattern: os.system(&quot;rm &quot; + $VAR)
+
+# GOOD: Matches all os.system calls with taint tracking
+mode: taint
+pattern-sources:
+  - pattern: input(...)
+pattern-sinks:
+  - pattern: os.system(...)</code></pre></p>
+<h4>Strictness Level</h4>
+<p>This workflow is <strong>strict</strong> - do not skip steps:</p>
+<ul>
+<li><strong>Read documentation first</strong>: See [Documentation](#documentation) before writing Semgrep rules</li>
+<li><strong>Test-first is mandatory</strong>: Never write a rule without tests</li>
+<li><strong>100% test pass is required</strong>: &quot;Most tests pass&quot; is not acceptable</li>
+<li><strong>Optimization comes last</strong>: Only simplify patterns after all tests pass</li>
+<li><strong>Avoid generic patterns</strong>: Rules must be specific, not match broad patterns</li>
+<li><strong>Prioritize taint mode</strong>: For data flow vulnerabilities</li>
+<li><strong>One YAML file - one Semgrep rule</strong>: Each YAML file must contain only one Semgrep rule; don&#39;t combine multiple rules in a single file</li>
+<li><strong>No generic rules</strong>: When targeting a specific language for Semgrep rules - avoid generic pattern matching (<code>languages: generic</code>)</li>
+<li><strong>Forbidden <code>todook</code> and <code>todoruleid</code> test annotations</strong>: <code>todoruleid: &lt;rule-id&gt;</code> and <code>todook: &lt;rule-id&gt;</code> annotations in tests files for future rule improvements are forbidden</li>
+</ul>
+<h4>Overview</h4>
+<p>This skill guides creation of Semgrep rules that detect security vulnerabilities and code patterns. Rules are created iteratively: analyze the problem, write tests first, analyze AST structure, write the rule, iterate until all tests pass, optimize the rule.</p>
+<p><strong>Approach selection:</strong></p>
+<ul>
+<li><strong>Taint mode</strong> (prioritize): Data flow issues where untrusted input reaches dangerous sinks</li>
+<li><strong>Pattern matching</strong>: Simple syntactic patterns without data flow requirements</li>
+</ul>
+<p><strong>Why prioritize taint mode?</strong> Pattern matching finds syntax but misses context. A pattern <code>eval($X)</code> matches both <code>eval(user_input)</code> (vulnerable) and <code>eval(&quot;safe_literal&quot;)</code> (safe). Taint mode tracks data flow, so it only alerts when untrusted data actually reaches the sink—dramatically reducing false positives for injection vulnerabilities.</p>
+<p><strong>Iterating between approaches:</strong> It&#39;s okay to experiment. If you start with taint mode and it&#39;s not working well (e.g., taint doesn&#39;t propagate as expected, too many false positives/negatives), switch to pattern matching. Conversely, if pattern matching produces too many false positives on safe cases, try taint mode instead. The goal is a working rule—not rigid adherence to one approach.</p>
+<p><strong>Output structure</strong> - exactly 2 files in a directory named after the rule-id:</p>
+<p><pre><code>&lt;rule-id&gt;/
+├── &lt;rule-id&gt;.yaml     # Semgrep rule
+└── &lt;rule-id&gt;.&lt;ext&gt;    # Test file with ruleid/ok annotations</code></pre></p>
+<h4>Quick Start</h4>
+<p><pre><code>rules:
+  - id: insecure-eval
+    languages: [python]
+    severity: HIGH
+    message: User input passed to eval() allows code execution
+    mode: taint
+    pattern-sources:
+      - pattern: request.args.get(...)
+    pattern-sinks:
+      - pattern: eval(...)</code></pre></p>
+<p>Test file (<code>insecure-eval.py</code>):</p>
+<p><pre><code># ruleid: insecure-eval
+eval(request.args.get(&#39;code&#39;))
+
+# ok: insecure-eval
+eval(&quot;print(&#39;safe&#39;)&quot;)</code></pre></p>
+<p>Run tests (from rule directory): <code>semgrep --test --config &lt;rule-id&gt;.yaml &lt;rule-id&gt;.&lt;ext&gt;</code></p>
+<h4>Quick Reference</h4>
+<ul>
+<li>For commands, pattern operators, and taint mode syntax, see [quick-reference.md]({baseDir}/references/quick-reference.md).</li>
+<li>For detailed workflow and examples, you MUST see [workflow.md]({baseDir}/references/workflow.md)</li>
+</ul>
+<h4>Workflow</h4>
+<p>Copy this checklist and track progress:</p>
+<p><pre><code>Semgrep Rule Progress:
+- [ ] Step 1: Analyze the Problem
+- [ ] Step 2: Write Tests First
+- [ ] Step 3: Analyze AST structure
+- [ ] Step 4: Write the rule
+- [ ] Step 5: Iterate until all tests pass (semgrep --test)
+- [ ] Step 6: Optimize the rule (remove redundancies, re-test)
+- [ ] Step 7: Final Run</code></pre></p>
+<h4>Documentation</h4>
+<p><strong>REQUIRED</strong>: Before writing any rule, use WebFetch to read <strong>all</strong> of these 7 links with Semgrep documentation:</p>
+<ol>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/rule-syntax.mdx" rel="noopener">Rule Syntax</a></li>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/pattern-syntax.mdx" rel="noopener">Pattern Syntax</a></li>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/testing-rules.mdx" rel="noopener">Testing Rules</a></li>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/data-flow/taint-mode/overview.mdx" rel="noopener">Taint analysis</a></li>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/data-flow/taint-mode/advanced.mdx" rel="noopener">Advanced techniques for taint analysis</a></li>
+<li><a href="https://raw.githubusercontent.com/semgrep/semgrep-docs/refs/heads/main/docs/writing-rules/data-flow/constant-propagation.mdx" rel="noopener">Constant propagation</a></li>
+<li><a href="https://raw.githubusercontent.com/trailofbits/testing-handbook/refs/heads/main/content/docs/static-analysis/semgrep/10-advanced.md" rel="noopener">Trail of Bits Testing Handbook - Semgrep chapter</a></li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Trail of Bits</strong> in
+        <a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add trailofbits/semgrep-rule-creator</code>
+  <button type="button" data-copy="npx aidentity add trailofbits/semgrep-rule-creator" aria-label="Copy install semgrep-rule-creator">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Trail of Bits</dd></div>
+          <div><dt>License</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">trailofbits/semgrep-rule-creator</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/trailofbits/semgrep-rule-creator/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

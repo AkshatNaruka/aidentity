@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ideagram — Aidentity</title>
+<meta name="description" content="Turn a concept, feature description, blog post, or pitch into a single beautiful, on-brand illustration by matching it to a real unDraw illustration in a local library and recoloring it to the brand accent — genuine illustrator quality, not an AI-drawn approximation. Use whenever the user asks to &quot;make an illustration,&quot; &quot;create a graphic,&quot; &quot;visualize this concept,&quot; &quot;explain this visually,&quot; wants something &quot;unDraw-style&quot; or &quot;Storyset-style,&quot; needs a hero/feature/blog illustration, or says an idea needs a picture. Trigger even if they don&#39;t name a style — &quot;make something to explain X&quot; or &quot;I need a graphic for this tweet&quot; both qualify.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/tastemaker/ideagram/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ideagram — Aidentity">
+<meta property="og:description" content="Turn a concept, feature description, blog post, or pitch into a single beautiful, on-brand illustration by matching it to a real unDraw illustration in a local library and recoloring it to the brand accent — genuine illustrator quality, not an AI-drawn approximation. Use whenever the user asks to &quot;make an illustration,&quot; &quot;create a graphic,&quot; &quot;visualize this concept,&quot; &quot;explain this visually,&quot; wants something &quot;unDraw-style&quot; or &quot;Storyset-style,&quot; needs a hero/feature/blog illustration, or says an idea needs a picture. Trigger even if they don&#39;t name a style — &quot;make something to explain X&quot; or &quot;I need a graphic for this tweet&quot; both qualify.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/tastemaker/ideagram/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"ideagram","description":"Turn a concept, feature description, blog post, or pitch into a single beautiful, on-brand illustration by matching it to a real unDraw illustration in a local library and recoloring it to the brand accent — genuine illustrator quality, not an AI-drawn approximation. Use whenever the user asks to \"make an illustration,\" \"create a graphic,\" \"visualize this concept,\" \"explain this visually,\" wants something \"unDraw-style\" or \"Storyset-style,\" needs a hero/feature/blog illustration, or says an idea needs a picture. Trigger even if they don't name a style — \"make something to explain X\" or \"I need a graphic for this tweet\" both qualify.","url":"https://akshatnaruka.github.io/aidentity/skills/tastemaker/ideagram/","author":{"@type":"Person","name":"codeswithroh"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>ideagram
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">codeswithroh/tastemaker · MIT</p>
+      <h1>ideagram</h1>
+      <p class="summary">Turn a concept, feature description, blog post, or pitch into a single beautiful, on-brand illustration by matching it to a real unDraw illustration in a local library and recoloring it to the brand accent — genuine illustrator quality, not an AI-drawn approximation. Use whenever the user asks to &quot;make an illustration,&quot; &quot;create a graphic,&quot; &quot;visualize this concept,&quot; &quot;explain this visually,&quot; wants something &quot;unDraw-style&quot; or &quot;Storyset-style,&quot; needs a hero/feature/blog illustration, or says an idea needs a picture. Trigger even if they don&#39;t name a style — &quot;make something to explain X&quot; or &quot;I need a graphic for this tweet&quot; both qualify.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Ideagram</h3>
+<h4>The core idea</h4>
+<p>Produce <strong>one</strong> beautiful, on-brand illustration for a concept by matching it to a real unDraw illustration and recoloring it to the brand — never by hand-drawing. unDraw&#39;s figures are dozens of hand-placed bezier anchors from a professional illustrator; freehand-generating path coordinates produces crude pictograms, not art. The quality lives in the real path data, so this skill reuses it: match → recolor → (compose, if needed) → deliver. The output is genuinely illustrator-grade because it <em>is</em> the illustrator&#39;s work, just made on-brand.</p>
+<p>Read <code>references/undraw-anatomy.md</code> once — it&#39;s the dissection of how these files are built and why this reuse approach works.</p>
+<h4>Setup: a local unDraw library</h4>
+<p>This skill reads real unDraw SVGs from a <strong>local library folder</strong> — it does not bundle or redistribute unDraw&#39;s files (their license bars compiling their assets into a redistributed collection; downloading them for your own use is free and needs no attribution).</p>
+<ul>
+<li>Default library location: <code>~/.ideagram/undraw/</code>.</li>
+<li>Populate it by downloading illustrations from <a href="https://undraw.co/illustrations" rel="noopener">undraw.co/illustrations</a> (free, no attribution, unlimited) — 20-30 illustrations spanning common themes (teams, devices, data, growth, communication, security, travel) covers most requests well.</li>
+<li>After adding SVGs, (re)build the index: <code>python3 scripts/build_library_index.py</code>. This writes <code>index.md</code> (human-scannable) and <code>index.json</code> (machine-readable) into the library folder — read <code>index.md</code> first for matching instead of guessing from filenames cold.</li>
+<li>If <strong>no library exists yet</strong>, say so plainly and point the user at undraw.co (30 seconds to grab a few). Only fall back to the crude generated-primitive path (<code>references/style-contract.md</code>) if they genuinely can&#39;t, and be upfront that it&#39;s a large quality drop from real unDraw art.</li>
+</ul>
+<h4>Workflow</h4>
+<h5>Step 1 — Distill the concept</h5>
+<p>Reduce the input to one sentence — &quot;this is fundamentally about ___&quot; — plus a few keywords. If the content genuinely holds two ideas, that&#39;s two illustrations, not one crowded brief.</p>
+<h5>Step 2 — Match to the best illustration in the library</h5>
+<p>Read <code>~/.ideagram/undraw/index.md</code> (run <code>scripts/build_library_index.py</code> first if it doesn&#39;t exist or the library changed). Match the concept&#39;s keywords against each entry&#39;s keyword list — prefer a match on the <em>scene</em>, not just a loose word overlap: a dashboard/analytics concept wants an illustration with a screen or chart; a teamwork concept wants one with multiple figures. If several are close, pick the one whose scene most literally embodies the concept (see the worked example below). If nothing in the library is a real fit, say so and either ask the user to grab a closer one from undraw.co or fall back (Step 5) — don&#39;t force a bad match.</p>
+<p><strong>Worked example:</strong> &quot;an AI creative director composing a whole design system from one prompt&quot; → not literally &quot;AI&quot; or &quot;design system&quot; in any filename, but <code>mobile-site-builder</code> (a person actively laying out screen components) is the closest <em>scene</em> match — the visual metaphor matters more than exact keyword overlap.</p>
+<h5>Step 3 — Recolor to the brand</h5>
+<p><pre><code>python3 scripts/recolor_undraw.py &lt;matched&gt;.svg --accent &quot;#&lt;brand-hex&gt;&quot; --out design/&lt;name&gt;.svg</code></pre></p>
+<p>This swaps only unDraw&#39;s <code>#6c63ff</code> accent family for the brand color, leaving every skin tone, hair, clothing, and neutral exactly as drawn — verified on real multi-figure scenes. Check the matched illustration&#39;s <code>index.md</code> row for a flagged secondary accent (green/pink); if present and it should also change, add <code>--also &quot;#8ed16f:#&lt;hex&gt;&quot;</code>. If the user gives no brand color, unDraw&#39;s default purple is a fine, deliberate choice — don&#39;t invent one.</p>
+<p><strong>If you need to redo a color</strong> (the user asks for a different one), re-copy the <em>original</em> unDraw source into the output path first, then recolor — <code>recolor_undraw.py</code> only remaps <code>#6c63ff</code> outward, so recoloring an already-recolored file does nothing (the purple it looks for is gone). Never edit a previously-branded file&#39;s colors by hand to &quot;fix&quot; this.</p>
+<h5>Step 4 — (Optional) Compose a custom scene from real components</h5>
+<p>Only when no single library illustration fits and a custom scene is worth the extra effort:</p>
+<ul>
+<li>List a source&#39;s components with <code>scripts/extract_component.py source.svg --list</code>, then lift one with <code>--match &quot;translate(...)&quot; --out part.svg</code>.</li>
+<li>Assemble whole components into one <code>&lt;svg&gt;</code> as a real <strong>scene</strong> — a background element, the concept&#39;s midground device, then the figure interacting with it, plus a ground shadow — not a floating figure. This is what separates a designed illustration from a subject stranded on white.</li>
+<li>Place each with <code>&lt;g transform=&quot;translate() scale()&quot;&gt;</code>; render and read <code>getBBox()</code> to size/position accurately rather than guessing coordinates from nested transforms.</li>
+<li>Reuse <em>whole</em> components. Recombining sub-limbs (an arm from one figure onto another&#39;s torso) is fragile — different coordinate spaces and shading directions rarely join cleanly.</li>
+<li>Recolor the finished composition (Step 3).</li>
+</ul>
+<h5>Step 5 — Fallback only if there&#39;s no usable library</h5>
+<p>If the user genuinely has no unDraw library and won&#39;t create one, <code>references/style-contract.md</code> + <code>assets/primitives/</code> still exist — but they produce simple flat pictograms, not illustrator-grade art. Use only as a last resort, and say plainly that a couple of real unDraw SVGs would look dramatically better for the same effort.</p>
+<h5>Step 6 — Validate and deliver</h5>
+<ul>
+<li><code>python3 scripts/validate_assets.py &lt;final&gt;.svg</code> — catches malformed SVG (e.g. a <code>--</code> inside a comment) that renders as a broken image in strict browsers, invisible unless actually parsed.</li>
+<li>Deliver the SVG directly for web use — smallest, crispest, infinitely recolorable. For social/raster: <code>scripts/export_png.py &lt;final&gt;.svg --out design/export/</code> (needs <code>cairosvg</code> + system cairo; degrades honestly if either is missing, and the SVG stays fully usable regardless).</li>
+</ul>
+<h4>Reference files</h4>
+<table><thead><tr><th>File</th><th>Read when</th></tr></thead><tbody>
+<tr><td><code>references/undraw-anatomy.md</code></td><td>Always, first — the palette, structure, and the reuse technique this skill is built on</td></tr>
+<tr><td><code>~/.ideagram/undraw/index.md</code></td><td>Step 2 — matching a concept to the right illustration</td></tr>
+<tr><td><code>references/style-contract.md</code>, <code>references/metaphor-library.md</code></td><td>Only for the Step 5 fallback (no library, generated primitives)</td></tr>
+</tbody></table>
+<h4>Scripts</h4>
+<table><thead><tr><th>Script</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>scripts/build_library_index.py</code></td><td>Index a local unDraw library into <code>index.md</code>/<code>index.json</code> for fast, accurate matching. Run after adding new SVGs.</td></tr>
+<tr><td><code>scripts/recolor_undraw.py</code></td><td>Recolor a real unDraw illustration&#39;s accent to a brand color, preserving skin/ink/clothing/neutrals. The workhorse.</td></tr>
+<tr><td><code>scripts/extract_component.py</code></td><td>Lift a whole figure/device/panel out of a source unDraw SVG for composing a new scene.</td></tr>
+<tr><td><code>scripts/validate_assets.py</code></td><td>Verify the finished SVG is well-formed before delivering.</td></tr>
+<tr><td><code>scripts/export_png.py</code></td><td>Export flattened PNGs at standard social/presentation sizes (needs cairosvg + system cairo).</td></tr>
+</tbody></table>
+<h4>Honesty</h4>
+<p>Say what actually happened: which illustration was matched and why, whether it was recolored, and if you fell back to generated primitives because there was no library, say that plainly and note the quality gap rather than presenting it as equal. Respect the sourcing model — reuse real unDraw art from the user&#39;s local library for their own sites; never redistribute unDraw&#39;s files into a public repo.</p>
+<h4>A note on image generation</h4>
+<p>An alternative, higher-ceiling approach exists — <em>generating</em> an original illustration with an image model, steered by a rigorous style system (<code>references/style-dna.md</code>, <code>composition-patterns.md</code>, <code>prompt-template.md</code>, <code>qa-checklist.md</code>) — for the rare case a session has a genuine image-generation tool available and the library has no good match. Most Claude sessions don&#39;t have one, so this isn&#39;t part of the default workflow above; only reach for it if such a tool is actually present, and say so.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>codeswithroh</strong> in
+        <a href="https://github.com/codeswithroh/tastemaker" rel="noopener">codeswithroh/tastemaker</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add tastemaker/ideagram</code>
+  <button type="button" data-copy="npx aidentity add tastemaker/ideagram" aria-label="Copy install ideagram">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/codeswithroh/tastemaker" rel="noopener">codeswithroh/tastemaker</a></dd></div>
+          <div><dt>Author</dt><dd>codeswithroh</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">tastemaker/ideagram</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/tastemaker/ideagram/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

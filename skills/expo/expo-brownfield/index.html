@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-brownfield — Aidentity</title>
+<meta name="description" content="Integrate Expo and React Native into an existing native iOS or Android app. Use for brownfield, embedding a React Native screen in SwiftUI/UIKit or Kotlin, or AAR/XCFramework packaging. Covers isolated and integrated approaches. For building or distributing a purely native app with EAS, use eas-app-stores.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-brownfield/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-brownfield — Aidentity">
+<meta property="og:description" content="Integrate Expo and React Native into an existing native iOS or Android app. Use for brownfield, embedding a React Native screen in SwiftUI/UIKit or Kotlin, or AAR/XCFramework packaging. Covers isolated and integrated approaches. For building or distributing a purely native app with EAS, use eas-app-stores.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-brownfield/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-brownfield","description":"Integrate Expo and React Native into an existing native iOS or Android app. Use for brownfield, embedding a React Native screen in SwiftUI/UIKit or Kotlin, or AAR/XCFramework packaging. Covers isolated and integrated approaches. For building or distributing a purely native app with EAS, use eas-app-stores.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-brownfield/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-brownfield
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-brownfield</h1>
+      <p class="summary">Integrate Expo and React Native into an existing native iOS or Android app. Use for brownfield, embedding a React Native screen in SwiftUI/UIKit or Kotlin, or AAR/XCFramework packaging. Covers isolated and integrated approaches. For building or distributing a purely native app with EAS, use eas-app-stores.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Brownfield</h3>
+<p>A <strong>brownfield</strong> app is an existing native iOS or Android app that adopts React Native incrementally, as opposed to a <strong>greenfield</strong> app that is React Native from day one.</p>
+<h4>Inspect the host first</h4>
+<p>Identify the existing app entry point, navigation owner, native build system, deployment targets, and any React Native runtime already linked. Record the installed Expo, React Native, and brownfield package versions from the lockfile. Adding EAS Build or Submit to a Swift app alone does not require React Native; route that task to <code>eas-app-stores</code>.</p>
+<p>Preserve the host&#39;s SwiftUI <code>App</code> / UIKit window and native screens when embedding a feature. <strong>Do not run prebuild in a manually maintained native host</strong>, including during troubleshooting. An isolated Expo producer may use CNG; keep its generated <code>ios/</code> and <code>android/</code> separate from the consuming app.</p>
+<p>Expo supports two distinct ways to add React Native to a brownfield project:</p>
+<table><thead><tr><th>Approach</th><th>What ships to the native app</th><th>When to choose</th></tr></thead><tbody>
+<tr><td><strong>Isolated</strong></td><td>Prebuilt AAR / XCFramework</td><td>Native team doesn&#39;t need Node or RN tooling; RN code can live in a separate repo</td></tr>
+<tr><td><strong>Integrated</strong></td><td>React Native sources added to the existing Gradle / CocoaPods build</td><td>One team owns everything; comfortable with RN tooling; wants a single build</td></tr>
+</tbody></table>
+<p>For the full decision matrix, see [./references/comparison.md](./references/comparison.md).</p>
+<h4>Pick an approach</h4>
+<p>Use these quick rules — fall through to <code>comparison.md</code> for anything ambiguous.</p>
+<ul>
+<li><strong>Choose isolated</strong> if the iOS/Android team must consume RN as a regular library dependency (AAR or XCFramework), without installing Node, Yarn, or the React Native build toolchain.</li>
+<li><strong>Choose isolated</strong> if RN code and native code live in separate repositories or release on independent cadences.</li>
+<li><strong>Choose integrated</strong> if a single team owns both the native and RN code and is willing to add React Native + Expo to the native project&#39;s Gradle and CocoaPods setup.</li>
+<li>Both approaches support Metro and Fast Refresh in Debug. Choose integrated for shared build ownership, not because isolated lacks live JS iteration.</li>
+</ul>
+<h4>References</h4>
+<ul>
+<li>./references/brownfield-isolated.md -- Build RN as AAR/XCFramework and consume from the native app (BrownfieldActivity, ReactNativeViewController, ReactNativeView)</li>
+<li>./references/brownfield-integrated.md -- Add RN and Expo directly to existing Gradle and CocoaPods builds, preserving the native app shell</li>
+<li>./references/feature-integration.md -- Pass input, return results, dismiss, clean up listeners, and forward lifecycle events; includes a SwiftUI host example</li>
+<li>./references/comparison.md -- Decision criteria, trade-offs, and scenario mapping for choosing an approach</li>
+<li>./references/troubleshooting.md -- Metro connection, build, signing, and module-resolution issues common to both approaches</li>
+</ul>
+<p>More information available at <a href="https://docs.expo.dev/brownfield/overview/" rel="noopener">https://docs.expo.dev/brownfield/overview/</a></p>
+<h4>Shared prerequisites</h4>
+<p>Both approaches require, in the environment that _builds_ the React Native side:</p>
+<ul>
+<li><strong>Node.js (LTS)</strong> — runs the Expo CLI and JavaScript code.</li>
+<li>The project&#39;s package manager and lockfile — npm, Yarn, pnpm, or Bun. Do not switch package managers just to follow an example.</li>
+</ul>
+<p>The iOS build environment needs Xcode and CocoaPods (use the project&#39;s Gemfile/Bundler setup when present). The isolated consuming app needs Xcode but no CocoaPods or RN tooling just to consume the artifacts.</p>
+<h4>Select compatible versions</h4>
+<p>For an existing Expo/RN project, keep its selected SDK and use <code>npx expo install</code> to align dependencies. Do not upgrade it just to follow this skill. For a new producer, use the <strong>current stable SDK</strong> compatible with the host&#39;s OS support, dependencies, and build toolchain; confirm the release is stable before selecting it.</p>
+<p>Before native setup, read [./references/version-compatibility.md](./references/version-compatibility.md) for matching native templates, toolchain/OS requirements, and build defaults across SDK versions. A purely native consumer has no Expo SDK version to pin, but must satisfy the artifact&#39;s requirements.</p>
+<h4>Verify the feature in the host</h4>
+<p>Open the RN screen with input, return a result to native, dismiss, and reopen with fresh input. Check listener cleanup and the host&#39;s original navigation. Then build the host in Release with a Release artifact and Metro stopped. Rendering only in Expo Go or the producer&#39;s example app does not validate the integration. See [./references/feature-integration.md](./references/feature-integration.md) for the complete acceptance scenario.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-brownfield&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-brownfield</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-brownfield" aria-label="Copy install expo-brownfield">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-brownfield</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-brownfield/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

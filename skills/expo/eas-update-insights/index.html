@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eas-update-insights — Aidentity</title>
+<meta name="description" content="Check the health of published EAS Update: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded build vs OTA, or wants to gate CI on update health.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/eas-update-insights/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eas-update-insights — Aidentity">
+<meta property="og:description" content="Check the health of published EAS Update: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded build vs OTA, or wants to gate CI on update health.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/eas-update-insights/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"eas-update-insights","description":"Check the health of published EAS Update: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded build vs OTA, or wants to gate CI on update health.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/eas-update-insights/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>eas-update-insights
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>eas-update-insights</h1>
+      <p class="summary">Check the health of published EAS Update: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded build vs OTA, or wants to gate CI on update health.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>EAS Update Insights</h3>
+<p>&gt; <strong>EAS service - costs apply.</strong> Insights cover updates published through EAS Update, a paid Expo Application Services product with free-tier limits. Update delivery and the data behind these commands count against your plan&#39;s EAS Update usage. Review <a href="https://expo.dev/pricing." rel="noopener">https://expo.dev/pricing.</a></p>
+<p>Query the health of published EAS Update directly from the CLI: launches, failed launches, crash rates, unique users, payload size, the embedded-vs-OTA user split per channel, and the most popular updates per runtime version. The data is the same data that powers the update and channel detail pages on expo.dev; these commands expose it in the terminal in human and JSON form.</p>
+<h4>When to use this skill</h4>
+<p>Use this when the user wants to assess the health or adoption of a published EAS Update: crash rates, install counts, unique users, bundle size, or the split between embedded and OTA users on a channel.</p>
+<p>Example prompts:</p>
+<ul>
+<li>&quot;How is the latest update doing?&quot;</li>
+<li>&quot;Is the latest update healthy?&quot;</li>
+<li>&quot;Is the new release crashing more than the last one?&quot;</li>
+<li>&quot;How many users are on the latest update vs the embedded build?&quot;</li>
+<li>&quot;Which update is most popular on production right now?&quot;</li>
+<li>&quot;How big is our update bundle?&quot;</li>
+</ul>
+<p>Also fits: post-publish rollout monitoring and regression detection.</p>
+<p>Don&#39;t use when the user needs per-user crash detail or device-level reporting; this skill only exposes aggregate EAS metrics.</p>
+<h4>Prerequisites</h4>
+<ul>
+<li><code>eas-cli</code> installed (<code>npm install -g eas-cli</code>).</li>
+<li>Logged in: <code>eas login</code>.</li>
+<li>For <code>channel:insights</code>: run from an Expo project directory (the command resolves the project ID from <code>app.json</code>). <code>update:insights</code> only needs a login.</li>
+</ul>
+<h4>Commands at a glance</h4>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>eas update:list</code></td><td>Discover recent update groups, their <code>group</code> IDs, and branch names</td></tr>
+<tr><td><code>eas update:insights &lt;groupId&gt;</code></td><td>Per-platform launches, failed launches, crash rate, unique users, payload size, daily breakdown</td></tr>
+<tr><td><code>eas update:view &lt;groupId&gt; --insights</code></td><td>Update group details + the same metrics appended</td></tr>
+<tr><td><code>eas channel:insights --channel &lt;name&gt; --runtime-version &lt;version&gt;</code></td><td>Embedded/OTA user counts, most popular updates, cumulative metrics for a channel + runtime</td></tr>
+</tbody></table>
+<p>All of these support <code>--json --non-interactive</code> for programmatic parsing.</p>
+<h4>Discovering IDs</h4>
+<p>Before querying insights for an update group, you need its <code>group</code> ID. Use <code>eas update:list</code> with either <code>--branch &lt;name&gt;</code> (updates on that branch) or <code>--all</code> (updates across all branches). Always pass <code>--json --non-interactive</code> when running non-interactively; without a branch/<code>--all</code> flag the command will otherwise prompt for a branch selection:</p>
+<p><pre><code># Latest group id across all branches
+eas update:list --all --json --non-interactive | jq -r &#39;.currentPage[0].group&#39;
+
+# Latest group id on a specific branch
+eas update:list --branch production --json --non-interactive | jq -r &#39;.currentPage[0].group&#39;</code></pre></p>
+<p>The JSON response has a <code>currentPage</code> array with one entry per update group (both platforms of the same publish are collapsed into one entry):</p>
+<p><pre><code>{
+  &quot;currentPage&quot;: [
+    {
+      &quot;branch&quot;: &quot;production&quot;,
+      &quot;message&quot;: &quot;\&quot;Fix checkout crash\&quot; (1 week ago by someone)&quot;,
+      &quot;runtimeVersion&quot;: &quot;1.0.6&quot;,
+      &quot;group&quot;: &quot;03d5dfcf-736c-475a-8730-af039c3f4d06&quot;,
+      &quot;platforms&quot;: &quot;android, ios&quot;,
+      &quot;isRollBackToEmbedded&quot;: false
+    }
+  ]
+}</code></pre></p>
+<p>Entries also carry <code>codeSigningKey</code> and <code>rolloutPercentage</code>, but only when those features are in use for the group (undefined values are omitted from the JSON output).</p>
+<p>When called with <code>--branch &lt;name&gt;</code>, the response also includes <code>name</code> (the branch name) and <code>id</code> (the branch ID) at the top level.</p>
+<h4><code>eas update:insights &lt;groupId&gt;</code></h4>
+<p>Shows launches, failed launches, crash rate, unique users, launch asset count, and average payload size for a single update group, broken down <strong>per platform</strong> (iOS, Android), plus a daily breakdown of launches and failures.</p>
+<h5>Basic use</h5>
+<p><pre><code>eas update:insights 03d5dfcf-736c-475a-8730-af039c3f4d06</code></pre></p>
+<h5>Flags</h5>
+<table><thead><tr><th>Flag</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--days &lt;N&gt;</code></td><td>Look back N days. Default: <strong>7</strong>. Mutually exclusive with <code>--start</code>/<code>--end</code>.</td></tr>
+<tr><td><code>--start &lt;iso-date&gt;</code> / <code>--end &lt;iso-date&gt;</code></td><td>Explicit time range, e.g. <code>--start 2026-04-01 --end 2026-04-15</code>.</td></tr>
+<tr><td>`--platform &lt;ios\</td><td>android&gt;`</td><td>Filter to a single platform. Omit to see all platforms in the group.</td></tr>
+<tr><td><code>--json</code></td><td>Machine-readable output. Implies <code>--non-interactive</code>.</td></tr>
+<tr><td><code>--non-interactive</code></td><td>Required when scripting.</td></tr>
+</tbody></table>
+<h5>JSON output shape</h5>
+<p>Top level: <code>groupId</code>, <code>timespan</code> (<code>start</code>, <code>end</code>, <code>daysBack</code>), and <code>platforms[]</code> with one entry per platform the group was published to. Each platform entry has <code>updateId</code>, <code>totals</code> (<code>uniqueUsers</code>, <code>installs</code>, <code>failedInstalls</code>, <code>crashRatePercent</code>), <code>payload</code> (<code>launchAssetCount</code>, <code>averageUpdatePayloadBytes</code>), and a <code>daily[]</code> time series of <code>{ date, installs, failedInstalls }</code>.</p>
+<p>For the complete schema and field reference, see [references/update-insights-schema.md](./references/update-insights-schema.md).</p>
+<p>Fields that matter for health assessment:</p>
+<ul>
+<li><code>platforms[].totals.crashRatePercent</code>, computed as <code>failedInstalls / (installs + failedInstalls) * 100</code>. Zero when there are no installs.</li>
+<li><code>platforms[].totals.installs</code> and <code>uniqueUsers</code> give the adoption signal.</li>
+<li><code>platforms[].daily</code> is a time series, useful for spotting a sudden spike in failures.</li>
+</ul>
+<h5>Errors</h5>
+<ul>
+<li><code>Could not find any updates with group ID: &quot;&lt;id&gt;&quot;</code> — group doesn&#39;t exist or you lack access.</li>
+<li><code>Update group &quot;&lt;id&gt;&quot; has no ios update (available platforms: android)</code> — <code>--platform ios</code> was used but the group wasn&#39;t published for iOS.</li>
+<li><code>EAS Update insights is not supported by this version of eas-cli. Please upgrade ...</code> — the server deprecated a field the CLI relies on. Run <code>npm install -g eas-cli@latest</code>.</li>
+</ul>
+<h4><code>eas update:view &lt;groupId&gt; --insights</code></h4>
+<p>Extends the standard <code>update:view</code> output with the same per-platform insights, inline.</p>
+<p><pre><code># Human-readable
+eas update:view 03d5dfcf-... --insights
+eas update:view 03d5dfcf-... --insights --days 30
+
+# JSON: wrapped as { updates: [...], insights: {...} }
+eas update:view 03d5dfcf-... --json --insights</code></pre></p>
+<p>Without <code>--insights</code>, <code>update:view</code> behaves exactly as before — no JSON shape change for existing consumers. The <code>--days</code> / <code>--start</code> / <code>--end</code> flags only apply when <code>--insights</code> is set; passing them alone errors.</p>
+<h4><code>eas channel:insights --channel &lt;name&gt; --runtime-version &lt;version&gt;</code></h4>
+<p>Shows, per channel, how many users are on the embedded build vs over-the-air updates and which updates are pulling the most traffic. Must be run from an Expo project directory.</p>
+<h5>Basic use</h5>
+<p><pre><code>eas channel:insights --channel production --runtime-version 1.0.6</code></pre></p>
+<h5>Flags</h5>
+<table><thead><tr><th>Flag</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--channel &lt;name&gt;</code></td><td><strong>Required.</strong> The channel name (e.g. <code>production</code>, <code>staging</code>).</td></tr>
+<tr><td><code>--runtime-version &lt;version&gt;</code></td><td><strong>Required.</strong> Match exactly what was published. Check <code>runtimeVersion</code> values in <code>update:list</code>.</td></tr>
+<tr><td><code>--days &lt;N&gt;</code></td><td>Look back N days. Default: <strong>7</strong>.</td></tr>
+<tr><td><code>--start</code> / <code>--end</code></td><td>Explicit time range, like <code>update:insights</code>.</td></tr>
+<tr><td><code>--json</code> / <code>--non-interactive</code></td><td>Machine-readable output.</td></tr>
+</tbody></table>
+<h5>JSON output shape</h5>
+<p>Top level: <code>channel</code>, <code>runtimeVersion</code>, <code>timespan</code>, <code>embeddedUpdateTotalUniqueUsers</code>, <code>otaTotalUniqueUsers</code>, <code>mostPopularUpdates[]</code> (each with <code>rank</code>, <code>groupId</code>, <code>message</code>, <code>platform</code>, <code>totalUniqueUsers</code>), <code>cumulativeMetricsAtLastTimestamp[]</code>, plus chart-shaped <code>uniqueUsersOverTime</code> and <code>cumulativeMetricsOverTime</code> objects with <code>labels</code> and <code>datasets</code>.</p>
+<p>For the complete schema and field reference, see [references/channel-insights-schema.md](./references/channel-insights-schema.md).</p>
+<p>Fields that matter:</p>
+<ul>
+<li><code>embeddedUpdateTotalUniqueUsers</code> is the count of users running the embedded (binary-bundled) build.</li>
+<li><code>mostPopularUpdates[]</code> is updates ranked by <code>totalUniqueUsers</code>. <strong>Caveat</strong>: this is the top-N the server returns; <code>otaTotalUniqueUsers</code> is a sum of that list and may undercount total OTA reach if more than top-N updates are active.</li>
+<li><code>uniqueUsersOverTime</code> and <code>cumulativeMetricsOverTime</code> are daily data series for charting.</li>
+</ul>
+<h5>Errors</h5>
+<ul>
+<li><code>Could not find channel with the name &lt;name&gt;</code> — typo or wrong account.</li>
+<li>&quot;No update launches recorded&quot; in the table / empty <code>mostPopularUpdates</code> in JSON — no OTA update has been launched for that channel + runtime yet. Usually means the channel is still serving the embedded build only.</li>
+</ul>
+<h4>Common workflows</h4>
+<h5>Verify the update I just published is healthy</h5>
+<p><pre><code># 1. Grab the latest publish on production
+GROUP_ID=$(eas update:list --branch production --json --non-interactive \
+  | jq -r &#39;.currentPage[0].group&#39;)
+
+# 2. Give it some adoption time (minutes to hours), then check crash rate
+eas update:insights &quot;$GROUP_ID&quot; --json --non-interactive \
+  | jq &#39;.platforms[] | {platform, installs: .totals.installs, crashRate: .totals.crashRatePercent}&#39;</code></pre></p>
+<p>Compare the <code>crashRate</code> across platforms and against previous releases; sudden spikes or asymmetric behaviour (iOS spiking while Android is flat, or vice versa) is the signal to investigate.</p>
+<h5>Compare adoption between two channels</h5>
+<p><pre><code>for channel in production staging; do
+  echo &quot;--- $channel ---&quot;
+  eas channel:insights --channel &quot;$channel&quot; --runtime-version 1.0.6 --json --non-interactive \
+    | jq &#39;{
+        channel,
+        embedded: .embeddedUpdateTotalUniqueUsers,
+        ota: .otaTotalUniqueUsers,
+        topUpdate: .mostPopularUpdates[0]
+      }&#39;
+done</code></pre></p>
+<h5>Detect a rollout regression in the last 24 hours</h5>
+<p><pre><code>eas update:insights &quot;$GROUP_ID&quot; --days 1 --json --non-interactive \
+  | jq &#39;.platforms[] | select(.totals.crashRatePercent &gt; 1)&#39;</code></pre></p>
+<h5>Summarize group metrics for release notes</h5>
+<p><pre><code>eas update:view &quot;$GROUP_ID&quot; --insights --days 30</code></pre></p>
+<p>Human-readable group details plus 30 days of launches/failures per platform — suitable for pasting into a changelog or incident review.</p>
+<h4>Output tips</h4>
+<ul>
+<li>Pipe JSON through <code>jq</code>; payloads are structured for easy filtering.</li>
+<li><code>--json</code> implies <code>--non-interactive</code>, but passing both is explicit and scripting-friendly.</li>
+<li>Dates in <code>daily[].date</code> are UTC ISO timestamps; the human-readable table renders them as <code>YYYY-MM-DD</code> (UTC).</li>
+<li>The CLI table labels say &quot;Launches&quot; / &quot;Crashes&quot; while JSON uses <code>installs</code> / <code>failedInstalls</code>. Same field, different display name.</li>
+</ul>
+<h4>Limitations</h4>
+<ul>
+<li><strong>Unique users across platforms</strong> may double-count users who run the same publish on both iOS and Android. The same caveat applies to <code>otaTotalUniqueUsers</code> in channel insights, which is a sum over <code>mostPopularUpdates</code>.</li>
+<li><strong>Fresh publishes</strong> may show zeros for a short period while the metrics pipeline catches up.</li>
+<li><strong>Installs are downloads, not launches</strong>: the <code>installs</code> / &quot;Launches&quot; field counts users who downloaded the manifest and launch asset. A confirmed run only registers on the user&#39;s <em>next</em> update check (typically up to 24h later, depending on the app&#39;s update policy). So metrics lag the real-world state slightly.</li>
+<li><strong>Crashes are self-reported</strong>: <code>failedInstalls</code> / &quot;Crashes&quot; counts updates that errored during install/launch and were reported on the next update check. Crashes that don&#39;t trigger an update request (e.g. process kill before recovery) won&#39;t appear.</li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;eas-update-insights&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/eas-update-insights</code>
+  <button type="button" data-copy="npx aidentity add expo/eas-update-insights" aria-label="Copy install eas-update-insights">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/eas-update-insights</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/eas-update-insights/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

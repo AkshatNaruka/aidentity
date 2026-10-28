@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>design-system — Aidentity</title>
+<meta name="description" content="Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/design-system/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="design-system — Aidentity">
+<meta property="og:description" content="Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/design-system/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"design-system","description":"Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.","url":"https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/design-system/","author":{"@type":"Person","name":"Next Level Builder"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=design">design</a><span>/</span>design-system
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">nextlevelbuilder/ui-ux-pro-max-skill · MIT</p>
+      <h1>design-system</h1>
+      <p class="summary">Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=design">design</a> <a class="tag" href="../../../skills/index.html?q=frontend">frontend</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Design System</h3>
+<p>Token architecture, component specifications, systematic design, slide generation.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Design token creation</li>
+<li>Component state definitions</li>
+<li>CSS variable systems</li>
+<li>Spacing/typography scales</li>
+<li>Design-to-code handoff</li>
+<li>Tailwind theme configuration</li>
+<li><strong>Slide/presentation generation</strong></li>
+</ul>
+<h4>Token Architecture</h4>
+<p>Load: <code>references/token-architecture.md</code></p>
+<h5>Three-Layer Structure</h5>
+<p><pre><code>Primitive (raw values)
+       ↓
+Semantic (purpose aliases)
+       ↓
+Component (component-specific)</code></pre></p>
+<p><strong>Example:</strong></p>
+<p><pre><code>/* Primitive */
+--color-blue-600: #2563EB;
+
+/* Semantic */
+--color-primary: var(--color-blue-600);
+
+/* Component */
+--button-bg: var(--color-primary);</code></pre></p>
+<h4>Script Paths</h4>
+<p>Script paths in this skill and its <code>references/</code> are relative to the directory that contains this SKILL.md, not to the project: <code>scripts/&lt;file&gt;</code> is this skill&#39;s own <code>scripts/</code> folder, and <code>../&lt;skill&gt;/scripts/&lt;file&gt;</code> is a sibling sub-skill installed alongside it. Build the full path from that directory (Claude Code reports it as the skill&#39;s base directory when the skill loads) and keep the working directory at the project root — the scripts read and write project files such as <code>docs/brand-guidelines.md</code>, <code>assets/design-tokens.json</code> or <code>src/</code> relative to it.</p>
+<h4>Quick Start</h4>
+<p><strong>Generate tokens:</strong></p>
+<p><pre><code>node scripts/generate-tokens.cjs --config tokens.json -o tokens.css</code></pre></p>
+<p><strong>Validate usage:</strong></p>
+<p><pre><code>node scripts/validate-tokens.cjs --dir src/</code></pre></p>
+<h4>References</h4>
+<table><thead><tr><th>Topic</th><th>File</th></tr></thead><tbody>
+<tr><td>Token Architecture</td><td><code>references/token-architecture.md</code></td></tr>
+<tr><td>Primitive Tokens</td><td><code>references/primitive-tokens.md</code></td></tr>
+<tr><td>Semantic Tokens</td><td><code>references/semantic-tokens.md</code></td></tr>
+<tr><td>Component Tokens</td><td><code>references/component-tokens.md</code></td></tr>
+<tr><td>Component Specs</td><td><code>references/component-specs.md</code></td></tr>
+<tr><td>States &amp; Variants</td><td><code>references/states-and-variants.md</code></td></tr>
+<tr><td>Tailwind Integration</td><td><code>references/tailwind-integration.md</code></td></tr>
+</tbody></table>
+<h4>Component Spec Pattern</h4>
+<table><thead><tr><th>Property</th><th>Default</th><th>Hover</th><th>Active</th><th>Disabled</th></tr></thead><tbody>
+<tr><td>Background</td><td>primary</td><td>primary-dark</td><td>primary-darker</td><td>muted</td></tr>
+<tr><td>Text</td><td>white</td><td>white</td><td>white</td><td>muted-fg</td></tr>
+<tr><td>Border</td><td>none</td><td>none</td><td>none</td><td>muted-border</td></tr>
+<tr><td>Shadow</td><td>sm</td><td>md</td><td>none</td><td>none</td></tr>
+</tbody></table>
+<h4>Scripts</h4>
+<table><thead><tr><th>Script</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>generate-tokens.cjs</code></td><td>Generate CSS from JSON token config</td></tr>
+<tr><td><code>validate-tokens.cjs</code></td><td>Check for hardcoded values in code</td></tr>
+<tr><td><code>search-slides.py</code></td><td>BM25 search + contextual recommendations</td></tr>
+<tr><td><code>slide-token-validator.py</code></td><td>Validate slide HTML for token compliance</td></tr>
+<tr><td><code>fetch-background.py</code></td><td>Fetch images from Pexels/Unsplash</td></tr>
+</tbody></table>
+<h4>Templates</h4>
+<table><thead><tr><th>Template</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>design-tokens-starter.json</code></td><td>Starter JSON with three-layer structure</td></tr>
+</tbody></table>
+<h4>Integration</h4>
+<p><strong>With brand:</strong> Extract primitives from brand colors/typography</p>
+<p><strong>With ui-styling:</strong> Component tokens → Tailwind config</p>
+<p><strong>Skill Dependencies:</strong> brand, ui-styling</p>
+<p><strong>Primary Agents:</strong> ui-ux-designer, frontend-developer</p>
+<h4>Slide System</h4>
+<p>Brand-compliant presentations using design tokens + Chart.js + contextual decision system.</p>
+<h5>Source of Truth</h5>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>docs/brand-guidelines.md</code></td><td>Brand identity, voice, colors</td></tr>
+<tr><td><code>assets/design-tokens.json</code></td><td>Token definitions (primitive→semantic→component)</td></tr>
+<tr><td><code>assets/design-tokens.css</code></td><td>CSS variables (import in slides)</td></tr>
+<tr><td><code>assets/css/slide-animations.css</code></td><td>CSS animation library</td></tr>
+</tbody></table>
+<h5>Slide Search (BM25)</h5>
+<p><pre><code># Basic search (auto-detect domain)
+python scripts/search-slides.py &quot;investor pitch&quot;
+
+# Domain-specific search
+python scripts/search-slides.py &quot;problem agitation&quot; -d copy
+python scripts/search-slides.py &quot;revenue growth&quot; -d chart
+
+# Contextual search (Premium System)
+python scripts/search-slides.py &quot;problem slide&quot; --context --position 2 --total 9
+python scripts/search-slides.py &quot;cta&quot; --context --position 9 --prev-emotion frustration</code></pre></p>
+<h5>Decision System CSVs</h5>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>data/slide-strategies.csv</code></td><td>15 deck structures + emotion arcs + sparkline beats</td></tr>
+<tr><td><code>data/slide-layouts.csv</code></td><td>25 layouts + component variants + animations</td></tr>
+<tr><td><code>data/slide-layout-logic.csv</code></td><td>Goal → Layout + break_pattern flag</td></tr>
+<tr><td><code>data/slide-typography.csv</code></td><td>Content type → Typography scale</td></tr>
+<tr><td><code>data/slide-color-logic.csv</code></td><td>Emotion → Color treatment</td></tr>
+<tr><td><code>data/slide-backgrounds.csv</code></td><td>Slide type → Image category (Pexels/Unsplash)</td></tr>
+<tr><td><code>data/slide-copy.csv</code></td><td>25 copywriting formulas (PAS, AIDA, FAB)</td></tr>
+<tr><td><code>data/slide-charts.csv</code></td><td>25 chart types with Chart.js config</td></tr>
+</tbody></table>
+<h5>Contextual Decision Flow</h5>
+<p><pre><code>1. Parse goal/context
+        ↓
+2. Search slide-strategies.csv → Get strategy + emotion beats
+        ↓
+3. For each slide:
+   a. Query slide-layout-logic.csv → layout + break_pattern
+   b. Query slide-typography.csv → type scale
+   c. Query slide-color-logic.csv → color treatment
+   d. Query slide-backgrounds.csv → image if needed
+   e. Apply animation class from slide-animations.css
+        ↓
+4. Generate HTML with design tokens
+        ↓
+5. Validate with slide-token-validator.py</code></pre></p>
+<h5>Pattern Breaking (Duarte Sparkline)</h5>
+<p>Premium decks alternate between emotions for engagement:</p>
+<p><pre><code>&quot;What Is&quot; (frustration) ↔ &quot;What Could Be&quot; (hope)</code></pre></p>
+<p>System calculates pattern breaks at 1/3 and 2/3 positions.</p>
+<h5>Slide Requirements</h5>
+<p><strong>ALL slides MUST:</strong></p>
+<ol>
+<li>Import <code>assets/design-tokens.css</code> - single source of truth</li>
+<li>Use CSS variables: <code>var(--color-primary)</code>, <code>var(--slide-bg)</code>, etc.</li>
+<li>Use Chart.js for charts (NOT CSS-only bars)</li>
+<li>Include navigation (keyboard arrows, click, progress bar)</li>
+<li>Center align content</li>
+<li>Focus on persuasion/conversion</li>
+</ol>
+<h5>Chart.js Integration</h5>
+<p><pre><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;canvas id=&quot;revenueChart&quot;&gt;&lt;/canvas&gt;
+&lt;script&gt;
+new Chart(document.getElementById(&#39;revenueChart&#39;), {
+    type: &#39;line&#39;,
+    data: {
+        labels: [&#39;Sep&#39;, &#39;Oct&#39;, &#39;Nov&#39;, &#39;Dec&#39;],
+        datasets: [{
+            data: [5, 12, 28, 45],
+            borderColor: &#39;#FF6B6B&#39;,  // Use brand coral
+            backgroundColor: &#39;rgba(255, 107, 107, 0.1)&#39;,
+            fill: true,
+            tension: 0.4
+        }]
+    }
+});
+&lt;/script&gt;</code></pre></p>
+<h5>Token Compliance</h5>
+<p><pre><code>/* CORRECT - uses token */
+background: var(--slide-bg);
+color: var(--color-primary);
+font-family: var(--typography-font-heading);
+
+/* WRONG - hardcoded */
+background: #0D0D0D;
+color: #FF6B6B;
+font-family: &#39;Space Grotesk&#39;;</code></pre></p>
+<h5>Reference Implementation</h5>
+<p>Working example with all features:</p>
+<p><pre><code>assets/designs/slides/claudekit-pitch-251223.html</code></pre></p>
+<h5>Command</h5>
+<p><pre><code>/slides:create &quot;10-slide investor pitch for ClaudeKit Marketing&quot;</code></pre></p>
+<h4>Best Practices</h4>
+<ol>
+<li>Never use raw hex in components - always reference tokens</li>
+<li>Semantic layer enables theme switching (light/dark)</li>
+<li>Component tokens enable per-component customization</li>
+<li>Use HSL format for opacity control</li>
+<li>Document every token&#39;s purpose</li>
+<li><strong>Slides must import design-tokens.css and use var() exclusively</strong></li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Next Level Builder</strong> in
+        <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/canvas-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="canvas-design create beautiful visual art in .png and .pdf documents using design philosophy. you should use this skill when the user asks to create a poster, piece of art, design, or other static piece. create original visual designs, never copying existing artists&#39; work to avoid copyright violations. design design anthropics/skills">
+  <span>
+    <span class="r-name">canvas-design</span>
+    <span class="r-desc">Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists&#39; work to avoid copyright violations.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/frontend-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="frontend-design guidance for distinctive, intentional visual design when building new ui or reshaping an existing one. helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults. design design frontend anthropics/skills">
+  <span>
+    <span class="r-name">frontend-design</span>
+    <span class="r-desc">Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/expo/expo-design-system/index.html"
+     data-source="expo"
+     data-category="design"
+     data-search="expo-design-system build and maintain a design system inside an expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (nativewind, tamagui, restyle, unistyles) in its own idiom, standardizing styles so screens (including ai-generated ones) look consistent and polished, fixing an app that looks ai-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). for platform styling specifics (semantic colors, hig rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure. design design expo/skills">
+  <span>
+    <span class="r-name">expo-design-system</span>
+    <span class="r-desc">Build and maintain a design system inside an Expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. Use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (NativeWind, Tamagui, Restyle, Unistyles) in its own idiom, standardizing styles so screens (including AI-generated ones) look consistent and polished, fixing an app that looks AI-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). For platform styling specifics (semantic colors, HIG rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure.</span>
+  </span>
+  <span class="r-src">expo/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/codebase-design/index.html"
+     data-source="mattpocock"
+     data-category="design"
+     data-search="codebase-design shared vocabulary for designing deep modules. use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or ai-navigable, or when another skill needs the deep-module vocabulary. design design mattpocock/skills">
+  <span>
+    <span class="r-name">codebase-design</span>
+    <span class="r-desc">Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add ui-ux-pro-max/design-system</code>
+  <button type="button" data-copy="npx aidentity add ui-ux-pro-max/design-system" aria-label="Copy install design-system">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a></dd></div>
+          <div><dt>Author</dt><dd>Next Level Builder</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>design</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">ui-ux-pro-max/design-system</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/ui-ux-pro-max/design-system/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

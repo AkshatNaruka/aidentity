@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>caveman-compress — Aidentity</title>
+<meta name="description" content="Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the configured model provider. Trigger: /caveman-compress.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="caveman-compress — Aidentity">
+<meta property="og:description" content="Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the configured model provider. Trigger: /caveman-compress.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"caveman-compress","description":"Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file's text to the configured model provider. Trigger: /caveman-compress.","url":"https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/","author":{"@type":"Person","name":"Julius Brussee"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>caveman-compress
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">JuliusBrussee/caveman · Apache-2.0</p>
+      <h1>caveman-compress</h1>
+      <p class="summary">Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the configured model provider. Trigger: /caveman-compress.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Caveman Compress</h3>
+<h4>Purpose</h4>
+<p>&gt; <strong>Data leaves the machine.</strong> Compression sends the file&#39;s full text to the model provider that <code>scripts/compress.py</code> is configured for: the <code>claude</code> CLI, the Anthropic API, or an OpenAI-compatible endpoint. Files whose names look like secrets (<code>.env</code>, <code>credentials</code>, <code>secrets</code>, <code>.netrc</code>, …) are refused before they are read. Don&#39;t compress a file the provider shouldn&#39;t see.</p>
+<p>Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as <code>&lt;filename&gt;.original.md</code>, but NOT beside the source file — it lives in an out-of-tree data dir (<code>$XDG_DATA_HOME/caveman-compress/backups/&lt;parent-dir-name&gt;/</code>, or <code>%LOCALAPPDATA%\caveman-compress\backups\&lt;parent-dir-name&gt;\</code> on Windows) so skill auto-loaders don&#39;t re-ingest it as a live file.</p>
+<h4>Trigger</h4>
+<p><code>/caveman-compress &lt;filepath&gt;</code> or when user asks to compress a memory file.</p>
+<p><strong>Requires an explicit filepath.</strong> If the user pastes raw text instead of naming a file, do NOT improvise an inline compression — ask them for the filepath to compress, or offer to save the pasted text to a file first. Writing your own reasoning/commentary about the request into the compressed output (e.g. &quot;User passed text directly, not a filepath...&quot;) is the exact failure this guards against — never let that leak into a saved file.</p>
+<h4>Process</h4>
+<ol>
+<li>The compression scripts live in <code>scripts/</code> (adjacent to this SKILL.md). If the path is not immediately available, search for <code>scripts/__main__.py</code> next to this SKILL.md.</li>
+</ol>
+<ol>
+<li>From the directory containing this SKILL.md, run:</li>
+</ol>
+<p>python3 -m scripts &lt;absolute_filepath&gt;</p>
+<ol>
+<li>The CLI will:</li>
+</ol>
+<ul>
+<li>detect file type (no tokens)</li>
+<li>call Claude to compress</li>
+<li>validate output (no tokens)</li>
+<li>if errors: cherry-pick fix with Claude (targeted fixes only, no recompression)</li>
+<li>retry up to 2 times</li>
+<li>if still failing after 2 retries: report error to user, leave original file untouched</li>
+</ul>
+<ol>
+<li>Return result to user</li>
+</ol>
+<h4>Compression Rules</h4>
+<h5>Remove</h5>
+<ul>
+<li>Articles: a, an, the</li>
+<li>Filler: just, really, basically, actually, simply, essentially, generally</li>
+<li>Pleasantries: &quot;sure&quot;, &quot;certainly&quot;, &quot;of course&quot;, &quot;happy to&quot;, &quot;I&#39;d recommend&quot;</li>
+<li>Hedging: &quot;it might be worth&quot;, &quot;you could consider&quot;, &quot;it would be good to&quot;</li>
+<li>Redundant phrasing: &quot;in order to&quot; → &quot;to&quot;, &quot;make sure to&quot; → &quot;ensure&quot;, &quot;the reason is because&quot; → &quot;because&quot;</li>
+<li>Connective fluff: &quot;however&quot;, &quot;furthermore&quot;, &quot;additionally&quot;, &quot;in addition&quot;</li>
+</ul>
+<h5>Preserve EXACTLY (never modify)</h5>
+<ul>
+<li>Code blocks (fenced ``` and indented)</li>
+<li>Inline code (<code>backtick content</code>)</li>
+<li>URLs and links (full URLs, markdown links)</li>
+<li>File paths (<code>/src/components/...</code>, <code>./config.yaml</code>)</li>
+<li>Commands (<code>npm install</code>, <code>git commit</code>, <code>docker build</code>)</li>
+<li>Technical terms (library names, API names, protocols, algorithms)</li>
+<li>Proper nouns (project names, people, companies)</li>
+<li>Dates, version numbers, numeric values</li>
+<li>Environment variables (<code>$HOME</code>, <code>NODE_ENV</code>)</li>
+</ul>
+<h5>Preserve Structure</h5>
+<ul>
+<li>All markdown headings (keep exact heading text, compress body below)</li>
+<li>Bullet point hierarchy (keep nesting level)</li>
+<li>Numbered lists (keep numbering)</li>
+<li>Tables (compress cell text, keep structure)</li>
+<li>Frontmatter/YAML headers in markdown files</li>
+</ul>
+<h5>Compress</h5>
+<ul>
+<li>Use short synonyms: &quot;big&quot; not &quot;extensive&quot;, &quot;fix&quot; not &quot;implement a solution for&quot;, &quot;use&quot; not &quot;utilize&quot;</li>
+<li>Fragments OK: &quot;Run tests before commit&quot; not &quot;You should always run tests before committing&quot;</li>
+<li>Drop &quot;you should&quot;, &quot;make sure to&quot;, &quot;remember to&quot; — just state the action</li>
+<li>Merge redundant bullets that say the same thing differently</li>
+<li>Keep one example where multiple examples show the same pattern</li>
+</ul>
+<p>CRITICAL RULE:</p>
+<p>Anything inside ``<code> ... </code>`` must be copied EXACTLY.</p>
+<p>Do not:</p>
+<ul>
+<li>remove comments</li>
+<li>remove spacing</li>
+<li>reorder lines</li>
+<li>shorten commands</li>
+<li>simplify anything</li>
+</ul>
+<p>Inline code (<code>...</code>) must be preserved EXACTLY.</p>
+<p>Do not modify anything inside backticks.</p>
+<p>If file contains code blocks:</p>
+<ul>
+<li>Treat code blocks as read-only regions</li>
+<li>Only compress text outside them</li>
+<li>Do not merge sections around code</li>
+</ul>
+<h4>Pattern</h4>
+<p>Original:</p>
+<p>&gt; You should always make sure to run the test suite before pushing any changes to the main branch. This is important because it helps catch bugs early and prevents broken builds from being deployed to production.</p>
+<p>Compressed:</p>
+<p>&gt; Run tests before push to main. Catch bugs early, prevent broken prod deploys.</p>
+<p>Original:</p>
+<p>&gt; The application uses a microservices architecture with the following components. The API gateway handles all incoming requests and routes them to the appropriate service. The authentication service is responsible for managing user sessions and JWT tokens.</p>
+<p>Compressed:</p>
+<p>&gt; Microservices architecture. API gateway route all requests to services. Auth service manage user sessions + JWT tokens.</p>
+<h4>Boundaries</h4>
+<ul>
+<li>ONLY compress natural language files (.md, .txt, .typ, .typst, .tex, extensionless)</li>
+<li>NEVER modify: .py, .js, .ts, .json, .yaml, .yml, .toml, .env, .lock, .css, .html, .xml, .sql, .sh</li>
+<li>If file has mixed content (prose + code), compress ONLY the prose sections</li>
+<li>If unsure whether something is code or prose, leave it unchanged</li>
+<li>Original file is backed up as FILE.original.md before overwriting — in the out-of-tree backup data dir (see Purpose), not beside the source file</li>
+<li>Never compress FILE.original.md (skip it)</li>
+</ul></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Julius Brussee</strong> in
+        <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add caveman/caveman-compress</code>
+  <button type="button" data-copy="npx aidentity add caveman/caveman-compress" aria-label="Copy install caveman-compress">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a></dd></div>
+          <div><dt>Author</dt><dd>Julius Brussee</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">caveman/caveman-compress</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/caveman/caveman-compress/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

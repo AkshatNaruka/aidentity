@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-app-clip — Aidentity</title>
+<meta name="description" content="Add an iOS App Clip target to an Expo app. Use when the user mentions App Clip, AASA, apple-app-site-association, appclips, smart app banner, or wants to ship a lightweight iOS Clip invoked from a URL alongside their parent app.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-app-clip/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-app-clip — Aidentity">
+<meta property="og:description" content="Add an iOS App Clip target to an Expo app. Use when the user mentions App Clip, AASA, apple-app-site-association, appclips, smart app banner, or wants to ship a lightweight iOS Clip invoked from a URL alongside their parent app.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-app-clip/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-app-clip","description":"Add an iOS App Clip target to an Expo app. Use when the user mentions App Clip, AASA, apple-app-site-association, appclips, smart app banner, or wants to ship a lightweight iOS Clip invoked from a URL alongside their parent app.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-app-clip/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-app-clip
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-app-clip</h1>
+      <p class="summary">Add an iOS App Clip target to an Expo app. Use when the user mentions App Clip, AASA, apple-app-site-association, appclips, smart app banner, or wants to ship a lightweight iOS Clip invoked from a URL alongside their parent app.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Add an App Clip to an Expo App</h3>
+<p>&gt; <strong>Requirements.</strong> Adding the App Clip target is open source. Shipping one requires an Apple Developer Program membership and App Store review, and the AASA file must be served over HTTPS on your domain (any HTTPS host works; EAS Hosting is one option). Building via EAS Build or <code>bunx testflight</code> uses your EAS plan&#39;s build minutes. See <a href="https://expo.dev/pricing" rel="noopener">https://expo.dev/pricing</a> and <a href="https://developer.apple.com/app-clips/." rel="noopener">https://developer.apple.com/app-clips/.</a></p>
+<p>Adds an iOS App Clip target to an Expo project. The Clip lives in <code>targets/clip/</code>, ships alongside the parent app, and is invoked from a URL on the app&#39;s domain via an Apple App Site Association (AASA) file.</p>
+<p>The parent app&#39;s bundle ID becomes <code>com.&lt;username&gt;.&lt;app-name&gt;</code> and the Clip&#39;s is automatically derived as <code>&lt;parent&gt;.clip</code> (e.g. <code>com.bacon.may20.clip</code>).</p>
+<h4>1. Set <code>bundleIdentifier</code> and <code>appleTeamId</code></h4>
+<p><code>bun create target</code> warns if these are missing. Add to <code>app.json</code>:</p>
+<p><pre><code>{
+  &quot;expo&quot;: {
+    &quot;ios&quot;: {
+      &quot;bundleIdentifier&quot;: &quot;com.&lt;username&gt;.&lt;app-name&gt;&quot;,
+      &quot;appleTeamId&quot;: &quot;XX57RJ5UTD&quot;
+    }
+  }
+}</code></pre></p>
+<h4>2. Add the App Clip target</h4>
+<p><pre><code>bun create target clip</code></pre></p>
+<p>This installs <a href="https://github.com/EvanBacon/expo-apple-targets" rel="noopener"><code>@bacons/apple-targets</code></a>, adds it to the <code>plugins</code> array in <code>app.json</code>, and writes:</p>
+<ul>
+<li><code>targets/clip/expo-target.config.js</code> — the target&#39;s config plugin</li>
+<li><code>targets/clip/Info.plist</code> — Clip Info.plist</li>
+<li><code>targets/clip/AppDelegate.swift</code>, <code>Assets.xcassets</code>, etc.</li>
+</ul>
+<p>Pick a good icon or reuse the existing one defined in the app — check it with <code>bunx expo config</code> under the <code>icon</code> or <code>ios.icon</code> key.</p>
+<h4>3. Wire up associated domains</h4>
+<p>The parent app and the Clip each need the Associated Domains entitlement pointing at the domain that hosts the AASA file.</p>
+<p>In <code>app.json</code>, add both <code>applinks:</code> (parent) and <code>appclips:</code> (Clip invocation) entries:</p>
+<p><pre><code>{
+  &quot;expo&quot;: {
+    &quot;ios&quot;: {
+      &quot;associatedDomains&quot;: [
+        &quot;applinks:may20.expo.app&quot;,
+        &quot;appclips:may20.expo.app&quot;
+      ]
+    }
+  }
+}</code></pre></p>
+<p>In <code>targets/clip/expo-target.config.js</code>, declare the Clip&#39;s entitlement:</p>
+<p><pre><code>/** @type {import(&#39;@bacons/apple-targets/app.plugin&#39;).ConfigFunction} */
+module.exports = (config) =&gt; ({
+  type: &quot;clip&quot;,
+  icon: &quot;https://github.com/expo.png&quot;,
+  entitlements: {
+    &quot;com.apple.developer.associated-domains&quot;: [&quot;appclips:may20.expo.app&quot;],
+  },
+});</code></pre></p>
+<p>&gt; If you skip this, <code>expo prebuild</code> will print: <code>Apple App Clip may require the associated domains entitlement but none were found</code>.</p>
+<h4>4. Register bundle IDs and create the App Store entry</h4>
+<p><pre><code>bunx setup-safari</code></pre></p>
+<p>This logs in to the Apple Developer account, registers <code>com.bacon.may20</code>, creates the App Store Connect entry, and prints:</p>
+<ul>
+<li>A starter <code>apple-app-site-association</code> JSON</li>
+<li>A <code>&lt;meta name=&quot;apple-itunes-app&quot;&gt;</code> tag with the iTunes app id</li>
+<li>Team ID, iTunes ID, and Bundle ID</li>
+</ul>
+<h4>5. Host the AASA file</h4>
+<p>App Clips are invoked when iOS fetches <code>https://&lt;your-domain&gt;/.well-known/apple-app-site-association</code> and finds a matching <code>appclips</code> entry.</p>
+<p><pre><code>mkdir -p public/.well-known
+touch public/.well-known/apple-app-site-association</code></pre></p>
+<p>Paste the JSON <code>setup-safari</code> printed, but <strong>add an <code>appclips</code> block</strong> for the Clip&#39;s full app ID (<code>&lt;TeamID&gt;.&lt;ClipBundleID&gt;</code>). The output of <code>setup-safari</code> only covers the parent app:</p>
+<p><pre><code>{
+  &quot;applinks&quot;: {
+    &quot;details&quot;: [
+      {
+        &quot;appIDs&quot;: [&quot;XX57RJ5UTD.com.bacon.may20&quot;],
+        &quot;components&quot;: [{ &quot;/&quot;: &quot;*&quot;, &quot;comment&quot;: &quot;Matches all routes&quot; }]
+      }
+    ]
+  },
+  &quot;appclips&quot;: {
+    &quot;apps&quot;: [&quot;XX57RJ5UTD.com.bacon.may20.clip&quot;]
+  },
+  &quot;activitycontinuation&quot;: {
+    &quot;apps&quot;: [&quot;XX57RJ5UTD.com.bacon.may20&quot;]
+  },
+  &quot;webcredentials&quot;: {
+    &quot;apps&quot;: [&quot;XX57RJ5UTD.com.bacon.may20&quot;]
+  }
+}</code></pre></p>
+<p>Notes:</p>
+<ul>
+<li>The file has <strong>no extension</strong> and <strong>no <code>Content-Type</code> requirements</strong> beyond being served as-is. Expo Router static export serves files in <code>public/</code> verbatim.</li>
+<li>The <code>appclips</code> block is what lets a URL on the domain launch the Clip.</li>
+<li><code>webcredentials</code> is used for sharing credentials between the website, parent app, and the App Clip.</li>
+<li><code>activitycontinuation</code> is optional and used for sharing the link between mobile and desktop. Must be used with <code>Head</code> from expo-router — see <a href="https://docs.expo.dev/router/advanced/apple-handoff/" rel="noopener">https://docs.expo.dev/router/advanced/apple-handoff/</a></li>
+<li>Notation and route-disabling details: <a href="https://sosumi.ai/documentation/xcode/supporting-associated-domains" rel="noopener">https://sosumi.ai/documentation/xcode/supporting-associated-domains</a></li>
+</ul>
+<h4>6. Add the Smart App Banner meta tag</h4>
+<p>Create <code>src/app/+html.tsx</code> (Expo Router&#39;s HTML shell) and add the tag from <code>setup-safari</code>. Create the versioned template if it doesn&#39;t exist:</p>
+<p><pre><code>bunx expo customize src/app/+html.tsx</code></pre></p>
+<p>Add the meta tag to the <code>&lt;head&gt;</code>:</p>
+<p><pre><code>import { ScrollViewStyleReset } from &quot;expo-router/html&quot;;
+
+export default function Root({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html lang=&quot;en&quot;&gt;
+      &lt;head&gt;
+        &lt;meta charSet=&quot;utf-8&quot; /&gt;
+        &lt;meta httpEquiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+        &lt;meta name=&quot;apple-itunes-app&quot; content=&quot;app-id=6771566491&quot; /&gt;
+        &lt;ScrollViewStyleReset /&gt;
+      &lt;/head&gt;
+      &lt;body&gt;{children}&lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre></p>
+<p>To make the website show the App Clip card instead of the install card, use:</p>
+<p><pre><code>&lt;meta
+  name=&quot;apple-itunes-app&quot;
+  content=&quot;app-id=6771566491, app-clip-bundle-id=com.bacon.may20.clip, app-clip-display=card&quot;
+/&gt;</code></pre></p>
+<h4>7. Deploy the website</h4>
+<p>The AASA file must be live before iOS will trust the association. Use <a href="https://docs.expo.dev/eas/hosting/" rel="noopener">EAS Hosting</a>:</p>
+<p><pre><code>bunx expo export -p web
+eas deploy --prod</code></pre></p>
+<p>This publishes the site (including <code>/.well-known/apple-app-site-association</code>) at <code>https://&lt;slug&gt;.expo.app</code>. Verify:</p>
+<p><pre><code>curl https://may20.expo.app/.well-known/apple-app-site-association</code></pre></p>
+<h4>8. Mirror permissions</h4>
+<p>Inspect the parent app&#39;s permissions after prebuild:</p>
+<p><pre><code>npx expo config --type introspect</code></pre></p>
+<p>Look at the <code>infoPlist</code> object — mirror the permission keys in the App Clip&#39;s <code>Info.plist</code> so matching APIs can be used from the Clip.</p>
+<p>Set <code>deploymentTarget: &quot;17.6&quot;</code> in the Clip&#39;s target config — App Clips have a higher minimum size limit in iOS 17.6.</p>
+<p>If the app uses push notifications or location services, add to the App Clip&#39;s <code>Info.plist</code> to request the necessary permissions:</p>
+<p><pre><code>&lt;key&gt;NSAppClip&lt;/key&gt;
+&lt;dict&gt;
+  &lt;key&gt;NSAppClipRequestEphemeralUserNotification&lt;/key&gt;
+  &lt;false/&gt;
+  &lt;key&gt;NSAppClipRequestLocationConfirmation&lt;/key&gt;
+  &lt;true/&gt;
+&lt;/dict&gt;</code></pre></p>
+<h4>9. Build and submit to TestFlight</h4>
+<p><pre><code>bunx testflight</code></pre></p>
+<p>This will:</p>
+<ol>
+<li>Generate an <code>eas.json</code> if missing.</li>
+<li>Set up credentials for <strong>both</strong> targets (parent + Clip). Each gets its own provisioning profile but can share a single Distribution Certificate.</li>
+<li>Sync capabilities — note <code>Enabled: Associated Domains</code> for the Clip target.</li>
+<li>Build, upload, and schedule a TestFlight submission.</li>
+</ol>
+<h4>10. Configure App Clip metadata</h4>
+<p>Pull existing App Store metadata to local:</p>
+<p><pre><code>eas metadata:pull</code></pre></p>
+<p>Add <code>apple.appClip</code> to <code>store.config.json</code>. Up to 3 invocation URLs can launch the Clip from a web page:</p>
+<p><pre><code>{
+  &quot;configVersion&quot;: 0,
+  &quot;apple&quot;: {
+    &quot;appClip&quot;: {
+      &quot;defaultExperience&quot;: {
+        &quot;action&quot;: &quot;PLAY&quot;,
+        &quot;releaseWithAppStoreVersion&quot;: true,
+        &quot;reviewDetail&quot;: {
+          &quot;invocationUrls&quot;: [&quot;https://may20.expo.app/&quot;, null, null]
+        },
+        &quot;info&quot;: {
+          &quot;en-US&quot;: {
+            &quot;subtitle&quot;: &quot;Instantly native with Expo&quot;,
+            &quot;headerImage&quot;: &quot;store/apple/app-clip/en-US/asc-app-clip.png&quot;
+          }
+        }
+      }
+    }
+  }
+}</code></pre></p>
+<p>The <code>headerImage</code> must be a 1800x1200 PNG with no opacity.</p>
+<p>Push back to the store:</p>
+<p><pre><code>eas metadata:push</code></pre></p>
+<p>Apple&#39;s recommended App Clip metadata guidelines: <a href="https://sosumi.ai/documentation/appclip/configuring-the-launch-experience-of-your-app-clip" rel="noopener">https://sosumi.ai/documentation/appclip/configuring-the-launch-experience-of-your-app-clip</a></p>
+<h4>What you get</h4>
+<ul>
+<li>Parent app target: <code>com.bacon.may20</code></li>
+<li>App Clip target: <code>com.bacon.may20.clip</code>, lives in <code>targets/clip/</code></li>
+<li>AASA hosted at <code>https://may20.expo.app/.well-known/apple-app-site-association</code></li>
+<li>Smart App Banner meta tag on every web route</li>
+<li>Every route linked to its native counterpart</li>
+<li>TestFlight build of the parent app with the Clip embedded</li>
+</ul>
+<p>Once Apple invokes the Clip from a URL on the domain, iOS opens <code>targets/clip/</code>&#39;s entry point which loads the React Native app.</p>
+<h4>Native detection (optional)</h4>
+<p>To let JS detect when it&#39;s running inside an App Clip and present an install prompt for the full app, create a local Expo module (<code>bunx create-expo-module --local</code>) that exposes <code>navigator.appClip.prompt()</code>.</p>
+<p>See [./references/native-module.md](./references/native-module.md) for the Swift module, TypeScript interface, and usage.</p>
+<h4>References</h4>
+<ul>
+<li>./references/native-module.md — Local Expo module to detect App Clip context and present the SKOverlay install prompt</li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-app-clip&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-app-clip</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-app-clip" aria-label="Copy install expo-app-clip">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-app-clip</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-app-clip/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

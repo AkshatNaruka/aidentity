@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-upgrade — Aidentity</title>
+<meta name="description" content="Guidelines for upgrading Expo SDK versions and fixing dependency issues">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-upgrade/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-upgrade — Aidentity">
+<meta property="og:description" content="Guidelines for upgrading Expo SDK versions and fixing dependency issues">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-upgrade/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-upgrade","description":"Guidelines for upgrading Expo SDK versions and fixing dependency issues","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-upgrade/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-upgrade
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-upgrade</h1>
+      <p class="summary">Guidelines for upgrading Expo SDK versions and fixing dependency issues</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h4>References</h4>
+<ul>
+<li>./references/react-19.md -- SDK +54: React 19 changes (useContext → use, Context.Provider → Context, forwardRef removal)</li>
+<li>./references/new-architecture.md -- SDK +53: New Architecture migration guide</li>
+<li>./references/react-compiler.md -- SDK +54: React Compiler setup and migration guide</li>
+<li>./references/native-tabs.md -- SDK +55: Native tabs changes (Icon/Label/Badge now accessed via NativeTabs.Trigger.\*)</li>
+<li>./references/expo-av-to-audio.md -- SDK +55: Migrate audio playback and recording from expo-av to expo-audio</li>
+<li>./references/expo-av-to-video.md -- SDK +55: Migrate video playback from expo-av to expo-video</li>
+<li>./references/react-navigation-to-expo-router.md -- SDK +56: Migrate <code>@react-navigation/*</code> imports to <code>expo-router</code> entry points (codemod + manual mapping)</li>
+</ul>
+<h4>Beta/Preview Releases</h4>
+<p>Beta versions use <code>.preview</code> suffix (e.g., <code>55.0.0-preview.2</code>), published under <code>@next</code> tag.</p>
+<p>Check if latest is beta: <a href="https://exp.host/--/api/v2/versions" rel="noopener">https://exp.host/--/api/v2/versions</a> (look for <code>-preview</code> in <code>expoVersion</code>)</p>
+<p><pre><code>npx expo install expo@next --fix  # install beta</code></pre></p>
+<h4>Step-by-Step Upgrade Process</h4>
+<p>&gt; If upgrading from SDK 55 or earlier, skip SDK 56 and upgrade directly to SDK 57. Don&#39;t use <code>expo@57.0.8</code> or below. SDK 55 with Hermes V1 enabled, SDK 56, and older SDK 57 releases contain a Hermes V1 memory regression that can drastically increase memory usage when using <code>react-native-worklets</code> or <code>react-native-reanimated</code>.</p>
+<ol>
+<li>Upgrade Expo and dependencies</li>
+</ol>
+<p><pre><code>npx expo install expo@latest
+npx expo install --fix</code></pre></p>
+<ol>
+<li>Run diagnostics: <code>npx expo-doctor</code></li>
+</ol>
+<ol>
+<li>Clear caches and reinstall</li>
+</ol>
+<p><pre><code>npx expo export -p ios --clear
+rm -rf node_modules .expo
+watchman watch-del-all</code></pre></p>
+<h4>Breaking Changes Checklist</h4>
+<ul>
+<li>Check for removed APIs in release notes</li>
+<li>Update import paths for moved modules</li>
+<li>Review native module changes requiring prebuild</li>
+<li>Test all camera, audio, and video features</li>
+<li>Verify navigation still works correctly</li>
+</ul>
+<h4>Prebuild for Native Changes</h4>
+<p><strong>First check if <code>ios/</code> and <code>android/</code> directories exist in the project.</strong> If neither directory exists, the project uses Continuous Native Generation (CNG) and native projects are regenerated at build time — skip this section and &quot;Clear caches for bare workflow&quot; entirely.</p>
+<p>If upgrading requires native changes:</p>
+<p><pre><code>npx expo prebuild --clean</code></pre></p>
+<p>This regenerates the <code>ios</code> and <code>android</code> directories. Ensure the project is not a bare workflow app before running this command.</p>
+<h4>Clear caches for bare workflow</h4>
+<p>These steps only apply when <code>ios/</code> and/or <code>android/</code> directories exist in the project:</p>
+<ul>
+<li>Clear the cocoapods cache for iOS: <code>cd ios &amp;&amp; pod install --repo-update</code></li>
+<li>Clear derived data for Xcode: <code>npx expo run:ios --no-build-cache</code></li>
+<li>Clear the Gradle cache for Android: <code>cd android &amp;&amp; ./gradlew clean</code></li>
+</ul>
+<h4>Housekeeping</h4>
+<ul>
+<li>Review release notes for the target SDK version at <a href="https://expo.dev/changelog" rel="noopener">https://expo.dev/changelog</a></li>
+<li>Update versioned docs links in agent instruction files (<code>AGENTS.md</code>). The default template links to <code>https://docs.expo.dev/versions/v&lt;version&gt;/</code>. Search for <code>docs.expo.dev/versions/</code> and bump each link to the new SDK version.</li>
+<li>If using Expo SDK 54 or later, ensure react-native-worklets is installed — this is required for react-native-reanimated to work.</li>
+<li>Enable React Compiler in SDK 54+ by adding <code>&quot;experiments&quot;: { &quot;reactCompiler&quot;: true }</code> to app.json — it&#39;s stable and recommended</li>
+<li>Delete sdkVersion from <code>app.json</code> to let Expo manage it automatically</li>
+<li>Review formerly implicit packages such as <code>@babel/core</code>, <code>babel-preset-expo</code>, and <code>expo-constants</code> individually instead of removing them wholesale. Keep any package that an installed dependency declares as a required peer.</li>
+<li>Keep <code>expo-constants</code> as a direct dependency whenever <code>expo-router</code> is installed. Expo Router imports it and declares it as a required peer; relying on a transitive copy can break native autolinking outside Expo Go.</li>
+<li>After removing any dependency, immediately run <code>npx expo-doctor</code> and restore anything it reports as a missing required peer.</li>
+<li>If the babel.config.js only contains &#39;babel-preset-expo&#39;, delete the file</li>
+<li>If the metro.config.js only contains expo defaults, delete the file</li>
+</ul>
+<h4>Deprecated Packages</h4>
+<table><thead><tr><th>Old Package</th><th>Replacement</th></tr></thead><tbody>
+<tr><td><code>expo-av</code></td><td><code>expo-audio</code> and <code>expo-video</code></td></tr>
+<tr><td><code>expo-permissions</code></td><td>Individual package permission APIs</td></tr>
+<tr><td><code>@expo/vector-icons</code></td><td><code>expo-symbols</code> (for SF Symbols)</td></tr>
+<tr><td><code>AsyncStorage</code></td><td><code>expo-sqlite/localStorage/install</code></td></tr>
+<tr><td><code>expo-app-loading</code></td><td><code>expo-splash-screen</code></td></tr>
+<tr><td>expo-linear-gradient</td><td>experimental_backgroundImage + CSS gradients in View</td></tr>
+</tbody></table>
+<p>When migrating deprecated packages, update all code usage before removing the old package. For expo-av, consult the migration references to convert Audio.Sound to useAudioPlayer, Audio.Recording to useAudioRecorder, and Video components to VideoView with useVideoPlayer.</p>
+<h4>expo.install.exclude</h4>
+<p>Check if package.json has excluded packages:</p>
+<p><pre><code>{
+  &quot;expo&quot;: { &quot;install&quot;: { &quot;exclude&quot;: [&quot;react-native-reanimated&quot;] } }
+}</code></pre></p>
+<p>Exclusions are often workarounds that may no longer be needed after upgrading. Review each one.</p>
+<h4>Removing patches</h4>
+<p>Check if there are any outdated patches in the <code>patches/</code> directory. Remove them if they are no longer needed.</p>
+<h4>Postcss</h4>
+<ul>
+<li><code>autoprefixer</code> isn&#39;t needed in SDK +53. Remove it from dependencies and check <code>postcss.config.js</code> or <code>postcss.config.mjs</code> to remove it from the plugins list.</li>
+<li>Use <code>postcss.config.mjs</code> in SDK +53.</li>
+</ul>
+<h4>Metro</h4>
+<p>Remove redundant metro config options:</p>
+<ul>
+<li>resolver.unstable_enablePackageExports is enabled by default in SDK +53.</li>
+<li><code>experimentalImportSupport</code> is enabled by default in SDK +54.</li>
+<li><code>EXPO_USE_FAST_RESOLVER=1</code> is removed in SDK +54.</li>
+<li>cjs and mjs extensions are supported by default in SDK +50.</li>
+<li>Expo webpack is deprecated, migrate to <a href="https://docs.expo.dev/router/migrate/from-expo-webpack/" rel="noopener">Expo Router and Metro web</a>.</li>
+</ul>
+<h4>Hermes engine v1</h4>
+<p>Hermes V1 is the default on SDK 56 and later. SDK 55 apps using Hermes V1, all SDK 56 apps, and SDK 57 apps before <code>expo@57.0.9</code> may encounter a memory regression when importing <code>react-native-worklets</code> or <code>react-native-reanimated</code>. Upgrade directly to SDK 57 and <code>expo@57.0.9</code> or later. Do not recommend Worklets Bundle Mode as a production workaround; it is unsupported and experimental and may not work as expected.</p>
+<p>Do not guide users to opt in to or out of Hermes V1. Changing the Hermes version from the SDK default is unsupported and has significant build and dependency-management caveats.</p>
+<h4>New Architecture</h4>
+<p>The new architecture is enabled by default, the app.json field <code>&quot;newArchEnabled&quot;: true</code> is no longer needed as it&#39;s the default. Expo Go only supports the new architecture as of SDK +53.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-upgrade&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-upgrade</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-upgrade" aria-label="Copy install expo-upgrade">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-upgrade</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-upgrade/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

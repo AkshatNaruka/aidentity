@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eas-workflows — Aidentity</title>
+<meta name="description" content="Helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/eas-workflows/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eas-workflows — Aidentity">
+<meta property="og:description" content="Helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/eas-workflows/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"eas-workflows","description":"Helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/eas-workflows/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>eas-workflows
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>eas-workflows</h1>
+      <p class="summary">Helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>EAS Workflows Skill</h3>
+<p>&gt; <strong>EAS service - costs apply.</strong> EAS Workflows run on Expo Application Services, a paid product with free-tier limits. Each workflow job consumes your plan&#39;s build/compute minutes, and jobs that build or submit also need paid Apple Developer and Google Play accounts. Review <a href="https://expo.dev/pricing" rel="noopener">https://expo.dev/pricing</a> before triggering runs.</p>
+<p>Help developers write and edit EAS CI/CD workflow YAML files.</p>
+<h4>Reference Documentation</h4>
+<p>Fetch these resources before generating or editing workflow files, or when answering syntax questions. First resolve this skill&#39;s directory, then use the fetch script in its <code>scripts/</code> directory. It is implemented using Node.js and caches responses using ETags for efficiency:</p>
+<p><pre><code># Fetch resources
+node &lt;skill-dir&gt;/scripts/fetch.js &lt;url&gt;</code></pre></p>
+<ol>
+<li><strong>JSON Schema</strong> — <a href="https://api.expo.dev/v2/workflows/schema" rel="noopener">https://api.expo.dev/v2/workflows/schema</a></li>
+</ol>
+<ul>
+<li>It is NECESSARY to fetch this schema</li>
+<li>Source of truth for the workflow YAML structure; EAS CLI remains the authoritative final validator</li>
+<li>All job types and their required/optional parameters</li>
+<li>Trigger types and configurations</li>
+<li>Runner types, VM images, and all enums</li>
+</ul>
+<ol>
+<li><strong>Syntax Documentation</strong> — <a href="https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/eas/workflows/syntax.mdx" rel="noopener">https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/eas/workflows/syntax.mdx</a></li>
+</ol>
+<ul>
+<li>Overview of workflow YAML syntax</li>
+<li>Examples and English explanations</li>
+<li>Expression syntax and contexts</li>
+</ul>
+<ol>
+<li><strong>Pre-packaged Jobs</strong> — <a href="https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/eas/workflows/pre-packaged-jobs.mdx" rel="noopener">https://raw.githubusercontent.com/expo/expo/refs/heads/main/docs/pages/eas/workflows/pre-packaged-jobs.mdx</a></li>
+</ol>
+<ul>
+<li>Documentation for supported pre-packaged job types</li>
+<li>Job-specific parameters and outputs</li>
+</ul>
+<p>Do not rely on memorized values; these resources evolve as new features are added.</p>
+<h4>Workflow File Location</h4>
+<p>Workflows live in <code>.eas/workflows/*.yml</code> (or <code>.yaml</code>). Each file must be 16 KiB or smaller.</p>
+<h4>Top-Level Structure</h4>
+<p>A workflow file has these top-level keys:</p>
+<ul>
+<li><code>name</code> — Display name for the workflow</li>
+<li><code>on</code> — Triggers that start the workflow (at least one required)</li>
+<li><code>jobs</code> — Job definitions (required)</li>
+<li><code>defaults</code> — Shared defaults for all jobs</li>
+<li><code>concurrency</code> — Control parallel workflow runs</li>
+</ul>
+<p>Consult the schema for the full specification of each section.</p>
+<h4>Expressions</h4>
+<p>Use <code>${{ }}</code> syntax for dynamic values. The schema defines available contexts:</p>
+<ul>
+<li><code>github.*</code> — GitHub repository and event information</li>
+<li><code>inputs.*</code> — Values from <code>workflow_dispatch</code> inputs</li>
+<li><code>needs.*</code> — Outputs and status from dependent jobs</li>
+<li><code>jobs.*</code> — Job outputs (alternative syntax)</li>
+<li><code>steps.*</code> — Step outputs within custom jobs</li>
+<li><code>workflow.*</code> — Workflow metadata</li>
+</ul>
+<h4>Generating Workflows</h4>
+<p>When generating or editing workflows:</p>
+<ol>
+<li>Fetch the schema to get current job types, parameters, and allowed values</li>
+<li>Validate that required fields are present for each job type</li>
+<li>Verify job references in <code>needs</code> and <code>after</code> exist in the workflow</li>
+<li>Check that expressions reference valid contexts and outputs</li>
+<li>Ensure <code>if</code> conditions respect the schema&#39;s length constraints</li>
+</ol>
+<h4>Validation</h4>
+<p>After generating or editing a workflow file, validate it with EAS CLI from the Expo project root:</p>
+<p><pre><code>npx -y eas-cli@latest workflow:validate .eas/workflows/&lt;workflow.yml&gt; --non-interactive</code></pre></p>
+<p>Run the command separately for each changed workflow file. It requires a logged-in EAS CLI session and a linked Expo project. Unlike schema-only validation, it also checks build profile references against the project&#39;s <code>eas.json</code> and performs EAS server-side validation. Fix every reported error and rerun the command until it prints <code>Workflow configuration YAML is valid.</code> Do not replace this command with a local YAML or JSON Schema validator.</p>
+<h4>Answering Questions</h4>
+<p>When users ask about available options (job types, triggers, runner types, etc.), fetch the schema and derive the answer from it rather than relying on potentially outdated information.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;eas-workflows&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/eas-workflows</code>
+  <button type="button" data-copy="npx aidentity add expo/eas-workflows" aria-label="Copy install eas-workflows">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/eas-workflows</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/eas-workflows/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

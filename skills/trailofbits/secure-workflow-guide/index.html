@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>secure-workflow-guide — Aidentity</title>
+<meta name="description" content="Guides through Trail of Bits&#39; 5-step secure development workflow. Runs Slither scans, checks special features (upgradeability/ERC conformance/token integration), generates visual security diagrams, helps document security properties for fuzzing/verification, and reviews manual security areas. Use when securing a smart contract end to end rather than hunting one bug, checking a project on every check-in or before deployment, triaging a Slither report, or asking where to start on smart contract security.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/trailofbits/secure-workflow-guide/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="secure-workflow-guide — Aidentity">
+<meta property="og:description" content="Guides through Trail of Bits&#39; 5-step secure development workflow. Runs Slither scans, checks special features (upgradeability/ERC conformance/token integration), generates visual security diagrams, helps document security properties for fuzzing/verification, and reviews manual security areas. Use when securing a smart contract end to end rather than hunting one bug, checking a project on every check-in or before deployment, triaging a Slither report, or asking where to start on smart contract security.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/trailofbits/secure-workflow-guide/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"secure-workflow-guide","description":"Guides through Trail of Bits' 5-step secure development workflow. Runs Slither scans, checks special features (upgradeability/ERC conformance/token integration), generates visual security diagrams, helps document security properties for fuzzing/verification, and reviews manual security areas. Use when securing a smart contract end to end rather than hunting one bug, checking a project on every check-in or before deployment, triaging a Slither report, or asking where to start on smart contract security.","url":"https://akshatnaruka.github.io/aidentity/skills/trailofbits/secure-workflow-guide/","author":{"@type":"Person","name":"Trail of Bits"},"license":"CC-BY-SA-4.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>secure-workflow-guide
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">trailofbits/skills · CC-BY-SA-4.0</p>
+      <h1>secure-workflow-guide</h1>
+      <p class="summary">Guides through Trail of Bits&#39; 5-step secure development workflow. Runs Slither scans, checks special features (upgradeability/ERC conformance/token integration), generates visual security diagrams, helps document security properties for fuzzing/verification, and reviews manual security areas. Use when securing a smart contract end to end rather than hunting one bug, checking a project on every check-in or before deployment, triaging a Slither report, or asking where to start on smart contract security.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Secure Workflow Guide</h3>
+<h4>Purpose</h4>
+<p>Guides through Trail of Bits&#39; secure development workflow - a 5-step process to enhance smart contract security throughout development.</p>
+<p><strong>Use this</strong>: On every check-in, before deployment, or when you want a security review</p>
+<hr>
+<h4>The 5-Step Workflow</h4>
+<p>Covers a security workflow including:</p>
+<h5>Step 1: Check for Known Security Issues</h5>
+<p>Run Slither with 70+ built-in detectors to find common vulnerabilities:</p>
+<ul>
+<li>Parse findings by severity</li>
+<li>Explain each issue with file references</li>
+<li>Recommend fixes</li>
+<li>Help triage false positives</li>
+</ul>
+<p><strong>Goal</strong>: Clean Slither report or documented triages</p>
+<h5>Step 2: Check Special Features</h5>
+<p>Detect and validate applicable features:</p>
+<ul>
+<li><strong>Upgradeability</strong>: slither-check-upgradeability (17 upgrade risks)</li>
+<li><strong>ERC conformance</strong>: slither-check-erc (6 common specs)</li>
+<li><strong>Token integration</strong>: Recommend token-integration-analyzer skill</li>
+<li><strong>Security properties</strong>: slither-prop for ERC20</li>
+</ul>
+<p><strong>Note</strong>: Only runs checks that apply to your codebase</p>
+<h5>Step 3: Visual Security Inspection</h5>
+<p>Generate 3 security diagrams:</p>
+<ul>
+<li><strong>Inheritance graph</strong>: Identify shadowing and C3 linearization issues</li>
+<li><strong>Function summary</strong>: Show visibility and access controls</li>
+<li><strong>Variables and authorization</strong>: Map who can write to state variables</li>
+</ul>
+<p>Review each diagram for security concerns</p>
+<h5>Step 4: Document Security Properties</h5>
+<p>Help document critical security properties:</p>
+<ul>
+<li>State machine transitions and invariants</li>
+<li>Access control requirements</li>
+<li>Arithmetic constraints and precision</li>
+<li>External interaction safety</li>
+<li>Standards conformance</li>
+</ul>
+<p>Then set up testing:</p>
+<ul>
+<li><strong>Echidna</strong>: Property-based fuzzing with invariants</li>
+<li><strong>Manticore</strong>: Formal verification with symbolic execution</li>
+<li><strong>Custom Slither checks</strong>: Project-specific business logic</li>
+</ul>
+<p><strong>Note</strong>: Most important activity for security</p>
+<h5>Step 5: Manual Review Areas</h5>
+<p>Analyze areas automated tools miss:</p>
+<ul>
+<li><strong>Privacy</strong>: On-chain secrets, commit-reveal needs</li>
+<li><strong>Front-running</strong>: Slippage protection, ordering risks, MEV</li>
+<li><strong>Cryptography</strong>: Weak randomness, signature issues, hash collisions</li>
+<li><strong>DeFi interactions</strong>: Oracle manipulation, flash loans, protocol assumptions</li>
+</ul>
+<p>Search codebase for these patterns and flag risks</p>
+<p>For detailed instructions, commands, and explanations for each step, see [WORKFLOW_STEPS.md](resources/WORKFLOW_STEPS.md).</p>
+<hr>
+<h4>How I Work</h4>
+<p>When invoked, I will:</p>
+<ol>
+<li><strong>Explore your codebase</strong> to understand structure</li>
+<li><strong>Run Step 1</strong>: Slither security scan</li>
+<li><strong>Detect and run Step 2</strong>: Special feature checks (only what applies)</li>
+<li><strong>Generate Step 3</strong>: Visual security diagrams</li>
+<li><strong>Guide Step 4</strong>: Security property documentation</li>
+<li><strong>Analyze Step 5</strong>: Manual review areas</li>
+<li><strong>Provide action plan</strong>: Prioritized fixes and next steps</li>
+</ol>
+<p>Adapts based on:</p>
+<ul>
+<li>What tools you have installed</li>
+<li>What&#39;s applicable to your project</li>
+<li>Where you are in development</li>
+</ul>
+<hr>
+<h4>Rationalizations (Do Not Skip)</h4>
+<table><thead><tr><th>Rationalization</th><th>Why It&#39;s Wrong</th><th>Required Action</th></tr></thead><tbody>
+<tr><td>&quot;Slither not available, I&#39;ll check manually&quot;</td><td>Manual checking misses 70+ detector patterns</td><td>Install and run Slither, or document why it&#39;s blocked</td></tr>
+<tr><td>&quot;Can&#39;t generate diagrams, I&#39;ll describe the architecture&quot;</td><td>Descriptions aren&#39;t visual - diagrams reveal patterns text misses</td><td>Execute slither --print commands, generate actual visual outputs</td></tr>
+<tr><td>&quot;No upgrades detected, skip upgradeability checks&quot;</td><td>Proxies and upgrades are often implicit or planned</td><td>Verify with codebase search before skipping Step 2 checks</td></tr>
+<tr><td>&quot;Not a token, skip ERC checks&quot;</td><td>Tokens can be integrated without obvious ERC inheritance</td><td>Check for token interactions, transfers, balances before skipping</td></tr>
+<tr><td>&quot;Can&#39;t set up Echidna now, suggesting it for later&quot;</td><td>Property-based testing is Step 4, not optional</td><td>Document properties now, set up fuzzing infrastructure</td></tr>
+<tr><td>&quot;No DeFi interactions, skip oracle/flash loan checks&quot;</td><td>DeFi patterns appear in unexpected places (price feeds, external calls)</td><td>Complete Step 5 manual review, search codebase for patterns</td></tr>
+<tr><td>&quot;This step doesn&#39;t apply to my project&quot;</td><td>&quot;Not applicable&quot; without verification = missed vulnerabilities</td><td>Verify with explicit codebase search before declaring N/A</td></tr>
+<tr><td>&quot;I&#39;ll provide generic security advice instead of running workflow&quot;</td><td>Generic advice isn&#39;t actionable, workflow finds specific issues</td><td>Execute all 5 steps, generate project-specific findings with file:line references</td></tr>
+</tbody></table>
+<hr>
+<h4>Example Output</h4>
+<p>When I complete the workflow, you&#39;ll get a comprehensive security report covering:</p>
+<ul>
+<li><strong>Step 1</strong>: Slither findings with severity, file references, and fix recommendations</li>
+<li><strong>Step 2</strong>: Special feature validation results (upgradeability, ERC conformance, etc.)</li>
+<li><strong>Step 3</strong>: Visual diagrams analyzing inheritance, functions, and state variable authorization</li>
+<li><strong>Step 4</strong>: Documented security properties and testing setup (Echidna/Manticore)</li>
+<li><strong>Step 5</strong>: Manual review findings (privacy, front-running, cryptography, DeFi risks)</li>
+<li><strong>Action plan</strong>: Critical/high/medium priority tasks with effort estimates</li>
+<li><strong>Workflow checklist</strong>: Progress on all 5 steps</li>
+</ul>
+<p>For a complete example workflow report, see [EXAMPLE_REPORT.md](resources/EXAMPLE_REPORT.md).</p>
+<hr>
+<h4>What You&#39;ll Get</h4>
+<p><strong>Security Report</strong>:</p>
+<ul>
+<li>Slither findings with severity and fixes</li>
+<li>Special feature validation results</li>
+<li>Visual diagrams (PNG/PDF)</li>
+<li>Manual review findings</li>
+</ul>
+<p><strong>Action Plan</strong>:</p>
+<ul>
+<li>[ ] Critical issues to fix immediately</li>
+<li>[ ] Security properties to document</li>
+<li>[ ] Testing to set up (Echidna/Manticore)</li>
+<li>[ ] Manual areas to review</li>
+</ul>
+<p><strong>Workflow Checklist</strong>:</p>
+<ul>
+<li>[ ] Clean Slither report</li>
+<li>[ ] Special features validated</li>
+<li>[ ] Visual inspection complete</li>
+<li>[ ] Properties documented</li>
+<li>[ ] Manual review done</li>
+</ul>
+<hr>
+<h4>Getting Help</h4>
+<p><strong>Trail of Bits Resources</strong>:</p>
+<ul>
+<li>Office Hours: Every Tuesday (<a href="https://meetings.hubspot.com/trailofbits/office-hours" rel="noopener">schedule</a>)</li>
+<li>Empire Hacking Slack: #crytic and #ethereum channels</li>
+</ul>
+<p><strong>Other Security</strong>:</p>
+<ul>
+<li>Remember: Security is about more than smart contracts</li>
+<li>Off-chain security (owner keys, infrastructure) equally critical</li>
+</ul>
+<hr>
+<h4>Ready to Start</h4>
+<p>Let me know when you&#39;re ready and I&#39;ll run through the workflow with your codebase!</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Trail of Bits</strong> in
+        <a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add trailofbits/secure-workflow-guide</code>
+  <button type="button" data-copy="npx aidentity add trailofbits/secure-workflow-guide" aria-label="Copy install secure-workflow-guide">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Trail of Bits</dd></div>
+          <div><dt>License</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">trailofbits/secure-workflow-guide</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/trailofbits/secure-workflow-guide/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

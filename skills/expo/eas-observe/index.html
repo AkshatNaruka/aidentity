@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eas-observe — Aidentity</title>
+<meta name="description" content="Use for anything related to EAS Observe - adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive and ObserveInteractiveMarker, the useObserve hook, the Expo Router / React Navigation integrations for per-route metrics, the expo-image and Reanimated integrations, user-defined events via `Observe.logEvent`, error reporting via ObserveErrorBoundary and `Observe.reportError`, native crash reporting, source map upload for symbolicated stack traces, and runtime config such as sampleRate and dispatchInDebug), querying via the EAS CLI (`eas observe:metrics-summary`, `observe:metrics`, `observe:routes`, `observe:events`, `observe:session`, `observe:versions`, `observe:errors`, `observe:event`) or the Expo MCP `observe_*` tools, interpreting the resulting metrics (cold/warm launch, TTR, TTI, navigation cold/warm TTR, update download, and the TTI frameRate/device/network params for triaging slow startups), or shipping an Observe integration inside a third-party package.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/eas-observe/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eas-observe — Aidentity">
+<meta property="og:description" content="Use for anything related to EAS Observe - adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive and ObserveInteractiveMarker, the useObserve hook, the Expo Router / React Navigation integrations for per-route metrics, the expo-image and Reanimated integrations, user-defined events via `Observe.logEvent`, error reporting via ObserveErrorBoundary and `Observe.reportError`, native crash reporting, source map upload for symbolicated stack traces, and runtime config such as sampleRate and dispatchInDebug), querying via the EAS CLI (`eas observe:metrics-summary`, `observe:metrics`, `observe:routes`, `observe:events`, `observe:session`, `observe:versions`, `observe:errors`, `observe:event`) or the Expo MCP `observe_*` tools, interpreting the resulting metrics (cold/warm launch, TTR, TTI, navigation cold/warm TTR, update download, and the TTI frameRate/device/network params for triaging slow startups), or shipping an Observe integration inside a third-party package.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/eas-observe/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"eas-observe","description":"Use for anything related to EAS Observe - adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive and ObserveInteractiveMarker, the useObserve hook, the Expo Router / React Navigation integrations for per-route metrics, the expo-image and Reanimated integrations, user-defined events via `Observe.logEvent`, error reporting via ObserveErrorBoundary and `Observe.reportError`, native crash reporting, source map upload for symbolicated stack traces, and runtime config such as sampleRate and dispatchInDebug), querying via the EAS CLI (`eas observe:metrics-summary`, `observe:metrics`, `observe:routes`, `observe:events`, `observe:session`, `observe:versions`, `observe:errors`, `observe:event`) or the Expo MCP `observe_*` tools, interpreting the resulting metrics (cold/warm launch, TTR, TTI, navigation cold/warm TTR, update download, and the TTI frameRate/device/network params for triaging slow startups), or shipping an Observe integration inside a third-party package.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/eas-observe/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>eas-observe
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>eas-observe</h1>
+      <p class="summary">Use for anything related to EAS Observe - adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive and ObserveInteractiveMarker, the useObserve hook, the Expo Router / React Navigation integrations for per-route metrics, the expo-image and Reanimated integrations, user-defined events via `Observe.logEvent`, error reporting via ObserveErrorBoundary and `Observe.reportError`, native crash reporting, source map upload for symbolicated stack traces, and runtime config such as sampleRate and dispatchInDebug), querying via the EAS CLI (`eas observe:metrics-summary`, `observe:metrics`, `observe:routes`, `observe:events`, `observe:session`, `observe:versions`, `observe:errors`, `observe:event`) or the Expo MCP `observe_*` tools, interpreting the resulting metrics (cold/warm launch, TTR, TTI, navigation cold/warm TTR, update download, and the TTI frameRate/device/network params for triaging slow startups), or shipping an Observe integration inside a third-party package.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>EAS Observe</h3>
+<p>&gt; <strong>EAS service - costs apply.</strong> EAS Observe is an Expo Application Services product. The free EAS plan allows up to 10,000 monthly active users, with a limited set of features; higher usage requires a paid subscription. For details, see <a href="https://expo.dev/pricing#plan-features." rel="noopener">https://expo.dev/pricing#plan-features.</a></p>
+<p>EAS Observe tracks startup, navigation, and custom-event performance from production Expo apps, and records JavaScript errors and native crashes. It needs a development or production build — the native library is not in Expo Go.</p>
+<p>&gt; <strong>Source of truth:</strong> <a href="https://docs.expo.dev/eas/observe/" rel="noopener">https://docs.expo.dev/eas/observe/</a> — always consult the canonical docs when API details matter, especially get-started, configuration, integrations, and the metrics reference. EAS Observe is evolving; this skill&#39;s references are written to stay accurate but may lag the docs.</p>
+<h4>Which reference to read</h4>
+<p>The five reference files in <code>./references/</code> cover what people typically need this skill for:</p>
+<ul>
+<li><strong>Adding EAS Observe to a project</strong> → [<code>./references/setup.md</code>](./references/setup.md). Install, wrap the root layout (<code>AppMetricsRoot</code> on SDK 55, <code>ObserveRoot</code> on SDK 56+), mark the app interactive (global <code>markInteractive()</code> on SDK 55, the <code>useObserve()</code> hook or <code>&lt;ObserveInteractiveMarker /&gt;</code> on SDK 56+), optional per-route navigation metrics through the Expo Router / React Navigation integrations, user-defined events via <code>Observe.logEvent</code> (SDK 56+), error reporting, and runtime configuration (sampling, dispatch, environments, custom endpoint).</li>
+<li><strong>Querying metrics from the terminal</strong> → [<code>./references/queries.md</code>](./references/queries.md). The <code>eas observe:*</code> commands — <code>metrics-summary</code>, <code>metrics</code>, <code>routes</code>, <code>events</code>, <code>session</code>, <code>versions</code>, <code>errors</code>, <code>event</code> — with flags, metric aliases, table layouts, JSON shapes, and common workflows. Also the matching <code>observe_*</code> tools in the Expo MCP Server, and how their inputs differ from the CLI flags.</li>
+<li><strong>Reading a dashboard or CLI output</strong> → [<code>./references/metrics.md</code>](./references/metrics.md). Target thresholds per metric, what the automatic TTI params mean (<code>frameRate.*</code>, <code>device.*</code>, <code>network.*</code>), and diagnostic patterns for telling slow-but-smooth startup apart from main-thread contention, hard blocks, or throttled devices.</li>
+<li><strong>Reporting problems from library integrations</strong> → [<code>./references/library-integrations.md</code>](./references/library-integrations.md). The current and future integrations that report problems a library detects as events or errors, with their options, limits, and how to query the reports. Currently: <code>expo-image</code> (<code>expo-image.oversized</code> events for images decoded far larger than the screen) and <code>react-native-reanimated</code> (<code>reanimated.error</code> errors and optional <code>reanimated.warning</code> events).</li>
+<li><strong>Shipping an Observe integration in a library</strong> → [<code>./references/third-party.md</code>](./references/third-party.md). For package authors only (SDK 57+): optional peer dependency, config declaration merging, <code>Observe.registerIntegration()</code>, and event naming.</li>
+</ul>
+<h4>Quick links to the docs</h4>
+<ul>
+<li>Get started: <a href="https://docs.expo.dev/eas/observe/get-started/" rel="noopener">https://docs.expo.dev/eas/observe/get-started/</a></li>
+<li>Dashboard guide: <a href="https://docs.expo.dev/eas/observe/dashboard/" rel="noopener">https://docs.expo.dev/eas/observe/dashboard/</a></li>
+<li>Querying with EAS CLI: <a href="https://docs.expo.dev/eas/observe/eas-cli/" rel="noopener">https://docs.expo.dev/eas/observe/eas-cli/</a></li>
+<li>Querying with the Expo MCP Server: <a href="https://docs.expo.dev/eas/observe/mcp/" rel="noopener">https://docs.expo.dev/eas/observe/mcp/</a></li>
+<li>Metrics reference: <a href="https://docs.expo.dev/eas/observe/reference/metrics/" rel="noopener">https://docs.expo.dev/eas/observe/reference/metrics/</a></li>
+<li>Expo Router integration: <a href="https://docs.expo.dev/eas/observe/integrations/expo-router/" rel="noopener">https://docs.expo.dev/eas/observe/integrations/expo-router/</a></li>
+<li>React Navigation integration: <a href="https://docs.expo.dev/eas/observe/integrations/react-navigation/" rel="noopener">https://docs.expo.dev/eas/observe/integrations/react-navigation/</a></li>
+<li>Expo Image integration: <a href="https://docs.expo.dev/eas/observe/integrations/expo-image/" rel="noopener">https://docs.expo.dev/eas/observe/integrations/expo-image/</a></li>
+<li>Reanimated integration: <a href="https://docs.expo.dev/eas/observe/integrations/react-native-reanimated/" rel="noopener">https://docs.expo.dev/eas/observe/integrations/react-native-reanimated/</a></li>
+<li>User-defined events: <a href="https://docs.expo.dev/eas/observe/events/" rel="noopener">https://docs.expo.dev/eas/observe/events/</a></li>
+<li>Error reporting: <a href="https://docs.expo.dev/eas/observe/errors/" rel="noopener">https://docs.expo.dev/eas/observe/errors/</a></li>
+<li>Configuration: <a href="https://docs.expo.dev/eas/observe/configuration/" rel="noopener">https://docs.expo.dev/eas/observe/configuration/</a></li>
+<li>Third-party integrations: <a href="https://docs.expo.dev/eas/observe/integrations/third-party/" rel="noopener">https://docs.expo.dev/eas/observe/integrations/third-party/</a></li>
+<li>EAS Update download performance: <a href="https://docs.expo.dev/eas/observe/eas-update/" rel="noopener">https://docs.expo.dev/eas/observe/eas-update/</a></li>
+<li>Troubleshooting: <a href="https://docs.expo.dev/eas/observe/reference/troubleshooting/" rel="noopener">https://docs.expo.dev/eas/observe/reference/troubleshooting/</a></li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;eas-observe&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/eas-observe</code>
+  <button type="button" data-copy="npx aidentity add expo/eas-observe" aria-label="Copy install eas-observe">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/eas-observe</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/eas-observe/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

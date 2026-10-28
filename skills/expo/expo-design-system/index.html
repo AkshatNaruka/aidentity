@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-design-system — Aidentity</title>
+<meta name="description" content="Build and maintain a design system inside an Expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. Use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (NativeWind, Tamagui, Restyle, Unistyles) in its own idiom, standardizing styles so screens (including AI-generated ones) look consistent and polished, fixing an app that looks AI-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). For platform styling specifics (semantic colors, HIG rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-design-system/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-design-system — Aidentity">
+<meta property="og:description" content="Build and maintain a design system inside an Expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. Use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (NativeWind, Tamagui, Restyle, Unistyles) in its own idiom, standardizing styles so screens (including AI-generated ones) look consistent and polished, fixing an app that looks AI-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). For platform styling specifics (semantic colors, HIG rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-design-system/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-design-system","description":"Build and maintain a design system inside an Expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. Use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (NativeWind, Tamagui, Restyle, Unistyles) in its own idiom, standardizing styles so screens (including AI-generated ones) look consistent and polished, fixing an app that looks AI-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). For platform styling specifics (semantic colors, HIG rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-design-system/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=design">design</a><span>/</span>expo-design-system
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-design-system</h1>
+      <p class="summary">Build and maintain a design system inside an Expo app - a reusable theme of design tokens (color, spacing, typography, radius, shadow, motion), reusable component structure with variant/size/state prop conventions, and rules for when to extract a repeated view into a shared component. Use when creating or organizing theme files and design tokens (theme.ts / theme/), extending an existing theme or styling library (NativeWind, Tamagui, Restyle, Unistyles) in its own idiom, standardizing styles so screens (including AI-generated ones) look consistent and polished, fixing an app that looks AI-generated or generic instead of native (the named native-slop tells), building an in-app component library, or auditing an app for design-system drift (hardcoded colors, spacing, fonts). For platform styling specifics (semantic colors, HIG rules, native controls) use expo-native-ui; for folder layout of a new app use expo-project-structure.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=design">design</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Design Systems</h3>
+<p>Make every screen in an app draw from one visual source of truth: a token theme and a small set of reusable components. This skill defines where tokens live, what they cover, how reusable components are shaped, and when a repeated view earns promotion into the system.</p>
+<p>Sibling skills own the layers around this one:</p>
+<ul>
+<li><code>expo-native-ui</code> - platform styling rules (HIG, semantic colors, controls, shadows syntax). Follow it for <strong>what values look native</strong>; follow this skill for <strong>where values live and how they&#39;re reused</strong>.</li>
+<li><code>expo-project-structure</code> - folder skeleton for new apps.</li>
+</ul>
+<p>For Tailwind projects, keep tokens in <code>global.css</code> as CSS variables and follow the styling library&#39;s own setup guidance. The scales and naming in this skill still apply; only the storage format changes.</p>
+<h4>References</h4>
+<p>Consult these resources as needed:</p>
+<p><pre><code>references/
+  audit.md        Audit an existing app for design-system drift: grep checks,
+                  scoring rubric, incremental adoption plan, and templates for
+                  documenting or extending components
+  native-slop.md  The 20 named anti-pattern tells of AI-generated apps (The Web
+                  Modal, Everything&#39;s a Card, ...) with grep checks for the greppable ones</code></pre></p>
+<h4>Adopt Before You Build</h4>
+<p>In an app that already has screens, the first move is detection, not construction. Before writing any token file:</p>
+<ol>
+<li><strong>Look for a declared system.</strong> Check <code>package.json</code> for a styling library - NativeWind/Tailwind, Tamagui, Restyle, Unistyles, styled-components. Then look for a token file: <code>theme.ts</code>, <code>src/theme/</code>, <code>constants/theme.ts</code>, or <code>constants/Colors.ts</code> (the create-expo-app default).</li>
+<li><strong>If one exists, it is the source of truth.</strong> Extend it in its own idiom - its names, its scale, its storage format. Audit drift against that system, not against the examples below.</li>
+<li><strong>If only de facto values exist</strong> - the same greys and paddings repeated across screens, no theme file - there is no system yet. Those values are the input to the scales, not the authority: derive tokens from the most frequent ones, snapped to the 4-point grid (<code>references/audit.md</code> §5).</li>
+<li><strong>Never introduce a second system beside an existing one.</strong> A fresh <code>src/theme/</code> next to a Tamagui config is design-system drift, not adoption.</li>
+</ol>
+<p>Only when nothing exists do the defaults below apply as written.</p>
+<h4>The Theme</h4>
+<p>In an app without an existing system, all design tokens live under <code>src/theme/</code>. In a project without a <code>src/</code> folder (the default <code>create-expo-app</code> template has <code>app/</code>, <code>components/</code>, and <code>constants/</code> at the root), use the equivalent top-level location - typically <code>theme/</code> or the existing <code>constants/</code> - and keep the same file layout. Start small and split by token class as it grows:</p>
+<p><pre><code>src/theme/
+  colors.ts       # see expo-native-ui &quot;Colors&quot; for the palette pattern
+  spacing.ts
+  typography.ts
+  radius.ts
+  shadows.ts
+  motion.ts
+  index.ts        # re-exports everything: import { spacing, type } from &quot;@/theme&quot;</code></pre></p>
+<p>A brand-new app can begin with a single <code>src/theme.ts</code> holding all of the objects below, then promote it to the folder form once any one class needs its own file (same promotion rule as components). Either way there is exactly <strong>one</strong> theme entry point - never two competing token files.</p>
+<p>Rules that make a theme worth having:</p>
+<ul>
+<li><strong>Every repeated visual value is a token.</strong> A literal that appears twice belongs in the theme.</li>
+<li><strong>Components import tokens; screens import components.</strong> A screen file that imports <code>spacing</code> for layout padding is fine; a screen file redefining a button color is drift.</li>
+<li><strong>Never hardcode</strong> hex colors, font sizes, or spacing multiples outside <code>src/theme/</code>. One-off values that are genuinely local (an icon&#39;s 17px optical nudge) may stay inline - with a comment saying why.</li>
+</ul>
+<h5>Colors</h5>
+<p>Build the palette from platform semantic colors: <code>Color</code> from <code>expo-router</code> wrapped in <code>Platform.select</code>, centralized in <code>theme/colors.ts</code>. Semantic colors resolve on-device and adapt to light/dark automatically - prefer them for backgrounds, labels, and separators. (<code>expo-native-ui</code> &quot;Colors&quot; covers the full palette and rationale; the minimal version is:)</p>
+<p><pre><code>// theme/colors.ts
+import { Platform } from &quot;react-native&quot;;
+import { Color } from &quot;expo-router&quot;;
+
+export const colors = {
+  label: Platform.select({
+    ios: Color.ios.label,
+    android: Color.android.dynamic.onSurface,
+    default: &quot;#000000&quot;,
+  })!,
+  secondaryLabel: Platform.select({
+    ios: Color.ios.secondaryLabel,
+    android: Color.android.dynamic.onSurfaceVariant,
+    default: &quot;#3c3c43&quot;,
+  })!,
+  separator: Platform.select({
+    ios: Color.ios.separator,
+    android: Color.android.dynamic.outlineVariant,
+    default: &quot;#c6c6c8&quot;,
+  })!,
+  systemBackground: Platform.select({
+    ios: Color.ios.systemBackground,
+    android: Color.android.dynamic.surface,
+    default: &quot;#ffffff&quot;,
+  })!,
+  systemBlue: Platform.select({
+    ios: Color.ios.systemBlue,
+    android: Color.android.dynamic.primary,
+    default: &quot;#007aff&quot;,
+  })!,
+  // Deliberately fixed: text on a tinted (accent) surface stays white in both modes.
+  onTint: &quot;#ffffff&quot;,
+};</code></pre></p>
+<p>Add brand colors as explicit light/dark pairs only when the brand requires values the platform doesn&#39;t provide:</p>
+<p><pre><code>// theme/colors.ts (brand additions)
+import { useColorScheme } from &quot;react-native&quot;;
+
+const brandPalette = {
+  light: { accent: &quot;#5B21B6&quot;, accentContrast: &quot;#FFFFFF&quot; },
+  dark: { accent: &quot;#A78BFA&quot;, accentContrast: &quot;#1E1B4B&quot; },
+} as const;
+
+export function useBrandColors() {
+  const scheme = useColorScheme();
+  return brandPalette[scheme === &quot;dark&quot; ? &quot;dark&quot; : &quot;light&quot;];
+}</code></pre></p>
+<p>Keep the brand set tiny (accent, accentContrast, maybe a tint per feature). Everything else stays semantic.</p>
+<p><strong>Static-safe vs hook-only.</strong> The two patterns above have different reach - keep the boundary explicit:</p>
+<ul>
+<li>Semantic/platform colors (<code>colors</code> above) are <strong>static-safe</strong>: they resolve on-device, so plain token files like <code>theme/typography.ts</code> can import them at module scope.</li>
+<li>Brand light/dark pairs are <strong>hook-only</strong>: <code>useBrandColors()</code> reads the color scheme at render time, so brand colors can only be applied inside components. A static token file cannot call the hook.</li>
+<li>Never mix the two in one file. If a static style (a <code>type</code> ramp step, a <code>variants</code> object) needs the brand accent, either apply the brand color in the component at render time, or wrap the pair in a static dynamic color (<code>DynamicColorIOS</code> on iOS) so it becomes static-safe.</li>
+</ul>
+<h5>Spacing</h5>
+<p>One scale, based on a 4-point grid. Name steps by size, not by use:</p>
+<p><pre><code>// theme/spacing.ts
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
+} as const;</code></pre></p>
+<ul>
+<li>Use <code>gap</code> with spacing tokens for layout rhythm (<code>expo-native-ui</code> prefers gap over margin).</li>
+<li>Screen edge padding is <code>spacing.md</code> unless the design says otherwise - pick one and keep it.</li>
+<li>If a layout needs a value between steps, use the nearest step. The grid is the point.</li>
+<li>If the same in-between multiple of 4 keeps recurring (12 and 20 are common), add it to the scale as a named step instead of scattering literals. The audit whitelist must then include it too.</li>
+</ul>
+<h5>Typography</h5>
+<p>Define named text styles, not raw font sizes. Mirror the platform ramp (Apple text styles) so sizes feel native:</p>
+<p><pre><code>// theme/typography.ts
+import { TextStyle } from &quot;react-native&quot;;
+import { colors } from &quot;./colors&quot;;
+
+export const type = {
+  largeTitle: { fontSize: 34, fontWeight: &quot;700&quot;, color: colors.label },
+  title: { fontSize: 22, fontWeight: &quot;600&quot;, color: colors.label },
+  headline: { fontSize: 17, fontWeight: &quot;600&quot;, color: colors.label },
+  body: { fontSize: 17, fontWeight: &quot;400&quot;, color: colors.label },
+  subhead: { fontSize: 15, fontWeight: &quot;400&quot;, color: colors.secondaryLabel },
+  caption: { fontSize: 12, fontWeight: &quot;400&quot;, color: colors.secondaryLabel },
+} as const satisfies Record&lt;string, TextStyle&gt;;</code></pre></p>
+<p>If the project bundles static font files (one file per weight, loaded with <code>expo-font</code> or the config plugin), set weight via <code>fontFamily</code> names instead and omit <code>fontWeight</code> - otherwise iOS synthesizes the weight or falls back to the system font:</p>
+<p><pre><code>headline: { fontSize: 17, fontFamily: &quot;SFProRounded-Semibold&quot;, color: colors.label },</code></pre></p>
+<p>Expose them through one component so screens never touch <code>fontSize</code>:</p>
+<p><pre><code>// components/themed-text.tsx
+import { Text, TextProps } from &quot;react-native&quot;;
+import { type } from &quot;@/theme&quot;;
+
+export function ThemedText({
+  variant = &quot;body&quot;,
+  style,
+  ...props
+}: TextProps &amp; { variant?: keyof typeof type }) {
+  return &lt;Text style={[type[variant], style]} {...props} /&gt;;
+}</code></pre></p>
+<p>Screen titles still come from the navigation stack header (<code>expo-native-ui</code> rule), so <code>largeTitle</code> is mostly for non-stack contexts.</p>
+<p><strong>Dynamic Type.</strong> Text scales with the user&#39;s system text-size setting (<code>allowFontScaling</code> is on by default). Use padding or <code>minHeight</code> around text so rows can grow, and check large accessibility text sizes. Let labels wrap or reflow before considering a per-element <code>maxFontSizeMultiplier</code> for constrained chrome; dense rows alone are not a reason to cap readable text. Never disable scaling app-wide with <code>allowFontScaling={false}</code>.</p>
+<h5>Radius</h5>
+<p><pre><code>// theme/radius.ts
+export const radius = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  full: 9999, // capsules
+} as const;</code></pre></p>
+<p>Pair every non-capsule radius with <code>borderCurve: &quot;continuous&quot;</code> (per <code>expo-native-ui</code>).</p>
+<h5>Shadows</h5>
+<p>Shadows are <code>boxShadow</code> strings (never legacy shadow/elevation props - see <code>expo-native-ui</code>). Two or three elevation levels are enough:</p>
+<p><pre><code>// theme/shadows.ts
+export const shadows = {
+  card: &quot;0 1px 2px rgba(0, 0, 0, 0.05)&quot;,
+  raised: &quot;0 4px 12px rgba(0, 0, 0, 0.10)&quot;,
+  overlay: &quot;0 8px 24px rgba(0, 0, 0, 0.18)&quot;,
+} as const;</code></pre></p>
+<h5>Motion</h5>
+<p>Durations and shared spring/easing configs, so animations across the app feel related:</p>
+<p><pre><code>// theme/motion.ts
+export const motion = {
+  fast: 150, // state feedback: press, toggle
+  base: 250, // element transitions: enter/exit
+  slow: 400, // large surfaces: sheets, screens
+} as const;</code></pre></p>
+<p>Reanimated caveat: don&#39;t pass <code>Color</code>/<code>PlatformColor</code> token values into Reanimated styles - use static colors there (see <code>expo-native-ui</code>).</p>
+<h4>Reusable Components</h4>
+<p>The theme controls values; components control structure. Shared primitives live in <code>src/components/</code> (see <code>expo-project-structure</code>).</p>
+<h5>The component contract</h5>
+<p>Every design-system primitive defines, explicitly:</p>
+<ul>
+<li><strong>Variants</strong> - visual intent: <code>primary</code>, <code>secondary</code>, <code>ghost</code>, <code>destructive</code>. Add a variant only when a real screen needs it.</li>
+<li><strong>Sizes</strong> - <code>sm</code>, <code>md</code>, <code>lg</code>. Default <code>md</code>. Sizes map to spacing/typography tokens, never to fresh numbers.</li>
+<li><strong>States</strong> - default, <strong>pressed</strong> (not hover - this is touch), disabled, loading. Handle pressed with a <code>Pressable</code> style function; never leave a tappable element without pressed feedback.</li>
+<li><strong>Style override</strong> - accept a <code>style</code> prop and merge it <strong>last</strong>, so callers can adjust layout (margins, flex) without forking the component. Callers may override layout, not identity - a caller changing a button&#39;s colors is a signal the variant set is missing something.</li>
+<li><strong>Accessibility</strong> - custom interactive primitives expose their role and disabled/busy/selected state as applicable. Text children can supply the label; icon-only controls and buttons that replace text with a spinner need an explicit label that remains available while loading. Verify labels on native controls too.</li>
+</ul>
+<p><pre><code>// components/button.tsx
+import { Pressable, ActivityIndicator, ViewStyle, StyleProp } from &quot;react-native&quot;;
+import { colors, spacing, radius } from &quot;@/theme&quot;;
+import { ThemedText } from &quot;./themed-text&quot;;
+
+const variants = {
+  primary: { backgroundColor: colors.systemBlue, color: colors.onTint },
+  secondary: { backgroundColor: colors.separator, color: colors.label },
+} as const;
+
+const sizes = {
+  sm: { paddingVertical: spacing.xs, paddingHorizontal: spacing.sm },
+  md: { paddingVertical: spacing.sm, paddingHorizontal: spacing.md },
+} as const;
+
+export function Button({
+  variant = &quot;primary&quot;,
+  size = &quot;md&quot;,
+  title,
+  loading,
+  disabled,
+  style,
+  onPress,
+}: {
+  variant?: keyof typeof variants;
+  size?: keyof typeof sizes;
+  title: string;
+  loading?: boolean;
+  disabled?: boolean;
+  style?: StyleProp&lt;ViewStyle&gt;;
+  onPress?: () =&gt; void;
+}) {
+  return (
+    &lt;Pressable
+      accessibilityRole=&quot;button&quot;
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: !!(disabled || loading), busy: !!loading }}
+      disabled={disabled || loading}
+      onPress={onPress}
+      style={({ pressed }) =&gt; [
+        {
+          backgroundColor: variants[variant].backgroundColor,
+          borderRadius: radius.md,
+          borderCurve: &quot;continuous&quot;,
+          alignItems: &quot;center&quot;,
+          opacity: disabled ? 0.4 : pressed ? 0.7 : 1,
+          ...sizes[size],
+        },
+        style, // caller overrides merge last
+      ]}
+    &gt;
+      {loading ? (
+        &lt;ActivityIndicator color={variants[variant].color as string} /&gt;
+      ) : (
+        &lt;ThemedText variant=&quot;headline&quot; style={{ color: variants[variant].color }}&gt;
+          {title}
+        &lt;/ThemedText&gt;
+      )}
+    &lt;/Pressable&gt;
+  );
+}</code></pre></p>
+<h5>Composition over configuration</h5>
+<p>When a component&#39;s props start describing <em>content</em> (<code>leftIcon</code>, <code>subtitle</code>, <code>footerText</code>, <code>badgeCount</code>), stop adding props and accept <code>children</code> instead. A <code>Card</code> that renders <code>children</code> with token padding outlives any <code>Card</code> with twelve content props. Reserve props for the contract above: variant, size, state, style.</p>
+<h5>When to extract - and when not to</h5>
+<p>Promote a view into <code>src/components/</code> when <strong>all</strong> of these hold:</p>
+<ol>
+<li>It appears (or is about to appear) in <strong>two or more screens</strong>. Until then it stays colocated in <code>screens/&lt;name&gt;/</code> (see <code>expo-project-structure</code>).</li>
+<li>It has a <strong>nameable role</strong> (&quot;Card&quot;, &quot;EmptyState&quot;, &quot;Badge&quot;) - not &quot;the thing on the profile screen&quot;.</li>
+<li>Its API is <strong>smaller than its implementation</strong>. If the props would just re-expose every internal style, it isn&#39;t a reusable component yet - it&#39;s a screen fragment.</li>
+</ol>
+<p>Promotion path: inline JSX → component in <code>screens/&lt;name&gt;/</code> → <code>src/components/</code>. Move one step at a time, when the trigger fires - never speculatively. Wrong abstractions cost more than duplication; a second copy of a view is cheaper than a primitive with a bad API.</p>
+<p>Do <strong>not</strong> wrap platform components that already carry the design language (<code>Switch</code>, <code>DateTimePicker</code>, stack headers, <code>@expo/ui</code> views) just to route them through the system. Native styling <em>is</em> the design system for those.</p>
+<h4>Where Decisions Live</h4>
+<table><thead><tr><th>Decision</th><th>Lives in</th><th>Example</th></tr></thead><tbody>
+<tr><td>A visual value used anywhere twice</td><td><code>src/theme/</code></td><td>brand accent, spacing step</td></tr>
+<tr><td>Structure + variants of a reused element</td><td><code>src/components/</code></td><td>Button, Card, EmptyState</td></tr>
+<tr><td>One screen&#39;s private composition</td><td><code>screens/&lt;name&gt;/</code></td><td>profile header layout</td></tr>
+<tr><td>One-off local adjustment</td><td>inline, with a comment</td><td>optical nudge on an icon</td></tr>
+<tr><td>Screen titles, top-level chrome</td><td>navigation stack options</td><td>header title, large title</td></tr>
+</tbody></table>
+<h4>Self-Critique Pass</h4>
+<p>After building or changing a screen, screenshot it and check it against these principles (from <a href="https://expo.dev/blog/how-to-apply-professional-design-principles-in-ai-app-development" rel="noopener">Expo&#39;s design-principles guide</a>). Each one maps to a system fix, not a local tweak:</p>
+<ul>
+<li><strong>Hierarchy / contrast</strong> - is the most important element obviously first? Fix with <code>type</code> ramp steps, not ad-hoc font sizes.</li>
+<li><strong>Proximity / white space</strong> - do related items sit closer than unrelated ones? Fix with <code>gap</code> + spacing tokens.</li>
+<li><strong>Repetition / unity</strong> - do all corners, shadows, and accents match? If not, a value escaped the theme - move it in.</li>
+<li><strong>Alignment</strong> - do edges share axes? Fix with consistent screen edge padding.</li>
+</ul>
+<p>Recheck the rendered result after fixing a value; moving it into the theme does not itself fix the layout. If the same defect recurs across screens, fix the shared token or component. Also run the primary-task and content checks in <code>expo-native-ui</code>&#39;s Behavior section; screenshots alone cannot verify interaction.</p>
+<h4>Named Failures: Native Slop</h4>
+<p>Use these names to recognize common mistakes when building and reviewing:</p>
+<ul>
+<li><strong>The Web Modal</strong> - a custom centered dialog used for composing or picking. Prefer a native sheet (<code>formSheet</code>, <code>@expo/ui</code> BottomSheet) or menu; native confirmation alerts remain appropriate for consequential actions.</li>
+<li><strong>Everything&#39;s a Card</strong> - every row and section in its own white rounded shadowed box. Use grouped lists; group with background and hairlines, not borders.</li>
+<li><strong>Emoji Iconography</strong> - 🔥 ⚙️ ✨ as tab or button icons. SF Symbols on iOS, Material icons on Android.</li>
+<li><strong>The Purple-Gradient Hero</strong> - a decorative gradient intro pushing the task below the fold. Lead task screens with useful content; retain a hero when it serves the requested experience.</li>
+<li><strong>The Spinner Blink</strong> - a full-screen spinner between every state, or &quot;No items yet&quot; flashing during the first load. Every screen has four states (see <code>expo-data-fetching</code>).</li>
+</ul>
+<p>Treat visual tells as review prompts, not blanket bans on cards, fonts, or branding. Fix the observable problem and respect the user&#39;s brief and existing design system. The full list of 20 and candidate grep checks are in <code>./references/native-slop.md</code>; use them to explain the problem and replacement when reviewing a screen.</p>
+<h4>Auditing an Existing App</h4>
+<p>To measure drift in an app that already has screens - hardcoded hex values, arbitrary spacing, inconsistent component APIs - follow <code>./references/audit.md</code>. It contains grep-based checks, a scoring rubric, an incremental adoption order for fixing a drifted app, and templates for documenting existing components and proposing new ones.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-design-system&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
+     data-source="addyosmani"
+     data-category="design"
+     data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
+  <span>
+    <span class="r-name">api-and-interface-design</span>
+    <span class="r-desc">Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/canvas-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="canvas-design create beautiful visual art in .png and .pdf documents using design philosophy. you should use this skill when the user asks to create a poster, piece of art, design, or other static piece. create original visual designs, never copying existing artists&#39; work to avoid copyright violations. design design anthropics/skills">
+  <span>
+    <span class="r-name">canvas-design</span>
+    <span class="r-desc">Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists&#39; work to avoid copyright violations.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/anthropic-official/frontend-design/index.html"
+     data-source="anthropic-official"
+     data-category="design"
+     data-search="frontend-design guidance for distinctive, intentional visual design when building new ui or reshaping an existing one. helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults. design design frontend anthropics/skills">
+  <span>
+    <span class="r-name">frontend-design</span>
+    <span class="r-desc">Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults.</span>
+  </span>
+  <span class="r-src">anthropics/skills</span>
+  <span class="r-lic">Proprietary</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/codebase-design/index.html"
+     data-source="mattpocock"
+     data-category="design"
+     data-search="codebase-design shared vocabulary for designing deep modules. use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or ai-navigable, or when another skill needs the deep-module vocabulary. design design mattpocock/skills">
+  <span>
+    <span class="r-name">codebase-design</span>
+    <span class="r-desc">Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module&#39;s interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/banner-design/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="design"
+     data-search="banner-design design banners for social media, ads, website heroes, creative assets, and print. multiple art direction options with optional generated or supplied visuals. actions: design, create, generate banner. platforms: facebook, twitter/x, linkedin, youtube, instagram, google display, website hero, print. styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3d, neon, duotone, editorial, collage. design design frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">banner-design</span>
+    <span class="r-desc">Design banners for social media, ads, website heroes, creative assets, and print. Multiple art direction options with optional generated or supplied visuals. Actions: design, create, generate banner. Platforms: Facebook, Twitter/X, LinkedIn, YouTube, Instagram, Google Display, website hero, print. Styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3D, neon, duotone, editorial, collage.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-design-system</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-design-system" aria-label="Copy install expo-design-system">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>design</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-design-system</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-design-system/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

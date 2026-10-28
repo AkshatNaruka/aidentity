@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-overview — Aidentity</title>
+<meta name="description" content="Entry point and router for every Expo or EAS task. Load this skill first — before writing code and before choosing another expo-* / eas-* skill — when the request, PRD, or spec mentions Expo, EAS, Expo Go, or an expo-* package, or the project has an `expo` dependency in `package.json`. Within that gate it also covers app specs and designs to implement (tabs, stacks, maps, lists, navigation, building from a screenshot), and phrasings like &#39;implement a mobile app&#39;, &#39;make my app look native&#39;, &#39;add navigation&#39;, &#39;fetch some data&#39;, &#39;upgrade my SDK&#39;, &#39;add Expo to my existing native app&#39;, &#39;ship to the App Store&#39;, or &#39;I&#39;m new to Expo, where do I start&#39;. A fully specified request (SDK pinned, libraries named, layout given) still routes through here — the shared setup rules still apply. Do NOT load it when neither signal is present: a bare React Native project with no `expo` dependency is not Expo work. Detects the real goal, routes to the right expo-* / eas-* skill, and owns the shared setup rules.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-overview/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-overview — Aidentity">
+<meta property="og:description" content="Entry point and router for every Expo or EAS task. Load this skill first — before writing code and before choosing another expo-* / eas-* skill — when the request, PRD, or spec mentions Expo, EAS, Expo Go, or an expo-* package, or the project has an `expo` dependency in `package.json`. Within that gate it also covers app specs and designs to implement (tabs, stacks, maps, lists, navigation, building from a screenshot), and phrasings like &#39;implement a mobile app&#39;, &#39;make my app look native&#39;, &#39;add navigation&#39;, &#39;fetch some data&#39;, &#39;upgrade my SDK&#39;, &#39;add Expo to my existing native app&#39;, &#39;ship to the App Store&#39;, or &#39;I&#39;m new to Expo, where do I start&#39;. A fully specified request (SDK pinned, libraries named, layout given) still routes through here — the shared setup rules still apply. Do NOT load it when neither signal is present: a bare React Native project with no `expo` dependency is not Expo work. Detects the real goal, routes to the right expo-* / eas-* skill, and owns the shared setup rules.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-overview/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-overview","description":"Entry point and router for every Expo or EAS task. Load this skill first — before writing code and before choosing another expo-* / eas-* skill — when the request, PRD, or spec mentions Expo, EAS, Expo Go, or an expo-* package, or the project has an `expo` dependency in `package.json`. Within that gate it also covers app specs and designs to implement (tabs, stacks, maps, lists, navigation, building from a screenshot), and phrasings like 'implement a mobile app', 'make my app look native', 'add navigation', 'fetch some data', 'upgrade my SDK', 'add Expo to my existing native app', 'ship to the App Store', or 'I'm new to Expo, where do I start'. A fully specified request (SDK pinned, libraries named, layout given) still routes through here — the shared setup rules still apply. Do NOT load it when neither signal is present: a bare React Native project with no `expo` dependency is not Expo work. Detects the real goal, routes to the right expo-* / eas-* skill, and owns the shared setup rules.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-overview/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-overview
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-overview</h1>
+      <p class="summary">Entry point and router for every Expo or EAS task. Load this skill first — before writing code and before choosing another expo-* / eas-* skill — when the request, PRD, or spec mentions Expo, EAS, Expo Go, or an expo-* package, or the project has an `expo` dependency in `package.json`. Within that gate it also covers app specs and designs to implement (tabs, stacks, maps, lists, navigation, building from a screenshot), and phrasings like &#39;implement a mobile app&#39;, &#39;make my app look native&#39;, &#39;add navigation&#39;, &#39;fetch some data&#39;, &#39;upgrade my SDK&#39;, &#39;add Expo to my existing native app&#39;, &#39;ship to the App Store&#39;, or &#39;I&#39;m new to Expo, where do I start&#39;. A fully specified request (SDK pinned, libraries named, layout given) still routes through here — the shared setup rules still apply. Do NOT load it when neither signal is present: a bare React Native project with no `expo` dependency is not Expo work. Detects the real goal, routes to the right expo-* / eas-* skill, and owns the shared setup rules.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3><code>expo-overview</code> — router &amp; shared rules for Expo / EAS</h3>
+<h4>Start Here — read before doing anything</h4>
+<p><strong>Do not guess the skill from project files alone.</strong> Many Expo goals look similar from</p>
+<p>the filesystem but need different skills.</p>
+<ol>
+<li><strong>Confirm this is Expo or EAS work</strong> — the request mentions Expo or EAS, or</li>
+</ol>
+<p>   <code>package.json</code> has an <code>expo</code> dependency. Otherwise this skill does not apply.</p>
+<p>   A native app using EAS for delivery qualifies without an Expo runtime.</p>
+<ol>
+<li><strong>Read the user&#39;s goal</strong> — what outcome do they want, in plain terms?</li>
+<li><strong>Classify it</strong> using the Skill Map below, translating casual phrasing to a goal.</li>
+<li><strong>Confirm intent</strong> if ambiguous (&quot;Sounds like you want to ship to the stores — that&#39;s</li>
+</ol>
+<p>   <code>eas-app-stores</code>. Right?&quot;), then load that skill&#39;s <code>SKILL.md</code> and follow it.</p>
+<ol>
+<li><strong>Trust the leaf skill</strong> — it has its own detection logic and steps. Don&#39;t improvise.</li>
+</ol>
+<h4>Skill Map (by goal)</h4>
+<p>Match the goal to a category, then the skill, then load that leaf&#39;s <code>SKILL.md</code>.</p>
+<p><strong>Build the app</strong></p>
+<ul>
+<li><code>expo-project-structure</code> — folder layout for a <strong>new</strong> Expo Router project: where screens, components, and config live (never restructure an existing app to match)</li>
+<li><code>expo-native-ui</code> — screens, styling, semantic colors, native controls, SF Symbols, media, layout</li>
+<li><code>expo-router</code> — navigation: file-based routes, tabs / stacks / modals / sheets, links, headers</li>
+<li><code>expo-animation</code> — motion and gestures: Reanimated worklets, Gesture Handler, screen transitions, sheet and press feedback, haptics, and fixing animation that stutters on device</li>
+<li><code>expo-ui</code> — native UI components via <code>@expo/ui</code>: BottomSheet, Picker, Slider, Switch, Menu, Button, FieldGroup (grouped form sections), List / ListItem, and more — real SwiftUI on iOS, Jetpack Compose on Android. The universal layer needs SDK 56+ and runs in Expo Go; the drop-in replacements (<code>@gorhom/bottom-sheet</code>, <code>datetimepicker</code>, …) and platform-specific layers also exist on SDK 55.</li>
+<li><code>expo-design-system</code> — one visual source of truth: design tokens (color, spacing, typography, radius, shadow, motion), reusable component conventions, and audits for drift (hardcoded colors, spacing, fonts)</li>
+<li><code>expo-tailwind-setup</code> — Tailwind / NativeWind styling</li>
+<li><code>expo-data-fetching</code> — network requests, React Query / SWR, caching, offline, route loaders</li>
+<li><code>expo-dom</code> — run web code or reuse a web library inside native</li>
+<li><code>expo-web-to-native</code> — migrate an existing web / React app to a native iOS / Android app</li>
+</ul>
+<p>&gt; <strong>Component selection rule:</strong> whenever you need a UI component (list rows, bottom sheets, pickers, sliders, menus, buttons, segmented controls, toggles), <strong>consult <code>expo-ui</code> first</strong> to check whether <code>@expo/ui</code> has a native equivalent before reaching for a React Native built-in or a community library. Native <code>@expo/ui</code> components give the best platform fit, and on SDK 56+ the universal ones run in Expo Go with no custom build. Load <code>expo-ui</code> alongside <code>expo-native-ui</code> for any app that renders lists, detail sheets, or form controls. One exception: <code>@expo/ui</code> <code>List</code> renders native grouped rows (an iOS Settings screen), <strong>not</strong> a virtualized list — use <code>FlatList</code> / <code>FlashList</code> for large datasets.</p>
+<p><strong>Ship &amp; operate</strong></p>
+<ul>
+<li><code>eas-app-stores</code> — build and submit iOS/Android apps (Expo and other React Native projects, plus existing native apps), TestFlight, versions, and store metadata</li>
+<li><code>eas-hosting</code> — deploy the web bundle to EAS Hosting; also author Expo Router API routes (<code>+api.ts</code> handlers) and their environments / domains</li>
+<li><code>eas-workflows</code> — EAS Workflow YAML and CI/CD pipelines</li>
+<li><code>eas-simulator</code> — run and drive the app on a remote iOS / Android simulator on EAS cloud</li>
+<li><code>expo-dev-client</code> — custom development builds</li>
+<li><code>eas-update</code> — configure, publish, test, and debug compatible over-the-air updates</li>
+<li><code>eas-update-insights</code> — OTA update health: crash rate, adoption, payload size</li>
+<li><code>eas-observe</code> — startup / launch / TTI performance with EAS Observe</li>
+</ul>
+<p><strong>Extend natively</strong></p>
+<ul>
+<li><code>expo-module</code> — native modules and views (Swift / Kotlin) with the Expo Modules API</li>
+<li><code>expo-brownfield</code> — embed Expo / React Native screens in native SwiftUI/UIKit or Android apps; isolated artifacts and integrated builds</li>
+<li><code>expo-app-clip</code> — iOS App Clip target (AASA, smart app banner)</li>
+</ul>
+<p><strong>Maintain &amp; learn</strong></p>
+<ul>
+<li><code>expo-upgrade</code> — upgrade the Expo SDK and fix dependency conflicts</li>
+<li><code>expo-examples</code> — canonical, version-matched integration examples (Stripe, Clerk, Supabase, …)</li>
+</ul>
+<h5>Translating vague asks</h5>
+<p>Some everyday phrasings don&#39;t obviously map to a skill name — translate before routing:</p>
+<ul>
+<li>&quot;Make it look native&quot; → grouped controls / settings forms = <code>expo-ui</code>; screens, styling = <code>expo-native-ui</code>; motion = <code>expo-animation</code>; navigation = <code>expo-router</code>.</li>
+<li>&quot;Make the screens consistent&quot; / &quot;clean up the styling&quot; / &quot;set up a theme or design tokens&quot; → <code>expo-design-system</code>.</li>
+<li>&quot;It looks AI-generated&quot; / &quot;too generic, not native&quot; → <code>expo-design-system</code> (named native-slop tells + audit), with <code>expo-native-ui</code> for the platform idioms.</li>
+<li>&quot;Ship it&quot; / &quot;get an .ipa or .apk&quot; / &quot;release to the stores&quot; / &quot;put my Swift app on TestFlight&quot; → <code>eas-app-stores</code> (build + submit, TestFlight, versions, store metadata).</li>
+<li>&quot;I&#39;m new / where do I start&quot; → scaffold first (see Shared setup rules), then route by goal.</li>
+</ul>
+<h4>Shared setup rules</h4>
+<p>Apply the rules that match the project and the requested task.</p>
+<ul>
+<li><strong>Native app using EAS for delivery?</strong> Route to <code>eas-app-stores</code>; its</li>
+</ul>
+<p>  <code>references/native-ios.md</code> covers SwiftUI/UIKit on iOS. Keep the existing native</p>
+<p>  project. Apply EAS auth/linking below; Expo scaffolding, SDK, and package-install</p>
+<p>  rules do not apply to this path.</p>
+<ul>
+<li><strong>Starting a new Expo app?</strong> Start one the standard way before routing to a feature skill:</li>
+</ul>
+<p>  <code>npx create-expo-app@latest</code>, laying out folders per <code>expo-project-structure</code>. Then</p>
+<p>  classify the user&#39;s goal and route.</p>
+<ul>
+<li><strong>Detect the SDK version</strong> before giving version-specific advice: read the <code>expo</code></li>
+</ul>
+<p>  version in <code>package.json</code> (and <code>app.json</code> / <code>app.config.{js,ts}</code>). Many APIs and</p>
+<p>  defaults differ by SDK.</p>
+<ul>
+<li><strong>Read the docs for that SDK, not <code>latest</code>.</strong> Use the version-pinned URL, e.g.</li>
+</ul>
+<p>  <code>https://docs.expo.dev/versions/v56.0.0/sdk/ui/</code> on SDK 56 instead of</p>
+<p>  <code>https://docs.expo.dev/versions/latest/sdk/ui/</code> — the <code>latest</code> pages track the newest</p>
+<p>  SDK and can document APIs the project does not have yet.</p>
+<ul>
+<li><strong>Moving to a newer SDK is its own task</strong> — load <code>expo-upgrade</code> instead of bumping</li>
+</ul>
+<p>  versions by hand.</p>
+<ul>
+<li><strong>Managed vs. bare/prebuild</strong>: the presence of committed <code>ios/</code> and <code>android/</code></li>
+</ul>
+<p>  directories means native projects exist (prebuild or bare). Config-plugin and</p>
+<p>  native-setup steps differ — note which one the project is in.</p>
+<ul>
+<li><strong>Install packages with <code>npx expo install &lt;pkg&gt;</code></strong>, not raw <code>npm</code>/<code>yarn</code>/<code>pnpm add</code>,</li>
+</ul>
+<p>  so versions stay compatible with the project&#39;s SDK.</p>
+<ul>
+<li><strong>Launching the app yourself?</strong> When you open Expo Go or a development build to look</li>
+</ul>
+<p>  at, screenshot, or drive it, skip the first-launch onboarding, the dev menu that opens</p>
+<p>  at launch, and the floating Tools button. On SDK 58+, Expo CLI does this for launches</p>
+<p>  it starts from a non-interactive shell. On SDK 57 and earlier, and for any URL you open</p>
+<p>  yourself (<code>simctl openurl</code>, <code>adb</code>, a controller), follow</p>
+<p>  <code>./references/launch-without-dev-menu.md</code>.</p>
+<ul>
+<li><strong>EAS auth &amp; linking</strong> (only needed for build/submit/update/observe/workflows): check</li>
+</ul>
+<p>  login with <code>eas whoami</code>, log in with <code>eas login</code>. A project is linked when</p>
+<p>  <code>extra.eas.projectId</code> exists in the app config; create it with <code>eas init</code> if missing.</p>
+<h4>When to skip the router hop</h4>
+<ul>
+<li>Only when the user explicitly named a specific <code>expo-*</code> / <code>eas-*</code> skill → load that</li>
+</ul>
+<p>  skill directly.</p>
+<ul>
+<li>A fully-specified task (SDK version pinned, file layout given, libraries named) is</li>
+</ul>
+<p>  <strong>not</strong> a reason to skip: the shared rules above still apply — check them, then route</p>
+<p>  to the matching leaf skill.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-overview&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-overview</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-overview" aria-label="Copy install expo-overview">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-overview</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-overview/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

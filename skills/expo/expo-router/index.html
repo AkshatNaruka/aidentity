@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-router — Aidentity</title>
+<meta name="description" content="Navigation and routing for Expo Router. Covers file-based routes, groups and dynamic routes, folder organization, Link with previews and context menus, native Stack, page titles, modals and form sheets, NativeTabs, headers and toolbars, and header search bars.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-router/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-router — Aidentity">
+<meta property="og:description" content="Navigation and routing for Expo Router. Covers file-based routes, groups and dynamic routes, folder organization, Link with previews and context menus, native Stack, page titles, modals and form sheets, NativeTabs, headers and toolbars, and header search bars.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-router/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-router","description":"Navigation and routing for Expo Router. Covers file-based routes, groups and dynamic routes, folder organization, Link with previews and context menus, native Stack, page titles, modals and form sheets, NativeTabs, headers and toolbars, and header search bars.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-router/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-router
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-router</h1>
+      <p class="summary">Navigation and routing for Expo Router. Covers file-based routes, groups and dynamic routes, folder organization, Link with previews and context menus, native Stack, page titles, modals and form sheets, NativeTabs, headers and toolbars, and header search bars.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Router Navigation</h3>
+<p>Navigation and routing for Expo Router apps. For screen styling, colors, controls, media, and visual effects, use the <code>expo-native-ui</code> skill; for motion and gestures, use <code>expo-animation</code>.</p>
+<h4>References</h4>
+<p>Consult these resources as needed:</p>
+<p><pre><code>references/
+  route-structure.md     Route conventions, dynamic routes, groups, folder organization
+  tabs.md                NativeTabs, migration from JS tabs, iOS 26 features
+  toolbar-and-headers.md Stack headers and toolbar buttons, menus, search (iOS only)
+  form-sheet.md          Form sheets in expo-router: configuration, footers and background interaction.
+  search.md              Search bar with headers, useSearch hook, filtering patterns
+  zoom-transitions.md    Apple Zoom: fluid zoom transitions with Link.AppleZoom (iOS 18+)</code></pre></p>
+<h4>Code Style</h4>
+<ul>
+<li>Always use kebab-case for file names, e.g. <code>comment-card.tsx</code></li>
+<li>Always remove old route files when moving or restructuring navigation</li>
+<li>Never use special characters in file names</li>
+<li>Configure tsconfig.json with path aliases, and prefer aliases over relative imports for refactors.</li>
+</ul>
+<h4>Routes</h4>
+<p>See <code>./references/route-structure.md</code> for detailed route conventions.</p>
+<ul>
+<li>Routes belong in the <code>app</code> directory.</li>
+<li>Never co-locate components, types, or utilities in the app directory. This is an anti-pattern.</li>
+<li>Ensure the app always has a route that matches &quot;/&quot;, it may be inside a group route.</li>
+</ul>
+<h4>Library Preferences</h4>
+<ul>
+<li><code>Color</code> from <code>expo-router</code> for native semantic colors, not raw <code>PlatformColor</code> (type-safe, auto-adapts to light/dark). See <code>expo-native-ui</code> for the full color palette pattern.</li>
+<li>In SDK 56+, never import from <code>@react-navigation/*</code> directly — use <code>expo-router/react-navigation</code> instead (covers <code>@react-navigation/native</code>, <code>/core</code>, <code>/elements</code>, <code>/routers</code>)</li>
+</ul>
+<h4>Behavior</h4>
+<ul>
+<li>Prefer <code>Stack.SearchBar</code> to add a search bar to a screen</li>
+</ul>
+<h3>Navigation</h3>
+<h4>Link</h4>
+<p>Use <code>&lt;Link href=&quot;/path&quot; /&gt;</code> from &#39;expo-router&#39; for navigation between routes.</p>
+<p><pre><code>import { Link } from &#39;expo-router&#39;;
+
+// Basic link
+&lt;Link href=&quot;/path&quot; /&gt;
+
+// Wrapping custom components
+&lt;Link href=&quot;/path&quot; asChild&gt;
+  &lt;Pressable&gt;...&lt;/Pressable&gt;
+&lt;/Link&gt;</code></pre></p>
+<p>Whenever possible, include a <code>&lt;Link.Preview&gt;</code> to follow iOS conventions. Add context menus and previews frequently to enhance navigation.</p>
+<h4>Stack</h4>
+<ul>
+<li>ALWAYS use <code>_layout.tsx</code> files to define stacks</li>
+<li>Use Stack from &#39;expo-router/stack&#39; for native navigation stacks</li>
+</ul>
+<h5>Page Title</h5>
+<p>Set the page title with <code>Stack.Title</code>:</p>
+<p><pre><code>&lt;Stack.Title&gt;Home&lt;/Stack.Title&gt;</code></pre></p>
+<h4>Context Menus</h4>
+<p>Add long press context menus to Link components:</p>
+<p><pre><code>import { Link } from &quot;expo-router&quot;;
+
+&lt;Link href=&quot;/settings&quot; asChild&gt;
+  &lt;Link.Trigger&gt;
+    &lt;Pressable&gt;
+      &lt;Card /&gt;
+    &lt;/Pressable&gt;
+  &lt;/Link.Trigger&gt;
+  &lt;Link.Menu&gt;
+    &lt;Link.MenuAction
+      title=&quot;Share&quot;
+      icon=&quot;square.and.arrow.up&quot;
+      onPress={handleSharePress}
+    /&gt;
+    &lt;Link.MenuAction
+      title=&quot;Block&quot;
+      icon=&quot;nosign&quot;
+      destructive
+      onPress={handleBlockPress}
+    /&gt;
+    &lt;Link.Menu title=&quot;More&quot; icon=&quot;ellipsis&quot;&gt;
+      &lt;Link.MenuAction title=&quot;Copy&quot; icon=&quot;doc.on.doc&quot; onPress={() =&gt; {}} /&gt;
+      &lt;Link.MenuAction
+        title=&quot;Delete&quot;
+        icon=&quot;trash&quot;
+        destructive
+        onPress={() =&gt; {}}
+      /&gt;
+    &lt;/Link.Menu&gt;
+  &lt;/Link.Menu&gt;
+&lt;/Link&gt;;</code></pre></p>
+<h4>Link Previews</h4>
+<p>Use link previews frequently to enhance navigation:</p>
+<p><pre><code>&lt;Link href=&quot;/settings&quot;&gt;
+  &lt;Link.Trigger&gt;
+    &lt;Pressable&gt;
+      &lt;Card /&gt;
+    &lt;/Pressable&gt;
+  &lt;/Link.Trigger&gt;
+  &lt;Link.Preview /&gt;
+&lt;/Link&gt;</code></pre></p>
+<p>Link preview can be used with context menus.</p>
+<h4>Modal</h4>
+<p>Present a screen as a modal:</p>
+<p><pre><code>&lt;Stack.Screen name=&quot;modal&quot; options={{ presentation: &quot;modal&quot; }} /&gt;</code></pre></p>
+<p>Prefer this to building a custom modal component.</p>
+<h4>Sheet</h4>
+<p>Present a screen as a dynamic form sheet:</p>
+<p><pre><code>&lt;Stack.Screen
+  name=&quot;sheet&quot;
+  options={{
+    presentation: &quot;formSheet&quot;,
+    sheetGrabberVisible: true,
+    sheetAllowedDetents: [0.5, 1.0],
+    contentStyle: { backgroundColor: &quot;transparent&quot; },
+  }}
+/&gt;</code></pre></p>
+<ul>
+<li>Using <code>contentStyle: { backgroundColor: &quot;transparent&quot; }</code> makes the background liquid glass on iOS 26+.</li>
+</ul>
+<h4>Common route structure</h4>
+<p>A standard app layout with tabs and stacks inside each tab:</p>
+<p><pre><code>app/
+  _layout.tsx — &lt;NativeTabs /&gt;
+  (index,search)/
+    _layout.tsx — &lt;Stack /&gt;
+    index.tsx — Main list
+    search.tsx — Search view</code></pre></p>
+<p><pre><code>// app/_layout.tsx
+import { NativeTabs } from &quot;expo-router/unstable-native-tabs&quot;;
+import { ThemeProvider, DarkTheme, DefaultTheme } from &quot;expo-router/react-navigation&quot;;
+import { useColorScheme } from &quot;react-native&quot;;
+
+export default function Layout() {
+  const colorScheme = useColorScheme();
+  return (
+    &lt;ThemeProvider value={colorScheme === &quot;dark&quot; ? DarkTheme : DefaultTheme}&gt;
+      &lt;NativeTabs&gt;
+        &lt;NativeTabs.Trigger name=&quot;(index)&quot;&gt;
+          &lt;NativeTabs.Trigger.Icon sf=&quot;list.dash&quot; md=&quot;list&quot; /&gt;
+          &lt;NativeTabs.Trigger.Label&gt;Items&lt;/NativeTabs.Trigger.Label&gt;
+        &lt;/NativeTabs.Trigger&gt;
+        &lt;NativeTabs.Trigger name=&quot;(search)&quot; role=&quot;search&quot; /&gt;
+      &lt;/NativeTabs&gt;
+    &lt;/ThemeProvider&gt;
+  );
+}</code></pre></p>
+<p>Create a shared group route so both tabs can push common screens:</p>
+<p><pre><code>// app/(index,search)/_layout.tsx
+import { Stack } from &quot;expo-router/stack&quot;;
+import { colors } from &quot;@/theme/colors&quot;;
+
+export default function Layout({ segment }) {
+  const screen = segment.match(/\((.*)\)/)?.[1]!;
+  const titles: Record&lt;string, string&gt; = { index: &quot;Items&quot;, search: &quot;Search&quot; };
+
+  return (
+    &lt;Stack
+      screenOptions={{
+        headerTransparent: true,
+        headerShadowVisible: false,
+        headerLargeTitleShadowVisible: false,
+        headerLargeStyle: { backgroundColor: &quot;transparent&quot; },
+        headerTitleStyle: { color: colors.label },
+        headerLargeTitleEnabled: true,
+        headerBlurEffect: &quot;none&quot;,
+        headerBackButtonDisplayMode: &quot;minimal&quot;,
+      }}
+    &gt;
+      &lt;Stack.Screen name={screen} options={{ title: titles[screen] }} /&gt;
+      &lt;Stack.Screen name=&quot;i/[id]&quot; options={{ headerLargeTitleEnabled: false }} /&gt;
+    &lt;/Stack&gt;
+  );
+}</code></pre></p>
+<p><code>headerLargeTitleEnabled</code> is the SDK 56+ option name; older SDKs use <code>headerLargeTitle</code>, which is deprecated upstream.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-router&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-router</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-router" aria-label="Copy install expo-router">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-router</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-router/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

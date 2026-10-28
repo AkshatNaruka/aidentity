@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-dom — Aidentity</title>
+<meta name="description" content="Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally. For the end-to-end migration of a whole web app, use the expo-web-to-native skill.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-dom/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-dom — Aidentity">
+<meta property="og:description" content="Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally. For the end-to-end migration of a whole web app, use the expo-web-to-native skill.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-dom/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-dom","description":"Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally. For the end-to-end migration of a whole web app, use the expo-web-to-native skill.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-dom/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-dom
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-dom</h1>
+      <p class="summary">Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally. For the end-to-end migration of a whole web app, use the expo-web-to-native skill.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h4>What are DOM Components?</h4>
+<p>DOM components allow web code to run verbatim in a webview on native platforms while rendering as-is on web. This enables using web-only libraries like <code>recharts</code>, <code>react-syntax-highlighter</code>, or any React web library in your Expo app without modification.</p>
+<h4>When to Use DOM Components</h4>
+<p>Use DOM components when you need:</p>
+<ul>
+<li><strong>Web-only libraries</strong> — Charts (recharts, chart.js), syntax highlighters, rich text editors, or any library that depends on DOM APIs</li>
+<li><strong>Migrating web code</strong> — Bring existing React web components to native without rewriting</li>
+<li><strong>Complex HTML/CSS layouts</strong> — When CSS features aren&#39;t available in React Native</li>
+<li><strong>iframes or embeds</strong> — Embedding external content that requires a browser context</li>
+<li><strong>Canvas or WebGL</strong> — Web graphics APIs not available natively</li>
+</ul>
+<h4>When NOT to Use DOM Components</h4>
+<p>Avoid DOM components when:</p>
+<ul>
+<li><strong>Native performance is critical</strong> — Webviews add overhead</li>
+<li><strong>Simple UI</strong> — React Native components are more efficient for basic layouts</li>
+<li><strong>Deep native integration</strong> — Use local modules instead for native APIs</li>
+<li><strong>Layout routes</strong> — <code>_layout</code> files cannot be DOM components</li>
+</ul>
+<h4>Basic DOM Component</h4>
+<p>Create a new file with the <code>&#39;use dom&#39;;</code> directive at the top:</p>
+<p><pre><code>// components/WebChart.tsx
+&quot;use dom&quot;;
+
+export default function WebChart({
+  data,
+}: {
+  data: number[];
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  return (
+    &lt;div style={{ padding: 20 }}&gt;
+      &lt;h2&gt;Chart Data&lt;/h2&gt;
+      &lt;ul&gt;
+        {data.map((value, i) =&gt; (
+          &lt;li key={i}&gt;{value}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></p>
+<h4>Rules for DOM Components</h4>
+<ol>
+<li><strong>Must have <code>&#39;use dom&#39;;</code> directive</strong> at the top of the file</li>
+<li><strong>Single default export</strong> — One React component per file</li>
+<li><strong>Own file</strong> — Cannot be defined inline or combined with native components</li>
+<li><strong>Serializable props only</strong> — Strings, numbers, booleans, arrays, plain objects</li>
+<li><strong>Include CSS in the component file</strong> — DOM components run in isolated context</li>
+</ol>
+<h4>The <code>dom</code> Prop</h4>
+<p>Every DOM component receives a special <code>dom</code> prop for webview configuration. Always type it in your props:</p>
+<p><pre><code>&quot;use dom&quot;;
+
+interface Props {
+  content: string;
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}
+
+export default function MyComponent({ content }: Props) {
+  return &lt;div&gt;{content}&lt;/div&gt;;
+}</code></pre></p>
+<h5>Common <code>dom</code> Prop Options</h5>
+<p><pre><code>// Disable body scrolling
+&lt;DOMComponent dom={{ scrollEnabled: false }} /&gt;
+
+// Flow under the notch (disable safe area insets)
+&lt;DOMComponent dom={{ contentInsetAdjustmentBehavior: &quot;never&quot; }} /&gt;
+
+// Control size manually
+&lt;DOMComponent dom={{ style: { width: 300, height: 400 } }} /&gt;
+
+// Combine options
+&lt;DOMComponent
+  dom={{
+    scrollEnabled: false,
+    contentInsetAdjustmentBehavior: &quot;never&quot;,
+    style: { width: &#39;100%&#39;, height: 500 }
+  }}
+/&gt;</code></pre></p>
+<h4>Exposing Native Actions to the Webview</h4>
+<p>Pass async functions as props to expose native functionality to the DOM component:</p>
+<p><pre><code>// app/index.tsx (native)
+import { Alert } from &quot;react-native&quot;;
+import DOMComponent from &quot;@/components/dom-component&quot;;
+
+export default function Screen() {
+  return (
+    &lt;DOMComponent
+      showAlert={async (message: string) =&gt; {
+        Alert.alert(&quot;From Web&quot;, message);
+      }}
+      saveData={async (data: { name: string; value: number }) =&gt; {
+        // Save to native storage, database, etc.
+        console.log(&quot;Saving:&quot;, data);
+        return { success: true };
+      }}
+    /&gt;
+  );
+}</code></pre></p>
+<p><pre><code>// components/dom-component.tsx
+&quot;use dom&quot;;
+
+interface Props {
+  showAlert: (message: string) =&gt; Promise&lt;void&gt;;
+  saveData: (data: {
+    name: string;
+    value: number;
+  }) =&gt; Promise&lt;{ success: boolean }&gt;;
+  dom?: import(&quot;expo/dom&quot;).DOMProps;
+}
+
+export default function DOMComponent({ showAlert, saveData }: Props) {
+  const handleClick = async () =&gt; {
+    await showAlert(&quot;Hello from the webview!&quot;);
+    const result = await saveData({ name: &quot;test&quot;, value: 42 });
+    console.log(&quot;Save result:&quot;, result);
+  };
+
+  return &lt;button onClick={handleClick}&gt;Trigger Native Action&lt;/button&gt;;
+}</code></pre></p>
+<h4>Using Web Libraries</h4>
+<p>DOM components can use any web library:</p>
+<p><pre><code>// components/syntax-highlight.tsx
+&quot;use dom&quot;;
+
+import SyntaxHighlighter from &quot;react-syntax-highlighter&quot;;
+import { docco } from &quot;react-syntax-highlighter/dist/esm/styles/hljs&quot;;
+
+interface Props {
+  code: string;
+  language: string;
+  dom?: import(&quot;expo/dom&quot;).DOMProps;
+}
+
+export default function SyntaxHighlight({ code, language }: Props) {
+  return (
+    &lt;SyntaxHighlighter language={language} style={docco}&gt;
+      {code}
+    &lt;/SyntaxHighlighter&gt;
+  );
+}</code></pre></p>
+<p><pre><code>// components/chart.tsx
+&quot;use dom&quot;;
+
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from &quot;recharts&quot;;
+
+interface Props {
+  data: Array&lt;{ name: string; value: number }&gt;;
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}
+
+export default function Chart({ data }: Props) {
+  return (
+    &lt;LineChart width={400} height={300} data={data}&gt;
+      &lt;CartesianGrid strokeDasharray=&quot;3 3&quot; /&gt;
+      &lt;XAxis dataKey=&quot;name&quot; /&gt;
+      &lt;YAxis /&gt;
+      &lt;Tooltip /&gt;
+      &lt;Line type=&quot;monotone&quot; dataKey=&quot;value&quot; stroke=&quot;#8884d8&quot; /&gt;
+    &lt;/LineChart&gt;
+  );
+}</code></pre></p>
+<h4>CSS in DOM Components</h4>
+<p>CSS imports must be in the DOM component file since they run in isolated context:</p>
+<p><pre><code>// components/styled-component.tsx
+&quot;use dom&quot;;
+
+import &quot;@/styles.css&quot;; // CSS file in same directory
+
+export default function StyledComponent({
+  dom,
+}: {
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  return (
+    &lt;div className=&quot;container&quot;&gt;
+      &lt;h1 className=&quot;title&quot;&gt;Styled Content&lt;/h1&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></p>
+<p>Or use inline styles / CSS-in-JS:</p>
+<p><pre><code>&quot;use dom&quot;;
+
+const styles = {
+  container: {
+    padding: 20,
+    backgroundColor: &quot;#f0f0f0&quot;,
+  },
+  title: {
+    fontSize: 24,
+    color: &quot;#333&quot;,
+  },
+};
+
+export default function StyledComponent({
+  dom,
+}: {
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  return (
+    &lt;div style={styles.container}&gt;
+      &lt;h1 style={styles.title}&gt;Styled Content&lt;/h1&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></p>
+<h4>Expo Router in DOM Components</h4>
+<p>The expo-router <code>&lt;Link /&gt;</code> component and router API work inside DOM components:</p>
+<p><pre><code>&quot;use dom&quot;;
+
+import { Link, useRouter } from &quot;expo-router&quot;;
+
+export default function Navigation({
+  dom,
+}: {
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  const router = useRouter();
+
+  return (
+    &lt;nav&gt;
+      &lt;Link href=&quot;/about&quot;&gt;About&lt;/Link&gt;
+      &lt;button onClick={() =&gt; router.push(&quot;/settings&quot;)}&gt;Settings&lt;/button&gt;
+    &lt;/nav&gt;
+  );
+}</code></pre></p>
+<h5>Router APIs That Require Props</h5>
+<p>These hooks don&#39;t work directly in DOM components because they need synchronous access to native routing state:</p>
+<ul>
+<li><code>useLocalSearchParams()</code></li>
+<li><code>useGlobalSearchParams()</code></li>
+<li><code>usePathname()</code></li>
+<li><code>useSegments()</code></li>
+<li><code>useRootNavigation()</code></li>
+<li><code>useRootNavigationState()</code></li>
+</ul>
+<p><strong>Solution:</strong> Read these values in the native parent and pass as props:</p>
+<p><pre><code>// app/[id].tsx (native)
+import { useLocalSearchParams, usePathname } from &quot;expo-router&quot;;
+import DOMComponent from &quot;@/components/dom-component&quot;;
+
+export default function Screen() {
+  const { id } = useLocalSearchParams();
+  const pathname = usePathname();
+
+  return &lt;DOMComponent id={id as string} pathname={pathname} /&gt;;
+}</code></pre></p>
+<p><pre><code>// components/dom-component.tsx
+&quot;use dom&quot;;
+
+interface Props {
+  id: string;
+  pathname: string;
+  dom?: import(&quot;expo/dom&quot;).DOMProps;
+}
+
+export default function DOMComponent({ id, pathname }: Props) {
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Current ID: {id}&lt;/p&gt;
+      &lt;p&gt;Current Path: {pathname}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></p>
+<h4>Detecting DOM Environment</h4>
+<p>Check if code is running in a DOM component:</p>
+<p><pre><code>&quot;use dom&quot;;
+
+import { IS_DOM } from &quot;expo/dom&quot;;
+
+export default function Component({
+  dom,
+}: {
+  dom?: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  return &lt;div&gt;{IS_DOM ? &quot;Running in DOM component&quot; : &quot;Running natively&quot;}&lt;/div&gt;;
+}</code></pre></p>
+<h4>Assets</h4>
+<p>Prefer requiring assets instead of using the public directory:</p>
+<p><pre><code>&quot;use dom&quot;;
+
+// Good - bundled with the component
+const logo = require(&quot;../assets/logo.png&quot;);
+
+export default function Component({
+  dom,
+}: {
+  dom: import(&quot;expo/dom&quot;).DOMProps;
+}) {
+  return &lt;img src={logo} alt=&quot;Logo&quot; /&gt;;
+}</code></pre></p>
+<h4>Usage from Native Components</h4>
+<p>Import and use DOM components like regular components:</p>
+<p><pre><code>// app/index.tsx
+import { View, Text } from &quot;react-native&quot;;
+import WebChart from &quot;@/components/web-chart&quot;;
+import CodeBlock from &quot;@/components/code-block&quot;;
+
+export default function HomeScreen() {
+  return (
+    &lt;View style={{ flex: 1 }}&gt;
+      &lt;Text&gt;Native content above&lt;/Text&gt;
+
+      &lt;WebChart data={[10, 20, 30, 40, 50]} dom={{ style: { height: 300 } }} /&gt;
+
+      &lt;CodeBlock
+        code=&quot;const x = 1;&quot;
+        language=&quot;javascript&quot;
+        dom={{ scrollEnabled: true }}
+      /&gt;
+
+      &lt;Text&gt;Native content below&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre></p>
+<h4>Platform Behavior</h4>
+<table><thead><tr><th>Platform</th><th>Behavior</th></tr></thead><tbody>
+<tr><td>iOS</td><td>Rendered in WKWebView</td></tr>
+<tr><td>Android</td><td>Rendered in WebView</td></tr>
+<tr><td>Web</td><td>Rendered as-is (no webview wrapper)</td></tr>
+</tbody></table>
+<p>On web, the <code>dom</code> prop is ignored since no webview is needed.</p>
+<h4>Tips</h4>
+<ul>
+<li>DOM components hot reload during development</li>
+<li>Keep DOM components focused — don&#39;t put entire screens in webviews</li>
+<li>Use native components for navigation chrome, DOM components for specialized content</li>
+<li>Test on all platforms — web rendering may differ slightly from native webviews</li>
+<li>Large DOM components may impact performance — profile if needed</li>
+<li>The webview has its own JavaScript context — cannot directly share state with native</li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-dom&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-dom</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-dom" aria-label="Copy install expo-dom">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-dom</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-dom/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

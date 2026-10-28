@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>brand — Aidentity</title>
+<meta name="description" content="Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/brand/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="brand — Aidentity">
+<meta property="og:description" content="Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/brand/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"brand","description":"Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.","url":"https://akshatnaruka.github.io/aidentity/skills/ui-ux-pro-max/brand/","author":{"@type":"Person","name":"Next Level Builder"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=frontend">frontend</a><span>/</span>brand
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">nextlevelbuilder/ui-ux-pro-max-skill · MIT</p>
+      <h1>brand</h1>
+      <p class="summary">Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=frontend">frontend</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Brand</h3>
+<p>Brand identity, voice, messaging, asset management, and consistency frameworks.</p>
+<h4>When to Use</h4>
+<ul>
+<li>Brand voice definition and content tone guidance</li>
+<li>Visual identity standards and style guide development</li>
+<li>Messaging framework creation</li>
+<li>Brand consistency review and audit</li>
+<li>Asset organization, naming, and approval</li>
+<li>Color palette management and typography specs</li>
+</ul>
+<h4>Script Paths</h4>
+<p>Script paths in this skill and its <code>references/</code> are relative to the directory that contains this SKILL.md, not to the project: <code>scripts/&lt;file&gt;</code> is this skill&#39;s own <code>scripts/</code> folder, and <code>../&lt;skill&gt;/scripts/&lt;file&gt;</code> is a sibling sub-skill installed alongside it. Build the full path from that directory (Claude Code reports it as the skill&#39;s base directory when the skill loads) and keep the working directory at the project root — the scripts read and write project files such as <code>docs/brand-guidelines.md</code>, <code>assets/design-tokens.json</code> or <code>src/</code> relative to it.</p>
+<h4>Quick Start</h4>
+<p><strong>Inject brand context into prompts:</strong></p>
+<p><pre><code>node scripts/inject-brand-context.cjs
+node scripts/inject-brand-context.cjs --json</code></pre></p>
+<p><strong>Validate an asset:</strong></p>
+<p><pre><code>node scripts/validate-asset.cjs &lt;asset-path&gt;</code></pre></p>
+<p><strong>Extract/compare colors:</strong></p>
+<p><pre><code>node scripts/extract-colors.cjs --palette
+node scripts/extract-colors.cjs &lt;image-path&gt;</code></pre></p>
+<h4>Brand Sync Workflow</h4>
+<p><pre><code># 1. Edit docs/brand-guidelines.md (or use /brand update)
+# 2. Sync to design tokens
+node scripts/sync-brand-to-tokens.cjs
+# 3. Verify
+node scripts/inject-brand-context.cjs --json | head -20</code></pre></p>
+<p>The sync stops when it detects existing token files, <code>:root</code> custom properties</p>
+<p>or Tailwind v4 <code>@theme</code> variables in common CSS entry points and their local</p>
+<p>CSS imports, or Tailwind theme colors and presets. Review the reported source</p>
+<p>before proceeding. If the detected files are the managed</p>
+<p><code>assets/design-tokens.*</code> outputs from an earlier sync and replacing them is</p>
+<p>intentional, re-run with <code>--force</code>.</p>
+<p><strong>Files synced:</strong></p>
+<ul>
+<li><code>docs/brand-guidelines.md</code> → Source of truth</li>
+<li><code>assets/design-tokens.json</code> → Token definitions</li>
+<li><code>assets/design-tokens.css</code> → CSS variables</li>
+</ul>
+<h4>Subcommands</h4>
+<table><thead><tr><th>Subcommand</th><th>Description</th><th>Reference</th></tr></thead><tbody>
+<tr><td><code>update</code></td><td>Update brand identity and sync to all design systems</td><td><code>references/update.md</code></td></tr>
+</tbody></table>
+<h4>References</h4>
+<table><thead><tr><th>Topic</th><th>File</th></tr></thead><tbody>
+<tr><td>Voice Framework</td><td><code>references/voice-framework.md</code></td></tr>
+<tr><td>Visual Identity</td><td><code>references/visual-identity.md</code></td></tr>
+<tr><td>Messaging</td><td><code>references/messaging-framework.md</code></td></tr>
+<tr><td>Consistency</td><td><code>references/consistency-checklist.md</code></td></tr>
+<tr><td>Guidelines Template</td><td><code>references/brand-guideline-template.md</code></td></tr>
+<tr><td>Asset Organization</td><td><code>references/asset-organization.md</code></td></tr>
+<tr><td>Color Management</td><td><code>references/color-palette-management.md</code></td></tr>
+<tr><td>Typography</td><td><code>references/typography-specifications.md</code></td></tr>
+<tr><td>Logo Usage</td><td><code>references/logo-usage-rules.md</code></td></tr>
+<tr><td>Approval Checklist</td><td><code>references/approval-checklist.md</code></td></tr>
+</tbody></table>
+<h4>Scripts</h4>
+<table><thead><tr><th>Script</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>scripts/inject-brand-context.cjs</code></td><td>Extract brand context for prompt injection</td></tr>
+<tr><td><code>scripts/sync-brand-to-tokens.cjs</code></td><td>Sync brand-guidelines.md → design-tokens.json/css</td></tr>
+<tr><td><code>scripts/validate-asset.cjs</code></td><td>Validate asset naming, size, format</td></tr>
+<tr><td><code>scripts/extract-colors.cjs</code></td><td>Extract and compare colors against palette</td></tr>
+</tbody></table>
+<h4>Templates</h4>
+<table><thead><tr><th>Template</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>templates/brand-guidelines-starter.md</code></td><td>Complete starter template for new brands</td></tr>
+</tbody></table>
+<h4>Routing</h4>
+<ol>
+<li>Parse subcommand from <code>$ARGUMENTS</code> (first word)</li>
+<li>Load corresponding <code>references/{subcommand}.md</code></li>
+<li>Execute with remaining arguments</li>
+</ol></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Next Level Builder</strong> in
+        <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/frontend-ui-engineering/index.html"
+     data-source="addyosmani"
+     data-category="frontend"
+     data-search="frontend-ui-engineering builds production-quality, accessible, responsive user-facing uis. use when building or modifying interfaces and pages, creating components, implementing layouts, meeting wcag accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than ai-generated. frontend frontend addyosmani/agent-skills">
+  <span>
+    <span class="r-name">frontend-ui-engineering</span>
+    <span class="r-desc">Builds production-quality, accessible, responsive user-facing UIs. Use when building or modifying interfaces and pages, creating components, implementing layouts, meeting WCAG accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than AI-generated.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/expo/expo-native-ui/index.html"
+     data-source="expo"
+     data-category="frontend"
+     data-search="expo-native-ui build beautiful, native-feeling expo screens. covers apple hig styling, semantic colors, native controls, sf symbols, media, visual effects, gradients, storage, and responsive layout. for routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill. frontend frontend expo/skills">
+  <span>
+    <span class="r-name">expo-native-ui</span>
+    <span class="r-desc">Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.</span>
+  </span>
+  <span class="r-src">expo/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/expo/expo-ui/index.html"
+     data-source="expo"
+     data-category="frontend"
+     data-search="expo-ui build native ui with the @expo/ui package: real swiftui on ios and jetpack compose on android. default to @expo/ui for sheets (bottomsheet), pickers, sliders, toggles, menus, and grouped-form sections — do not reach for reanimated, @gorhom/bottom-sheet, or rn built-in picker/switch; use @expo/ui instead. fall back to rn built-ins only when @expo/ui is missing the component. note: @expo/ui list renders native grouped rows like an ios settings screen — it is not a virtualized list; use flatlist/flashlist for large datasets. covers universal components (host, column, row, button, text, list, bottomsheet, fieldgroup, switch, slider, picker, menu), drop-in replacements for rn community libraries, and platform-specific swiftui/jetpack compose trees. not for expo router navigation, reanimated, or data fetching. frontend frontend expo/skills">
+  <span>
+    <span class="r-name">expo-ui</span>
+    <span class="r-desc">Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.</span>
+  </span>
+  <span class="r-src">expo/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/slides/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="slides create strategic html presentations with chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">slides</span>
+    <span class="r-desc">Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/ui-ux-pro-max/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="ui-ux-pro-max ui/ux design intelligence for web, mobile, and desktop. this skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific ui implementation. searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 ux guidelines, 105 icons, 17 gsap presets, 25 chart types, and 22 stacks. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">ui-ux-pro-max</span>
+    <span class="r-desc">UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add ui-ux-pro-max/brand</code>
+  <button type="button" data-copy="npx aidentity add ui-ux-pro-max/brand" aria-label="Copy install brand">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a></dd></div>
+          <div><dt>Author</dt><dd>Next Level Builder</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>frontend</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">ui-ux-pro-max/brand</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/ui-ux-pro-max/brand/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

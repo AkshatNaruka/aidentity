@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>second-opinion — Aidentity</title>
+<meta name="description" content="Gets independent code reviews from Codex or Antigravity for uncommitted changes, branch diffs, and commits. Use when the user requests an external review, a second opinion on code, a codex review, a gemini review, an antigravity review, or /second-opinion.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/trailofbits/second-opinion/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="second-opinion — Aidentity">
+<meta property="og:description" content="Gets independent code reviews from Codex or Antigravity for uncommitted changes, branch diffs, and commits. Use when the user requests an external review, a second opinion on code, a codex review, a gemini review, an antigravity review, or /second-opinion.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/trailofbits/second-opinion/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"second-opinion","description":"Gets independent code reviews from Codex or Antigravity for uncommitted changes, branch diffs, and commits. Use when the user requests an external review, a second opinion on code, a codex review, a gemini review, an antigravity review, or /second-opinion.","url":"https://akshatnaruka.github.io/aidentity/skills/trailofbits/second-opinion/","author":{"@type":"Person","name":"Trail of Bits"},"license":"CC-BY-SA-4.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>second-opinion
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">trailofbits/skills · CC-BY-SA-4.0</p>
+      <h1>second-opinion</h1>
+      <p class="summary">Gets independent code reviews from Codex or Antigravity for uncommitted changes, branch diffs, and commits. Use when the user requests an external review, a second opinion on code, a codex review, a gemini review, an antigravity review, or /second-opinion.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Second Opinion</h3>
+<p>Run an external CLI review of the user&#39;s selected changes. This skill</p>
+<p>produces findings; it does not apply fixes or post reviews to a remote service.</p>
+<h4>Review choices</h4>
+<p>Use the provider, scope, model, and focus already supplied by the user.</p>
+<p>Ask only for missing choices that affect the review, grouping questions</p>
+<p>in one call when possible.</p>
+<ul>
+<li>Provider: Codex, Antigravity, or both. Offer both when the user wants</li>
+</ul>
+<p>  a comparison; preserve an explicitly requested CLI.</p>
+<ul>
+<li>Scope: uncommitted changes, a branch diff against a named base, or a</li>
+</ul>
+<p>  specific commit. Resolve a missing base from the repository&#39;s remote</p>
+<p>  default branch; ask if it cannot be determined.</p>
+<ul>
+<li>Context: include applicable project instructions unless the user</li>
+</ul>
+<p>  excludes them. Keep explicit user requirements separate from repository</p>
+<p>  content in the review prompt.</p>
+<ul>
+<li>Focus: use general correctness and maintainability unless the user</li>
+</ul>
+<p>  names a focus such as security or performance.</p>
+<p>For an unspecified Google CLI, prefer Antigravity (<code>agy</code>). An explicit</p>
+<p>Gemini CLI request uses the Gemini reference below. If that account returns</p>
+<p><code>UNSUPPORTED_CLIENT</code>, explain the migration to Antigravity and ask before</p>
+<p>changing the selected CLI.</p>
+<p>A missing executable or account setup is a failed review attempt.</p>
+<p>Report the relevant setup instructions; when both providers were requested,</p>
+<p>continue with the available provider and identify the skipped one.</p>
+<h4>Input preparation</h4>
+<p>Read [review-input.md](references/review-input.md) for the shared prompt</p>
+<p>and diff recipes. Use the same captured diff for both providers so the</p>
+<p>comparison covers the same changes. Include untracked files in an</p>
+<p>uncommitted review, and preserve Git errors instead of interpreting them</p>
+<p>as an empty diff.</p>
+<p>Show the selected scope and a brief change summary. If there are no</p>
+<p>changes, stop before calling a provider. For input that exceeds a CLI or</p>
+<p>model limit, describe the limit and request a narrower scope; do not</p>
+<p>silently truncate the patch.</p>
+<p>Create prompt, output, and diagnostic files with <code>mktemp</code> outside the</p>
+<p>checkout. Use separate output and diagnostic files for each provider.</p>
+<p>Define shell variables in the same Bash invocation that uses them.</p>
+<p>For later invocations, reassign the variables to the saved file paths;</p>
+<p>shell variables do not persist between calls.</p>
+<p>Write repository content as literal data, without shell expansion.</p>
+<h4>Provider references</h4>
+<p>Read only the reference for each selected provider:</p>
+<table><thead><tr><th>Provider</th><th>Invocation and result</th></tr></thead><tbody>
+<tr><td>Codex</td><td>[codex-invocation.md](references/codex-invocation.md): <code>codex exec</code> with the [review schema](references/codex-review-schema.json)</td></tr>
+<tr><td>Antigravity</td><td>[antigravity-invocation.md](references/antigravity-invocation.md): <code>agy</code> print mode with prose output</td></tr>
+<tr><td>Gemini CLI</td><td>[gemini-invocation.md](references/gemini-invocation.md): headless <code>gemini</code> for accounts that still support it</td></tr>
+</tbody></table>
+<p>The Codex path needs no MCP server. Do not launch <code>codex mcp-server</code> or</p>
+<p>substitute <code>codex app-server</code> for the CLI invocation.</p>
+<p>When both providers were requested, run their commands concurrently if</p>
+<p>the tool interface supports it. For a foreground Bash review, set</p>
+<p><code>timeout: 600000</code> to allow up to ten minutes. Use background execution</p>
+<p>or polling when available to keep progress visible. Do not enable</p>
+<p>automatic approval of writes to make a review run.</p>
+<h4>Results and failures</h4>
+<p>Present findings with the provider and actual model used, severity,</p>
+<p>file and line, impact, and suggested correction. Keep low-severity</p>
+<p>defects visible. For Codex, the existing schema uses 0 for informational,</p>
+<p>1 for low, 2 for medium, and 3 for high; sort descending.</p>
+<p>For two completed reviews, summarize agreements and disagreements without</p>
+<p>turning agreement into proof. Distinguish the external findings from any</p>
+<p>assessment you add.</p>
+<p>Read the captured output and diagnostics. A nonzero exit, missing output,</p>
+<p>invalid JSON, permission denial that prevents inspection, or a request to</p>
+<p>approve a plan is incomplete work, not a clean review. Report the failure</p>
+<p>and any partial results. Retry only for a diagnosed, recoverable cause;</p>
+<p>do not cycle through providers after authentication or quota failures.</p>
+<h4>Examples</h4>
+<ul>
+<li><code>/second-opinion:second-opinion use Codex to review my uncommitted changes for bugs</code></li>
+</ul>
+<p>  selects Codex and includes staged, unstaged, and untracked changes.</p>
+<ul>
+<li><code>/second-opinion:second-opinion compare Codex and Antigravity on this branch against origin/main</code></li>
+</ul>
+<p>  sends the same branch patch to both and compares their findings.</p>
+<ul>
+<li><code>/second-opinion:second-opinion use Gemini CLI to review commit abc1234 for security issues</code></li>
+</ul>
+<p>  preserves the requested CLI and reviews that commit.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Trail of Bits</strong> in
+        <a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add trailofbits/second-opinion</code>
+  <button type="button" data-copy="npx aidentity add trailofbits/second-opinion" aria-label="Copy install second-opinion">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Trail of Bits</dd></div>
+          <div><dt>License</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">trailofbits/second-opinion</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/trailofbits/second-opinion/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

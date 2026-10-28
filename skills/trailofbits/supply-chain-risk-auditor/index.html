@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>supply-chain-risk-auditor — Aidentity</title>
+<meta name="description" content="Audits a project&#39;s dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/trailofbits/supply-chain-risk-auditor/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="supply-chain-risk-auditor — Aidentity">
+<meta property="og:description" content="Audits a project&#39;s dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/trailofbits/supply-chain-risk-auditor/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"supply-chain-risk-auditor","description":"Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.","url":"https://akshatnaruka.github.io/aidentity/skills/trailofbits/supply-chain-risk-auditor/","author":{"@type":"Person","name":"Trail of Bits"},"license":"CC-BY-SA-4.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>supply-chain-risk-auditor
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">trailofbits/skills · CC-BY-SA-4.0</p>
+      <h1>supply-chain-risk-auditor</h1>
+      <p class="summary">Audits a project&#39;s dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Supply Chain Risk Auditor</h3>
+<p>Generates a supply-chain risk report for a project&#39;s direct dependencies (npm, PyPI,</p>
+<p>Go), plus an advisory sweep of everything its lockfile resolves. Two deterministic</p>
+<p>scripts do the measuring; your job is the judgment they refuse to automate.</p>
+<h4>Why the scripts do the measuring, not you</h4>
+<p>Every figure in this report is a claim about somebody else&#39;s project, and hand-collected</p>
+<p>figures were measured wrong before this skill was rebuilt around scripts: GitHub</p>
+<p>contributor counts said five-plus people maintain <code>lodash</code> where npm&#39;s ACL says one, and</p>
+<p><code>gh</code> saw zero downloads for a package that moves 164 million a week. Do not estimate</p>
+<p>maintainer counts, downloads, staleness, or CVE history from <code>gh</code>, web search, or</p>
+<p>memory — run the collector, and quote what it measured.</p>
+<p>The scripts enforce two rules worth knowing before you read their output:</p>
+<ul>
+<li><strong>Unavailable data is never evidence of risk.</strong> Every criterion resolves to</li>
+</ul>
+<p>  assessed-clean, assessed-flagged, or unassessable-with-a-reason.</p>
+<ul>
+<li><strong>An absent measurement is never a clean verdict.</strong> A run that measured nothing exits</li>
+</ul>
+<p>  non-zero instead of printing a report that finds nothing.</p>
+<h4>Workflow</h4>
+<ol>
+<li>Confirm the target directory has manifests: <code>package.json</code>, <code>pyproject.toml</code>,</li>
+</ol>
+<p>   <code>requirements*.txt</code>, or <code>go.mod</code>. If none exist, say so and stop — do not audit an</p>
+<p>   ecosystem this collector does not parse by hand. Lockfiles read for exact versions</p>
+<p>   and the transitive sweep: <code>package-lock.json</code>/<code>npm-shrinkwrap.json</code>, <code>uv.lock</code>, and</p>
+<p>   a go 1.17+ <code>go.mod</code>. <code>yarn.lock</code>, <code>pnpm-lock.yaml</code>, and <code>poetry.lock</code> are not read —</p>
+<p>   the report says so when they are present, and versions fall back to pins or the</p>
+<p>   latest release.</p>
+<ol>
+<li>Check <code>gh auth status</code>. Unauthenticated GitHub allows 60 requests/hour against 5,000,</li>
+</ol>
+<p>   and the collector makes several per dependency; expect repository criteria to come</p>
+<p>   back unassessable without it. Say so rather than fixing it silently.</p>
+<ol>
+<li>Collect, then render. Put outputs somewhere outside the audited repository unless</li>
+</ol>
+<p>   asked otherwise:</p>
+<p>   <pre><code>   uv run {baseDir}/scripts/collect.py &lt;project-dir&gt; --json &lt;out-dir&gt;/findings.json
+   uv run {baseDir}/scripts/render.py &lt;out-dir&gt;/findings.json --out &lt;out-dir&gt;/report.md
+   </code></pre></p>
+<p>   Expect a few minutes for ~50 dependencies — several HTTP requests per dependency,</p>
+<p>   more with many Go modules, and slower without authenticated <code>gh</code>. If <code>collect.py</code></p>
+<p>   exits non-zero, it is refusing to report — relay its message verbatim instead of</p>
+<p>   retrying or working around it.</p>
+<ol>
+<li>Read <code>report.md</code> and <code>findings.json</code>. The report is the deliverable; the JSON carries</li>
+</ol>
+<p>   the datum behind every verdict when you need to cite one.</p>
+<ol>
+<li>Add what the collector cannot, clearly separated from what it measured:</li>
+</ol>
+<ul>
+<li>A short narrative for this reader: what to act on first, and why.</li>
+<li>Upgrade paths for advisory findings — check whether the fix is a patch or a major</li>
+</ul>
+<p>     version away.</p>
+<ul>
+<li>Replacement candidates for abandoned or archived dependencies. Verify a candidate</li>
+</ul>
+<p>     exists in the registry before naming it, and label these as judgment, not</p>
+<p>     measurement.</p>
+<ul>
+<li>For flagged install scripts: whether <code>npm ci --ignore-scripts</code> is viable for this</li>
+</ul>
+<p>     project&#39;s build.</p>
+<h4>Style for what you add</h4>
+<p>Write added prose the way a security report reads, and apply the same register to the</p>
+<p>report addendum and the final reply alike — replies get pasted into tickets and reports</p>
+<p>verbatim. State the finding, the datum behind it, and the action.</p>
+<ul>
+<li>Impersonal and declarative: no first or second person (&quot;I ran the collector&quot;, &quot;you</li>
+</ul>
+<p>  should upgrade&quot;), no contractions, no exclamation points.</p>
+<ul>
+<li>Active voice, with the subject matter as the actor: &quot;upgrading to 1.19.0 clears all</li>
+</ul>
+<p>  25 advisories&quot;, not &quot;it is recommended that axios be upgraded&quot;.</p>
+<ul>
+<li>Objective: no intensifiers or subjective framing (&quot;very&quot;, &quot;significant&quot;,</li>
+</ul>
+<p>  &quot;fortunately&quot;), and no guesses about why the project chose what it chose.</p>
+<ul>
+<li>Tense: past for what the audit did, present for the state of the dependencies,</li>
+</ul>
+<p>  future for the consequences of acting or not.</p>
+<ul>
+<li>Constructive: a recommendation names the action and its cost, never a culprit.</li>
+</ul>
+<p>If the <code>report-writing:writing-style</code> skill is available in the session, follow it —</p>
+<p>it is the full version of this register.</p>
+<p>The rendered report carries facts only. The interpretive rules below are instructions</p>
+<p>to you, not content for the reader — do not copy them into the deliverable as caveats</p>
+<p>or framing.</p>
+<h4>Reading the report</h4>
+<ul>
+<li><strong>Unassessable is not risk.</strong> PyPI publishes no maintainer ACL and Go has no registry;</li>
+</ul>
+<p>  those rows say what could not be known, not what is wrong.</p>
+<ul>
+<li><strong>The coverage table bounds every claim.</strong> &quot;No advisories&quot; means &quot;none among what was</li>
+</ul>
+<p>  assessed&quot; — check the assessed count before repeating a clean verdict.</p>
+<ul>
+<li><strong>Quote figures verbatim.</strong> Do not re-derive, round, or embellish the report&#39;s</li>
+</ul>
+<p>  numbers; every one is reproducible from the artifact.</p>
+<ul>
+<li><strong>Absence from the findings is not endorsement.</strong> A dependency with no findings was</li>
+</ul>
+<p>  measured against these criteria only.</p>
+<h4>Rationalizations to reject</h4>
+<ul>
+<li>&quot;<code>gh</code> can give me maintainer counts faster than the collector.&quot; Measured wrong — repo</li>
+</ul>
+<p>  contributors and registry publish rights are different populations.</p>
+<ul>
+<li>&quot;No findings, so the dependencies are safe.&quot; Read the coverage table; on PyPI and Go,</li>
+</ul>
+<p>  half the criteria are structurally unassessable.</p>
+<ul>
+<li>&quot;The unassessable rows would just confuse the reader; I&#39;ll drop them.&quot; They are the</li>
+</ul>
+<p>  boundary of every claim in the report. Dropping them turns partial coverage into a</p>
+<p>  clean bill of health, which is the failure this skill was rebuilt to prevent.</p>
+<ul>
+<li>&quot;The version is probably close enough.&quot; A range checked at latest-release and a</li>
+</ul>
+<p>  lockfile-resolved version are different claims; the report labels which one it makes.</p>
+<p>  Keep the label.</p>
+<h4>When not to use</h4>
+<ul>
+<li>License compliance auditing.</li>
+<li>Scanning the target&#39;s own source for vulnerabilities or secrets — this skill never</li>
+</ul>
+<p>  reads dependency source, only registry, advisory, and repository metadata.</p>
+<ul>
+<li>Judging whether the project installs or builds. The audit is designed to work from</li>
+</ul>
+<p>  nothing more than the dependency list — manifests and lockfiles — and never installs,</p>
+<p>  builds, or executes anything. Broken installs and import-time breakage are out of</p>
+<p>  scope, and worth saying so if the user seems to expect them.</p>
+<ul>
+<li>Ecosystems other than npm, PyPI, and Go; say the ecosystem is unsupported rather than</li>
+</ul>
+<p>  improvising an audit for it.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Trail of Bits</strong> in
+        <a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add trailofbits/supply-chain-risk-auditor</code>
+  <button type="button" data-copy="npx aidentity add trailofbits/supply-chain-risk-auditor" aria-label="Copy install supply-chain-risk-auditor">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Trail of Bits</dd></div>
+          <div><dt>License</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">trailofbits/supply-chain-risk-auditor</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/trailofbits/supply-chain-risk-auditor/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

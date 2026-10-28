@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eas-update — Aidentity</title>
+<meta name="description" content="Configure and use EAS Update for over-the-air JavaScript and asset updates with expo-updates and EAS CLI. Use when setting up OTA updates, running eas update:configure or eas update, publishing to preview/staging/production channels, explaining branches/channels/runtime versions, testing updates, or debugging why an installed build still shows old code. Load for TestFlight, preview, or production updates that do not appear, including questions about cold launches or reopening the app. Not for update health metrics; use eas-update-insights for adoption, crashes, and rollout monitoring.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/eas-update/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eas-update — Aidentity">
+<meta property="og:description" content="Configure and use EAS Update for over-the-air JavaScript and asset updates with expo-updates and EAS CLI. Use when setting up OTA updates, running eas update:configure or eas update, publishing to preview/staging/production channels, explaining branches/channels/runtime versions, testing updates, or debugging why an installed build still shows old code. Load for TestFlight, preview, or production updates that do not appear, including questions about cold launches or reopening the app. Not for update health metrics; use eas-update-insights for adoption, crashes, and rollout monitoring.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/eas-update/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"eas-update","description":"Configure and use EAS Update for over-the-air JavaScript and asset updates with expo-updates and EAS CLI. Use when setting up OTA updates, running eas update:configure or eas update, publishing to preview/staging/production channels, explaining branches/channels/runtime versions, testing updates, or debugging why an installed build still shows old code. Load for TestFlight, preview, or production updates that do not appear, including questions about cold launches or reopening the app. Not for update health metrics; use eas-update-insights for adoption, crashes, and rollout monitoring.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/eas-update/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>eas-update
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>eas-update</h1>
+      <p class="summary">Configure and use EAS Update for over-the-air JavaScript and asset updates with expo-updates and EAS CLI. Use when setting up OTA updates, running eas update:configure or eas update, publishing to preview/staging/production channels, explaining branches/channels/runtime versions, testing updates, or debugging why an installed build still shows old code. Load for TestFlight, preview, or production updates that do not appear, including questions about cold launches or reopening the app. Not for update health metrics; use eas-update-insights for adoption, crashes, and rollout monitoring.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>EAS Update</h3>
+<p>&gt; <strong>EAS service - costs apply.</strong> EAS Update is available on the Free plan; publishing and delivery use update, bandwidth, and storage allowances, with higher limits on paid plans. See <a href="https://expo.dev/pricing." rel="noopener">https://expo.dev/pricing.</a></p>
+<p>Use EAS Update to deliver compatible JavaScript, styling, and asset changes to installed apps without submitting a new native binary. Native-code changes still require a new build.</p>
+<h4>Start with the supported configuration path</h4>
+<p>Before changing anything, inspect <code>package.json</code>, the Expo app config, <code>eas.json</code> if present, and whether <code>ios/</code> or <code>android/</code> are tracked. Use what you find when reviewing the CLI&#39;s changes:</p>
+<ul>
+<li>Preserve existing dynamic or platform-specific app configuration.</li>
+<li>If <code>eas.json</code> exists, preserve its profiles and existing channel assignments. The CLI adds a channel matching the profile name only to build profiles that do not already have one.</li>
+<li>If <code>eas.json</code> is absent, do not create it by hand. The CLI may direct the user to run <code>eas build:configure</code> separately.</li>
+<li>With tracked native projects, expect the CLI to synchronize the platform&#39;s native Update configuration. Without them, expect Continuous Native Generation to apply the native configuration during a later build.</li>
+</ul>
+<p>Detect the Expo SDK version before installing packages or interpreting version-specific behavior.</p>
+<p>If <code>expo-updates</code> is not installed, install the SDK-compatible version:</p>
+<p><pre><code>npx expo install expo-updates</code></pre></p>
+<p>Configure from the project root:</p>
+<p><pre><code>npx eas-cli@latest update:configure</code></pre></p>
+<p>Use <code>eas update:configure</code> rather than manually inventing <code>updates.url</code>, <code>runtimeVersion</code>, native metadata, or build-profile channels. The command understands EAS project linking, Continuous Native Generation, and projects with committed native directories. Review and explain its resulting diff.</p>
+<p>If the command cannot proceed because the project is not linked or the user has not authorized the required remote operation, stop after any independently valid package installation and explain what remains. Do not partially reproduce <code>update:configure</code> by adding a runtime-version policy, config plugin, update URL, or channels by hand.</p>
+<p>For dynamic app config, non-EAS builds, or a command that cannot complete automatically, follow the current setup documentation instead of guessing: <a href="https://docs.expo.dev/eas-update/getting-started.md." rel="noopener">https://docs.expo.dev/eas-update/getting-started.md.</a></p>
+<h4>Keep the model straight</h4>
+<ul>
+<li><strong>Build:</strong> the installed native app. It contains native code, an embedded update, a platform, a runtime version, and normally a channel fixed at build time.</li>
+<li><strong>Update:</strong> a published JavaScript bundle, assets, and metadata for one platform and runtime version.</li>
+<li><strong>Branch:</strong> an ordered stream of updates. Its newest compatible update is active.</li>
+<li><strong>Channel:</strong> a stable deployment target embedded in builds. On the server, it points to a branch.</li>
+<li><strong>Runtime version:</strong> the compatibility boundary between an update and the native code in a build.</li>
+</ul>
+<p>A build receives an update only when platform and runtime version match and the build&#39;s channel points to the branch containing that update:</p>
+<p><pre><code>installed build (channel: production, runtime: 1.1.1, platform: ios)
+  -&gt; production channel
+  -&gt; production branch
+  -&gt; newest update for runtime 1.1.1 and ios</code></pre></p>
+<p>Channels and branches commonly have the same name, but they are separate objects. <code>eas channel:edit</code> changes a channel&#39;s server-side branch mapping for every build on that channel. It does not change an individual installation&#39;s embedded channel.</p>
+<p>Use this model to make decisions, but explain only the concepts needed for the user&#39;s request rather than reciting the entire model every time.</p>
+<h4>Decide whether an update is compatible</h4>
+<p>Use an update for changes to JavaScript, styling, and bundled assets that the installed native runtime already supports.</p>
+<p>Create a new native build when a change adds or modifies native code or native configuration, including most native-library additions and SDK upgrades. Do not work around a runtime mismatch or imply that publishing can add native capabilities to an existing build. See <a href="https://docs.expo.dev/eas-update/runtime-versions.md." rel="noopener">https://docs.expo.dev/eas-update/runtime-versions.md.</a></p>
+<p>Do not change the project&#39;s runtime-version policy as an incidental fix. Explain how the current policy affects compatibility; treat changing it as a separate decision because it changes which installed builds can receive future updates.</p>
+<h4>Publish deliberately</h4>
+<p>Check the current CLI help before relying on remembered flags:</p>
+<p><pre><code>npx eas-cli@latest update --help</code></pre></p>
+<p>For the common channel-based flow:</p>
+<p><pre><code>npx eas-cli@latest update \
+  --channel &lt;channel&gt; \
+  --message &quot;&lt;message&gt;&quot; \
+  --environment &lt;environment&gt;</code></pre></p>
+<p>SDK 55 and later require an EAS environment for publishing. Choose the environment intentionally so exported code receives the intended variables.</p>
+<p>Publishing changes remote state and can affect installed applications. Before running it, establish the exact project, channel, environment, platforms, runtime version, and message. Publish to production only when the user has explicitly requested or approved it; if the authorization or target is ambiguous, stop before the command and ask. Do not infer a production destination solely from the current Git branch.</p>
+<p>Prefer a preview or staging channel for validation. When promoting a tested update, use the documented deployment flow so production receives the same artifact where possible: <a href="https://docs.expo.dev/eas-update/deployment.md." rel="noopener">https://docs.expo.dev/eas-update/deployment.md.</a></p>
+<h4>Test according to the build type</h4>
+<h5>Development builds</h5>
+<p>Preview updates with the development build&#39;s Extensions UI, the EAS dashboard, or Expo Orbit. A normal <code>expo-dev-client</code> development build does not behave like a release build&#39;s automatic startup update flow.</p>
+<h5>Preview, TestFlight, and production builds</h5>
+<p>Release builds normally prioritize startup speed. With the default launch behavior, the app may start its current embedded or cached update while downloading a newly published update in the background. The downloaded update is applied on a later restart.</p>
+<p>For manual QA, fully terminate the app rather than backgrounding it, reopen it, allow the update time to download, and, if the change is not visible, fully terminate and reopen it once more. Describe this as <strong>up to two cold launches</strong>, not a TestFlight-specific ritual:</p>
+<ol>
+<li>One launch can discover and download the update.</li>
+<li>The following launch can run the downloaded update.</li>
+</ol>
+<p>Do not automatically change <code>fallbackToCacheTimeout</code> to avoid the second launch. Waiting at startup trades launch latency and reliability for faster update activation. If the app needs an intentional update UX, consider the <code>expo-updates</code> APIs for checking, fetching, and presenting a non-blocking restart action. Use the <code>expo-updates</code> API reference for the project&#39;s detected SDK version.</p>
+<h4>Debug a build that did not update</h4>
+<p>Check these in order:</p>
+<ol>
+<li>Confirm the update was published to the intended EAS project, channel or branch, platform, and environment.</li>
+<li>Compare the installed build&#39;s platform and runtime version with the published update.</li>
+<li>Confirm the build actually contains the expected update URL and channel; app-config changes take effect only in a newly compiled build.</li>
+<li>Inspect the channel-to-branch mapping and the active update on that branch.</li>
+<li>Fully terminate the release build and allow for the normal download-then-apply lifecycle.</li>
+<li>Use the current debugging guide for native logs, export problems, and configuration checks: <a href="https://docs.expo.dev/eas-update/debug.md." rel="noopener">https://docs.expo.dev/eas-update/debug.md.</a></li>
+</ol>
+<p>Never bypass a compatibility or anti-bricking safeguard merely to make an update appear.</p>
+<h4>Advanced and adjacent workflows</h4>
+<ul>
+<li><strong>Channel surfing:</strong> an individual release build can override its <code>expo-channel-name</code> request header to request another compatible channel. This differs from changing the server-side channel-to-branch mapping. Follow <a href="https://docs.expo.dev/eas-update/channel-surfing.md" rel="noopener">https://docs.expo.dev/eas-update/channel-surfing.md</a> and preserve its access-control, persistence, recovery, and compatibility constraints.</li>
+<li><strong>Update health:</strong> load <code>eas-update-insights</code> for adoption, launch failures, crash rate, payload size, and rollout monitoring after publishing.</li>
+<li><strong>Store releases:</strong> load <code>eas-app-stores</code> when native changes require a new TestFlight, App Store, or Play Store build.</li>
+</ul>
+<h4>Official references</h4>
+<ul>
+<li>Setup: <a href="https://docs.expo.dev/eas-update/getting-started.md" rel="noopener">https://docs.expo.dev/eas-update/getting-started.md</a></li>
+<li>Concepts and matching: <a href="https://docs.expo.dev/eas-update/how-it-works.md" rel="noopener">https://docs.expo.dev/eas-update/how-it-works.md</a></li>
+<li>Deployment: <a href="https://docs.expo.dev/eas-update/deployment.md" rel="noopener">https://docs.expo.dev/eas-update/deployment.md</a></li>
+<li>Debugging: <a href="https://docs.expo.dev/eas-update/debug.md" rel="noopener">https://docs.expo.dev/eas-update/debug.md</a></li>
+<li>Current EAS CLI reference: <a href="https://docs.expo.dev/eas/cli.md" rel="noopener">https://docs.expo.dev/eas/cli.md</a></li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;eas-update&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/eas-update</code>
+  <button type="button" data-copy="npx aidentity add expo/eas-update" aria-label="Copy install eas-update">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/eas-update</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/eas-update/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

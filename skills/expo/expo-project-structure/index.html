@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-project-structure — Aidentity</title>
+<meta name="description" content="Folder structure for a new Expo app. Use when scaffolding or laying out a new Expo project with Expo Router, or deciding where a file should live in one. For new projects only — never restructure an existing app to match.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-project-structure/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-project-structure — Aidentity">
+<meta property="og:description" content="Folder structure for a new Expo app. Use when scaffolding or laying out a new Expo project with Expo Router, or deciding where a file should live in one. For new projects only — never restructure an existing app to match.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-project-structure/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-project-structure","description":"Folder structure for a new Expo app. Use when scaffolding or laying out a new Expo project with Expo Router, or deciding where a file should live in one. For new projects only — never restructure an existing app to match.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-project-structure/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-project-structure
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-project-structure</h1>
+      <p class="summary">Folder structure for a new Expo app. Use when scaffolding or laying out a new Expo project with Expo Router, or deciding where a file should live in one. For new projects only — never restructure an existing app to match.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Project Structure</h3>
+<p>A starting skeleton for a <strong>new</strong> Expo app — one with no committed folder structure yet.</p>
+<p><strong>Apply only to new projects.</strong> If the app already has a layout, follow its existing conventions and leave files where they are — a default to start from, never a standard to enforce or migrate toward. When unsure whether a project is new, ask before moving anything.</p>
+<p>The whole layout, assembled from the rules below:</p>
+<p><pre><code>├── assets/
+├── scripts/
+├── src/
+│   ├── app/                       # Expo Router routes ONLY — every file is a route
+│   │   ├── api/                   #   server API routes, grouped here
+│   │   │   ├── user+api.ts
+│   │   │   └── settings+api.ts
+│   │   ├── _layout.tsx
+│   │   ├── _layout.web.tsx         #   platform-specific layout
+│   │   ├── index.tsx
+│   │   └── settings.tsx
+│   ├── components/                 # reusable UI: button, card, table…
+│   │   ├── table/                  #   complex component → folder + index.tsx
+│   │   │   ├── cell.tsx
+│   │   │   └── index.tsx
+│   │   ├── bar-chart.tsx
+│   │   ├── bar-chart.web.tsx        #   platform-specific variant
+│   │   └── button.tsx
+│   ├── screens/                    # screen bodies that route files render
+│   │   ├── home/
+│   │   │   ├── card.tsx            #   used only by Home — not shared
+│   │   │   └── index.tsx           #   rendered by src/app/index.tsx
+│   │   └── settings.tsx
+│   ├── server/                     # server-only helpers used by app/api
+│   │   ├── auth.ts
+│   │   └── db.ts
+│   ├── utils/                      # standalone helpers + colocated tests
+│   │   ├── format-date.ts
+│   │   └── format-date.test.ts
+│   ├── hooks/                      # reusable hooks: use-theme.ts…
+│   ├── constants.ts
+│   └── theme.ts
+├── app.json
+├── eas.json
+└── package.json</code></pre></p>
+<h4><code>src/</code> and <code>src/app</code></h4>
+<p>Keep app code under <code>src/</code> to separate it from config files. Expo Router supports both <code>app/</code> and <code>src/app/</code> out of the box — to switch, move the folder and restart the bundler. The default template aliases <code>@/*</code> to <code>./src/*</code> in <code>tsconfig.json</code>.</p>
+<p><code>src/app</code> is <strong>routes-only</strong>: every file there becomes a route, so nothing else belongs in it. Everything below lives in sibling folders.</p>
+<h4>components/ — reusable UI</h4>
+<p>Generic, reused UI (button, card, table) with one named export each. Name files in <strong>kebab-case</strong> (<code>bar-chart.tsx</code>), matching the default <code>create-expo-app</code> template. When a component grows, give it its own folder with the root in <code>index.tsx</code> and <strong>colocate</strong> its private sub-components beside it — the import path (<code>@/components/table</code>) stays unchanged.</p>
+<h4>screens/ — screen bodies</h4>
+<p>Because <code>app/</code> files must be routes, complex screen UI that isn&#39;t reused has no home there. Once a screen grows big enough to need breaking out to separate components, put it in <code>screens/</code> and let each route just render its screen:</p>
+<p><pre><code>import { Home } from &quot;@/screens/home&quot;;
+
+export default function HomeScreen() {
+  // route-specific concerns only — e.g. read url params here
+  return &lt;Home /&gt;;
+}</code></pre></p>
+<p><strong>Colocate</strong> a screen&#39;s private components inside its folder (<code>screens/home/components/</code>). A bonus: the same screen can render under multiple routes.</p>
+<h4>server/ + app/api/ — separate server code</h4>
+<p>Appending <code>+api</code> to a file in <code>app/</code> makes it a server <strong>API route</strong>. Server code is different from frontend code — it runs in a Node-like server environment (deployed with EAS Hosting or on <a href="https://docs.expo.dev/router/web/api-routes/#hosting-on-third-party-services" rel="noopener">third-party services</a>) and can read secret env vars (<code>process.env.X</code>, not just <code>EXPO_PUBLIC_*</code>). Keep it apart:</p>
+<ul>
+<li>Group all routes under <code>app/api/</code> → <code>/api/user</code>, <code>/api/settings</code>. This colocates them and avoids collisions (e.g. a <code>/user</code> screen and a <code>/user</code> route).</li>
+<li>Put shared server-only helpers in <code>src/server/</code>.</li>
+<li>Consider ESLint rules that fence <code>+api</code> files and <code>server/</code> off from frontend-only checks.</li>
+</ul>
+<h4>Platform-specific code</h4>
+<p>Small differences: use <code>Platform.select</code> / <code>Platform.OS</code>. For larger ones, split into platform files instead of inline <code>if/else</code> — <code>bar-chart.tsx</code> + <code>bar-chart.web.tsx</code>, imported extension-free (<code>@/components/bar-chart</code>); Metro picks the right file per target.</p>
+<ul>
+<li>Props must be identical across variants.</li>
+<li>A default file (no platform extension) is always required — make it a no-op if the component is single-platform.</li>
+<li>Supported extensions: <code>.ios</code>, <code>.android</code>, <code>.native</code>, <code>.web</code>.</li>
+</ul>
+<h4>Colocate styles and tests</h4>
+<ul>
+<li><strong>Styles:</strong> keep the <code>StyleSheet.create({ ... })</code> object at the bottom of the component file rather than in a separate <code>.styles</code> file.</li>
+<li><strong>Tests:</strong> put <code>format-date.test.ts</code> next to <code>format-date.ts</code> (preferred over a separate <code>__tests__/</code> folder) so tested files are obvious at a glance.</li>
+</ul>
+<h4>AI and config files</h4>
+<p>Agent instructions live at the repo root — <code>AGENTS.md</code> / <code>CLAUDE.md</code>, with project skills under <code>.claude/</code>. Other config and assets stay outside <code>src/</code>: <code>app.json</code> / <code>app.config.ts</code>, <code>eas.json</code>, <code>package.json</code>, <code>assets/</code>, and <code>scripts/</code>.</p>
+<hr>
+<p>Based on <a href="https://expo.dev/blog/expo-app-folder-structure-best-practices" rel="noopener">Expo app folder structure best practices</a> by Kadi Kraman. For <code>src/</code> precedence and alias mechanics, see the <a href="https://docs.expo.dev/router/reference/src-directory/" rel="noopener">Expo docs</a>.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-project-structure&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-project-structure</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-project-structure" aria-label="Copy install expo-project-structure">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-project-structure</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-project-structure/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

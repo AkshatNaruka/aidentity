@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>audit-context-building — Aidentity</title>
+<meta name="description" content="Understand a codebase before looking for bugs in it - what each function assumes, what it guarantees, and what it depends on elsewhere. Use when starting an audit, threat model, or architecture review on unfamiliar code, and before any vulnerability-hunting pass.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/trailofbits/audit-context-building/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="audit-context-building — Aidentity">
+<meta property="og:description" content="Understand a codebase before looking for bugs in it - what each function assumes, what it guarantees, and what it depends on elsewhere. Use when starting an audit, threat model, or architecture review on unfamiliar code, and before any vulnerability-hunting pass.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/trailofbits/audit-context-building/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"audit-context-building","description":"Understand a codebase before looking for bugs in it - what each function assumes, what it guarantees, and what it depends on elsewhere. Use when starting an audit, threat model, or architecture review on unfamiliar code, and before any vulnerability-hunting pass.","url":"https://akshatnaruka.github.io/aidentity/skills/trailofbits/audit-context-building/","author":{"@type":"Person","name":"Trail of Bits"},"license":"CC-BY-SA-4.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>audit-context-building
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">trailofbits/skills · CC-BY-SA-4.0</p>
+      <h1>audit-context-building</h1>
+      <p class="summary">Understand a codebase before looking for bugs in it - what each function assumes, what it guarantees, and what it depends on elsewhere. Use when starting an audit, threat model, or architecture review on unfamiliar code, and before any vulnerability-hunting pass.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Audit Context Building</h3>
+<p>Build understanding, not verdicts. This runs before anyone hunts for bugs, and feeds that work.</p>
+<h4>When to Use</h4>
+<p>At the start of an audit, a threat model, or an architecture review, when the code is unfamiliar. Also when</p>
+<p>an earlier pass produced findings nobody could judge, because no one had mapped out how the system fits</p>
+<p>together.</p>
+<h4>When NOT to Use</h4>
+<p>Do not name vulnerabilities, suggest fixes, write proofs-of-concept, or rate severity. Those belong to the</p>
+<p>hunting phase, which runs next and with the whole picture in hand. When the code counts on something and</p>
+<p>nothing checks it, record that plainly and move on — whether it matters is decided later.</p>
+<p>Not worth the tokens on code you already understand.</p>
+<h4>Do not analyze in this context</h4>
+<p>The analysis is long, and this context needs to survive to use it. Dispatch it:</p>
+<ul>
+<li><strong>A codebase, or more than one function</strong> — run <code>/audit-context-building:audit-context &lt;path&gt;</code>. It orients,</li>
+</ul>
+<p>  analyzes each function in its own subagent, and writes <code>audit-context/DOSSIER.md</code> plus one file per</p>
+<p>  function under <code>audit-context/functions/</code>. Only compact records return here.</p>
+<ul>
+<li><strong>A single function</strong> — dispatch the <code>audit-context-building:function-analyzer</code> agent at it. It writes its</li>
+</ul>
+<p>  prose to disk and returns a record.</p>
+<p>Then work from what comes back: the index, the unenforced assumptions, the open questions. Read a function&#39;s</p>
+<p>file when you need its detail.</p>
+<p>The workflow is what enforces this, not this text: a subagent bound to a return schema cannot return prose.</p>
+<p>Treat this section as routing, and route.</p>
+<h4>What comes back, and how to read it</h4>
+<p>Each record lists what must always be true (with the line that shows it), what the function takes on faith</p>
+<p>(with whatever establishes it), which functions it calls and what it needs from each, and anything still</p>
+<p>unclear. The dossier adds the rules that span several functions, who can reach what, and where the</p>
+<p>complicated parts cluster.</p>
+<p>Two things matter more than the rest:</p>
+<ul>
+<li><strong>Assumptions marked <code>nothing found</code>.</strong> The code counts on something being true and nothing anywhere makes</li>
+</ul>
+<p>  it true. This is the most useful thing to hand the hunting phase.</p>
+<ul>
+<li><strong>The open questions.</strong> An honest list of what is still unclear beats a confident answer that turns out to</li>
+</ul>
+<p>  be wrong. Carry them forward instead of closing them out.</p>
+<p>Where two records disagree, both are quoted rather than quietly reconciled. That is a fact about the code,</p>
+<p>not a flaw in the analysis.</p>
+<h4>The format</h4>
+<p>[ANALYSIS_FORMAT.md](resources/ANALYSIS_FORMAT.md) defines it, and</p>
+<p>[FUNCTION_MICRO_ANALYSIS_EXAMPLE.md](resources/FUNCTION_MICRO_ANALYSIS_EXAMPLE.md) works through examples in</p>
+<p>C and Solidity. Read them when extending this plugin or deciding whether a record can be trusted.</p>
+<p>The format is the same whatever the target. What changes is what fills each slot, and what counts as a call</p>
+<p>you cannot see inside. [DOMAIN_NOTES.md](resources/DOMAIN_NOTES.md) maps that across smart contracts, C and</p>
+<p>C++, decompiled firmware, and web services — read it when the target is not plain source code.</p>
+<p><strong>The rule that matters most: follow the calls.</strong> Whether a function is correct usually depends on something</p>
+<p>another function does, and you cannot see that from the caller alone. A limit looks enforced because the</p>
+<p>value came back from a function whose name suggests it was checked. So read the function being called, follow</p>
+<p>every path through it rather than only the one that succeeds, and say what makes each assumption true. When</p>
+<p>nothing does, use those words: <code>nothing found</code>. Every claim cites a line, or becomes an open question.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Trail of Bits</strong> in
+        <a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add trailofbits/audit-context-building</code>
+  <button type="button" data-copy="npx aidentity add trailofbits/audit-context-building" aria-label="Copy install audit-context-building">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/trailofbits/skills" rel="noopener">trailofbits/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Trail of Bits</dd></div>
+          <div><dt>License</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">trailofbits/audit-context-building</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/trailofbits/audit-context-building/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

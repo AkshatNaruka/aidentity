@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eas-hosting — Aidentity</title>
+<meta name="description" content="Deploy Expo websites and Expo Router API routes to EAS Hosting - export the web bundle, run eas deploy for production and PR preview URLs, manage environment secrets and custom domains, and work within the Cloudflare Workers runtime. Also covers authoring API routes (+api.ts handlers, HTTP methods, request handling, CORS). Use when deploying an Expo web app or API routes, setting up EAS Hosting, or configuring hosting environments and domains. Not for native builds or store releases - use the eas-app-stores skill for those.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/eas-hosting/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eas-hosting — Aidentity">
+<meta property="og:description" content="Deploy Expo websites and Expo Router API routes to EAS Hosting - export the web bundle, run eas deploy for production and PR preview URLs, manage environment secrets and custom domains, and work within the Cloudflare Workers runtime. Also covers authoring API routes (+api.ts handlers, HTTP methods, request handling, CORS). Use when deploying an Expo web app or API routes, setting up EAS Hosting, or configuring hosting environments and domains. Not for native builds or store releases - use the eas-app-stores skill for those.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/eas-hosting/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"eas-hosting","description":"Deploy Expo websites and Expo Router API routes to EAS Hosting - export the web bundle, run eas deploy for production and PR preview URLs, manage environment secrets and custom domains, and work within the Cloudflare Workers runtime. Also covers authoring API routes (+api.ts handlers, HTTP methods, request handling, CORS). Use when deploying an Expo web app or API routes, setting up EAS Hosting, or configuring hosting environments and domains. Not for native builds or store releases - use the eas-app-stores skill for those.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/eas-hosting/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>eas-hosting
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>eas-hosting</h1>
+      <p class="summary">Deploy Expo websites and Expo Router API routes to EAS Hosting - export the web bundle, run eas deploy for production and PR preview URLs, manage environment secrets and custom domains, and work within the Cloudflare Workers runtime. Also covers authoring API routes (+api.ts handlers, HTTP methods, request handling, CORS). Use when deploying an Expo web app or API routes, setting up EAS Hosting, or configuring hosting environments and domains. Not for native builds or store releases - use the eas-app-stores skill for those.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>EAS Hosting</h3>
+<p>&gt; <strong>EAS service - costs apply.</strong> EAS Hosting is a paid Expo Application Services product with free-tier limits; production deploys use your plan&#39;s request and bandwidth allowance. See <a href="https://expo.dev/pricing." rel="noopener">https://expo.dev/pricing.</a> Authoring API routes and exporting the web bundle are free and open source, and you can self-host the exported server output instead of EAS Hosting.</p>
+<p>EAS Hosting deploys your Expo <strong>web app and API routes</strong> to Expo&#39;s managed edge (Cloudflare Workers). Export the web bundle with <code>npx expo export -p web</code> and ship it with <code>eas deploy</code> - the same command deploys any Expo Router API routes bundled alongside it. This skill covers deploying a website, authoring API routes, and the hosting runtime; see the Deployment section below for the deploy workflow.</p>
+<h4>When to Use API Routes</h4>
+<p>Use API routes when you need:</p>
+<ul>
+<li><strong>Server-side secrets</strong> — API keys, database credentials, or tokens that must never reach the client</li>
+<li><strong>Database operations</strong> — Direct database queries that shouldn&#39;t be exposed</li>
+<li><strong>Third-party API proxies</strong> — Hide API keys when calling external services (OpenAI, Stripe, etc.)</li>
+<li><strong>Server-side validation</strong> — Validate data before database writes</li>
+<li><strong>Webhook endpoints</strong> — Receive callbacks from services like Stripe or GitHub</li>
+<li><strong>Rate limiting</strong> — Control access at the server level</li>
+<li><strong>Heavy computation</strong> — Offload processing that would be slow on mobile</li>
+</ul>
+<h4>When NOT to Use API Routes</h4>
+<p>Avoid API routes when:</p>
+<ul>
+<li><strong>Data is already public</strong> — Use direct fetch to public APIs instead</li>
+<li><strong>No secrets required</strong> — Static data or client-safe operations</li>
+<li><strong>Real-time updates needed</strong> — Use WebSockets or services like Supabase Realtime</li>
+<li><strong>Simple CRUD</strong> — Consider Firebase, Supabase, or Convex for managed backends</li>
+<li><strong>File uploads</strong> — Use direct-to-storage uploads (S3 presigned URLs, Cloudflare R2)</li>
+<li><strong>Authentication only</strong> — Use Clerk, Auth0, or Firebase Auth instead</li>
+</ul>
+<h4>File Structure</h4>
+<p>API routes live in the <code>app</code> directory with <code>+api.ts</code> suffix:</p>
+<p><pre><code>app/
+  api/
+    hello+api.ts          → GET /api/hello
+    users+api.ts          → /api/users
+    users/[id]+api.ts     → /api/users/:id
+  (tabs)/
+    index.tsx</code></pre></p>
+<h4>Basic API Route</h4>
+<p><pre><code>// app/api/hello+api.ts
+export function GET(request: Request) {
+  return Response.json({ message: &quot;Hello from Expo!&quot; });
+}</code></pre></p>
+<h4>HTTP Methods</h4>
+<p>Export named functions for each HTTP method:</p>
+<p><pre><code>// app/api/items+api.ts
+export function GET(request: Request) {
+  return Response.json({ items: [] });
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  return Response.json({ created: body }, { status: 201 });
+}
+
+export async function PUT(request: Request) {
+  const body = await request.json();
+  return Response.json({ updated: body });
+}
+
+export async function DELETE(request: Request) {
+  return new Response(null, { status: 204 });
+}</code></pre></p>
+<h4>Dynamic Routes</h4>
+<p><pre><code>// app/api/users/[id]+api.ts
+export function GET(request: Request, { id }: { id: string }) {
+  return Response.json({ userId: id });
+}</code></pre></p>
+<h4>Request Handling</h4>
+<h5>Query Parameters</h5>
+<p><pre><code>export function GET(request: Request) {
+  const url = new URL(request.url);
+  const page = url.searchParams.get(&quot;page&quot;) ?? &quot;1&quot;;
+  const limit = url.searchParams.get(&quot;limit&quot;) ?? &quot;10&quot;;
+
+  return Response.json({ page, limit });
+}</code></pre></p>
+<h5>Headers</h5>
+<p><pre><code>export function GET(request: Request) {
+  const auth = request.headers.get(&quot;Authorization&quot;);
+
+  if (!auth) {
+    return Response.json({ error: &quot;Unauthorized&quot; }, { status: 401 });
+  }
+
+  return Response.json({ authenticated: true });
+}</code></pre></p>
+<h5>JSON Body</h5>
+<p><pre><code>export async function POST(request: Request) {
+  const { email, password } = await request.json();
+
+  if (!email || !password) {
+    return Response.json({ error: &quot;Missing fields&quot; }, { status: 400 });
+  }
+
+  return Response.json({ success: true });
+}</code></pre></p>
+<h4>Environment Variables</h4>
+<p>Use <code>process.env</code> for server-side secrets:</p>
+<p><pre><code>// app/api/ai+api.ts
+export async function POST(request: Request) {
+  const { prompt } = await request.json();
+
+  const response = await fetch(&quot;https://api.openai.com/v1/chat/completions&quot;, {
+    method: &quot;POST&quot;,
+    headers: {
+      &quot;Content-Type&quot;: &quot;application/json&quot;,
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: &quot;gpt-4&quot;,
+      messages: [{ role: &quot;user&quot;, content: prompt }],
+    }),
+  });
+
+  const data = await response.json();
+  return Response.json(data);
+}</code></pre></p>
+<p>Set environment variables:</p>
+<ul>
+<li><strong>Local</strong>: Create <code>.env</code> file (never commit)</li>
+<li><strong>EAS Hosting</strong>: Use <code>eas env:create</code> or Expo dashboard</li>
+</ul>
+<h4>CORS Headers</h4>
+<p>Add CORS for web clients:</p>
+<p><pre><code>const corsHeaders = {
+  &quot;Access-Control-Allow-Origin&quot;: &quot;*&quot;,
+  &quot;Access-Control-Allow-Methods&quot;: &quot;GET, POST, PUT, DELETE, OPTIONS&quot;,
+  &quot;Access-Control-Allow-Headers&quot;: &quot;Content-Type, Authorization&quot;,
+};
+
+export function OPTIONS() {
+  return new Response(null, { headers: corsHeaders });
+}
+
+export function GET() {
+  return Response.json({ data: &quot;value&quot; }, { headers: corsHeaders });
+}</code></pre></p>
+<h4>Error Handling</h4>
+<p><pre><code>export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    // Process...
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error(&quot;API error:&quot;, error);
+    return Response.json({ error: &quot;Internal server error&quot; }, { status: 500 });
+  }
+}</code></pre></p>
+<h4>Testing Locally</h4>
+<p>Start the development server with API routes:</p>
+<p><pre><code>npx expo serve</code></pre></p>
+<p>This starts a local server at <code>http://localhost:8081</code> with full API route support.</p>
+<p>Test with curl:</p>
+<p><pre><code>curl http://localhost:8081/api/hello
+curl -X POST http://localhost:8081/api/users -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;name&quot;:&quot;Test&quot;}&#39;</code></pre></p>
+<h4>Deployment to EAS Hosting</h4>
+<h5>Prerequisites</h5>
+<p><pre><code>npm install -g eas-cli
+eas login</code></pre></p>
+<h5>Deploy</h5>
+<p>Deploying ships your web bundle and any Expo Router API routes together - <code>eas deploy</code> handles both. The export runs whether you have a full website, an API-routes-only backend, or both.</p>
+<p><pre><code># Export the web bundle (includes any API routes)
+npx expo export -p web
+
+# Deploy a preview (PR-style URL)
+npx eas-cli@latest deploy
+
+# Deploy to production
+npx eas-cli@latest deploy --prod</code></pre></p>
+<p>Everything lands on EAS Hosting (Cloudflare Workers).</p>
+<h5>Environment Variables for Production</h5>
+<p><pre><code># Create a secret
+eas env:create --name OPENAI_API_KEY --value sk-xxx --environment production
+
+# Or use the Expo dashboard</code></pre></p>
+<h5>Custom Domain</h5>
+<p>Configure in <code>eas.json</code> or Expo dashboard.</p>
+<h5>Automate with EAS Workflows</h5>
+<p>Deploy the website (and API routes) on every push to main with a <code>type: deploy</code> workflow:</p>
+<p><code>.eas/workflows/deploy.yml</code></p>
+<p><pre><code>name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+# https://docs.expo.dev/eas/workflows/syntax/#deploy
+jobs:
+  deploy_web:
+    type: deploy
+    params:
+      prod: true</code></pre></p>
+<p>Preview deploys for pull requests use the same job type with <code>prod: false</code>:</p>
+<p><pre><code>name: Web PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  preview:
+    type: deploy
+    params:
+      prod: false</code></pre></p>
+<p>To author or validate workflow YAML beyond these examples, use the <code>eas-workflows</code> skill.</p>
+<h4>EAS Hosting Runtime (Cloudflare Workers)</h4>
+<p>API routes run on Cloudflare Workers. Key limitations:</p>
+<h5>Missing/Limited APIs</h5>
+<ul>
+<li><strong>No Node.js filesystem</strong> — <code>fs</code> module unavailable</li>
+<li><strong>No native Node modules</strong> — Use Web APIs or polyfills</li>
+<li><strong>Limited execution time</strong> — 30 second timeout for CPU-intensive tasks</li>
+<li><strong>No persistent connections</strong> — WebSockets require Durable Objects</li>
+<li><strong>fetch is available</strong> — Use standard fetch for HTTP requests</li>
+</ul>
+<h5>Use Web APIs Instead</h5>
+<p><pre><code>// Use Web Crypto instead of Node crypto
+const hash = await crypto.subtle.digest(
+  &quot;SHA-256&quot;,
+  new TextEncoder().encode(&quot;data&quot;)
+);
+
+// Use fetch instead of node-fetch
+const response = await fetch(&quot;https://api.example.com&quot;);
+
+// Use Response/Request (already available)
+return new Response(JSON.stringify(data), {
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+});</code></pre></p>
+<h5>Database Options</h5>
+<p>Since filesystem is unavailable, use cloud databases:</p>
+<ul>
+<li><strong>Cloudflare D1</strong> — SQLite at the edge</li>
+<li><strong>Turso</strong> — Distributed SQLite</li>
+<li><strong>PlanetScale</strong> — Serverless MySQL</li>
+<li><strong>Supabase</strong> — Postgres with REST API</li>
+<li><strong>Neon</strong> — Serverless Postgres</li>
+</ul>
+<p>Example with Turso:</p>
+<p><pre><code>// app/api/users+api.ts
+import { createClient } from &quot;@libsql/client/web&quot;;
+
+const db = createClient({
+  url: process.env.TURSO_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN!,
+});
+
+export async function GET() {
+  const result = await db.execute(&quot;SELECT * FROM users&quot;);
+  return Response.json(result.rows);
+}</code></pre></p>
+<h4>Calling API Routes from Client</h4>
+<p><pre><code>// From React Native components
+const response = await fetch(&quot;/api/hello&quot;);
+const data = await response.json();
+
+// With body
+const response = await fetch(&quot;/api/users&quot;, {
+  method: &quot;POST&quot;,
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  body: JSON.stringify({ name: &quot;John&quot; }),
+});</code></pre></p>
+<h4>Common Patterns</h4>
+<h5>Authentication Middleware</h5>
+<p><pre><code>// utils/auth.ts
+export async function requireAuth(request: Request) {
+  const token = request.headers.get(&quot;Authorization&quot;)?.replace(&quot;Bearer &quot;, &quot;&quot;);
+
+  if (!token) {
+    throw new Response(JSON.stringify({ error: &quot;Unauthorized&quot; }), {
+      status: 401,
+      headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+    });
+  }
+
+  // Verify token...
+  return { userId: &quot;123&quot; };
+}
+
+// app/api/protected+api.ts
+import { requireAuth } from &quot;../../utils/auth&quot;;
+
+export async function GET(request: Request) {
+  const { userId } = await requireAuth(request);
+  return Response.json({ userId });
+}</code></pre></p>
+<h5>Proxy External API</h5>
+<p><pre><code>// app/api/weather+api.ts
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const city = url.searchParams.get(&quot;city&quot;);
+
+  const response = await fetch(
+    `https://api.weather.com/v1/current?city=${city}&amp;key=${process.env.WEATHER_API_KEY}`
+  );
+
+  return Response.json(await response.json());
+}</code></pre></p>
+<h4>Rules</h4>
+<ul>
+<li>NEVER expose API keys or secrets in client code</li>
+<li>ALWAYS validate and sanitize user input</li>
+<li>Use proper HTTP status codes (200, 201, 400, 401, 404, 500)</li>
+<li>Handle errors gracefully with try/catch</li>
+<li>Keep API routes focused — one responsibility per endpoint</li>
+<li>Use TypeScript for type safety</li>
+<li>Log errors server-side for debugging</li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;eas-hosting&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/eas-hosting</code>
+  <button type="button" data-copy="npx aidentity add expo/eas-hosting" aria-label="Copy install eas-hosting">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/eas-hosting</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/eas-hosting/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

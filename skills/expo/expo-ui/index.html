@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-ui — Aidentity</title>
+<meta name="description" content="Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-ui/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-ui — Aidentity">
+<meta property="og:description" content="Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-ui/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-ui","description":"Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-ui/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=frontend">frontend</a><span>/</span>expo-ui
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-ui</h1>
+      <p class="summary">Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=frontend">frontend</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo UI (<code>@expo/ui</code>)</h3>
+<p><code>@expo/ui</code> renders real native UI from React: SwiftUI on iOS, Jetpack Compose on Android. It also ships drop-in replacements for migrating off RN community UI libraries.</p>
+<p>&gt; These instructions track the latest Expo SDK. The <strong>universal</strong> layer requires <strong>SDK 56+</strong> and works in Expo Go — no custom build needed. Drop-in replacements and the platform-specific layers also exist on SDK 55. For component details on a specific SDK, refer to the Expo UI docs for that version.</p>
+<h4>Installation</h4>
+<p><pre><code>npx expo install @expo/ui</code></pre></p>
+<p>Every <code>@expo/ui</code> tree — universal or platform-specific — must be wrapped in <code>Host</code>.</p>
+<h4>Use @expo/ui by default — don&#39;t reach for RN alternatives first</h4>
+<p><strong>Before using Reanimated, <code>@gorhom/bottom-sheet</code>, React Native&#39;s built-in <code>Switch</code>/<code>Picker</code>, or any community UI library for the items below, use <code>@expo/ui</code> instead.</strong> Only fall back to RN built-ins when <code>@expo/ui</code> is missing the component.</p>
+<table><thead><tr><th>Need</th><th>Use</th></tr></thead><tbody>
+<tr><td>Slide-up sheet / bottom sheet</td><td><code>BottomSheet</code> from <code>@expo/ui</code> — <strong>not</strong> Reanimated or <code>@gorhom/bottom-sheet</code></td></tr>
+<tr><td>Grouped native list rows (settings/form-style)</td><td><code>List</code> + <code>ListItem</code> from <code>@expo/ui</code> — <strong>not</strong> <code>FlatList</code> (see note below)</td></tr>
+<tr><td>Toggle</td><td><code>Switch</code> from <code>@expo/ui</code></td></tr>
+<tr><td>Slider</td><td><code>Slider</code> from <code>@expo/ui</code></td></tr>
+<tr><td>Date/time picker</td><td><code>@expo/ui/community/datetimepicker</code></td></tr>
+<tr><td>Menu</td><td><code>Menu</code> from <code>@expo/ui</code></td></tr>
+<tr><td>Form section with label</td><td><code>FieldGroup</code> from <code>@expo/ui</code></td></tr>
+<tr><td>Collapsible section</td><td><code>Collapsible</code> from <code>@expo/ui</code></td></tr>
+</tbody></table>
+<p>&gt; <strong><code>List</code> is NOT a virtualized scrolling list.</strong> It renders native grouped table rows — the visual look of an iOS Settings screen or a form section, with disclosure indicators and native row styling. Each <code>ListItem</code> is a native node on the JS thread; rows are not recycled. For any list with large or unknown-length data (feeds, search results, catalogs), use <strong><code>FlatList</code></strong> or <strong><code>FlashList</code></strong> instead. <code>List</code> is the right choice for short, fixed-length groups: a settings screen, a detail panel&#39;s rows, a fixed menu.</p>
+<p><strong><code>BottomSheet</code> example</strong> (use this for map pin details, action sheets, detail panels — not Reanimated):</p>
+<p><pre><code>import { Host, BottomSheet, Column, Text } from &#39;@expo/ui&#39;;
+import { useState } from &#39;react&#39;;
+
+export default function MapScreen() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    &lt;View style={{ flex: 1 }}&gt;
+      &lt;MapView onMarkerPress={() =&gt; setIsOpen(true)} /&gt;
+      &lt;Host&gt;
+        &lt;BottomSheet
+          isPresented={isOpen}
+          onDismiss={() =&gt; setIsOpen(false)}
+          snapPoints={[&#39;half&#39;, &#39;full&#39;]}
+        &gt;
+          &lt;Column&gt;
+            &lt;Text&gt;Café name&lt;/Text&gt;
+            &lt;Text&gt;Address&lt;/Text&gt;
+          &lt;/Column&gt;
+        &lt;/BottomSheet&gt;
+      &lt;/Host&gt;
+    &lt;/View&gt;
+  );
+}</code></pre></p>
+<p><code>BottomSheet</code> uses <code>isPresented</code>/<code>onDismiss</code> — <strong>not</strong> <code>isOpened</code>, <code>isOpen</code>, <code>onIsOpenedChange</code>, or <code>onChange</code> (those are <code>@gorhom/bottom-sheet</code> props and will silently do nothing). <code>snapPoints</code> accepts <code>&#39;half&#39;</code>, <code>&#39;full&#39;</code>, <code>{ fraction: 0.5 }</code>, or <code>{ height: 400 }</code> and is optional (auto-sizes to content when omitted).</p>
+<h4>Choosing an approach</h4>
+<p>Work down this list and stop at the first layer that meets the need:</p>
+<ol>
+<li><strong>Universal components — start here.</strong> Import from the <code>@expo/ui</code> root. One component tree runs unmodified on iOS, Android, and web from a single source (Compose on Android, SwiftUI on iOS, <code>react-native-web</code>/<code>react-dom</code> on web). No platform file splits. → <code>./references/universal.md</code></li>
+</ol>
+<ol>
+<li><strong>Platform-specific (SwiftUI / Jetpack Compose).</strong> Import from <code>@expo/ui/swift-ui</code> or <code>@expo/ui/jetpack-compose</code>. Use <strong>only</strong> when the universal layer is missing a component or modifier you need, or when you need platform-specific behavior or optimization. <strong>Downside:</strong> you write two trees and split them into <code>.ios.tsx</code> / <code>.android.tsx</code> files (or branch on <code>Platform.OS</code>) — more code to maintain.</li>
+</ol>
+<p>   &gt; <strong><code>@expo/ui/swift-ui</code> is iOS-only. <code>@expo/ui/jetpack-compose</code> is Android-only.</strong> Importing either in a file that runs on the other platform will crash at runtime with &quot;Unable to get view config&quot; errors. Isolate platform-specific trees in <code>.ios.tsx</code> / <code>.android.tsx</code> files placed in <code>components/</code> (never inside <code>app/</code> — Expo Router does not support platform extensions for route files), or guard with <code>Platform.OS</code> in a regular route file. <code>Host</code> must always be imported from <code>@expo/ui</code> (the universal package root), not from the platform-specific sub-packages. → <code>./references/swift-ui.md</code> and <code>./references/jetpack-compose.md</code></p>
+<p><strong>Already using an RN community UI library?</strong> <code>@expo/ui</code> also ships <strong>drop-in replacements</strong> — API-compatible swaps for popular libraries (<code>@gorhom/bottom-sheet</code>, <code>@react-native-community/datetimepicker</code>, and more), imported from <code>@expo/ui/community/&lt;name&gt;</code>. This is a migration side-path for replacing an existing dependency, not a step in the universal-vs-platform decision above. → <code>./references/drop-in-replacements.md</code></p>
+<h4>References</h4>
+<p>Consult these resources as needed:</p>
+<p><pre><code>references/
+  universal.md             Universal @expo/ui components and when to use them (SDK 56+)
+  drop-in-replacements.md  API-compatible replacements for RN community UI libraries
+  swift-ui.md              Platform-specific iOS UI: @expo/ui/swift-ui components, modifiers, RNHostView, useNativeState
+  jetpack-compose.md       Platform-specific Android UI: @expo/ui/jetpack-compose components, modifiers, LazyColumn caveat, icons, useNativeState</code></pre></p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-ui&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/frontend-ui-engineering/index.html"
+     data-source="addyosmani"
+     data-category="frontend"
+     data-search="frontend-ui-engineering builds production-quality, accessible, responsive user-facing uis. use when building or modifying interfaces and pages, creating components, implementing layouts, meeting wcag accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than ai-generated. frontend frontend addyosmani/agent-skills">
+  <span>
+    <span class="r-name">frontend-ui-engineering</span>
+    <span class="r-desc">Builds production-quality, accessible, responsive user-facing UIs. Use when building or modifying interfaces and pages, creating components, implementing layouts, meeting WCAG accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than AI-generated.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/expo/expo-native-ui/index.html"
+     data-source="expo"
+     data-category="frontend"
+     data-search="expo-native-ui build beautiful, native-feeling expo screens. covers apple hig styling, semantic colors, native controls, sf symbols, media, visual effects, gradients, storage, and responsive layout. for routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill. frontend frontend expo/skills">
+  <span>
+    <span class="r-name">expo-native-ui</span>
+    <span class="r-desc">Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.</span>
+  </span>
+  <span class="r-src">expo/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/brand/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="brand brand voice, visual identity, messaging frameworks, asset management, brand consistency. activate for branded content, tone of voice, marketing assets, brand compliance, style guides. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">brand</span>
+    <span class="r-desc">Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/slides/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="slides create strategic html presentations with chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">slides</span>
+    <span class="r-desc">Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/ui-ux-pro-max/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="ui-ux-pro-max ui/ux design intelligence for web, mobile, and desktop. this skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific ui implementation. searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 ux guidelines, 105 icons, 17 gsap presets, 25 chart types, and 22 stacks. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">ui-ux-pro-max</span>
+    <span class="r-desc">UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-ui</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-ui" aria-label="Copy install expo-ui">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>frontend</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-ui</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-ui/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

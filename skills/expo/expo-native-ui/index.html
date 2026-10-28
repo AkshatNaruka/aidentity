@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-native-ui — Aidentity</title>
+<meta name="description" content="Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-native-ui/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-native-ui — Aidentity">
+<meta property="og:description" content="Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-native-ui/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-native-ui","description":"Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-native-ui/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=frontend">frontend</a><span>/</span>expo-native-ui
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-native-ui</h1>
+      <p class="summary">Build beautiful, native-feeling Expo screens. Covers Apple HIG styling, semantic colors, native controls, SF Symbols, media, visual effects, gradients, storage, and responsive layout. For routing and navigation, use the expo-router skill; for motion and animation, use the expo-animation skill.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=frontend">frontend</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Native UI Guidelines</h3>
+<p>For routes, links, stacks, tabs, modals, sheets, and headers, use the <code>expo-router</code> skill. For any motion — entering/exiting, gestures, springs, keyboard-driven UI — use the <code>expo-animation</code> skill.</p>
+<p>&gt; <strong>Before picking any UI component, check <code>expo-ui</code> first.</strong> <code>@expo/ui</code> provides native equivalents — BottomSheet, Button, Picker, Slider, Menu, Section, Switch, SegmentedControl, and more — rendered as real SwiftUI on iOS and Jetpack Compose on Android, available in Expo Go on SDK 56+ with no custom build. Load the <strong><code>expo-ui</code></strong> skill to find the right component before falling back to React Native built-ins or community libraries. This skill (<code>expo-native-ui</code>) covers the surrounding structure: Expo Router navigation, layout, styling, and visual effects.</p>
+<h4>References</h4>
+<p>Consult these resources as needed:</p>
+<p><pre><code>references/
+  controls.md            Native iOS: Switch, Slider, SegmentedControl, DateTimePicker, Picker
+  gradients.md           CSS gradients via experimental_backgroundImage (New Arch only)
+  icons.md               SF Symbols via expo-symbols SymbolView: names, weights, animations; Material icons on Android
+  media.md               Camera, audio, video, and file saving
+  storage.md             SQLite, AsyncStorage, SecureStore
+  visual-effects.md      Blur (expo-blur) and liquid glass (expo-glass-effect)
+  webgpu-three.md        3D graphics, games, GPU visualizations with WebGPU and Three.js</code></pre></p>
+<h4>Running the App</h4>
+<p><strong>CRITICAL: Always try Expo Go first before creating custom builds.</strong></p>
+<p>Most Expo apps work in Expo Go without any custom native code. Before running <code>npx expo run:ios</code> or <code>npx expo run:android</code>:</p>
+<ol>
+<li><strong>Start with Expo Go</strong>: Run <code>npx expo start</code> and scan the QR code with Expo Go</li>
+<li><strong>Check if features work</strong>: Test your app thoroughly in Expo Go</li>
+<li><strong>Only create custom builds when required</strong> - see below</li>
+</ol>
+<h5>When Custom Builds Are Required</h5>
+<p>You need <code>npx expo run:ios/android</code> or <code>eas build</code> ONLY when using:</p>
+<ul>
+<li><strong>Local Expo modules</strong> (custom native code in <code>modules/</code>)</li>
+<li><strong>Apple targets</strong> (widgets, app clips, extensions via <code>@bacons/apple-targets</code>)</li>
+<li><strong>Third-party native modules</strong> not included in Expo Go</li>
+<li><strong>Custom native configuration</strong> that can&#39;t be expressed in <code>app.json</code></li>
+</ul>
+<h5>When Expo Go Works</h5>
+<p>Expo Go supports a wide range of features out of the box:</p>
+<ul>
+<li>Most <code>expo-*</code> packages (camera, location, sensors, sqlite, etc.) — but not all: remote push notifications don&#39;t work in Expo Go on Android since SDK 53, and some packages need native capabilities Expo Go doesn&#39;t bundle (e.g. WebGPU — see <code>references/webgpu-three.md</code>)</li>
+<li>Expo Router navigation and deep links</li>
+<li>Most UI libraries (reanimated, gesture handler, etc.)</li>
+</ul>
+<p><strong>If you&#39;re unsure, try Expo Go first.</strong> Creating custom builds adds complexity, slower iteration, and requires Xcode/Android Studio setup.</p>
+<h4>Code Style</h4>
+<ul>
+<li>Be cautious of unterminated strings. Ensure nested backticks are escaped; never forget to escape quotes correctly.</li>
+<li>Always use import statements at the top of the file.</li>
+<li>Always use kebab-case for file names, e.g. <code>comment-card.tsx</code></li>
+<li>Never use special characters in file names</li>
+<li>Configure tsconfig.json with path aliases, and prefer aliases over relative imports for refactors.</li>
+</ul>
+<h4>Library Preferences</h4>
+<ul>
+<li><strong>For any sheet, picker, slider, toggle, menu, or grouped-form section: use <code>@expo/ui</code> (see <code>expo-ui</code> skill) before reaching for a React Native built-in or community library</strong> — it renders native SwiftUI/Compose and works in Expo Go on SDK 56+. For grouped/settings-style rows (short, fixed-length), use <code>@expo/ui</code>&#39;s <code>List</code> + <code>ListItem</code>. For large or unknown-length scrolling lists (feeds, search results, catalogs), use <code>FlatList</code> or <code>FlashList</code> — <code>@expo/ui</code>&#39;s <code>List</code> is not virtualized.</li>
+<li>Never use modules removed from React Native such as Picker, WebView, SafeAreaView, or AsyncStorage</li>
+<li>Never use legacy expo-permissions</li>
+<li><code>expo-audio</code> not <code>expo-av</code></li>
+<li><code>expo-video</code> not <code>expo-av</code></li>
+<li><code>expo-symbols</code> (<code>SymbolView</code>) for SF Symbols on iOS, not <code>@expo/vector-icons</code> — see <code>references/icons.md</code>. SF Symbols are Apple-only: on Android every icon needs a Material source (<code>md</code> prop on NativeTabs triggers; in-screen options under &quot;Android: Material Icons&quot; in icons.md), never SF-only iconography</li>
+<li><code>react-native-safe-area-context</code> not react-native SafeAreaView</li>
+<li><code>process.env.EXPO_OS</code> not <code>Platform.OS</code></li>
+<li><code>React.use</code> not <code>React.useContext</code></li>
+<li><code>expo-image</code> Image component instead of intrinsic element <code>img</code></li>
+<li><code>expo-glass-effect</code> for liquid glass backdrops</li>
+<li><code>Color</code> from <code>expo-router</code> for native semantic colors, not raw <code>PlatformColor</code> (type-safe, auto-adapts to light/dark)</li>
+<li>In SDK 56+, never import from <code>@react-navigation/*</code> directly — use <code>expo-router/react-navigation</code> instead (covers <code>@react-navigation/native</code>, <code>/core</code>, <code>/elements</code>, <code>/routers</code>)</li>
+</ul>
+<h4>Responsiveness</h4>
+<ul>
+<li>Wrap screens with scrollable content in a ScrollView. Screens whose root is a FlatList/FlashList must not add an outer ScrollView (the list is the scroll container), and full-bleed screens (camera, map, canvas) need neither</li>
+<li>Use <code>&lt;ScrollView contentInsetAdjustmentBehavior=&quot;automatic&quot; /&gt;</code> instead of <code>&lt;SafeAreaView&gt;</code> for smarter safe area insets</li>
+<li><code>contentInsetAdjustmentBehavior=&quot;automatic&quot;</code> should be applied to FlatList and SectionList as well</li>
+<li>Use flexbox instead of Dimensions API</li>
+<li>ALWAYS prefer <code>useWindowDimensions</code> over <code>Dimensions.get()</code> to measure screen size</li>
+</ul>
+<h4>Behavior</h4>
+<ul>
+<li>Use expo-haptics conditionally on iOS to make more delightful experiences</li>
+<li>Use views with built-in haptics like <code>&lt;Switch /&gt;</code> from React Native and <code>@react-native-community/datetimepicker</code></li>
+<li>When a Stack route has scrollable content, make the ScrollView (or FlatList) the first component inside the route, with <code>contentInsetAdjustmentBehavior=&quot;automatic&quot;</code> set</li>
+<li>Use the <code>&lt;Text selectable /&gt;</code> prop on text containing data that could be copied</li>
+<li>Consider formatting large numbers like 1.4M or 38k</li>
+<li>Never use intrinsic elements like &#39;img&#39; or &#39;div&#39; unless in a webview or Expo DOM component</li>
+<li>Every screen that loads data has four states (loading, error, empty, content) - never show the empty state while the first load is still resolving; the rules live in the <code>expo-data-fetching</code> skill</li>
+<li>On scrollable forms and search results, use <code>keyboardShouldPersistTaps=&quot;handled&quot;</code> so controls receive the first tap and unhandled taps can dismiss the keyboard. Use <code>&quot;always&quot;</code> only when unhandled taps should also keep it open</li>
+<li>A form&#39;s primary action must never sit under the keyboard. For UI that tracks the keyboard&#39;s real frame, load the <code>expo-animation</code> skill&#39;s keyboard recipe (<code>react-native-keyboard-controller</code>) - never <code>Keyboard.addListener</code> plus a timing animation</li>
+<li>Every enabled control must perform its advertised action: search filters results, Save commits edits, and settings affect behavior. Empty handlers and success alerts are not implementations; local state is enough when the user requested a prototype</li>
+<li>For async saves, preserve drafts and handle pending/failure states per <code>expo-data-fetching</code>; do not dismiss a form before its save succeeds</li>
+</ul>
+<p>Before calling a screen complete, walk through its primary task, including one failure and recovery when it loads or saves data. Check keyboard access and back/dismiss behavior. Try long titles, missing images, no search results, and large system text; required actions must remain reachable. Report what you exercised and what you could not run.</p>
+<h3>Styling</h3>
+<p>Follow each platform&#39;s own design language: Apple Human Interface Guidelines on iOS, Material Design 3 on Android. Never dress one platform in the other&#39;s uniform - no FAB or ripple in iOS layouts; no hand-built iOS chrome (back-chevrons, large-title text, iOS-styled switches) on Android.</p>
+<h4>General Styling Rules</h4>
+<ul>
+<li>Prefer flex gap over margin and padding styles</li>
+<li>Prefer padding over margin where possible</li>
+<li>Always account for safe area, either with stack headers, tabs, or ScrollView/FlatList <code>contentInsetAdjustmentBehavior=&quot;automatic&quot;</code></li>
+<li>Ensure both top and bottom safe area insets are accounted for</li>
+<li>Inline styles not StyleSheet.create unless reusing styles is faster</li>
+<li>For any motion or animation work, load the <code>expo-animation</code> skill — it owns the animate-or-not decision, timing values, and interruption rules</li>
+<li>Use <code>{ borderCurve: &#39;continuous&#39; }</code> for rounded corners unless creating a capsule shape</li>
+<li>ALWAYS use a navigation stack title instead of a custom text element on the page</li>
+<li>When padding a ScrollView, use <code>contentContainerStyle</code> padding and gap instead of padding on the ScrollView itself (reduces clipping)</li>
+<li>CSS and Tailwind are not supported - use inline styles</li>
+</ul>
+<h4>Colors</h4>
+<p>Use the <code>Color</code> API from <code>expo-router</code> for native semantic colors. It is a type-safe wrapper over <code>PlatformColor</code> that exposes iOS UIKit colors through <code>Color.ios.*</code> and Android Material 3 colors through <code>Color.android.material.*</code> (static) or <code>Color.android.dynamic.*</code> (adapts to the user&#39;s wallpaper on Android 12+). These resolve on-device and automatically adapt to light/dark mode and accessibility settings, so you no longer maintain separate light/dark hex tables or a <code>colors.web.ts</code> file.</p>
+<p><code>Color</code> is platform-specific, so wrap each value in <code>Platform.select</code> with a <code>default</code> hex fallback for web. Centralize the palette in <code>theme/colors.ts</code> and import <code>colors</code> everywhere:</p>
+<p><pre><code>// theme/colors.ts
+import { Platform } from &quot;react-native&quot;;
+import { Color } from &quot;expo-router&quot;;
+
+export const colors = {
+  label: Platform.select({
+    ios: Color.ios.label,
+    android: Color.android.dynamic.onSurface,
+    default: &quot;#000000&quot;,
+  })!,
+  secondaryLabel: Platform.select({
+    ios: Color.ios.secondaryLabel,
+    android: Color.android.dynamic.onSurfaceVariant,
+    default: &quot;#3c3c43&quot;,
+  })!,
+  separator: Platform.select({
+    ios: Color.ios.separator,
+    android: Color.android.dynamic.outlineVariant,
+    default: &quot;#c6c6c8&quot;,
+  })!,
+  systemBackground: Platform.select({
+    ios: Color.ios.systemBackground,
+    android: Color.android.dynamic.surface,
+    default: &quot;#ffffff&quot;,
+  })!,
+  secondarySystemBackground: Platform.select({
+    ios: Color.ios.secondarySystemBackground,
+    android: Color.android.dynamic.surfaceVariant,
+    default: &quot;#f2f2f7&quot;,
+  })!,
+  systemBlue: Platform.select({
+    ios: Color.ios.systemBlue,
+    android: Color.android.dynamic.primary,
+    default: &quot;#007aff&quot;,
+  })!,
+};</code></pre></p>
+<p><pre><code>import { colors } from &quot;@/theme/colors&quot;;
+
+&lt;View style={{ backgroundColor: colors.systemBackground }}&gt;
+  &lt;Text style={{ color: colors.label }}&gt;Title&lt;/Text&gt;
+&lt;/View&gt;;</code></pre></p>
+<ul>
+<li>iOS re-resolves these colors automatically when the system theme changes. On Android, call <code>useColorScheme()</code> inside any component that renders them so it re-renders when the theme flips (required when React Compiler memoizes the component).</li>
+<li>Don&#39;t pass <code>Color</code> / <code>PlatformColor</code> values into Reanimated styles — they are opaque native color objects, not strings; use static colors there.</li>
+<li><code>Platform.select({...})!</code> returns <code>string | OpaqueColorValue</code>. Most React Native style props accept <code>ColorValue</code> (<code>string | OpaqueColorValue</code>) so this works fine. But some third-party props only accept <code>string</code> (e.g. <code>tintColor</code> on <code>expo-image</code>). Cast when needed: <code>colors.label as string</code>.</li>
+</ul>
+<h4>Text Styling</h4>
+<ul>
+<li>Add the <code>selectable</code> prop to every <code>&lt;Text/&gt;</code> element displaying important data or error messages</li>
+<li>Counters should use <code>{ fontVariant: &#39;tabular-nums&#39; }</code> for alignment</li>
+</ul>
+<h4>Shadows</h4>
+<p>Use CSS <code>boxShadow</code> style prop. NEVER use legacy React Native shadow or elevation styles.</p>
+<p><pre><code>&lt;View style={{ boxShadow: &quot;0 1px 2px rgba(0, 0, 0, 0.05)&quot; }} /&gt;</code></pre></p>
+<p>&#39;inset&#39; shadows are supported.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-native-ui&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/frontend-ui-engineering/index.html"
+     data-source="addyosmani"
+     data-category="frontend"
+     data-search="frontend-ui-engineering builds production-quality, accessible, responsive user-facing uis. use when building or modifying interfaces and pages, creating components, implementing layouts, meeting wcag accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than ai-generated. frontend frontend addyosmani/agent-skills">
+  <span>
+    <span class="r-name">frontend-ui-engineering</span>
+    <span class="r-desc">Builds production-quality, accessible, responsive user-facing UIs. Use when building or modifying interfaces and pages, creating components, implementing layouts, meeting WCAG accessibility requirements, managing state, or when the output needs to look and feel production-quality rather than AI-generated.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/expo/expo-ui/index.html"
+     data-source="expo"
+     data-category="frontend"
+     data-search="expo-ui build native ui with the @expo/ui package: real swiftui on ios and jetpack compose on android. default to @expo/ui for sheets (bottomsheet), pickers, sliders, toggles, menus, and grouped-form sections — do not reach for reanimated, @gorhom/bottom-sheet, or rn built-in picker/switch; use @expo/ui instead. fall back to rn built-ins only when @expo/ui is missing the component. note: @expo/ui list renders native grouped rows like an ios settings screen — it is not a virtualized list; use flatlist/flashlist for large datasets. covers universal components (host, column, row, button, text, list, bottomsheet, fieldgroup, switch, slider, picker, menu), drop-in replacements for rn community libraries, and platform-specific swiftui/jetpack compose trees. not for expo router navigation, reanimated, or data fetching. frontend frontend expo/skills">
+  <span>
+    <span class="r-name">expo-ui</span>
+    <span class="r-desc">Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android. Default to @expo/ui for sheets (BottomSheet), pickers, sliders, toggles, menus, and grouped-form sections — do NOT reach for Reanimated, @gorhom/bottom-sheet, or RN built-in Picker/Switch; use @expo/ui instead. Fall back to RN built-ins only when @expo/ui is missing the component. NOTE: @expo/ui List renders native grouped rows like an iOS Settings screen — it is NOT a virtualized list; use FlatList/FlashList for large datasets. Covers universal components (Host, Column, Row, Button, Text, List, BottomSheet, FieldGroup, Switch, Slider, Picker, Menu), drop-in replacements for RN community libraries, and platform-specific SwiftUI/Jetpack Compose trees. Not for Expo Router navigation, Reanimated, or data fetching.</span>
+  </span>
+  <span class="r-src">expo/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/brand/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="brand brand voice, visual identity, messaging frameworks, asset management, brand consistency. activate for branded content, tone of voice, marketing assets, brand compliance, style guides. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">brand</span>
+    <span class="r-desc">Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/slides/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="slides create strategic html presentations with chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">slides</span>
+    <span class="r-desc">Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/ui-ux-pro-max/ui-ux-pro-max/index.html"
+     data-source="ui-ux-pro-max"
+     data-category="frontend"
+     data-search="ui-ux-pro-max ui/ux design intelligence for web, mobile, and desktop. this skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific ui implementation. searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 ux guidelines, 105 icons, 17 gsap presets, 25 chart types, and 22 stacks. frontend frontend nextlevelbuilder/ui-ux-pro-max-skill">
+  <span>
+    <span class="r-name">ui-ux-pro-max</span>
+    <span class="r-desc">UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.</span>
+  </span>
+  <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-native-ui</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-native-ui" aria-label="Copy install expo-native-ui">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>frontend</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-native-ui</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-native-ui/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

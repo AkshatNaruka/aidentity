@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-dev-client — Aidentity</title>
+<meta name="description" content="Build and distribute Expo development clients locally or via TestFlight for internal testing. For production TestFlight releases and store submission, use the eas-app-stores skill.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-dev-client/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-dev-client — Aidentity">
+<meta property="og:description" content="Build and distribute Expo development clients locally or via TestFlight for internal testing. For production TestFlight releases and store submission, use the eas-app-stores skill.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-dev-client/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-dev-client","description":"Build and distribute Expo development clients locally or via TestFlight for internal testing. For production TestFlight releases and store submission, use the eas-app-stores skill.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-dev-client/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-dev-client
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-dev-client</h1>
+      <p class="summary">Build and distribute Expo development clients locally or via TestFlight for internal testing. For production TestFlight releases and store submission, use the eas-app-stores skill.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>Use EAS Build to create development clients for testing native code changes on physical devices. Use this for creating custom Expo Go clients for testing branches of your app.</p>
+<p>&gt; <strong>Free locally; cloud builds are paid.</strong> <code>expo-dev-client</code> itself is open source and building locally is free. Building or distributing via EAS Build/TestFlight uses your EAS plan&#39;s build minutes and needs a paid Apple Developer account for device/TestFlight distribution. See <a href="https://expo.dev/pricing." rel="noopener">https://expo.dev/pricing.</a></p>
+<h4>Important: When Development Clients Are Needed</h4>
+<p><strong>Development clients are the recommended setup for any real or production app.</strong> Expo Go is a playground for learning and quick experiments with the native libraries it bundles; most apps outgrow it and move to a development client. See <a href="https://docs.expo.dev/develop/development-builds/introduction/" rel="noopener">Expo Go vs. development builds</a> for the full reasoning.</p>
+<p>You need a dev client ONLY when using:</p>
+<ul>
+<li>Local Expo modules (custom native code)</li>
+<li>Apple targets (widgets, app clips, extensions)</li>
+<li>Third-party native modules not in Expo Go</li>
+<li>Config plugins, or testing remote push notifications and App/Universal Links</li>
+</ul>
+<h4>EAS Configuration</h4>
+<p>Ensure <code>eas.json</code> has a development profile:</p>
+<p><pre><code>{
+  &quot;cli&quot;: {
+    &quot;version&quot;: &quot;&gt;= 16.0.1&quot;,
+    &quot;appVersionSource&quot;: &quot;remote&quot;
+  },
+  &quot;build&quot;: {
+    &quot;production&quot;: {
+      &quot;autoIncrement&quot;: true
+    },
+    &quot;development&quot;: {
+      &quot;autoIncrement&quot;: true,
+      &quot;developmentClient&quot;: true
+    }
+  },
+  &quot;submit&quot;: {
+    &quot;production&quot;: {},
+    &quot;development&quot;: {}
+  }
+}</code></pre></p>
+<p>Key settings:</p>
+<ul>
+<li><code>developmentClient: true</code> - Bundles expo-dev-client for development builds</li>
+<li><code>autoIncrement: true</code> - Automatically increments build numbers</li>
+<li><code>appVersionSource: &quot;remote&quot;</code> - Uses EAS as the source of truth for version numbers</li>
+</ul>
+<h4>Building for TestFlight</h4>
+<p>Build iOS dev client and submit to TestFlight in one command:</p>
+<p><pre><code>eas build -p ios --profile development --submit</code></pre></p>
+<p>This will:</p>
+<ol>
+<li>Build the development client in the cloud</li>
+<li>Automatically submit to App Store Connect</li>
+<li>Send you an email when the build is ready in TestFlight</li>
+</ol>
+<p>After receiving the TestFlight email:</p>
+<ol>
+<li>Download the build from TestFlight on your device</li>
+<li>Launch the app to see the expo-dev-client UI</li>
+<li>Connect to your local Metro bundler or scan a QR code</li>
+</ol>
+<h4>Building Locally</h4>
+<p>Build a development client on your machine:</p>
+<p><pre><code># iOS (requires Xcode)
+eas build -p ios --profile development --local
+
+# Android
+eas build -p android --profile development --local</code></pre></p>
+<p>Local builds output:</p>
+<ul>
+<li>iOS: <code>.ipa</code> file</li>
+<li>Android: <code>.apk</code> or <code>.aab</code> file</li>
+</ul>
+<h4>Installing Local Builds</h4>
+<p>Install iOS build on simulator:</p>
+<p><pre><code># Find the .app in the .tar.gz output
+tar -xzf build-*.tar.gz
+xcrun simctl install booted ./path/to/App.app</code></pre></p>
+<p>Install iOS build on device (requires signing):</p>
+<p><pre><code># Use Xcode Devices window or ideviceinstaller
+ideviceinstaller -i build.ipa</code></pre></p>
+<p>Install Android build:</p>
+<p><pre><code>adb install build.apk</code></pre></p>
+<h4>Building for Specific Platform</h4>
+<p><pre><code># iOS only
+eas build -p ios --profile development
+
+# Android only
+eas build -p android --profile development
+
+# Both platforms
+eas build --profile development</code></pre></p>
+<h4>Checking Build Status</h4>
+<p><pre><code># List recent builds
+eas build:list
+
+# View build details
+eas build:view</code></pre></p>
+<h4>Using the Dev Client</h4>
+<p>Once installed, the dev client provides:</p>
+<ul>
+<li><strong>Development server connection</strong> - Enter your Metro bundler URL or scan QR</li>
+<li><strong>Build information</strong> - View native build details</li>
+<li><strong>Launcher UI</strong> - Switch between development servers</li>
+</ul>
+<p>Connect to local development:</p>
+<p><pre><code># Start Metro bundler
+npx expo start --dev-client
+
+# Scan QR code with dev client or enter URL manually</code></pre></p>
+<p>When you launch the dev client yourself to screenshot or drive it, skip the onboarding sheet, the dev menu at launch, and the Tools button. On SDK 58+, Expo CLI does this for launches it starts from a non-interactive shell; for a URL you open yourself, use <code>&lt;scheme&gt;://?__expo_url=&lt;encoded dev server URL&gt;&amp;__expo_disable_onboarding=1&amp;__expo_disable_fab=1&amp;__expo_disable_auto_launch=1</code>. On SDK 57 and earlier, launch the iOS app with the <code>-EXDevMenu*</code> launch arguments, and on Android open <code>&lt;scheme&gt;://expo-development-client/?url=&lt;encoded dev server URL&gt;&amp;disableOnboarding=1&amp;disableFab=1&amp;disableAutoLaunch=1</code>. See <code>../expo-overview/references/launch-without-dev-menu.md</code> for the exact commands.</p>
+<h4>Troubleshooting</h4>
+<p><strong>Build fails with signing errors:</strong></p>
+<p><pre><code>eas credentials</code></pre></p>
+<p><strong>Clear build cache:</strong></p>
+<p><pre><code>eas build -p ios --profile development --clear-cache</code></pre></p>
+<p><strong>Check EAS CLI version:</strong></p>
+<p><pre><code>eas --version
+eas update</code></pre></p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-dev-client&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-dev-client</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-dev-client" aria-label="Copy install expo-dev-client">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-dev-client</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-dev-client/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

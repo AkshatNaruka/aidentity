@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-examples — Aidentity</title>
+<meta name="description" content="Expo&#39;s official example projects - the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more). Use when integrating a third-party library or service into an existing Expo app and you want the canonical, version-matched pattern to adapt, or when scaffolding a new project from one with `npx create-expo --example`.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-examples/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-examples — Aidentity">
+<meta property="og:description" content="Expo&#39;s official example projects - the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more). Use when integrating a third-party library or service into an existing Expo app and you want the canonical, version-matched pattern to adapt, or when scaffolding a new project from one with `npx create-expo --example`.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-examples/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-examples","description":"Expo's official example projects - the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more). Use when integrating a third-party library or service into an existing Expo app and you want the canonical, version-matched pattern to adapt, or when scaffolding a new project from one with `npx create-expo --example`.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-examples/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-examples
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-examples</h1>
+      <p class="summary">Expo&#39;s official example projects - the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more). Use when integrating a third-party library or service into an existing Expo app and you want the canonical, version-matched pattern to adapt, or when scaffolding a new project from one with `npx create-expo --example`.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Expo Examples</h3>
+<p><a href="https://github.com/expo/examples" rel="noopener">expo/examples</a> is Expo&#39;s official library of ~70 <strong>integration examples</strong> — directories named <code>with-&lt;library&gt;</code> (e.g. <code>with-stripe</code>, <code>with-maps</code>), each built around <strong>one</strong> library or service. These are not full apps: they&#39;re <strong>managed</strong> projects (no <code>ios/</code>/<code>android/</code> dirs — native setup is via config plugins), and the typical one is a <strong>single screen of ~100–200 lines</strong>. Mine them for the canonical integration <em>pattern</em> — the dependency set, <code>app.json</code> config plugins, and minimal wiring Expo maintains against the current SDK — and adapt that into the user&#39;s app. Don&#39;t expect to lift an application architecture from them.</p>
+<p>Reach for an example before hand-rolling an integration. (Kinds — full-stack, showcases, starters — are noted in <code>./references/catalog.md</code>.)</p>
+<h4>Two modes</h4>
+<ol>
+<li><strong>Inspiration / adapt</strong> (most common) — the user already has a project. Find the matching example, read its key files, and apply the <em>pattern</em> to their code.</li>
+<li><strong>Scaffold</strong> — greenfield. Start a fresh project directly from the example.</li>
+</ol>
+<h4>Workflow</h4>
+<h5>1. Find the right example</h5>
+<p>Map the user&#39;s need to an example name (e.g. payments → <code>with-stripe</code>, auth → <code>with-clerk</code>). <code>./references/catalog.md</code> is a categorized snapshot for fast triage — but it drifts, so confirm against the live list:</p>
+<p><pre><code># Live example names:
+gh api repos/expo/examples/contents --jq &#39;.[] | select(.type==&quot;dir&quot; and (.name|startswith(&quot;.&quot;)|not)) | .name&#39;
+# Aliases (renamed) + deprecated (dead/moved) examples — check before recommending:
+gh api repos/expo/examples/contents/meta.json --jq &#39;.content&#39; | base64 -d</code></pre></p>
+<p><code>meta.json</code> is the source of truth for what&#39;s renamed or dead (deprecated examples are removed from the repo tree but still listed here, each with a <code>message</code>). If an example is in its <code>deprecated</code> map, don&#39;t recommend it — follow the <code>message</code> to the modern path. If it&#39;s in <code>aliases</code>, use the <code>destination</code>.</p>
+<h5>2a. Inspiration mode — study without touching the user&#39;s project</h5>
+<p>The common case: the user already has an app and wants to see how Expo does something. Read the example as <strong>reference</strong> and apply the patterns by hand — never scaffold an example on top of their project.</p>
+<p><strong>First, list the whole example in one call.</strong> Integration code is often nested (e.g. Stripe&#39;s server routes live in <code>app/api/</code>), so a one-level listing misses the important files:</p>
+<p><pre><code>gh api &#39;repos/expo/examples/git/trees/master?recursive=1&#39; \
+  --jq &#39;.tree[].path | select(startswith(&quot;with-stripe/&quot;))&#39;</code></pre></p>
+<p><strong>Then read the high-signal files first:</strong> <code>README.md</code> (setup) → <code>package.json</code> (deps) → <code>app.json</code> (config plugins / permissions) → the integration code the manifest revealed → <code>.env</code> (required secrets). Per file:</p>
+<p><pre><code>gh api repos/expo/examples/contents/with-stripe/utils/stripe-server.ts --jq &#39;.content&#39; | base64 -d
+# No gh? Raw URL (branch is master):
+curl -s https://raw.githubusercontent.com/expo/examples/master/with-stripe/utils/stripe-server.ts</code></pre></p>
+<p><strong>Reading more than a couple of files?</strong> Many integrations are spread across server routes, a client provider, and config (Stripe is). Skip the per-file calls — pull the whole example into a <strong>throwaway/gitignored dir (not the user&#39;s project)</strong> and read it freely with Grep/Read, then apply by hand:</p>
+<p><pre><code>npx degit expo/examples/with-stripe /tmp/expo-ref/with-stripe   # clean copy, no git history
+# fallback without degit (sparse-checkout, no full ~64 MB clone):
+git clone --depth 1 --filter=blob:none --sparse https://github.com/expo/examples.git /tmp/expo-ref/examples \
+  &amp;&amp; (cd /tmp/expo-ref/examples &amp;&amp; git sparse-checkout set with-stripe)</code></pre></p>
+<p>Read from there with Grep/Read; delete the scratch dir when done.</p>
+<h5>2b. Scaffold mode — new project from an example</h5>
+<p><pre><code>npx create-expo --example with-stripe   # short form:  npx create-expo -e with-stripe
+bun create expo --example with-stripe    # with bun</code></pre></p>
+<h5>3. Adapt into the user&#39;s app — non-destructively (critical)</h5>
+<p>When the user already has an app, <strong>add only what the example introduces; never overwrite their setup.</strong></p>
+<ul>
+<li><strong>Version-align — don&#39;t copy pinned versions.</strong> Examples track the <strong>latest</strong> SDK, so their <code>package.json</code> pins won&#39;t match an older project. Add only the <em>missing</em> deps with <code>npx expo install &lt;pkg&gt;</code> (it resolves SDK-correct versions) instead of copying exact versions.</li>
+<li><strong>Merge config, don&#39;t replace it.</strong> Add only the <code>app.json</code>/<code>app.config.*</code> plugins and permissions the example introduces that the user lacks — keep their existing config block intact.</li>
+<li><strong>Port the integration code.</strong></li>
+<li><strong>Recreate env vars</strong> from the example&#39;s <code>.env</code> shape — it holds placeholders, never working secrets.</li>
+</ul>
+<p><strong>Done when</strong> the integration code is ported and every dependency, config plugin, permission, and env var it needs is accounted for in the user&#39;s app — not when it merely <em>looks</em> wired up.</p>
+<h4>Gotchas</h4>
+<ul>
+<li><strong>Default branch is <code>master</code>,</strong> not <code>main</code> (matters for raw URLs and sparse checkout).</li>
+<li><strong>Single-click deploy.</strong> Every example has a launch URL: <code>https://launch.expo.dev/?github=https://github.com/expo/examples/tree/master/&lt;example&gt;</code>.</li>
+</ul>
+<h4>Related skills</h4>
+<ul>
+<li>Native UI components (@expo/ui package) → <code>expo-ui</code></li>
+<li>Styling and native-feeling screens → <code>expo-native-ui</code></li>
+<li>Navigation and routing → <code>expo-router</code></li>
+<li>Authoring a native module → <code>expo-module</code></li>
+<li>Upgrade the SDK before adopting a latest-SDK example → <code>expo-upgrade</code></li>
+</ul>
+<h4>References</h4>
+<ul>
+<li><code>./references/catalog.md</code> — categorized snapshot of the example library for fast triage.</li>
+</ul>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-examples&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-examples</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-examples" aria-label="Copy install expo-examples">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-examples</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-examples/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

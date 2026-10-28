@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>supabase — Aidentity</title>
+<meta name="description" content="Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS); Supabase CLI or MCP server; schema changes, migrations, declarative schemas, security audits, Postgres extensions (pg_graphql, pg_cron, pg_vector); debugging and troubleshooting errors or unexpected behavior on Supabase projects (HTTP errors, Postgres errors, RLS surprises, permission denied, schema cache issues, timeouts, Edge Function crashes, Realtime drops, Storage failures) and reading or querying logs (Logs Explorer, ClickHouse).">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/supabase/supabase/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="supabase — Aidentity">
+<meta property="og:description" content="Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS); Supabase CLI or MCP server; schema changes, migrations, declarative schemas, security audits, Postgres extensions (pg_graphql, pg_cron, pg_vector); debugging and troubleshooting errors or unexpected behavior on Supabase projects (HTTP errors, Postgres errors, RLS surprises, permission denied, schema cache issues, timeouts, Edge Function crashes, Realtime drops, Storage failures) and reading or querying logs (Logs Explorer, ClickHouse).">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/supabase/supabase/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"supabase","description":"Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS); Supabase CLI or MCP server; schema changes, migrations, declarative schemas, security audits, Postgres extensions (pg_graphql, pg_cron, pg_vector); debugging and troubleshooting errors or unexpected behavior on Supabase projects (HTTP errors, Postgres errors, RLS surprises, permission denied, schema cache issues, timeouts, Edge Function crashes, Realtime drops, Storage failures) and reading or querying logs (Logs Explorer, ClickHouse).","url":"https://akshatnaruka.github.io/aidentity/skills/supabase/supabase/","author":{"@type":"Person","name":"Supabase"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>supabase
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">supabase/agent-skills · MIT</p>
+      <h1>supabase</h1>
+      <p class="summary">Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout, sessions, JWT, cookies, getSession, getUser, getClaims, RLS); Supabase CLI or MCP server; schema changes, migrations, declarative schemas, security audits, Postgres extensions (pg_graphql, pg_cron, pg_vector); debugging and troubleshooting errors or unexpected behavior on Supabase projects (HTTP errors, Postgres errors, RLS surprises, permission denied, schema cache issues, timeouts, Edge Function crashes, Realtime drops, Storage failures) and reading or querying logs (Logs Explorer, ClickHouse).</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Supabase</h3>
+<h4>Core Principles</h4>
+<p><strong>1. Supabase changes frequently — verify against changelog and current docs before implementing.</strong></p>
+<p>Do not rely on training data for Supabase features. Function signatures, config.toml settings, and API conventions change between versions.</p>
+<p>First, fetch <code>https://supabase.com/changelog.md</code> (a lightweight summary index — not a heavy pull), scan for <code>breaking-change</code> tags relevant to your task, and follow the linked page for any that apply. Then look up the relevant topic using the documentation access methods below.</p>
+<p><strong>2. Verify your work.</strong></p>
+<p>After implementing any fix, run a test query to confirm the change works. A fix without verification is incomplete.</p>
+<p><strong>3. Recover from errors, don&#39;t loop.</strong></p>
+<p>If an approach fails after 2-3 attempts, stop and reconsider. Try a different method, check documentation, inspect the error more carefully, and review relevant logs when available. Supabase issues are not always solved by retrying the same command, and the answer is not always in the logs, but logs are often worth checking before proceeding.</p>
+<p><strong>4. Exposing tables to the Data API:</strong> Depending on the user&#39;s <a href="https://supabase.com/dashboard/project/&lt;ref&gt;/integrations/data_api/settings" rel="noopener">Data API settings</a>, newly created tables may not be automatically exposed via the Data (REST) API. If this is the case, <code>anon</code> and <code>authenticated</code> roles will need to be explicitly granted access.</p>
+<p>&gt; Note that this is separate from RLS, which controls which _rows_ are visible once a table is accessible, not whether the table is accessible at all.</p>
+<p>When a user reports a SQL-created table is unexpectedly inaccessible, check their Data API settings and whether the roles have been granted access via explicit <code>GRANT</code> SQL. When granting public (<code>anon</code>/<code>authenticated</code>) access, always enable RLS too. See <a href="https://supabase.com/docs/guides/api/securing-your-api.md" rel="noopener">Exposing a Table to the Data API</a> for the full setup workflow.</p>
+<p><strong>5. RLS in exposed schemas.</strong></p>
+<p>Enable RLS on every table in any exposed schema, which includes <code>public</code> by default. This is critical in Supabase because tables in exposed schemas can be reachable through the Data API when the <code>anon</code>/<code>authenticated</code> roles have access (see <a href="https://supabase.com/docs/guides/api/securing-your-api.md" rel="noopener">Exposing a Table to the Data API</a>). For private schemas, prefer RLS as defense in depth. After enabling RLS, create policies that match the actual access model rather than defaulting every table to the same <code>auth.uid()</code> pattern.</p>
+<p><strong>6. Security checklist.</strong></p>
+<p>When working on any Supabase task that touches auth, RLS, views, storage, or user data, run through this checklist. These are Supabase-specific security traps that silently create vulnerabilities:</p>
+<ul>
+<li><strong>Auth and session security</strong></li>
+<li><strong>Never use <code>user_metadata</code> claims in JWT-based authorization decisions.</strong> In Supabase, <code>raw_user_meta_data</code> is user-editable and can appear in <code>auth.jwt()</code>, so it is unsafe for RLS policies or any other authorization logic. Store authorization data in <code>raw_app_meta_data</code> / <code>app_metadata</code> instead.</li>
+<li><strong>Deleting a user does not invalidate existing access tokens.</strong> Sign out or revoke sessions first, keep JWT expiry short for sensitive apps, and for strict guarantees validate <code>session_id</code> against <code>auth.sessions</code> on sensitive operations.</li>
+<li><strong>If you use <code>app_metadata</code> or <code>auth.jwt()</code> for authorization, remember JWT claims are not always fresh until the user&#39;s token is refreshed.</strong></li>
+</ul>
+<ul>
+<li><strong>API key and client exposure</strong></li>
+<li><strong>Never expose the <code>service_role</code> or secret key in public clients.</strong> Prefer publishable keys for frontend code. Legacy <code>anon</code> keys are only for compatibility. In Next.js, any <code>NEXT_PUBLIC_</code> env var is sent to the browser.</li>
+<li><strong>Use scoped personal access tokens for the Management API, CLI, and MCP server.</strong> A classic personal access token carries the user&#39;s full account access, on every organization and project. For scripts, CI, and agents, have the user create a scoped token limited to the organizations, projects, and permissions the task needs. The <a href="https://supabase.com/docs/guides/platform/personal-access-tokens.md" rel="noopener">personal access tokens guide</a> lists the permission each Management API endpoint and MCP tool requires. Look permissions up there rather than guessing.</li>
+</ul>
+<ul>
+<li><strong>RLS, views, and privileged database code</strong></li>
+<li><strong>Views bypass RLS by default.</strong> In Postgres 15 and above, use <code>CREATE VIEW ... WITH (security_invoker = true)</code>. In older versions of Postgres, protect your views by revoking access from the <code>anon</code> and <code>authenticated</code> roles, or by putting them in an unexposed schema.</li>
+<li><strong>UPDATE requires a SELECT policy.</strong> In Postgres RLS, an UPDATE needs to first SELECT the row. Without a SELECT policy, updates silently return 0 rows — no error, just no change.</li>
+<li><strong><code>auth.role()</code> is deprecated — use the <code>TO</code> clause instead.</strong> Supabase has deprecated <code>auth.role()</code> in favour of specifying the target role directly on the policy with <code>TO authenticated</code> or <code>TO anon</code>. Beyond deprecation, <code>auth.role() = &#39;authenticated&#39;</code> breaks silently when anonymous sign-ins are enabled, because anonymous users carry the <code>authenticated</code> Postgres role and pass the check regardless of whether the user is genuinely signed in.</li>
+</ul>
+<p>    <pre><code>    -- Deprecated (do not use)
+    create policy &quot;example&quot; on table_name for select
+    using ( auth.role() = &#39;authenticated&#39; );
+    </code></pre></p>
+<ul>
+<li><strong><code>TO authenticated</code> alone is authentication without authorization (BOLA / IDOR).</strong> Using <code>TO authenticated</code> only checks the role — it does not restrict which rows a user can access. The correct pattern combines <code>TO authenticated</code> with an ownership predicate in <code>USING</code>:</li>
+</ul>
+<p>    <pre><code>    create policy &quot;example&quot; on table_name for select
+    to authenticated
+    using ( (select auth.uid()) = user_id );
+    </code></pre></p>
+<ul>
+<li><strong>UPDATE policies require both <code>USING</code> and <code>WITH CHECK</code>.</strong> Without <code>WITH CHECK</code>, a user can reassign a row&#39;s <code>user_id</code> to another user:</li>
+</ul>
+<p>    <pre><code>    create policy &quot;example&quot; on table_name for update
+    to authenticated
+    using ( (select auth.uid()) = user_id )
+    with check ( (select auth.uid()) = user_id );
+    </code></pre></p>
+<ul>
+<li><strong><code>SECURITY DEFINER</code> functions bypass RLS.</strong> A <code>SECURITY DEFINER</code> function runs with its creator&#39;s privileges — typically a role with <code>bypassrls</code> (e.g., <code>postgres</code>). Never add <code>SECURITY DEFINER</code> to resolve a permission error; it silently removes access control without fixing the underlying cause. Prefer <code>SECURITY INVOKER</code>.</li>
+<li><strong><code>SECURITY DEFINER</code> functions in <code>public</code> are callable by all roles.</strong> Postgres grants <code>EXECUTE</code> to <code>PUBLIC</code> by default for every new function, so any <code>SECURITY DEFINER</code> function in <code>public</code> is a public API endpoint callable by <code>anon</code> and <code>authenticated</code> (which inherit from <code>PUBLIC</code>) without any additional grant. When <code>SECURITY DEFINER</code> is genuinely needed (e.g., bypassing RLS on an internal lookup table), keep the function in a non-exposed schema, always include an <code>auth.uid()</code> check in the function body, and run <code>supabase db advisors</code> after making changes.</li>
+</ul>
+<ul>
+<li><strong>Storage access control</strong></li>
+<li><strong>Storage upsert requires INSERT + SELECT + UPDATE.</strong> Granting only INSERT allows new uploads but file replacement (upsert) silently fails. You need all three.</li>
+</ul>
+<ul>
+<li><strong>Dependency and supply-chain security</strong></li>
+<li><strong>Always pin package versions and commit lockfiles</strong> when installing Supabase packages (<code>supabase-js</code>, <code>@supabase/ssr</code>, <code>supabase-py</code>, etc.). See the <a href="https://supabase.com/docs/guides/security/npm-security.md" rel="noopener">npm security guide</a> for the full checklist.</li>
+</ul>
+<p>For any security concern not covered above, fetch the Supabase product security index: <code>https://supabase.com/docs/guides/security/product-security.md</code></p>
+<h4>Supabase CLI</h4>
+<p>Always discover commands via <code>--help</code> — never guess. The CLI structure changes between versions.</p>
+<p><pre><code>supabase --help                    # All top-level commands
+supabase &lt;group&gt; --help            # Subcommands (e.g., supabase db --help)
+supabase &lt;group&gt; &lt;command&gt; --help  # Flags for a specific command</code></pre></p>
+<p><strong>Supabase CLI Known gotchas:</strong></p>
+<ul>
+<li><code>supabase db query</code> requires <strong>CLI v2.79.0+</strong> → use MCP <code>execute_sql</code> or <code>psql</code> as fallback</li>
+<li><code>supabase db advisors</code> requires <strong>CLI v2.81.3+</strong> → use MCP <code>get_advisors</code> as fallback</li>
+<li>The browser flow of <code>supabase login</code> creates a classic token with full account access. In CI, set <code>SUPABASE_ACCESS_TOKEN</code> to a scoped personal access token instead. It takes precedence over any saved login. Commands that connect with the database password (<code>--password</code> or <code>SUPABASE_DB_PASSWORD</code>, for example <code>supabase db push</code>) aren&#39;t limited by the token&#39;s permissions.</li>
+<li>In imperative migration projects, create new hand-authored migration files with <code>supabase migration new &lt;name&gt;</code> first. Never invent a migration filename or rely on memory for the expected format. Declarative schema projects generate migrations from <code>supabase/schemas/</code>; see &quot;Making and Committing Schema Changes&quot; below.</li>
+</ul>
+<p><strong>Version check and upgrade:</strong> Run <code>supabase --version</code> to check. For CLI changelogs and version-specific features, consult the <a href="https://supabase.com/docs/reference/cli/introduction" rel="noopener">CLI documentation</a> or <a href="https://github.com/supabase/cli/releases" rel="noopener">GitHub releases</a>.</p>
+<h4>Supabase MCP Server</h4>
+<p>For setup instructions, server URL, and configuration, see the <a href="https://supabase.com/docs/guides/getting-started/mcp" rel="noopener">MCP setup guide</a>.</p>
+<p><strong>Troubleshooting connection issues</strong> — follow these steps in order:</p>
+<ol>
+<li><strong>Check if the server is reachable:</strong></li>
+</ol>
+<p>   <code>curl -so /dev/null -w &quot;%{http_code}&quot; <a href="https://mcp.supabase.com/mcp" rel="noopener">https://mcp.supabase.com/mcp</a></code></p>
+<p>   A <code>401</code> is expected (no token) and means the server is up. Timeout or &quot;connection refused&quot; means it may be down.</p>
+<ol>
+<li><strong>Check <code>.mcp.json</code> configuration:</strong></li>
+</ol>
+<p>   Verify the project root has a valid <code>.mcp.json</code> with the correct server URL. If missing, create one pointing to <code>https://mcp.supabase.com/mcp</code>.</p>
+<ol>
+<li><strong>Authenticate the MCP server:</strong></li>
+</ol>
+<p>   If the server is reachable and <code>.mcp.json</code> is correct but tools aren&#39;t visible, the user needs to authenticate. The Supabase MCP server uses OAuth 2.1 — tell the user to trigger the auth flow in their agent, complete it in the browser, and reload the session.</p>
+<p>   In CI or other environments where the browser flow can&#39;t run, pass a scoped personal access token in the <code>Authorization: Bearer</code> header instead.</p>
+<ol>
+<li><strong>Check scoped token permissions:</strong></li>
+</ol>
+<p>   If a tool fails with &quot;You do not have permission to perform this action&quot; while using a scoped personal access token, the token lacks that tool&#39;s permission or the project is outside the token&#39;s scope. Check the tool&#39;s required permission in the <a href="https://supabase.com/docs/guides/platform/personal-access-tokens.md#mcp-tools" rel="noopener">personal access tokens guide</a>.</p>
+<h4>Supabase Documentation</h4>
+<p>Before implementing any Supabase feature, find the relevant documentation. Use these methods in priority order:</p>
+<ol>
+<li><strong>MCP <code>search_docs</code> tool</strong> (preferred — returns relevant snippets directly)</li>
+<li><strong>Fetch docs pages as markdown</strong> — any docs page can be fetched by appending <code>.md</code> to the URL path.</li>
+<li><strong>Web search</strong> for Supabase-specific topics when you don&#39;t know which page to look at.</li>
+</ol>
+<h4>Making and Committing Schema Changes</h4>
+<p>First decide which schema workflow the project uses.</p>
+<h5>Option A: Declarative schemas</h5>
+<p>Use this when <code>supabase/schemas/</code> exists or <code>config.toml</code> sets <code>schema_paths</code>. Edit the desired schema state in those files, then generate and review the migration. Do not start by hand-writing a migration. See the <a href="https://supabase.com/docs/guides/local-development/declarative-database-schemas" rel="noopener">Declarative database schemas guide</a>.</p>
+<h5>Option B: Imperative migrations</h5>
+<p>Use this when the project does not use declarative schemas.</p>
+<p><strong>To make schema changes, use <code>execute_sql</code> (MCP) or <code>supabase db query</code> (CLI).</strong> These run SQL directly on the database without creating migration history entries, so you can iterate freely and generate a clean migration when ready.</p>
+<p>Do NOT use <code>apply_migration</code> to change a local database schema — it writes a migration history entry on every call, which means you can&#39;t iterate, and <code>supabase db diff</code> / <code>supabase db pull</code> will produce empty or conflicting diffs. If you use it, you&#39;ll be stuck with whatever SQL you passed on the first try.</p>
+<p><strong>When ready to commit</strong> your changes to a migration file:</p>
+<ol>
+<li><strong>Run advisors</strong> → <code>supabase db advisors</code> (CLI v2.81.3+) or MCP <code>get_advisors</code>. Fix any issues.</li>
+<li><strong>Review the Security Checklist above</strong> if your changes involve views, functions, triggers, or storage.</li>
+<li><strong>Generate the migration</strong> → <code>supabase db pull &lt;descriptive-name&gt; --local --yes</code></li>
+<li><strong>Verify</strong> → <code>supabase migration list --local</code></li>
+</ol>
+<h4>Debugging</h4>
+<p>When you get an error on a Supabase-related request, for example an error code from the Supabase REST API, Postgres database, or PostgREST, an empty result, getting blocked by RLS unexpectedly, or an error from a Supabase service like Auth, Realtime, Edge Functions, or Storage, you <strong>must</strong> fetch Supabase&#39;s <a href="https://supabase.com/docs/guides/monitoring-and-debugging.md" rel="noopener">Monitoring and Debugging</a> documentation before diagnosing or proposing a fix, rather than working from memory. The same docs also cover performance optimizations, such as slow queries and missing indexes.</p>
+<h4>Reference Guides</h4>
+<ul>
+<li><strong>Skill Feedback</strong> → [references/skill-feedback.md](references/skill-feedback.md)</li>
+</ul>
+<p>  <strong>MUST read when</strong> the user reports that this skill gave incorrect guidance or is missing information.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Supabase</strong> in
+        <a href="https://github.com/supabase/agent-skills" rel="noopener">supabase/agent-skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add supabase/supabase</code>
+  <button type="button" data-copy="npx aidentity add supabase/supabase" aria-label="Copy install supabase">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/supabase/agent-skills" rel="noopener">supabase/agent-skills</a></dd></div>
+          <div><dt>Author</dt><dd>Supabase</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">supabase/supabase</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/supabase/supabase/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

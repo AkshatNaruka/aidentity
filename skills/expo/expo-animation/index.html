@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>expo-animation — Aidentity</title>
+<meta name="description" content="Build animations in React Native and Expo, making the decisions in the order that determines whether they feel right — should it animate, which thread it runs on, which properties, spring or timing, how the gesture hands off, how it degrades. Writes the implementation with Reanimated, Gesture Handler, Expo Router and expo-haptics. Use when animating anything in an Expo app, adding gestures, sheets, screen transitions, press feedback or haptics, or fixing motion that stutters on device. For web animation use `animate`.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/expo/expo-animation/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="expo-animation — Aidentity">
+<meta property="og:description" content="Build animations in React Native and Expo, making the decisions in the order that determines whether they feel right — should it animate, which thread it runs on, which properties, spring or timing, how the gesture hands off, how it degrades. Writes the implementation with Reanimated, Gesture Handler, Expo Router and expo-haptics. Use when animating anything in an Expo app, adding gestures, sheets, screen transitions, press feedback or haptics, or fixing motion that stutters on device. For web animation use `animate`.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/expo/expo-animation/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"expo-animation","description":"Build animations in React Native and Expo, making the decisions in the order that determines whether they feel right — should it animate, which thread it runs on, which properties, spring or timing, how the gesture hands off, how it degrades. Writes the implementation with Reanimated, Gesture Handler, Expo Router and expo-haptics. Use when animating anything in an Expo app, adding gestures, sheets, screen transitions, press feedback or haptics, or fixing motion that stutters on device. For web animation use `animate`.","url":"https://akshatnaruka.github.io/aidentity/skills/expo/expo-animation/","author":{"@type":"Person","name":"Expo (650 Industries)"},"license":"MIT","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=general">general</a><span>/</span>expo-animation
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">expo/skills · MIT</p>
+      <h1>expo-animation</h1>
+      <p class="summary">Build animations in React Native and Expo, making the decisions in the order that determines whether they feel right — should it animate, which thread it runs on, which properties, spring or timing, how the gesture hands off, how it degrades. Writes the implementation with Reanimated, Gesture Handler, Expo Router and expo-haptics. Use when animating anything in an Expo app, adding gestures, sheets, screen transitions, press feedback or haptics, or fixing motion that stutters on device. For web animation use `animate`.</p>
+
+      <div class="tags" style="margin-top:20px">
+        
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><h3>Building Animations in Expo</h3>
+<p>This skill was created in collaboration with <a href="https://github.com/emilkowalski" rel="noopener">Emil Kowalski</a> and can also be found in the <a href="https://github.com/emilkowalski/skills" rel="noopener">emilkowalski/skills</a> repository, along with other useful animation skills.</p>
+<p>A construction skill for React Native. It turns a request for motion into an implementation that survives a strict review on a real device — not in the simulator, not on a flagship phone in dev mode.</p>
+<p>Mobile changes three things about animation, and everything in this skill follows from them:</p>
+<ol>
+<li><strong>There is no hover.</strong> Every affordance the web puts in hover has to live in press, position, or nothing.</li>
+<li><strong>There are two runtimes.</strong> Worklets (Reanimated 4) makes this explicit: the React Native runtime, where React renders and your app logic runs, and the UI runtime, where worklets run every frame (plus optional worker runtimes for background work). An animation that touches the RN runtime stutters the moment the app does anything else. The whole craft is keeping motion on the UI runtime.</li>
+<li><strong>The user&#39;s finger is on the element.</strong> Gestures are the primary input, so interruptibility and velocity handoff aren&#39;t polish — they&#39;re the baseline.</li>
+</ol>
+<h4>Operating Posture</h4>
+<p>You are a senior mobile engineer building the animation yourself. Make the call, state the reasoning in one line, write the code. Never present motion options as a menu.</p>
+<p>Two failure modes, and the first is worse:</p>
+<ol>
+<li><strong>Animating something that shouldn&#39;t animate.</strong> The gate below exists to produce zero lines of code sometimes.</li>
+<li><strong>Animating the right thing on the wrong thread</strong> — a <code>setState</code> per frame, a <code>PanResponder</code>, an animated <code>height</code>. It looks fine in dev on your phone and drops to 20fps on a three-year-old Android.</li>
+</ol>
+<h4>Hard Rules</h4>
+<ol>
+<li><strong>Run the sequence in order.</strong> Steps 1 and 2 gate everything.</li>
+<li><strong>Reanimated, not core <code>Animated</code>.</strong> Core <code>Animated</code> can&#39;t be driven by a gesture without crossing the bridge, and <code>useNativeDriver</code> refuses anything but transform and opacity anyway. Reanimated worklets run on the UI thread and keep running while JS is busy.</li>
+<li><strong>No approximated values.</strong> Curves and spring configs come from the tables below.</li>
+<li><strong>Reduced motion ships with the animation</strong>, not as a follow-up.</li>
+<li><strong>Feel is judged on a release build on the slowest device you support.</strong> Nothing else counts as verified.</li>
+</ol>
+<h4>The Build Sequence</h4>
+<h5>1. Should this animate at all?</h5>
+<table><thead><tr><th>Frequency</th><th>Decision</th></tr></thead><tbody>
+<tr><td>100+ times/day — tab switches, keyboard open/close, scrolling, toggles in settings</td><td><strong>No animation.</strong> Platform default or nothing. Stop here.</td></tr>
+<tr><td>Tens of times/day — press feedback, list navigation, row selection</td><td>Near-imperceptible only: under 150ms, or nothing</td></tr>
+<tr><td>Occasional — sheets, modals, toasts, onboarding steps</td><td>Standard animation</td></tr>
+<tr><td>Rare / first-time — success states, empty-state illustrations, celebration</td><td>The delight budget lives here</td></tr>
+</tbody></table>
+<p><strong>Tab switches never slide.</strong> Tabs are peers, not a hierarchy — sliding implies depth that isn&#39;t there, and the user pays for it dozens of times a session. <code>animation: &#39;none&#39;</code>.</p>
+<p>If the request fails this gate, say so and don&#39;t write it.</p>
+<h5>2. What is the purpose?</h5>
+<p>Name it in one word before continuing: <strong>feedback</strong>, <strong>spatial consistency</strong>, <strong>state indication</strong>, <strong>preventing a jarring change</strong>, <strong>explanation</strong>, or <strong>delight</strong> (rare tier only).</p>
+<p>Can&#39;t name it? Don&#39;t build it.</p>
+<h5>3. Pick the tool — cheapest that works</h5>
+<p>Walk down; stop at the first that fits.</p>
+<table><thead><tr><th>Need</th><th>Tool</th></tr></thead><tbody>
+<tr><td>A state-driven change with no gesture — press, toggle, color, a value flipping</td><td><strong>Reanimated CSS transition</strong> (<code>transitionProperty</code> in the style)</td></tr>
+<tr><td>Loop, multi-stage, or plays on mount with no state change</td><td><strong>Reanimated CSS animation</strong> (<code>animationName</code> keyframes)</td></tr>
+<tr><td>An element mounting or unmounting, or a list reflowing</td><td><strong>Layout animations</strong> (<code>entering</code> / <code>exiting</code> / <code>itemLayoutAnimation</code>)</td></tr>
+<tr><td>Anything a finger touches, or anything derived from scroll</td><td><strong><code>useSharedValue</code> + <code>Gesture</code> + <code>useAnimatedStyle</code></strong></td></tr>
+<tr><td>Screen to screen</td><td><strong>Native stack options in Expo Router.</strong> Never hand-roll this</td></tr>
+<tr><td>A bottom sheet that is its own screen</td><td><strong><code>presentation: &#39;formSheet&#39;</code></strong> — it&#39;s a real UISheetPresentationController, free and correct</td></tr>
+<tr><td>Tab bar</td><td><strong><code>NativeTabs</code></strong> (from <code>expo-router/unstable-native-tabs</code>) — the platform&#39;s real tab bar, its behaviors and transitions included</td></tr>
+<tr><td>Context menu, press-and-hold preview</td><td><strong><code>Link.Menu</code> / <code>Link.Preview</code></strong> (Expo Router, iOS-only) — native menus and peek, never rebuilt in JS</td></tr>
+<tr><td>Header that collapses into a large title</td><td><strong><code>headerLargeTitleEnabled</code></strong> on the native stack (iOS-only; <code>headerLargeTitle</code> is deprecated) — not a scroll worklet</td></tr>
+<tr><td>Pull to refresh</td><td><strong><code>RefreshControl</code></strong> — hand-roll only when it&#39;s a signature interaction (see the threshold recipe)</td></tr>
+<tr><td>UI that tracks the keyboard</td><td><strong><code>react-native-keyboard-controller</code></strong> — the keyboard&#39;s real position, frame by frame, on the UI thread</td></tr>
+<tr><td>Vector illustration, celebration, empty state</td><td><strong>Lottie</strong> — for illustration only, never for UI state</td></tr>
+<tr><td>A huge animated scene, freeform drawing</td><td><strong><code>@shopify/react-native-skia</code></strong> — a canvas, for when the view hierarchy itself is the bottleneck</td></tr>
+</tbody></table>
+<p>Reach for a shared value only when the value is continuous or interruptible. A press scale is a CSS transition; a drag is a shared value. Using a worklet for a two-state toggle is the mobile equivalent of installing a motion library for a fade.</p>
+<p><strong>Dependencies.</strong> Install with <code>npx expo install &lt;package&gt;</code> — it resolves the version that matches the project&#39;s SDK, which plain <code>npm install</code> won&#39;t:</p>
+<table><thead><tr><th>Need</th><th>Package</th></tr></thead><tbody>
+<tr><td>Animation</td><td><code>react-native-reanimated</code> + <code>react-native-worklets</code></td></tr>
+<tr><td>Gestures</td><td><code>react-native-gesture-handler</code></td></tr>
+<tr><td>Navigation, sheets, native tabs, menus</td><td><code>expo-router</code></td></tr>
+<tr><td>Haptics</td><td><code>expo-haptics</code></td></tr>
+<tr><td>Keyboard-following UI</td><td><code>react-native-keyboard-controller</code> (needs <code>KeyboardProvider</code> at the root — see the keyboard recipe)</td></tr>
+<tr><td>Illustration, celebration</td><td><code>lottie-react-native</code></td></tr>
+<tr><td>Very large animated scenes, custom drawing</td><td><code>@shopify/react-native-skia</code></td></tr>
+</tbody></table>
+<h5>4. Pick the properties</h5>
+<ul>
+<li><strong><code>transform</code> and <code>opacity</code> are free.</strong> Everything else is a layout pass. <code>width</code>, <code>height</code>, <code>margin</code>, <code>padding</code>, <code>flex</code>, <code>top</code>, <code>left</code>, <code>gap</code> re-run Yoga on every frame for that node <em>and its siblings</em>.</li>
+<li><strong>The one exception: an absolutely positioned element with no children</strong> — a tab pill, a progress bar fill. It&#39;s out of flow, so nothing else re-lays-out, and animating <code>width</code> keeps the corner radius that <code>scaleX</code> would smear.</li>
+<li><strong>Never <code>scale(0)</code>.</strong> Start from <code>scale(0.9–0.97)</code> + <code>opacity: 0</code>. Nothing in the real world appears from nothing.</li>
+<li><strong><code>transform</code> is an array and order matters</strong> — <code>[{ translateY }, { scale }]</code> scales after moving; reversed, the translate gets scaled too. Keep translate first unless you want the multiplication.</li>
+<li><strong>Android shadows are <code>elevation</code>, and animating elevation re-renders the shadow every frame.</strong> Animate opacity of a pre-shadowed layer instead.</li>
+<li><strong>Never animate <code>BlurView</code> intensity.</strong> On Android it re-renders the blur each frame. Crossfade the opacity of a static <code>BlurView</code> instead.</li>
+<li><strong>Percentages work in <code>translate</code></strong> and are relative to the element&#39;s own size — <code>translateY(&#39;100%&#39;)</code> moves a sheet by its own height whatever its content.</li>
+</ul>
+<h5>5. Timing or spring</h5>
+<p><strong>If a finger was involved, use a spring.</strong> Springs carry velocity through an interruption; timing curves restart. Everything else uses timing.</p>
+<p>Reanimated&#39;s spring takes Apple&#39;s two designer parameters directly — use this form, not mass/stiffness/damping:</p>
+<table><thead><tr><th>Interaction</th><th>Config</th></tr></thead><tbody>
+<tr><td>Default settle, no overshoot</td><td><code>{ duration: 400, dampingRatio: 1 }</code></td></tr>
+<tr><td>Reposition / snap back after a drag</td><td><code>{ duration: 400, dampingRatio: 0.8, velocity }</code></td></tr>
+<tr><td>Sheet, drawer</td><td><code>{ duration: 300, dampingRatio: 0.8, velocity }</code></td></tr>
+<tr><td>Must not pass a hard edge</td><td>add <code>overshootClamping: true</code></td></tr>
+</tbody></table>
+<p><strong>Bounce only when the gesture carried momentum.</strong> Overshoot on a menu that faded in feels wrong; overshoot on a card you flicked feels right.</p>
+<p><strong>Easing</strong>, for everything without a finger on it:</p>
+<table><thead><tr><th>Situation</th><th>Easing</th></tr></thead><tbody>
+<tr><td>Entering or exiting</td><td><code>ease-out</code></td></tr>
+<tr><td>Moving / morphing on screen</td><td><code>ease-in-out</code></td></tr>
+<tr><td>Constant motion (progress, marquee)</td><td><code>linear</code></td></tr>
+<tr><td>Default</td><td><code>ease-out</code></td></tr>
+</tbody></table>
+<p><strong>Never <code>ease-in</code> on UI.</strong> It starts slow, delaying the exact moment the user is watching. Reanimated&#39;s built-ins are as weak as CSS&#39;s — use these:</p>
+<p><pre><code>import { cubicBezier, Easing } from &#39;react-native-reanimated&#39;;
+
+// transitionTimingFunction / animationTimingFunction
+const CSS_EASE_OUT = cubicBezier(0.23, 1, 0.32, 1);
+
+// withTiming / .easing(...)
+const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);      // strong ease-out for UI
+const EASE_IN_OUT = Easing.bezier(0.77, 0, 0.175, 1);  // on-screen movement
+const EASE_SHEET = Easing.bezier(0.32, 0.72, 0, 1);    // iOS sheet curve</code></pre></p>
+<p>Reanimated 4.1.1 and 4.5.1 reject raw <code>&#39;cubic-bezier(...)&#39;</code> strings. CSS transitions and animations use <code>cubicBezier(...)</code>; <code>withTiming</code> and <code>.easing(...)</code> use <code>Easing.bezier(...)</code>.</p>
+<p><strong>Duration:</strong></p>
+<table><thead><tr><th>Element</th><th>Duration</th></tr></thead><tbody>
+<tr><td>Press feedback</td><td>100–150ms</td></tr>
+<tr><td>Toggle, chip, small state change</td><td>150–200ms</td></tr>
+<tr><td>Sheet, modal, drawer</td><td>spring, ~300ms perceived</td></tr>
+<tr><td>Screen transition</td><td>the platform default — don&#39;t override it</td></tr>
+</tbody></table>
+<p>Mobile UI animations stay under 300ms, same as web. The platform&#39;s own transitions are longer (iOS push is 350ms); match the platform for navigation, beat it everywhere else.</p>
+<h5>6. Keep it off the JS thread</h5>
+<p>This is the mobile-specific craft, and it&#39;s where most React Native motion dies.</p>
+<ul>
+<li><strong>Never <code>setState</code> from a gesture or scroll handler.</strong> One React render per frame is the single biggest cause of jank in RN apps. Shared value → <code>useAnimatedStyle</code>, and React never re-renders at all.</li>
+<li><strong>Never schedule back to the RN runtime inside <code>onUpdate</code> or a scroll handler.</strong> <code>scheduleOnRN(fn, ...args)</code> from <code>react-native-worklets</code> — the Reanimated 4 replacement for the deprecated <code>runOnJS(fn)(...args)</code> — queues an RN-runtime call, and in <code>onUpdate</code> that&#39;s 60–120× per second. It belongs in <code>onEnd</code>, or in a <code>useAnimatedReaction</code> that fires when a value crosses a threshold.</li>
+<li><strong>Never read a shared value during render</strong> (<code>translateY.get()</code> in JSX). It&#39;s a snapshot that never updates and it silently desyncs. <strong>Never write one during render either</strong> — it fires mid-reconciliation, and a re-render you didn&#39;t cause replays the write. Touch shared values only in worklets, handlers, and effects.</li>
+<li><strong>Use <code>.get()</code> / <code>.set()</code>, not <code>.value</code>.</strong> Same API, but direct <code>.value</code> access is the form the React Compiler can&#39;t see through — the Reanimated docs call <code>get</code>/<code>set</code> the compiler-safe way. <code>set</code> also takes a functional update: <code>sv.set((v) =&gt; v + 1)</code>.</li>
+<li><strong>Functions called from a worklet need <code>&#39;worklet&#39;</code></strong> as their first line, or they throw at runtime on device while working fine in the debugger.</li>
+</ul>
+<h5>7. Press, not hover</h5>
+<p>Every hover affordance from the web has to be redesigned, not ported.</p>
+<ul>
+<li><strong>Feedback on press-in, commit on press-out.</strong> Waiting for the tap to complete before showing anything feels dead — this is the latency the user actually perceives.</li>
+<li><strong><code>scale: 0.97</code> in 100–150ms</strong> on any button-like pressable, <code>Pressable</code> + a CSS transition. <code>scale</code> takes the label and icons with it, which is what makes it read as physical. Full-width list rows are the exception: they highlight their background instead — a scaling row reads as the whole screen squishing.</li>
+<li><strong>44×44pt minimum touch target</strong> (48dp Android). If the visual is smaller, add <code>hitSlop</code> — don&#39;t grow the visual.</li>
+<li><strong><code>pressRetentionOffset</code></strong> so a finger drifting a few pixels doesn&#39;t cancel a press the user meant.</li>
+<li><strong>Android ripple only in a Material-styled app.</strong> In a custom-designed app, the same scale on both platforms is more coherent than a ripple on one.</li>
+</ul>
+<h5>8. Haptics</h5>
+<p>Mobile has a sense the web doesn&#39;t. Use it sparingly and it becomes the thing that makes the app feel expensive; use it everywhere and users turn it off.</p>
+<table><thead><tr><th>Moment</th><th>Call</th></tr></thead><tbody>
+<tr><td>A value ticks past a step — picker, slider detent, segmented control</td><td><code>Haptics.selectionAsync()</code></td></tr>
+<tr><td>Something snaps home, a sheet detent catches, a drag commits</td><td><code>Haptics.impactAsync(ImpactFeedbackStyle.Light)</code></td></tr>
+<tr><td>A heavy object lands, a destructive action fires</td><td><code>Haptics.impactAsync(ImpactFeedbackStyle.Medium)</code></td></tr>
+<tr><td>Operation succeeded or failed</td><td><code>Haptics.notificationAsync(NotificationFeedbackType.Success / Error)</code></td></tr>
+</tbody></table>
+<p>Three rules, and they&#39;re absolute:</p>
+<ul>
+<li><strong>Same frame as the visual.</strong> A haptic that lags its animation reads as a glitch, not as feedback. Fire it at the causal moment — the detent catching — not when the animation finishes.</li>
+<li><strong>One per user action.</strong> Never on scroll, never per frame, never on an entrance animation the user didn&#39;t cause.</li>
+<li><strong>Never the only feedback.</strong> Haptics are off system-wide for many users, and silent on most Android hardware. The visual has to stand alone.</li>
+</ul>
+<p>From a worklet, haptics must be scheduled back to the RN runtime: <code>scheduleOnRN(Haptics.selectionAsync)</code>.</p>
+<h5>9. Reduced motion and accessibility</h5>
+<p><pre><code>import { useReducedMotion, ReduceMotion, withSpring } from &#39;react-native-reanimated&#39;;
+
+const reduced = useReducedMotion();
+const y = useSharedValue(reduced ? 0 : SHEET_HEIGHT);
+
+// or let each animation decide
+withSpring(0, { duration: 300, dampingRatio: 0.8, reduceMotion: ReduceMotion.System });</code></pre></p>
+<p>Reduced motion means <strong>fewer and gentler</strong>, not zero: keep opacity and color changes that explain a state change, drop translation, scale, parallax and overshoot. Screen transitions become <code>animation: &#39;fade&#39;</code>.</p>
+<p><strong>Text scales.</strong> <code>allowFontScaling</code> is on by default, so any height you measured at default type size is wrong at 200%. Never animate to a hardcoded height — measure with <code>onLayout</code>, or animate a transform instead.</p>
+<h4>Setup that silently breaks motion</h4>
+<p>Check these first when &quot;the animation just doesn&#39;t run&quot;:</p>
+<ul>
+<li>Install through Expo so versions match the SDK: <code>npx expo install react-native-reanimated react-native-worklets</code>. In an Expo project, <code>babel-preset-expo</code> configures the worklets Babel plugin automatically — no <code>babel.config.js</code> step. Only a bare RN project without that preset adds the plugin manually, and there it must be last in the list. A missing or misplaced plugin doesn&#39;t silently fall back anymore — it throws <code>Failed to create a worklet</code> at runtime.</li>
+<li><code>GestureHandlerRootView</code> must wrap the app, or gestures do nothing with no error.</li>
+<li>Reanimated 4 requires the New Architecture.</li>
+<li><strong>Expo Go is not a performance environment.</strong> Judge feel in a release build; a dev build&#39;s JS thread is slow enough to hide exactly the problems you&#39;re looking for.</li>
+</ul>
+<h4>120fps</h4>
+<p>On ProMotion iPhones, third-party animations are capped at 60fps unless <code>CADisableMinimumFrameDurationOnPhone</code> is set. Recent Expo SDKs set it by default — confirm it&#39;s there, and add it if not:</p>
+<p><pre><code>{ &quot;expo&quot;: { &quot;ios&quot;: { &quot;infoPlist&quot;: { &quot;CADisableMinimumFrameDurationOnPhone&quot;: true } } } }</code></pre></p>
+<p>Then the frame budget is 8ms, not 16. This is also why a UI-thread animation matters more on mobile than it does on web.</p>
+<h4>Recipes</h4>
+<p>For ready-to-build implementations — press feedback, drag-to-dismiss sheet, swipe-to-delete, collapsing header, list entrances, keyboard-synced UI, tab indicator, screen transitions — see [RECIPES.md](RECIPES.md). Load it whenever the request matches one; start from the recipe rather than from a blank file.</p>
+<h4>Never Ship</h4>
+<table><thead><tr><th>Never</th><th>Instead</th></tr></thead><tbody>
+<tr><td><code>PanResponder</code></td><td><code>Gesture.Pan()</code> from gesture-handler</td></tr>
+<tr><td><code>setState</code> in a gesture or scroll handler</td><td>shared value + <code>useAnimatedStyle</code></td></tr>
+<tr><td><code>runOnJS</code> (deprecated in Reanimated 4)</td><td><code>scheduleOnRN</code> from <code>react-native-worklets</code></td></tr>
+<tr><td><code>scheduleOnRN</code> per frame</td><td><code>onEnd</code>, or <code>useAnimatedReaction</code> at a threshold</td></tr>
+<tr><td>Reading or writing a shared value during render</td><td><code>.get()</code> / <code>.set()</code> in worklets, handlers, effects</td></tr>
+<tr><td>Core <code>Animated</code> for anything a finger touches</td><td>Reanimated</td></tr>
+<tr><td>Animating <code>height</code> / <code>width</code> / <code>margin</code> / <code>flex</code> / <code>top</code></td><td><code>transform</code> + <code>opacity</code> (absolute, childless elements exempt)</td></tr>
+<tr><td>Animating <code>BlurView</code> intensity or Android <code>elevation</code></td><td>crossfade a static layer</td></tr>
+<tr><td><code>entering</code> on a virtualized list row</td><td>animate the container, or <code>itemLayoutAnimation</code></td></tr>
+<tr><td>A screen transition rebuilt in JS</td><td>native stack <code>animation</code></td></tr>
+<tr><td>Sliding between tabs</td><td><code>animation: &#39;none&#39;</code></td></tr>
+<tr><td><code>Easing.in(...)</code> on a UI element</td><td><code>Easing.bezier(0.23, 1, 0.32, 1)</code></td></tr>
+<tr><td><code>&#39;cubic-bezier(...)&#39;</code> in a Reanimated CSS style</td><td><code>cubicBezier(...)</code> from <code>react-native-reanimated</code></td></tr>
+<tr><td><code>scale(0)</code> entrance</td><td><code>scale(0.95)</code> + <code>opacity: 0</code></td></tr>
+<tr><td>Distance-only dismissal threshold</td><td>velocity <strong>or</strong> distance — a flick is enough</td></tr>
+<tr><td>Hard stop at a boundary</td><td>rubber-band resistance</td></tr>
+<tr><td>A haptic per frame, or as the only feedback</td><td>one per commit, always paired with a visual</td></tr>
+<tr><td>Judging feel in Expo Go or the simulator</td><td>release build, slowest supported device</td></tr>
+</tbody></table>
+<h4>Output</h4>
+<p>Write the code. Then, in at most a few lines:</p>
+<ul>
+<li><strong>The gate result</strong> — frequency tier and named purpose. Say what you rejected and why.</li>
+<li><strong>The ingredients</strong> — tool, properties, spring or curve + duration, thread.</li>
+<li><strong>What to feel-check on device</strong> — gestures, velocity handoff and haptic timing cannot be judged from code. Name what to try: flick it, interrupt it mid-flight, reverse it, run it on the slowest Android you have.</li>
+</ul>
+<p>The code is the deliverable. Don&#39;t pad it into a report.</p>
+<h4>Tone</h4>
+<p>Opinionated and brief. When the honest answer is &quot;this shouldn&#39;t animate,&quot; or &quot;this needs a real device before I can tell you if it&#39;s right,&quot; give it.</p>
+<h4>Submitting Feedback</h4>
+<p>If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:</p>
+<p><pre><code>npx --yes @expo/agent-cli@latest feedback --category skills --subject &quot;expo-animation&quot; &quot;&lt;actionable feedback&gt;&quot;</code></pre></p>
+<p>Only submit when you have something specific and actionable to report. Include as much relevant context as possible.</p>
+<p>If an agent repeatedly fails at an Expo task or the user has to step in, submit a brief report of the task, expected result, and what went wrong using <code>--category evals</code> and the relevant Expo package or command as <code>--subject</code>.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Expo (650 Industries)</strong> in
+        <a href="https://github.com/expo/skills" rel="noopener">expo/skills</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-simplification</span>
+    <span class="r-desc">Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/constraint-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="constraint-driven-development establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in constraints.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">constraint-driven-development</span>
+    <span class="r-desc">Establishes a project&#39;s quality bar as a written contract and stops agents quietly lowering it. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says &quot;set up constraints&quot; or &quot;define our standards&quot;, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don&#39;t know what number to pick, or when an agent writes more code than anyone will read.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/context-engineering/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="context-engineering optimizes agent context setup. use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">context-engineering</span>
+    <span class="r-desc">Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/doubt-driven-development/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="doubt-driven-development subjects every non-trivial decision to a fresh-context adversarial review before it stands. use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">doubt-driven-development</span>
+    <span class="r-desc">Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/addyosmani/idea-refine/index.html"
+     data-source="addyosmani"
+     data-category="general"
+     data-search="idea-refine refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;. general  addyosmani/agent-skills">
+  <span>
+    <span class="r-name">idea-refine</span>
+    <span class="r-desc">Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on &quot;ideate&quot;, &quot;refine this idea&quot;, or &quot;stress-test my plan&quot;.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add expo/expo-animation</code>
+  <button type="button" data-copy="npx aidentity add expo/expo-animation" aria-label="Copy install expo-animation">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/expo/skills" rel="noopener">expo/skills</a></dd></div>
+          <div><dt>Author</dt><dd>Expo (650 Industries)</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
+          <div><dt>Category</dt><dd>general</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">expo/expo-animation</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/expo/expo-animation/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

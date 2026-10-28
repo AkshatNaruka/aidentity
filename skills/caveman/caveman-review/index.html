@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>caveman-review — Aidentity</title>
+<meta name="description" content="Compressed code review - one line per finding with location, problem and fix. Use for /caveman-review, &quot;review this PR&quot;, or &quot;review the diff&quot;.">
+<link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-review/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="caveman-review — Aidentity">
+<meta property="og:description" content="Compressed code review - one line per finding with location, problem and fix. Use for /caveman-review, &quot;review this PR&quot;, or &quot;review the diff&quot;.">
+<meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-review/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"caveman-review","description":"Compressed code review - one line per finding with location, problem and fix. Use for /caveman-review, \"review this PR\", or \"review the diff\".","url":"https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-review/","author":{"@type":"Person","name":"Julius Brussee"},"license":"Apache-2.0","isPartOf":{"@type":"WebSite","name":"Aidentity","url":"https://akshatnaruka.github.io/aidentity"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark" href="../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../../../skills/index.html">Browse</a>
+      <a href="../../../sources/index.html">Sources</a>
+      <a href="../../../about/index.html">About</a>
+      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../../skills/index.html">Skills</a><span>/</span><a href="../../../skills/index.html?category=code-review">code-review</a><span>/</span>caveman-review
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">JuliusBrussee/caveman · Apache-2.0</p>
+      <h1>caveman-review</h1>
+      <p class="summary">Compressed code review - one line per finding with location, problem and fix. Use for /caveman-review, &quot;review this PR&quot;, or &quot;review the diff&quot;.</p>
+
+      <div class="tags" style="margin-top:20px">
+        <a class="tag" href="../../../skills/index.html?q=code-review">code-review</a>
+        <span class="tag ok">stable</span>
+      </div>
+
+      <h2>Contents</h2>
+      <div class="skill-content"><p>Write code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing.</p>
+<h4>Rules</h4>
+<p><strong>Format:</strong> <code>L&lt;line&gt;: &lt;problem&gt;. &lt;fix&gt;.</code> — or <code>&lt;file&gt;:L&lt;line&gt;: ...</code> when reviewing multi-file diffs.</p>
+<p><strong>Severity prefix (optional, when mixed):</strong></p>
+<ul>
+<li><code>🔴 bug:</code> — broken behavior, will cause incident</li>
+<li><code>🟡 risk:</code> — works but fragile (race, missing null check, swallowed error)</li>
+<li><code>🔵 nit:</code> — style, naming, micro-optim. Author can ignore</li>
+<li><code>❓ q:</code> — genuine question, not a suggestion</li>
+</ul>
+<p><strong>Drop:</strong></p>
+<ul>
+<li>&quot;I noticed that...&quot;, &quot;It seems like...&quot;, &quot;You might want to consider...&quot;</li>
+<li>&quot;This is just a suggestion but...&quot; — use <code>nit:</code> instead</li>
+<li>&quot;Great work!&quot;, &quot;Looks good overall but...&quot; — say it once at the top, not per comment</li>
+<li>Restating what the line does — the reviewer can read the diff</li>
+<li>Hedging (&quot;perhaps&quot;, &quot;maybe&quot;, &quot;I think&quot;) — if unsure use <code>q:</code></li>
+</ul>
+<p><strong>Keep:</strong></p>
+<ul>
+<li>Exact line numbers</li>
+<li>Exact symbol/function/variable names in backticks</li>
+<li>Concrete fix, not &quot;consider refactoring this&quot;</li>
+<li>The <em>why</em> if the fix isn&#39;t obvious from the problem statement</li>
+</ul>
+<h4>Examples</h4>
+<p>❌ &quot;I noticed that on line 42 you&#39;re not checking if the user object is null before accessing the email property. This could potentially cause a crash if the user is not found in the database. You might want to add a null check here.&quot;</p>
+<p>✅ <code>L42: 🔴 bug: user can be null after .find(). Add guard before .email.</code></p>
+<p>❌ &quot;It looks like this function is doing a lot of things and might benefit from being broken up into smaller functions for readability.&quot;</p>
+<p>✅ <code>L88-140: 🔵 nit: 50-line fn does 4 things. Extract validate/normalize/persist.</code></p>
+<p>❌ &quot;Have you considered what happens if the API returns a 429? I think we should probably handle that case.&quot;</p>
+<p>✅ <code>L23: 🟡 risk: no retry on 429. Wrap in withBackoff(3).</code></p>
+<h4>Auto-Clarity</h4>
+<p>Drop terse mode for: security findings (CVE-class bugs need full explanation + reference), architectural disagreements (need rationale, not just a one-liner), and onboarding contexts where the author is new and needs the &quot;why&quot;. In those cases write a normal paragraph, then resume terse for the rest.</p>
+<h4>Boundaries</h4>
+<p>Reviews only — does not write the code fix, does not approve/request-changes, does not run linters. Output the comment(s) ready to paste into the PR. &quot;stop caveman-review&quot; or &quot;normal mode&quot;: revert to verbose review style.</p></div>
+
+      <h2>Provenance</h2>
+      <p class="prose">
+        Authored by <strong>Julius Brussee</strong> in
+        <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a>.
+        The content is mirrored here under its upstream license.
+      </p>
+
+      <h2>Related</h2>
+      <div class="rows">
+        <a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
+     data-source="addyosmani"
+     data-category="code-review"
+     data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
+  <span>
+    <span class="r-name">code-review-and-quality</span>
+    <span class="r-desc">Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.</span>
+  </span>
+  <span class="r-src">addyosmani/agent-skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/mattpocock/engineering/code-review/index.html"
+     data-source="mattpocock"
+     data-category="code-review"
+     data-search="code-review review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: standards (does the code follow this repo&#39;s documented coding standards?) and spec (does the code match what the originating issue/spec asked for?). runs both reviews in parallel sub-agents and reports them side by side. use when the user wants to review a branch, a pr, work-in-progress changes, or asks to &quot;review since x&quot;. code-review code-review mattpocock/skills">
+  <span>
+    <span class="r-name">code-review</span>
+    <span class="r-desc">Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo&#39;s documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to &quot;review since X&quot;.</span>
+  </span>
+  <span class="r-src">mattpocock/skills</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/receiving-code-review/index.html"
+     data-source="obra-superpowers"
+     data-category="code-review"
+     data-search="receiving-code-review use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation code-review code-review obra/superpowers">
+  <span>
+    <span class="r-name">receiving-code-review</span>
+    <span class="r-desc">Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/obra-superpowers/requesting-code-review/index.html"
+     data-source="obra-superpowers"
+     data-category="code-review"
+     data-search="requesting-code-review use when completing tasks, implementing major features, or before merging to verify work meets requirements code-review code-review obra/superpowers">
+  <span>
+    <span class="r-name">requesting-code-review</span>
+    <span class="r-desc">Use when completing tasks, implementing major features, or before merging to verify work meets requirements</span>
+  </span>
+  <span class="r-src">obra/superpowers</span>
+  <span class="r-lic">MIT</span>
+</a>
+<a class="row" href="../../../skills/caveman/cavecrew/index.html"
+     data-source="caveman"
+     data-category="general"
+     data-search="cavecrew when to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline or using `explore`. their output is compressed, so main context lasts longer. general  juliusbrussee/caveman">
+  <span>
+    <span class="r-name">cavecrew</span>
+    <span class="r-desc">When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline or using `Explore`. Their output is compressed, so main context lasts longer.</span>
+  </span>
+  <span class="r-src">JuliusBrussee/caveman</span>
+  <span class="r-lic">Apache-2.0</span>
+</a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Install</h2>
+        <div class="cmd">
+  <span class="prompt" aria-hidden="true">$</span>
+  <code>npx aidentity add caveman/caveman-review</code>
+  <button type="button" data-copy="npx aidentity add caveman/caveman-review" aria-label="Copy install caveman-review">copy</button>
+</div>
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Source</dt><dd><a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a></dd></div>
+          <div><dt>Author</dt><dd>Julius Brussee</dd></div>
+          <div><dt>License</dt><dd>Apache-2.0</dd></div>
+          <div><dt>Category</dt><dd>code-review</dd></div>
+          <div><dt>Status</dt><dd>stable</dd></div>
+          <div><dt>Checked</dt><dd>2026-10-28</dd></div>
+          <div><dt>ID</dt><dd class="mono" style="font-size:11px">caveman/caveman-review</dd></div>
+        </dl>
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/caveman/caveman-review/SKILL.md" rel="noopener">View file ↗</a>
+        
+      </div>
+    </aside>
+  </article>
+</div>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-10-28. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+    <p style="margin:0"><a href="../../../skills/index.html">Browse</a> · <a href="../../../sources/index.html">Sources</a> · <a href="../../../about/index.html">About</a> · <a href="../../../registry.json">registry.json</a> · <a href="../../../llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>
