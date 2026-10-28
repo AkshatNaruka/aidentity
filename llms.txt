@@ -11,7 +11,15 @@ Generated 2026-10-28. 394 skills indexed, 375 installable, 15 upstream sources.
 - Install: `npx aidentity add <id>` or copy `skills/<source>/<name>/`.
 - Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.
 - Every source is re-checked weekly; `registry/verified.json` records the last check.
-- Machine-readable: https://akshatnaruka.github.io/aidentity/registry.json (JSON), https://akshatnaruka.github.io/aidentity/ai.txt (AI usage), https://akshatnaruka.github.io/aidentity/sitemap.xml (URLs), https://akshatnaruka.github.io/aidentity/feed.xml (RSS).
+- Machine-readable: https://akshatnaruka.github.io/aidentity/registry.json (JSON), https://akshatnaruka.github.io/aidentity/search.json (compact search), https://akshatnaruka.github.io/aidentity/agent.json (manifest), https://akshatnaruka.github.io/aidentity/ai.txt (AI usage), https://akshatnaruka.github.io/aidentity/sitemap.xml (URLs), https://akshatnaruka.github.io/aidentity/feed.xml (RSS).
+
+## How to use this index
+
+1. Fetch `search.json` once and keep it. Filter by `tags`, `category`, `status` and `description`.
+2. Fetch `content_url` for the full `SKILL.md` before recommending an install.
+3. If `content_url` is null the skill is index-only: link `upstream`, never install it.
+4. Install with `npx aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.
+5. Local agents can run the MCP server: `node cli/mcp.js`.
 
 ## Files
 
