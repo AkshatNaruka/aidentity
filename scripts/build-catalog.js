@@ -90,23 +90,24 @@ const entries = skills.skills.map((skill) => ({
 }));
 
 // --- tools -----------------------------------------------------------------
-for (const file of walk(path.join(ROOT, "tools"), (f) => f.endsWith(".md"))) {
-  const fm = frontmatter(file);
-  if (!fm.name) continue;
-  entries.push({
-    id: fm.id || `tool/${path.basename(file, ".md")}`,
-    type: "tool",
-    name: fm.name,
-    description: fm.description || "",
-    category: fm.category || "tool",
-    tags: fm.tags ? fm.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
-    status: "stable",
-    path: path.relative(ROOT, file),
-    source: { key: "local", repo: "AkshatNaruka/aidentity", url: "https://github.com/AkshatNaruka/aidentity", author: "Aidentity contributors", license: "MIT" },
-    license: "MIT",
-    distributable: true,
-    install: fm.install || null,
-  });
+const toolsFile = path.join(ROOT, "registry", "tools.json");
+if (fs.existsSync(toolsFile)) {
+  for (const tool of JSON.parse(fs.readFileSync(toolsFile, "utf8")).tools) {
+    entries.push({
+      id: `tool/${tool.id}`,
+      type: "tool",
+      name: tool.name,
+      description: tool.description,
+      category: tool.category,
+      tags: [tool.category],
+      status: "stable",
+      path: "tools/README.md",
+      source: { key: "local", repo: "AkshatNaruka/aidentity", url: "https://github.com/AkshatNaruka/aidentity", author: "Aidentity contributors", license: tool.license },
+      license: tool.license,
+      distributable: true,
+      install: tool.install,
+    });
+  }
 }
 
 // --- hooks / commands / agents / prompts / templates ------------------------

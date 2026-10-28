@@ -1,0 +1,151 @@
+{
+  "$comment": "Canonical MCP tool catalog. tools/README.md is generated from this file by scripts/build-tools-doc.js. Platform snippets are the same command expressed in each client's config format.",
+  "version": "1.0.0",
+  "generated_at": "2026-10-28",
+  "tools": [
+    {
+      "id": "playwright-mcp",
+      "name": "Playwright MCP",
+      "category": "browser-automation",
+      "url": "https://github.com/microsoft/playwright-mcp",
+      "license": "Apache-2.0",
+      "description": "Drive a real browser through accessibility snapshots instead of screenshots.",
+      "when_to_use": "Use when an agent must click through a flow, fill a form, verify a UI change, or scrape a page that needs JavaScript. Prefer it over screenshot-based tools: the agent gets a structured tree it can reason about, not pixels.",
+      "install": "npx -y @playwright/mcp@latest",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "env": []
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "name": "Chrome DevTools MCP",
+      "category": "browser-automation",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "license": "Apache-2.0",
+      "description": "Inspect console, network, performance traces and DOM from a live Chrome session.",
+      "when_to_use": "Use for debugging a running app: console errors, failed requests, layout shifts, performance traces. Pair with Playwright MCP when you need both interaction and diagnostics.",
+      "install": "npx -y chrome-devtools-mcp@latest",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "env": []
+    },
+    {
+      "id": "github-mcp",
+      "name": "GitHub MCP Server",
+      "category": "github",
+      "url": "https://github.com/github/github-mcp-server",
+      "license": "MIT",
+      "description": "Read repositories, issues, pull requests and actions through the GitHub API.",
+      "when_to_use": "Use when the task spans more than the local checkout: triaging issues, reviewing PRs, reading CI logs, or opening a PR. Needs a token with the minimum scopes for the repositories involved.",
+      "install": "docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server",
+      "command": ["docker", "run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+      "env": ["GITHUB_PERSONAL_ACCESS_TOKEN"]
+    },
+    {
+      "id": "postgres-mcp",
+      "name": "Postgres MCP Pro",
+      "category": "databases",
+      "url": "https://github.com/crystaldba/postgres-mcp",
+      "license": "MIT",
+      "description": "Inspect schemas, run read-only queries, and get index and health advice.",
+      "when_to_use": "Use when the agent needs to understand a real database rather than guess at the schema: migrations, slow queries, index design, or data-shape checks. Point it at a read replica where possible.",
+      "install": "npx -y @crystaldba/postgres-mcp --access-mode=restricted",
+      "command": ["npx", "-y", "@crystaldba/postgres-mcp", "--access-mode=restricted"],
+      "env": ["DATABASE_URI"]
+    },
+    {
+      "id": "supabase-mcp",
+      "name": "Supabase MCP",
+      "category": "databases",
+      "url": "https://github.com/supabase-community/supabase-mcp",
+      "license": "Apache-2.0",
+      "description": "Manage Supabase projects: SQL, migrations, logs, storage and edge functions.",
+      "when_to_use": "Use when the project is on Supabase and the task touches schema, auth, storage or edge functions. Scope the token to one project; do not hand it an organization-wide key.",
+      "install": "npx -y @supabase/mcp-server-supabase@latest --project-ref=<ref>",
+      "command": ["npx", "-y", "@supabase/mcp-server-supabase@latest", "--project-ref=<ref>"],
+      "env": ["SUPABASE_ACCESS_TOKEN"]
+    },
+    {
+      "id": "context7",
+      "name": "Context7",
+      "category": "docs-search",
+      "url": "https://github.com/upstash/context7",
+      "license": "MIT",
+      "description": "Fetch version-specific documentation for libraries instead of relying on model memory.",
+      "when_to_use": "Use whenever an API may have changed since training: framework routers, SDK methods, config formats. It returns current docs and examples, which reduces hallucinated APIs.",
+      "install": "npx -y @upstash/context7-mcp",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+      "env": []
+    },
+    {
+      "id": "exa-mcp",
+      "name": "Exa MCP",
+      "category": "docs-search",
+      "url": "https://github.com/exa-labs/exa-mcp-server",
+      "license": "MIT",
+      "description": "Semantic web search with full-page extraction.",
+      "when_to_use": "Use for research that needs primary sources: release notes, benchmarks, competitor docs. Better than a keyword search when the query is conceptual.",
+      "install": "npx -y exa-mcp-server",
+      "command": ["npx", "-y", "exa-mcp-server"],
+      "env": ["EXA_API_KEY"]
+    },
+    {
+      "id": "figma-mcp",
+      "name": "Figma Context MCP",
+      "category": "design",
+      "url": "https://github.com/GLips/Figma-Context-MCP",
+      "license": "MIT",
+      "description": "Expose Figma file structure, components and styles to the agent.",
+      "when_to_use": "Use when implementing a design that exists in Figma. The agent gets node IDs, layout, tokens and text content instead of interpreting a screenshot.",
+      "install": "npx -y figma-developer-mcp --figma-api-key=<key> --stdio",
+      "command": ["npx", "-y", "figma-developer-mcp", "--stdio"],
+      "env": ["FIGMA_API_KEY"]
+    },
+    {
+      "id": "cloudflare-mcp",
+      "name": "Cloudflare MCP",
+      "category": "deploy",
+      "url": "https://github.com/cloudflare/mcp-server-cloudflare",
+      "license": "Apache-2.0",
+      "description": "Inspect and operate Workers, KV, R2, D1 and DNS.",
+      "when_to_use": "Use for deploy-adjacent work on Cloudflare: checking a Worker, reading logs, inspecting bindings. Keep the token scoped to the account and environment you are actually changing.",
+      "install": "npx -y @cloudflare/mcp-server-cloudflare",
+      "command": ["npx", "-y", "@cloudflare/mcp-server-cloudflare"],
+      "env": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
+    },
+    {
+      "id": "vercel-mcp",
+      "name": "Vercel MCP",
+      "category": "deploy",
+      "url": "https://github.com/vercel/mcp-adapter",
+      "license": "Apache-2.0",
+      "description": "Read deployments, logs and project configuration from Vercel.",
+      "when_to_use": "Use after a deploy fails or when the agent needs to confirm what is actually running. Read-only is usually enough; avoid granting deploy rights to an autonomous loop.",
+      "install": "npx -y @vercel/mcp-adapter",
+      "command": ["npx", "-y", "@vercel/mcp-adapter"],
+      "env": ["VERCEL_TOKEN"]
+    },
+    {
+      "id": "filesystem-mcp",
+      "name": "Filesystem MCP",
+      "category": "files",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+      "license": "MIT",
+      "description": "Scoped read/write access to a directory tree.",
+      "when_to_use": "Use when the agent must work across a directory the host tool does not already expose, or when you want an explicit allowlist. Pass the narrowest directory that solves the task.",
+      "install": "npx -y @modelcontextprotocol/server-filesystem <path>",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "<path>"],
+      "env": []
+    },
+    {
+      "id": "sequential-thinking",
+      "name": "Sequential Thinking",
+      "category": "reasoning",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+      "license": "MIT",
+      "description": "A scratchpad tool for multi-step reasoning with revision.",
+      "when_to_use": "Use for planning or diagnosis where the agent would otherwise rush. It is not a substitute for reading the code; it is a place to keep the plan visible and revisable.",
+      "install": "npx -y @modelcontextprotocol/server-sequential-thinking",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": []
+    }
+  ]
+}
