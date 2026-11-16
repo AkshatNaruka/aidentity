@@ -37,19 +37,43 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-head">
-  <div class="wrap">
-    <a class="wordmark" href="../../../../index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="../../../../setup/index.html">Setup</a>
-      <a href="../../../../skills/index.html">Browse</a>
-      <a href="../../../../playbooks/index.html">Playbooks</a>
-      <a href="../../../../guides/index.html">Guides</a>
-      <a href="../../../../sources/index.html">Sources</a>
-      <a href="../../../../for-agents/index.html">Agents</a>
-      <a href="../../../../about/index.html">About</a>
-      <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener">GitHub</a>
-    </nav>
+<header class="site-head" id="site-head">
+  <div class="wrap site-head-inner">
+    <div class="site-brand">
+      <a class="wordmark" href="../../../../index.html">
+        <span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span>
+      </a>
+      <span class="live-pill" title="526 verified skills, 100% SHA-256 integrity checked">
+        <span class="live-beacon" aria-hidden="true"></span>
+        <span class="live-text">526 verified</span>
+      </span>
+    </div>
+
+    <div class="site-nav-group">
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="../../../../setup/index.html">Setup</a>
+        <a href="../../../../skills/index.html">Browse</a>
+        <a href="../../../../playbooks/index.html">Playbooks</a>
+        <a href="../../../../guides/index.html">Guides</a>
+        <a href="../../../../sources/index.html">Sources</a>
+        <a href="../../../../for-agents/index.html">Agents</a>
+        <a href="../../../../about/index.html">About</a>
+        <a href="https://github.com/AkshatNaruka/aidentity" rel="noopener" target="_blank" class="nav-github">
+          <span>GitHub</span>
+          <span class="nav-arrow" aria-hidden="true">↗</span>
+        </a>
+      </nav>
+
+      <button type="button" class="nav-search-trigger" id="nav-search-trigger" aria-label="Quick Search (/ or ⌘K)">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <span class="search-label">Search</span>
+        <kbd class="search-kbd">/</kbd>
+      </button>
+
+      <button type="button" class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 </header>
 <main id="main">
@@ -320,10 +344,75 @@ kubectl get vpa {deployment_name}-vpa -o jsonpath=&#39;{.status.recommendation}&
 </div>
 
 </main>
-<footer class="site-foot">
-  <div class="wrap">
-    <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-11-16. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="../../../../setup/index.html">Setup</a> · <a href="../../../../skills/index.html">Browse</a> · <a href="../../../../playbooks/index.html">Playbooks</a> · <a href="../../../../guides/index.html">Guides</a> · <a href="../../../../sources/index.html">Sources</a> · <a href="../../../../about/index.html">About</a> · <a href="../../../../support/index.html">Support</a> · <a href="../../../../pricing.md">pricing.md</a> · <a href="../../../../okf/index.md">okf/</a> · <a href="../../../../registry.json">registry.json</a> · <a href="../../../../llms.txt">llms.txt</a> · <a href="../../../../feed.xml">RSS</a></p>
+<footer class="site-foot" id="site-foot">
+  <canvas id="footer-shader-canvas" class="footer-shader-canvas" aria-hidden="true"></canvas>
+  <div class="footer-overlay" aria-hidden="true"></div>
+  <div class="footer-watermark" aria-hidden="true">AIDENTITY</div>
+  <div class="wrap footer-wrap">
+    <div class="footer-grid">
+      <div class="footer-col footer-col-brand">
+        <div class="footer-brand-title">
+          <span class="dot" aria-hidden="true"></span><strong>aidentity</strong>
+        </div>
+        <p class="footer-tagline">
+          The verified registry of AI agent skills, playbooks, and curricula. Every file cryptographically verified with SHA-256 digests and validated against SPDX open-source licenses.
+        </p>
+        <div class="footer-chips">
+          <span class="footer-chip">526 Skills</span>
+          <span class="footer-chip">21 Roles</span>
+          <span class="footer-chip">6 Tracks</span>
+          <span class="footer-chip">100% Safe</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Registry</h4>
+        <ul class="footer-links">
+          <li><a href="../../../../setup/index.html">Setup Generator (5 Qs)</a></li>
+          <li><a href="../../../../skills/index.html">Browse All 526 Skills</a></li>
+          <li><a href="../../../../playbooks/index.html">Role Playbooks &amp; Blueprints</a></li>
+          <li><a href="../../../../playbooks/index.html#courses">Guided Learning Tracks</a></li>
+          <li><a href="../../../../guides/index.html">Engineering Guides</a></li>
+          <li><a href="../../../../sources/index.html">Sources &amp; Authors (25)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Agents &amp; Formats</h4>
+        <ul class="footer-links">
+          <li><a href="../../../../for-agents/index.html">Agent Instructions</a></li>
+          <li><a href="../../../../llms.txt">llms.txt (Full Index Context)</a></li>
+          <li><a href="../../../../agent.json">agent.json Discovery</a></li>
+          <li><a href="../../../../security.json">security.json Digests</a></li>
+          <li><a href="../../../../catalog.json">catalog.json Schema</a></li>
+          <li><a href="../../../../feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Integrity &amp; Open Source</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/AkshatNaruka/aidentity" rel="noopener" target="_blank">GitHub Repository ↗</a></li>
+          <li><a href="../../../../about/index.html">About &amp; Architecture</a></li>
+          <li><a href="../../../../about/index.html#licensing">SPDX Licensing Notice</a></li>
+          <li><a href="../../../../security.json">Threat Gate &amp; Audit</a></li>
+          <li><a href="../../../../pricing.md">Zero-Cost Model (Free/MIT)</a></li>
+          <li><a href="../../../../support/index.html">Support &amp; Community</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-16. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../../about/index.html#licensing">licensing</a>.</p>
+      </div>
+      <div class="footer-actions">
+        <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
+          <span>Back to top</span>
+          <span class="arrow" aria-hidden="true">&uarr;</span>
+        </button>
+      </div>
+    </div>
   </div>
 </footer>
 <script src="../../../../assets/app.js" defer></script>
