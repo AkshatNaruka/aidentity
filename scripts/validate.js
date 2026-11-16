@@ -124,7 +124,45 @@ if (fs.existsSync(toolsFile)) {
   }
 }
 
-// 6 — catalog freshness
+// 6 — roles & setup prompts
+const rolesFile = path.join(ROOT, "roles", "roles.json");
+if (fs.existsSync(rolesFile)) {
+  const rolesData = JSON.parse(fs.readFileSync(rolesFile, "utf8"));
+  const knownSkills = new Set(registry.skills.filter((s) => s.distributable).map((s) => s.id));
+  const roleSlugs = new Set();
+  for (const role of rolesData.roles || []) {
+    if (roleSlugs.has(role.slug)) fail(`duplicate role slug: ${role.slug}`);
+    roleSlugs.add(role.slug);
+    if (!Array.isArray(role.skills) || role.skills.length < 4) {
+      fail(`role ${role.slug}: must specify at least 4 skills`);
+    }
+    for (const id of role.skills || []) {
+      if (!knownSkills.has(id)) fail(`role ${role.slug}: unknown or non-distributable skill "${id}"`);
+    }
+    for (const rel of [...(role.rules || []), ...(role.agents || []), ...(role.commands || []), ...(role.hooks || [])]) {
+      if (!fs.existsSync(path.join(ROOT, rel))) fail(`role ${role.slug}: missing referenced file "${rel}"`);
+    }
+  }
+}
+
+// 7 — security verification & setup prompts freshness
+try {
+  execFileSync(process.execPath, [path.join(ROOT, "scripts", "scan-skills-security.js"), "--check"], {
+    stdio: "pipe",
+  });
+} catch {
+  fail("registry/security.json is stale or has security findings. Run: node scripts/scan-skills-security.js");
+}
+
+try {
+  execFileSync(process.execPath, [path.join(ROOT, "scripts", "build-setup-prompts.js"), "--check"], {
+    stdio: "pipe",
+  });
+} catch {
+  fail("prompts/setup/** is stale. Run: node scripts/build-setup-prompts.js");
+}
+
+// 8 — catalog freshness
 try {
   execFileSync(process.execPath, [path.join(ROOT, "scripts", "build-catalog.js"), "--check"], {
     stdio: "pipe",

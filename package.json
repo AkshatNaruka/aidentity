@@ -27,7 +27,14 @@
     "registry",
     "skills",
     "bundles",
+    "roles",
+    "rules",
+    "agents",
+    "commands",
+    "hooks",
+    "prompts/setup",
     "README.md",
+    "ROLES.md",
     "LICENSE"
   ],
   "engines": {
@@ -36,13 +43,17 @@
   "scripts": {
     "build": "node site/build.js",
     "registry": "node scripts/build-registry.js",
-    "validate": "node scripts/build-registry.js --check && node scripts/check-licenses.js",
+    "security": "node scripts/scan-skills-security.js",
+    "setup-prompts": "node scripts/build-setup-prompts.js",
+    "validate": "node scripts/build-registry.js --check && node scripts/scan-skills-security.js --check && node scripts/check-licenses.js && node scripts/validate.js",
     "notices": "node scripts/generate-notices.js",
     "verify": "node scripts/verify-sources.js",
     "serve": "node site/serve.js",
     "mcp": "node cli/mcp.js",
     "recommend": "node cli/index.js recommend",
-    "prepublishOnly": "node scripts/build-registry.js --check && node scripts/check-licenses.js && node scripts/validate.js"
+    "setup": "node cli/index.js setup",
+    "audit": "node cli/index.js audit",
+    "prepublishOnly": "node scripts/build-registry.js --check && node scripts/scan-skills-security.js --check && node scripts/check-licenses.js && node scripts/validate.js"
   },
   "funding": [
     {

@@ -5,6 +5,10 @@ cd "$(dirname "$0")/.."
 
 echo "→ registry"
 node scripts/build-registry.js --check
+echo "→ security"
+node scripts/scan-skills-security.js --check
+echo "→ setup prompts"
+node scripts/build-setup-prompts.js --check
 echo "→ catalog"
 node scripts/build-catalog.js --check
 echo "→ licenses"

@@ -6,8 +6,10 @@ Curated and consolidated prompt templates for AI agents.
 
 ```
 prompts/
-├── system/          # System prompts for different roles
-├── routing/         # Model routing prompts
+├── setup/           # One-shot role & profile setup prompts (Individual & Enterprise)
+│   ├── universal-individual.md
+│   ├── universal-enterprise.md
+│   └── roles/       # 20 role-specific setup prompts
 ├── domain/          # Domain-specific prompts
 │   ├── coding.md    # Code review, debugging, refactoring
 │   ├── analysis.md  # Data, document, market analysis
@@ -23,6 +25,9 @@ prompts/
 ### Quick Start
 
 ```bash
+# Generate or print a role setup prompt (Individual or Enterprise)
+npx aidentity setup software-engineer --profile enterprise --prompt
+
 # Use a coding prompt
 cat prompts/domain/coding.md | grep -A 10 "Code Review"
 

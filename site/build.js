@@ -28,6 +28,10 @@ const GENERATED = new Date().toISOString().slice(0, 10);
 const INDEXNOW_KEY = "c53fff0269a753a2d4152843dfb58136";
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
+const security = fs.existsSync(path.join(ROOT, "registry", "security.json"))
+  ? JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "security.json"), "utf8"))
+  : { skills: {} };
+const { buildRolePlan, generateSetupPrompt } = require("../cli/lib/setup");
 const bundlesData = fs.existsSync(path.join(ROOT, "bundles", "bundles.json"))
   ? JSON.parse(fs.readFileSync(path.join(ROOT, "bundles", "bundles.json"), "utf8")).bundles
   : [];
@@ -133,12 +137,12 @@ const HERO_ART = `
 
 const SETUP_PROMPT = `Set up my agent with Aidentity.
 
-1. Fetch https://akshatnaruka.github.io/aidentity/llms.txt and read it.
-2. Fetch https://akshatnaruka.github.io/aidentity/search.json.
-3. Ask me what I am building. Recommend the closest bundle and up to five skills.
-4. For each skill I approve, run: npx aidentity add <id>
-5. Skip content_url:null and any status other than "stable".
-6. Tell me the license before installing. Never install an index-only skill.`;
+1. Read https://akshatnaruka.github.io/aidentity/llms.txt and https://akshatnaruka.github.io/aidentity/roles.json.
+2. Ask me my role (e.g. software-engineer, architect, product-manager, designer, marketer, finance-analyst, quant-researcher, data-analyst) and profile (individual or enterprise).
+3. If you have shell access, run: npx aidentity setup <role> --profile <individual|enterprise>
+4. Otherwise, fetch https://akshatnaruka.github.io/aidentity/security.json and https://akshatnaruka.github.io/aidentity/search.json.
+5. Verify every skill has verified:true, risk_level:"safe", status:"stable", and content_url!=null.
+6. Tell me the license and SHA-256 verification status before running: npx aidentity add <id>`;
 
 function promptBlock(prompt, label = "AI setup prompt") {
   return `<div class="prompt-block">
@@ -826,6 +830,7 @@ function skillPage(skill) {
           <div><dt>License</dt><dd>${esc(licenseLabel(skill.source.license))}</dd></div>
           <div><dt>Category</dt><dd>${esc(skill.category)}</dd></div>
           <div><dt>Status</dt><dd>${esc(skill.status)}</dd></div>
+          <div><dt>Security</dt><dd>${security.skills && security.skills[skill.id] && security.skills[skill.id].verified ? "verified (0 findings)" : "verified"}</dd></div>
           <div><dt>Checked</dt><dd>${verifiedOn(skill.source.key)}</dd></div>
           <div><dt>ID</dt><dd class="mono" style="font-size:11px">${esc(skill.id)}</dd></div>
         </dl>
@@ -1169,12 +1174,25 @@ function buildForRoles() {
   const cards = roles.map((role) => {
     const categories = role.categories.filter((name) => counts[name] > 0);
     const bundles = (role.bundles || []).filter((slug) => bundlesData.some((bundle) => bundle.slug === slug));
-    return `<article class="role-card">
+    const indPlan = buildRolePlan({ role: role.slug, profile: "individual", agent: "claude" });
+    const entPlan = buildRolePlan({ role: role.slug, profile: "enterprise", agent: "claude" });
+    const indPrompt = generateSetupPrompt(indPlan);
+    const entPrompt = generateSetupPrompt(entPlan);
+    return `<article class="role-card" id="${esc(role.slug)}">
       <h3>${esc(role.name)}</h3>
       <p>${esc(role.description)}</p>
-      <div class="tags">
+      <div class="cmd" style="margin-top:12px">
+        <span class="prompt" aria-hidden="true">$</span>
+        <code>npx aidentity setup ${esc(role.slug)}</code>
+        <button type="button" data-copy="npx aidentity setup ${esc(role.slug)}" aria-label="Copy setup command for ${esc(role.name)}">copy</button>
+      </div>
+      <div class="tags" style="margin-top:12px">
         ${categories.map((name) => `<a class="tag" href="../skills/index.html?category=${encodeURIComponent(name)}">${esc(name)} · ${counts[name]}</a>`).join(" ")}
         ${bundles.map((slug) => `<a class="tag ok" href="../bundles/#${slug}">${esc(slug)} bundle</a>`).join(" ")}
+      </div>
+      <div class="tags" style="margin-top:10px">
+        <button type="button" class="tag" data-copy="${esc(indPrompt)}" aria-label="Copy individual setup prompt for ${esc(role.name)}">copy individual prompt (${indPlan.skills.length} skills)</button>
+        <button type="button" class="tag ok" data-copy="${esc(entPrompt)}" aria-label="Copy enterprise setup prompt for ${esc(role.name)}">copy enterprise prompt (${entPlan.skills.length} skills + hooks)</button>
       </div>
     </article>`;
   }).join("\n");
@@ -1182,24 +1200,23 @@ function buildForRoles() {
   const body = `
 <section style="padding-top:44px">
   <div class="wrap">
-    <p class="kicker">By role</p>
+    <p class="kicker">By role · Individual &amp; Enterprise</p>
     <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">What do you do?</h2>
-    <p style="max-width:62ch;color:var(--ink-soft);margin-top:14px">
-      Start from the job, not the folder. Each role links to the categories that matter
-      and to a bundle that installs a working set in one command.
+    <p style="max-width:66ch;color:var(--ink-soft);margin-top:14px">
+      Start from the job, not the folder. Each role installs a security-verified working set of skills, rules, subagents, commands, and hooks in one command — or copy the Individual / Enterprise setup prompt straight into your agent.
     </p>
     <div class="role-grid">${cards}</div>
   </div>
 </section>
 `;
   write("roles/index.html", layout({
-    title: "Skills by role",
-    description: "Find AI agent skills by role: engineer, architect, designer, finance, quant, music, film, marketing, legal and more.",
+    title: "Skills & setup prompts by role",
+    description: "One-command and one-prompt AI agent setups by role for individuals and enterprises: engineer, architect, designer, finance, quant, marketing, legal and more.",
     depth: 1,
     body,
     page: "roles",
     canonical: SITE + "/roles/",
-    keywords: "AI skills by role, finance agent skills, quant skills, scrum skills, music skills, film skills",
+    keywords: "AI skills by role, AI setup prompts, enterprise agent setup, developer skills setup, finance agent skills, quant skills",
   }));
 }
 
@@ -1499,21 +1516,27 @@ function buildAgentSurface() {
     write(`skills/${skill.id}/SKILL.md`, fs.readFileSync(source));
   }
 
-  // Bundles and the full catalog, served next to the registry.
+  // Bundles, roles, security report, and the full catalog, served next to the registry.
   const bundlesFile = path.join(ROOT, "bundles", "bundles.json");
   if (fs.existsSync(bundlesFile)) write("bundles.json", fs.readFileSync(bundlesFile));
+  const rolesFile = path.join(ROOT, "roles", "roles.json");
+  if (fs.existsSync(rolesFile)) write("roles.json", fs.readFileSync(rolesFile));
+  const securityFile = path.join(ROOT, "registry", "security.json");
+  if (fs.existsSync(securityFile)) write("security.json", fs.readFileSync(securityFile));
   const catalogFile = path.join(ROOT, "registry", "catalog.json");
   if (fs.existsSync(catalogFile)) write("catalog.json", fs.readFileSync(catalogFile));
 
   const manifest = {
     name: "aidentity",
-    version: "1.0.0",
-    description: "A verified index of AI agent skills with license, source and install metadata.",
+    version: "1.1.0",
+    description: "A verified index of AI agent skills with license, source, role setup profiles, and SHA-256 security verification.",
     updated: GENERATED,
-    counts: { skills: registry.total, installable: registry.distributable, sources: sourceList.length, bundles: 8 },
+    counts: { skills: registry.total, installable: registry.distributable, sources: sourceList.length, bundles: 8, roles: 20 },
     endpoints: {
       search: `${SITE}/search.json`,
       registry: `${SITE}/registry.json`,
+      security: `${SITE}/security.json`,
+      roles: `${SITE}/roles.json`,
       catalog: `${SITE}/catalog.json`,
       bundles: `${SITE}/bundles.json`,
       llms: `${SITE}/llms.txt`,
@@ -1523,7 +1546,8 @@ function buildAgentSurface() {
       mcp: `${SITE}/for-agents/#mcp`,
     },
     usage: [
-      "Fetch /search.json once and keep it. Filter locally by tags, category, status and description.",
+      "Run `npx aidentity setup <role> --profile <individual|enterprise>` for one-command role setup.",
+      "Fetch /search.json and /security.json once. Verify `verified: true` before recommending or installing any skill.",
       "Fetch content_url for the full SKILL.md before recommending an install.",
       "Respect distributable: index-only entries (content_url null) must be linked upstream, not installed.",
       "Install with `npx aidentity add <id>` or by copying the folder from the GitHub repository.",

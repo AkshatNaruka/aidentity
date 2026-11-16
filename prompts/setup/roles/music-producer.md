@@ -1,0 +1,130 @@
+---
+id: prompt/setup-music-producer
+name: Music producer Setup Prompt
+description: Initial AI agent setup prompt for Music producer (Individual & Enterprise profiles) — installs verified skills, rules, subagents, commands, and security hooks.
+category: setup
+tags: setup, role, music-producer, individual, enterprise
+---
+
+# Music producer — Initial Setup Prompts
+
+> **Role**: Music producer (`music-producer`)
+> **Focus**: Lyrics, song structure, mastering, album concepts and release assets.
+> **Categories**: `music`, `motion`
+> **Security**: All 11 recommended skills are scanned and verified (`0` critical findings).
+
+---
+
+## Quick CLI Setup
+
+```bash
+# Individual setup (skills + rules + subagents + safety hooks)
+npx aidentity setup music-producer --profile individual
+
+# Enterprise setup (adds security/supply-chain audit skills + full governance hooks)
+npx aidentity setup music-producer --profile enterprise
+
+# Print the copy-paste prompt in terminal
+npx aidentity setup music-producer --profile individual --prompt
+```
+
+---
+
+## Option A: Individual Setup Prompt
+
+Copy and paste into Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or Copilot:
+
+```markdown
+# Aidentity Setup Prompt — Music producer (Individual)
+
+Set up my AI agent environment for the **Music producer** role using the **Individual** profile.
+
+## 1. One-Command Automated Setup (Preferred)
+If you have shell access in this workspace, run:
+```bash
+npx aidentity setup music-producer --profile individual --agent claude
+```
+
+## 2. Security & Provenance Gate (Mandatory)
+Before installing or loading any skill, rule, or hook:
+1. Verify against `https://akshatnaruka.github.io/aidentity/security.json` (or local `registry/security.json`) that `verified === true` and `risk_level === "safe"`.
+2. Never install any skill where `distributable === false`, `content_url === null`, or `status !== "stable"`.
+3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
+4. **Individual Guardrails**: Enable `block-dangerous.js` and `scan-secrets.js` to prevent accidental destructive commands or credential leaks.
+
+## 3. Verified Skills for Music producer (7)
+Install with `npx aidentity add <id> --agent claude`:
+  - `jtydhr88-lyric-writing-skills/lw-song-intent` (MIT · security: verified · sha256:857c39644d93606e) — The gate you must pass before writing a single line (动笔前必填). Five questions that force an actual choice - which kind of song this is (attitudinal, situational, narrative, or expository, and why the default is not narrative), the one thing it says, who it is said to, at what moment, and the one photographable object that runs through it - with the failure mode each question catches, the downstream choices the song type fixes (person, voice, repetition budget), how to tell a real answer from a filled-in one, and why this gate exists at all (AI-written lyrics are not bad at words, they are written by nobody). Use when starting any lyric, when a draft feels generic but you cannot say why, when every song comes out as a story, when a song is trying to say two things, or when LYR-LINT check 1 fails. 立意、动笔前必填、歌的类型、态度型、情境型、叙事型、说理型、只说一件事、对谁说、锚定物件、重复预算、写不出来、太泛。
+  - `jtydhr88-lyric-writing-skills/lw-structure` (MIT · security: verified · sha256:40be2c1d6a541120) — The structural layer of a lyric (词的结构层) - what each section is for and what it must not say, which song form to pick, where the title lands and how often it comes back, and how line counts, line lengths and rhyme placement make a section feel finished or still owing something. Covers verse / pre-chorus / chorus / bridge / refrain functions, central versus developmental sections, AABA and verse-chorus and verse-refrain forms, the five structural parameters (balance, pace, flow, closure, closure type), the five hook-placement strategies, and the deliberate asymmetry that keeps a lyric from sounding machine-made. Use when laying out sections before writing a line, when a chorus does not feel like an arrival, when a bridge sounds like one more verse, when every section came out the same length, when deciding where the title goes, or when LYR-LINT check 3, 4 or 10 fails. 段落结构、曲式、副歌、bridge、hook、标题位置、句式、不对称、段落功能、AABA。
+  - `jtydhr88-lyric-writing-skills/lw-narrative` (MIT · security: verified · sha256:5007d9549699b7ce) — Who is speaking, when they are speaking, and how much they are allowed to know (歌词的叙事层). The three narrative fields every lyric must fill - point of view, tense anchor, and the one thing deliberately left unsaid - with the cost of each person, the risk of mixing pronouns mid-song and the few shifts that actually work, how present/past/future change the listener's distance, why a fixed moment limits what the speaker can know (write the symptom, not the conclusion), why a completed emotional arc (hurt - peace - blessing) is a machine fingerprint, and how a story lyric advances through scene, turn and cost. Use when a draft has no speaker, when you cannot tell who is being addressed, when pronouns drift between sections, when the timeline is half memory and half now, when a lyric resolves everything and leaves nothing hanging, when writing a story song, or when LYR-LINT check 5 or 6 fails. 视角、人称、时间、时态、留白、不解决、叙事、故事型歌词、没有说话人、谁在说话、情绪走完整。
+  - `jtydhr88-lyric-writing-skills/lw-imagery` (MIT · security: verified · sha256:91c87799e97967fe) — The imagery layer - how to find concrete nouns and make them a system (意象与具体名词). Object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct AI fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. Use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when LYR-LINT check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。
+  - `jtydhr88-lyric-writing-skills/lw-english` (MIT · security: verified · sha256:98a04b0665ca1910) — The English language layer for lyric writing (英文词的重音与节拍对齐). Word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence's intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and 'em do to the count; why the, of and and must not land on a downbeat; and the mistakes a Chinese-speaking writer makes in English. Use when writing or checking English lyrics, fitting English words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。
+  - `jtydhr88-lyric-writing-skills/lw-workflow` (MIT · security: verified · sha256:bd4a08c79070f9ce) — Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first - and their different stage tables, which skill to load for which task, the full-library boundary table, the LYR-SPEC gate rules, the external interface (what the spec hands out, what it reads if present, the six fields shared with the music side, the messages channel), and three checks (requests that are easy to misroute, whether a draft can be told apart from human-written lyrics, the tone check). Load this FIRST for any lyric writing request, before deciding which other skill to read. Use when starting a lyric, when fitting words to an existing melody or a melody to existing words, when unsure which skill owns a question, when a draft fails lint, or when handing the lyric on to composition, recording or scoring. 作词、歌词、填词、工作流、路由、该读哪个 skill、LYR-SPEC、先曲后词、先词后曲。
+  - `haidrrrry-claude-remotion-skill/remotion-motion-graphics` (MIT · security: verified · sha256:9e4a86a61f3acc92) — Create and edit professional motion graphics videos with Remotion (React-based video). Use this skill EVERY time the user wants to create a video, edit a video, animate something, build an intro/outro/logo animation, make a Reel/Short/promo/launch video, add text animations or captions to footage, composite images and B-roll into a video, or mentions Remotion, motion graphics, video rendering, or "make this video look better/less generic". Also trigger when editing an existing Remotion project or when the user complains their video looks basic, generic, or amateur — this skill contains the exact fixes. Always read this skill BEFORE writing any Remotion code.
+
+## 4. Coding & Workflow Rules
+Copy into your agent's rules directory or `AGENTS.md`:
+  - None required for this role (use project conventions)
+
+## 5. Scoped Subagents & Slash Commands
+- Subagents:
+  - `agents/doc-writer.md`
+  - `agents/planner.md`
+- Guardrail Hooks:
+  - `hooks/scan-secrets.js`
+  - `hooks/block-dangerous.js`
+```
+
+---
+
+## Option B: Enterprise Setup Prompt
+
+Copy and paste for team/organization standardization and strict security governance:
+
+```markdown
+# Aidentity Setup Prompt — Music producer (Enterprise)
+
+Set up my AI agent environment for the **Music producer** role using the **Enterprise** profile.
+
+## 1. One-Command Automated Setup (Preferred)
+If you have shell access in this workspace, run:
+```bash
+npx aidentity setup music-producer --profile enterprise --agent claude
+```
+
+## 2. Security & Provenance Gate (Mandatory)
+Before installing or loading any skill, rule, or hook:
+1. Verify against `https://akshatnaruka.github.io/aidentity/security.json` (or local `registry/security.json`) that `verified === true` and `risk_level === "safe"`.
+2. Never install any skill where `distributable === false`, `content_url === null`, or `status !== "stable"`.
+3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
+4. **Enterprise Governance**: Enable all pre-tool security hooks (`block-dangerous.js`, `scan-secrets.js`), post-edit formatting (`format-on-save.js`), and test verification (`test-on-stop.js`). Require security and supply-chain review before shipping.
+
+## 3. Verified Skills for Music producer (11)
+Install with `npx aidentity add <id> --agent claude`:
+  - `jtydhr88-lyric-writing-skills/lw-song-intent` (MIT · security: verified · sha256:857c39644d93606e) — The gate you must pass before writing a single line (动笔前必填). Five questions that force an actual choice - which kind of song this is (attitudinal, situational, narrative, or expository, and why the default is not narrative), the one thing it says, who it is said to, at what moment, and the one photographable object that runs through it - with the failure mode each question catches, the downstream choices the song type fixes (person, voice, repetition budget), how to tell a real answer from a filled-in one, and why this gate exists at all (AI-written lyrics are not bad at words, they are written by nobody). Use when starting any lyric, when a draft feels generic but you cannot say why, when every song comes out as a story, when a song is trying to say two things, or when LYR-LINT check 1 fails. 立意、动笔前必填、歌的类型、态度型、情境型、叙事型、说理型、只说一件事、对谁说、锚定物件、重复预算、写不出来、太泛。
+  - `jtydhr88-lyric-writing-skills/lw-structure` (MIT · security: verified · sha256:40be2c1d6a541120) — The structural layer of a lyric (词的结构层) - what each section is for and what it must not say, which song form to pick, where the title lands and how often it comes back, and how line counts, line lengths and rhyme placement make a section feel finished or still owing something. Covers verse / pre-chorus / chorus / bridge / refrain functions, central versus developmental sections, AABA and verse-chorus and verse-refrain forms, the five structural parameters (balance, pace, flow, closure, closure type), the five hook-placement strategies, and the deliberate asymmetry that keeps a lyric from sounding machine-made. Use when laying out sections before writing a line, when a chorus does not feel like an arrival, when a bridge sounds like one more verse, when every section came out the same length, when deciding where the title goes, or when LYR-LINT check 3, 4 or 10 fails. 段落结构、曲式、副歌、bridge、hook、标题位置、句式、不对称、段落功能、AABA。
+  - `jtydhr88-lyric-writing-skills/lw-narrative` (MIT · security: verified · sha256:5007d9549699b7ce) — Who is speaking, when they are speaking, and how much they are allowed to know (歌词的叙事层). The three narrative fields every lyric must fill - point of view, tense anchor, and the one thing deliberately left unsaid - with the cost of each person, the risk of mixing pronouns mid-song and the few shifts that actually work, how present/past/future change the listener's distance, why a fixed moment limits what the speaker can know (write the symptom, not the conclusion), why a completed emotional arc (hurt - peace - blessing) is a machine fingerprint, and how a story lyric advances through scene, turn and cost. Use when a draft has no speaker, when you cannot tell who is being addressed, when pronouns drift between sections, when the timeline is half memory and half now, when a lyric resolves everything and leaves nothing hanging, when writing a story song, or when LYR-LINT check 5 or 6 fails. 视角、人称、时间、时态、留白、不解决、叙事、故事型歌词、没有说话人、谁在说话、情绪走完整。
+  - `jtydhr88-lyric-writing-skills/lw-imagery` (MIT · security: verified · sha256:91c87799e97967fe) — The imagery layer - how to find concrete nouns and make them a system (意象与具体名词). Object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct AI fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. Use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when LYR-LINT check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。
+  - `jtydhr88-lyric-writing-skills/lw-english` (MIT · security: verified · sha256:98a04b0665ca1910) — The English language layer for lyric writing (英文词的重音与节拍对齐). Word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence's intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and 'em do to the count; why the, of and and must not land on a downbeat; and the mistakes a Chinese-speaking writer makes in English. Use when writing or checking English lyrics, fitting English words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。
+  - `jtydhr88-lyric-writing-skills/lw-workflow` (MIT · security: verified · sha256:bd4a08c79070f9ce) — Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first - and their different stage tables, which skill to load for which task, the full-library boundary table, the LYR-SPEC gate rules, the external interface (what the spec hands out, what it reads if present, the six fields shared with the music side, the messages channel), and three checks (requests that are easy to misroute, whether a draft can be told apart from human-written lyrics, the tone check). Load this FIRST for any lyric writing request, before deciding which other skill to read. Use when starting a lyric, when fitting words to an existing melody or a melody to existing words, when unsure which skill owns a question, when a draft fails lint, or when handing the lyric on to composition, recording or scoring. 作词、歌词、填词、工作流、路由、该读哪个 skill、LYR-SPEC、先曲后词、先词后曲。
+  - `haidrrrry-claude-remotion-skill/remotion-motion-graphics` (MIT · security: verified · sha256:9e4a86a61f3acc92) — Create and edit professional motion graphics videos with Remotion (React-based video). Use this skill EVERY time the user wants to create a video, edit a video, animate something, build an intro/outro/logo animation, make a Reel/Short/promo/launch video, add text animations or captions to footage, composite images and B-roll into a video, or mentions Remotion, motion graphics, video rendering, or "make this video look better/less generic". Also trigger when editing an existing Remotion project or when the user complains their video looks basic, generic, or amateur — this skill contains the exact fixes. Always read this skill BEFORE writing any Remotion code.
+  - `addyosmani/security-and-hardening` (MIT · security: verified · sha256:c4e213e9374f82e8) — Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.
+  - `trailofbits/supply-chain-risk-auditor` (CC-BY-SA-4.0 · security: verified · sha256:e8c5f983bb6ba819) — Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.
+  - `trailofbits/agentic-actions-auditor` (CC-BY-SA-4.0 · security: verified · sha256:c21aed572e34d6c6) — Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.
+  - `addyosmani/code-review-and-quality` (MIT · security: verified · sha256:6475fb1665945e2e) — Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+
+## 4. Coding & Workflow Rules
+Copy into your agent's rules directory or `AGENTS.md`:
+  - None required for this role (use project conventions)
+
+## 5. Scoped Subagents & Slash Commands
+- Subagents:
+  - `agents/doc-writer.md`
+  - `agents/planner.md`
+  - `agents/security-auditor.md`
+- Guardrail Hooks:
+  - `hooks/scan-secrets.js`
+  - `hooks/block-dangerous.js`
+  - `hooks/format-on-save.js`
+  - `hooks/test-on-stop.js`
+```

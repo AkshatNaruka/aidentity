@@ -7,6 +7,9 @@
  *   recommend(task, limit)
  *   get_skill(id)
  *   list_bundles()
+ *   list_roles()
+ *   setup_role(role, profile, task, platform, global, dry_run)
+ *   verify_skill_security(id)
  *   install_skill(id, platform, global, dry_run)
  *
  * Install is dry-run unless dry_run is explicitly false.
@@ -16,6 +19,14 @@ const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
 const { registry, bundles, search, recommend } = require("./lib/recommend");
+const {
+  rolesData,
+  securityData,
+  getSecurityRecord,
+  buildRolePlan,
+  generateSetupPrompt,
+  executeSetup,
+} = require("./lib/setup");
 
 const ROOT = path.join(__dirname, "..");
 const PLATFORMS = {
@@ -54,7 +65,7 @@ const TOOLS = [
   },
   {
     name: "get_skill",
-    description: "Get one skill with metadata and its full SKILL.md instructions.",
+    description: "Get one skill with metadata, security status, and its full SKILL.md instructions.",
     inputSchema: {
       type: "object",
       properties: { id: { type: "string", description: "Skill id, e.g. mattpocock/engineering/code-review" } },
@@ -67,9 +78,42 @@ const TOOLS = [
     inputSchema: { type: "object", properties: {} },
   },
   {
+    name: "list_roles",
+    description: "List all 20 job roles with their skills, rules, subagents, commands, and hooks.",
+    inputSchema: { type: "object", properties: {} },
+  },
+  {
+    name: "setup_role",
+    description:
+      "Generate a role-based setup plan and prompt (Individual or Enterprise profile), and optionally install skills, rules, subagents, commands, and hooks. Dry-run by default.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        role: { type: "string", description: "Role slug or alias, e.g. 'software-engineer', 'architect', 'product-manager', 'designer'" },
+        profile: { type: "string", enum: ["individual", "enterprise"], description: "Default 'individual'" },
+        task: { type: "string", description: "Optional specific project requirement to tailor skills" },
+        platform: { type: "string", enum: Object.keys(PLATFORMS), description: "Default 'claude'" },
+        global: { type: "boolean", description: "Install into home directory instead of project" },
+        dry_run: { type: "boolean", description: "Default true" },
+      },
+      required: ["role"],
+    },
+  },
+  {
+    name: "verify_skill_security",
+    description:
+      "Check the security verification report and SHA-256 digest for a specific skill or the entire registry.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "Optional skill id. Omit for registry-wide security summary." },
+      },
+    },
+  },
+  {
     name: "install_skill",
     description:
-      "Install a hosted skill into an agent's skills directory. Dry-run by default; pass dry_run:false to write.",
+      "Install a security-verified hosted skill into an agent's skills directory. Dry-run by default; pass dry_run:false to write.",
     inputSchema: {
       type: "object",
       properties: {
@@ -86,6 +130,7 @@ const TOOLS = [
 function getSkill(id) {
   const skill = registry.skills.find((entry) => entry.id === id);
   if (!skill) throw new Error(`unknown skill id: ${id}`);
+  const sec = getSecurityRecord(skill.id);
   let content = null;
   if (skill.distributable && skill.path) {
     const file = path.join(ROOT, skill.path);
@@ -100,6 +145,13 @@ function getSkill(id) {
     status: skill.status,
     license: skill.source.license,
     source: skill.source.repo,
+    security: {
+      status: sec.status,
+      verified: Boolean(sec.verified),
+      risk_level: sec.risk_level,
+      files_scanned: sec.files_scanned,
+      sha256: sec.sha256,
+    },
     install: skill.install,
     page: `https://akshatnaruka.github.io/aidentity/skills/${skill.id}/`,
     upstream: skill.upstream ? skill.upstream.url : skill.source.url,
@@ -114,15 +166,27 @@ function installSkill({ id, platform, global = false, dry_run = true }) {
   if (!skill.distributable || !skill.path) {
     throw new Error(`${id} is index-only (${skill.source.license}); install it from ${skill.upstream ? skill.upstream.url : skill.source.url}`);
   }
+  const sec = getSecurityRecord(skill.id);
+  if (!sec.verified) {
+    throw new Error(`security verification failed for ${id} (${sec.status}); installation blocked.`);
+  }
   const base = global
     ? path.join(process.env.HOME || process.env.USERPROFILE, PLATFORMS[platform])
     : path.join(process.cwd(), PLATFORMS[platform]);
   const destination = path.join(base, path.basename(skill.id));
-  if (dry_run) return { dry_run: true, source: path.dirname(skill.path), destination, skill: skill.id };
+  if (dry_run) {
+    return {
+      dry_run: true,
+      source: path.dirname(skill.path),
+      destination,
+      skill: skill.id,
+      security: { verified: true, sha256: sec.sha256 },
+    };
+  }
   if (fs.existsSync(destination)) throw new Error(`${destination} already exists`);
   fs.mkdirSync(base, { recursive: true });
   fs.cpSync(path.join(ROOT, path.dirname(skill.path)), destination, { recursive: true });
-  return { dry_run: false, installed: skill.id, destination };
+  return { dry_run: false, installed: skill.id, destination, security: { verified: true, sha256: sec.sha256 } };
 }
 
 function callTool(name, args = {}) {
@@ -141,6 +205,52 @@ function callTool(name, args = {}) {
         skills: bundle.skills.length,
         install: `node scripts/install.js ${bundle.slug} --platform <name>`,
       }));
+    case "list_roles":
+      return rolesData.roles.map((r) => ({
+        slug: r.slug,
+        name: r.name,
+        aliases: r.aliases || [],
+        description: r.description,
+        skills_count: (r.skills || []).length,
+        rules_count: (r.rules || []).length,
+        agents_count: (r.agents || []).length,
+        setup_command: `npx aidentity setup ${r.slug} --profile <individual|enterprise>`,
+      }));
+    case "setup_role": {
+      const plan = buildRolePlan({
+        role: args.role,
+        profile: args.profile || "individual",
+        task: args.task || "",
+        agent: args.platform || "claude",
+      });
+      const execution = executeSetup(plan, {
+        global: Boolean(args.global),
+        dryRun: args.dry_run !== false,
+      });
+      return {
+        ...plan,
+        prompt: generateSetupPrompt(plan),
+        execution,
+      };
+    }
+    case "verify_skill_security": {
+      if (args.id) {
+        const skill = registry.skills.find((entry) => entry.id === args.id);
+        if (!skill) throw new Error(`unknown skill id: ${args.id}`);
+        return { id: skill.id, name: skill.name, license: skill.source.license, ...getSecurityRecord(skill.id) };
+      }
+      return {
+        name: securityData.name,
+        version: securityData.version,
+        total_skills: securityData.total_skills,
+        verified_skills: securityData.verified_skills,
+        failed_skills: securityData.failed_skills,
+        total_files_scanned: securityData.total_files_scanned,
+        critical_findings: securityData.critical_findings,
+        advisories: securityData.advisories,
+        policy: securityData.policy,
+      };
+    }
     case "install_skill":
       return installSkill(args);
     default:
@@ -171,7 +281,7 @@ rl.on("line", (line) => {
       result: {
         protocolVersion: params?.protocolVersion || "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "aidentity", version: "1.0.0" },
+        serverInfo: { name: "aidentity", version: "1.1.0" },
       },
     });
     return;

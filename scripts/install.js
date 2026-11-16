@@ -18,6 +18,8 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
+const securityFile = path.join(ROOT, "registry", "security.json");
+const security = fs.existsSync(securityFile) ? JSON.parse(fs.readFileSync(securityFile, "utf8")).skills || {} : {};
 const bundleFile = path.join(ROOT, "bundles", "bundles.json");
 const bundles = fs.existsSync(bundleFile) ? JSON.parse(fs.readFileSync(bundleFile, "utf8")).bundles : [];
 
@@ -100,6 +102,12 @@ let skipped = 0;
 for (const skill of resolved) {
   if (!skill.distributable || !skill.path) {
     console.error(`skip: ${skill.id} is indexed but not hosted (${skill.source.license}).`);
+    skipped += 1;
+    continue;
+  }
+  const sec = security[skill.id];
+  if (sec && !sec.verified) {
+    console.error(`skip: ${skill.id} failed security verification (${sec.status}).`);
     skipped += 1;
     continue;
   }
