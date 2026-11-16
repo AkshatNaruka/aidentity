@@ -31,6 +31,7 @@ npx aidentity audit
 
 | Role | CLI Command | Individual Profile | Enterprise Profile |
 |---|---|---|---|
+| **[Founder / Startup builder](roles/founder.md)** | `npx aidentity setup founder` | 9 skills · 2 rules · 4 agents | 12 skills · 4 hooks |
 | **[Software engineer](roles/software-engineer.md)** | `npx aidentity setup software-engineer` | 8 skills · 3 rules · 3 agents | 11 skills · 4 hooks |
 | **[Software architect](roles/architect.md)** | `npx aidentity setup architect` | 8 skills · 2 rules · 3 agents | 11 skills · 4 hooks |
 | **[Product manager](roles/product-manager.md)** | `npx aidentity setup product-manager` | 8 skills · 0 rules · 3 agents | 12 skills · 4 hooks |
