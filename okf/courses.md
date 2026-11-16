@@ -2,14 +2,16 @@
 type: CourseCollection
 title: Aidentity AI Agent Courses & Curricula
 description: 6 hands-on courses teaching spec-driven development, TDD, AI SEO/GEO, enterprise agent security, UI design, and quant finance.
-resource: https://akshatnaruka.github.io/aidentity/courses/
+resource: https://akshatnaruka.github.io/aidentity/playbooks/
 tags: [courses, curriculum, tdd, ai-seo, geo, appsec, quant]
 timestamp: 2026-11-16
 ---
 
-# Aidentity AI Agent Courses
+# Aidentity AI Agent Courses & Curricula
 
 See [OKF Index](./index.md) · [Role Setup Playbooks](./playbooks.md) · [Skill Security Standard](./security.md).
+
+All course curricula are now directly integrated into the corresponding role playbooks.
 
 ## AI Coding Agent Mastery: Spec, TDD & Verification
 - Level: Intermediate to Advanced
