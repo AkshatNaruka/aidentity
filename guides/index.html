@@ -43,7 +43,6 @@
     <nav class="site-nav" aria-label="Primary">
       <a href="../setup/index.html">Setup</a>
       <a href="../skills/index.html">Browse</a>
-      <a href="../roles/index.html">Roles</a>
       <a href="../playbooks/index.html">Playbooks</a>
       <a href="../courses/index.html">Courses</a>
       <a href="../guides/index.html" aria-current="page">Guides</a>
@@ -66,6 +65,14 @@
     <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:12px">
       Last updated: 2026-11-16 · Author: Akshat Naruka · Cited sources: AgentReady.org, Princeton GEO (KDD 2024), Trail of Bits, Google Search Central
     </p>
+
+    <nav class="guide-toc" aria-label="Guides table of contents">
+      <span class="mono" style="font-size:11px;font-weight:bold;color:var(--muted);align-self:center;margin-right:6px">JUMP TO:</span>
+      <a href="#agent-comparison">1. Agent Path Comparison</a>
+      <a href="#individual-vs-enterprise">2. Individual vs. Enterprise</a>
+      <a href="#security-standard">3. 7-Gate Security Standard</a>
+      <a href="#ai-visibility-architecture">4. AI Visibility Architecture</a>
+    </nav>
 
     <h2 id="agent-comparison" style="font-family:var(--sans);font-size:1.25rem;margin-top:40px">1. Coding Agent Skill Directory &amp; MCP Comparison (Claude Code vs. Cursor vs. Codex vs. Gemini CLI)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
@@ -127,49 +134,81 @@
     <p style="color:var(--ink-soft);font-size:0.95rem">
       Solo developers optimize for speed and low token overhead; enterprise engineering teams optimize for supply-chain safety, secret prevention, and consistent code review.
     </p>
-    <div class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr><th>Feature</th><th>Individual Profile (<span class="mono">--profile individual</span>)</th><th>Enterprise Profile (<span class="mono">--profile enterprise</span>)</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Feature"><strong>Skill Set</strong></td>
-            <td data-label="Individual Profile">6–8 core role-specific skills</td>
-            <td data-label="Enterprise Profile">Core role skills + 4 mandatory security/supply-chain audit skills</td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Pre-Tool Hooks</strong></td>
-            <td data-label="Individual Profile"><span class="mono">block-dangerous.js</span>, <span class="mono">scan-secrets.js</span></td>
-            <td data-label="Enterprise Profile"><span class="mono">block-dangerous.js</span>, <span class="mono">scan-secrets.js</span>, <span class="mono">format-on-save.js</span>, <span class="mono">test-on-stop.js</span></td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Security Gate</strong></td>
-            <td data-label="Individual Profile">Blocks skills failing <span class="mono">security.json</span> verification</td>
-            <td data-label="Enterprise Profile">Blocks unverified skills + enforces SHA-256 lockfile audit (<span class="mono">npx aidentity audit</span>)</td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Price / License</strong></td>
-            <td data-label="Individual Profile">$0 (MIT / Apache-2.0 / CC0)</td>
-            <td data-label="Enterprise Profile">$0 (MIT / Apache-2.0 / CC0 — self-hosted in your repo)</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <span class="profile-badge">Individual Profile</span>
+        <h3>Solo Developer &amp; Rapid Iteration</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Fast, lightweight agent configuration with core role skills and safety hooks.</p>
+        <div style="margin-bottom:14px">
+          <code>npx aidentity setup &lt;role&gt; --profile individual</code>
+        </div>
+        <ul class="profile-list">
+          <li><span class="label">Skill Set</span><span class="val">6–8 core role skills</span></li>
+          <li><span class="label">Pre-Tool Hooks</span><span class="val">block-dangerous.js, scan-secrets.js</span></li>
+          <li><span class="label">Security Gate</span><span class="val">Verified in security.json</span></li>
+          <li><span class="label">Lockfile Audit</span><span class="val">Optional</span></li>
+          <li><span class="label">License / Cost</span><span class="val">$0 (MIT / Apache-2.0)</span></li>
+        </ul>
+      </div>
+
+      <div class="profile-card enterprise">
+        <span class="profile-badge" style="color:var(--ok)">Enterprise Profile</span>
+        <h3>Team Governance &amp; Supply-Chain Audit</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Full organizational guardrails with supply-chain audits, secret scanning, and automated hooks.</p>
+        <div style="margin-bottom:14px">
+          <code>npx aidentity setup &lt;role&gt; --profile enterprise</code>
+        </div>
+        <ul class="profile-list">
+          <li><span class="label">Skill Set</span><span class="val">Core + 4 supply-chain/audit skills</span></li>
+          <li><span class="label">Pre-Tool Hooks</span><span class="val">Dangerous, secrets, format, test-on-stop</span></li>
+          <li><span class="label">Security Gate</span><span class="val">Enforced SHA-256 lockfile audit</span></li>
+          <li><span class="label">CI Integration</span><span class="val">npx aidentity audit in pipeline</span></li>
+          <li><span class="label">License / Cost</span><span class="val">$0 (Self-hosted in repo)</span></li>
+        </ul>
+      </div>
     </div>
 
     <h2 id="security-standard" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">3. How Aidentity Verifies Skill Security (7-Gate Static Analysis)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
       Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection instructions that exfiltrate <span class="mono">.env</span> secrets, or destructive shell commands. Every skill in Aidentity (2492 files across 526 skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
     </p>
-    <ol style="color:var(--ink-soft);font-size:0.95rem">
-      <li><strong>Gate 1 — Hidden &amp; Trojan-Source Unicode:</strong> Rejects zero-width spaces (<span class="mono">U+200B</span>–<span class="mono">U+200D</span>), BOMs, and bidirectional override characters (<span class="mono">U+202A</span>–<span class="mono">U+202E</span>, <span class="mono">U+2066</span>–<span class="mono">U+2069</span>).</li>
-      <li><strong>Gate 2 — Hardcoded Secrets &amp; Keys:</strong> Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys.</li>
-      <li><strong>Gate 3 — Destructive Shell Patterns:</strong> Blocks <span class="mono">rm -rf /</span>, fork bombs, raw disk writes (<span class="mono">dd</span>, <span class="mono">mkfs</span>), and root permission wipes.</li>
-      <li><strong>Gate 4 — Prompt Injection &amp; Exfiltration:</strong> Detects instructions attempting to override system guardrails, exfiltrate environment variables, or open reverse shells.</li>
-      <li><strong>Gate 5 — Untrusted Remote Script Execution:</strong> Flags <span class="mono">curl | sh</span> and <span class="mono">wget | bash</span> patterns.</li>
-      <li><strong>Gate 6 — Symlink &amp; Binary Hygiene:</strong> Rejects symlinks escaping the skill directory and unexpected compiled binaries.</li>
-      <li><strong>Gate 7 — Deterministic SHA-256 Digest:</strong> Computes a canonical SHA-256 hash over every file in the skill folder and publishes it in <a href="../security.json">security.json</a>.</li>
-    </ol>
+    <div class="gate-grid">
+      <div class="gate-card">
+        <span class="gate-num">Gate 01</span>
+        <h3>Hidden &amp; Trojan Unicode</h3>
+        <p>Rejects zero-width spaces (<code>U+200B</code>–<code>U+200D</code>), byte-order marks, and bidirectional override characters (<code>U+202A</code>–<code>U+202E</code>, <code>U+2066</code>–<code>U+2069</code>).</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 02</span>
+        <h3>Hardcoded Secrets &amp; Keys</h3>
+        <p>Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys across every instruction file.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 03</span>
+        <h3>Destructive Shell Patterns</h3>
+        <p>Blocks <code>rm -rf /</code>, fork bombs, raw disk writes (<code>dd</code>, <code>mkfs</code>), and root permission wipes.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 04</span>
+        <h3>Prompt Injection &amp; Exfiltration</h3>
+        <p>Detects instructions attempting to override system guardrails, exfiltrate environment variables, or establish reverse shells.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 05</span>
+        <h3>Untrusted Remote Scripts</h3>
+        <p>Flags <code>curl | sh</code> and <code>wget | bash</code> patterns that fetch and execute arbitrary unverified code from the network.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 06</span>
+        <h3>Symlink &amp; Binary Hygiene</h3>
+        <p>Rejects symlinks pointing outside the skill directory and unexpected compiled binary blobs.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 07</span>
+        <h3>Deterministic SHA-256 Digest</h3>
+        <p>Computes canonical SHA-256 hash across every file in the skill directory, published in <a href="../security.json">security.json</a>.</p>
+      </div>
+    </div>
 
     <h2 id="ai-visibility-architecture" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">4. Agent-Readable &amp; AI Visibility Architecture (AEO / GEO / OKF)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
@@ -196,7 +235,7 @@
 <footer class="site-foot">
   <div class="wrap">
     <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated 2026-11-16. Content under MIT, Apache-2.0 and CC0 — see <a href="../about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="../setup/index.html">Setup</a> · <a href="../skills/index.html">Browse</a> · <a href="../roles/index.html">Roles</a> · <a href="../playbooks/index.html">Playbooks</a> · <a href="../courses/index.html">Courses</a> · <a href="../guides/index.html">Guides</a> · <a href="../sources/index.html">Sources</a> · <a href="../about/index.html">About</a> · <a href="../support/index.html">Support</a> · <a href="../pricing.md">pricing.md</a> · <a href="../okf/index.md">okf/</a> · <a href="../registry.json">registry.json</a> · <a href="../llms.txt">llms.txt</a> · <a href="../feed.xml">RSS</a></p>
+    <p style="margin:0"><a href="../setup/index.html">Setup</a> · <a href="../skills/index.html">Browse</a> · <a href="../playbooks/index.html">Playbooks</a> · <a href="../courses/index.html">Courses</a> · <a href="../guides/index.html">Guides</a> · <a href="../sources/index.html">Sources</a> · <a href="../about/index.html">About</a> · <a href="../support/index.html">Support</a> · <a href="../pricing.md">pricing.md</a> · <a href="../okf/index.md">okf/</a> · <a href="../registry.json">registry.json</a> · <a href="../llms.txt">llms.txt</a> · <a href="../feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="../assets/app.js" defer></script>
