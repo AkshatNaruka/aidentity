@@ -310,8 +310,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
     <nav class="site-nav" aria-label="Primary">
       <a href="${p}setup/index.html"${page === "setup" ? ' aria-current="page"' : ""}>Setup</a>
       <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
-      <a href="${p}roles/index.html"${page === "roles" ? ' aria-current="page"' : ""}>Roles</a>
-      <a href="${p}playbooks/index.html"${page === "playbooks" ? ' aria-current="page"' : ""}>Playbooks</a>
+      <a href="${p}playbooks/index.html"${page === "playbooks" || page === "roles" ? ' aria-current="page"' : ""}>Playbooks</a>
       <a href="${p}courses/index.html"${page === "courses" ? ' aria-current="page"' : ""}>Courses</a>
       <a href="${p}guides/index.html"${page === "guides" ? ' aria-current="page"' : ""}>Guides</a>
       <a href="${p}sources/index.html"${page === "sources" ? ' aria-current="page"' : ""}>Sources</a>
@@ -327,7 +326,7 @@ ${body}
 <footer class="site-foot">
   <div class="wrap">
     <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 — see <a href="${p}about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="${p}setup/index.html">Setup</a> · <a href="${p}skills/index.html">Browse</a> · <a href="${p}roles/index.html">Roles</a> · <a href="${p}playbooks/index.html">Playbooks</a> · <a href="${p}courses/index.html">Courses</a> · <a href="${p}guides/index.html">Guides</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}support/index.html">Support</a> · <a href="${p}pricing.md">pricing.md</a> · <a href="${p}okf/index.md">okf/</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
+    <p style="margin:0"><a href="${p}setup/index.html">Setup</a> · <a href="${p}skills/index.html">Browse</a> · <a href="${p}playbooks/index.html">Playbooks</a> · <a href="${p}courses/index.html">Courses</a> · <a href="${p}guides/index.html">Guides</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}support/index.html">Support</a> · <a href="${p}pricing.md">pricing.md</a> · <a href="${p}okf/index.md">okf/</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="${p}assets/app.js" defer></script>
@@ -534,8 +533,7 @@ function buildHome() {
     ${rotatingCommandBlock(heroCommands)}
     <p class="hero-links">
       <a href="setup/index.html">Setup generator (5 questions) →</a>
-      <a href="roles/index.html">Setup by role (${homeRoles.length} roles)</a>
-      <a href="playbooks/index.html">Role playbooks</a>
+      <a href="playbooks/index.html">Role playbooks (${homeRoles.length} roles)</a>
       <a href="courses/index.html">AI agent courses</a>
       <a href="skills/index.html">Browse all ${registry.total} skills</a>
     </p>
@@ -1032,7 +1030,7 @@ function buildAbout() {
       <h3 style="font-size:0.98rem;margin:18px 0 6px">What is Aidentity?</h3>
       <p>Aidentity is a verified index of ${registry.total} AI agent skills and 20 role-based setups (Individual &amp; Enterprise). Each entry records its source repository, author, license, SHA-256 security status, category and last verification date.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I set up my agent for my role?</h3>
-      <p>Run <span class="mono">npx aidentity setup &lt;role&gt; --profile individual</span> (or <span class="mono">enterprise</span>), or use the interactive Setup Prompt Builder on the <a href="../roles/index.html">Roles page</a> to copy a one-shot setup prompt into your agent.</p>
+      <p>Run <span class="mono">npx aidentity setup &lt;role&gt; --profile individual</span> (or <span class="mono">enterprise</span>), use the interactive prompt builder on the <a href="../setup/index.html">Setup page</a>, or browse full blueprints in the <a href="../playbooks/index.html">Playbooks directory</a>.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">Are the skills free to use?</h3>
       <p>Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. ${registry.total - registry.distributable} skills from Anthropic are indexed with a link only, because their upstream license does not permit redistribution. Every page states its license.</p>
       <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I install one?</h3>
@@ -1428,69 +1426,38 @@ function renderSetupWizardSection({ roles, securityPath = "../security.json", he
 }
 
 function buildForRoles() {
-  const roleFile = path.join(ROOT, "roles", "roles.json");
-  if (!fs.existsSync(roleFile)) return;
-  const roles = JSON.parse(fs.readFileSync(roleFile, "utf8")).roles;
-  const counts = Object.fromEntries(categoryList.map((category) => [category.name, category.count]));
-
-  const cards = roles.map((role) => {
-    const categories = role.categories.filter((name) => counts[name] > 0);
-    const bundles = (role.bundles || []).filter((slug) => bundlesData.some((bundle) => bundle.slug === slug));
-    const indPlan = buildRolePlan({ role: role.slug, profile: "individual", agent: "claude" });
-    return `<article class="role-card" id="${esc(role.slug)}">
-      <h3>${esc(role.name)}</h3>
-      <p>${esc(role.description)}</p>
-      <div class="cmd" style="margin-top:12px">
-        <span class="prompt" aria-hidden="true">$</span>
-        <code>npx aidentity setup ${esc(role.slug)}</code>
-        <button type="button" data-copy="npx aidentity setup ${esc(role.slug)}" aria-label="Copy setup command for ${esc(role.name)}">copy</button>
-      </div>
-      <div class="tags" style="margin-top:12px">
-        ${categories.map((name) => `<a class="tag" href="../skills/index.html?category=${encodeURIComponent(name)}">${esc(name)} · ${counts[name]}</a>`).join(" ")}
-        ${bundles.map((slug) => `<a class="tag ok" href="../bundles/#${slug}">${esc(slug)} bundle</a>`).join(" ")}
-      </div>
-      <details>
-        <summary>Included in ${esc(role.name)} setup (${indPlan.skills.length} skills, ${indPlan.agents.length} agents, ${indPlan.rules.length} rules)</summary>
-        <ul class="role-meta-list">
-          ${indPlan.skills.map((s) => `<li><a href="../skills/${esc(s.id)}/index.html">${esc(s.name)}</a> <span class="mono">(${esc(s.license)})</span></li>`).join("")}
-          ${indPlan.rules.map((r) => `<li class="mono">${esc(r)}</li>`).join("")}
-          ${indPlan.agents.map((a) => `<li class="mono">${esc(a)}</li>`).join("")}
-        </ul>
-      </details>
-      <p style="margin:12px 0 0;font-family:var(--mono);font-size:11px"><a href="../playbooks/${esc(role.slug)}/index.html">Open full ${esc(role.name)} playbook →</a></p>
-    </article>`;
-  }).join("\n");
-
   const body = `
-<section style="padding-top:44px">
-  <div class="wrap">
-    <p class="kicker">By role · Individual &amp; Enterprise Blueprints</p>
-    <h1 style="font-size:clamp(2rem,4.6vw,3.2rem)">AI Agent Setups by Role</h1>
-    <p style="max-width:66ch;color:var(--ink-soft);margin-top:14px">
-      Pre-configured skill bundles, language coding rules, subagents, and safety hooks for ${roles.length} roles. Install via the one-line CLI command or view full playbooks.
+<section style="padding:70px 0;text-align:center">
+  <div class="wrap" style="max-width:680px">
+    <p class="kicker">Navigation Update</p>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.5rem)">Roles has merged into Playbooks</h1>
+    <p style="color:var(--ink-soft);margin-top:14px;font-size:1.05rem">
+      All 21 role setups, verified skill lists, and Individual &amp; Enterprise blueprints are now unified under the <strong>Playbooks</strong> directory.
     </p>
-
-    <div class="callout" style="margin-top:24px">
-      <strong>Looking for the interactive questionnaire?</strong> Use the dedicated <a href="../setup/index.html"><strong>Setup tab →</strong></a> to answer 5 quick questions and copy a customized initial prompt for your coding agent.
+    <div style="margin-top:28px">
+      <a class="btn" href="../playbooks/index.html">Open Role Playbooks →</a>
     </div>
-
-    <div class="section-head" style="margin-top:44px">
-      <h2>All ${roles.length} roles</h2>
-      <a class="more" href="../playbooks/index.html">Browse all ${roles.length} role playbooks →</a>
-    </div>
-    <div class="role-grid">${cards}</div>
   </div>
 </section>
+<script>
+  (function () {
+    var hash = window.location.hash || "";
+    if (hash) {
+      var slug = hash.replace(/^#/, "");
+      window.location.replace("../playbooks/" + slug + "/index.html");
+    } else {
+      window.location.replace("../playbooks/index.html");
+    }
+  })();
+</script>
 `;
   write("roles/index.html", layout({
-    title: "Skills & setups by role",
-    description: `Pre-configured AI agent setups across ${roles.length} job roles with SHA-256 security verification.`,
+    title: "Roles & Playbooks",
+    description: "Role setups have merged into the unified Playbooks directory.",
     depth: 1,
     body,
-    page: "roles",
-    canonical: SITE + "/roles/",
-    keywords: "AI skills by role, AI setup prompts, founder AI agent setup, enterprise agent setup, developer skills setup, finance agent skills, quant skills, AI agent playbooks",
-    markdownAlt: `${SITE}/roles.json`,
+    page: "playbooks",
+    canonical: SITE + "/playbooks/",
   }));
 }
 
@@ -1515,18 +1482,18 @@ function buildSetup() {
 
     <div class="section-head" style="margin-top:56px">
       <h2>Explore Pre-Built Role Setups &amp; Playbooks</h2>
-      <a class="more" href="../roles/index.html">Browse all ${roles.length} roles →</a>
+      <a class="more" href="../playbooks/index.html">Browse all ${roles.length} role playbooks →</a>
     </div>
     <div class="three">
       <div>
         <span class="num">01</span>
-        <h3>All ${roles.length} Roles Catalog</h3>
-        <p>Prefer to pick your role directly? Explore the full catalog of ${roles.length} roles with one-command CLI installers, verified skill lists, and rules. <a href="../roles/index.html">View roles →</a></p>
+        <h3>Role Playbooks</h3>
+        <p>Explore all ${roles.length} role playbooks with one-command CLI installers, verified skill lists, and rules. <a href="../playbooks/index.html">View playbooks →</a></p>
       </div>
       <div>
         <span class="num">02</span>
-        <h3>Role Playbooks</h3>
-        <p>Read comprehensive deep-dive setup playbooks with Individual vs. Enterprise comparisons for every job. <a href="../playbooks/index.html">Browse playbooks →</a></p>
+        <h3>Individual vs. Enterprise</h3>
+        <p>Every role playbook includes both an Individual (solo speed) and Enterprise (security guardrails) setup. <a href="../guides/index.html#individual-vs-enterprise">Compare profiles →</a></p>
       </div>
       <div>
         <span class="num">03</span>
@@ -1574,6 +1541,24 @@ function buildSetup() {
 // playbooks (programmatic SEO: 20 role setup playbooks + hub)
 // ---------------------------------------------------------------------------
 
+function getRoleDomain(slug) {
+  if (["software-engineer", "architect", "engineering-manager", "data-analyst"].includes(slug)) return "engineering";
+  if (["product-manager", "designer", "motion-designer", "founder"].includes(slug)) return "product";
+  if (["marketer", "content-creator", "seo-specialist", "sales"].includes(slug)) return "marketing";
+  if (["finance-analyst", "quant-researcher"].includes(slug)) return "finance";
+  return "specialized";
+}
+
+function getDomainLabel(domain) {
+  switch (domain) {
+    case "engineering": return "Engineering & Infra";
+    case "product": return "Product & Design";
+    case "marketing": return "Growth & Marketing";
+    case "finance": return "Finance & Quant";
+    default: return "Specialized";
+  }
+}
+
 function buildPlaybooks() {
   const roles = rolesData.roles || [];
   if (!roles.length) return;
@@ -1581,71 +1566,69 @@ function buildPlaybooks() {
   const hubCards = roles.map((role) => {
     const indPlan = buildRolePlan({ role: role.slug, profile: "individual", agent: "claude" });
     const entPlan = buildRolePlan({ role: role.slug, profile: "enterprise", agent: "claude" });
-    return `<article class="role-card" id="playbook-${esc(role.slug)}">
-      <p class="kicker" style="margin:0 0 6px">${esc((role.aliases || []).slice(0, 3).join(" · ") || role.slug)}</p>
-      <h3><a href="${esc(role.slug)}/index.html">${esc(role.name)} AI Agent Playbook</a></h3>
-      <p>${esc(role.description)}</p>
-      <div class="cmd" style="margin-top:10px">
-        <span class="prompt" aria-hidden="true">$</span>
-        <code>npx aidentity setup ${esc(role.slug)} --profile individual</code>
-        <button type="button" data-copy="npx aidentity setup ${esc(role.slug)} --profile individual">copy</button>
+    const domain = getRoleDomain(role.slug);
+    const domainLabel = getDomainLabel(domain);
+    const categories = (role.categories || []).slice(0, 3);
+    const bundles = (role.bundles || []).slice(0, 1);
+    const tagsHtml = (categories.length || bundles.length)
+      ? `<div class="tags" style="margin-top:10px">
+          ${categories.map((c) => `<span class="tag">${esc(c)}</span>`).join(" ")}
+          ${bundles.map((b) => `<a class="tag ok" href="../bundles/#${esc(b)}">${esc(b)} bundle</a>`).join(" ")}
+        </div>`
+      : "";
+
+    return `<article class="playbook-card" id="${esc(role.slug)}" data-domain="${esc(domain)}">
+      <div class="playbook-card-head">
+        <span class="playbook-domain-badge">${esc(domainLabel)}</span>
+        <span class="mono" style="font-size:11px;color:var(--muted)">${indPlan.skills.length} / ${entPlan.skills.length} skills</span>
       </div>
-      <div class="tags" style="margin-top:12px">
-        <span class="tag ok">${indPlan.skills.length} individual skills</span>
-        <span class="tag ok">${entPlan.skills.length} enterprise skills</span>
-        <span class="tag">${entPlan.hooks.length} safety hooks</span>
+      <h3><a href="${esc(role.slug)}/index.html">${esc(role.name)}</a></h3>
+      <p class="playbook-desc">${esc(role.description)}</p>
+      <div class="playbook-cmd-row">
+        <code>npx aidentity setup ${esc(role.slug)}</code>
+        <button type="button" class="playbook-copy-btn" data-copy="npx aidentity setup ${esc(role.slug)}">copy</button>
       </div>
-      <p style="margin:12px 0 0;font-family:var(--mono);font-size:11px">
-        <a href="${esc(role.slug)}/index.html">Read ${esc(role.name)} playbook →</a> · <a href="${esc(role.slug)}/playbook.md">playbook.md</a>
-      </p>
+      ${tagsHtml}
+      <div class="playbook-card-foot">
+        <span class="mono" style="font-size:11px;color:var(--ink-soft)">${entPlan.hooks.length} safety hooks</span>
+        <a href="${esc(role.slug)}/index.html">Open Full Playbook →</a>
+      </div>
     </article>`;
   }).join("\n");
 
   const hubBody = `
 <section style="padding-top:44px">
   <div class="wrap">
-    <p class="kicker">Playbooks · Individual &amp; Enterprise Agent Setup</p>
+    <p class="kicker">Playbooks &amp; Role Setups · 21 Roles · Individual &amp; Enterprise</p>
     <h1 style="font-size:clamp(2rem,4.6vw,3.4rem)">AI Agent Setup Playbooks by Role</h1>
     <p style="max-width:68ch;color:var(--ink-soft);margin-top:14px">
-      <strong>What is an AI agent setup playbook?</strong> An AI agent setup playbook is a deterministic, step-by-step configuration blueprint that installs verified <span class="mono">SKILL.md</span> files, language coding rules, specialist subagents, slash commands, and safety hooks into Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or GitHub Copilot for a specific job role. Every Aidentity playbook is available in two profiles — <strong>Individual</strong> (fast solo workflow) and <strong>Enterprise</strong> (supply-chain audits, secret scanning, and test-on-stop guardrails) — with 100% of skills SHA-256 verified in <a href="../security.json">security.json</a>.
+      Deterministic, step-by-step agent configuration blueprints. Each playbook installs verified <span class="mono">SKILL.md</span> files, language coding rules, specialist subagents, and safety hooks into Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or GitHub Copilot in both <strong>Individual</strong> (solo speed) and <strong>Enterprise</strong> (supply-chain audits &amp; test guardrails) profiles.
     </p>
     <p style="font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:12px">
-      Last updated: ${GENERATED} · Author: Akshat Naruka · 20 role playbooks · ${registry.total} security-verified skills
+      Last updated: ${GENERATED} · Author: Akshat Naruka · 21 role playbooks · ${registry.total} security-verified skills
     </p>
 
-    <div class="table-scroll" style="margin-top:28px">
-      <table class="table">
-        <thead>
-          <tr><th>Role Playbook</th><th>Individual Command</th><th>Enterprise Command</th><th>Verified Skills</th><th>Subagents &amp; Hooks</th></tr>
-        </thead>
-        <tbody>
-          ${roles.map((role) => {
-            const indPlan = buildRolePlan({ role: role.slug, profile: "individual", agent: "claude" });
-            const entPlan = buildRolePlan({ role: role.slug, profile: "enterprise", agent: "claude" });
-            return `<tr>
-              <td data-label="Role Playbook"><a href="${esc(role.slug)}/index.html"><strong>${esc(role.name)} Playbook</strong></a></td>
-              <td data-label="Individual Command" class="mono">npx aidentity setup ${esc(role.slug)} --profile individual</td>
-              <td data-label="Enterprise Command" class="mono">npx aidentity setup ${esc(role.slug)} --profile enterprise</td>
-              <td data-label="Verified Skills" class="mono">${indPlan.skills.length} / ${entPlan.skills.length}</td>
-              <td data-label="Subagents & Hooks" class="mono">${indPlan.agents.length} agents · ${entPlan.hooks.length} hooks</td>
-            </tr>`;
-          }).join("\n")}
-        </tbody>
-      </table>
+    <div class="callout" style="margin-top:20px">
+      <strong>Looking for custom agent onboarding?</strong> Answer 5 quick questions in our <a href="../setup/index.html"><strong>Interactive Setup Generator →</strong></a> to customize your stack, safety presets, and agent rules.
     </div>
 
-    <div class="section-head" style="margin-top:48px">
-      <h2>All 20 Role Playbooks</h2>
-      <a class="more" href="../courses/index.html">Explore AI Agent Courses →</a>
+    <div class="filter-bar" style="margin-top:28px" role="tablist" aria-label="Filter playbooks by category">
+      <button type="button" class="filter-btn active" data-playbook-filter="all">All Roles (21)</button>
+      <button type="button" class="filter-btn" data-playbook-filter="engineering">Engineering &amp; Infra</button>
+      <button type="button" class="filter-btn" data-playbook-filter="product">Product &amp; Design</button>
+      <button type="button" class="filter-btn" data-playbook-filter="marketing">Growth &amp; Marketing</button>
+      <button type="button" class="filter-btn" data-playbook-filter="finance">Finance &amp; Quant</button>
+      <button type="button" class="filter-btn" data-playbook-filter="specialized">Specialized</button>
     </div>
-    <div class="role-grid">${hubCards}</div>
+
+    <div class="playbook-grid" style="margin-top:24px">${hubCards}</div>
   </div>
 </section>
 `;
 
   write("playbooks/index.html", layout({
-    title: "AI Agent Setup Playbooks — Individual & Enterprise Guides for 20 Roles",
-    description: "20 step-by-step AI agent setup playbooks for software engineers, architects, PMs, designers, marketers, finance analysts, and quants. SHA-256 verified skills for Claude Code & Cursor.",
+    title: "AI Agent Setup Playbooks — Individual & Enterprise Blueprints for 21 Roles",
+    description: "21 step-by-step AI agent setup playbooks and role blueprints for software engineers, architects, PMs, designers, marketers, finance analysts, and quants. SHA-256 verified skills for Claude Code & Cursor.",
     depth: 1,
     body: hubBody,
     page: "playbooks",
@@ -1666,7 +1649,7 @@ function buildPlaybooks() {
           "@id": `${SITE}/playbooks/#collection`,
           name: "AI Agent Setup Playbooks by Role",
           url: `${SITE}/playbooks/`,
-          description: "20 step-by-step AI agent setup playbooks for Individual and Enterprise engineering, product, design, marketing, finance, and quant teams.",
+          description: "21 step-by-step AI agent setup playbooks for Individual and Enterprise engineering, product, design, marketing, finance, and quant teams.",
           dateModified: GENERATED,
           author: { "@type": "Person", name: "Akshat Naruka" },
           mainEntity: {
@@ -1828,8 +1811,18 @@ function buildPlaybooks() {
 
       <h2>Step 4 — Copyable One-Shot Setup Prompts</h2>
       <p class="prose">Paste either prompt directly into Claude Code, Cursor, Codex, or Gemini CLI to configure your workspace automatically:</p>
-      ${promptBlock(indPrompt, `${role.name} · Individual Setup Prompt`)}
-      ${promptBlock(entPrompt, `${role.name} · Enterprise Setup Prompt`)}
+      <details class="prompt-details" open style="margin-top:14px">
+        <summary>${esc(role.name)} · Individual Setup Prompt <span class="mono" style="font-size:11px;color:var(--muted);font-weight:normal">(${indPlan.skills.length} skills · Click to collapse)</span></summary>
+        <div style="margin-top:12px">
+          ${promptBlock(indPrompt, `${role.name} · Individual Setup Prompt`)}
+        </div>
+      </details>
+      <details class="prompt-details" style="margin-top:14px">
+        <summary>${esc(role.name)} · Enterprise Setup Prompt <span class="mono" style="font-size:11px;color:var(--muted);font-weight:normal">(${entPlan.skills.length} skills + hooks · Click to expand)</span></summary>
+        <div style="margin-top:12px">
+          ${promptBlock(entPrompt, `${role.name} · Enterprise Setup Prompt`)}
+        </div>
+      </details>
 
       <h2 id="faq">Frequently Asked Questions — ${esc(role.name)} AI Setup</h2>
       <div class="prose">
@@ -1858,7 +1851,7 @@ function buildPlaybooks() {
         </dl>
         ${shareRow(pageUrl, `${role.name} AI Agent Setup Playbook — Aidentity`)}
         <a class="btn" href="playbook.md">View Markdown (playbook.md) ↗</a>
-        <a class="btn" href="../../roles/index.html#${esc(role.slug)}" style="margin-top:8px">Open in Interactive Builder ↗</a>
+        <a class="btn" href="../../setup/index.html" style="margin-top:8px">Open in Interactive Setup Generator ↗</a>
       </div>
     </aside>
   </article>
@@ -2094,66 +2087,46 @@ const COURSES_DATA = [
 ];
 
 function buildCourses() {
-  const courseCards = COURSES_DATA.map((course) => {
+  const hubCards = COURSES_DATA.map((course) => {
     const allSkillIds = course.modules.flatMap((m) => m.skills);
     const resolvedSkills = allSkillIds.map((id) => skills.find((s) => s.id === id)).filter(Boolean);
-    const moduleHtml = course.modules.map((m) => {
-      const mSkills = m.skills.map((id) => skills.find((s) => s.id === id)).filter(Boolean);
-      return `<div style="margin-top:14px">
-        <h4 style="font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 6px;color:var(--ink)">${esc(m.title)}</h4>
-        <ul class="role-meta-list" style="margin-top:4px">
-          ${mSkills.map((s) => `<li><a href="../skills/${esc(s.id)}/index.html"><strong>${esc(s.name)}</strong></a> — ${esc(s.description)}</li>`).join("")}
-        </ul>
-      </div>`;
-    }).join("\n");
 
-    return `<article class="bundle" id="${esc(course.slug)}">
-      <p class="kicker">${esc(course.kicker)} · ${esc(course.level)}</p>
-      <h3>${esc(course.name)}</h3>
-      <p>${esc(course.summary)}</p>
-      <p class="mono" style="font-size:11.5px;color:var(--muted)">
-        Target audience: ${esc(course.audience)} · ${resolvedSkills.length} verified skills · <a href="../playbooks/${esc(course.roleSlug)}/index.html">Matching Role Playbook →</a>
-      </p>
-      ${commandBlock(`npx aidentity setup ${course.roleSlug} --profile individual`, `install ${course.name} skills`)}
-      <div style="margin-top:14px">
-        <strong style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)">What you will learn &amp; automate:</strong>
-        <ul class="role-meta-list">
-          ${course.outcomes.map((o) => `<li>${esc(o)}</li>`).join("")}
-        </ul>
+    return `<article class="course-hub-card" id="${esc(course.slug)}">
+      <div>
+        <div class="course-card-head" style="margin-bottom:8px">
+          <span class="course-badge">${esc(course.kicker.split("·")[0].trim())}</span>
+          <span class="mono" style="font-size:11px;color:var(--muted)">${esc(course.level)}</span>
+        </div>
+        <h3><a href="${esc(course.slug)}/index.html">${esc(course.name)}</a></h3>
+        <p class="course-hub-desc">${esc(course.summary)}</p>
+        <div class="cmd" style="margin-top:10px">
+          <span class="prompt" aria-hidden="true">$</span>
+          <code>npx aidentity setup ${esc(course.roleSlug)}</code>
+          <button type="button" data-copy="npx aidentity setup ${esc(course.roleSlug)}" aria-label="Copy install command">copy</button>
+        </div>
       </div>
-      ${moduleHtml}
+      <div class="course-hub-foot">
+        <span class="mono" style="font-size:11px;color:var(--ink-soft)">${course.modules.length} modules · ${resolvedSkills.length} skills</span>
+        <a href="${esc(course.slug)}/index.html">View Course &amp; Curriculum →</a>
+      </div>
     </article>`;
   }).join("\n");
 
   const body = `
 <section style="padding-top:44px">
-  <div class="wrap" style="max-width:920px">
-    <p class="kicker">Courses · Curricula &amp; Interactive Learning Paths</p>
+  <div class="wrap" style="max-width:960px">
+    <p class="kicker">Courses · Curricula &amp; Hands-on Learning</p>
     <h1 style="font-size:clamp(2rem,4.6vw,3.3rem)">AI Agent Courses &amp; Skill Curricula</h1>
-    <p style="max-width:66ch;color:var(--ink-soft);margin-top:14px">
-      <strong>What is an Aidentity AI Agent Course?</strong> Each course is a structured, hands-on curriculum built directly from security-verified <span class="mono">SKILL.md</span> modules in the Aidentity index. You can read every module on the web to learn the methodology — or run a single CLI command to install the entire curriculum into Claude Code, Cursor, Codex, or Gemini CLI so your agent executes the workflow with you.
+    <p style="max-width:68ch;color:var(--ink-soft);margin-top:14px">
+      Structured, hands-on learning paths built directly from security-verified <span class="mono">SKILL.md</span> modules. Select a course below to explore the modules and equip your coding agent with the complete workflow.
     </p>
     <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:12px">
       Last updated: ${GENERATED} · Author: Akshat Naruka · ${COURSES_DATA.length} structured courses · 100% free &amp; open-source
     </p>
 
-    <div class="table-scroll" style="margin-top:28px">
-      <table class="table">
-        <thead>
-          <tr><th>Course</th><th>Level</th><th>Role Setup Command</th><th>Modules</th></tr>
-        </thead>
-        <tbody>
-          ${COURSES_DATA.map((c) => `<tr>
-            <td data-label="Course"><a href="#${esc(c.slug)}"><strong>${esc(c.name)}</strong></a></td>
-            <td data-label="Level" class="mono">${esc(c.level)}</td>
-            <td data-label="Role Setup Command" class="mono">npx aidentity setup ${esc(c.roleSlug)}</td>
-            <td data-label="Modules" class="mono">${c.modules.length} modules (${c.modules.reduce((acc, m) => acc + m.skills.length, 0)} skills)</td>
-          </tr>`).join("\n")}
-        </tbody>
-      </table>
+    <div class="course-hub-grid">
+      ${hubCards}
     </div>
-
-    ${courseCards}
 
     <div class="callout" style="margin-top:36px">
       <strong>Teach with Aidentity.</strong> Need to build custom exercises or team training? Install the <a href="../playbooks/teacher/index.html">Teacher Playbook</a> (<span class="mono">npx aidentity setup teacher</span>) to get <span class="mono">teach</span> and <span class="mono">scaffold-exercises</span> in your coding agent.
@@ -2176,7 +2149,7 @@ function buildCourses() {
         "@type": "Course",
         name: c.name,
         description: c.summary,
-        url: `${SITE}/courses/#${c.slug}`,
+        url: `${SITE}/courses/${c.slug}/`,
         educationalLevel: c.level,
         provider: {
           "@type": "Organization",
@@ -2202,6 +2175,174 @@ function buildCourses() {
     keywords: "AI agent courses, Claude Code course, Cursor AI course, AI SEO course, GEO course, AEO course, enterprise AI security course, quant trading AI course",
     jsonld: coursesJsonLd,
   }));
+
+  // Dedicated course pages: /courses/<slug>/index.html + /courses/<slug>/course.md
+  for (const course of COURSES_DATA) {
+    const allSkillIds = course.modules.flatMap((m) => m.skills);
+    const resolvedSkills = allSkillIds.map((id) => skills.find((s) => s.id === id)).filter(Boolean);
+    const pageUrl = `${SITE}/courses/${course.slug}/`;
+
+    const mdLines = [
+      `---`,
+      `type: Course`,
+      `title: "${course.name}"`,
+      `description: "${course.summary}"`,
+      `level: "${course.level}"`,
+      `audience: "${course.audience}"`,
+      `resource: ${pageUrl}`,
+      `timestamp: ${GENERATED}`,
+      `---`,
+      ``,
+      `# ${course.name}`,
+      ``,
+      `${course.summary}`,
+      ``,
+      `**Level:** ${course.level} · **Target Audience:** ${course.audience} · **Skills Included:** ${resolvedSkills.length}`,
+      ``,
+      `## 1. Quick Setup Command`,
+      ``,
+      `\`\`\`bash`,
+      `npx aidentity setup ${course.roleSlug} --profile individual`,
+      `\`\`\``,
+      ``,
+      `## 2. Learning Outcomes`,
+      ``,
+      ...course.outcomes.map((o) => `- ${o}`),
+      ``,
+      `## 3. Curriculum Modules & Verified Skills`,
+      ``,
+      ...course.modules.flatMap((m) => [
+        `### ${m.title}`,
+        ``,
+        ...m.skills.map((id) => {
+          const s = skills.find((sk) => sk.id === id);
+          return s ? `- **${s.name}** (\`${s.id}\`, ${s.license}): ${s.description}` : `- \`${id}\``;
+        }),
+        ``,
+      ]),
+      `## 4. Matching Role Playbook`,
+      ``,
+      `Read the full role blueprint at: ${SITE}/playbooks/${course.roleSlug}/`,
+      ``,
+    ];
+    write(`courses/${course.slug}/course.md`, mdLines.join("\n"));
+
+    const courseBody = `
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../index.html">Home</a><span>/</span><a href="../index.html">Courses</a><span>/</span>${esc(course.name.split(":")[0])}
+  </nav>
+
+  <article class="detail">
+    <div>
+      <p class="kicker">${esc(course.kicker)} · Level: ${esc(course.level)} · 100% Free &amp; Open Source</p>
+      <h1>${esc(course.name)}</h1>
+      <p class="summary">
+        ${esc(course.summary)}
+      </p>
+      <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:12px">
+        Last updated: ${GENERATED} · Author: Akshat Naruka · Audience: ${esc(course.audience)} · <a href="course.md">Download course.md</a>
+      </p>
+
+      <h2>Step 1 — Install Curriculum Skills into Your Agent</h2>
+      <p class="prose">Equip Claude Code, Cursor, Codex, or Gemini CLI with all ${resolvedSkills.length} verified skills in this course with a single CLI command:</p>
+      ${commandBlock(`npx aidentity setup ${course.roleSlug} --profile individual`, `install ${course.name} skills`)}
+
+      <h2>Step 2 — What You Will Learn &amp; Automate</h2>
+      <ul class="outcomes-list" style="margin-top:14px">
+        ${course.outcomes.map((o) => `<li>${esc(o)}</li>`).join("")}
+      </ul>
+
+      <h2>Step 3 — Curriculum Modules &amp; Verified Skills</h2>
+      <p class="prose">Every module below is composed of security-verified <span class="mono">SKILL.md</span> files with published SHA-256 digests. Click any skill to read its technical documentation:</p>
+      <div style="margin-top:18px">
+        ${course.modules.map((m) => {
+          const mSkills = m.skills.map((id) => skills.find((s) => s.id === id)).filter(Boolean);
+          return `<div class="module-block" style="padding:14px 16px;margin-bottom:14px">
+            <h3 style="font-family:var(--sans);font-size:13.5px;font-weight:600;margin:0 0 8px;color:var(--ink)">${esc(m.title)}</h3>
+            <div class="skill-chips" style="margin-bottom:10px">
+              ${mSkills.map((s) => `<a class="skill-chip" href="../../skills/${esc(s.id)}/index.html" title="${esc(s.description)}">${esc(s.name)}</a>`).join("")}
+            </div>
+            <ul class="role-meta-list" style="margin-top:8px">
+              ${mSkills.map((s) => `<li><a href="../../skills/${esc(s.id)}/index.html"><strong>${esc(s.name)}</strong></a> — ${esc(s.description)} <span class="mono" style="font-size:11px;color:var(--muted)">(${esc(s.license)})</span></li>`).join("")}
+            </ul>
+          </div>`;
+        }).join("\n")}
+      </div>
+
+      <h2>Step 4 — Matching Role Playbook</h2>
+      <p class="prose">
+        This curriculum is directly integrated into the <strong>${esc(course.name.split(":")[0])}</strong> workflow. For enterprise supply-chain audits, coding rules, subagents, and test-on-stop guardrails, explore the matching role playbook:
+      </p>
+      <p style="margin-top:12px">
+        <a class="btn" href="../../playbooks/${esc(course.roleSlug)}/index.html">Open Matching Role Playbook →</a>
+      </p>
+    </div>
+
+    <aside>
+      <div class="aside-card">
+        <h2>Course Overview</h2>
+        ${commandBlock(`npx aidentity setup ${course.roleSlug}`, `install course`)}
+        <dl class="meta" style="margin-top:20px">
+          <div><dt>Difficulty</dt><dd class="mono">${esc(course.level)}</dd></div>
+          <div><dt>Modules</dt><dd class="mono">${course.modules.length} modules</dd></div>
+          <div><dt>Skills</dt><dd class="mono">${resolvedSkills.length} verified</dd></div>
+          <div><dt>Audience</dt><dd>${esc(course.audience)}</dd></div>
+          <div><dt>Duration</dt><dd class="mono">Self-paced (~6 hrs)</dd></div>
+          <div><dt>License</dt><dd class="mono">100% Free (MIT/Apache)</dd></div>
+          <div><dt>Updated</dt><dd>${GENERATED}</dd></div>
+        </dl>
+        ${shareRow(pageUrl, `${course.name} — Free AI Agent Course`)}
+        <a class="btn" href="course.md">View Markdown (course.md) ↗</a>
+        <a class="btn" href="../../playbooks/${esc(course.roleSlug)}/index.html" style="margin-top:8px">Role Playbook Blueprint ↗</a>
+      </div>
+    </aside>
+  </article>
+</div>
+`;
+
+    const singleCourseJsonLd = jsonld({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+            { "@type": "ListItem", position: 2, name: "Courses", item: `${SITE}/courses/` },
+            { "@type": "ListItem", position: 3, name: course.name, item: pageUrl },
+          ],
+        },
+        {
+          "@type": "Course",
+          name: course.name,
+          description: course.summary,
+          url: pageUrl,
+          educationalLevel: course.level,
+          provider: {
+            "@type": "Organization",
+            name: "Aidentity",
+            sameAs: SITE + "/",
+          },
+          hasCourseInstance: {
+            "@type": "CourseInstance",
+            courseMode: "online",
+            courseWorkload: "PT6H",
+          },
+        },
+      ],
+    });
+
+    write(`courses/${course.slug}/index.html`, layout({
+      title: `${course.name} — Free AI Agent Course`,
+      description: course.summary,
+      depth: 2,
+      body: courseBody,
+      page: "courses",
+      canonical: pageUrl,
+      keywords: `${course.name}, AI agent curriculum, ${course.roleSlug} course, Claude Code course, Cursor course`,
+      jsonld: singleCourseJsonLd,
+    }));
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -2220,6 +2361,14 @@ function buildGuides() {
     <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:12px">
       Last updated: ${GENERATED} · Author: Akshat Naruka · Cited sources: AgentReady.org, Princeton GEO (KDD 2024), Trail of Bits, Google Search Central
     </p>
+
+    <nav class="guide-toc" aria-label="Guides table of contents">
+      <span class="mono" style="font-size:11px;font-weight:bold;color:var(--muted);align-self:center;margin-right:6px">JUMP TO:</span>
+      <a href="#agent-comparison">1. Agent Path Comparison</a>
+      <a href="#individual-vs-enterprise">2. Individual vs. Enterprise</a>
+      <a href="#security-standard">3. 7-Gate Security Standard</a>
+      <a href="#ai-visibility-architecture">4. AI Visibility Architecture</a>
+    </nav>
 
     <h2 id="agent-comparison" style="font-family:var(--sans);font-size:1.25rem;margin-top:40px">1. Coding Agent Skill Directory &amp; MCP Comparison (Claude Code vs. Cursor vs. Codex vs. Gemini CLI)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
@@ -2281,49 +2430,81 @@ function buildGuides() {
     <p style="color:var(--ink-soft);font-size:0.95rem">
       Solo developers optimize for speed and low token overhead; enterprise engineering teams optimize for supply-chain safety, secret prevention, and consistent code review.
     </p>
-    <div class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr><th>Feature</th><th>Individual Profile (<span class="mono">--profile individual</span>)</th><th>Enterprise Profile (<span class="mono">--profile enterprise</span>)</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Feature"><strong>Skill Set</strong></td>
-            <td data-label="Individual Profile">6–8 core role-specific skills</td>
-            <td data-label="Enterprise Profile">Core role skills + 4 mandatory security/supply-chain audit skills</td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Pre-Tool Hooks</strong></td>
-            <td data-label="Individual Profile"><span class="mono">block-dangerous.js</span>, <span class="mono">scan-secrets.js</span></td>
-            <td data-label="Enterprise Profile"><span class="mono">block-dangerous.js</span>, <span class="mono">scan-secrets.js</span>, <span class="mono">format-on-save.js</span>, <span class="mono">test-on-stop.js</span></td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Security Gate</strong></td>
-            <td data-label="Individual Profile">Blocks skills failing <span class="mono">security.json</span> verification</td>
-            <td data-label="Enterprise Profile">Blocks unverified skills + enforces SHA-256 lockfile audit (<span class="mono">npx aidentity audit</span>)</td>
-          </tr>
-          <tr>
-            <td data-label="Feature"><strong>Price / License</strong></td>
-            <td data-label="Individual Profile">$0 (MIT / Apache-2.0 / CC0)</td>
-            <td data-label="Enterprise Profile">$0 (MIT / Apache-2.0 / CC0 — self-hosted in your repo)</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <span class="profile-badge">Individual Profile</span>
+        <h3>Solo Developer &amp; Rapid Iteration</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Fast, lightweight agent configuration with core role skills and safety hooks.</p>
+        <div style="margin-bottom:14px">
+          <code>npx aidentity setup &lt;role&gt; --profile individual</code>
+        </div>
+        <ul class="profile-list">
+          <li><span class="label">Skill Set</span><span class="val">6–8 core role skills</span></li>
+          <li><span class="label">Pre-Tool Hooks</span><span class="val">block-dangerous.js, scan-secrets.js</span></li>
+          <li><span class="label">Security Gate</span><span class="val">Verified in security.json</span></li>
+          <li><span class="label">Lockfile Audit</span><span class="val">Optional</span></li>
+          <li><span class="label">License / Cost</span><span class="val">$0 (MIT / Apache-2.0)</span></li>
+        </ul>
+      </div>
+
+      <div class="profile-card enterprise">
+        <span class="profile-badge" style="color:var(--ok)">Enterprise Profile</span>
+        <h3>Team Governance &amp; Supply-Chain Audit</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Full organizational guardrails with supply-chain audits, secret scanning, and automated hooks.</p>
+        <div style="margin-bottom:14px">
+          <code>npx aidentity setup &lt;role&gt; --profile enterprise</code>
+        </div>
+        <ul class="profile-list">
+          <li><span class="label">Skill Set</span><span class="val">Core + 4 supply-chain/audit skills</span></li>
+          <li><span class="label">Pre-Tool Hooks</span><span class="val">Dangerous, secrets, format, test-on-stop</span></li>
+          <li><span class="label">Security Gate</span><span class="val">Enforced SHA-256 lockfile audit</span></li>
+          <li><span class="label">CI Integration</span><span class="val">npx aidentity audit in pipeline</span></li>
+          <li><span class="label">License / Cost</span><span class="val">$0 (Self-hosted in repo)</span></li>
+        </ul>
+      </div>
     </div>
 
     <h2 id="security-standard" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">3. How Aidentity Verifies Skill Security (7-Gate Static Analysis)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
       Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection instructions that exfiltrate <span class="mono">.env</span> secrets, or destructive shell commands. Every skill in Aidentity (${security.total_files_scanned || 2492} files across ${registry.total} skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
     </p>
-    <ol style="color:var(--ink-soft);font-size:0.95rem">
-      <li><strong>Gate 1 — Hidden &amp; Trojan-Source Unicode:</strong> Rejects zero-width spaces (<span class="mono">U+200B</span>–<span class="mono">U+200D</span>), BOMs, and bidirectional override characters (<span class="mono">U+202A</span>–<span class="mono">U+202E</span>, <span class="mono">U+2066</span>–<span class="mono">U+2069</span>).</li>
-      <li><strong>Gate 2 — Hardcoded Secrets &amp; Keys:</strong> Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys.</li>
-      <li><strong>Gate 3 — Destructive Shell Patterns:</strong> Blocks <span class="mono">rm -rf /</span>, fork bombs, raw disk writes (<span class="mono">dd</span>, <span class="mono">mkfs</span>), and root permission wipes.</li>
-      <li><strong>Gate 4 — Prompt Injection &amp; Exfiltration:</strong> Detects instructions attempting to override system guardrails, exfiltrate environment variables, or open reverse shells.</li>
-      <li><strong>Gate 5 — Untrusted Remote Script Execution:</strong> Flags <span class="mono">curl | sh</span> and <span class="mono">wget | bash</span> patterns.</li>
-      <li><strong>Gate 6 — Symlink &amp; Binary Hygiene:</strong> Rejects symlinks escaping the skill directory and unexpected compiled binaries.</li>
-      <li><strong>Gate 7 — Deterministic SHA-256 Digest:</strong> Computes a canonical SHA-256 hash over every file in the skill folder and publishes it in <a href="../security.json">security.json</a>.</li>
-    </ol>
+    <div class="gate-grid">
+      <div class="gate-card">
+        <span class="gate-num">Gate 01</span>
+        <h3>Hidden &amp; Trojan Unicode</h3>
+        <p>Rejects zero-width spaces (<code>U+200B</code>–<code>U+200D</code>), byte-order marks, and bidirectional override characters (<code>U+202A</code>–<code>U+202E</code>, <code>U+2066</code>–<code>U+2069</code>).</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 02</span>
+        <h3>Hardcoded Secrets &amp; Keys</h3>
+        <p>Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys across every instruction file.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 03</span>
+        <h3>Destructive Shell Patterns</h3>
+        <p>Blocks <code>rm -rf /</code>, fork bombs, raw disk writes (<code>dd</code>, <code>mkfs</code>), and root permission wipes.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 04</span>
+        <h3>Prompt Injection &amp; Exfiltration</h3>
+        <p>Detects instructions attempting to override system guardrails, exfiltrate environment variables, or establish reverse shells.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 05</span>
+        <h3>Untrusted Remote Scripts</h3>
+        <p>Flags <code>curl | sh</code> and <code>wget | bash</code> patterns that fetch and execute arbitrary unverified code from the network.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 06</span>
+        <h3>Symlink &amp; Binary Hygiene</h3>
+        <p>Rejects symlinks pointing outside the skill directory and unexpected compiled binary blobs.</p>
+      </div>
+      <div class="gate-card">
+        <span class="gate-num">Gate 07</span>
+        <h3>Deterministic SHA-256 Digest</h3>
+        <p>Computes canonical SHA-256 hash across every file in the skill directory, published in <a href="../security.json">security.json</a>.</p>
+      </div>
+    </div>
 
     <h2 id="ai-visibility-architecture" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">4. Agent-Readable &amp; AI Visibility Architecture (AEO / GEO / OKF)</h2>
     <p style="color:var(--ink-soft);font-size:0.95rem">
@@ -2533,7 +2714,6 @@ function buildMachineReadable() {
     "/sources/",
     "/about/",
     "/for-agents/",
-    "/roles/",
     "/playbooks/",
     "/courses/",
     "/guides/",
@@ -2542,6 +2722,7 @@ function buildMachineReadable() {
     "/pricing.md",
     "/okf/index.md",
     ...roles.map((r) => `/playbooks/${r.slug}/`),
+    ...COURSES_DATA.map((c) => `/courses/${c.slug}/`),
     ...skills.map((skill) => `/skills/${skill.id}/`),
   ];
   write(
@@ -3059,7 +3240,7 @@ buildSupport();
 buildMachineReadable();
 buildAgentSurface();
 
-const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + 12;
+const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + COURSES_DATA.length + 12;
 console.log(`Built ${pages} pages → ${path.relative(ROOT, OUT)}`);
 console.log(`  ${registry.total} skills · ${(rolesData.roles || []).length} role playbooks · ${COURSES_DATA.length} courses · ${sourceList.length} sources · ${categoryList.length} categories`);
 

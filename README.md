@@ -17,7 +17,8 @@
 <a href="LICENSE"><img src="https://img.shields.io/github/license/AkshatNaruka/aidentity?style=flat-square&color=14130f" alt="License"></a>
 
 <a href="https://akshatnaruka.github.io/aidentity/">Browse</a> ·
-<a href="https://akshatnaruka.github.io/aidentity/roles/">By role</a> ·
+<a href="https://akshatnaruka.github.io/aidentity/playbooks/">Playbooks</a> ·
+<a href="https://akshatnaruka.github.io/aidentity/courses/">Courses</a> ·
 <a href="https://akshatnaruka.github.io/aidentity/llms.txt">llms.txt</a> ·
 <a href="https://akshatnaruka.github.io/aidentity/registry.json">Registry</a> ·
 <a href="https://www.npmjs.com/package/aidentity">npm</a>
@@ -133,7 +134,7 @@ Full task router: **[INDEX.md](INDEX.md)** · bundles: **[bundles/](bundles/)** 
 
 Twenty roles mapped to verified skills, coding rules, subagents, slash commands, and hooks — with ready-to-paste **Individual** and **Enterprise** setup prompts for engineer, architect, product manager, engineering manager, designer, motion designer, content creator, marketer, SEO, finance, quant, music producer, filmmaker, journalist, legal, sales, support, teacher, HR, and data analyst.
 
-**[Open the role router →](https://akshatnaruka.github.io/aidentity/roles/)** · **[ROLES.md](ROLES.md)** · **[Role Setup Prompts →](prompts/setup/README.md)**
+**[Open Role Playbooks →](https://akshatnaruka.github.io/aidentity/playbooks/)** · **[ROLES.md](ROLES.md)** · **[Role Setup Prompts →](prompts/setup/README.md)**
 
 ---
 

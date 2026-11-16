@@ -351,63 +351,88 @@
 
   // --- browse filtering ---------------------------------------------------
   const list = document.getElementById("skill-list");
-  if (!list) return;
+  if (list) {
+    const search = document.getElementById("q");
+    const sourceFilter = document.getElementById("filter-source");
+    const categoryFilter = document.getElementById("filter-category");
+    const count = document.getElementById("result-count");
+    const empty = document.getElementById("empty");
+    const rows = Array.prototype.slice.call(list.querySelectorAll(".row"));
 
-  const search = document.getElementById("q");
-  const sourceFilter = document.getElementById("filter-source");
-  const categoryFilter = document.getElementById("filter-category");
-  const count = document.getElementById("result-count");
-  const empty = document.getElementById("empty");
-  const rows = Array.prototype.slice.call(list.querySelectorAll(".row"));
+    const params = new URLSearchParams(window.location.search);
+    if (search && params.get("q")) search.value = params.get("q");
+    if (categoryFilter && params.get("category")) categoryFilter.value = params.get("category");
+    if (sourceFilter && params.get("source")) sourceFilter.value = params.get("source");
 
-  const params = new URLSearchParams(window.location.search);
-  if (search && params.get("q")) search.value = params.get("q");
-  if (categoryFilter && params.get("category")) categoryFilter.value = params.get("category");
-  if (sourceFilter && params.get("source")) sourceFilter.value = params.get("source");
+    function apply() {
+      const query = (search ? search.value : "").trim().toLowerCase();
+      const source = sourceFilter ? sourceFilter.value : "";
+      const category = categoryFilter ? categoryFilter.value : "";
+      let visible = 0;
 
-  function apply() {
-    const query = (search ? search.value : "").trim().toLowerCase();
-    const source = sourceFilter ? sourceFilter.value : "";
-    const category = categoryFilter ? categoryFilter.value : "";
-    let visible = 0;
+      rows.forEach(function (row) {
+        const text = row.getAttribute("data-search") || "";
+        const rowSource = row.getAttribute("data-source") || "";
+        const rowCategory = row.getAttribute("data-category") || "";
+        const match =
+          (!query || text.indexOf(query) !== -1) &&
+          (!source || rowSource === source) &&
+          (!category || rowCategory === category);
 
-    rows.forEach(function (row) {
-      const text = row.getAttribute("data-search") || "";
-      const rowSource = row.getAttribute("data-source") || "";
-      const rowCategory = row.getAttribute("data-category") || "";
-      const match =
-        (!query || text.indexOf(query) !== -1) &&
-        (!source || rowSource === source) &&
-        (!category || rowCategory === category);
+        row.hidden = !match;
+        if (match) visible += 1;
+      });
 
-      row.hidden = !match;
-      if (match) visible += 1;
+      if (count) count.textContent = visible + (visible === 1 ? " skill" : " skills");
+      if (empty) empty.hidden = visible !== 0;
+
+      const next = new URLSearchParams();
+      if (query) next.set("q", query);
+      if (source) next.set("source", source);
+      if (category) next.set("category", category);
+      const suffix = next.toString();
+      window.history.replaceState(null, "", window.location.pathname + (suffix ? "?" + suffix : ""));
+    }
+
+    [search, sourceFilter, categoryFilter].forEach(function (element) {
+      if (!element) return;
+      element.addEventListener("input", apply);
+      element.addEventListener("change", apply);
     });
 
-    if (count) count.textContent = visible + (visible === 1 ? " skill" : " skills");
-    if (empty) empty.hidden = visible !== 0;
-
-    const next = new URLSearchParams();
-    if (query) next.set("q", query);
-    if (source) next.set("source", source);
-    if (category) next.set("category", category);
-    const suffix = next.toString();
-    window.history.replaceState(null, "", window.location.pathname + (suffix ? "?" + suffix : ""));
+    apply();
   }
 
-  [search, sourceFilter, categoryFilter].forEach(function (element) {
-    if (!element) return;
-    element.addEventListener("input", apply);
-    element.addEventListener("change", apply);
-  });
+  // --- playbook domain filtering ------------------------------------------
+  const playbookGrid = document.querySelector(".playbook-grid");
+  if (playbookGrid) {
+    const filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-playbook-filter], [data-PlaybookFilter]"));
+    const cards = Array.prototype.slice.call(playbookGrid.querySelectorAll(".playbook-card"));
 
-  apply();
+    filterButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const filter = btn.getAttribute("data-playbook-filter") || btn.getAttribute("data-PlaybookFilter") || "all";
+        filterButtons.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+
+        cards.forEach(function (card) {
+          const domain = card.getAttribute("data-domain") || "";
+          if (filter === "all" || domain.indexOf(filter) !== -1) {
+            card.style.display = "";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    });
+  }
 
   // --- keyboard: "/" focuses search --------------------------------------
   document.addEventListener("keydown", function (event) {
     if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
     const tag = (event.target.tagName || "").toLowerCase();
     if (tag === "input" || tag === "textarea" || tag === "select") return;
+    const search = document.getElementById("q");
     if (!search) return;
     event.preventDefault();
     search.focus();
