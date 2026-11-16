@@ -2,21 +2,35 @@
 (function () {
   "use strict";
 
-  // --- copy install commands ---------------------------------------------
+  // --- copy install commands & modern copy components -----------------------
   document.addEventListener("click", function (event) {
-    const button = event.target.closest("[data-copy]");
+    const button = event.target.closest("[data-copy], [data-copy-target]");
     if (!button) return;
-    const value = button.getAttribute("data-copy");
+    let value = button.getAttribute("data-copy");
+    if (!value && button.getAttribute("data-copy-target")) {
+      const targetElem = document.querySelector(button.getAttribute("data-copy-target"));
+      if (targetElem) value = targetElem.innerText || targetElem.textContent;
+    }
     if (!value) return;
 
+    const copyTextElem = button.querySelector(".copy-text");
+    const originalHTML = button.innerHTML;
+
     const done = function () {
-      const original = button.textContent;
-      button.textContent = "copied ✓";
       button.classList.add("copied");
+      if (copyTextElem) {
+        copyTextElem.textContent = "Copied ✓";
+        const svg = button.querySelector("svg");
+        if (svg) {
+          svg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+        }
+      } else {
+        button.textContent = "copied ✓";
+      }
       window.setTimeout(function () {
-        button.textContent = original;
         button.classList.remove("copied");
-      }, 1600);
+        button.innerHTML = originalHTML;
+      }, 1800);
     };
 
     const fallback = function () {
@@ -38,7 +52,6 @@
       if (ok) {
         done();
       } else {
-        // Last resort: select the command so the user can copy it manually.
         const code = button.closest(".cmd") && button.closest(".cmd").querySelector("code");
         if (code && window.getSelection) {
           const range = document.createRange();
@@ -49,7 +62,7 @@
         }
         button.textContent = "selected";
         window.setTimeout(function () {
-          button.textContent = "copy";
+          button.innerHTML = originalHTML;
         }, 2000);
       }
     };

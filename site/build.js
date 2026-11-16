@@ -86,6 +86,41 @@ function rotatingCommandBlock(commands) {
 </div>`;
 }
 
+function modernCopyButton(text, label = "Copy") {
+  return `<button type="button" class="modern-copy-btn" data-copy="${esc(text)}" aria-label="${esc(label)}">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+  <span class="copy-text">${esc(label)}</span>
+</button>`;
+}
+
+function modernCommandSnippet({ title, badge = "CURL", command }) {
+  return `<div class="snippet-card snippet-card-dark">
+  <div class="snippet-header">
+    <div class="snippet-info">
+      <span class="snippet-badge">${esc(badge)}</span>
+      <span class="snippet-title">${esc(title)}</span>
+    </div>
+    ${modernCopyButton(command, "Copy command")}
+  </div>
+  <pre class="snippet-body"><code>${esc(command)}</code></pre>
+</div>`;
+}
+
+function modernPromptCard({ num, title, description, prompt }) {
+  return `<div class="prompt-card">
+  <div class="prompt-card-head">
+    <div class="prompt-card-title-group">
+      <span class="prompt-card-num">${esc(num)}</span>
+      <span class="prompt-card-name">${esc(title)}</span>
+    </div>
+    ${modernCopyButton(prompt, "Copy prompt")}
+  </div>
+  ${description ? `<p class="prompt-card-desc">${esc(description)}</p>` : ""}
+  <div class="prompt-card-body">
+    <pre><code>${esc(prompt)}</code></pre>
+  </div>
+</div>`;
+}
 
 function jsonld(value) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
@@ -1313,24 +1348,34 @@ function buildForAgents() {
 <section style="padding: 24px 0 60px">
   <div class="wrap" style="max-width:880px">
 
-    <!-- Terminal Code Card: Quick Curl Examples -->
-    <div class="terminal-card">
-      <div class="terminal-header">
-        <div class="terminal-dots">
-          <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+    <!-- Modern Snippet Cards: Quick Curl & JQ Examples -->
+    <div style="margin-bottom:48px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div>
+          <p class="kicker">Terminal Operations</p>
+          <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:4px 0">Quick Agent Queries · curl &amp; jq</h2>
         </div>
-        <span class="terminal-title">Quick Agent Queries · curl &amp; jq</span>
+        <div class="mono" style="font-size:12px;color:var(--muted)">One-click copyable bash pipelines</div>
       </div>
-      <div class="terminal-body">
-<span style="color:#8c887e"># 1. Fetch LLM context summary for prompt injection</span>
-<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/llms.txt | head -n 35
+      <p style="color:var(--ink-soft);font-size:0.95rem;margin-bottom:18px">Execute these one-liners in your shell, CI pipelines, or LLM agent sandboxes:</p>
 
-<span style="color:#8c887e"># 2. Query verified skills in JSON with jq</span>
-<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/search.json | jq <span style="color:#a3e635">'.[] | select(.tags | contains(["security"]))'</span>
+      ${modernCommandSnippet({
+        badge: "CURL · LLMS.TXT",
+        title: "01 · Fetch LLM Context Summary for Prompt Injection",
+        command: "curl -s https://akshatnaruka.github.io/aidentity/llms.txt | head -n 35"
+      })}
 
-<span style="color:#8c887e"># 3. Check SHA-256 security verification status</span>
-<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/security.json | jq <span style="color:#a3e635">'.skills["addyosmani/engineering/debugging"]'</span>
-      </div>
+      ${modernCommandSnippet({
+        badge: "CURL · JQ",
+        title: "02 · Query Verified Skills in JSON by Tag",
+        command: `curl -s https://akshatnaruka.github.io/aidentity/search.json | jq '.[] | select(.tags | contains(["security"]))'`
+      })}
+
+      ${modernCommandSnippet({
+        badge: "CURL · INTEGRITY",
+        title: "03 · Check SHA-256 Security Verification Status",
+        command: `curl -s https://akshatnaruka.github.io/aidentity/security.json | jq '.skills["addyosmani/engineering/debugging"]'`
+      })}
     </div>
 
     <!-- Endpoints Bento Grid -->
@@ -1423,6 +1468,9 @@ function buildForAgents() {
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+              ${modernCopyButton("claude mcp add aidentity -- node /path/to/aidentity/cli/mcp.js", "Copy command")}
+            </div>
             <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>claude mcp add aidentity -- node /path/to/aidentity/cli/mcp.js</code></pre>
           </div>
         </details>
@@ -1433,6 +1481,9 @@ function buildForAgents() {
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+              ${modernCopyButton(`{\n  "mcpServers": {\n    "aidentity": {\n      "command": "node",\n      "args": ["/path/to/aidentity/cli/mcp.js"]\n    }\n  }\n}`, "Copy config")}
+            </div>
             <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>{
   "mcpServers": {
     "aidentity": {
@@ -1450,6 +1501,9 @@ function buildForAgents() {
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+              ${modernCopyButton(`[mcp_servers.aidentity]\ncommand = "node"\nargs = ["/path/to/aidentity/cli/mcp.js"]`, "Copy config")}
+            </div>
             <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>[mcp_servers.aidentity]
 command = "node"
 args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
@@ -1462,6 +1516,9 @@ args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+              ${modernCopyButton(`{\n  "mcpServers": {\n    "aidentity": {\n      "command": "node",\n      "args": ["/path/to/aidentity/cli/mcp.js"]\n    }\n  }\n}`, "Copy config")}
+            </div>
             <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>{
   "mcpServers": {
     "aidentity": {
@@ -1476,28 +1533,37 @@ args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
     </div>
 
     <!-- Agent Operational Prompts & Guardrails -->
-    <div style="margin-bottom:40px">
-      <p class="kicker">Agent Instructions</p>
-      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">Prompts That Work</h2>
-      <p style="color:var(--ink-soft);font-size:0.95rem;margin-bottom:14px">Copy and paste these exact prompts into any LLM or autonomous coding agent:</p>
-      
-      <div class="terminal-card">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
-          </div>
-          <span class="terminal-title">Copy-Paste Prompts for Autonomous Agents</span>
+    <div style="margin-bottom:48px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div>
+          <p class="kicker">Agent Instructions</p>
+          <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:4px 0">Prompts That Work</h2>
         </div>
-        <div class="terminal-body" style="white-space:pre-wrap;line-height:1.6">Fetch https://akshatnaruka.github.io/aidentity/roles.json and https://akshatnaruka.github.io/aidentity/security.json
-Set up my workspace for the "software-engineer" role with the "enterprise" profile.
-Verify every skill is verified:true before installing.
+        <div class="mono" style="font-size:12px;color:var(--muted)">100% Deterministic execution prompts</div>
+      </div>
+      <p style="color:var(--ink-soft);font-size:0.95rem;margin-bottom:18px">Copy and paste these exact prompts into Claude Code, Cursor, Codex, Gemini CLI, or ChatGPT:</p>
 
-Fetch https://akshatnaruka.github.io/aidentity/search.json
-Filter for category "testing" and status "stable".
-Return the top 3 best matches with their install commands.
+      <div class="prompt-card-grid">
+        ${modernPromptCard({
+          num: "Prompt 01",
+          title: "Full Role Setup & Security Verification",
+          description: "Directs the agent to fetch the role blueprint and security manifest, configure the workspace with enterprise guardrails, and enforce SHA-256 integrity before installation.",
+          prompt: `Fetch https://akshatnaruka.github.io/aidentity/roles.json and https://akshatnaruka.github.io/aidentity/security.json\nSet up my workspace for the "software-engineer" role with the "enterprise" profile.\nVerify every skill is verified:true before installing.`
+        })}
 
-Read https://akshatnaruka.github.io/aidentity/llms.txt
-I am building a Next.js + Supabase SaaS. Which bundle should I install, and why?</div>
+        ${modernPromptCard({
+          num: "Prompt 02",
+          title: "Query & Filter Skills by Category and Status",
+          description: "Queries search.json to identify stable skills within a specific engineering domain and returns prioritized install commands.",
+          prompt: `Fetch https://akshatnaruka.github.io/aidentity/search.json\nFilter for category "testing" and status "stable".\nReturn the top 3 best matches with their install commands.`
+        })}
+
+        ${modernPromptCard({
+          num: "Prompt 03",
+          title: "Stack Architecture Recommendation via llms.txt",
+          description: "Supplies llms.txt to the LLM to analyze dependencies and recommend the optimal verified skill bundle for a modern tech stack.",
+          prompt: `Read https://akshatnaruka.github.io/aidentity/llms.txt\nI am building a Next.js + Supabase SaaS. Which bundle should I install, and why?`
+        })}
       </div>
 
       <div class="callout" style="margin-top:24px">
