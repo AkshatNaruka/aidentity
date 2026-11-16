@@ -1,17 +1,20 @@
 {
   "name": "aidentity",
-  "version": "1.0.0",
-  "description": "A verified index of AI agent skills with license, source and install metadata.",
-  "updated": "2026-10-28",
+  "version": "1.1.0",
+  "description": "A verified index of AI agent skills with license, source, role setup profiles, and SHA-256 security verification.",
+  "updated": "2026-11-16",
   "counts": {
     "skills": 526,
     "installable": 507,
     "sources": 25,
-    "bundles": 8
+    "bundles": 8,
+    "roles": 20
   },
   "endpoints": {
     "search": "https://akshatnaruka.github.io/aidentity/search.json",
     "registry": "https://akshatnaruka.github.io/aidentity/registry.json",
+    "security": "https://akshatnaruka.github.io/aidentity/security.json",
+    "roles": "https://akshatnaruka.github.io/aidentity/roles.json",
     "catalog": "https://akshatnaruka.github.io/aidentity/catalog.json",
     "bundles": "https://akshatnaruka.github.io/aidentity/bundles.json",
     "llms": "https://akshatnaruka.github.io/aidentity/llms.txt",
@@ -21,7 +24,8 @@
     "mcp": "https://akshatnaruka.github.io/aidentity/for-agents/#mcp"
   },
   "usage": [
-    "Fetch /search.json once and keep it. Filter locally by tags, category, status and description.",
+    "Run `npx aidentity setup <role> --profile <individual|enterprise>` for one-command role setup.",
+    "Fetch /search.json and /security.json once. Verify `verified: true` before recommending or installing any skill.",
     "Fetch content_url for the full SKILL.md before recommending an install.",
     "Respect distributable: index-only entries (content_url null) must be linked upstream, not installed.",
     "Install with `npx aidentity add <id>` or by copying the folder from the GitHub repository."
