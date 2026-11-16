@@ -308,6 +308,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
   <div class="wrap">
     <a class="wordmark" href="${p}index.html"><span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span></a>
     <nav class="site-nav" aria-label="Primary">
+      <a href="${p}setup/index.html"${page === "setup" ? ' aria-current="page"' : ""}>Setup</a>
       <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
       <a href="${p}roles/index.html"${page === "roles" ? ' aria-current="page"' : ""}>Roles</a>
       <a href="${p}playbooks/index.html"${page === "playbooks" ? ' aria-current="page"' : ""}>Playbooks</a>
@@ -326,7 +327,7 @@ ${body}
 <footer class="site-foot">
   <div class="wrap">
     <p style="margin:0">Aidentity is an index, not a fork. Every skill belongs to its author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 — see <a href="${p}about/index.html#licensing">licensing</a>.</p>
-    <p style="margin:0"><a href="${p}skills/index.html">Browse</a> · <a href="${p}roles/index.html">Roles</a> · <a href="${p}playbooks/index.html">Playbooks</a> · <a href="${p}courses/index.html">Courses</a> · <a href="${p}guides/index.html">Guides</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}support/index.html">Support</a> · <a href="${p}pricing.md">pricing.md</a> · <a href="${p}okf/index.md">okf/</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
+    <p style="margin:0"><a href="${p}setup/index.html">Setup</a> · <a href="${p}skills/index.html">Browse</a> · <a href="${p}roles/index.html">Roles</a> · <a href="${p}playbooks/index.html">Playbooks</a> · <a href="${p}courses/index.html">Courses</a> · <a href="${p}guides/index.html">Guides</a> · <a href="${p}sources/index.html">Sources</a> · <a href="${p}about/index.html">About</a> · <a href="${p}support/index.html">Support</a> · <a href="${p}pricing.md">pricing.md</a> · <a href="${p}okf/index.md">okf/</a> · <a href="${p}registry.json">registry.json</a> · <a href="${p}llms.txt">llms.txt</a> · <a href="${p}feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="${p}assets/app.js" defer></script>
@@ -532,8 +533,8 @@ function buildHome() {
     </p>
     ${rotatingCommandBlock(heroCommands)}
     <p class="hero-links">
-      <a href="#setup-builder">Generate your setup prompt ↓</a>
-      <a href="roles/index.html">Setup by role (${homeRoles.length} roles) →</a>
+      <a href="setup/index.html">Setup generator (5 questions) →</a>
+      <a href="roles/index.html">Setup by role (${homeRoles.length} roles)</a>
       <a href="playbooks/index.html">Role playbooks</a>
       <a href="courses/index.html">AI agent courses</a>
       <a href="skills/index.html">Browse all ${registry.total} skills</a>
@@ -553,12 +554,6 @@ function buildHome() {
   </div>
 </div>
 
-<section id="onboarding-wizard">
-  <div class="wrap">
-    ${renderSetupWizardSection({ roles: homeRoles, securityPath: "security.json", headingLevel: "h2" })}
-  </div>
-</section>
-
 <section>
   <div class="wrap">
     <div class="section-head">
@@ -568,7 +563,7 @@ function buildHome() {
       <div>
         <span class="num">01</span>
         <h3>One prompt sets up your role.</h3>
-        <p>Whether you are a founder, software engineer, architect, PM, designer, marketer, or quant, answer 5 questions above to generate a one-time setup prompt that installs your exact verified skills, coding rules, subagents, and safety hooks. <a href="playbooks/index.html">Browse all ${homeRoles.length} playbooks →</a></p>
+        <p>Whether you are a founder, software engineer, architect, PM, designer, marketer, or quant, use the new <a href="setup/index.html"><strong>Setup Generator</strong></a> to answer 5 quick questions and copy your initial setup prompt. Or browse all <a href="playbooks/index.html">${homeRoles.length} role playbooks →</a></p>
       </div>
       <div>
         <span class="num">02</span>
@@ -1469,15 +1464,17 @@ function buildForRoles() {
   const body = `
 <section style="padding-top:44px">
   <div class="wrap">
-    <p class="kicker">By role · Individual &amp; Enterprise Setup</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Set up your agent for your job</h2>
+    <p class="kicker">By role · Individual &amp; Enterprise Blueprints</p>
+    <h1 style="font-size:clamp(2rem,4.6vw,3.2rem)">AI Agent Setups by Role</h1>
     <p style="max-width:66ch;color:var(--ink-soft);margin-top:14px">
-      Answer the 5 questions below to generate a one-time setup prompt tailored to your role (Founder, Engineer, Architect, PM, Designer, Marketer, Quant, and more), stack, and security requirements. Copy-paste it once into your coding agent or run the CLI command.
+      Pre-configured skill bundles, language coding rules, subagents, and safety hooks for ${roles.length} roles. Install via the one-line CLI command or view full playbooks.
     </p>
 
-    ${renderSetupWizardSection({ roles, securityPath: "../security.json", headingLevel: "h3" })}
+    <div class="callout" style="margin-top:24px">
+      <strong>Looking for the interactive questionnaire?</strong> Use the dedicated <a href="../setup/index.html"><strong>Setup tab →</strong></a> to answer 5 quick questions and copy a customized initial prompt for your coding agent.
+    </div>
 
-    <div class="section-head" style="margin-top:56px">
+    <div class="section-head" style="margin-top:44px">
       <h2>All ${roles.length} roles</h2>
       <a class="more" href="../playbooks/index.html">Browse all ${roles.length} role playbooks →</a>
     </div>
@@ -1486,14 +1483,90 @@ function buildForRoles() {
 </section>
 `;
   write("roles/index.html", layout({
-    title: "Skills & setup prompts by role",
-    description: `Interactive role setup questionnaire and one-prompt AI agent setups for individuals and enterprises across ${roles.length} jobs.`,
+    title: "Skills & setups by role",
+    description: `Pre-configured AI agent setups across ${roles.length} job roles with SHA-256 security verification.`,
     depth: 1,
     body,
     page: "roles",
     canonical: SITE + "/roles/",
     keywords: "AI skills by role, AI setup prompts, founder AI agent setup, enterprise agent setup, developer skills setup, finance agent skills, quant skills, AI agent playbooks",
     markdownAlt: `${SITE}/roles.json`,
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// setup tab (interactive 5-question one-time setup prompt generator)
+// ---------------------------------------------------------------------------
+
+function buildSetup() {
+  const roles = rolesData.roles || [];
+
+  const body = `
+<section style="padding-top:44px">
+  <div class="wrap">
+    <p class="kicker">Setup tab · Interactive Prompt Generator</p>
+    <h1 style="font-size:clamp(2rem,4.6vw,3.4rem)">One-Time Initial Agent Setup Generator</h1>
+    <p style="max-width:68ch;color:var(--ink-soft);margin-top:14px">
+      Answer the 5 quick questions below to generate a tailored, one-time initial setup prompt for your coding agent.
+      Whether you are a <strong>Founder</strong>, <strong>Software Engineer</strong>, <strong>Architect</strong>, <strong>PM</strong>, <strong>Designer</strong>, <strong>Marketer</strong>, or <strong>Quant</strong>, copy-paste the output prompt into Claude Code, Cursor, Codex, or Gemini CLI once to install your verified skills, coding rules, subagents, and security guardrails.
+    </p>
+
+    ${renderSetupWizardSection({ roles, securityPath: "../security.json", headingLevel: "h2" })}
+
+    <div class="section-head" style="margin-top:56px">
+      <h2>Explore Pre-Built Role Setups &amp; Playbooks</h2>
+      <a class="more" href="../roles/index.html">Browse all ${roles.length} roles →</a>
+    </div>
+    <div class="three">
+      <div>
+        <span class="num">01</span>
+        <h3>All ${roles.length} Roles Catalog</h3>
+        <p>Prefer to pick your role directly? Explore the full catalog of ${roles.length} roles with one-command CLI installers, verified skill lists, and rules. <a href="../roles/index.html">View roles →</a></p>
+      </div>
+      <div>
+        <span class="num">02</span>
+        <h3>Role Playbooks</h3>
+        <p>Read comprehensive deep-dive setup playbooks with Individual vs. Enterprise comparisons for every job. <a href="../playbooks/index.html">Browse playbooks →</a></p>
+      </div>
+      <div>
+        <span class="num">03</span>
+        <h3>100% Security Verified</h3>
+        <p>Every single skill across all roles is statically scanned by a 7-gate checker with published SHA-256 digests. <a href="../security.json">View security.json →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+`;
+
+  write("setup/index.html", layout({
+    title: "One-Time Initial Agent Setup Generator — Custom AI Agent Prompts",
+    description: "Answer 5 quick questions to generate a customized one-time AI agent setup prompt for Founders, Software Engineers, Architects, PMs, Designers, Marketers, and Quants.",
+    depth: 1,
+    body,
+    page: "setup",
+    canonical: SITE + "/setup/",
+    keywords: "AI agent setup, Claude Code setup prompt, Cursor agent setup, founder AI setup prompt, enterprise AI agent generator, coding agent onboarding questionnaire",
+    markdownAlt: `${SITE}/roles.json`,
+    jsonld: jsonld({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+            { "@type": "ListItem", position: 2, name: "Setup", item: `${SITE}/setup/` },
+          ],
+        },
+        {
+          "@type": "WebApplication",
+          name: "Aidentity Initial Agent Setup Generator",
+          url: `${SITE}/setup/`,
+          description: "Interactive questionnaire generating customized one-time AI agent setup prompts for Founders, Software Engineers, Architects, PMs, Designers, and Quants.",
+          applicationCategory: "DeveloperApplication",
+          operatingSystem: "All",
+        },
+      ],
+    }),
   }));
 }
 
@@ -2455,6 +2528,7 @@ function buildMachineReadable() {
 
   const urls = [
     "/",
+    "/setup/",
     "/skills/",
     "/sources/",
     "/about/",
@@ -2718,6 +2792,7 @@ function buildAgentSurface() {
       courses: COURSES_DATA.length,
     },
     endpoints: {
+      setup: `${SITE}/setup/`,
       search: `${SITE}/search.json`,
       registry: `${SITE}/registry.json`,
       security: `${SITE}/security.json`,
@@ -2970,6 +3045,7 @@ function buildAgentSurface() {
 fs.rmSync(OUT, { recursive: true, force: true });
 buildAssets();
 buildHome();
+buildSetup();
 buildBrowse();
 buildSources();
 buildAbout();
@@ -2983,7 +3059,8 @@ buildSupport();
 buildMachineReadable();
 buildAgentSurface();
 
-const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + 11;
+const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + 12;
 console.log(`Built ${pages} pages → ${path.relative(ROOT, OUT)}`);
 console.log(`  ${registry.total} skills · ${(rolesData.roles || []).length} role playbooks · ${COURSES_DATA.length} courses · ${sourceList.length} sources · ${categoryList.length} categories`);
+
 
