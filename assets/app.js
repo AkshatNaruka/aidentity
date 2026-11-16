@@ -86,6 +86,18 @@
     }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (commands.length > 1 && !reduce) {
+      // Prioritize top skills, but shuffle the subsequent pool randomly so every session gets fresh discoveries from the entire collection
+      const priorityCount = 6;
+      const head = commands.slice(0, priorityCount);
+      const tail = commands.slice(priorityCount);
+      for (let i = tail.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = tail[i];
+        tail[i] = tail[j];
+        tail[j] = temp;
+      }
+      commands = head.concat(tail);
+
       const code = rotator.querySelector("code");
       const button = rotator.querySelector("button");
       let index = 0;
