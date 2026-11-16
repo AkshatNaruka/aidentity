@@ -551,11 +551,38 @@ function skillBody(skill) {
 // ---------------------------------------------------------------------------
 
 function buildHome() {
+  const topPrioritySkillIds = [
+    "mattpocock/engineering/tdd",
+    "mattpocock/engineering/code-review",
+    "obra-superpowers/systematic-debugging",
+    "addyosmani/planning-and-task-breakdown",
+    "addyosmani/security-and-hardening",
+    "ui-ux-pro-max/ui-ux-pro-max",
+    "trailofbits/audit-context-building",
+    "trailofbits/supply-chain-risk-auditor",
+    "obra-superpowers/test-driven-development",
+    "obra-superpowers/using-git-worktrees",
+    "expo/expo-router",
+    "marketingskills/ai-seo",
+    "supabase/supabase-postgres-best-practices",
+    "mattpocock/engineering/grill-with-docs",
+    "addyosmani/debugging-and-error-recovery",
+    "trailofbits/semgrep-rule-creator",
+    "marketingskills/copywriting",
+  ];
+
+  const distributableSkills = skills.filter((s) => s.distributable);
+  const prioritySkills = topPrioritySkillIds
+    .map((id) => distributableSkills.find((s) => s.id === id))
+    .filter(Boolean);
+
+  const remainingSkills = distributableSkills.filter(
+    (s) => !topPrioritySkillIds.includes(s.id)
+  );
+
   const heroCommands = [
-    "npx aidentity setup founder --profile individual",
-    "npx aidentity setup software-engineer --profile individual",
-    "npx aidentity setup architect --profile enterprise",
-    "npx aidentity audit",
+    ...prioritySkills.map((s) => `npx aidentity add ${s.id}`),
+    ...remainingSkills.map((s) => `npx aidentity add ${s.id}`),
   ];
   const featured = startHere.slice(0, 6);
   const topCategories = categoryList;
