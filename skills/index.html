@@ -78,21 +78,43 @@
 </header>
 <main id="main">
 
-<section style="padding-top:44px">
-  <div class="wrap">
-    <p class="kicker">The index</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.4rem)">All skills</h2>
-    <p style="max-width:62ch;color:var(--ink-soft);margin-top:14px">
-      526 entries. Filter by name, category or upstream. Press <span class="mono">/</span> to search.
+<div class="wrap">
+  <div class="page-hero">
+    <span class="page-hero-kicker">Verified Registry · All 526 Skills</span>
+    <h1 class="page-title">Browse Verified Agent Skills</h1>
+    <p class="page-lead">
+      Search and filter across 526 security-audited skills from 25 upstream sources.
+      Every file is scanned for prompt injection, secret exfiltration, and malicious shell scripts, with SHA-256 digests published in <span class="mono">security.json</span>.
     </p>
+    <div class="page-hero-meta">
+      <span class="hero-pill"><span class="dot"></span> 526 Total Skills</span>
+      <span class="hero-pill"><span class="dot"></span> 507 One-Command Install</span>
+      <span class="hero-pill"><span class="dot"></span> 25 Upstream Repositories</span>
+      <span class="hero-pill"><span class="dot"></span> Weekly Verified</span>
+    </div>
+  </div>
 
-    <div class="controls">
-      <label class="sr-only" for="q">Search skills</label>
-      <input id="q" type="search" placeholder="Search 526 skills — name, tag, description…" autocomplete="off" spellcheck="false">
-      <label class="sr-only" for="filter-category">Filter by category</label>
-      <select id="filter-category">
-        <option value="">All categories</option>
-        <option value="cloud">cloud</option>
+  <div class="pill-strip" id="category-pills" role="toolbar" aria-label="Quick category filters">
+    <button type="button" class="pill-btn active" data-cat="">All (526)</button>
+    <button type="button" class="pill-btn" data-cat="cloud">cloud (110)</button>
+    <button type="button" class="pill-btn" data-cat="azure">azure (61)</button>
+    <button type="button" class="pill-btn" data-cat="corporate">corporate (43)</button>
+    <button type="button" class="pill-btn" data-cat="mobile">mobile (23)</button>
+    <button type="button" class="pill-btn" data-cat="project-management">project-management (20)</button>
+    <button type="button" class="pill-btn" data-cat="engineering">engineering (19)</button>
+    <button type="button" class="pill-btn" data-cat="design">design (17)</button>
+    <button type="button" class="pill-btn" data-cat="ads">ads (16)</button>
+    <button type="button" class="pill-btn" data-cat="growth">growth (16)</button>
+    <button type="button" class="pill-btn" data-cat="copywriting">copywriting (12)</button>
+  </div>
+
+  <div class="controls">
+    <label class="sr-only" for="q">Search skills</label>
+    <input id="q" type="search" placeholder="Search 526 skills — name, tag, category, author…" autocomplete="off" spellcheck="false">
+    <label class="sr-only" for="filter-category">Filter by category</label>
+    <select id="filter-category">
+      <option value="">All categories (47)</option>
+      <option value="cloud">cloud</option>
 <option value="azure">azure</option>
 <option value="corporate">corporate</option>
 <option value="mobile">mobile</option>
@@ -139,11 +161,11 @@
 <option value="performance">performance</option>
 <option value="tooling">tooling</option>
 <option value="video">video</option>
-      </select>
-      <label class="sr-only" for="filter-source">Filter by source</label>
-      <select id="filter-source">
-        <option value="">All sources</option>
-        <option value="google-cloud">google-cloud</option>
+    </select>
+    <label class="sr-only" for="filter-source">Filter by source</label>
+    <select id="filter-source">
+      <option value="">All sources (25)</option>
+      <option value="google-cloud">google-cloud</option>
 <option value="microsoft-azure">microsoft-azure</option>
 <option value="opensensenova-sensenova-skills">opensensenova-sensenova-skills</option>
 <option value="marketingskills">marketingskills</option>
@@ -168,16 +190,16 @@
 <option value="repo-scanner">repo-scanner</option>
 <option value="haidrrrry-claude-remotion-skill">haidrrrry-claude-remotion-skill</option>
 <option value="agents365-ai-drawio-skill">agents365-ai-drawio-skill</option>
-      </select>
-    </div>
+    </select>
+  </div>
 
-    <div class="browse-meta">
-      <span id="result-count">526 skills</span>
-      <span>507 installable · 19 indexed only</span>
-    </div>
+  <div class="browse-meta">
+    <span id="result-count"><strong>526</strong> skills available</span>
+    <span class="mono">507 distributable · 19 indexed only (proprietary notice)</span>
+  </div>
 
-    <div class="rows" id="skill-list">
-      <a class="row" href="../skills/abrahamferga-scrum-skills/audit-backlog-ado/index.html"
+  <div class="rows" id="skill-list">
+    <a class="row" href="../skills/abrahamferga-scrum-skills/audit-backlog-ado/index.html"
      data-source="abrahamferga-scrum-skills"
      data-category="project-management"
      data-search="audit-backlog-ado audits the azure devops product backlog for hygiene, story quality, and refinement readiness — identifying items that are too large, missing acceptance criteria, stale, unestimated, or out of priority order. use when a scrum master or product owner says things like &quot;audit the backlog&quot;, &quot;is the backlog healthy&quot;, &quot;review the backlog before refinement&quot;, &quot;clean up the backlog&quot;, &quot;check backlog hygiene&quot;, or &quot;prepare the backlog for planning&quot;. do not use for individual story audits — use audit-user-story for that. do not use for sprint planning or velocity review. project-management  abrahamferga/scrum-skills">
@@ -5963,10 +5985,9 @@
   <span class="r-src">nextlevelbuilder/ui-ux-pro-max-skill</span>
   <span class="r-lic">MIT</span>
 </a>
-    </div>
-    <p class="empty" id="empty" hidden>No skills match that. Try a broader term.</p>
   </div>
-</section>
+  <p class="empty" id="empty" hidden>No skills match that search term. Try clearing filters or searching by author/tool name.</p>
+</div>
 
 </main>
 <footer class="site-foot" id="site-foot">

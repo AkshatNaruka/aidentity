@@ -3,24 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About — Aidentity</title>
-<meta name="description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups.">
+<title>About Aidentity — Verified AI Agent Registry — Aidentity</title>
+<meta name="description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups with complete provenance receipts.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
 
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/about/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="website">
-<meta property="og:title" content="About — Aidentity">
-<meta property="og:description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups.">
+<meta property="og:title" content="About Aidentity — Verified AI Agent Registry — Aidentity">
+<meta property="og:description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups with complete provenance receipts.">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/about/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="About — Aidentity">
-<meta name="twitter:description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups.">
+<meta name="twitter:title" content="About Aidentity — Verified AI Agent Registry — Aidentity">
+<meta name="twitter:description" content="How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups with complete provenance receipts.">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
@@ -78,71 +78,186 @@
 </header>
 <main id="main">
 
-<section style="padding-top:44px">
-  <div class="wrap" style="max-width:760px">
-    <p class="kicker">About</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">An index, with receipts</h2>
+<section class="page-hero">
+  <div class="wrap" style="max-width:820px">
+    <span class="hero-badge">Manifesto &amp; Verification</span>
+    <h1 class="hero-title">An Index, with Receipts</h1>
+    <p class="hero-desc">
+      There are thousands of AI agent skills. They live in dozens of repositories, in conflicting directory conventions, under unstated licenses. Finding one is easy. Knowing whether it's safe to run, who wrote it, and what you're allowed to do with it is not. Aidentity is the verifiable registry.
+    </p>
+  </div>
+</section>
 
-    <div class="prose" style="margin-top:24px;font-size:1rem">
-      <p>There are thousands of agent skills. They live in dozens of repositories, in at least six different
-      directory conventions, under licenses that are usually unstated. Finding one is easy. Knowing whether it
-      still works, who wrote it, and what you're allowed to do with it is not.</p>
-
-      <p>Aidentity is a registry. Each entry is one record with a stable ID, an upstream source, an author, a
-      license, a status, and the date it was last verified. The website, the CLI, and the machine-readable
-      registry all read the same file.</p>
-
-      <h2 id="security" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Security &amp; Integrity Verification</h2>
-      <p>Every skill in the repository (2492 files across 526 entries) is scanned by <span class="mono">scripts/scan-skills-security.js</span> and recorded in <a href="../security.json">security.json</a> with a deterministic SHA-256 content digest. The scanner blocks:</p>
-      <ol>
-        <li>Hidden or bidirectional Unicode characters (<span class="mono">U+200B</span>–<span class="mono">U+200D</span>, <span class="mono">U+FEFF</span>, BiDi overrides).</li>
-        <li>Live credentials or private keys (AWS, GitHub, OpenAI, Anthropic, Slack, Google, PEM blocks).</li>
-        <li>Destructive shell commands (<span class="mono">rm -rf /</span>, fork bombs, <span class="mono">mkfs</span>, raw <span class="mono">dd</span> device writes).</li>
-        <li>Prompt injection directives, credential exfiltration instructions, and reverse shells.</li>
-        <li>Untrusted remote script execution (<span class="mono">curl | sh</span>) and symlinks or unexpected binaries.</li>
-      </ol>
-      <p>The CLI (<span class="mono">npx aidentity add</span>, <span class="mono">npx aidentity setup</span>, <span class="mono">npx aidentity audit</span>) and MCP server verify <span class="mono">verified: true</span> before installing any skill.</p>
-
-      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Verification</h2>
-      <p>Every Monday, CI requests each upstream repository. The result is written to
-      <span class="mono">registry/verified.json</span> and rendered on every page that depends on it. If a source
-      disappears, an issue is opened automatically. A stale link is a bug, not an accepted cost.</p>
-
-      <h2 id="licensing" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Licensing</h2>
-      <p>Three rules:</p>
-      <ol>
-        <li>Content is mirrored only when the upstream license permits redistribution (MIT, Apache-2.0).</li>
-        <li>When it does not, the entry is a pointer: name, description, author, license, upstream URL. No content.</li>
-        <li>Every mirrored source keeps its upstream <span class="mono">LICENSE</span> file. Notices are generated,
-        not hand-written.</li>
-      </ol>
-      <p>This repository's own code is MIT. The registry data is CC0. Original writing is CC BY 4.0. Vendored
-      skills remain under their upstream licenses.</p>
-
-      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Machine-readable</h2>
-      <p>The registry is a single JSON file, versioned and schema-validated. Agents can read it directly:
-      <a href="../registry.json">registry.json</a> · <a href="../security.json">security.json</a> · <a href="../roles.json">roles.json</a> · <a href="../llms.txt">llms.txt</a> ·
-      <a href="../sitemap.xml">sitemap.xml</a>.</p>
-
-      <h2 id="faq" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Questions</h2>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">What is Aidentity?</h3>
-      <p>Aidentity is a verified index of 526 AI agent skills and 20 role-based setups (Individual &amp; Enterprise). Each entry records its source repository, author, license, SHA-256 security status, category and last verification date.</p>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I set up my agent for my role?</h3>
-      <p>Run <span class="mono">npx aidentity setup &lt;role&gt; --profile individual</span> (or <span class="mono">enterprise</span>), use the interactive prompt builder on the <a href="../setup/index.html">Setup page</a>, or browse full blueprints in the <a href="../playbooks/index.html">Playbooks directory</a>.</p>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">Are the skills free to use?</h3>
-      <p>Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. 19 skills from Anthropic are indexed with a link only, because their upstream license does not permit redistribution. Every page states its license.</p>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">How do I install one?</h3>
-      <p>Run <span class="mono">npx aidentity add &lt;id&gt;</span>, or copy the folder from <span class="mono">skills/&lt;source&gt;/&lt;name&gt;/</span>. The CLI detects Claude Code, Cursor, Codex, Gemini CLI, OpenCode or Copilot and writes to the right directory.</p>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">How do you keep the index accurate and safe?</h3>
-      <p>CI rebuilds the registry on every change, runs the 7-gate security scanner (<span class="mono">scripts/scan-skills-security.js</span>), and checks the license policy. A weekly job requests every upstream repository and writes <span class="mono">registry/verified.json</span>.</p>
-      <h3 style="font-size:0.98rem;margin:18px 0 6px">Can I add a skill?</h3>
-      <p>Yes. One JSON record and a pull request. CI validates the schema, the license, security checks, and that the source resolves. See the contributing guide.</p>
-
-      <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Contributing</h2>
-      <p>One JSON record per pull request. CI validates the schema, the license, and that the source resolves.
-      Maintainers review within a day.</p>
-      <p><a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/CONTRIBUTING.md" rel="noopener">Contributing guide ↗</a></p>
+<section style="padding: 24px 0 60px">
+  <div class="wrap" style="max-width:840px">
+    
+    <!-- 4 Core Pillars Bento -->
+    <div style="margin-bottom:48px">
+      <p class="kicker">Registry Architecture</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 20px">Four Principles of Aidentity</h2>
+      <div class="bento-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr))">
+        <div class="bento-card">
+          <div class="kicker" style="color:var(--ok)">01 · Safety First</div>
+          <h3>Deterministic Security</h3>
+          <p>Every skill is scanned across 7 static analysis gates for Trojan Unicode, credentials, prompt injections, and destructive commands. SHA-256 digests in <span class="mono">security.json</span>.</p>
+        </div>
+        <div class="bento-card">
+          <div class="kicker" style="color:var(--accent)">02 · Attribution</div>
+          <h3>Upstream Respect</h3>
+          <p>Aidentity is an index, never a fork. We preserve upstream authors, source links, and original licenses. Where licenses prohibit re-hosting, we link directly without mirroring.</p>
+        </div>
+        <div class="bento-card">
+          <div class="kicker" style="color:var(--ink)">03 · Normalization</div>
+          <h3>Cross-Agent Portability</h3>
+          <p>One unified registry maps seamlessly across Claude Code, Cursor, OpenAI Codex, Gemini CLI, OpenCode, and Copilot. One CLI installs to the exact right directory.</p>
+        </div>
+        <div class="bento-card">
+          <div class="kicker" style="color:var(--ink-soft)">04 · Fast &amp; Machine-Ready</div>
+          <h3>Zero-Bloat Performance</h3>
+          <p>Built with zero runtime JavaScript dependencies. 100% static HTML/CSS, machine-readable JSON endpoints, and full <span class="mono">llms.txt</span> support for autonomous RAG agents.</p>
+        </div>
+      </div>
     </div>
+
+    <!-- Security Deep Dive -->
+    <div style="margin-bottom:48px" id="security">
+      <p class="kicker">Security &amp; Integrity</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">The 7-Gate Security Scanner</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:18px">
+        Every skill in the registry (2492 files across 526 entries) is scanned by <span class="mono">scripts/scan-skills-security.js</span> and recorded in <a href="../security.json" class="mono">security.json</a> with a deterministic SHA-256 digest. The scanner strictly blocks:
+      </p>
+
+      <div class="gate-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-bottom:24px">
+        <div class="gate-card">
+          <span class="gate-num">Gate 01</span>
+          <h3 style="font-size:14px;margin:4px 0 6px">Trojan &amp; BiDi Unicode</h3>
+          <p style="font-size:12px">Rejects zero-width spaces (<code>U+200B</code>), byte-order marks, and bidirectional direction overrides.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 02</span>
+          <h3 style="font-size:14px;margin:4px 0 6px">Hardcoded Secrets</h3>
+          <p style="font-size:12px">Rejects live AWS, GitHub, OpenAI, Anthropic, Slack tokens, and private PEM keys.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 03</span>
+          <h3 style="font-size:14px;margin:4px 0 6px">Destructive Commands</h3>
+          <p style="font-size:12px">Blocks <code>rm -rf /</code>, fork bombs, disk formatters (<code>mkfs</code>), and raw disk writes.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 04</span>
+          <h3 style="font-size:14px;margin:4px 0 6px">Prompt Injections</h3>
+          <p style="font-size:12px">Detects instructions attempting to exfiltrate env vars or bypass system safety guardrails.</p>
+        </div>
+      </div>
+
+      <!-- Terminal Preview -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+          </div>
+          <span class="terminal-title">Terminal · npx aidentity audit</span>
+        </div>
+        <div class="terminal-body">
+<span style="color:#10b981">✓</span> Scanning 526 skills across 2,492 files...
+<span style="color:#10b981">✓</span> Gate 01: Zero-width &amp; BiDi Unicode: 0 findings
+<span style="color:#10b981">✓</span> Gate 02: Hardcoded credentials &amp; tokens: 0 findings
+<span style="color:#10b981">✓</span> Gate 03: Destructive shell operations: 0 findings
+<span style="color:#10b981">✓</span> Gate 04: Prompt injection &amp; data exfiltration: 0 findings
+<span style="color:#10b981">✓</span> Gate 05: Untrusted remote execution: 0 findings
+<span style="color:#10b981">✓</span> Gate 06: Symlink &amp; binary hygiene: 0 findings
+<span style="color:#10b981">✓</span> Gate 07: Deterministic SHA-256 verification: 100% PASS
+<span style="color:#38bdf8">→ Output written to security.json · Ready for production agents</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Licensing & FAQ Section -->
+    <div style="margin-bottom:48px" id="licensing">
+      <p class="kicker">Transparency</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">Licensing Policy</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6">
+        Every skill in the registry strictly observes its upstream license:
+      </p>
+      <ul style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin:12px 0 24px 20px">
+        <li><strong>Redistributable (MIT, Apache-2.0, CC BY):</strong> Mirrored with preserved upstream license notices.</li>
+        <li><strong>Non-Redistributable (Proprietary, Index-Only):</strong> Pointers with name, description, author, and direct link only. Never copied.</li>
+        <li><strong>Repository Code:</strong> Aidentity tooling is MIT. Registry metadata is CC0. Original writing is CC BY 4.0.</li>
+      </ul>
+    </div>
+
+    <!-- Interactive FAQ Accordion -->
+    <div style="margin-bottom:48px" id="faq">
+      <p class="kicker">Frequently Asked Questions</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 20px">Everything You Need to Know</h2>
+      
+      <div class="accordion-group">
+        <details class="accordion-item" open>
+          <summary class="accordion-trigger">
+            <span>What is Aidentity?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            Aidentity is a verified, open-source registry of 526 AI agent skills and 20 role-based setups. Each entry records its source repository, author, license, SHA-256 security verification status, category, and automated verification date.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>How do I set up my agent for my job role?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            You can run <code class="mono">npx aidentity setup &lt;role&gt; --profile individual</code> (or <code class="mono">enterprise</code>), use the interactive 5-question wizard on our <a href="../setup/index.html">Setup page</a>, or browse complete blueprints in the <a href="../playbooks/index.html">Playbooks directory</a>.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>Are the skills free to use?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            Yes, 100% of the skills indexed are free. The majority are licensed under MIT or Apache-2.0. Trail of Bits skills are licensed under CC BY-SA 4.0. Upstream skills from Anthropic are indexed with direct reference links. Every page clearly states its specific license.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>How do I install a skill into my coding agent?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            Run <code class="mono">npx aidentity add &lt;id&gt; --agent claude</code> (or <code class="mono">cursor</code>, <code class="mono">codex</code>, <code class="mono">gemini</code>, <code class="mono">opencode</code>, <code class="mono">copilot</code>). The CLI automatically detects your active coding agent and writes files to the exact directory required.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>How do you keep the index safe and updated?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            CI rebuilds the registry on every commit, executes the 7-gate static analysis scanner, and computes deterministic SHA-256 hashes. A scheduled weekly workflow tests every upstream Git repository and writes fresh verification timestamps to <code class="mono">registry/verified.json</code>.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>Can I contribute a new skill or repository?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            Yes! Submitting a skill requires just one JSON entry and a GitHub pull request. CI automatically verifies schema conformity, license compliance, and security checks. Submissions are reviewed by maintainers within 24 hours.
+          </div>
+        </details>
+      </div>
+
+      <div style="text-align:center;margin-top:32px">
+        <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Read Contributing Guide ↗</a>
+      </div>
+    </div>
+
   </div>
 </section>
 

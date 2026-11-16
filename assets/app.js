@@ -613,8 +613,50 @@
     requestAnimationFrame(render);
   })();
 
+  // --- Category Pill Strip for Browse ------------------------------------
+  const pillStrip = document.getElementById("category-pills");
+  if (pillStrip) {
+    const pillButtons = pillStrip.querySelectorAll(".pill-btn");
+    const categorySelect = document.getElementById("filter-category");
+    pillButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const cat = btn.getAttribute("data-cat") || "";
+        pillButtons.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        if (categorySelect) {
+          categorySelect.value = cat;
+          categorySelect.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+  }
+
+  // --- Setup Preset Cards -----------------------------------------------
+  document.querySelectorAll("[data-preset-role]").forEach(function (preset) {
+    preset.addEventListener("click", function () {
+      const role = preset.getAttribute("data-preset-role");
+      const profile = preset.getAttribute("data-preset-profile") || "individual";
+      const roleSelect = document.getElementById("wiz-role");
+      const profileSelect = document.getElementById("wiz-profile");
+      if (roleSelect) {
+        roleSelect.value = role;
+        roleSelect.dispatchEvent(new Event("change"));
+      }
+      if (profileSelect) {
+        profileSelect.value = profile;
+        profileSelect.dispatchEvent(new Event("change"));
+      }
+      document.querySelectorAll("[data-preset-role]").forEach(function (p) { p.classList.remove("active"); });
+      preset.classList.add("active");
+      const outputElem = document.getElementById("wizard-output");
+      if (outputElem) {
+        outputElem.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  });
+
   // --- Card Spotlight Initializer -----------------------------------------
-  document.querySelectorAll(".playbook-card, .role-card, .aside-card, .three div").forEach(function (card) {
+  document.querySelectorAll(".playbook-card, .role-card, .aside-card, .three div, .bento-card, .preset-card").forEach(function (card) {
     card.classList.add("spotlight-card");
   });
 })();

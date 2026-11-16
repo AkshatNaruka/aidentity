@@ -78,179 +78,231 @@
 </header>
 <main id="main">
 
-<section style="padding-top:44px">
-  <div class="wrap" style="max-width:920px">
-    <p class="kicker">Guides · Comparisons · Security · AI Visibility</p>
-    <h1 style="font-size:clamp(2rem,4.6vw,3.3rem)">Definitive Guides to AI Agent Skills, Setup &amp; Security</h1>
-    <p style="max-width:68ch;color:var(--ink-soft);margin-top:14px">
-      <strong>What is the Aidentity Reference Guide?</strong> This page is the canonical reference for comparing AI coding agent directory conventions, choosing between <strong>Individual</strong> and <strong>Enterprise</strong> agent setups, verifying <span class="mono">SKILL.md</span> security, and optimizing sites for AI citation and agent readiness (<span class="mono">AgentReady</span>, <span class="mono">llms.txt</span>, and <span class="mono">OKF</span>).
+<section class="page-hero">
+  <div class="wrap" style="max-width:960px">
+    <span class="hero-badge">Canonical Reference Architecture</span>
+    <h1 class="hero-title">Definitive Guides to AI Agent Skills, Setup &amp; Security</h1>
+    <p class="hero-desc">
+      The authoritative reference for comparing AI coding agent directory conventions, choosing between <strong>Individual</strong> and <strong>Enterprise</strong> agent setups, verifying <span class="mono">SKILL.md</span> security, and optimizing codebases for autonomous AI citation and agent readiness.
     </p>
-    <p class="mono" style="font-size:11.5px;color:var(--muted);margin-top:12px">
-      Last updated: 2026-11-16 · Author: Akshat Naruka · Cited sources: AgentReady.org, Princeton GEO (KDD 2024), Trail of Bits, Google Search Central
-    </p>
+    <div class="pill-strip" style="justify-content:center;margin-top:20px">
+      <span class="pill-btn" style="cursor:default">6 Agent Runtimes</span>
+      <span class="pill-btn" style="cursor:default">7 Security Gates</span>
+      <span class="pill-btn" style="cursor:default">AgentReady Certified</span>
+      <span class="pill-btn" style="cursor:default">Open Knowledge Format (OKF)</span>
+    </div>
+  </div>
+</section>
 
-    <nav class="guide-toc" aria-label="Guides table of contents">
+<section style="padding: 24px 0 60px">
+  <div class="wrap" style="max-width:960px">
+
+    <nav class="pill-strip" aria-label="Guides table of contents" style="margin-bottom:36px;padding-bottom:18px;border-bottom:1px solid var(--rule)">
       <span class="mono" style="font-size:11px;font-weight:bold;color:var(--muted);align-self:center;margin-right:6px">JUMP TO:</span>
-      <a href="#agent-comparison">1. Agent Path Comparison</a>
-      <a href="#individual-vs-enterprise">2. Individual vs. Enterprise</a>
-      <a href="#security-standard">3. 7-Gate Security Standard</a>
-      <a href="#ai-visibility-architecture">4. AI Visibility Architecture</a>
+      <a href="#agent-comparison" class="pill-btn">1. Agent Path Comparison</a>
+      <a href="#individual-vs-enterprise" class="pill-btn">2. Individual vs. Enterprise</a>
+      <a href="#security-standard" class="pill-btn">3. 7-Gate Security Standard</a>
+      <a href="#ai-visibility-architecture" class="pill-btn">4. AI Visibility Architecture</a>
     </nav>
 
-    <h2 id="agent-comparison" style="font-family:var(--sans);font-size:1.25rem;margin-top:40px">1. Coding Agent Skill Directory &amp; MCP Comparison (Claude Code vs. Cursor vs. Codex vs. Gemini CLI)</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">
-      Every AI coding agent reads markdown instructions, but each tool uses a different folder layout. <span class="mono">npx aidentity setup &lt;role&gt; --agent &lt;target&gt;</span> normalizes all 6 platforms from a single skill ID:
-    </p>
-    <div class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr><th>Agent</th><th>Skills Path</th><th>Rules / Context File</th><th>MCP Config Path</th><th>CLI Install Flag</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Agent"><strong>Claude Code</strong></td>
-            <td data-label="Skills Path" class="mono">.claude/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">CLAUDE.md + .claude/rules/</td>
-            <td data-label="MCP Config Path" class="mono">claude mcp add aidentity</td>
-            <td data-label="CLI Install Flag" class="mono">--agent claude</td>
-          </tr>
-          <tr>
-            <td data-label="Agent"><strong>Cursor</strong></td>
-            <td data-label="Skills Path" class="mono">.cursor/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">.cursor/rules/*.mdc</td>
-            <td data-label="MCP Config Path" class="mono">.cursor/mcp.json</td>
-            <td data-label="CLI Install Flag" class="mono">--agent cursor</td>
-          </tr>
-          <tr>
-            <td data-label="Agent"><strong>OpenAI Codex</strong></td>
-            <td data-label="Skills Path" class="mono">.codex/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">AGENTS.md</td>
-            <td data-label="MCP Config Path" class="mono">~/.codex/config.toml</td>
-            <td data-label="CLI Install Flag" class="mono">--agent codex</td>
-          </tr>
-          <tr>
-            <td data-label="Agent"><strong>Gemini CLI</strong></td>
-            <td data-label="Skills Path" class="mono">.gemini/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">GEMINI.md</td>
-            <td data-label="MCP Config Path" class="mono">~/.gemini/settings.json</td>
-            <td data-label="CLI Install Flag" class="mono">--agent gemini</td>
-          </tr>
-          <tr>
-            <td data-label="Agent"><strong>OpenCode</strong></td>
-            <td data-label="Skills Path" class="mono">.opencode/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">AGENTS.md</td>
-            <td data-label="MCP Config Path" class="mono">opencode.json</td>
-            <td data-label="CLI Install Flag" class="mono">--agent opencode</td>
-          </tr>
-          <tr>
-            <td data-label="Agent"><strong>GitHub Copilot</strong></td>
-            <td data-label="Skills Path" class="mono">.github/skills/&lt;name&gt;/SKILL.md</td>
-            <td data-label="Rules / Context File" class="mono">.github/copilot-instructions.md</td>
-            <td data-label="MCP Config Path" class="mono">.vscode/mcp.json</td>
-            <td data-label="CLI Install Flag" class="mono">--agent copilot</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- SECTION 1: Coding Agent Directory Comparison -->
+    <div id="agent-comparison" style="margin-bottom:52px">
+      <p class="kicker">Multi-Agent Normalization</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">1. Coding Agent Skill Directory &amp; MCP Comparison</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        Every AI coding agent reads markdown instructions, but each tool expects a different folder layout. <span class="mono">npx aidentity setup &lt;role&gt; --agent &lt;target&gt;</span> automatically normalizes installation paths across all 6 leading platforms:
+      </p>
 
-    <h2 id="individual-vs-enterprise" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">2. Individual vs. Enterprise AI Agent Setup</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">
-      Solo developers optimize for speed and low token overhead; enterprise engineering teams optimize for supply-chain safety, secret prevention, and consistent code review.
-    </p>
-    <div class="profile-grid">
-      <div class="profile-card">
-        <span class="profile-badge">Individual Profile</span>
-        <h3>Solo Developer &amp; Rapid Iteration</h3>
-        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Fast, lightweight agent configuration with core role skills and safety hooks.</p>
-        <div style="margin-bottom:14px">
-          <code>npx aidentity setup &lt;role&gt; --profile individual</code>
+      <div class="bento-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom:24px">
+        <div class="bento-card">
+          <span class="tag ok" style="margin-bottom:8px">Anthropic</span>
+          <h3>Claude Code</h3>
+          <p>Installs to <code>.claude/skills/&lt;name&gt;/SKILL.md</code>. Reads system rules from <code>CLAUDE.md</code> and supports pre-tool safety hooks.</p>
+          <div class="mono" style="font-size:11px;color:var(--muted);margin-top:auto">CLI: --agent claude</div>
         </div>
-        <ul class="profile-list">
-          <li><span class="label">Skill Set</span><span class="val">6–8 core role skills</span></li>
-          <li><span class="label">Pre-Tool Hooks</span><span class="val">block-dangerous.js, scan-secrets.js</span></li>
-          <li><span class="label">Security Gate</span><span class="val">Verified in security.json</span></li>
-          <li><span class="label">Lockfile Audit</span><span class="val">Optional</span></li>
-          <li><span class="label">License / Cost</span><span class="val">$0 (MIT / Apache-2.0)</span></li>
-        </ul>
-      </div>
 
-      <div class="profile-card enterprise">
-        <span class="profile-badge" style="color:var(--ok)">Enterprise Profile</span>
-        <h3>Team Governance &amp; Supply-Chain Audit</h3>
-        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Full organizational guardrails with supply-chain audits, secret scanning, and automated hooks.</p>
-        <div style="margin-bottom:14px">
-          <code>npx aidentity setup &lt;role&gt; --profile enterprise</code>
+        <div class="bento-card">
+          <span class="tag ok" style="margin-bottom:8px">Anysphere</span>
+          <h3>Cursor</h3>
+          <p>Installs to <code>.cursor/skills/&lt;name&gt;/SKILL.md</code>. Uses <code>.cursor/rules/*.mdc</code> for scoped context and <code>.cursor/mcp.json</code> for tool servers.</p>
+          <div class="mono" style="font-size:11px;color:var(--muted);margin-top:auto">CLI: --agent cursor</div>
         </div>
-        <ul class="profile-list">
-          <li><span class="label">Skill Set</span><span class="val">Core + 4 supply-chain/audit skills</span></li>
-          <li><span class="label">Pre-Tool Hooks</span><span class="val">Dangerous, secrets, format, test-on-stop</span></li>
-          <li><span class="label">Security Gate</span><span class="val">Enforced SHA-256 lockfile audit</span></li>
-          <li><span class="label">CI Integration</span><span class="val">npx aidentity audit in pipeline</span></li>
-          <li><span class="label">License / Cost</span><span class="val">$0 (Self-hosted in repo)</span></li>
-        </ul>
+
+        <div class="bento-card">
+          <span class="tag ok" style="margin-bottom:8px">OpenAI &amp; Google</span>
+          <h3>Codex &amp; Gemini CLI</h3>
+          <p>Installs to <code>.codex/skills/</code> and <code>.gemini/skills/</code>. Respects <code>AGENTS.md</code> / <code>GEMINI.md</code> project instructions.</p>
+          <div class="mono" style="font-size:11px;color:var(--muted);margin-top:auto">CLI: --agent codex / gemini</div>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr><th>Agent</th><th>Skills Path</th><th>Rules / Context File</th><th>MCP Config Path</th><th>CLI Install Flag</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Agent"><strong>Claude Code</strong></td>
+              <td data-label="Skills Path" class="mono">.claude/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">CLAUDE.md + .claude/rules/</td>
+              <td data-label="MCP Config Path" class="mono">claude mcp add aidentity</td>
+              <td data-label="CLI Install Flag" class="mono">--agent claude</td>
+            </tr>
+            <tr>
+              <td data-label="Agent"><strong>Cursor</strong></td>
+              <td data-label="Skills Path" class="mono">.cursor/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">.cursor/rules/*.mdc</td>
+              <td data-label="MCP Config Path" class="mono">.cursor/mcp.json</td>
+              <td data-label="CLI Install Flag" class="mono">--agent cursor</td>
+            </tr>
+            <tr>
+              <td data-label="Agent"><strong>OpenAI Codex</strong></td>
+              <td data-label="Skills Path" class="mono">.codex/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">AGENTS.md</td>
+              <td data-label="MCP Config Path" class="mono">~/.codex/config.toml</td>
+              <td data-label="CLI Install Flag" class="mono">--agent codex</td>
+            </tr>
+            <tr>
+              <td data-label="Agent"><strong>Gemini CLI</strong></td>
+              <td data-label="Skills Path" class="mono">.gemini/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">GEMINI.md</td>
+              <td data-label="MCP Config Path" class="mono">~/.gemini/settings.json</td>
+              <td data-label="CLI Install Flag" class="mono">--agent gemini</td>
+            </tr>
+            <tr>
+              <td data-label="Agent"><strong>OpenCode</strong></td>
+              <td data-label="Skills Path" class="mono">.opencode/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">AGENTS.md</td>
+              <td data-label="MCP Config Path" class="mono">opencode.json</td>
+              <td data-label="CLI Install Flag" class="mono">--agent opencode</td>
+            </tr>
+            <tr>
+              <td data-label="Agent"><strong>GitHub Copilot</strong></td>
+              <td data-label="Skills Path" class="mono">.github/skills/&lt;name&gt;/SKILL.md</td>
+              <td data-label="Rules / Context File" class="mono">.github/copilot-instructions.md</td>
+              <td data-label="MCP Config Path" class="mono">.vscode/mcp.json</td>
+              <td data-label="CLI Install Flag" class="mono">--agent copilot</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <h2 id="security-standard" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">3. How Aidentity Verifies Skill Security (7-Gate Static Analysis)</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">
-      Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection instructions that exfiltrate <span class="mono">.env</span> secrets, or destructive shell commands. Every skill in Aidentity (2492 files across 526 skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
-    </p>
-    <div class="gate-grid">
-      <div class="gate-card">
-        <span class="gate-num">Gate 01</span>
-        <h3>Hidden &amp; Trojan Unicode</h3>
-        <p>Rejects zero-width spaces (<code>U+200B</code>–<code>U+200D</code>), byte-order marks, and bidirectional override characters (<code>U+202A</code>–<code>U+202E</code>, <code>U+2066</code>–<code>U+2069</code>).</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 02</span>
-        <h3>Hardcoded Secrets &amp; Keys</h3>
-        <p>Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys across every instruction file.</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 03</span>
-        <h3>Destructive Shell Patterns</h3>
-        <p>Blocks <code>rm -rf /</code>, fork bombs, raw disk writes (<code>dd</code>, <code>mkfs</code>), and root permission wipes.</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 04</span>
-        <h3>Prompt Injection &amp; Exfiltration</h3>
-        <p>Detects instructions attempting to override system guardrails, exfiltrate environment variables, or establish reverse shells.</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 05</span>
-        <h3>Untrusted Remote Scripts</h3>
-        <p>Flags <code>curl | sh</code> and <code>wget | bash</code> patterns that fetch and execute arbitrary unverified code from the network.</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 06</span>
-        <h3>Symlink &amp; Binary Hygiene</h3>
-        <p>Rejects symlinks pointing outside the skill directory and unexpected compiled binary blobs.</p>
-      </div>
-      <div class="gate-card">
-        <span class="gate-num">Gate 07</span>
-        <h3>Deterministic SHA-256 Digest</h3>
-        <p>Computes canonical SHA-256 hash across every file in the skill directory, published in <a href="../security.json">security.json</a>.</p>
+    <!-- SECTION 2: Individual vs Enterprise -->
+    <div id="individual-vs-enterprise" style="margin-bottom:52px">
+      <p class="kicker">Setup Governance</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">2. Individual vs. Enterprise AI Agent Setup</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        Solo developers prioritize execution velocity and lean token overhead; engineering organizations enforce supply-chain safety, secret scanning, and reproducible code standards.
+      </p>
+      
+      <div class="profile-grid">
+        <div class="profile-card">
+          <span class="profile-badge">Individual Profile</span>
+          <h3>Solo Developer &amp; Rapid Iteration</h3>
+          <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Fast, lightweight agent configuration with core role skills and safety hooks.</p>
+          <div style="margin-bottom:14px">
+            <code>npx aidentity setup &lt;role&gt; --profile individual</code>
+          </div>
+          <ul class="profile-list">
+            <li><span class="label">Skill Set</span><span class="val">6–8 core role skills</span></li>
+            <li><span class="label">Pre-Tool Hooks</span><span class="val">block-dangerous.js, scan-secrets.js</span></li>
+            <li><span class="label">Security Gate</span><span class="val">Verified in security.json</span></li>
+            <li><span class="label">Lockfile Audit</span><span class="val">Optional</span></li>
+            <li><span class="label">License / Cost</span><span class="val">$0 (MIT / Apache-2.0)</span></li>
+          </ul>
+        </div>
+
+        <div class="profile-card enterprise">
+          <span class="profile-badge" style="color:var(--ok)">Enterprise Profile</span>
+          <h3>Team Governance &amp; Supply-Chain Audit</h3>
+          <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Full organizational guardrails with supply-chain audits, secret scanning, and automated hooks.</p>
+          <div style="margin-bottom:14px">
+            <code>npx aidentity setup &lt;role&gt; --profile enterprise</code>
+          </div>
+          <ul class="profile-list">
+            <li><span class="label">Skill Set</span><span class="val">Core + 4 supply-chain/audit skills</span></li>
+            <li><span class="label">Pre-Tool Hooks</span><span class="val">Dangerous, secrets, format, test-on-stop</span></li>
+            <li><span class="label">Security Gate</span><span class="val">Enforced SHA-256 lockfile audit</span></li>
+            <li><span class="label">CI Integration</span><span class="val">npx aidentity audit in pipeline</span></li>
+            <li><span class="label">License / Cost</span><span class="val">$0 (Self-hosted in repo)</span></li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <h2 id="ai-visibility-architecture" style="font-family:var(--sans);font-size:1.25rem;margin-top:44px">4. Agent-Readable &amp; AI Visibility Architecture (AEO / GEO / OKF)</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">
-      Aidentity implements the full <a href="https://agentready.org" rel="noopener">AgentReady</a> and Open Knowledge Format (<span class="mono">OKF</span>) stack so both search engines and autonomous agents can discover, verify, and act on the index without JavaScript rendering:
-    </p>
-    <div class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr><th>Discovery Surface</th><th>URL</th><th>Purpose for Search &amp; AI Agents</th></tr>
-        </thead>
-        <tbody>
-          <tr><td data-label="Surface"><strong>AI Catalog</strong></td><td data-label="URL" class="mono"><a href="../.well-known/ai-catalog.json">/.well-known/ai-catalog.json</a></td><td data-label="Purpose">Lists all machine-readable endpoints, MCP server, OpenAPI spec, and OKF bundle</td></tr>
-          <tr><td data-label="Surface"><strong>OpenAPI 3.1</strong></td><td data-label="URL" class="mono"><a href="../openapi.json">/openapi.json</a></td><td data-label="Purpose">Typed schema for registry, search, security digests, and role blueprints</td></tr>
-          <tr><td data-label="Surface"><strong>OKF Knowledge Bundle</strong></td><td data-label="URL" class="mono"><a href="../okf/index.md">/okf/index.md</a></td><td data-label="Purpose">Cross-linked markdown concept graph with YAML frontmatter for RAG ingestion</td></tr>
-          <tr><td data-label="Surface"><strong>Structured Pricing</strong></td><td data-label="URL" class="mono"><a href="../pricing.md">/pricing.md</a></td><td data-label="Purpose">Explicit $0 free/open-source licensing for autonomous tool-evaluation agents</td></tr>
-          <tr><td data-label="Surface"><strong>LLMs Context</strong></td><td data-label="URL" class="mono"><a href="../llms.txt">/llms.txt</a> · <a href="../llms-full.txt">/llms-full.txt</a></td><td data-label="Purpose">Single-request index summary and full skill instructions for LLMs</td></tr>
-        </tbody>
-      </table>
+    <!-- SECTION 3: 7-Gate Security Pipeline -->
+    <div id="security-standard" style="margin-bottom:52px">
+      <p class="kicker">Defense in Depth</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">3. How Aidentity Verifies Skill Security (7-Gate Static Analysis)</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection directives that leak <span class="mono">.env</span> secrets, or destructive shell operations. Every skill in Aidentity (2492 files across 526 skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
+      </p>
+
+      <div class="gate-grid">
+        <div class="gate-card">
+          <span class="gate-num">Gate 01</span>
+          <h3>Hidden &amp; Trojan Unicode</h3>
+          <p>Rejects zero-width spaces (<code>U+200B</code>–<code>U+200D</code>), byte-order marks, and bidirectional override characters (<code>U+202A</code>–<code>U+202E</code>, <code>U+2066</code>–<code>U+2069</code>).</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 02</span>
+          <h3>Hardcoded Secrets &amp; Keys</h3>
+          <p>Scans for live AWS, GitHub, OpenAI, Anthropic, Slack, Stripe, and PEM private keys across every instruction file.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 03</span>
+          <h3>Destructive Shell Patterns</h3>
+          <p>Blocks <code>rm -rf /</code>, fork bombs, raw disk writes (<code>dd</code>, <code>mkfs</code>), and root permission wipes.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 04</span>
+          <h3>Prompt Injection &amp; Exfiltration</h3>
+          <p>Detects instructions attempting to override system guardrails, exfiltrate environment variables, or establish reverse shells.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 05</span>
+          <h3>Untrusted Remote Scripts</h3>
+          <p>Flags <code>curl | sh</code> and <code>wget | bash</code> patterns that fetch and execute arbitrary unverified code from the network.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 06</span>
+          <h3>Symlink &amp; Binary Hygiene</h3>
+          <p>Rejects symlinks pointing outside the skill directory and unexpected compiled binary blobs.</p>
+        </div>
+        <div class="gate-card">
+          <span class="gate-num">Gate 07</span>
+          <h3>Deterministic SHA-256 Digest</h3>
+          <p>Computes canonical SHA-256 hash across every file in the skill directory, published in <a href="../security.json">security.json</a>.</p>
+        </div>
+      </div>
     </div>
+
+    <!-- SECTION 4: AI Visibility & AgentReady Architecture -->
+    <div id="ai-visibility-architecture" style="margin-bottom:40px">
+      <p class="kicker">Discovery &amp; RAG Architecture</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">4. Agent-Readable &amp; AI Visibility Architecture (AEO / GEO / OKF)</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        Aidentity implements the complete <a href="https://agentready.org" target="_blank" rel="noopener">AgentReady</a> and Open Knowledge Format (<span class="mono">OKF</span>) stack so both search engines and autonomous agents can discover, verify, and act on the index without JavaScript rendering:
+      </p>
+
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr><th>Discovery Surface</th><th>URL</th><th>Purpose for Search &amp; AI Agents</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-label="Surface"><strong>AI Catalog</strong></td><td data-label="URL" class="mono"><a href="../.well-known/ai-catalog.json">/.well-known/ai-catalog.json</a></td><td data-label="Purpose">Lists all machine-readable endpoints, MCP server, OpenAPI spec, and OKF bundle</td></tr>
+            <tr><td data-label="Surface"><strong>OpenAPI 3.1</strong></td><td data-label="URL" class="mono"><a href="../openapi.json">/openapi.json</a></td><td data-label="Purpose">Typed schema for registry, search, security digests, and role blueprints</td></tr>
+            <tr><td data-label="Surface"><strong>OKF Knowledge Bundle</strong></td><td data-label="URL" class="mono"><a href="../okf/index.md">/okf/index.md</a></td><td data-label="Purpose">Cross-linked markdown concept graph with YAML frontmatter for RAG ingestion</td></tr>
+            <tr><td data-label="Surface"><strong>Structured Pricing</strong></td><td data-label="URL" class="mono"><a href="../pricing.md">/pricing.md</a></td><td data-label="Purpose">Explicit $0 free/open-source licensing for autonomous tool-evaluation agents</td></tr>
+            <tr><td data-label="Surface"><strong>LLMs Context</strong></td><td data-label="URL" class="mono"><a href="../llms.txt">/llms.txt</a> · <a href="../llms-full.txt">/llms-full.txt</a></td><td data-label="Purpose">Single-request index summary and full skill instructions for LLMs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </section>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Use Aidentity from an agent — Aidentity</title>
+<title>Use Aidentity from an AI Agent — Machine-Readable Registry API — Aidentity</title>
 <meta name="description" content="Machine-readable endpoints, an MCP server, security verification, and role setup prompts for AI coding agents.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,7 +11,7 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/for-agents/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Use Aidentity from an agent — Aidentity">
+<meta property="og:title" content="Use Aidentity from an AI Agent — Machine-Readable Registry API — Aidentity">
 <meta property="og:description" content="Machine-readable endpoints, an MCP server, security verification, and role setup prompts for AI coding agents.">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/for-agents/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
@@ -19,7 +19,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Use Aidentity from an agent — Aidentity">
+<meta name="twitter:title" content="Use Aidentity from an AI Agent — Machine-Readable Registry API — Aidentity">
 <meta name="twitter:description" content="Machine-readable endpoints, an MCP server, security verification, and role setup prompts for AI coding agents.">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -78,118 +78,222 @@
 </header>
 <main id="main">
 
-<section style="padding-top:44px">
-  <div class="wrap" style="max-width:820px">
-    <p class="kicker">For agents</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Use Aidentity from an agent</h2>
-    <p style="max-width:64ch;color:var(--ink-soft);margin-top:16px">
-      The index is designed to be read by machines first. Fetch one JSON file, verify security in <span class="mono">security.json</span>,
-      then fetch the full <span class="mono">SKILL.md</span> or run a role setup in one command.
-      No scraping, no auth, no rate limit beyond GitHub Pages.
+<section class="page-hero">
+  <div class="wrap" style="max-width:840px">
+    <span class="hero-badge">Machine-Readable API</span>
+    <h1 class="hero-title">Use Aidentity from an AI Agent</h1>
+    <p class="hero-desc">
+      The registry is designed to be read by machines first. One deterministic JSON endpoint, verified SHA-256 digests, and full <span class="mono">SKILL.md</span> instructions in clean markdown. Zero authentication, zero scraping, and instantaneous responses.
     </p>
+    <div class="pill-strip" style="justify-content:center;margin-top:20px">
+      <span class="pill-btn" style="cursor:default">HTTP GET</span>
+      <span class="pill-btn" style="cursor:default">CORS Allowed</span>
+      <span class="pill-btn" style="cursor:default">llms.txt Standard</span>
+      <span class="pill-btn" style="cursor:default">Zero Auth Required</span>
+      <span class="pill-btn" style="cursor:default">OpenAPI 3.1 Spec</span>
+    </div>
+  </div>
+</section>
 
-    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Endpoints</h2>
-    <div class="table-scroll">
-    <table class="table">
-      <thead><tr><th>File</th><th>What it is</th><th>Size</th></tr></thead>
-      <tbody>
-        <tr><td data-label="File"><a href="../search.json">search.json</a></td><td data-label="What">Compact index: id, name, description, tags, license, install, content URL</td><td data-label="Size">~461 KB</td></tr>
-        <tr><td data-label="File"><a href="../security.json">security.json</a></td><td data-label="What">SHA-256 digests, file counts, and 7-gate security verification status per skill</td><td data-label="Size">~140 KB</td></tr>
-        <tr><td data-label="File"><a href="../roles.json">roles.json</a></td><td data-label="What">20 job roles &amp; Individual/Enterprise setup profiles (skills, rules, subagents, hooks)</td><td data-label="Size">tiny</td></tr>
-        <tr><td data-label="File"><a href="../llms.txt">llms.txt</a></td><td data-label="What">Key facts and every skill with a one-line description</td><td data-label="Size">~461 KB</td></tr>
-        <tr><td data-label="File"><a href="../llms-full.txt">llms-full.txt</a></td><td data-label="What">Every skill with metadata, install command and instruction URL</td><td data-label="Size">—</td></tr>
-        <tr><td data-label="File"><a href="../registry.json">registry.json</a></td><td data-label="What">Full registry, schema-backed</td><td data-label="Size">—</td></tr>
-        <tr><td data-label="File"><a href="../catalog.json">catalog.json</a></td><td data-label="What">Everything: skills, setup prompts, tools, hooks, commands, agents, rules, templates</td><td data-label="Size">—</td></tr>
-        <tr><td data-label="File"><a href="../bundles.json">bundles.json</a></td><td data-label="What">Task-based sets of 5–15 skills</td><td data-label="Size">—</td></tr>
-        <tr><td data-label="File"><a href="../agent.json">agent.json</a></td><td data-label="What">Manifest: endpoints, counts, usage rules</td><td data-label="Size">tiny</td></tr>
-        <tr><td data-label="File"><a href="../ai.txt">ai.txt</a></td><td data-label="What">Citation and usage preferences</td><td data-label="Size">tiny</td></tr>
-      </tbody>
-    </table>
+<section style="padding: 24px 0 60px">
+  <div class="wrap" style="max-width:880px">
+
+    <!-- Terminal Code Card: Quick Curl Examples -->
+    <div class="terminal-card">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+        </div>
+        <span class="terminal-title">Quick Agent Queries · curl &amp; jq</span>
+      </div>
+      <div class="terminal-body">
+<span style="color:#8c887e"># 1. Fetch LLM context summary for prompt injection</span>
+<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/llms.txt | head -n 35
+
+<span style="color:#8c887e"># 2. Query verified skills in JSON with jq</span>
+<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/search.json | jq <span style="color:#a3e635">'.[] | select(.tags | contains(["security"]))'</span>
+
+<span style="color:#8c887e"># 3. Check SHA-256 security verification status</span>
+<span style="color:#ef4444">curl</span> -s https://akshatnaruka.github.io/aidentity/security.json | jq <span style="color:#a3e635">'.skills["addyosmani/engineering/debugging"]'</span>
+      </div>
     </div>
 
-    <h2 id="mcp" style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">MCP server</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">
-      The repository ships a zero-dependency MCP server. It exposes
-      <span class="mono">search_skills</span>, <span class="mono">recommend</span>,
-      <span class="mono">get_skill</span>, <span class="mono">list_bundles</span>,
-      <span class="mono">list_roles</span>, <span class="mono">setup_role</span>,
-      <span class="mono">verify_skill_security</span>, and
-      <span class="mono">install_skill</span>. Install writes are dry-run unless you pass
-      <span class="mono">dry_run: false</span>.
-    </p>
-    <div class="cmd">
+    <!-- Endpoints Bento Grid -->
+    <div style="margin: 44px 0">
+      <p class="kicker">Direct Endpoints</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 20px">Machine-Readable Surfaces</h2>
+      <div class="bento-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">TXT</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">~461 KB</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../llms.txt" style="color:var(--ink);text-decoration:none">llms.txt</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">Standardized concise summary and one-line descriptions for LLM system prompts.</p>
+          <div style="margin-top:auto"><a href="../llms.txt" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch llms.txt ↗</a></div>
+        </div>
+
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">JSON</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">~461 KB</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../search.json" style="color:var(--ink);text-decoration:none">search.json</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">Compact fuzzy search index: ID, name, description, tags, license, and install commands.</p>
+          <div style="margin-top:auto"><a href="../search.json" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch search.json ↗</a></div>
+        </div>
+
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">JSON</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">SHA-256</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../security.json" style="color:var(--ink);text-decoration:none">security.json</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">SHA-256 digests, file counts, and 7-gate static analysis verification results for every skill.</p>
+          <div style="margin-top:auto"><a href="../security.json" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch security.json ↗</a></div>
+        </div>
+
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">JSON</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">Roles</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../roles.json" style="color:var(--ink);text-decoration:none">roles.json</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">20 job roles with Individual and Enterprise setup profiles (skills, rules, subagents, hooks).</p>
+          <div style="margin-top:auto"><a href="../roles.json" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch roles.json ↗</a></div>
+        </div>
+
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">OpenAPI 3.1</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">Schema</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../openapi.json" style="color:var(--ink);text-decoration:none">openapi.json</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">Typed schema for autonomous agent tool-calling, function definition, and API clients.</p>
+          <div style="margin-top:auto"><a href="../openapi.json" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch openapi.json ↗</a></div>
+        </div>
+
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="tag ok">OKF</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">Bundle</span>
+          </div>
+          <h3 style="font-size:1.2rem;margin-bottom:6px"><a href="../okf/index.md" style="color:var(--ink);text-decoration:none">okf/index.md</a></h3>
+          <p style="font-size:12.5px;color:var(--ink-soft)">Open Knowledge Format bundle for full semantic RAG ingestion and context indexing.</p>
+          <div style="margin-top:auto"><a href="../okf/index.md" class="mono" style="font-size:11.5px;color:var(--accent)">Fetch OKF Bundle ↗</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCP Server Section -->
+    <div style="margin-bottom:48px" id="mcp">
+      <p class="kicker">Model Context Protocol</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">Built-in MCP Server</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6">
+        The repository includes a zero-dependency Model Context Protocol (MCP) server exposing tools:
+        <span class="mono">search_skills</span>, <span class="mono">recommend</span>,
+        <span class="mono">get_skill</span>, <span class="mono">list_bundles</span>,
+        <span class="mono">list_roles</span>, <span class="mono">setup_role</span>,
+        <span class="mono">verify_skill_security</span>, and <span class="mono">install_skill</span>.
+      </p>
+
+      <div class="cmd">
   <span class="prompt" aria-hidden="true">$</span>
   <code>node cli/mcp.js</code>
   <button type="button" data-copy="node cli/mcp.js" aria-label="Copy start the MCP server">copy</button>
 </div>
 
-    <details style="margin-top:18px"><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Claude Code</summary>
-    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>claude mcp add aidentity -- node /absolute/path/to/aidentity/cli/mcp.js</code></pre>
-    </details>
-    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Cursor — .cursor/mcp.json</summary>
-    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
-  "mcpServers": {
-    "aidentity": {
-      "command": "node",
-      "args": ["/absolute/path/to/aidentity/cli/mcp.js"]
-    }
-  }
-}</code></pre>
-    </details>
-    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Codex — ~/.codex/config.toml</summary>
-    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>[mcp_servers.aidentity]
-command = "node"
-args = ["/absolute/path/to/aidentity/cli/mcp.js"]</code></pre>
-    </details>
-    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">Gemini CLI — ~/.gemini/settings.json</summary>
-    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
-  "mcpServers": {
-    "aidentity": {
-      "command": "node",
-      "args": ["/absolute/path/to/aidentity/cli/mcp.js"]
-    }
-  }
-}</code></pre>
-    </details>
-    <details><summary style="cursor:pointer;font-family:var(--mono);font-size:12px">OpenCode — opencode.json</summary>
-    <pre style="background:#14130f;color:#efeade;padding:14px;overflow-x:auto;font-size:12px"><code>{
-  "mcp": {
-    "aidentity": {
-      "type": "local",
-      "command": ["node", "/absolute/path/to/aidentity/cli/mcp.js"],
-      "enabled": true
-    }
-  }
-}</code></pre>
-    </details>
+      <div style="margin-top:24px">
+        <h3 style="font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:12px">Agent Integration Configurations:</h3>
+        
+        <details class="accordion-item" style="margin-bottom:8px" open>
+          <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
+            <span>Claude Code — Terminal Setup</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body" style="padding:14px 16px">
+            <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>claude mcp add aidentity -- node /path/to/aidentity/cli/mcp.js</code></pre>
+          </div>
+        </details>
 
-    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Prompts that work</h2>
-    <p style="color:var(--ink-soft);font-size:0.95rem">Give these to any agent that can fetch a URL:</p>
-    <pre style="background:#14130f;color:#efeade;padding:16px;overflow-x:auto;font-size:12px"><code>Fetch https://akshatnaruka.github.io/aidentity/roles.json and https://akshatnaruka.github.io/aidentity/security.json
+        <details class="accordion-item" style="margin-bottom:8px">
+          <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
+            <span>Cursor — .cursor/mcp.json</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body" style="padding:14px 16px">
+            <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>{
+  "mcpServers": {
+    "aidentity": {
+      "command": "node",
+      "args": ["/path/to/aidentity/cli/mcp.js"]
+    }
+  }
+}</code></pre>
+          </div>
+        </details>
+
+        <details class="accordion-item" style="margin-bottom:8px">
+          <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
+            <span>OpenAI Codex — ~/.codex/config.toml</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body" style="padding:14px 16px">
+            <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>[mcp_servers.aidentity]
+command = "node"
+args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
+          </div>
+        </details>
+
+        <details class="accordion-item" style="margin-bottom:8px">
+          <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
+            <span>Gemini CLI — ~/.gemini/settings.json</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body" style="padding:14px 16px">
+            <pre style="background:#14130f;color:#efeade;padding:12px;overflow-x:auto;font-size:12px;margin:0;border-radius:4px"><code>{
+  "mcpServers": {
+    "aidentity": {
+      "command": "node",
+      "args": ["/path/to/aidentity/cli/mcp.js"]
+    }
+  }
+}</code></pre>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Agent Operational Prompts & Guardrails -->
+    <div style="margin-bottom:40px">
+      <p class="kicker">Agent Instructions</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">Prompts That Work</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;margin-bottom:14px">Copy and paste these exact prompts into any LLM or autonomous coding agent:</p>
+      
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+          </div>
+          <span class="terminal-title">Copy-Paste Prompts for Autonomous Agents</span>
+        </div>
+        <div class="terminal-body" style="white-space:pre-wrap;line-height:1.6">Fetch https://akshatnaruka.github.io/aidentity/roles.json and https://akshatnaruka.github.io/aidentity/security.json
 Set up my workspace for the "software-engineer" role with the "enterprise" profile.
 Verify every skill is verified:true before installing.
 
 Fetch https://akshatnaruka.github.io/aidentity/search.json
 Filter for category "testing" and status "stable".
-Return the three best matches with their install commands.
+Return the top 3 best matches with their install commands.
 
 Read https://akshatnaruka.github.io/aidentity/llms.txt
-I am building a Next.js + Supabase SaaS. Which bundle should I install, and why?</code></pre>
+I am building a Next.js + Supabase SaaS. Which bundle should I install, and why?</div>
+      </div>
 
-    <h2 style="font-family:var(--sans);font-size:1.15rem;margin-top:36px">Rules agents must follow</h2>
-    <ol style="color:var(--ink-soft);font-size:0.95rem">
-      <li><strong>Verify security first.</strong> Check <span class="mono">security.json</span> (or run <span class="mono">npx aidentity audit</span>) to ensure <span class="mono">verified === true</span> and <span class="mono">risk_level === "safe"</span>.</li>
-      <li><strong>Check <span class="mono">content_url</span>.</strong> If it is null, the skill is index-only; link upstream, never claim it can be installed.</li>
-      <li><strong>Check <span class="mono">status</span>.</strong> Do not recommend <span class="mono">in-progress</span> or <span class="mono">deprecated</span> entries.</li>
-      <li><strong>Quote the license.</strong> MIT and Apache-2.0 are safe; CC BY-SA is share-alike; proprietary entries need review.</li>
-      <li><strong>Read before recommending.</strong> Fetch the SKILL.md; descriptions are a summary, not the instructions.</li>
-    </ol>
-
-    <div class="callout">
-      <strong>Give this URL to an agent:</strong>
-      <span class="mono">https://akshatnaruka.github.io/aidentity/llms.txt</span> — it starts with the facts an
-      agent needs and links to every machine-readable file.
+      <div class="callout" style="margin-top:24px">
+        <strong>Direct Context Injection:</strong> Pass <span class="mono">https://akshatnaruka.github.io/aidentity/llms.txt</span> to your agent to provide the complete verified registry in a single HTTP fetch.
+      </div>
     </div>
+
   </div>
 </section>
 
