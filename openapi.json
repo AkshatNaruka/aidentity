@@ -1,0 +1,85 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Aidentity Static Registry & Security API",
+    "version": "1.2.0",
+    "description": "Read-only JSON endpoints for searching 526 AI agent skills, verifying SHA-256 security digests, and retrieving 20 Individual/Enterprise role setup blueprints.",
+    "license": {
+      "name": "CC0-1.0",
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://akshatnaruka.github.io/aidentity"
+    }
+  ],
+  "paths": {
+    "/search.json": {
+      "get": {
+        "operationId": "getCompactSkillSearchIndex",
+        "summary": "Compact search index of all 526 skills with SHA-256 digest and content_url",
+        "responses": {
+          "200": {
+            "description": "Compact search index JSON"
+          }
+        }
+      }
+    },
+    "/registry.json": {
+      "get": {
+        "operationId": "getFullSkillRegistry",
+        "summary": "Full schema-validated skill registry with source and license provenance",
+        "responses": {
+          "200": {
+            "description": "Full registry JSON"
+          }
+        }
+      }
+    },
+    "/security.json": {
+      "get": {
+        "operationId": "getSecurityVerificationReport",
+        "summary": "7-gate static security scan report and deterministic SHA-256 digests for all skills",
+        "responses": {
+          "200": {
+            "description": "Security report JSON"
+          }
+        }
+      }
+    },
+    "/roles.json": {
+      "get": {
+        "operationId": "getRoleSetupBlueprints",
+        "summary": "20 job role setup blueprints with Individual and Enterprise profiles",
+        "responses": {
+          "200": {
+            "description": "Role blueprints JSON"
+          }
+        }
+      }
+    },
+    "/bundles.json": {
+      "get": {
+        "operationId": "getTaskBundles",
+        "summary": "Curated task-based skill bundles",
+        "responses": {
+          "200": {
+            "description": "Bundles JSON"
+          }
+        }
+      }
+    },
+    "/catalog.json": {
+      "get": {
+        "operationId": "getFullCatalog",
+        "summary": "Complete catalog of skills, setup prompts, rules, subagents, commands, hooks, and templates",
+        "responses": {
+          "200": {
+            "description": "Catalog JSON"
+          }
+        }
+      }
+    }
+  }
+}

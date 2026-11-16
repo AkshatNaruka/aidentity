@@ -1,36 +1,85 @@
 # Aidentity
 
-> A verified, machine-readable index of AI agent skills. One ID, one command, works in every coding agent.
+> A verified, machine-readable index of AI agent skills, role setup playbooks, and courses. One ID, one command, works in every coding agent.
 
-Generated 2026-11-16. 526 skills indexed, 507 installable, 25 upstream sources.
+Generated 2026-11-16. 526 skills indexed, 507 installable, undefined/526 security-verified, 21 role setup playbooks, 6 courses, 25 upstream sources.
 
 ## Key facts
 
-- Aidentity is a verified index of AI agent skills. It is not a fork: each skill belongs to its upstream author.
+- Aidentity is a verified index of AI agent skills, playbooks, and courses. It is not a fork: each skill belongs to its upstream author.
 - 526 entries: 507 hosted and installable, 19 indexed with an upstream link only.
-- Install: `npx aidentity add <id>` or copy `skills/<source>/<name>/`.
+- Role setup playbooks (Individual or Enterprise): `npx aidentity setup <role> --profile individual|enterprise --agent claude|cursor|codex|gemini|opencode|copilot`.
+- Install a single skill: `npx aidentity add <id>` or copy `skills/<source>/<name>/`.
+- Every skill is scanned by `scripts/scan-skills-security.js` (undefined/526 verified, 0 critical findings) with SHA-256 digests in `https://akshatnaruka.github.io/aidentity/security.json`.
+- Pricing: $0 (100% free & open-source). See `https://akshatnaruka.github.io/aidentity/pricing.md`.
 - Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.
 - Every source is re-checked weekly; `registry/verified.json` records the last check.
-- Machine-readable: https://akshatnaruka.github.io/aidentity/registry.json (JSON), https://akshatnaruka.github.io/aidentity/search.json (compact search), https://akshatnaruka.github.io/aidentity/agent.json (manifest), https://akshatnaruka.github.io/aidentity/ai.txt (AI usage), https://akshatnaruka.github.io/aidentity/sitemap.xml (URLs), https://akshatnaruka.github.io/aidentity/feed.xml (RSS).
+- Machine-readable: https://akshatnaruka.github.io/aidentity/registry.json (JSON), https://akshatnaruka.github.io/aidentity/search.json (compact search), https://akshatnaruka.github.io/aidentity/roles.json (role setup blueprints), https://akshatnaruka.github.io/aidentity/security.json (SHA-256 digests & scan results), https://akshatnaruka.github.io/aidentity/openapi.json (OpenAPI 3.1), https://akshatnaruka.github.io/aidentity/.well-known/ai-catalog.json (AI Catalog), https://akshatnaruka.github.io/aidentity/okf/index.md (Open Knowledge Format bundle), https://akshatnaruka.github.io/aidentity/pricing.md (pricing & licensing), https://akshatnaruka.github.io/aidentity/agent.json (manifest), https://akshatnaruka.github.io/aidentity/ai.txt (AI usage), https://akshatnaruka.github.io/aidentity/sitemap.xml (URLs), https://akshatnaruka.github.io/aidentity/feed.xml (RSS).
 
 ## How to use this index
 
-1. Fetch `search.json` once and keep it. Filter by `tags`, `category`, `status` and `description`.
-2. Fetch `content_url` for the full `SKILL.md` before recommending an install.
-3. If `content_url` is null the skill is index-only: link `upstream`, never install it.
-4. Install with `npx aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.
-5. Local agents can run the MCP server: `node cli/mcp.js`.
+1. For full role setup, fetch `roles.json` or run `npx aidentity setup <role> --profile individual|enterprise`.
+2. Fetch `search.json` once and keep it. Filter by `tags`, `category`, `status` and `description`.
+3. Check `security.json` (`verified === true`) and fetch `content_url` for the full `SKILL.md` before recommending an install.
+4. If `content_url` is null the skill is index-only: link `upstream`, never install it.
+5. Install with `npx aidentity add <id>` or copy from `https://github.com/AkshatNaruka/aidentity`.
+6. Local agents can run the MCP server: `node cli/mcp.js` (`list_roles`, `setup_role`, `verify_skill_security`, `search_skills`, `get_skill`, `install_skill`).
 
-## Files
+## Files & Hubs
 
 - [Registry](https://akshatnaruka.github.io/aidentity/registry.json): every skill with id, description, category, tags, status, source, license and install command.
+- [Roles](https://akshatnaruka.github.io/aidentity/roles.json): 20 job role setup blueprints with Individual and Enterprise profiles.
+- [Playbooks Hub](https://akshatnaruka.github.io/aidentity/playbooks/): 20 step-by-step AI agent setup playbooks by job role.
+- [Courses Hub](https://akshatnaruka.github.io/aidentity/courses/): 6 structured AI agent courses and curricula.
+- [Guides Hub](https://akshatnaruka.github.io/aidentity/guides/): comparisons (Claude Code vs Cursor vs Codex vs Gemini CLI), security verification, and GEO/OKF architecture.
+- [Security](https://akshatnaruka.github.io/aidentity/security.json): static security scan status and SHA-256 digests for all 526 skills.
+- [Pricing](https://akshatnaruka.github.io/aidentity/pricing.md): $0 open-source pricing and licensing tiers.
+- [Open Knowledge Format (OKF)](https://akshatnaruka.github.io/aidentity/okf/index.md): cross-linked markdown concept bundle for RAG and agent ingestion.
+- [OpenAPI 3.1](https://akshatnaruka.github.io/aidentity/openapi.json): formal API schema for all JSON endpoints.
+- [AI Catalog](https://akshatnaruka.github.io/aidentity/.well-known/ai-catalog.json): AgentReady discovery catalog.
 - [Schema](https://github.com/AkshatNaruka/aidentity/blob/main/registry/schema.json): JSON Schema for the registry.
 - [Sources](https://akshatnaruka.github.io/aidentity/sources/): provenance and license for every upstream repository.
 
-## Install
+## Role Setup Playbooks (20 Roles)
+
+- [Founder / Startup builder Playbook](https://akshatnaruka.github.io/aidentity/playbooks/founder/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/founder/playbook.md)): `npx aidentity setup founder --profile individual|enterprise` — End-to-end startup building: product specs, shipping MVPs, pricing, launch, AI SEO, and pitch decks.
+- [Software engineer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/software-engineer/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/software-engineer/playbook.md)): `npx aidentity setup software-engineer --profile individual|enterprise` — Day-to-day coding: planning, implementation, review, tests, debugging.
+- [Software architect Playbook](https://akshatnaruka.github.io/aidentity/playbooks/architect/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/architect/playbook.md)): `npx aidentity setup architect --profile individual|enterprise` — System design, interfaces, diagrams, trade-offs and technical direction.
+- [Product manager Playbook](https://akshatnaruka.github.io/aidentity/playbooks/product-manager/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/product-manager/playbook.md)): `npx aidentity setup product-manager --profile individual|enterprise` — Specs, discovery, prioritisation, stakeholder updates, sprint planning.
+- [Engineering manager Playbook](https://akshatnaruka.github.io/aidentity/playbooks/engineering-manager/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/engineering-manager/playbook.md)): `npx aidentity setup engineering-manager --profile individual|enterprise` — Sprint delivery, capacity, retrospectives, hiring and people ops.
+- [Product designer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/designer/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/designer/playbook.md)): `npx aidentity setup designer --profile individual|enterprise` — UI direction, design systems, frontend implementation, accessibility.
+- [Motion designer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/motion-designer/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/motion-designer/playbook.md)): `npx aidentity setup motion-designer --profile individual|enterprise` — Motion graphics, video composition, easing, rendering and review.
+- [Content creator Playbook](https://akshatnaruka.github.io/aidentity/playbooks/content-creator/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/content-creator/playbook.md)): `npx aidentity setup content-creator --profile individual|enterprise` — Copy, editing, SEO, social, video, email and launch content.
+- [Growth marketer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/marketer/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/marketer/playbook.md)): `npx aidentity setup marketer --profile individual|enterprise` — Acquisition, ads, CRO, analytics, email, launch and retention.
+- [SEO specialist Playbook](https://akshatnaruka.github.io/aidentity/playbooks/seo-specialist/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/seo-specialist/playbook.md)): `npx aidentity setup seo-specialist --profile individual|enterprise` — Technical SEO, content, schema, internal links and AI search visibility.
+- [Finance analyst Playbook](https://akshatnaruka.github.io/aidentity/playbooks/finance-analyst/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/finance-analyst/playbook.md)): `npx aidentity setup finance-analyst --profile individual|enterprise` — Three-statement models, DCF, comps, LBO, budgets and Excel workflows.
+- [Quant researcher Playbook](https://akshatnaruka.github.io/aidentity/playbooks/quant-researcher/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/quant-researcher/playbook.md)): `npx aidentity setup quant-researcher --profile individual|enterprise` — Backtesting, signals, risk, position sizing, fixed income and execution.
+- [Music producer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/music-producer/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/music-producer/playbook.md)): `npx aidentity setup music-producer --profile individual|enterprise` — Lyrics, song structure, mastering, album concepts and release assets.
+- [Filmmaker Playbook](https://akshatnaruka.github.io/aidentity/playbooks/filmmaker/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/filmmaker/playbook.md)): `npx aidentity setup filmmaker --profile individual|enterprise` — Screenwriting, story structure, shot planning, editing and delivery.
+- [Journalist Playbook](https://akshatnaruka.github.io/aidentity/playbooks/journalist/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/journalist/playbook.md)): `npx aidentity setup journalist --profile individual|enterprise` — Reporting, data journalism, editorial workflow and source verification.
+- [Legal counsel Playbook](https://akshatnaruka.github.io/aidentity/playbooks/legal-counsel/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/legal-counsel/playbook.md)): `npx aidentity setup legal-counsel --profile individual|enterprise` — Contract review, plain-language legal writing, compliance and policy.
+- [Sales Playbook](https://akshatnaruka.github.io/aidentity/playbooks/sales/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/sales/playbook.md)): `npx aidentity setup sales --profile individual|enterprise` — Prospecting, outreach, pipeline, CRM hygiene and deal support.
+- [Customer support Playbook](https://akshatnaruka.github.io/aidentity/playbooks/support/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/support/playbook.md)): `npx aidentity setup support --profile individual|enterprise` — Tickets, escalation, help-centre content and customer research.
+- [Teacher Playbook](https://akshatnaruka.github.io/aidentity/playbooks/teacher/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/teacher/playbook.md)): `npx aidentity setup teacher --profile individual|enterprise` — Explaining, curriculum, exercises, feedback and course material.
+- [HR / people ops Playbook](https://akshatnaruka.github.io/aidentity/playbooks/hr-people/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/hr-people/playbook.md)): `npx aidentity setup hr-people --profile individual|enterprise` — Hiring, interviews, job descriptions, onboarding and policy.
+- [Data analyst Playbook](https://akshatnaruka.github.io/aidentity/playbooks/data-analyst/) ([playbook.md](https://akshatnaruka.github.io/aidentity/playbooks/data-analyst/playbook.md)): `npx aidentity setup data-analyst --profile individual|enterprise` — Excel, SQL, cleaning, dashboards, statistics and reporting.
+
+## AI Agent Courses
+
+- [AI Coding Agent Mastery: Spec, TDD & Verification](https://akshatnaruka.github.io/aidentity/courses/#ai-coding-agent-mastery): Learn how to turn Claude Code, Cursor, Codex, and Gemini CLI into disciplined engineering partners using spec-driven development, red-green-refactor TDD, git worktrees, and automated code review.
+- [AI SEO, AEO & Generative Engine Optimization (GEO) Course](https://akshatnaruka.github.io/aidentity/courses/#ai-seo-aeo-geo-playbook): Master traditional technical SEO alongside AI Search Optimization (AEO/GEO) so your product is indexed by Google and cited or selected as the default by ChatGPT, Perplexity, Claude, and Gemini.
+- [Enterprise AI Agent Security, Auditing & Supply-Chain Governance](https://akshatnaruka.github.io/aidentity/courses/#enterprise-agent-security-governance): Secure autonomous coding agents in enterprise repositories. Learn how to audit SKILL.md files for hidden Unicode and prompt injection, audit GitHub Actions, and enforce runtime pre-tool hooks.
+- [Full-Stack Product Design, UI Systems & Conversion Engineering](https://akshatnaruka.github.io/aidentity/courses/#fullstack-product-design-shipping): Go from aesthetic direction and design tokens to accessible React/Next.js interfaces, Postgres data models, conversion rate optimization (CRO), and automated production releases.
+- [Quantitative Trading, Risk Management & Institutional Financial Modeling](https://akshatnaruka.github.io/aidentity/courses/#quantitative-finance-investment-workflows): Combine institutional 3-statement/DCF/LBO financial modeling with systematic backtesting (Backtrader, VectorBT), Kelly position sizing, regime detection, and risk management.
+- [AI-Native Product Management, Spec Writing & Sprint Delivery](https://akshatnaruka.github.io/aidentity/courses/#product-management-agile-delivery): Run discovery, write unambiguous PRDs and user stories, slice backlogs, plan sprint capacity, and generate release notes using verified product and agile skills.
+
+## Install & Setup
 
 ```bash
+npx aidentity setup software-engineer --profile individual
+npx aidentity setup architect --profile enterprise
 npx aidentity add <id>
+npx aidentity audit
 ```
 
 ## Skills

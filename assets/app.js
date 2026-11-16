@@ -105,6 +105,250 @@
     }
   }
 
+  // --- interactive role setup onboarding wizard --------------------------
+  const builder = document.getElementById("setup-builder");
+  if (builder) {
+    let wizard = { plans: {}, focusPresets: {}, stackPresets: {}, extraSkillsCatalog: {} };
+    try {
+      const rawWizard = builder.getAttribute("data-wizard");
+      if (rawWizard) {
+        wizard = JSON.parse(rawWizard);
+      } else {
+        wizard.plans = JSON.parse(builder.getAttribute("data-plans") || "{}");
+      }
+    } catch (error) {
+      wizard = { plans: {}, focusPresets: {}, stackPresets: {}, extraSkillsCatalog: {} };
+    }
+
+    const plans = wizard.plans || {};
+    const focusPresets = wizard.focusPresets || {};
+    const stackPresets = wizard.stackPresets || {};
+    const extraSkillsCatalog = wizard.extraSkillsCatalog || {};
+
+    const roleSelect = document.getElementById("setup-role");
+    const profileSelect = document.getElementById("setup-profile");
+    const stackSelect = document.getElementById("setup-stack");
+    const focusSelect = document.getElementById("setup-focus");
+    const agentSelect = document.getElementById("setup-agent");
+    const quickRoleButtons = Array.prototype.slice.call(builder.querySelectorAll("[data-QuickRole]"));
+
+    const cmdCode = document.getElementById("setup-cmd-code");
+    const cmdCopy = document.getElementById("setup-cmd-copy");
+    const promptPre = document.getElementById("setup-prompt-code");
+    const promptCopy = document.getElementById("setup-prompt-copy");
+    const promptTitle = document.getElementById("setup-prompt-title");
+    const summaryText = document.getElementById("setup-summary-text");
+
+    const buildCustomPrompt = function (entry, options) {
+      const roleName = entry.roleName;
+      const profileName = options.profile === "enterprise" ? "Enterprise" : "Individual";
+      const isEnterprise = options.profile === "enterprise";
+      const agent = options.agent;
+      const focusPreset = focusPresets[options.focus] || { label: "Role Default", extraSkills: [], extraAgents: [] };
+      const stackPreset = stackPresets[options.stack] || { label: "Role Default", rules: [] };
+
+      // Merge skills (role + profile + focus) without duplicates
+      const skillMap = new Map();
+      (entry.skills || []).forEach(function (s) {
+        skillMap.set(s.id, s);
+      });
+      (focusPreset.extraSkills || []).forEach(function (id) {
+        if (!skillMap.has(id) && extraSkillsCatalog[id]) {
+          skillMap.set(id, extraSkillsCatalog[id]);
+        }
+      });
+      const mergedSkills = Array.from(skillMap.values());
+
+      // Merge rules based on selected stack
+      let mergedRules = [];
+      if (options.stack === "none") {
+        mergedRules = [];
+      } else if (options.stack === "role" || !stackPreset.rules || !stackPreset.rules.length) {
+        mergedRules = (entry.rules || []).slice();
+      } else {
+        const ruleSet = new Set(stackPreset.rules.concat(entry.rules || []));
+        // If user explicitly picked a single language stack, prioritize that stack's rules
+        mergedRules = stackPreset.rules.slice();
+        (entry.rules || []).forEach(function (r) {
+          if (mergedRules.indexOf(r) === -1 && options.stack === "fullstack") {
+            mergedRules.push(r);
+          }
+        });
+      }
+
+      // Merge subagents
+      const agentSet = new Set((entry.agents || []).concat(focusPreset.extraAgents || []));
+      const mergedAgents = Array.from(agentSet);
+      const mergedHooks = (entry.hooks || []).slice();
+
+      const focusFlag =
+        options.focus !== "default" ? ' --task "' + focusPreset.label.toLowerCase() + '"' : "";
+      const cliCmd =
+        "npx aidentity setup " +
+        entry.roleSlug +
+        " --profile " +
+        options.profile +
+        " --agent " +
+        agent +
+        focusFlag;
+
+      const skillLines = mergedSkills
+        .map(function (s) {
+          const sec = s.security || {};
+          const sha = sec.sha256 ? " · sha256:" + sec.sha256 : "";
+          return (
+            "  - `" +
+            s.id +
+            "` (" +
+            s.license +
+            " · security: " +
+            (sec.status || "verified") +
+            sha +
+            ") — " +
+            s.description
+          );
+        })
+        .join("\n");
+
+      const ruleLines = mergedRules.length
+        ? mergedRules.map(function (r) { return "  - `" + r + "`"; }).join("\n")
+        : "  - None required for this stack (use project conventions)";
+
+      const agentLines = mergedAgents.length
+        ? mergedAgents.map(function (a) { return "  - `" + a + "`"; }).join("\n")
+        : "  - None required";
+
+      const hookLines = mergedHooks.length
+        ? mergedHooks.map(function (h) { return "  - `" + h + "`"; }).join("\n")
+        : "  - `hooks/scan-secrets.js`";
+
+      const contextHeader = [
+        "- **Role**: " + roleName + " (" + entry.roleDescription + ")",
+        "- **Organization Profile**: " + profileName,
+        "- **Primary Stack**: " + (stackPreset.label || "Role Default"),
+        "- **Primary Focus**: " + (focusPreset.label || "Role Default"),
+        "- **Target Agent**: `" + agent + "`",
+      ].join("\n");
+
+      const promptText =
+        "# Aidentity One-Time Initial Setup — " +
+        roleName +
+        " (" +
+        profileName +
+        ")\n\n" +
+        "Set up my AI coding agent environment once based on my onboarding profile:\n" +
+        contextHeader +
+        "\n\n" +
+        "## 1. One-Command Automated Setup (Preferred)\n" +
+        "If you have shell access in this workspace, run:\n" +
+        "```bash\n" +
+        cliCmd +
+        "\n```\n\n" +
+        "## 2. Security & Provenance Gate (Mandatory)\n" +
+        "Before installing or loading any skill, rule, or hook:\n" +
+        '1. Verify against `https://akshatnaruka.github.io/aidentity/security.json` (or local `registry/security.json`) that `verified === true` and `risk_level === "safe"`.\n' +
+        '2. Never install any skill where `distributable === false`, `content_url === null`, or `status !== "stable"`.\n' +
+        "3. State the upstream author, SPDX license, and SHA-256 verification status before installing.\n" +
+        (isEnterprise
+          ? "4. **Enterprise Governance**: Enable all pre-tool security hooks (`block-dangerous.js`, `scan-secrets.js`), post-edit formatting (`format-on-save.js`), and test verification (`test-on-stop.js`). Require security and supply-chain review before shipping."
+          : "4. **Individual Guardrails**: Enable `block-dangerous.js` and `scan-secrets.js` to prevent accidental destructive commands or credential leaks.") +
+        "\n\n" +
+        "## 3. Verified Skills to Install (" +
+        mergedSkills.length +
+        ")\n" +
+        "Install with `npx aidentity add <id> --agent " +
+        agent +
+        "`:\n" +
+        skillLines +
+        "\n\n" +
+        "## 4. Coding & Workflow Rules (" +
+        mergedRules.length +
+        ")\n" +
+        "Copy into your agent's rules directory or `AGENTS.md`:\n" +
+        ruleLines +
+        "\n\n" +
+        "## 5. Scoped Subagents & Guardrail Hooks\n" +
+        "- Subagents:\n" +
+        agentLines +
+        "\n- Guardrail Hooks:\n" +
+        hookLines;
+
+      return {
+        cliCmd: cliCmd,
+        promptText: promptText,
+        skillsCount: mergedSkills.length,
+        rulesCount: mergedRules.length,
+        agentsCount: mergedAgents.length,
+        hooksCount: mergedHooks.length,
+        title:
+          roleName +
+          " · " +
+          profileName +
+          (options.focus !== "default" ? " · " + focusPreset.label : "") +
+          " Setup Prompt",
+      };
+    };
+
+    const updateBuilder = function () {
+      const role = roleSelect ? roleSelect.value : "founder";
+      const profile = profileSelect ? profileSelect.value : "individual";
+      const stack = stackSelect ? stackSelect.value : "role";
+      const focus = focusSelect ? focusSelect.value : "default";
+      const agent = agentSelect ? agentSelect.value : "claude";
+      const key = role + ":" + profile;
+      const entry = plans[key];
+      if (!entry) return;
+
+      quickRoleButtons.forEach(function (btn) {
+        const isMatch = btn.getAttribute("data-QuickRole") === role;
+        btn.classList.toggle("active", isMatch);
+      });
+
+      const built = buildCustomPrompt(entry, {
+        role: role,
+        profile: profile,
+        stack: stack,
+        focus: focus,
+        agent: agent,
+      });
+
+      if (cmdCode) cmdCode.textContent = built.cliCmd;
+      if (cmdCopy) cmdCopy.setAttribute("data-copy", built.cliCmd);
+      if (promptPre) promptPre.textContent = built.promptText;
+      if (promptCopy) promptCopy.setAttribute("data-copy", built.promptText);
+      if (promptTitle) promptTitle.textContent = built.title;
+      if (summaryText) {
+        summaryText.textContent =
+          built.skillsCount +
+          " verified skills · " +
+          built.rulesCount +
+          " rules · " +
+          built.agentsCount +
+          " subagents · " +
+          built.hooksCount +
+          " safety hooks · 100% SHA-256 verified";
+      }
+    };
+
+    quickRoleButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const targetRole = btn.getAttribute("data-QuickRole");
+        if (roleSelect && targetRole) {
+          roleSelect.value = targetRole;
+          updateBuilder();
+        }
+      });
+    });
+
+    [roleSelect, profileSelect, stackSelect, focusSelect, agentSelect].forEach(function (el) {
+      if (el) {
+        el.addEventListener("change", updateBuilder);
+        el.addEventListener("input", updateBuilder);
+      }
+    });
+    updateBuilder();
+  }
+
   // --- browse filtering ---------------------------------------------------
   const list = document.getElementById("skill-list");
   if (!list) return;

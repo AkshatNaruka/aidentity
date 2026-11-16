@@ -1,0 +1,139 @@
+---
+type: Playbook
+title: "Motion designer AI Agent Setup Playbook (Individual & Enterprise)"
+description: "Motion graphics, video composition, easing, rendering and review. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
+resource: https://akshatnaruka.github.io/aidentity/playbooks/motion-designer/
+tags: [motion-designer, motion, video, design, film, playbook, agent-setup]
+timestamp: 2026-11-16
+---
+
+# Motion designer AI Agent Setup Playbook (Individual & Enterprise)
+
+**Definition:** The **Motion designer AI Agent Playbook** configures any coding agent (Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or GitHub Copilot) for motion graphics, video composition, easing, rendering and review. It installs 7 SHA-256 security-verified skills in the Individual profile and 11 skills plus 4 runtime guardrails in the Enterprise profile.
+
+## Quick Commands
+
+```bash
+# Individual setup (7 verified skills)
+npx aidentity setup motion-designer --profile individual
+
+# Enterprise setup (11 verified skills + supply-chain & security hooks)
+npx aidentity setup motion-designer --profile enterprise
+```
+
+## Individual vs. Enterprise Comparison
+
+| Component | Individual Profile | Enterprise Profile |
+|---|---|---|
+| Verified Skills | 7 core skills | 11 skills (+4 security/audit skills) |
+| Coding Rules | 1 rule files | 1 rule files |
+| Subagents | 2 subagents | 3 subagents |
+| Slash Commands | 1 commands | 2 commands |
+| Safety Hooks | hooks/scan-secrets.js, hooks/block-dangerous.js | hooks/scan-secrets.js, hooks/block-dangerous.js, hooks/format-on-save.js, hooks/test-on-stop.js |
+
+## Verified Skills Included
+
+- **remotion-motion-graphics** (`haidrrrry-claude-remotion-skill/remotion-motion-graphics`, MIT, SHA-256 ``): Create and edit professional motion graphics videos with Remotion (React-based video). Use this skill EVERY time the user wants to create a video, edit a video, animate something, build an intro/outro/logo animation, make a Reel/Short/promo/launch video, add text animations or captions to footage, composite images and B-roll into a video, or mentions Remotion, motion graphics, video rendering, or "make this video look better/less generic". Also trigger when editing an existing Remotion project or when the user complains their video looks basic, generic, or amateur — this skill contains the exact fixes. Always read this skill BEFORE writing any Remotion code.
+- **video** (`marketingskills/video`, MIT, SHA-256 ``): When the user wants to create, generate, or produce video content using AI tools or programmatic frameworks. Also use when the user mentions 'video production,' 'AI video,' 'Remotion,' 'Hyperframes,' 'HeyGen,' 'Synthesia,' 'Veo,' 'Sora,' 'Runway,' 'Kling,' 'Seedance,' 'Hailuo,' 'MiniMax,' 'Pika,' 'Hunyuan,' 'Wan,' 'video generation,' 'AI avatar,' 'talking head video,' 'programmatic video,' 'video template,' 'explainer video,' 'product demo video,' 'record a product demo,' 'feature demo video,' 'in-app demo,' 'video pipeline,' 'copy this edit,' 'match this video style,' 'reverse-engineer this video,' 'edit like this reference,' or 'make me a video.' Use this for video creation, generation, and production workflows. For video content strategy and what to post, see social. For paid video ad creative, see ad-creative.
+- **image** (`marketingskills/image`, MIT, SHA-256 ``): When the user wants to create, generate, edit, or optimize images for marketing — blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets. Also use when the user mentions 'AI image generation,' 'generate an image,' 'create a graphic,' 'product mockup,' 'hero image,' 'social media graphic,' 'banner image,' 'cover photo,' 'profile banner,' 'listing screenshot,' 'Flux,' 'Flux Kontext,' 'Midjourney,' 'DALL-E,' 'GPT Image,' 'ChatGPT Images,' 'Ideogram,' 'Gemini image,' 'Nano Banana,' 'Recraft,' 'Stable Diffusion,' 'Canva,' 'Figma,' 'image optimization,' 'compress images,' 'WebP,' or 'OG image.' Use this for general-purpose marketing image creation and optimization. For paid ad image creative and platform-specific ad specs, see ad-creative. For video production, see video.
+- **ui-ux-pro-max** (`ui-ux-pro-max/ui-ux-pro-max`, MIT, SHA-256 ``): UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.
+- **tastemaker** (`tastemaker/tastemaker`, MIT, SHA-256 ``): Generate genuinely beautiful, on-brand UI instead of generic "AI slop" — use whenever the user asks to build, design, style, or improve a UI, landing page, dashboard, app screen, or component, whenever a PRD/spec needs a design pass before implementation, whenever the user pastes reference images/Pinterest/Dribbble links and wants the app to look like them, or whenever the user complains the AI-generated UI looks generic, boring, cookie-cutter, or "like every other AI app." Make sure to trigger this even if the user doesn't say "design" explicitly — phrases like "make this look good", "build the frontend for X", "this looks like every other SaaS site", or "match this vibe" all qualify. Also triggers on two verbs, "study"/"extract the look of" a reference screenshot or URL, and "audit"/"review"/"why does this look AI-generated" for critiquing existing UI.
+- **sw-story-structure** (`jtydhr88-screenwriting-skills/sw-story-structure`, MIT, SHA-256 ``): Story structure for screenplays and stage plays (故事结构) — merged from Syd Field's paradigm and plot points, Blake Snyder's Save the Cat beat sheet and board, Robert McKee's Story (event/scene/sequence/act, inciting incident, progressive complications, crisis-climax-resolution, subplots, story triangle), Julian Hoxter's nine-beat model, Neill Hicks' three acts as attraction/anticipation/satisfaction, and Lu Jun's Chinese short-play structure (凤头猪肚豹尾, 起承转合, eight openings, eight endings, 入戏要快/脉络要清/高潮要高/转变要顺/变化要多). Use when outlining a script, placing plot points and midpoint, fixing a saggy second act, designing an opening or ending, diagnosing "nothing happens", choosing between linear and non-linear designs, or converting a premise into beats and cards.
+- **sw-workflow** (`jtydhr88-screenwriting-skills/sw-workflow`, MIT, SHA-256 ``): Project orchestrator for the screenwriting skill set (剧本项目主线调度 / 状态存档 / story bible) — a meta-skill that adds no new craft knowledge but routes a screenplay or stage-play project through stages (premise → structure → character → scenes → draft → revision → submission) and a TV / streaming series project (电视剧 / 剧集 / pilot / 一季) through a separate series stage table (engine → character network & season arc → documents/bible → pilot structure → break story & outline → draft → submission), names which sw-* skill to invoke at each stage, defines each stage's deliverable and advisory exit check, and keeps all project state in a story-bible.md file so work can resume across sessions. Use when starting a new script project, resuming one ("continue my screenplay", "where were we"), when the user asks "what should I do next" on a script, when converting a vague idea into a full development pipeline, or when the other sw-* skills are firing individually and the overall process needs sequencing.
+- **security-and-hardening** (`addyosmani/security-and-hardening`, MIT, SHA-256 ``): Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.
+- **supply-chain-risk-auditor** (`trailofbits/supply-chain-risk-auditor`, CC-BY-SA-4.0, SHA-256 ``): Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.
+- **agentic-actions-auditor** (`trailofbits/agentic-actions-auditor`, CC-BY-SA-4.0, SHA-256 ``): Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.
+- **code-review-and-quality** (`addyosmani/code-review-and-quality`, MIT, SHA-256 ``): Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+
+## One-Shot Individual Setup Prompt
+
+```markdown
+# Aidentity Setup Prompt — Motion designer (Individual)
+
+Set up my AI agent environment for the **Motion designer** role using the **Individual** profile.
+
+## 1. One-Command Automated Setup (Preferred)
+If you have shell access in this workspace, run:
+```bash
+npx aidentity setup motion-designer --profile individual --agent claude
+```
+
+## 2. Security & Provenance Gate (Mandatory)
+Before installing or loading any skill, rule, or hook:
+1. Verify against `https://akshatnaruka.github.io/aidentity/security.json` (or local `registry/security.json`) that `verified === true` and `risk_level === "safe"`.
+2. Never install any skill where `distributable === false`, `content_url === null`, or `status !== "stable"`.
+3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
+4. **Individual Guardrails**: Enable `block-dangerous.js` and `scan-secrets.js` to prevent accidental destructive commands or credential leaks.
+
+## 3. Verified Skills for Motion designer (7)
+Install with `npx aidentity add <id> --agent claude`:
+  - `haidrrrry-claude-remotion-skill/remotion-motion-graphics` (MIT · security: verified · sha256:9e4a86a61f3acc92) — Create and edit professional motion graphics videos with Remotion (React-based video). Use this skill EVERY time the user wants to create a video, edit a video, animate something, build an intro/outro/logo animation, make a Reel/Short/promo/launch video, add text animations or captions to footage, composite images and B-roll into a video, or mentions Remotion, motion graphics, video rendering, or "make this video look better/less generic". Also trigger when editing an existing Remotion project or when the user complains their video looks basic, generic, or amateur — this skill contains the exact fixes. Always read this skill BEFORE writing any Remotion code.
+  - `marketingskills/video` (MIT · security: verified · sha256:0f142bfc4087ff85) — When the user wants to create, generate, or produce video content using AI tools or programmatic frameworks. Also use when the user mentions 'video production,' 'AI video,' 'Remotion,' 'Hyperframes,' 'HeyGen,' 'Synthesia,' 'Veo,' 'Sora,' 'Runway,' 'Kling,' 'Seedance,' 'Hailuo,' 'MiniMax,' 'Pika,' 'Hunyuan,' 'Wan,' 'video generation,' 'AI avatar,' 'talking head video,' 'programmatic video,' 'video template,' 'explainer video,' 'product demo video,' 'record a product demo,' 'feature demo video,' 'in-app demo,' 'video pipeline,' 'copy this edit,' 'match this video style,' 'reverse-engineer this video,' 'edit like this reference,' or 'make me a video.' Use this for video creation, generation, and production workflows. For video content strategy and what to post, see social. For paid video ad creative, see ad-creative.
+  - `marketingskills/image` (MIT · security: verified · sha256:a133744dbc1ea07f) — When the user wants to create, generate, edit, or optimize images for marketing — blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets. Also use when the user mentions 'AI image generation,' 'generate an image,' 'create a graphic,' 'product mockup,' 'hero image,' 'social media graphic,' 'banner image,' 'cover photo,' 'profile banner,' 'listing screenshot,' 'Flux,' 'Flux Kontext,' 'Midjourney,' 'DALL-E,' 'GPT Image,' 'ChatGPT Images,' 'Ideogram,' 'Gemini image,' 'Nano Banana,' 'Recraft,' 'Stable Diffusion,' 'Canva,' 'Figma,' 'image optimization,' 'compress images,' 'WebP,' or 'OG image.' Use this for general-purpose marketing image creation and optimization. For paid ad image creative and platform-specific ad specs, see ad-creative. For video production, see video.
+  - `ui-ux-pro-max/ui-ux-pro-max` (MIT · security: verified · sha256:bdc40690131e52d2) — UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.
+  - `tastemaker/tastemaker` (MIT · security: verified · sha256:94991c63279bf31b) — Generate genuinely beautiful, on-brand UI instead of generic "AI slop" — use whenever the user asks to build, design, style, or improve a UI, landing page, dashboard, app screen, or component, whenever a PRD/spec needs a design pass before implementation, whenever the user pastes reference images/Pinterest/Dribbble links and wants the app to look like them, or whenever the user complains the AI-generated UI looks generic, boring, cookie-cutter, or "like every other AI app." Make sure to trigger this even if the user doesn't say "design" explicitly — phrases like "make this look good", "build the frontend for X", "this looks like every other SaaS site", or "match this vibe" all qualify. Also triggers on two verbs, "study"/"extract the look of" a reference screenshot or URL, and "audit"/"review"/"why does this look AI-generated" for critiquing existing UI.
+  - `jtydhr88-screenwriting-skills/sw-story-structure` (MIT · security: verified · sha256:0656256bf248648b) — Story structure for screenplays and stage plays (故事结构) — merged from Syd Field's paradigm and plot points, Blake Snyder's Save the Cat beat sheet and board, Robert McKee's Story (event/scene/sequence/act, inciting incident, progressive complications, crisis-climax-resolution, subplots, story triangle), Julian Hoxter's nine-beat model, Neill Hicks' three acts as attraction/anticipation/satisfaction, and Lu Jun's Chinese short-play structure (凤头猪肚豹尾, 起承转合, eight openings, eight endings, 入戏要快/脉络要清/高潮要高/转变要顺/变化要多). Use when outlining a script, placing plot points and midpoint, fixing a saggy second act, designing an opening or ending, diagnosing "nothing happens", choosing between linear and non-linear designs, or converting a premise into beats and cards.
+  - `jtydhr88-screenwriting-skills/sw-workflow` (MIT · security: verified · sha256:a5534c5676c3bae1) — Project orchestrator for the screenwriting skill set (剧本项目主线调度 / 状态存档 / story bible) — a meta-skill that adds no new craft knowledge but routes a screenplay or stage-play project through stages (premise → structure → character → scenes → draft → revision → submission) and a TV / streaming series project (电视剧 / 剧集 / pilot / 一季) through a separate series stage table (engine → character network & season arc → documents/bible → pilot structure → break story & outline → draft → submission), names which sw-* skill to invoke at each stage, defines each stage's deliverable and advisory exit check, and keeps all project state in a story-bible.md file so work can resume across sessions. Use when starting a new script project, resuming one ("continue my screenplay", "where were we"), when the user asks "what should I do next" on a script, when converting a vague idea into a full development pipeline, or when the other sw-* skills are firing individually and the overall process needs sequencing.
+
+## 4. Coding & Workflow Rules
+Copy into your agent's rules directory or `AGENTS.md`:
+  - `rules/typescript/coding-style.md`
+
+## 5. Scoped Subagents & Slash Commands
+- Subagents:
+  - `agents/designer.md`
+  - `agents/planner.md`
+- Guardrail Hooks:
+  - `hooks/scan-secrets.js`
+  - `hooks/block-dangerous.js`
+```
+
+## One-Shot Enterprise Setup Prompt
+
+```markdown
+# Aidentity Setup Prompt — Motion designer (Enterprise)
+
+Set up my AI agent environment for the **Motion designer** role using the **Enterprise** profile.
+
+## 1. One-Command Automated Setup (Preferred)
+If you have shell access in this workspace, run:
+```bash
+npx aidentity setup motion-designer --profile enterprise --agent claude
+```
+
+## 2. Security & Provenance Gate (Mandatory)
+Before installing or loading any skill, rule, or hook:
+1. Verify against `https://akshatnaruka.github.io/aidentity/security.json` (or local `registry/security.json`) that `verified === true` and `risk_level === "safe"`.
+2. Never install any skill where `distributable === false`, `content_url === null`, or `status !== "stable"`.
+3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
+4. **Enterprise Governance**: Enable all pre-tool security hooks (`block-dangerous.js`, `scan-secrets.js`), post-edit formatting (`format-on-save.js`), and test verification (`test-on-stop.js`). Require security and supply-chain review before shipping.
+
+## 3. Verified Skills for Motion designer (11)
+Install with `npx aidentity add <id> --agent claude`:
+  - `haidrrrry-claude-remotion-skill/remotion-motion-graphics` (MIT · security: verified · sha256:9e4a86a61f3acc92) — Create and edit professional motion graphics videos with Remotion (React-based video). Use this skill EVERY time the user wants to create a video, edit a video, animate something, build an intro/outro/logo animation, make a Reel/Short/promo/launch video, add text animations or captions to footage, composite images and B-roll into a video, or mentions Remotion, motion graphics, video rendering, or "make this video look better/less generic". Also trigger when editing an existing Remotion project or when the user complains their video looks basic, generic, or amateur — this skill contains the exact fixes. Always read this skill BEFORE writing any Remotion code.
+  - `marketingskills/video` (MIT · security: verified · sha256:0f142bfc4087ff85) — When the user wants to create, generate, or produce video content using AI tools or programmatic frameworks. Also use when the user mentions 'video production,' 'AI video,' 'Remotion,' 'Hyperframes,' 'HeyGen,' 'Synthesia,' 'Veo,' 'Sora,' 'Runway,' 'Kling,' 'Seedance,' 'Hailuo,' 'MiniMax,' 'Pika,' 'Hunyuan,' 'Wan,' 'video generation,' 'AI avatar,' 'talking head video,' 'programmatic video,' 'video template,' 'explainer video,' 'product demo video,' 'record a product demo,' 'feature demo video,' 'in-app demo,' 'video pipeline,' 'copy this edit,' 'match this video style,' 'reverse-engineer this video,' 'edit like this reference,' or 'make me a video.' Use this for video creation, generation, and production workflows. For video content strategy and what to post, see social. For paid video ad creative, see ad-creative.
+  - `marketingskills/image` (MIT · security: verified · sha256:a133744dbc1ea07f) — When the user wants to create, generate, edit, or optimize images for marketing — blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets. Also use when the user mentions 'AI image generation,' 'generate an image,' 'create a graphic,' 'product mockup,' 'hero image,' 'social media graphic,' 'banner image,' 'cover photo,' 'profile banner,' 'listing screenshot,' 'Flux,' 'Flux Kontext,' 'Midjourney,' 'DALL-E,' 'GPT Image,' 'ChatGPT Images,' 'Ideogram,' 'Gemini image,' 'Nano Banana,' 'Recraft,' 'Stable Diffusion,' 'Canva,' 'Figma,' 'image optimization,' 'compress images,' 'WebP,' or 'OG image.' Use this for general-purpose marketing image creation and optimization. For paid ad image creative and platform-specific ad specs, see ad-creative. For video production, see video.
+  - `ui-ux-pro-max/ui-ux-pro-max` (MIT · security: verified · sha256:bdc40690131e52d2) — UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.
+  - `tastemaker/tastemaker` (MIT · security: verified · sha256:94991c63279bf31b) — Generate genuinely beautiful, on-brand UI instead of generic "AI slop" — use whenever the user asks to build, design, style, or improve a UI, landing page, dashboard, app screen, or component, whenever a PRD/spec needs a design pass before implementation, whenever the user pastes reference images/Pinterest/Dribbble links and wants the app to look like them, or whenever the user complains the AI-generated UI looks generic, boring, cookie-cutter, or "like every other AI app." Make sure to trigger this even if the user doesn't say "design" explicitly — phrases like "make this look good", "build the frontend for X", "this looks like every other SaaS site", or "match this vibe" all qualify. Also triggers on two verbs, "study"/"extract the look of" a reference screenshot or URL, and "audit"/"review"/"why does this look AI-generated" for critiquing existing UI.
+  - `jtydhr88-screenwriting-skills/sw-story-structure` (MIT · security: verified · sha256:0656256bf248648b) — Story structure for screenplays and stage plays (故事结构) — merged from Syd Field's paradigm and plot points, Blake Snyder's Save the Cat beat sheet and board, Robert McKee's Story (event/scene/sequence/act, inciting incident, progressive complications, crisis-climax-resolution, subplots, story triangle), Julian Hoxter's nine-beat model, Neill Hicks' three acts as attraction/anticipation/satisfaction, and Lu Jun's Chinese short-play structure (凤头猪肚豹尾, 起承转合, eight openings, eight endings, 入戏要快/脉络要清/高潮要高/转变要顺/变化要多). Use when outlining a script, placing plot points and midpoint, fixing a saggy second act, designing an opening or ending, diagnosing "nothing happens", choosing between linear and non-linear designs, or converting a premise into beats and cards.
+  - `jtydhr88-screenwriting-skills/sw-workflow` (MIT · security: verified · sha256:a5534c5676c3bae1) — Project orchestrator for the screenwriting skill set (剧本项目主线调度 / 状态存档 / story bible) — a meta-skill that adds no new craft knowledge but routes a screenplay or stage-play project through stages (premise → structure → character → scenes → draft → revision → submission) and a TV / streaming series project (电视剧 / 剧集 / pilot / 一季) through a separate series stage table (engine → character network & season arc → documents/bible → pilot structure → break story & outline → draft → submission), names which sw-* skill to invoke at each stage, defines each stage's deliverable and advisory exit check, and keeps all project state in a story-bible.md file so work can resume across sessions. Use when starting a new script project, resuming one ("continue my screenplay", "where were we"), when the user asks "what should I do next" on a script, when converting a vague idea into a full development pipeline, or when the other sw-* skills are firing individually and the overall process needs sequencing.
+  - `addyosmani/security-and-hardening` (MIT · security: verified · sha256:c4e213e9374f82e8) — Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.
+  - `trailofbits/supply-chain-risk-auditor` (CC-BY-SA-4.0 · security: verified · sha256:e8c5f983bb6ba819) — Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.
+  - `trailofbits/agentic-actions-auditor` (CC-BY-SA-4.0 · security: verified · sha256:c21aed572e34d6c6) — Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.
+  - `addyosmani/code-review-and-quality` (MIT · security: verified · sha256:6475fb1665945e2e) — Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+
+## 4. Coding & Workflow Rules
+Copy into your agent's rules directory or `AGENTS.md`:
+  - `rules/typescript/coding-style.md`
+
+## 5. Scoped Subagents & Slash Commands
+- Subagents:
+  - `agents/designer.md`
+  - `agents/planner.md`
+  - `agents/security-auditor.md`
+- Guardrail Hooks:
+  - `hooks/scan-secrets.js`
+  - `hooks/block-dangerous.js`
+  - `hooks/format-on-save.js`
+  - `hooks/test-on-stop.js`
+```

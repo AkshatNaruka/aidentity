@@ -532,3 +532,77 @@ p { margin: 0 0 1em; }
 .support-card p { color: var(--ink-soft); font-size: 0.9rem; margin: 0 0 16px; }
 .support-card img { display: block; width: 180px; height: 180px; margin: 0 0 16px; }
 @media (max-width: 700px) { .support-grid { grid-template-columns: 1fr; } }
+
+/* ---------- interactive setup builder & role cards ---------- */
+.setup-builder {
+  border: 1px solid var(--rule); background: var(--paper-2);
+  padding: 28px; margin-top: 28px;
+}
+.wizard-header {
+  margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--rule);
+}
+.wizard-quick-roles {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 18px;
+}
+.wizard-pill {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--paper); color: var(--ink-soft);
+  border: 1px solid var(--rule-strong); border-radius: 2px;
+  padding: 5px 10px; cursor: pointer;
+}
+.wizard-pill:hover {
+  border-color: var(--accent); color: var(--accent);
+}
+.wizard-pill.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.setup-controls {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 14px; margin-bottom: 20px;
+}
+.setup-controls.setup-controls-5 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.setup-field label {
+  display: block; font-family: var(--mono); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px;
+}
+.setup-field select {
+  font-family: var(--mono); font-size: 12.5px;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule-strong); border-radius: 2px;
+  padding: 10px 11px; width: 100%;
+}
+.setup-field select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.setup-summary {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px 20px; padding: 14px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  margin: 18px 0 0; font-size: 13px; color: var(--ink-soft);
+}
+.setup-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.role-card button.tag {
+  background: var(--paper-2); cursor: pointer;
+}
+.role-card button.tag:hover {
+  border-color: var(--accent); color: var(--accent);
+}
+.role-card details {
+  margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 10px;
+}
+.role-card summary {
+  cursor: pointer; font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+}
+.role-card summary:hover { color: var(--accent); }
+.role-meta-list {
+  margin: 10px 0 0; padding-left: 16px; font-size: 12px; color: var(--ink-soft);
+}
+.role-meta-list li { margin: 3px 0; }
+@media (max-width: 980px) {
+  .setup-controls.setup-controls-5 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 780px) {
+  .setup-controls, .setup-controls.setup-controls-5 { grid-template-columns: 1fr; }
+  .setup-builder { padding: 18px; }
+}
+
+
