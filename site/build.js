@@ -2538,7 +2538,14 @@ function buildSetup() {
     <div class="presets-grid">
       <div class="preset-card active" data-preset-role="founder" data-preset-profile="individual">
         <div>
-          <div class="preset-icon">🚀</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+            </svg>
+          </div>
           <h4>Founder / MVP Velocity</h4>
           <p>Product specs, MVP scaffolding, pricing models, launch strategy, and AI SEO.</p>
         </div>
@@ -2547,7 +2554,12 @@ function buildSetup() {
 
       <div class="preset-card" data-preset-role="software-engineer" data-preset-profile="individual">
         <div>
-          <div class="preset-icon">⚡</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
           <h4>Software Engineer</h4>
           <p>TDD workflow, systematic debugging, code refactoring, and strict code review.</p>
         </div>
@@ -2556,7 +2568,13 @@ function buildSetup() {
 
       <div class="preset-card" data-preset-role="architect" data-preset-profile="enterprise">
         <div>
-          <div class="preset-icon">🏛️</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
           <h4>Software Architect</h4>
           <p>C4 documentation, ADR records, microservices resilience, and security review.</p>
         </div>
@@ -2565,7 +2583,13 @@ function buildSetup() {
 
       <div class="preset-card" data-preset-role="product-manager" data-preset-profile="individual">
         <div>
-          <div class="preset-icon">🎯</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+          </div>
           <h4>Product Manager</h4>
           <p>PRD generation, JTBD user analysis, feature specs, and product telemetry.</p>
         </div>
@@ -2574,7 +2598,15 @@ function buildSetup() {
 
       <div class="preset-card" data-preset-role="designer" data-preset-profile="individual">
         <div>
-          <div class="preset-icon">🎨</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+            </svg>
+          </div>
           <h4>Product Designer</h4>
           <p>Design systems, Toss/Rayden tokens, micro-interactions, and mobile UX.</p>
         </div>
@@ -2583,7 +2615,12 @@ function buildSetup() {
 
       <div class="preset-card" data-preset-role="quant-researcher" data-preset-profile="enterprise">
         <div>
-          <div class="preset-icon">📈</div>
+          <div class="preset-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+          </div>
           <h4>Quant Researcher</h4>
           <p>Backtesting engines, risk metrics, financial APIs, and market data feeds.</p>
         </div>

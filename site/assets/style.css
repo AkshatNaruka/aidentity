@@ -1616,8 +1616,25 @@ main > section:last-child {
   background: rgba(176, 52, 29, 0.05);
 }
 .preset-icon {
-  font-size: 20px;
-  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(176, 52, 29, 0.08);
+  margin-bottom: 10px;
+  color: var(--accent);
+  transition: all 0.2s ease;
+}
+@media (prefers-color-scheme: dark) {
+  .preset-icon {
+    background: rgba(176, 52, 29, 0.16);
+  }
+}
+.preset-card.active .preset-icon {
+  background: var(--accent);
+  color: #fff;
 }
 .preset-card h4 {
   font-family: var(--sans);
