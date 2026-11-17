@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>azure-monitor-ingestion-py — azure AI agent skill — Aidentity</title>
+<title>azure-monitor-ingestion-py | azure AI agent skill | Aidentity</title>
 <meta name="description" content="Azure Monitor Ingestion SDK for Python. Use for sending custom logs to Log Analytics workspace via Logs Ingestion API. Triggers: &quot;azure-monitor-ingestion&quot;…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="azure-monitor-ingestion-py — azure AI agent skill — Aidentity">
+<meta property="og:title" content="azure-monitor-ingestion-py | azure AI agent skill | Aidentity">
 <meta property="og:description" content="Azure Monitor Ingestion SDK for Python. Use for sending custom logs to Log Analytics workspace via Logs Ingestion API. Triggers: &quot;azure-monitor-ingestion&quot;…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="azure-monitor-ingestion-py — azure AI agent skill — Aidentity">
+<meta name="twitter:title" content="azure-monitor-ingestion-py | azure AI agent skill | Aidentity">
 <meta name="twitter:description" content="Azure Monitor Ingestion SDK for Python. Use for sending custom logs to Log Analytics workspace via Logs Ingestion API. Triggers: &quot;azure-monitor-ingestion&quot;…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"azure","item":"https://akshatnaruka.github.io/aidentity/skills/?category=azure"},{"@type":"ListItem","position":3,"name":"azure-monitor-ingestion-py","item":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/"}]},{"@type":"TechArticle","headline":"azure-monitor-ingestion-py","description":"Azure Monitor Ingestion SDK for Python. Use for sending custom logs to Log Analytics workspace via Logs Ingestion API. Triggers: \"azure-monitor-ingestion\", \"LogsIngestionClient\", \"custom logs\", \"DCR\", \"data collection rule\", \"Log Analytics\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"azure, azure, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -114,15 +114,15 @@ AZURE_TOKEN_CREDENTIALS=prod # Required only if DefaultAzureCredential is used i
 <h4>Prerequisites</h4>
 <p>Before using this SDK, you need:</p>
 <ol>
-<li><strong>Log Analytics Workspace</strong> — Target for your logs</li>
-<li><strong>Data Collection Endpoint (DCE)</strong> — Ingestion endpoint</li>
-<li><strong>Data Collection Rule (DCR)</strong> — Defines schema and destination</li>
-<li><strong>Custom Table</strong> — In Log Analytics (created via DCR or manually)</li>
+<li><strong>Log Analytics Workspace</strong>, Target for your logs</li>
+<li><strong>Data Collection Endpoint (DCE)</strong>, Ingestion endpoint</li>
+<li><strong>Data Collection Rule (DCR)</strong>, Defines schema and destination</li>
+<li><strong>Custom Table</strong>, In Log Analytics (created via DCR or manually)</li>
 </ol>
 <h4>Authentication &amp; Lifecycle</h4>
 <p>&gt; <strong>🔑 Two rules apply to every code sample below:</strong></p>
 <p>&gt;</p>
-<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys — they bypass Entra audit and rotation.</p>
+<p>&gt; 1. <strong>Prefer <code>DefaultAzureCredential</code>.</strong> It works locally (Azure CLI / VS Code / Developer CLI) and in Azure (managed identity, workload identity) with no code change. Avoid connection strings, account/API keys, they bypass Entra audit and rotation.</p>
 <p>&gt;    - Local dev: <code>DefaultAzureCredential</code> works as-is.</p>
 <p>&gt;    - Production: set <code>AZURE_TOKEN_CREDENTIALS=prod</code> (or <code>AZURE_TOKEN_CREDENTIALS=&lt;specific_credential&gt;</code>) to constrain the credential chain to production-safe credentials.</p>
 <p>&gt; 2. <strong>Wrap every client in a context manager</strong> so HTTP transports, sockets, and token caches are released deterministically:</p>
@@ -246,28 +246,28 @@ with LogsIngestionClient(
 </tbody></table>
 <h4>Key Concepts</h4>
 <table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody>
-<tr><td><strong>DCE</strong></td><td>Data Collection Endpoint — ingestion URL</td></tr>
-<tr><td><strong>DCR</strong></td><td>Data Collection Rule — defines schema, transformations, destination</td></tr>
+<tr><td><strong>DCE</strong></td><td>Data Collection Endpoint, ingestion URL</td></tr>
+<tr><td><strong>DCR</strong></td><td>Data Collection Rule, defines schema, transformations, destination</td></tr>
 <tr><td><strong>Stream</strong></td><td>Named data flow within a DCR</td></tr>
 <tr><td><strong>Custom Table</strong></td><td>Target table in Log Analytics (ends with <code>_CL</code>)</td></tr>
 </tbody></table>
 <h4>DCR Stream Name Format</h4>
 <p>Stream names follow patterns:</p>
 <ul>
-<li><code>Custom-&lt;TableName&gt;_CL</code> — For custom tables</li>
-<li><code>Microsoft-&lt;TableName&gt;</code> — For built-in tables</li>
+<li><code>Custom-&lt;TableName&gt;_CL</code>, For custom tables</li>
+<li><code>Microsoft-&lt;TableName&gt;</code>, For built-in tables</li>
 </ul>
 <h4>Best Practices</h4>
 <ol>
 <li><strong>Pick sync OR async and stay consistent.</strong> Do not mix <code>azure.xxx</code> sync clients with <code>azure.xxx.aio</code> async clients in the same call path. Choose one mode per module.</li>
 <li><strong>Always use context managers for clients and async credentials.</strong> Wrap every client in <code>with Client(...) as client:</code> (sync) or <code>async with Client(...) as client:</code> (async) to ensure proper cleanup. For async <code>DefaultAzureCredential</code> from <code>azure.identity.aio</code>, also use <code>async with credential:</code> so tokens and transports are cleaned up.</li>
 <li><strong>Use <code>DefaultAzureCredential</code></strong> for code that runs locally. Use a specific token credential for code that runs in Azure.</li>
-<li><strong>Handle errors gracefully</strong> — use <code>on_error</code> callback for partial failures</li>
-<li><strong>Include TimeGenerated</strong> — Required field for all logs</li>
-<li><strong>Match DCR schema</strong> — Log fields must match DCR column definitions</li>
+<li><strong>Handle errors gracefully</strong>, use <code>on_error</code> callback for partial failures</li>
+<li><strong>Include TimeGenerated</strong>, Required field for all logs</li>
+<li><strong>Match DCR schema</strong>, Log fields must match DCR column definitions</li>
 <li><strong>Use async client</strong> for high-throughput scenarios</li>
-<li><strong>Batch uploads</strong> — SDK handles batching, but send reasonable chunks</li>
-<li><strong>Monitor ingestion</strong> — Check Log Analytics for ingestion status</li>
+<li><strong>Batch uploads</strong>, SDK handles batching, but send reasonable chunks</li>
+<li><strong>Monitor ingestion</strong>, Check Log Analytics for ingestion status</li>
 </ol>
 <h4>Reference Files</h4>
 <table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>
@@ -287,6 +287,8 @@ with LogsIngestionClient(
         <a class="row" href="../../../skills/microsoft-azure/agent-framework-azure-ai-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="agent-framework-azure-ai-py"
+     data-distributable="1"
      data-search="agent-framework-azure-ai-py build azure ai foundry agents using the microsoft agent framework python sdk (agent-framework-azure-ai). use when creating persistent agents with azureaiagentsprovider, using hosted tools (code interpreter, file search, web search), integrating mcp servers, managing conversation threads, or implementing streaming responses. covers function tools, structured outputs, and multi-tool agents. azure agents azure microsoft/skills">
   <span>
     <span class="r-name">agent-framework-azure-ai-py</span>
@@ -298,10 +300,12 @@ with LogsIngestionClient(
 <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
      data-source="microsoft-azure"
      data-category="azure"
-     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+     data-name="applicationinsights-web-ts"
+     data-distributable="1"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum), page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
   <span>
     <span class="r-name">applicationinsights-web-ts</span>
-    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM), page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
   </span>
   <span class="r-src">microsoft/skills</span>
   <span class="r-lic">MIT</span>
@@ -309,6 +313,8 @@ with LogsIngestionClient(
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-contentsafety-py"
+     data-distributable="1"
      data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-contentsafety-py</span>
@@ -320,6 +326,8 @@ with LogsIngestionClient(
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-contentunderstanding-py"
+     data-distributable="1"
      data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-contentunderstanding-py</span>
@@ -331,6 +339,8 @@ with LogsIngestionClient(
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-language-conversations-py"
+     data-distributable="1"
      data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-language-conversations-py</span>
@@ -362,10 +372,10 @@ with LogsIngestionClient(
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=azure-monitor-ingestion-py%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=azure-monitor-ingestion-py%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F&t=azure-monitor-ingestion-py%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F&title=azure-monitor-ingestion-py%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F&t=azure-monitor-ingestion-py%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fazure-monitor-ingestion-py%2F&title=azure-monitor-ingestion-py%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/azure-monitor-ingestion-py/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/azure-monitor-ingestion-py/SKILL.md" rel="noopener">View file ↗</a>
@@ -437,7 +447,7 @@ with LogsIngestionClient(
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -448,6 +458,6 @@ with LogsIngestionClient(
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

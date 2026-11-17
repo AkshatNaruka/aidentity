@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>strategic-compact — context AI agent skill — Aidentity</title>
+<title>strategic-compact | context AI agent skill | Aidentity</title>
 <meta name="description" content="Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Use when a session i…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="strategic-compact — context AI agent skill — Aidentity">
+<meta property="og:title" content="strategic-compact | context AI agent skill | Aidentity">
 <meta property="og:description" content="Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Use when a session i…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="strategic-compact — context AI agent skill — Aidentity">
+<meta name="twitter:title" content="strategic-compact | context AI agent skill | Aidentity">
 <meta name="twitter:description" content="Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Use when a session i…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"context","item":"https://akshatnaruka.github.io/aidentity/skills/?category=context"},{"@type":"ListItem","position":3,"name":"strategic-compact","item":"https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/"}]},{"@type":"TechArticle","headline":"strategic-compact","description":"Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Use when a session is approaching a context limit and a task phase is a natural place to compact.","url":"https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Affaan Mustafa"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"context, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -115,15 +115,15 @@
 </ul>
 <p>Strategic compaction at logical boundaries:</p>
 <ul>
-<li><strong>After exploration, before execution</strong> — Compact research context, keep implementation plan</li>
-<li><strong>After completing a milestone</strong> — Fresh start for next phase</li>
-<li><strong>Before major context shifts</strong> — Clear exploration context before different task</li>
+<li><strong>After exploration, before execution</strong>, Compact research context, keep implementation plan</li>
+<li><strong>After completing a milestone</strong>, Fresh start for next phase</li>
+<li><strong>Before major context shifts</strong>, Clear exploration context before different task</li>
 </ul>
 <h4>How It Works</h4>
 <p>The <code>suggest-compact.js</code> script runs on PreToolUse (Edit/Write) and combines two signals:</p>
 <ol>
-<li><strong>Context size (primary)</strong> — Reads the latest <code>usage</code> record from the session transcript (<code>transcript_path</code> in the hook payload) and sums <code>input_tokens + cache_read_input_tokens + cache_creation_input_tokens</code> (the true context size of the turn). Suggests <code>/compact</code> at a window-scaled threshold — 160k tokens on a 200k window, 250k on a 1M window (detected from a <code>[1m]</code> model marker, or inferred when observed tokens already exceed 200k) — and re-reminds after every additional 60k tokens of context growth</li>
-<li><strong>Tool-call count (secondary)</strong> — Counts tool invocations in session; suggests at a configurable threshold (default: 50 calls), then every 25 calls after</li>
+<li><strong>Context size (primary)</strong>, Reads the latest <code>usage</code> record from the session transcript (<code>transcript_path</code> in the hook payload) and sums <code>input_tokens + cache_read_input_tokens + cache_creation_input_tokens</code> (the true context size of the turn). Suggests <code>/compact</code> at a window-scaled threshold, 160k tokens on a 200k window, 250k on a 1M window (detected from a <code>[1m]</code> model marker, or inferred when observed tokens already exceed 200k), and re-reminds after every additional 60k tokens of context growth</li>
+<li><strong>Tool-call count (secondary)</strong>, Counts tool invocations in session; suggests at a configurable threshold (default: 50 calls), then every 25 calls after</li>
 </ol>
 <h4>Hook Setup</h4>
 <p>Add to your <code>~/.claude/settings.json</code>:</p>
@@ -144,11 +144,11 @@
 <h4>Configuration</h4>
 <p>Environment variables:</p>
 <ul>
-<li><code>COMPACT_THRESHOLD</code> — Tool calls before first suggestion (default: 50)</li>
-<li><code>COMPACT_CONTEXT_THRESHOLD</code> — Context tokens before the context-size suggestion (default: 160000 on a 200k window, 250000 on a 1M window; <code>0</code> disables the context signal)</li>
-<li><code>COMPACT_CONTEXT_INTERVAL</code> — Additional context tokens before the suggestion repeats (default: 60000)</li>
-<li><code>ECC_CONTEXT_WINDOW_TOKENS</code> — Explicit context-window size, in tokens, overriding auto-detection. Set this for large-window models whose reported id lacks a <code>[1m]</code> marker (e.g. 400k Opus 4.x, or a new 1M-window model family) so the threshold scales to the real window instead of defaulting to 200k and overstating context usage.</li>
-<li><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code> — Claude Code&#39;s native window-size override, in tokens; honored as a fallback when <code>ECC_CONTEXT_WINDOW_TOKENS</code> is unset.</li>
+<li><code>COMPACT_THRESHOLD</code>, Tool calls before first suggestion (default: 50)</li>
+<li><code>COMPACT_CONTEXT_THRESHOLD</code>, Context tokens before the context-size suggestion (default: 160000 on a 200k window, 250000 on a 1M window; <code>0</code> disables the context signal)</li>
+<li><code>COMPACT_CONTEXT_INTERVAL</code>, Additional context tokens before the suggestion repeats (default: 60000)</li>
+<li><code>ECC_CONTEXT_WINDOW_TOKENS</code>, Explicit context-window size, in tokens, overriding auto-detection. Set this for large-window models whose reported id lacks a <code>[1m]</code> marker (e.g. 400k Opus 4.x, or a new 1M-window model family) so the threshold scales to the real window instead of defaulting to 200k and overstating context usage.</li>
+<li><code>CLAUDE_CODE_AUTO_COMPACT_WINDOW</code>, Claude Code&#39;s native window-size override, in tokens; honored as a fallback when <code>ECC_CONTEXT_WINDOW_TOKENS</code> is unset.</li>
 </ul>
 <p>&gt; The context window is otherwise auto-detected from a <code>[1m]</code> model marker or inferred when observed tokens already exceed 200k. On a large-window model that carries neither signal, set one of the overrides above so the <code>/compact</code> suggestion fires at the right point.</p>
 <h4>Compaction Decision Guide</h4>
@@ -168,35 +168,35 @@
 <tr><td>Files on disk</td><td>File contents you previously read</td></tr>
 <tr><td>Memory files (<code>~/.claude/memory/</code>)</td><td>Multi-step conversation context</td></tr>
 <tr><td>Git state (commits, branches)</td><td>Tool call history and counts</td></tr>
-<tr><td>The task list — <strong>only if you have the todo tools</strong> (see below)</td><td>Nuanced user preferences stated verbally</td></tr>
+<tr><td>The task list, <strong>only if you have the todo tools</strong> (see below)</td><td>Nuanced user preferences stated verbally</td></tr>
 </tbody></table>
-<p>&gt; ### Don&#39;t rely on the task list surviving — it may not exist</p>
+<p>&gt; ### Don&#39;t rely on the task list surviving, it may not exist</p>
 <p>&gt;</p>
 <p>&gt; Claude Code <strong>2.1.233 removed the todo/task tools by default</strong> on Opus 4.8, Sonnet 5,</p>
 <p>&gt; Fable 5, Mythos 5 and newer models (<code>TodoWrite</code>, <code>TaskCreate/Get/Update/List</code>).</p>
 <p>&gt; <code>CLAUDE_CODE_ENABLE_TODO_TOOLS=1</code> brings them back, but that is a per-machine</p>
-<p>&gt; environment setting — <strong>it does not travel with this skill</strong>, so you cannot assume the</p>
+<p>&gt; environment setting, <strong>it does not travel with this skill</strong>, so you cannot assume the</p>
 <p>&gt; reader has it.</p>
 <p>&gt;</p>
 <p>&gt; This matters because &quot;my todo list survives compaction&quot; is a reason people compact</p>
 <p>&gt; <em>instead of</em> writing state down. If the tools are absent there is no list to survive,</p>
-<p>&gt; and the plan is simply gone. <strong>Write the plan to a file before compacting</strong> — a file</p>
+<p>&gt; and the plan is simply gone. <strong>Write the plan to a file before compacting</strong>, a file</p>
 <p>&gt; persists on every version and every model. Treat the task list as a convenience that</p>
 <p>&gt; may be missing, never as your durable record.</p>
 <h4>Best Practices</h4>
 <ol>
-<li><strong>Compact after planning</strong> — Once the plan is finalized <strong>and written to a file</strong>, compact to start fresh</li>
-<li><strong>Compact after debugging</strong> — Clear error-resolution context before continuing</li>
-<li><strong>Don&#39;t compact mid-implementation</strong> — Preserve context for related changes</li>
-<li><strong>Read the suggestion</strong> — The hook tells you <em>when</em>, you decide <em>if</em></li>
-<li><strong>Write before compacting</strong> — Save important context to files or memory before compacting</li>
-<li><strong>Use <code>/compact</code> with a summary</strong> — Add a custom message: <code>/compact Focus on implementing auth middleware next</code></li>
+<li><strong>Compact after planning</strong>, Once the plan is finalized <strong>and written to a file</strong>, compact to start fresh</li>
+<li><strong>Compact after debugging</strong>, Clear error-resolution context before continuing</li>
+<li><strong>Don&#39;t compact mid-implementation</strong>, Preserve context for related changes</li>
+<li><strong>Read the suggestion</strong>, The hook tells you <em>when</em>, you decide <em>if</em></li>
+<li><strong>Write before compacting</strong>, Save important context to files or memory before compacting</li>
+<li><strong>Use <code>/compact</code> with a summary</strong>, Add a custom message: <code>/compact Focus on implementing auth middleware next</code></li>
 </ol>
 <h4>Related</h4>
 <ul>
-<li><a href="https://x.com/affaanmustafa/status/2014040193557471352" rel="noopener">The Longform Guide</a> — Token optimization section</li>
-<li>Memory persistence hooks — For state that survives compaction</li>
-<li><code>continuous-learning</code> skill — Extracts patterns before session ends</li>
+<li><a href="https://x.com/affaanmustafa/status/2014040193557471352" rel="noopener">The Longform Guide</a>, Token optimization section</li>
+<li>Memory persistence hooks, For state that survives compaction</li>
+<li><code>continuous-learning</code> skill, Extracts patterns before session ends</li>
 </ul></div>
 
       <h2>Provenance</h2>
@@ -211,6 +211,8 @@
         <a class="row" href="../../../skills/caveman/cavecrew/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="cavecrew"
+     data-distributable="1"
      data-search="cavecrew when to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline or using `explore`. their output is compressed, so main context lasts longer. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">cavecrew</span>
@@ -222,6 +224,8 @@
 <a class="row" href="../../../skills/caveman/caveman/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman"
+     data-distributable="1"
      data-search="caveman terse caveman voice: answer first, fluff gone, every technical fact kept. use for /caveman, &quot;caveman mode&quot;, &quot;talk like caveman&quot;, &quot;be brief&quot;, &quot;less tokens&quot;. stays on until &quot;stop caveman&quot; or &quot;normal mode&quot;. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman</span>
@@ -233,6 +237,8 @@
 <a class="row" href="../../../skills/caveman/caveman-commit/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-commit"
+     data-distributable="1"
      data-search="caveman-commit write a conventional commits message compressed to intent only. use for &quot;write a commit&quot;, &quot;commit message&quot;, /commit or /caveman-commit. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-commit</span>
@@ -244,6 +250,8 @@
 <a class="row" href="../../../skills/caveman/caveman-compress/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-compress"
+     data-distributable="1"
      data-search="caveman-compress compress a memory file such as claude.md or a todo list into caveman format to save input tokens, keeping a readable backup. sends the file&#39;s text to the configured model provider. trigger: /caveman-compress. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-compress</span>
@@ -255,6 +263,8 @@
 <a class="row" href="../../../skills/caveman/caveman-review/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-review"
+     data-distributable="1"
      data-search="caveman-review compressed code review - one line per finding with location, problem and fix. use for /caveman-review, &quot;review this pr&quot;, or &quot;review the diff&quot;. context code-review juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-review</span>
@@ -286,10 +296,10 @@
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=strategic-compact%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=strategic-compact%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F&t=strategic-compact%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F&title=strategic-compact%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F&t=strategic-compact%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Feverything-claude-code%2Fstrategic-compact%2F&title=strategic-compact%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/everything-claude-code/strategic-compact/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/everything-claude-code/strategic-compact/SKILL.md" rel="noopener">View file ↗</a>
@@ -361,7 +371,7 @@
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -372,6 +382,6 @@
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

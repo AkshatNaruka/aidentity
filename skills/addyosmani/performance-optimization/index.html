@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>performance-optimization — performance AI agent skill — Aidentity</title>
+<title>performance-optimization | performance AI agent skill | Aidentity</title>
 <meta name="description" content="Optimizes application performance across frontend, backend, queries, and databases. Use when performance requirements exist, when you suspect performance r…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="performance-optimization — performance AI agent skill — Aidentity">
+<meta property="og:title" content="performance-optimization | performance AI agent skill | Aidentity">
 <meta property="og:description" content="Optimizes application performance across frontend, backend, queries, and databases. Use when performance requirements exist, when you suspect performance r…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="performance-optimization — performance AI agent skill — Aidentity">
+<meta name="twitter:title" content="performance-optimization | performance AI agent skill | Aidentity">
 <meta name="twitter:description" content="Optimizes application performance across frontend, backend, queries, and databases. Use when performance requirements exist, when you suspect performance r…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"performance","item":"https://akshatnaruka.github.io/aidentity/skills/?category=performance"},{"@type":"ListItem","position":3,"name":"performance-optimization","item":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/"}]},{"@type":"TechArticle","headline":"performance-optimization","description":"Optimizes application performance across frontend, backend, queries, and databases. Use when performance requirements exist, when you suspect performance regressions, when Core Web Vitals or load times need improvement, when N+1 query patterns need fixing, or when profiling reveals bottlenecks.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"performance, performance, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -98,7 +98,7 @@
       <h2>Contents</h2>
       <div class="skill-content"><h3>Performance Optimization</h3>
 <h4>Overview</h4>
-<p>Measure before optimizing. Performance work without measurement is guessing — and guessing leads to premature optimization that adds complexity without improving what matters. Profile first, identify the actual bottleneck, fix it, measure again. Optimize only what measurements prove matters.</p>
+<p>Measure before optimizing. Performance work without measurement is guessing, and guessing leads to premature optimization that adds complexity without improving what matters. Profile first, identify the actual bottleneck, fix it, measure again. Optimize only what measurements prove matters.</p>
 <h4>When to Use</h4>
 <ul>
 <li>Performance requirements exist in the spec (load time budgets, response time SLAs)</li>
@@ -121,7 +121,7 @@
 4. VERIFY   → Measure again; keep or revert
 5. GUARD    → Add monitoring or tests to prevent regression</code></pre></p>
 <h5>Step 1: Measure</h5>
-<p>Two complementary approaches — use both:</p>
+<p>Two complementary approaches, use both:</p>
 <ul>
 <li><strong>Synthetic (Lighthouse, DevTools Performance tab):</strong> Controlled conditions, reproducible. Best for CI regression detection and isolating specific issues.</li>
 <li><strong>RUM (web-vitals library, CrUX):</strong> Real user data in real conditions. Required to validate that a fix actually improved user experience.</li>
@@ -185,7 +185,7 @@ console.timeEnd(&#39;db-query&#39;);</code></pre></p>
 </tbody></table>
 <h5>Step 3: Fix Common Anti-Patterns</h5>
 <h5>N+1 Queries (Backend)</h5>
-<p><pre><code>// BAD: N+1 — one query per task for the owner
+<p><pre><code>// BAD: N+1, one query per task for the owner
 const tasks = await db.tasks.findMany();
 for (const task of tasks) {
   task.owner = await db.users.findUnique({ where: { id: task.ownerId } });
@@ -228,7 +228,7 @@ WHERE owner_id = 42 ORDER BY created_at DESC LIMIT 20;</code></pre></p>
 <p>Re-run <code>EXPLAIN ANALYZE</code> after. An index that did not change the plan is a revert (Step 4), and it is not free: it still costs on every write.</p>
 <h5>Connection Pool Exhaustion</h5>
 <p>The signature is distinctive: <strong>every</strong> endpoint slows at once, the slow time is spent waiting for a connection rather than executing, and the database reports mostly idle sessions.</p>
-<p><pre><code>// BAD: a pool per request or per module — under serverless this multiplies
+<p><pre><code>// BAD: a pool per request or per module, under serverless this multiplies
 // by instance count and exhausts the database&#39;s connection limit
 // GOOD: one pool per process, sized against the database&#39;s ceiling
 const pool = new Pool({
@@ -241,7 +241,7 @@ const pool = new Pool({
 <p><pre><code>&lt;!-- BAD: No dimensions, no format optimization --&gt;
 &lt;img src=&quot;/hero.jpg&quot; /&gt;
 
-&lt;!-- GOOD: Hero / LCP image — art direction + resolution switching, high priority --&gt;
+&lt;!-- GOOD: Hero / LCP image, art direction + resolution switching, high priority --&gt;
 &lt;!--
   Two techniques combined:
   - Art direction (media): different crop/composition per breakpoint
@@ -289,7 +289,7 @@ const pool = new Pool({
   /&gt;
 &lt;/picture&gt;
 
-&lt;!-- GOOD: Below-the-fold image — lazy loaded + async decoding --&gt;
+&lt;!-- GOOD: Below-the-fold image, lazy loaded + async decoding --&gt;
 &lt;img
   src=&quot;/content.webp&quot;
   width=&quot;800&quot;
@@ -323,7 +323,7 @@ function TaskStats({ tasks }: Props) {
 <h5>Large Bundle Size</h5>
 <p><pre><code>// Modern bundlers (Vite, webpack 5+) handle named imports with tree-shaking automatically,
 // provided the dependency ships ESM and is marked `sideEffects: false` in package.json.
-// Profile before changing import styles — the real gains come from splitting and lazy loading.
+// Profile before changing import styles, the real gains come from splitting and lazy loading.
 
 // GOOD: Dynamic import for heavy, rarely-used features
 const ChartLibrary = lazy(() =&gt; import(&#39;./ChartLibrary&#39;));
@@ -493,6 +493,8 @@ npx lhci autorun</code></pre></p>
         <a class="row" href="../../../skills/addyosmani/api-and-interface-design/index.html"
      data-source="addyosmani"
      data-category="design"
+     data-name="api-and-interface-design"
+     data-distributable="1"
      data-search="api-and-interface-design guides stable api and interface design. use when designing apis, module boundaries, or any public interface. use when creating rest or graphql endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend. design design addyosmani/agent-skills">
   <span>
     <span class="r-name">api-and-interface-design</span>
@@ -504,6 +506,8 @@ npx lhci autorun</code></pre></p>
 <a class="row" href="../../../skills/addyosmani/browser-testing-with-devtools/index.html"
      data-source="addyosmani"
      data-category="testing"
+     data-name="browser-testing-with-devtools"
+     data-distributable="1"
      data-search="browser-testing-with-devtools tests in real browsers via chrome devtools mcp. use when building or debugging anything that runs in a browser. use when you need to inspect the dom, capture console errors, analyze network requests, profile performance, or verify visual output with real runtime data. requires the chrome-devtools mcp server to be configured. testing testing addyosmani/agent-skills">
   <span>
     <span class="r-name">browser-testing-with-devtools</span>
@@ -515,6 +519,8 @@ npx lhci autorun</code></pre></p>
 <a class="row" href="../../../skills/addyosmani/ci-cd-and-automation/index.html"
      data-source="addyosmani"
      data-category="devops"
+     data-name="ci-cd-and-automation"
+     data-distributable="1"
      data-search="ci-cd-and-automation automates ci/cd pipeline setup. use when setting up or modifying build and deployment pipelines. use when you need to automate quality gates, configure test runners in ci, or establish deployment strategies. devops devops addyosmani/agent-skills">
   <span>
     <span class="r-name">ci-cd-and-automation</span>
@@ -526,6 +532,8 @@ npx lhci autorun</code></pre></p>
 <a class="row" href="../../../skills/addyosmani/code-review-and-quality/index.html"
      data-source="addyosmani"
      data-category="code-review"
+     data-name="code-review-and-quality"
+     data-distributable="1"
      data-search="code-review-and-quality conducts multi-axis code review. use before merging any change. use when reviewing code written by yourself, another agent, or a human. use when you need to assess code quality across multiple dimensions before it enters the main branch. code-review code-review addyosmani/agent-skills">
   <span>
     <span class="r-name">code-review-and-quality</span>
@@ -537,6 +545,8 @@ npx lhci autorun</code></pre></p>
 <a class="row" href="../../../skills/addyosmani/code-simplification/index.html"
      data-source="addyosmani"
      data-category="engineering"
+     data-name="code-simplification"
+     data-distributable="1"
      data-search="code-simplification simplifies code for clarity. use when refactoring code for clarity without changing behavior. use when code works but is harder to read, maintain, or extend than it should be. use when reviewing code that has accumulated unnecessary complexity. engineering  addyosmani/agent-skills">
   <span>
     <span class="r-name">code-simplification</span>
@@ -568,10 +578,10 @@ npx lhci autorun</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=performance-optimization%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=performance-optimization%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F&t=performance-optimization%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F&title=performance-optimization%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F&t=performance-optimization%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fperformance-optimization%2F&title=performance-optimization%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/addyosmani/performance-optimization/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/performance-optimization/SKILL.md" rel="noopener">View file ↗</a>
@@ -643,7 +653,7 @@ npx lhci autorun</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -654,6 +664,6 @@ npx lhci autorun</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

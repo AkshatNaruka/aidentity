@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>caveman-compress — context AI agent skill — Aidentity</title>
+<title>caveman-compress | context AI agent skill | Aidentity</title>
 <meta name="description" content="Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the c…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="caveman-compress — context AI agent skill — Aidentity">
+<meta property="og:title" content="caveman-compress | context AI agent skill | Aidentity">
 <meta property="og:description" content="Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the c…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="caveman-compress — context AI agent skill — Aidentity">
+<meta name="twitter:title" content="caveman-compress | context AI agent skill | Aidentity">
 <meta name="twitter:description" content="Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file&#39;s text to the c…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"context","item":"https://akshatnaruka.github.io/aidentity/skills/?category=context"},{"@type":"ListItem","position":3,"name":"caveman-compress","item":"https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/"}]},{"@type":"TechArticle","headline":"caveman-compress","description":"Compress a memory file such as CLAUDE.md or a todo list into caveman format to save input tokens, keeping a readable backup. Sends the file's text to the configured model provider. Trigger: /caveman-compress.","url":"https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Julius Brussee"},"license":"Apache-2.0","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"context, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -99,10 +99,10 @@
       <div class="skill-content"><h3>Caveman Compress</h3>
 <h4>Purpose</h4>
 <p>&gt; <strong>Data leaves the machine.</strong> Compression sends the file&#39;s full text to the model provider that <code>scripts/compress.py</code> is configured for: the <code>claude</code> CLI, the Anthropic API, or an OpenAI-compatible endpoint. Files whose names look like secrets (<code>.env</code>, <code>credentials</code>, <code>secrets</code>, <code>.netrc</code>, …) are refused before they are read. Don&#39;t compress a file the provider shouldn&#39;t see.</p>
-<p>Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as <code>&lt;filename&gt;.original.md</code>, but NOT beside the source file — it lives in an out-of-tree data dir (<code>$XDG_DATA_HOME/caveman-compress/backups/&lt;parent-dir-name&gt;/</code>, or <code>%LOCALAPPDATA%\caveman-compress\backups\&lt;parent-dir-name&gt;\</code> on Windows) so skill auto-loaders don&#39;t re-ingest it as a live file.</p>
+<p>Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as <code>&lt;filename&gt;.original.md</code>, but NOT beside the source file, it lives in an out-of-tree data dir (<code>$XDG_DATA_HOME/caveman-compress/backups/&lt;parent-dir-name&gt;/</code>, or <code>%LOCALAPPDATA%\caveman-compress\backups\&lt;parent-dir-name&gt;\</code> on Windows) so skill auto-loaders don&#39;t re-ingest it as a live file.</p>
 <h4>Trigger</h4>
 <p><code>/caveman-compress &lt;filepath&gt;</code> or when user asks to compress a memory file.</p>
-<p><strong>Requires an explicit filepath.</strong> If the user pastes raw text instead of naming a file, do NOT improvise an inline compression — ask them for the filepath to compress, or offer to save the pasted text to a file first. Writing your own reasoning/commentary about the request into the compressed output (e.g. &quot;User passed text directly, not a filepath...&quot;) is the exact failure this guards against — never let that leak into a saved file.</p>
+<p><strong>Requires an explicit filepath.</strong> If the user pastes raw text instead of naming a file, do NOT improvise an inline compression, ask them for the filepath to compress, or offer to save the pasted text to a file first. Writing your own reasoning/commentary about the request into the compressed output (e.g. &quot;User passed text directly, not a filepath...&quot;) is the exact failure this guards against, never let that leak into a saved file.</p>
 <h4>Process</h4>
 <ol>
 <li>The compression scripts live in <code>scripts/</code> (adjacent to this SKILL.md). If the path is not immediately available, search for <code>scripts/__main__.py</code> next to this SKILL.md.</li>
@@ -159,7 +159,7 @@
 <ul>
 <li>Use short synonyms: &quot;big&quot; not &quot;extensive&quot;, &quot;fix&quot; not &quot;implement a solution for&quot;, &quot;use&quot; not &quot;utilize&quot;</li>
 <li>Fragments OK: &quot;Run tests before commit&quot; not &quot;You should always run tests before committing&quot;</li>
-<li>Drop &quot;you should&quot;, &quot;make sure to&quot;, &quot;remember to&quot; — just state the action</li>
+<li>Drop &quot;you should&quot;, &quot;make sure to&quot;, &quot;remember to&quot;, just state the action</li>
 <li>Merge redundant bullets that say the same thing differently</li>
 <li>Keep one example where multiple examples show the same pattern</li>
 </ul>
@@ -196,7 +196,7 @@
 <li>NEVER modify: .py, .js, .ts, .json, .yaml, .yml, .toml, .env, .lock, .css, .html, .xml, .sql, .sh</li>
 <li>If file has mixed content (prose + code), compress ONLY the prose sections</li>
 <li>If unsure whether something is code or prose, leave it unchanged</li>
-<li>Original file is backed up as FILE.original.md before overwriting — in the out-of-tree backup data dir (see Purpose), not beside the source file</li>
+<li>Original file is backed up as FILE.original.md before overwriting, in the out-of-tree backup data dir (see Purpose), not beside the source file</li>
 <li>Never compress FILE.original.md (skip it)</li>
 </ul></div>
 
@@ -212,6 +212,8 @@
         <a class="row" href="../../../skills/caveman/cavecrew/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="cavecrew"
+     data-distributable="1"
      data-search="cavecrew when to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline or using `explore`. their output is compressed, so main context lasts longer. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">cavecrew</span>
@@ -223,6 +225,8 @@
 <a class="row" href="../../../skills/caveman/caveman/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman"
+     data-distributable="1"
      data-search="caveman terse caveman voice: answer first, fluff gone, every technical fact kept. use for /caveman, &quot;caveman mode&quot;, &quot;talk like caveman&quot;, &quot;be brief&quot;, &quot;less tokens&quot;. stays on until &quot;stop caveman&quot; or &quot;normal mode&quot;. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman</span>
@@ -234,6 +238,8 @@
 <a class="row" href="../../../skills/caveman/caveman-commit/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-commit"
+     data-distributable="1"
      data-search="caveman-commit write a conventional commits message compressed to intent only. use for &quot;write a commit&quot;, &quot;commit message&quot;, /commit or /caveman-commit. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-commit</span>
@@ -245,6 +251,8 @@
 <a class="row" href="../../../skills/caveman/caveman-review/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-review"
+     data-distributable="1"
      data-search="caveman-review compressed code review - one line per finding with location, problem and fix. use for /caveman-review, &quot;review this pr&quot;, or &quot;review the diff&quot;. context code-review juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-review</span>
@@ -256,6 +264,8 @@
 <a class="row" href="../../../skills/caveman/caveman-stats/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-stats"
+     data-distributable="1"
      data-search="caveman-stats show recorded output and cache-read token usage and mode attribution for the current claude code session, or locate the host&#39;s native usage report. trigger: /caveman-stats. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-stats</span>
@@ -287,10 +297,10 @@
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=caveman-compress%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=caveman-compress%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F&t=caveman-compress%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F&title=caveman-compress%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F&t=caveman-compress%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcaveman-compress%2F&title=caveman-compress%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/caveman/caveman-compress/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/caveman/caveman-compress/SKILL.md" rel="noopener">View file ↗</a>
@@ -362,7 +372,7 @@
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -373,6 +383,6 @@
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

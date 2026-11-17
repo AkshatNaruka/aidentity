@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>cavecrew — context AI agent skill — Aidentity</title>
+<title>cavecrew | context AI agent skill | Aidentity</title>
 <meta name="description" content="When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inlin…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cavecrew — context AI agent skill — Aidentity">
+<meta property="og:title" content="cavecrew | context AI agent skill | Aidentity">
 <meta property="og:description" content="When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inlin…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="cavecrew — context AI agent skill — Aidentity">
+<meta name="twitter:title" content="cavecrew | context AI agent skill | Aidentity">
 <meta name="twitter:description" content="When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inlin…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"context","item":"https://akshatnaruka.github.io/aidentity/skills/?category=context"},{"@type":"ListItem","position":3,"name":"cavecrew","item":"https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/"}]},{"@type":"TechArticle","headline":"cavecrew","description":"When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline or using `Explore`. Their output is compressed, so main context lasts longer.","url":"https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Julius Brussee"},"license":"Apache-2.0","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"context, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -114,11 +114,11 @@
 <p>What main thread can rely on per agent:</p>
 <p><strong><code>cavecrew-investigator</code></strong></p>
 <p><pre><code>&lt;Header&gt;:
-- path:line — `symbol` — short note
+- path:line, `symbol`, short note
 totals: &lt;counts&gt;.</code></pre></p>
 <p>Or <code>No match.</code> Always file-path-first, line-number-attached, backticked symbols. Safe to grep with <code>path:\d+</code>.</p>
 <p><strong><code>cavecrew-builder</code></strong></p>
-<p><pre><code>&lt;path:line-range&gt; — &lt;change ≤10 words&gt;.
+<p><pre><code>&lt;path:line-range&gt;, &lt;change ≤10 words&gt;.
 verified: &lt;re-read OK | mismatch @ path:line&gt;.</code></pre></p>
 <p>Or one of: <code>too-big.</code> / <code>needs-confirm.</code> / <code>ambiguous.</code> / <code>regressed.</code> (terminal first token).</p>
 <p><strong><code>cavecrew-reviewer</code></strong></p>
@@ -140,7 +140,7 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 <ul>
 <li>Don&#39;t use <code>cavecrew-builder</code> when you don&#39;t already know the file. Spawn investigator first or main thread will eat tokens passing context.</li>
 <li>Don&#39;t chain <code>cavecrew-investigator → cavecrew-builder</code> for a 5-file refactor. Builder will return <code>too-big.</code> and you&#39;ll have wasted a turn.</li>
-<li>Don&#39;t ask <code>cavecrew-reviewer</code> for &quot;general feedback&quot; — it returns findings only, no architecture opinions. Use <code>Code Reviewer</code> for that when installed.</li>
+<li>Don&#39;t ask <code>cavecrew-reviewer</code> for &quot;general feedback&quot;, it returns findings only, no architecture opinions. Use <code>Code Reviewer</code> for that when installed.</li>
 <li>Don&#39;t expect prose. Cavecrew output is structured, sometimes terse to the point of cryptic. If a human will read it directly, paraphrase.</li>
 </ul>
 <h4>Auto-clarity (inherited)</h4>
@@ -158,6 +158,8 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
         <a class="row" href="../../../skills/caveman/caveman/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman"
+     data-distributable="1"
      data-search="caveman terse caveman voice: answer first, fluff gone, every technical fact kept. use for /caveman, &quot;caveman mode&quot;, &quot;talk like caveman&quot;, &quot;be brief&quot;, &quot;less tokens&quot;. stays on until &quot;stop caveman&quot; or &quot;normal mode&quot;. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman</span>
@@ -169,6 +171,8 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 <a class="row" href="../../../skills/caveman/caveman-commit/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-commit"
+     data-distributable="1"
      data-search="caveman-commit write a conventional commits message compressed to intent only. use for &quot;write a commit&quot;, &quot;commit message&quot;, /commit or /caveman-commit. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-commit</span>
@@ -180,6 +184,8 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 <a class="row" href="../../../skills/caveman/caveman-compress/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-compress"
+     data-distributable="1"
      data-search="caveman-compress compress a memory file such as claude.md or a todo list into caveman format to save input tokens, keeping a readable backup. sends the file&#39;s text to the configured model provider. trigger: /caveman-compress. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-compress</span>
@@ -191,6 +197,8 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 <a class="row" href="../../../skills/caveman/caveman-review/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-review"
+     data-distributable="1"
      data-search="caveman-review compressed code review - one line per finding with location, problem and fix. use for /caveman-review, &quot;review this pr&quot;, or &quot;review the diff&quot;. context code-review juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-review</span>
@@ -202,6 +210,8 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 <a class="row" href="../../../skills/caveman/caveman-stats/index.html"
      data-source="caveman"
      data-category="context"
+     data-name="caveman-stats"
+     data-distributable="1"
      data-search="caveman-stats show recorded output and cache-read token usage and mode attribution for the current claude code session, or locate the host&#39;s native usage report. trigger: /caveman-stats. context  juliusbrussee/caveman">
   <span>
     <span class="r-name">caveman-stats</span>
@@ -233,10 +243,10 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=cavecrew%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=cavecrew%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F&t=cavecrew%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F&title=cavecrew%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F&t=cavecrew%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fcaveman%2Fcavecrew%2F&title=cavecrew%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/caveman/cavecrew/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/caveman/cavecrew/SKILL.md" rel="noopener">View file ↗</a>
@@ -308,7 +318,7 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -319,6 +329,6 @@ totals: N🔴 N🟡 N🔵 N❓</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

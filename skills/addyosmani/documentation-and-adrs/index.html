@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>documentation-and-adrs — docs AI agent skill — Aidentity</title>
+<title>documentation-and-adrs | docs AI agent skill | Aidentity</title>
 <meta name="description" content="Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context t…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="documentation-and-adrs — docs AI agent skill — Aidentity">
+<meta property="og:title" content="documentation-and-adrs | docs AI agent skill | Aidentity">
 <meta property="og:description" content="Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context t…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="documentation-and-adrs — docs AI agent skill — Aidentity">
+<meta name="twitter:title" content="documentation-and-adrs | docs AI agent skill | Aidentity">
 <meta name="twitter:description" content="Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context t…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"docs","item":"https://akshatnaruka.github.io/aidentity/skills/?category=docs"},{"@type":"ListItem","position":3,"name":"documentation-and-adrs","item":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/"}]},{"@type":"TechArticle","headline":"documentation-and-adrs","description":"Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"docs, documentation, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -98,7 +98,7 @@
       <h2>Contents</h2>
       <div class="skill-content"><h3>Documentation and ADRs</h3>
 <h4>Overview</h4>
-<p>Document decisions, not just code. The most valuable documentation captures the <em>why</em> — the context, constraints, and trade-offs that led to a decision. Code shows <em>what</em> was built; documentation explains <em>why it was built this way</em> and <em>what alternatives were considered</em>. This context is essential for future humans and agents working in the codebase.</p>
+<p>Document decisions, not just code. The most valuable documentation captures the <em>why</em>, the context, constraints, and trade-offs that led to a decision. Code shows <em>what</em> was built; documentation explains <em>why it was built this way</em> and <em>what alternatives were considered</em>. This context is essential for future humans and agents working in the codebase.</p>
 <h4>When to Use</h4>
 <ul>
 <li>Making a significant architectural decision</li>
@@ -121,15 +121,15 @@
 <li>Any decision that would be expensive to reverse</li>
 </ul>
 <h5>Match the existing convention first</h5>
-<p>Before creating an ADR, inspect the available repository context for an established convention — existing ADRs, project instructions, and ADR-related configuration or tooling (e.g. an <code>.adr-dir</code> file). An established convention overrides the defaults below. Match:</p>
+<p>Before creating an ADR, inspect the available repository context for an established convention, existing ADRs, project instructions, and ADR-related configuration or tooling (e.g. an <code>.adr-dir</code> file). An established convention overrides the defaults below. Match:</p>
 <ul>
-<li><strong>Location and format</strong> — e.g. <code>docs/adr/*.md</code>, <code>Documentation/Decisions/*.rst</code>, a MADR layout, or an <code>adr-tools</code> setup. Match the existing directory, file extension, and markup (Markdown vs reStructuredText).</li>
-<li><strong>Numbering and naming</strong> — continue the existing sequence and filename pattern (<code>ADR-004-Title.rst</code>, <code>0004-title.md</code>, …); don&#39;t restart at 001 or introduce a second scheme.</li>
-<li><strong>Section headings</strong> — reuse the project&#39;s heading set rather than imposing this template&#39;s.</li>
+<li><strong>Location and format</strong>, e.g. <code>docs/adr/*.md</code>, <code>Documentation/Decisions/*.rst</code>, a MADR layout, or an <code>adr-tools</code> setup. Match the existing directory, file extension, and markup (Markdown vs reStructuredText).</li>
+<li><strong>Numbering and naming</strong>, continue the existing sequence and filename pattern (<code>ADR-004-Title.rst</code>, <code>0004-title.md</code>, …); don&#39;t restart at 001 or introduce a second scheme.</li>
+<li><strong>Section headings</strong>, reuse the project&#39;s heading set rather than imposing this template&#39;s.</li>
 </ul>
 <p>If the available evidence conflicts, surface the conflict rather than silently introducing another scheme. Only when no convention can be established do you apply the default below.</p>
 <h5>ADR Template</h5>
-<p>Store ADRs in <code>docs/decisions/</code> with sequential numbering (unless the project already uses another location — see above):</p>
+<p>Store ADRs in <code>docs/decisions/</code> with sequential numbering (unless the project already uses another location, see above):</p>
 <p><pre><code># ADR-001: Use PostgreSQL for primary database
 
 ## Status
@@ -184,7 +184,7 @@ Use PostgreSQL with Prisma ORM.
 counter += 1;
 
 // GOOD: Explains non-obvious intent
-// Rate limit uses a sliding window — reset counter at window boundary,
+// Rate limit uses a sliding window, reset counter at window boundary,
 // not on a fixed schedule, to prevent burst attacks at window edges
 if (now - windowStart &gt; WINDOW_SIZE_MS) {
   counter = 0;
@@ -293,10 +293,10 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <h4>Documentation for Agents</h4>
 <p>Special consideration for AI agent context:</p>
 <ul>
-<li><strong>CLAUDE.md / rules files</strong> — Document project conventions so agents follow them</li>
-<li><strong>Spec files</strong> — Keep specs updated so agents build the right thing</li>
-<li><strong>ADRs</strong> — Help agents understand why past decisions were made (prevents re-deciding)</li>
-<li><strong>Inline gotchas</strong> — Prevent agents from falling into known traps</li>
+<li><strong>CLAUDE.md / rules files</strong>, Document project conventions so agents follow them</li>
+<li><strong>Spec files</strong>, Keep specs updated so agents build the right thing</li>
+<li><strong>ADRs</strong>, Help agents understand why past decisions were made (prevents re-deciding)</li>
+<li><strong>Inline gotchas</strong>, Prevent agents from falling into known traps</li>
 </ul>
 <h4>Common Rationalizations</h4>
 <table><thead><tr><th>Rationalization</th><th>Reality</th></tr></thead><tbody>
@@ -304,7 +304,7 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <tr><td>&quot;We&#39;ll write docs when the API stabilizes&quot;</td><td>APIs stabilize faster when you document them. The doc is the first test of the design.</td></tr>
 <tr><td>&quot;Nobody reads docs&quot;</td><td>Agents do. Future engineers do. Your 3-months-later self does.</td></tr>
 <tr><td>&quot;ADRs are overhead&quot;</td><td>A 10-minute ADR prevents a 2-hour debate about the same decision six months later.</td></tr>
-<tr><td>&quot;Comments get outdated&quot;</td><td>Comments on <em>why</em> are stable. Comments on <em>what</em> get outdated — that&#39;s why you only write the former.</td></tr>
+<tr><td>&quot;Comments get outdated&quot;</td><td>Comments on <em>why</em> are stable. Comments on <em>what</em> get outdated, that&#39;s why you only write the former.</td></tr>
 </tbody></table>
 <h4>Red Flags</h4>
 <ul>
@@ -339,6 +339,8 @@ How to contribute, coding standards, PR process.</code></pre></p>
         <a class="row" href="../../../skills/addyosmani/source-driven-development/index.html"
      data-source="addyosmani"
      data-category="docs"
+     data-name="source-driven-development"
+     data-distributable="1"
      data-search="source-driven-development grounds every implementation decision in official documentation. use when you want authoritative, source-cited code free from outdated patterns. use when building with any framework or library where correctness matters. docs  addyosmani/agent-skills">
   <span>
     <span class="r-name">source-driven-development</span>
@@ -350,10 +352,12 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/academy-guide/index.html"
      data-source="anthropic-official"
      data-category="docs"
-     data-search="academy-guide stop and check this skill before finishing any reply to a question about how to use claude or a claude product — it recommends matching courses, tutorials, and use cases from claude academy (academy.claude.com), anthropic&#39;s learning hub. trigger on: &quot;how do i&quot;, &quot;how can i&quot;, &quot;getting started with&quot;, &quot;what can claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, mcp; requests about rolling claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. this skill composes with other skills: after consulting product documentation to answer how a claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an academy recommendation belong together. only recommend on a strong match; never invent academy content. docs  anthropics/skills">
+     data-name="academy-guide"
+     data-distributable="0"
+     data-search="academy-guide stop and check this skill before finishing any reply to a question about how to use claude or a claude product, it recommends matching courses, tutorials, and use cases from claude academy (academy.claude.com), anthropic&#39;s learning hub. trigger on: &quot;how do i&quot;, &quot;how can i&quot;, &quot;getting started with&quot;, &quot;what can claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, mcp; requests about rolling claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. use it when the user is learning how to use a feature or product, not when they are mid-task and just want the task done. this skill composes with other skills: after consulting product documentation to answer how a claude feature works, also check here for a matching course or tutorial, a docs-grounded answer and an academy recommendation belong together. only recommend on a strong match; never invent academy content. docs  anthropics/skills">
   <span>
     <span class="r-name">academy-guide</span>
-    <span class="r-desc">Stop and check this skill before finishing any reply to a question about how to use Claude or a Claude product — it recommends matching courses, tutorials, and use cases from Claude Academy (academy.claude.com), Anthropic&#39;s learning hub. Trigger on: &quot;how do I&quot;, &quot;how can I&quot;, &quot;getting started with&quot;, &quot;what can Claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, MCP; requests about rolling Claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. Use it when the user is learning how to use a feature or product — not when they are mid-task and just want the task done. This skill composes with other skills: after consulting product documentation to answer how a Claude feature works, also check here for a matching course or tutorial — a docs-grounded answer and an Academy recommendation belong together. Only recommend on a strong match; never invent Academy content.</span>
+    <span class="r-desc">Stop and check this skill before finishing any reply to a question about how to use Claude or a Claude product, it recommends matching courses, tutorials, and use cases from Claude Academy (academy.claude.com), Anthropic&#39;s learning hub. Trigger on: &quot;how do I&quot;, &quot;how can I&quot;, &quot;getting started with&quot;, &quot;what can Claude do&quot;, &quot;teach me&quot;, &quot;learn to use&quot;; questions about artifacts, projects, skills, plugins, connectors, MCP; requests about rolling Claude out to a team, class, or organization; and any ask for training materials, onboarding content, or learning resources. Use it when the user is learning how to use a feature or product, not when they are mid-task and just want the task done. This skill composes with other skills: after consulting product documentation to answer how a Claude feature works, also check here for a matching course or tutorial, a docs-grounded answer and an Academy recommendation belong together. Only recommend on a strong match; never invent Academy content.</span>
   </span>
   <span class="r-src">anthropics/skills</span>
   <span class="r-lic">Proprietary</span>
@@ -361,6 +365,8 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/doc-coauthoring/index.html"
      data-source="anthropic-official"
      data-category="docs"
+     data-name="doc-coauthoring"
+     data-distributable="0"
      data-search="doc-coauthoring guide users through a structured workflow for co-authoring documentation. use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. this workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks. docs  anthropics/skills">
   <span>
     <span class="r-name">doc-coauthoring</span>
@@ -372,6 +378,8 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/docx/index.html"
      data-source="anthropic-official"
      data-category="docs"
+     data-name="docx"
+     data-distributable="0"
      data-search="docx use this skill whenever the user wants to create, read, edit, or manipulate word documents (.docx files) or word templates (.dotx files). triggers include: any mention of &#39;word doc&#39;, &#39;word document&#39;, &#39;.docx&#39;, &#39;.dotx&#39;, or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. also use when extracting or reorganizing content from .docx or .dotx files, inserting or replacing images in documents, performing find-and-replace in word files, working with tracked changes or comments, or converting content into a polished word document. if the user asks for a &#39;report&#39;, &#39;memo&#39;, &#39;letter&#39;, &#39;template&#39;, or similar deliverable as a word or .docx file, use this skill. do not use for pdfs, spreadsheets, google docs, or general coding tasks unrelated to document generation. docs  anthropics/skills">
   <span>
     <span class="r-name">docx</span>
@@ -383,6 +391,8 @@ How to contribute, coding standards, PR process.</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/pdf/index.html"
      data-source="anthropic-official"
      data-category="docs"
+     data-name="pdf"
+     data-distributable="0"
      data-search="pdf use this skill whenever the user wants to do anything with pdf files. this includes reading or extracting text/tables from pdfs, combining or merging multiple pdfs into one, splitting pdfs apart, rotating pages, adding watermarks, creating new pdfs, filling pdf forms, encrypting/decrypting pdfs, extracting images, and ocr on scanned pdfs to make them searchable. if the user mentions a .pdf file or asks to produce one, use this skill. docs  anthropics/skills">
   <span>
     <span class="r-name">pdf</span>
@@ -414,10 +424,10 @@ How to contribute, coding standards, PR process.</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=documentation-and-adrs%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=documentation-and-adrs%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F&t=documentation-and-adrs%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F&title=documentation-and-adrs%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F&t=documentation-and-adrs%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fdocumentation-and-adrs%2F&title=documentation-and-adrs%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/addyosmani/documentation-and-adrs/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/documentation-and-adrs/SKILL.md" rel="noopener">View file ↗</a>
@@ -489,7 +499,7 @@ How to contribute, coding standards, PR process.</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -500,6 +510,6 @@ How to contribute, coding standards, PR process.</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

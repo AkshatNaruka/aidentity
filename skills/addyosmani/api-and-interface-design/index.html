@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>api-and-interface-design — design AI agent skill — Aidentity</title>
+<title>api-and-interface-design | design AI agent skill | Aidentity</title>
 <meta name="description" content="Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, d…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="api-and-interface-design — design AI agent skill — Aidentity">
+<meta property="og:title" content="api-and-interface-design | design AI agent skill | Aidentity">
 <meta property="og:description" content="Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, d…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="api-and-interface-design — design AI agent skill — Aidentity">
+<meta name="twitter:title" content="api-and-interface-design | design AI agent skill | Aidentity">
 <meta name="twitter:description" content="Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, d…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"design","item":"https://akshatnaruka.github.io/aidentity/skills/?category=design"},{"@type":"ListItem","position":3,"name":"api-and-interface-design","item":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/"}]},{"@type":"TechArticle","headline":"api-and-interface-design","description":"Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.","url":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Addy Osmani"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"design, design, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -110,7 +110,7 @@
 <h4>Core Principles</h4>
 <h5>Hyrum&#39;s Law</h5>
 <p>&gt; With a sufficient number of users of an API, all observable behaviors of your system will be depended on by somebody, regardless of what you promise in the contract.</p>
-<p>This means: every public behavior — including undocumented quirks, error message text, timing, and ordering — becomes a de facto contract once users depend on it. Design implications:</p>
+<p>This means: every public behavior, including undocumented quirks, error message text, timing, and ordering, becomes a de facto contract once users depend on it. Design implications:</p>
 <ul>
 <li><strong>Be intentional about what you expose.</strong> Every observable behavior is a potential commitment.</li>
 <li><strong>Don&#39;t leak implementation details.</strong> If users can observe it, they will depend on it.</li>
@@ -118,9 +118,9 @@
 <li><strong>Tests are not enough.</strong> Even with perfect contract tests, Hyrum&#39;s Law means &quot;safe&quot; changes can break real users who depend on undocumented behavior.</li>
 </ul>
 <h5>The One-Version Rule</h5>
-<p>Avoid forcing consumers to choose between multiple versions of the same dependency or API. Diamond dependency problems arise when different consumers need different versions of the same thing. Design for a world where only one version exists at a time — extend rather than fork.</p>
+<p>Avoid forcing consumers to choose between multiple versions of the same dependency or API. Diamond dependency problems arise when different consumers need different versions of the same thing. Design for a world where only one version exists at a time, extend rather than fork.</p>
 <h5>1. Contract First</h5>
-<p>Define the interface before implementing it. The contract is the spec — implementation follows.</p>
+<p>Define the interface before implementing it. The contract is the spec, implementation follows.</p>
 <p><pre><code>// Define the contract first
 interface TaskAPI {
   // Creates a task and returns the created task with server-generated fields
@@ -132,10 +132,10 @@ interface TaskAPI {
   // Returns a single task or throws NotFoundError
   getTask(id: string): Promise&lt;Task&gt;;
 
-  // Partial update — only provided fields change
+  // Partial update, only provided fields change
   updateTask(id: string, input: UpdateTaskInput): Promise&lt;Task&gt;;
 
-  // Idempotent delete — succeeds even if already deleted
+  // Idempotent delete, succeeds even if already deleted
   deleteTask(id: string): Promise&lt;void&gt;;
 }</code></pre></p>
 <h5>2. Consistent Error Semantics</h5>
@@ -158,7 +158,7 @@ interface APIError {
 // 409 → Conflict (duplicate, version mismatch)
 // 422 → Validation failed (semantically invalid)
 // 500 → Server error (never expose internal details)</code></pre></p>
-<p><strong>Don&#39;t mix patterns.</strong> If some endpoints throw, others return null, and others return <code>{ error }</code> — the consumer can&#39;t predict behavior.</p>
+<p><strong>Don&#39;t mix patterns.</strong> If some endpoints throw, others return null, and others return <code>{ error }</code>, the consumer can&#39;t predict behavior.</p>
 <h5>3. Validate at Boundaries</h5>
 <p>Trust internal code. Validate at system edges where external input enters:</p>
 <p><pre><code>// Validate at the API boundary
@@ -205,8 +205,8 @@ interface CreateTaskInput {
 // Bad: Change existing field types or remove fields
 interface CreateTaskInput {
   title: string;
-  // description: string;  // Removed — breaks existing consumers
-  priority: number;         // Changed from string — breaks existing consumers
+  // description: string;  // Removed, breaks existing consumers
+  priority: number;         // Changed from string, breaks existing consumers
 }</code></pre></p>
 <h5>5. Predictable Naming</h5>
 <table><thead><tr><th>Pattern</th><th>Convention</th><th>Example</th></tr></thead><tbody>
@@ -217,15 +217,15 @@ interface CreateTaskInput {
 <tr><td>Enum values</td><td>UPPER_SNAKE</td><td><code>&quot;IN_PROGRESS&quot;</code>, <code>&quot;COMPLETED&quot;</code></td></tr>
 </tbody></table>
 <h5>6. Honouring an Idempotency Key</h5>
-<p>Accepting an <code>Idempotency-Key</code> is the contract. Honouring it is the implementation, and it is where the money is lost — a key the server accepts but handles carelessly is worse than no key at all, because the client now believes retrying is safe.</p>
+<p>Accepting an <code>Idempotency-Key</code> is the contract. Honouring it is the implementation, and it is where the money is lost, a key the server accepts but handles carelessly is worse than no key at all, because the client now believes retrying is safe.</p>
 <p><strong>Derive the key from the intent, not the attempt.</strong> The key must be stable across retries of one intent and different across distinct intents:</p>
-<p><pre><code>crypto.randomUUID()                    // ✗ new key per attempt — every retry is a new charge
+<p><pre><code>crypto.randomUUID()                    // ✗ new key per attempt, every retry is a new charge
 `${userId}:${amount}`                  // ✗ two legitimate $50 charges collapse into one
 `${orderId}:${Date.now()}`             // ✗ a timestamp is randomUUID() wearing a hat
 
 req.headers[&#39;idempotency-key&#39;]         // ✓ client generates once, reuses on retry
 `charge:v1:${orderId}`                 // ✓ derived from an immutable identifier</code></pre></p>
-<p>The key comes from the client or the initiating event — never from the layer doing the retrying.</p>
+<p>The key comes from the client or the initiating event, never from the layer doing the retrying.</p>
 <p><strong>Claim atomically. A check followed by an act is a race:</strong></p>
 <p><pre><code>// ✗ TOCTOU: two concurrent retries both read &quot;not seen&quot;, both charge
 if (!(await db.exists(key))) {
@@ -247,14 +247,14 @@ await db.update({ key, state: &#39;succeeded&#39;, response: result });</code></
 <p><pre><code>if (existing.requestHash !== hash(req.body)) {
   return res.status(422).json({ error: &#39;idempotency key reused with a different payload&#39; });
 }</code></pre></p>
-<p><strong>Decide what an in-flight duplicate gets.</strong> The first request is still running when the second arrives — the common case under retry storms:</p>
+<p><strong>Decide what an in-flight duplicate gets.</strong> The first request is still running when the second arrives, the common case under retry storms:</p>
 <table><thead><tr><th>Strategy</th><th>Response</th><th>Use when</th></tr></thead><tbody>
 <tr><td>Reject</td><td><code>409 Conflict</code></td><td>Client can retry later; simplest and safest</td></tr>
 <tr><td>Wait</td><td>Block for the result, bounded</td><td>Caller needs it synchronously</td></tr>
 <tr><td>Return pending</td><td><code>202</code> + status URL</td><td>Long-running effects</td></tr>
 </tbody></table>
 <p>Never let the second caller through because the first &quot;seems stuck&quot;. A stalled attempt whose fate is unknown is exactly when duplicating costs most.</p>
-<p><strong>Every call has three outcomes, not two: success, failure, and _unknown_.</strong> A timeout tells you nothing about whether the effect applied. Record the intent <em>before</em> calling out, so a crash between the call and the response leaves evidence something must resolve later — rather than a silently retried charge.</p>
+<p><strong>Every call has three outcomes, not two: success, failure, and _unknown_.</strong> A timeout tells you nothing about whether the effect applied. Record the intent <em>before</em> calling out, so a crash between the call and the response leaves evidence something must resolve later, rather than a silently retried charge.</p>
 <p><strong>Set retention from the longest retry chain</strong>, not from disk cost. Keys must outlive every path that can re-deliver the same intent, including a dead-letter queue replayed a week later and any provider dispute window. A 24-hour key TTL behind a 7-day DLQ is a duplicate waiting to happen.</p>
 <h4>REST API Patterns</h4>
 <h5>Resource Design</h5>
@@ -285,7 +285,7 @@ GET /api/tasks?page=1&amp;pageSize=20&amp;sortBy=createdAt&amp;sortOrder=desc
 <p>Use query parameters for filters:</p>
 <p><pre><code>GET /api/tasks?status=in_progress&amp;assignee=user123&amp;createdAfter=2025-01-01</code></pre></p>
 <h5>Partial Updates (PATCH)</h5>
-<p>Accept partial objects — only update what&#39;s provided:</p>
+<p>Accept partial objects, only update what&#39;s provided:</p>
 <p><pre><code>// Only title changes, everything else preserved
 PATCH /api/tasks/123
 { &quot;title&quot;: &quot;Updated title&quot; }</code></pre></p>
@@ -339,8 +339,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <tr><td>&quot;We can just maintain two versions&quot;</td><td>Multiple versions multiply maintenance cost and create diamond dependency problems. Prefer the One-Version Rule.</td></tr>
 <tr><td>&quot;Internal APIs don&#39;t need contracts&quot;</td><td>Internal consumers are still consumers. Contracts prevent coupling and enable parallel work.</td></tr>
 <tr><td>&quot;Accepting the Idempotency-Key header is enough&quot;</td><td>The header is the contract; storing the key against the result is the implementation. A key you accept but don&#39;t honour tells the client retrying is safe when it isn&#39;t.</td></tr>
-<tr><td>&quot;Our queue guarantees exactly-once delivery&quot;</td><td>No queue does across a consumer crash — the broker&#39;s ack and your side effect are not in one transaction. Design for at-least-once with idempotent processing.</td></tr>
-<tr><td>&quot;Duplicate requests are rare&quot;</td><td>They&#39;re <em>correlated</em>. Retries spike exactly when a dependency is degraded — the moment duplicates are most likely and most expensive.</td></tr>
+<tr><td>&quot;Our queue guarantees exactly-once delivery&quot;</td><td>No queue does across a consumer crash, the broker&#39;s ack and your side effect are not in one transaction. Design for at-least-once with idempotent processing.</td></tr>
+<tr><td>&quot;Duplicate requests are rare&quot;</td><td>They&#39;re <em>correlated</em>. Retries spike exactly when a dependency is degraded, the moment duplicates are most likely and most expensive.</td></tr>
 </tbody></table>
 <h4>Red Flags</h4>
 <ul>
@@ -351,7 +351,7 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <li>List endpoints without pagination</li>
 <li>Verbs in REST URLs (<code>/api/createTask</code>, <code>/api/getUsers</code>)</li>
 <li>Third-party API responses used without validation or sanitization</li>
-<li>A <code>SELECT</code> for an idempotency key followed by an <code>INSERT</code> — that&#39;s a race, not a guard</li>
+<li>A <code>SELECT</code> for an idempotency key followed by an <code>INSERT</code>, that&#39;s a race, not a guard</li>
 <li>An idempotency key derived from a UUID, timestamp, or anything else regenerated per attempt</li>
 <li>The same key accepted with a different request body, silently returning the first response</li>
 <li>A key retention window shorter than the longest path that can re-deliver the request</li>
@@ -385,6 +385,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
         <a class="row" href="../../../skills/anthropic-official/algorithmic-art/index.html"
      data-source="anthropic-official"
      data-category="design"
+     data-name="algorithmic-art"
+     data-distributable="0"
      data-search="algorithmic-art creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. create original algorithmic art rather than copying existing artists&#39; work to avoid copyright violations. design  anthropics/skills">
   <span>
     <span class="r-name">algorithmic-art</span>
@@ -396,6 +398,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/brand-guidelines/index.html"
      data-source="anthropic-official"
      data-category="design"
+     data-name="brand-guidelines"
+     data-distributable="0"
      data-search="brand-guidelines applies anthropic&#39;s official brand colors and typography to any sort of artifact that may benefit from having anthropic&#39;s look-and-feel. use it when brand colors or style guidelines, visual formatting, or company design standards apply. design  anthropics/skills">
   <span>
     <span class="r-name">brand-guidelines</span>
@@ -407,6 +411,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/canvas-design/index.html"
      data-source="anthropic-official"
      data-category="design"
+     data-name="canvas-design"
+     data-distributable="0"
      data-search="canvas-design create beautiful visual art in .png and .pdf documents using design philosophy. you should use this skill when the user asks to create a poster, piece of art, design, or other static piece. create original visual designs, never copying existing artists&#39; work to avoid copyright violations. design design anthropics/skills">
   <span>
     <span class="r-name">canvas-design</span>
@@ -418,6 +424,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/frontend-design/index.html"
      data-source="anthropic-official"
      data-category="design"
+     data-name="frontend-design"
+     data-distributable="0"
      data-search="frontend-design guidance for distinctive, intentional visual design when building new ui or reshaping an existing one. helps with aesthetic direction, typography, and making choices that don&#39;t read as templated defaults. design design frontend anthropics/skills">
   <span>
     <span class="r-name">frontend-design</span>
@@ -429,6 +437,8 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 <a class="row" href="../../../skills/anthropic-official/theme-factory/index.html"
      data-source="anthropic-official"
      data-category="design"
+     data-name="theme-factory"
+     data-distributable="0"
      data-search="theme-factory toolkit for styling artifacts with a theme. these artifacts can be slides, docs, reportings, html landing pages, etc. there are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly. design  anthropics/skills">
   <span>
     <span class="r-name">theme-factory</span>
@@ -460,10 +470,10 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=api-and-interface-design%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=api-and-interface-design%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F&t=api-and-interface-design%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F&title=api-and-interface-design%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F&t=api-and-interface-design%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Faddyosmani%2Fapi-and-interface-design%2F&title=api-and-interface-design%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/addyosmani/api-and-interface-design/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/addyosmani/api-and-interface-design/SKILL.md" rel="noopener">View file ↗</a>
@@ -535,7 +545,7 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -546,6 +556,6 @@ function getTask(id: TaskId): Promise&lt;Task&gt; { ... }</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

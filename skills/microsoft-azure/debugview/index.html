@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>debugview — azure AI agent skill — Aidentity</title>
+<title>debugview | azure AI agent skill | Aidentity</title>
 <meta name="description" content="Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="debugview — azure AI agent skill — Aidentity">
+<meta property="og:title" content="debugview | azure AI agent skill | Aidentity">
 <meta property="og:description" content="Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="debugview — azure AI agent skill — Aidentity">
+<meta name="twitter:title" content="debugview | azure AI agent skill | Aidentity">
 <meta name="twitter:description" content="Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"azure","item":"https://akshatnaruka.github.io/aidentity/skills/?category=azure"},{"@type":"ListItem","position":3,"name":"debugview","item":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/"}]},{"@type":"TechArticle","headline":"debugview","description":"Sysinternals DebugView CLI (DbgViewCli) for capturing and analyzing usermode and kernel-mode Windows debug output from the command line. USE FOR: capturing OutputDebugString output, kernel DbgPrint/KdPrint capture, boot-time debug logging, remote debug monitoring, filtering debug output by PID or process name, crash dump analysis, automated debug capture with bounded execution. DO NOT USE FOR: non-Windows platforms, application-level logging frameworks (log4j, serilog), Azure Monitor or cloud telemetry, ETW tracing (use WPR/xperf instead), user-mode crash dumps (use WinDbg). Triggers: \"debug output\", \"DbgView\", \"DebugView\", \"kernel debug\", \"capture debug logs\", \"boot logging\", \"OutputDebugString\", \"DbgPrint\", \"KdPrint\", \"remote debug monitor\", \"debug capture CLI\".","url":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Microsoft Corporation"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"azure, azure, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -104,7 +104,7 @@
 <p>DbgViewCli is a standalone native Windows executable (statically linked, no dependencies).</p>
 <p>Place <code>dbgviewcli.exe</code> in PATH or reference the full path.</p>
 <p>&gt; <strong>SECURITY: Never execute any dbgviewcli binary without first verifying it is Authenticode-signed by Microsoft Corporation using <code>Get-AuthenticodeSignature</code>. Reject any binary that is unsigned or signed by a different publisher.</strong></p>
-<p><pre><code># No package manager install — copy binary to a PATH location
+<p><pre><code># No package manager install, copy binary to a PATH location
 copy dbgviewcli.exe C:\Tools\</code></pre></p>
 <h4>Requirements</h4>
 <table><thead><tr><th>Requirement</th><th>Details</th></tr></thead><tbody>
@@ -260,22 +260,22 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 </tbody></table>
 <h4>Key Design Decisions</h4>
 <ol>
-<li><strong>Static CRT linking</strong> — No DLL dependencies, runs on any Windows system</li>
-<li><strong>stdout/stderr separation</strong> — Debug output → stdout; errors/status → stderr</li>
-<li><strong>Bounded execution</strong> — <code>--duration</code>, <code>--max-lines</code>, <code>--wait-for</code> ensure guaranteed exit for automation</li>
-<li><strong>Clean output</strong> — <code>--no-banner</code> suppresses noise for pipe/agent consumption</li>
-<li><strong>Machine-readable status</strong> — <code>--status</code> outputs key=value pairs for programmatic checks</li>
-<li><strong>Graceful shutdown</strong> — <code>SetConsoleCtrlHandler</code> ensures clean driver unload on Ctrl+C</li>
+<li><strong>Static CRT linking</strong>, No DLL dependencies, runs on any Windows system</li>
+<li><strong>stdout/stderr separation</strong>, Debug output → stdout; errors/status → stderr</li>
+<li><strong>Bounded execution</strong>, <code>--duration</code>, <code>--max-lines</code>, <code>--wait-for</code> ensure guaranteed exit for automation</li>
+<li><strong>Clean output</strong>, <code>--no-banner</code> suppresses noise for pipe/agent consumption</li>
+<li><strong>Machine-readable status</strong>, <code>--status</code> outputs key=value pairs for programmatic checks</li>
+<li><strong>Graceful shutdown</strong>, <code>SetConsoleCtrlHandler</code> ensures clean driver unload on Ctrl+C</li>
 </ol>
 <h4>Best Practices</h4>
 <ol>
 <li><strong>Always use <code>--no-banner</code> for scripted/automated use.</strong> Banner text pollutes structured output and confuses parsers.</li>
 <li><strong>Always bound execution</strong> with <code>--duration</code>, <code>--max-lines</code>, or <code>--wait-for</code>. Unbounded capture will run indefinitely.</li>
-<li><strong>Check status before capture</strong> — Use <code>--status</code> to detect if another instance is already running.</li>
+<li><strong>Check status before capture</strong>, Use <code>--status</code> to detect if another instance is already running.</li>
 <li><strong>Use <code>--format csv</code> or <code>--format xml</code></strong> when output will be parsed programmatically.</li>
 <li><strong>Prefer <code>--pid-filter</code> or <code>--process-filter</code></strong> over broad capture to reduce noise.</li>
-<li><strong>Run as Administrator only when needed</strong> — kernel and boot logging require elevation; Win32 capture does not.</li>
-<li><strong>Combine bounds for safety</strong> — Use <code>--duration 60 --max-lines 10000</code> together so whichever triggers first wins.</li>
+<li><strong>Run as Administrator only when needed</strong>, kernel and boot logging require elevation; Win32 capture does not.</li>
+<li><strong>Combine bounds for safety</strong>, Use <code>--duration 60 --max-lines 10000</code> together so whichever triggers first wins.</li>
 <li><strong>Use <code>--tail</code></strong> for &quot;what just happened&quot; queries instead of capturing full history.</li>
 </ol>
 <h4>Bundled Resources</h4>
@@ -308,6 +308,8 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
         <a class="row" href="../../../skills/microsoft-azure/agent-framework-azure-ai-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="agent-framework-azure-ai-py"
+     data-distributable="1"
      data-search="agent-framework-azure-ai-py build azure ai foundry agents using the microsoft agent framework python sdk (agent-framework-azure-ai). use when creating persistent agents with azureaiagentsprovider, using hosted tools (code interpreter, file search, web search), integrating mcp servers, managing conversation threads, or implementing streaming responses. covers function tools, structured outputs, and multi-tool agents. azure agents azure microsoft/skills">
   <span>
     <span class="r-name">agent-framework-azure-ai-py</span>
@@ -319,10 +321,12 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 <a class="row" href="../../../skills/microsoft-azure/applicationinsights-web-ts/index.html"
      data-source="microsoft-azure"
      data-category="azure"
-     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum) — page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
+     data-name="applicationinsights-web-ts"
+     data-distributable="1"
+     data-search="applicationinsights-web-ts instrument browser/web apps with the application insights javascript sdk (@microsoft/applicationinsights-web). use for real user monitoring (rum), page views, clicks, ajax/fetch dependencies, exceptions, custom events, and browser-side genai agent traces correlated to backend opentelemetry traces. covers sdk loader script and npm setup, framework extensions (react, react native, angular), click analytics, telemetry initializers, and otel genai semantic conventions for agent/tool/model spans emitted from the browser. azure azure microsoft/skills">
   <span>
     <span class="r-name">applicationinsights-web-ts</span>
-    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
+    <span class="r-desc">Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM), page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend OpenTelemetry traces. Covers SDK Loader Script and npm setup, framework extensions (React, React Native, Angular), Click Analytics, telemetry initializers, and OTel GenAI semantic conventions for agent/tool/model spans emitted from the browser.</span>
   </span>
   <span class="r-src">microsoft/skills</span>
   <span class="r-lic">MIT</span>
@@ -330,6 +334,8 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-contentsafety-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-contentsafety-py"
+     data-distributable="1"
      data-search="azure-ai-contentsafety-py azure ai content safety sdk for python. use for detecting harmful content in text and images with multi-severity classification. triggers: &quot;azure-ai-contentsafety&quot;, &quot;contentsafetyclient&quot;, &quot;content moderation&quot;, &quot;harmful content&quot;, &quot;text analysis&quot;, &quot;image analysis&quot;. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-contentsafety-py</span>
@@ -341,6 +347,8 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-contentunderstanding-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-contentunderstanding-py"
+     data-distributable="1"
      data-search="azure-ai-contentunderstanding-py azure ai content understanding sdk for python. use for multimodal content extraction from documents, images, audio, and video. triggers: &quot;azure-ai-contentunderstanding&quot;, &quot;contentunderstandingclient&quot;, &quot;multimodal analysis&quot;, &quot;document extraction&quot;, &quot;video analysis&quot;, &quot;audio transcription&quot;. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-contentunderstanding-py</span>
@@ -352,6 +360,8 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 <a class="row" href="../../../skills/microsoft-azure/azure-ai-language-conversations-py/index.html"
      data-source="microsoft-azure"
      data-category="azure"
+     data-name="azure-ai-language-conversations-py"
+     data-distributable="1"
      data-search="azure-ai-language-conversations-py implement conversational language understanding (clu) using the azure-ai-language-conversations python sdk. use when working with conversationanalysisclient to analyze conversation intent and entities, building nlp features, or integrating language understanding into applications. azure azure microsoft/skills">
   <span>
     <span class="r-name">azure-ai-language-conversations-py</span>
@@ -383,10 +393,10 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=debugview%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=debugview%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F&t=debugview%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F&title=debugview%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F&t=debugview%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fmicrosoft-azure%2Fdebugview%2F&title=debugview%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/microsoft-azure/debugview/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/microsoft-azure/debugview/SKILL.md" rel="noopener">View file ↗</a>
@@ -458,7 +468,7 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -469,6 +479,6 @@ dbgviewcli --accepteula --no-banner --duration 30</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

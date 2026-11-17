@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>using-git-worktrees — git AI agent skill — Aidentity</title>
+<title>using-git-worktrees | git AI agent skill | Aidentity</title>
 <meta name="description" content="Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="using-git-worktrees — git AI agent skill — Aidentity">
+<meta property="og:title" content="using-git-worktrees | git AI agent skill | Aidentity">
 <meta property="og:description" content="Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="using-git-worktrees — git AI agent skill — Aidentity">
+<meta name="twitter:title" content="using-git-worktrees | git AI agent skill | Aidentity">
 <meta name="twitter:description" content="Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"git","item":"https://akshatnaruka.github.io/aidentity/skills/?category=git"},{"@type":"ListItem","position":3,"name":"using-git-worktrees","item":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/"}]},{"@type":"TechArticle","headline":"using-git-worktrees","description":"Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback","url":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/","dateModified":"2026-11-17","author":{"@type":"Person","name":"Jesse Vincent"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"git, git, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -107,7 +107,7 @@
 GIT_COMMON=$(cd &quot;$(git rev-parse --git-common-dir)&quot; 2&gt;/dev/null &amp;&amp; pwd -P)
 BRANCH=$(git branch --show-current)</code></pre></p>
 <p><strong>Submodule guard:</strong> <code>GIT_DIR != GIT_COMMON</code> is also true inside git submodules. Before concluding &quot;already in a worktree,&quot; verify you are not in a submodule:</p>
-<p><pre><code># If this returns a path, you&#39;re in a submodule, not a worktree — treat as normal repo
+<p><pre><code># If this returns a path, you&#39;re in a submodule, not a worktree, treat as normal repo
 git rev-parse --show-superproject-working-tree 2&gt;/dev/null</code></pre></p>
 <p><strong>If <code>GIT_DIR != GIT_COMMON</code> (and not a submodule):</strong> You are already in a linked worktree. Skip to Step 2 (Project Setup). Do NOT create another worktree.</p>
 <p>Report with branch state:</p>
@@ -126,7 +126,7 @@ git rev-parse --show-superproject-working-tree 2&gt;/dev/null</code></pre></p>
 <p>Native tools handle directory placement, branch creation, and cleanup automatically. Using <code>git worktree add</code> when you have a native tool creates phantom state your harness can&#39;t see or manage.</p>
 <p>Only proceed to Step 1b if you have no native worktree tool available.</p>
 <h5>1b. Git Worktree Fallback</h5>
-<p><strong>Only use this if Step 1a does not apply</strong> — you have no native worktree tool available. Create a worktree manually using git.</p>
+<p><strong>Only use this if Step 1a does not apply</strong>, you have no native worktree tool available. Create a worktree manually using git.</p>
 <h5>Directory Selection</h5>
 <p>Follow this priority order. Explicit user preference always beats observed filesystem state.</p>
 <ol>
@@ -195,11 +195,11 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 </tbody></table>
 <h4>Common Rationalizations</h4>
 <table><thead><tr><th>Excuse</th><th>Reality</th></tr></thead><tbody>
-<tr><td>&quot;I&#39;m obviously not in a worktree — no need to check&quot;</td><td>Run Step 0. Harness-created isolation and submodules both fool eyeballing; the detection commands settle it.</td></tr>
-<tr><td>&quot;<code>git worktree add</code> is quicker than hunting for a native tool&quot;</td><td>A native tool (e.g. <code>EnterWorktree</code>) owns placement, branching, and cleanup. Bypassing it is the #1 mistake — it creates phantom state your harness can&#39;t see or manage.</td></tr>
+<tr><td>&quot;I&#39;m obviously not in a worktree, no need to check&quot;</td><td>Run Step 0. Harness-created isolation and submodules both fool eyeballing; the detection commands settle it.</td></tr>
+<tr><td>&quot;<code>git worktree add</code> is quicker than hunting for a native tool&quot;</td><td>A native tool (e.g. <code>EnterWorktree</code>) owns placement, branching, and cleanup. Bypassing it is the #1 mistake, it creates phantom state your harness can&#39;t see or manage.</td></tr>
 <tr><td>&quot;The worktree directory is surely ignored already&quot;</td><td>Run <code>git check-ignore</code>. An unignored worktree directory commits the whole tree into the repo.</td></tr>
 <tr><td>&quot;Any directory name works&quot;</td><td>Explicit instructions beat an existing project-local directory, which beats the <code>.worktrees/</code> default.</td></tr>
-<tr><td>&quot;The workspace is fresh — baseline tests can wait&quot;</td><td>A dirty baseline makes every later failure ambiguous. Run the tests now; proceeding past failures is your human partner&#39;s call.</td></tr>
+<tr><td>&quot;The workspace is fresh, baseline tests can wait&quot;</td><td>A dirty baseline makes every later failure ambiguous. Run the tests now; proceeding past failures is your human partner&#39;s call.</td></tr>
 </tbody></table></div>
 
       <h2>Provenance</h2>
@@ -214,6 +214,8 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
         <a class="row" href="../../../skills/addyosmani/git-workflow-and-versioning/index.html"
      data-source="addyosmani"
      data-category="git"
+     data-name="git-workflow-and-versioning"
+     data-distributable="1"
      data-search="git-workflow-and-versioning structures git workflow practices. use when making any code change. use when committing, branching, resolving conflicts, opening or reviewing a pull request (pr), pushing to a remote, or when you need to organize work across multiple parallel streams. use when cutting a release, choosing a semantic version bump, tagging, or writing a changelog. git git addyosmani/agent-skills">
   <span>
     <span class="r-name">git-workflow-and-versioning</span>
@@ -225,6 +227,8 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 <a class="row" href="../../../skills/mattpocock/engineering/resolving-merge-conflicts/index.html"
      data-source="mattpocock"
      data-category="git"
+     data-name="resolving-merge-conflicts"
+     data-distributable="1"
      data-search="resolving-merge-conflicts use when you need to resolve an in-progress git merge/rebase conflict. git  mattpocock/skills">
   <span>
     <span class="r-name">resolving-merge-conflicts</span>
@@ -236,6 +240,8 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 <a class="row" href="../../../skills/mattpocock/misc/git-guardrails-claude-code/index.html"
      data-source="mattpocock"
      data-category="git"
+     data-name="git-guardrails-claude-code"
+     data-distributable="1"
      data-search="git-guardrails-claude-code set up claude code hooks to block dangerous git commands (push, reset --hard, clean, branch -d, etc.) before they execute. use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in claude code. git git mattpocock/skills">
   <span>
     <span class="r-name">git-guardrails-claude-code</span>
@@ -247,6 +253,8 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 <a class="row" href="../../../skills/mattpocock/misc/setup-pre-commit/index.html"
      data-source="mattpocock"
      data-category="git"
+     data-name="setup-pre-commit"
+     data-distributable="1"
      data-search="setup-pre-commit set up husky pre-commit hooks with lint-staged (prettier), type checking, and tests in the current repo. use when user wants to add pre-commit hooks, set up husky, configure lint-staged, or add commit-time formatting/typechecking/testing. git  mattpocock/skills">
   <span>
     <span class="r-name">setup-pre-commit</span>
@@ -258,6 +266,8 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 <a class="row" href="../../../skills/obra-superpowers/finishing-a-development-branch/index.html"
      data-source="obra-superpowers"
      data-category="git"
+     data-name="finishing-a-development-branch"
+     data-distributable="1"
      data-search="finishing-a-development-branch use when implementation is complete, all tests pass, and you need to decide how to integrate the work git  obra/superpowers">
   <span>
     <span class="r-name">finishing-a-development-branch</span>
@@ -289,10 +299,10 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=using-git-worktrees%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=using-git-worktrees%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F&t=using-git-worktrees%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F&title=using-git-worktrees%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F&t=using-git-worktrees%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fobra-superpowers%2Fusing-git-worktrees%2F&title=using-git-worktrees%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/obra-superpowers/using-git-worktrees/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/obra-superpowers/using-git-worktrees/SKILL.md" rel="noopener">View file ↗</a>
@@ -364,7 +374,7 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -375,6 +385,6 @@ Ready to implement &lt;feature-name&gt;</code></pre></p>
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>

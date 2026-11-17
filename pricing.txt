@@ -1,4 +1,4 @@
-# Pricing — Aidentity
+# Pricing: Aidentity
 
 Last updated: 2026-11-17
 

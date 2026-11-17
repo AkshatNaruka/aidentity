@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>lw-workflow — music AI agent skill — Aidentity</title>
+<title>lw-workflow | music AI agent skill | Aidentity</title>
 <meta name="description" content="Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first -…">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
@@ -11,15 +11,15 @@
 <link rel="canonical" href="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lw-workflow — music AI agent skill — Aidentity">
+<meta property="og:title" content="lw-workflow | music AI agent skill | Aidentity">
 <meta property="og:description" content="Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first -…">
 <meta property="og:url" content="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/">
 <meta property="og:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="lw-workflow — music AI agent skill — Aidentity">
+<meta name="twitter:title" content="lw-workflow | music AI agent skill | Aidentity">
 <meta name="twitter:description" content="Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first -…">
 <meta name="twitter:image" content="https://akshatnaruka.github.io/aidentity/assets/og.png">
 <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)">
@@ -27,7 +27,7 @@
 <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../../manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="../../../feed.xml">
 <link rel="ai-catalog" href="../../../.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="../../../.well-known/ai-plugin.json">
 <link rel="mcp-server" href="../../../.well-known/mcp.json">
@@ -37,7 +37,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../../../assets/style.css?v=mwkbwnne">
+<link rel="stylesheet" href="../../../assets/style.css?v=mwkcf6yh">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Skills","item":"https://akshatnaruka.github.io/aidentity/skills/"},{"@type":"ListItem","position":2,"name":"music","item":"https://akshatnaruka.github.io/aidentity/skills/?category=music"},{"@type":"ListItem","position":3,"name":"lw-workflow","item":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/"}]},{"@type":"TechArticle","headline":"lw-workflow","description":"Entry point and router for the lyric writing library (作词工作流与路由). The two workflows that fork at the very first question - music-first versus lyrics-first - and their different stage tables, which skill to load for which task, the full-library boundary table, the LYR-SPEC gate rules, the external interface (what the spec hands out, what it reads if present, the six fields shared with the music side, the messages channel), and three checks (requests that are easy to misroute, whether a draft can be told apart from human-written lyrics, the tone check). Load this FIRST for any lyric writing request, before deciding which other skill to read. Use when starting a lyric, when fitting words to an existing melody or a melody to existing words, when unsure which skill owns a question, when a draft fails lint, or when handing the lyric on to composition, recording or scoring. 作词、歌词、填词、工作流、路由、该读哪个 skill、LYR-SPEC、先曲后词、先词后曲。","url":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/","mainEntityOfPage":"https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/","dateModified":"2026-11-17","author":{"@type":"Person","name":"jtydhr88"},"license":"MIT","isPartOf":{"@id":"https://akshatnaruka.github.io/aidentity/#website"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"},"keywords":"music, AI agent skill, SKILL.md"}]}</script>
 </head>
 <body>
@@ -98,19 +98,17 @@
       <h2>Contents</h2>
       <div class="skill-content"><h3>作词工作流与路由（Workflow &amp; Routing）</h3>
 <p><strong>任何作词请求先读这个 skill，再决定读哪个别的。</strong></p>
-<p>这个库的产出<strong>不是歌词文本，是一份 LYR-SPEC</strong>（词稿规格单）——</p>
-<p>词是它的一部分，但规格单还带着&quot;为什么这么写&quot;和&quot;怎么验它&quot;。</p>
+<p>这个库的产出<strong>不是歌词文本，是一份 LYR-SPEC</strong>（词稿规格单）, , 词是它的一部分，但规格单还带着&quot;为什么这么写&quot;和&quot;怎么验它&quot;。</p>
 <h4>★ 作词这一环最大的不同</h4>
 <p>&gt; <strong>作词是一首歌的制作里唯一产出纯文本的环节。</strong></p>
 <p>两个后果：</p>
 <ol>
-<li><strong>不用绕&quot;先算再听&quot;那三步</strong> —— 文本的 AB 方法可以原样用：</li>
+<li><strong>不用绕&quot;先算再听&quot;那三步</strong>, , 文本的 AB 方法可以原样用：</li>
 </ol>
 <p>   评判表在看结果前定稿、A/B 标签打乱、成对比较、同一对判两三次看结论稳不稳</p>
 <ol>
-<li>★ <strong>倒字与协音可以用程序判定</strong> ——</li>
+<li>★ <strong>倒字与协音可以用程序判定</strong>, , 普通话的倒字（声调走向与旋律走向相反 → 唱成别的字）、粤语的协音，</li>
 </ol>
-<p>   普通话的倒字（声调走向与旋律走向相反 → 唱成别的字）、粤语的协音，</p>
 <p>   <strong>都不需要耳朵</strong>。这让中文歌词第一次有了客观判据，</p>
 <p>   <strong>地位相当于音频里的速度（tempo）</strong>：少数能直接量准、拿来对照的量</p>
 <hr>
@@ -135,14 +133,14 @@
 <tr><td>已经有旋律/demo 了吗</td><td>有 → <strong>先曲后词</strong>（§2）</td></tr>
 <tr><td>是命题作文、有既定曲子吗</td><td>是 → 先曲后词</td></tr>
 <tr><td>词的内容比曲更重要吗</td><td>是 → 考虑<strong>先词后曲</strong>（§3）</td></tr>
-<tr><td>是粤语吗</td><td>★ <strong>粤语几乎必然是先曲后词</strong>——协音让旋律直接决定每个位置能用什么字（见 <code>lw-cantonese</code>）</td></tr>
+<tr><td>是粤语吗</td><td>★ <strong>粤语几乎必然是先曲后词</strong>, , 协音让旋律直接决定每个位置能用什么字（见 <code>lw-cantonese</code>）</td></tr>
 </tbody></table>
 <hr>
 <h4>2. 阶段表：先曲后词</h4>
 <table><thead><tr><th>阶段</th><th>做什么</th><th>产出</th><th>门禁</th></tr></thead><tbody>
 <tr><td><strong>S0 立意</strong></td><td>把 brief 变成&quot;只说一件事&quot;</td><td><code>intent</code> 五项</td><td>★ <strong>五项齐全</strong>，<code>plot_type</code> 先答且不默认叙事型，<code>anchor_object</code> 必须是<strong>能拍照的实物</strong></td></tr>
 <tr><td><strong>S1 接规格</strong></td><td>从 <code>meta.upstream</code> 读段落、小节数、情绪弧与旋律；没有段落表就对着旋律或 demo 自己分段、数小节，填进 <code>meta.upstream.form</code> 并注明自拟</td><td><code>prosody.sections</code> 的框</td><td>段落 id 与 <code>meta.upstream.form[].id</code> <strong>一一对应</strong></td></tr>
-<tr><td><strong>S2 量句</strong></td><td>逐句数音节/字数、标重音位置、标<strong>最高音落在哪个字</strong></td><td><code>prosody</code> 填满</td><td>★ <strong><code>peak_syllable</code> 必填</strong>——那个字要经得起唱</td></tr>
+<tr><td><strong>S2 量句</strong></td><td>逐句数音节/字数、标重音位置、标<strong>最高音落在哪个字</strong></td><td><code>prosody</code> 填满</td><td>★ <strong><code>peak_syllable</code> 必填</strong>, , 那个字要经得起唱</td></tr>
 <tr><td><strong>S3 找物件与意象</strong></td><td>object writing，凑出具体名词清单</td><td><code>imagery</code></td><td>抽象词黑名单清零</td></tr>
 <tr><td><strong>S4 写词</strong></td><td>按 prosody 的格子填</td><td>词稿</td><td></td></tr>
 <tr><td><strong>S5 语言层检查</strong></td><td>倒字/协音/辙口/重音</td><td><code>checks.computed</code></td><td>★ 普通话查倒字率，粤语<strong>协音违例必须为 0</strong>。★★ <strong>手判的结果必须写进 <code>checks.computed</code></strong>（倒字率、查了哪些位置、哪几个字倒了、怎么处理），只读了 <code>lw-tone-check</code> 不写记录等于没查，lint 第 7 条直接不过</td></tr>
@@ -153,7 +151,7 @@
 <h4>3. 阶段表：先词后曲</h4>
 <table><thead><tr><th>阶段</th><th>做什么</th><th>与先曲后词的差别</th></tr></thead><tbody>
 <tr><td><strong>S0 立意</strong></td><td>同上</td><td>一样</td></tr>
-<tr><td><strong>S1 定形</strong></td><td>先定段落与句式</td><td>★ <strong>没有外来约束，自己定</strong>——所以更容易写得整齐划一，<strong>§6 的反对称要更用力</strong></td></tr>
+<tr><td><strong>S1 定形</strong></td><td>先定段落与句式</td><td>★ <strong>没有外来约束，自己定</strong>, , 所以更容易写得整齐划一，<strong>§6 的反对称要更用力</strong></td></tr>
 <tr><td><strong>S2 写词</strong></td><td>按自己的句式写</td><td></td></tr>
 <tr><td><strong>S3 量句</strong></td><td>★ <strong>反过来</strong>：数出每句字数，<strong>按字数句式定 <code>form[].bars</code></strong></td><td>本包先做，六个共享字段由本包定（§6.1）</td></tr>
 <tr><td><strong>S4 语言层检查</strong></td><td>★ <strong>此时还没有旋律，倒字查不了</strong></td><td>⚠ <strong>倒字检查要等旋律出来再补做</strong></td></tr>
@@ -188,7 +186,7 @@
 <p>★ <strong><code>lw-japanese</code> ⇄ <code>lw-korean</code></strong>：日文按モーラ数，促音・撥音・長音各占一拍；韩文按谚文字块数，收音不另占拍。拿日文那套去数韩文，每个闭音节都会多数一拍。</p>
 <table><thead><tr><th>A ⇄ B</th><th>分界线</th></tr></thead><tbody>
 <tr><td><code>lw-rhyme</code> ⇄ <code>lw-mandarin</code></td><td><strong>rhyme 管押韵这件事本身（韵式、意外度、故意不押）；mandarin 管中文的韵表（十三辙）与字调</strong></td></tr>
-<tr><td><code>lw-mandarin</code> ⇄ <code>lw-cantonese</code></td><td>★ <strong>不是&quot;换张韵表&quot;</strong>。粤语的协音是<strong>硬约束且写作顺序反转</strong>——旋律定了，每个位置只剩几个字可选</td></tr>
+<tr><td><code>lw-mandarin</code> ⇄ <code>lw-cantonese</code></td><td>★ <strong>不是&quot;换张韵表&quot;</strong>。粤语的协音是<strong>硬约束且写作顺序反转</strong>, , 旋律定了，每个位置只剩几个字可选</td></tr>
 <tr><td><code>lw-imagery</code> ⇄ <code>lw-narrative</code></td><td><strong>imagery 管&quot;用什么东西说&quot;；narrative 管&quot;谁在说、什么时候说、哪些不说&quot;</strong></td></tr>
 <tr><td><code>lw-structure</code> ⇄ 作曲编曲</td><td>★ <strong>词的段落功能归这里；曲式的小节数归作曲编曲。</strong> 段落 id 两边共用（§6.1）</td></tr>
 <tr><td>本库 ⇄ 演唱指导</td><td>★ <strong>字怎么安到音上（符割り）归本库；那些字该怎么唱（气声/力度/修音）归演唱指导（声音）</strong></td></tr>
@@ -208,7 +206,7 @@
 <p>★ <strong>写规格单前先 Read 模板，照它的字段名填。</strong> <strong>写完 <code>prosody.syllables</code> 之后对着词逐行点一遍字数再交</strong>，这一项是最稳定的差一个字的地方。 不看模板的话字段名会自己长出来（实测写成过 <code>said_to</code>、<code>moment</code>，而规范里是 <code>to_whom</code>、<code>at_what_moment</code>），读这份规格单的人就接不上了。</p>
 <p>★ <strong>YAML 自查</strong>（最常写坏的两处）：</p>
 <ul>
-<li>值里用了引号就整句都在引号里，<strong>不要引号外再续写</strong>（<code>peak_syllable: &quot;价&quot;（第二杯半价）—— 去声</code> 这样整份文件都解析不了）</li>
+<li>值里用了引号就整句都在引号里，<strong>不要引号外再续写</strong>（<code>peak_syllable: &quot;价&quot;（第二杯半价）, , 去声</code> 这样整份文件都解析不了）</li>
 <li>列表项 <code>- {…}</code> 下面<strong>不能再挂 <code>note:</code> 键</strong>，要注释用同级 <code>xxx_note:</code> 或 <code>#</code> 行注释</li>
 </ul>
 <h5>5.1 ★ 为什么是这些字段</h5>
@@ -225,10 +223,10 @@
 </tbody></table>
 <p>★ <strong>九条里七条可算。</strong> 比音频的同类检查更硬，<strong>因为文本不需要检测</strong>。</p>
 <h5>5.1b ★ 十条怎么过：用眼睛，不用工具</h5>
-<p>本库不需要用户机器上有任何工具——没有脚本、不预设 Python 或 Node。</p>
+<p>本库不需要用户机器上有任何工具, , 没有脚本、不预设 Python 或 Node。</p>
 <ul>
 <li>LYR-LINT 十条全部<strong>手工逐条过</strong>（下表每条都是能用眼睛判的），结果写进 <code>checks.self_audit</code></li>
-<li>倒字：用 <code>lw-tone-check</code> §2.2 的五个调型表<strong>手判</strong>——只对每段最高音、每句首字、大跳落点这三类位置查（约占全部字的 1/5），不必全查；★ 判完把结果写进 <code>checks.computed</code>（例：<code>倒字: {查了: 18 字, 倒: [&quot;暖&quot;, &quot;口&quot;], 率: 0.11, 处理: &quot;暖 改 温&quot;}</code>），这一步漏掉是最常见的失分点</li>
+<li>倒字：用 <code>lw-tone-check</code> §2.2 的五个调型表<strong>手判</strong>, , 只对每段最高音、每句首字、大跳落点这三类位置查（约占全部字的 1/5），不必全查；★ 判完把结果写进 <code>checks.computed</code>（例：<code>倒字: {查了: 18 字, 倒: [&quot;暖&quot;, &quot;口&quot;], 率: 0.11, 处理: &quot;暖 改 温&quot;}</code>），这一步漏掉是最常见的失分点</li>
 <li>★ <strong>十条是判据不是铁律</strong>：不过的条目改掉，或写一句为什么这首词就该这样。写了理由的偏离是合法选择，不是&quot;没过&quot;</li>
 <li><strong>不要为了检查去写脚本</strong></li>
 </ul>
@@ -251,8 +249,8 @@
 <h4>6. 对外接口</h4>
 <p>本库对外只经 LYR-SPEC：交出去什么、读什么、有事怎么说，都写在规格单里；不假设读的人是谁、用什么工具。每个字段怎么理解见 [LYR-SPEC.schema.md](LYR-SPEC.schema.md) §3。</p>
 <table><thead><tr><th>交给哪个职能</th><th>交出去</th><th>有就读（<code>meta.upstream</code>）</th></tr></thead><tbody>
-<tr><td><strong>作曲编曲</strong>（旋律、和声、编曲、曲式小节数）</td><td><code>lyrics[]</code>；<code>prosody.sections[]</code>（每句字数、重音位置、<strong>最高音落在哪个字</strong>；先词后曲时还有字调轮廓）；先词后曲时本库定的六个共享字段（§6.1）；<code>checks.computed</code> 的倒字记录</td><td>段落表 <code>form</code>（段落 id、名、小节数、情绪值）、速度、调、谁在唱、旋律出处——先曲后词时就是 S1 的输入</td></tr>
-<tr><td><strong>声音</strong>（录音与演唱指导）</td><td><code>lyrics[]</code>（录音与修音的参考）；<code>vocal.persona</code>、<code>narrative.pov</code>；倒字高风险字与要装饰音才救得回来的字（<code>checks</code>）</td><td>—</td></tr>
+<tr><td><strong>作曲编曲</strong>（旋律、和声、编曲、曲式小节数）</td><td><code>lyrics[]</code>；<code>prosody.sections[]</code>（每句字数、重音位置、<strong>最高音落在哪个字</strong>；先词后曲时还有字调轮廓）；先词后曲时本库定的六个共享字段（§6.1）；<code>checks.computed</code> 的倒字记录</td><td>段落表 <code>form</code>（段落 id、名、小节数、情绪值）、速度、调、谁在唱、旋律出处, , 先曲后词时就是 S1 的输入</td></tr>
+<tr><td><strong>声音</strong>（录音与演唱指导）</td><td><code>lyrics[]</code>（录音与修音的参考）；<code>vocal.persona</code>、<code>narrative.pov</code>；倒字高风险字与要装饰音才救得回来的字（<code>checks</code>）</td><td>,</td></tr>
 <tr><td><strong>配乐</strong>（有歌词的 cue）</td><td><code>intent</code>、<code>narrative</code>、<code>lyrics[]</code></td><td>这首歌在画面里的位置（<code>scene</code>：cue、时长、前后发生了什么）</td></tr>
 <tr><td><strong>剧作</strong>（戏里的唱段）</td><td><code>intent</code>、<code>narrative</code>、<code>lyrics[]</code></td><td>这场戏的出处与转折（<code>scene</code>）</td></tr>
 </tbody></table>
@@ -263,7 +261,7 @@
 <h5>6.1 ★ 与歌曲另一侧共享的六个字段</h5>
 <p><code>form[].id</code> / <code>form[].bars</code> / <code>form[].name</code> / <code>meta.tempo</code> / <code>meta.key</code> / <code>vocal.persona</code></p>
 <ul>
-<li><strong>谁先做谁定，后做的一方只读</strong>：先曲后词时，这六项在 <code>meta.upstream</code> 里，本库当锁死项用；先词后曲时由本库定、交出去——词的字数和句式就是 <code>form[].bars</code> 的依据。</li>
+<li><strong>谁先做谁定，后做的一方只读</strong>：先曲后词时，这六项在 <code>meta.upstream</code> 里，本库当锁死项用；先词后曲时由本库定、交出去, , 词的字数和句式就是 <code>form[].bars</code> 的依据。</li>
 <li><strong>后做的一方不改这六项</strong>：词放不进这几小节，就写一条消息给 <code>music</code>，说清改哪一项、为什么；对方接受后改了，本库再重新读。</li>
 <li>只有词这一侧时，这六项由本库自己定。规则原文与每一项放在哪，见 schema §3.3。</li>
 </ul>
@@ -336,6 +334,8 @@
         <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-case-studies/index.html"
      data-source="jtydhr88-lyric-writing-skills"
      data-category="music"
+     data-name="lw-case-studies"
+     data-distributable="1"
      data-search="lw-case-studies the case layer - how to take a finished lyric apart and what three working lyricists say about their own habits (案例与拆解). a fixed twelve-row worksheet for dissecting any song, keyed to the library&#39;s own fields so every finding lands in a skill instead of staying an impression; the rule that a real lyric is read from the middle outward, not from the theme down; what yao qian, zhang li and hong yuan each say about opening lines, restraint, revision, rhyme width, colloquial versus literary diction and how much to leave the composer, plus the four places they openly disagree and how to pick a side; worked dissections of songs the sources analyse in full, including one song two of them discuss independently; and the failure patterns they name - flat, scattered, overlong, bland, blunt, bare, stuffed. use when studying a lyric you admire, when you need a real example of a technique, when a draft feels wrong and you want a model to compare against, or when asked to critique a song. 案例、拆解、词评、作品分析、词人自述、改稿对照。 music  jtydhr88/lyric-writing-skills">
   <span>
     <span class="r-name">lw-case-studies</span>
@@ -347,6 +347,8 @@
 <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-chinese-style/index.html"
      data-source="jtydhr88-lyric-writing-skills"
      data-category="music"
+     data-name="lw-chinese-style"
+     data-distributable="1"
      data-search="lw-chinese-style the chinese-style layer for lyric writing (中国风歌词). what makes a lyric read as 中国风 rather than merely decorated - the vocabulary families it draws on (place, dynasty, object, craft, plant), the sixteen rhetorical devices fang wen-shan catalogues inside his own lyrics, each with a book example and a failure condition, why every image must belong to one material world and how one out-of-period object breaks it, the four grades of borrowing from classical verse and where borrowing becomes copying, what to do when the listener will not catch the allusion, what the words promise the arrangement when they name an instrument, and the three ways this style usually dies - ornament with no event, images unrelated to what the song says, and archaism for its own sake. use when writing or auditing a 中国风 or 古风 lyric, when a draft is full of beautiful old words but says nothing, when checking an allusion, when images from different eras collide, or when the words name an instrument. 中国风、古风、典故、化用、文字游戏、修辞、意象成套、方文山、穿帮。 music  jtydhr88/lyric-writing-skills">
   <span>
     <span class="r-name">lw-chinese-style</span>
@@ -358,6 +360,8 @@
 <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-english/index.html"
      data-source="jtydhr88-lyric-writing-skills"
      data-category="music"
+     data-name="lw-english"
+     data-distributable="1"
      data-search="lw-english the english language layer for lyric writing (英文词的重音与节拍对齐). word stress is fixed inside a polysyllabic word, so the melody bends to the word and never the reverse; stressed syllables belong on stressed notes, which keeps the natural shape of the language; line length is counted in stressed syllables, not total syllables; common meter and its 4-3 stress lines; long syllables want long notes and the contour should track the sentence&#39;s intonation; where the breath falls, how phrase length accelerates a section, what enjambment costs; what gonna, wanna and &#39;em do to the count; why the, of and and must not land on a downbeat; and the mistakes a chinese-speaking writer makes in english. use when writing or checking english lyrics, fitting english words to a melody, when a sung line sounds mispronounced, when counting syllables, or when a line will not fit the bar. 英文作词、英文歌词、重音、节拍对齐、音节数、prosody、phrasing、气口、重音落错、唱不进小节。 music  jtydhr88/lyric-writing-skills">
   <span>
     <span class="r-name">lw-english</span>
@@ -369,6 +373,8 @@
 <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-imagery/index.html"
      data-source="jtydhr88-lyric-writing-skills"
      data-category="music"
+     data-name="lw-imagery"
+     data-distributable="1"
      data-search="lw-imagery the imagery layer - how to find concrete nouns and make them a system (意象与具体名词). object writing and the seven senses, the ten-minute timed practice, why abstract nouns are the most direct ai fingerprint and how to build the forbidden list, how to check that a lyric is not all sight, why a set of images must belong to one physical world instead of being piled up at random, simile versus metaphor and how to spot and replace a dead one, and how one object recurs with a shifting meaning. use when a lyric feels vague or generic but the words look fine, when every noun in a draft is a concept, when you cannot find images, when images are pretty but unrelated, when a metaphor sounds borrowed, or when lyr-lint check 2 fails. 意象、具体名词、抽象词、object writing、物体写作、五感、七感、比喻、明喻、暗喻、通感、陈词、死喻、词太泛、找不到意象。 music  jtydhr88/lyric-writing-skills">
   <span>
     <span class="r-name">lw-imagery</span>
@@ -380,6 +386,8 @@
 <a class="row" href="../../../skills/jtydhr88-lyric-writing-skills/lw-japanese/index.html"
      data-source="jtydhr88-lyric-writing-skills"
      data-category="music"
+     data-name="lw-japanese"
+     data-distributable="1"
      data-search="lw-japanese the japanese language layer for lyric writing (日文词的モーラ与符割り). the counting unit is the mora, not the kana or the syllable - the small tsu, the moraic n and the long vowel each take a beat, a palatalized pair takes one; one kana per note is the default, and the same melody remaps itself when the words change; every word carries a pitch-accent contour, and a melody that fights it gets the line heard as a different sentence; fuwari, the mapping of kana to notes; bunsetsu segmentation and where a line may break; ji-amari and ji-tarazu as deliberate mismatch; the four ways to fix a melody when the counts do not fit; why japanese rhyme is weak and how shichigo-cho slips in unnoticed; the lyrics-first and music-first routes; and the iron rule for english words inside a japanese song. use when writing or checking japanese lyrics, fitting kana to an existing melody, counting morae, when a sung line is misheard as another word, or when the words will not sit on the notes. 日文作词、日语歌词、モーラ、拍数、符割り、字余り、字足らず、音高重音、七五調。 music  jtydhr88/lyric-writing-skills">
   <span>
     <span class="r-name">lw-japanese</span>
@@ -411,10 +419,10 @@
         </dl>
         <div class="share">
   <span class="share-label">Share</span>
-  <a href="https://x.com/intent/tweet?text=lw-workflow%20%E2%80%94%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F" rel="noopener" target="_blank">X</a>
+  <a href="https://x.com/intent/tweet?text=lw-workflow%20%7C%20AI%20agent%20skill&url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F" rel="noopener" target="_blank">X</a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F" rel="noopener" target="_blank">LinkedIn</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F&t=lw-workflow%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
-  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F&title=lw-workflow%20%E2%80%94%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F&t=lw-workflow%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Hacker News</a>
+  <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fakshatnaruka.github.io%2Faidentity%2Fskills%2Fjtydhr88-lyric-writing-skills%2Flw-workflow%2F&title=lw-workflow%20%7C%20AI%20agent%20skill" rel="noopener" target="_blank">Reddit</a>
   <button type="button" data-copy="https://akshatnaruka.github.io/aidentity/skills/jtydhr88-lyric-writing-skills/lw-workflow/">copy link</button>
 </div>
         <a class="btn" href="https://github.com/AkshatNaruka/aidentity/blob/main/skills/jtydhr88-lyric-writing-skills/lw-workflow/SKILL.md" rel="noopener">View file ↗</a>
@@ -486,7 +494,7 @@
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 — see <a href="../../../about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../../../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -497,6 +505,6 @@
     </div>
   </div>
 </footer>
-<script src="../../../assets/app.js?v=mwkbwnne" defer></script>
+<script src="../../../assets/app.js?v=mwkcf6yh" defer></script>
 </body>
 </html>
