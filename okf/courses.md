@@ -4,7 +4,7 @@ title: Aidentity AI Agent Courses & Curricula
 description: 6 hands-on courses teaching spec-driven development, TDD, AI SEO/GEO, enterprise agent security, UI design, and quant finance.
 resource: https://akshatnaruka.github.io/aidentity/playbooks/
 tags: [courses, curriculum, tdd, ai-seo, geo, appsec, quant]
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # Aidentity AI Agent Courses & Curricula

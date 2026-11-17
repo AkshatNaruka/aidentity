@@ -4,7 +4,7 @@ title: Aidentity Role Setup Playbooks (20 Jobs · Individual & Enterprise)
 description: Deterministic setup blueprints for configuring AI coding agents by job role.
 resource: https://akshatnaruka.github.io/aidentity/playbooks/
 tags: [playbooks, roles, individual, enterprise, agent-setup]
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # Aidentity Role Setup Playbooks

@@ -4,20 +4,20 @@ title: "Quant researcher AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Backtesting, signals, risk, position sizing, fixed income and execution. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/quant-researcher/
 tags: [quant-researcher, quant, finance, testing, playbook, agent-setup]
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # Quant researcher AI Agent Setup Playbook (Individual & Enterprise)
 
-**Definition:** The **Quant researcher AI Agent Playbook** configures any coding agent (Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or GitHub Copilot) for backtesting, signals, risk, position sizing, fixed income and execution. It installs 8 SHA-256 security-verified skills in the Individual profile and 12 skills plus 4 runtime guardrails in the Enterprise profile.
+**Definition:** The **Quant researcher AI Agent Playbook** configures any coding agent (Claude Code, Cursor, Codex, Gemini CLI, OpenCode, or GitHub Copilot) for backtesting, signals, risk, position sizing, fixed income and execution. It installs 12 SHA-256 security-verified skills in the Individual profile and 16 skills plus 4 runtime guardrails in the Enterprise profile.
 
 ## Quick Commands
 
 ```bash
-# Individual setup (8 verified skills)
+# Individual setup (12 verified skills)
 npx aidentity setup quant-researcher --profile individual
 
-# Enterprise setup (12 verified skills + supply-chain & security hooks)
+# Enterprise setup (16 verified skills + supply-chain & security hooks)
 npx aidentity setup quant-researcher --profile enterprise
 ```
 
@@ -25,7 +25,7 @@ npx aidentity setup quant-researcher --profile enterprise
 
 | Component | Individual Profile | Enterprise Profile |
 |---|---|---|
-| Verified Skills | 8 core skills | 12 skills (+4 security/audit skills) |
+| Verified Skills | 12 core skills | 16 skills (+4 security/audit skills) |
 | Coding Rules | 1 rule files | 1 rule files |
 | Subagents | 3 subagents | 4 subagents |
 | Slash Commands | 2 commands | 2 commands |
@@ -40,7 +40,11 @@ npx aidentity setup quant-researcher --profile enterprise
 - **risk-management** (`agiprolabs-claude-trading-skills/risk-management`, MIT, SHA-256 ``): Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading
 - **regime-detection** (`agiprolabs-claude-trading-skills/regime-detection`, MIT, SHA-256 ``): Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading
 - **fixed-income** (`agiprolabs-claude-trading-skills/fixed-income`, MIT, SHA-256 ``): [STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling
+- **exit-strategies** (`agiprolabs-claude-trading-skills/exit-strategies`, MIT, SHA-256 ``): Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading
 - **tdd** (`mattpocock/engineering/tdd`, MIT, SHA-256 ``): Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+- **systematic-debugging** (`obra-superpowers/systematic-debugging`, MIT, SHA-256 ``): Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+- **supabase-postgres-best-practices** (`supabase/supabase-postgres-best-practices`, MIT, SHA-256 ``): Postgres best practices maintained by Supabase, for Postgres running anywhere. Load this skill BEFORE writing or changing anything that lives in a Postgres database: creating or altering tables and columns (including choosing column types), schema design, migrations and declarative schema files, RLS policies and the tests that verify them, indexes, triggers, database functions, queues and scheduled jobs (pg_cron, pgmq), vector/semantic search (pgvector), and restoring dumps (pg_restore) or importing data. Also load it when diagnosing slow queries, high CPU, timeouts, EXPLAIN plans, connection exhaustion, locking, bloat, or rows visible to the wrong user or tenant. This is not just a performance guide — schema, migration, security, and SQL authoring tasks need these rules too, even for a one-column change or a single query.
+- **bigquery-ai-ml** (`google-cloud/cloud/bigquery-ai-ml`, Apache-2.0, SHA-256 ``): Leverages BigQuery's built-in machine learning and GenAI capabilities for advanced data analytics. Use when you need to write SQL queries that perform time-series forecasting, predict values, detect outliers or anomalies, find key drivers, perform semantic search or vector search, classify text, calculate similarity, summarize content, translate language, evaluate models, filter by semantic conditions, or leverage generative AI capabilities in BigQuery. Do not use for general BigQuery dataset, table, or job management requests.
 - **security-and-hardening** (`addyosmani/security-and-hardening`, MIT, SHA-256 ``): Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.
 - **supply-chain-risk-auditor** (`trailofbits/supply-chain-risk-auditor`, CC-BY-SA-4.0, SHA-256 ``): Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.
 - **agentic-actions-auditor** (`trailofbits/agentic-actions-auditor`, CC-BY-SA-4.0, SHA-256 ``): Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.
@@ -66,7 +70,7 @@ Before installing or loading any skill, rule, or hook:
 3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
 4. **Individual Guardrails**: Enable `block-dangerous.js` and `scan-secrets.js` to prevent accidental destructive commands or credential leaks.
 
-## 3. Verified Skills for Quant researcher (8)
+## 3. Verified Skills for Quant researcher (12)
 Install with `npx aidentity add <id> --agent claude`:
   - `agiprolabs-claude-trading-skills/backtrader` (MIT · security: verified · sha256:153184bb72ef59af) — Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators
   - `agiprolabs-claude-trading-skills/vectorbt` (MIT · security: verified · sha256:90094c311c30bc6a) — High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics
@@ -75,7 +79,11 @@ Install with `npx aidentity add <id> --agent claude`:
   - `agiprolabs-claude-trading-skills/risk-management` (MIT · security: verified · sha256:5bcf7a98e6626d98) — Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading
   - `agiprolabs-claude-trading-skills/regime-detection` (MIT · security: verified · sha256:4ca066735eadb11f) — Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading
   - `agiprolabs-claude-trading-skills/fixed-income` (MIT · security: verified · sha256:9c142a83f4b0c53a) — [STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling
+  - `agiprolabs-claude-trading-skills/exit-strategies` (MIT · security: verified · sha256:1ae2ac266e57308e) — Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading
   - `mattpocock/engineering/tdd` (MIT · security: verified · sha256:60c7cd4f212f8921) — Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+  - `obra-superpowers/systematic-debugging` (MIT · security: verified · sha256:1845e2e29a540bd8) — Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+  - `supabase/supabase-postgres-best-practices` (MIT · security: verified · sha256:35e9f904d60459a3) — Postgres best practices maintained by Supabase, for Postgres running anywhere. Load this skill BEFORE writing or changing anything that lives in a Postgres database: creating or altering tables and columns (including choosing column types), schema design, migrations and declarative schema files, RLS policies and the tests that verify them, indexes, triggers, database functions, queues and scheduled jobs (pg_cron, pgmq), vector/semantic search (pgvector), and restoring dumps (pg_restore) or importing data. Also load it when diagnosing slow queries, high CPU, timeouts, EXPLAIN plans, connection exhaustion, locking, bloat, or rows visible to the wrong user or tenant. This is not just a performance guide — schema, migration, security, and SQL authoring tasks need these rules too, even for a one-column change or a single query.
+  - `google-cloud/cloud/bigquery-ai-ml` (Apache-2.0 · security: verified · sha256:9d9e5c8c6a7b0e00) — Leverages BigQuery's built-in machine learning and GenAI capabilities for advanced data analytics. Use when you need to write SQL queries that perform time-series forecasting, predict values, detect outliers or anomalies, find key drivers, perform semantic search or vector search, classify text, calculate similarity, summarize content, translate language, evaluate models, filter by semantic conditions, or leverage generative AI capabilities in BigQuery. Do not use for general BigQuery dataset, table, or job management requests.
 
 ## 4. Coding & Workflow Rules
 Copy into your agent's rules directory or `AGENTS.md`:
@@ -111,7 +119,7 @@ Before installing or loading any skill, rule, or hook:
 3. State the upstream author, SPDX license, and SHA-256 verification status before installing.
 4. **Enterprise Governance**: Enable all pre-tool security hooks (`block-dangerous.js`, `scan-secrets.js`), post-edit formatting (`format-on-save.js`), and test verification (`test-on-stop.js`). Require security and supply-chain review before shipping.
 
-## 3. Verified Skills for Quant researcher (12)
+## 3. Verified Skills for Quant researcher (16)
 Install with `npx aidentity add <id> --agent claude`:
   - `agiprolabs-claude-trading-skills/backtrader` (MIT · security: verified · sha256:153184bb72ef59af) — Event-driven backtesting with bar-by-bar execution, complex order types, multiple analyzers, and custom indicators
   - `agiprolabs-claude-trading-skills/vectorbt` (MIT · security: verified · sha256:90094c311c30bc6a) — High-performance vectorized backtesting with parameter optimization, portfolio simulation, and rich performance metrics
@@ -120,7 +128,11 @@ Install with `npx aidentity add <id> --agent claude`:
   - `agiprolabs-claude-trading-skills/risk-management` (MIT · security: verified · sha256:5bcf7a98e6626d98) — Portfolio-level risk controls, drawdown management, exposure limits, and circuit breakers for crypto trading
   - `agiprolabs-claude-trading-skills/regime-detection` (MIT · security: verified · sha256:4ca066735eadb11f) — Market regime identification using volatility clustering, trend detection, and statistical methods for adaptive trading
   - `agiprolabs-claude-trading-skills/fixed-income` (MIT · security: verified · sha256:9c142a83f4b0c53a) — [STUB] Bond pricing, yield curves, duration and convexity analysis, and DeFi lending rate modeling
+  - `agiprolabs-claude-trading-skills/exit-strategies` (MIT · security: verified · sha256:1ae2ac266e57308e) — Systematic exit rules, stop-loss methods, take-profit strategies, and trailing stop implementations for crypto trading
   - `mattpocock/engineering/tdd` (MIT · security: verified · sha256:60c7cd4f212f8921) — Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+  - `obra-superpowers/systematic-debugging` (MIT · security: verified · sha256:1845e2e29a540bd8) — Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+  - `supabase/supabase-postgres-best-practices` (MIT · security: verified · sha256:35e9f904d60459a3) — Postgres best practices maintained by Supabase, for Postgres running anywhere. Load this skill BEFORE writing or changing anything that lives in a Postgres database: creating or altering tables and columns (including choosing column types), schema design, migrations and declarative schema files, RLS policies and the tests that verify them, indexes, triggers, database functions, queues and scheduled jobs (pg_cron, pgmq), vector/semantic search (pgvector), and restoring dumps (pg_restore) or importing data. Also load it when diagnosing slow queries, high CPU, timeouts, EXPLAIN plans, connection exhaustion, locking, bloat, or rows visible to the wrong user or tenant. This is not just a performance guide — schema, migration, security, and SQL authoring tasks need these rules too, even for a one-column change or a single query.
+  - `google-cloud/cloud/bigquery-ai-ml` (Apache-2.0 · security: verified · sha256:9d9e5c8c6a7b0e00) — Leverages BigQuery's built-in machine learning and GenAI capabilities for advanced data analytics. Use when you need to write SQL queries that perform time-series forecasting, predict values, detect outliers or anomalies, find key drivers, perform semantic search or vector search, classify text, calculate similarity, summarize content, translate language, evaluate models, filter by semantic conditions, or leverage generative AI capabilities in BigQuery. Do not use for general BigQuery dataset, table, or job management requests.
   - `addyosmani/security-and-hardening` (MIT · security: verified · sha256:c4e213e9374f82e8) — Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.
   - `trailofbits/supply-chain-risk-auditor` (CC-BY-SA-4.0 · security: verified · sha256:e8c5f983bb6ba819) — Audits a project's dependencies for supply-chain risk: version-matched advisories for direct dependencies and the full lockfile tree, abandoned or archived upstreams, npm publisher concentration, and install-time script execution. Use when asked to audit dependencies, assess supply-chain or third-party package risk, or review a dependency tree before an engagement.
   - `trailofbits/agentic-actions-auditor` (CC-BY-SA-4.0 · security: verified · sha256:c21aed572e34d6c6) — Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.

@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "Quantitative Trading, Risk Management & Institutional Financial Modeling"
 target: https://akshatnaruka.github.io/aidentity/playbooks/quant-researcher/#curriculum
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # Quantitative Trading, Risk Management & Institutional Financial Modeling

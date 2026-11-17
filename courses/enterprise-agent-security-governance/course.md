@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "Enterprise AI Agent Security, Auditing & Supply-Chain Governance"
 target: https://akshatnaruka.github.io/aidentity/playbooks/architect/#curriculum
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # Enterprise AI Agent Security, Auditing & Supply-Chain Governance

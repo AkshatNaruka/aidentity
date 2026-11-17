@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "AI SEO, AEO & Generative Engine Optimization (GEO) Course"
 target: https://akshatnaruka.github.io/aidentity/playbooks/seo-specialist/#curriculum
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # AI SEO, AEO & Generative Engine Optimization (GEO) Course

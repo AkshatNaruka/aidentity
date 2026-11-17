@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "AI Coding Agent Mastery: Spec, TDD & Verification"
 target: https://akshatnaruka.github.io/aidentity/playbooks/software-engineer/#curriculum
-timestamp: 2026-11-16
+timestamp: 2026-11-17
 ---
 
 # AI Coding Agent Mastery: Spec, TDD & Verification
