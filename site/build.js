@@ -1441,7 +1441,12 @@ function buildEnterprise() {
 
       <div class="trust-pillars-grid">
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">🔒</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">1. Zero External Telemetry</h3>
           <p class="trust-pillar-desc">
             No cloud registry server, no telemetry daemons, and zero network calls during agent operation. All skills, prompts, and hooks execute 100% locally in your developer environment or private CI/CD runners. Your company source code and proprietary prompts never touch third-party servers.
@@ -1449,7 +1454,12 @@ function buildEnterprise() {
         </div>
 
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">🛡️</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">2. SHA-256 Lockfile Immutability</h3>
           <p class="trust-pillar-desc">
             Every skill release is cryptographically fingerprinted in <span class="mono">registry/security.json</span> and pinned in <span class="mono">.aidentity-lock.json</span>. If an upstream repository is compromised or a single character in a skill is altered, <span class="mono">npx aidentity audit</span> halts execution immediately.
@@ -1457,7 +1467,12 @@ function buildEnterprise() {
         </div>
 
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">⚡</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 17 10 11 4 5"></polyline>
+              <line x1="12" y1="19" x2="20" y2="19"></line>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">3. 7-Gate AST Static Analysis</h3>
           <p class="trust-pillar-desc">
             Every file passes a continuous 7-gate static analysis scanner on every commit: zero hidden/BiDi Unicode, zero hardcoded API keys or private certificates, zero destructive shell commands, zero prompt injection exfiltration, zero untrusted script piping, and zero symlink directory escapes.
@@ -1465,7 +1480,12 @@ function buildEnterprise() {
         </div>
 
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">🛑</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">4. Runtime Pre-Execution Hooks</h3>
           <p class="trust-pillar-desc">
             The Enterprise Profile automatically configures pre-tool hooks (<span class="mono">block-dangerous.js</span> and <span class="mono">scan-secrets.js</span>) for Claude Code, Cursor, and Codex. Harmful shell operations (<span class="mono">rm -rf /</span>, disk format) and credential leaks (<span class="mono">.env</span>, tokens) are intercepted and rejected before execution.
@@ -1473,7 +1493,14 @@ function buildEnterprise() {
         </div>
 
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">⚖️</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">5. SPDX License &amp; IP Hygiene</h3>
           <p class="trust-pillar-desc">
             Eliminate legal risk and copyright contamination. Every skill is audited against standard open-source licenses (MIT, Apache-2.0, CC BY-SA 4.0). Non-redistributable upstream skills are indexed by metadata reference only and never vendored. Registry metadata is dedicated to the public domain under CC0.
@@ -1481,7 +1508,14 @@ function buildEnterprise() {
         </div>
 
         <div class="trust-pillar-card">
-          <div class="trust-pillar-icon">🏢</div>
+          <div class="trust-pillar-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
           <h3 class="trust-pillar-title">Air-Gapped &amp; Private VPC Ready</h3>
           <p class="trust-pillar-desc">
             Designed for isolated defense, finance, and healthcare networks. Mirror the entire repository into internal GitLab, GitHub Enterprise, or Artifactory. Your teams run the exact same governance CLI and skill sets behind your corporate proxy without internet access.
@@ -1569,7 +1603,7 @@ const dangerousPatterns = [
   /\\bdd\\b[^\\n]*\\bof=\\/dev\\/(sd|nvme|hd|disk)/i             // raw disk writes
 ];
 if (dangerousPatterns.some(re => re.test(toolInput.command))) {
-  console.error("🛑 [AIDENTITY HOOK BLOCKED]: Destructive command rejected prior to execution.");
+  console.error("[AIDENTITY HOOK BLOCKED]: Destructive command rejected prior to execution.");
   process.exit(1);
 }`
         })}
@@ -1585,7 +1619,7 @@ const secretPatterns = [
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/           // Private Cryptographic Keys
 ];
 if (secretPatterns.some(re => re.test(payloadContent))) {
-  console.error("🛑 [AIDENTITY HOOK BLOCKED]: High-entropy secret detected. Scrub before LLM API transmission.");
+  console.error("[AIDENTITY HOOK BLOCKED]: High-entropy secret detected. Scrub before LLM API transmission.");
   process.exit(1);
 }`
         })}
@@ -1657,37 +1691,37 @@ npx aidentity audit --strict</code></pre>
               <td><span class="std-badge">NIST SP 800-218</span></td>
               <td><strong>PS.1 / PS.2: Software Supply Chain Integrity</strong></td>
               <td>Cryptographic SHA-256 digest hashing of all vendored files; immutable lockfile pinning.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
             <tr>
               <td><span class="std-badge">NIST SP 800-218</span></td>
               <td><strong>PW.1: Static Application Security Testing (SAST)</strong></td>
               <td>Continuous 7-gate static analysis scanner inspecting Unicode, tokens, prompt injection, and shell syntax.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
             <tr>
               <td><span class="std-badge">OWASP LLM01</span></td>
               <td><strong>Prompt Injection Defense</strong></td>
               <td>Gate 04 scans for instruction overrides; runtime hooks intercept unauthorized system context altering.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
             <tr>
               <td><span class="std-badge">OWASP LLM02</span></td>
               <td><strong>Sensitive Information Disclosure</strong></td>
               <td>Gate 02 + runtime <span class="mono">scan-secrets.js</span> prevents API keys, tokens, and .env files from entering LLM context.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
             <tr>
               <td><span class="std-badge">SOC 2 Type II</span></td>
               <td><strong>CC6.1 / CC6.6: Perimeter &amp; Tooling Governance</strong></td>
               <td>Zero external telemetry; completely self-contained local CLI; optional air-gapped internal Git mirroring.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
             <tr>
               <td><span class="std-badge">Legal / SPDX</span></td>
               <td><strong>Open-Source License Compliance</strong></td>
               <td>Automated SPDX license audits; strict segregation of permissive vs. non-distributable upstream items.</td>
-              <td><span class="status-pass">✓ Verified</span></td>
+              <td><span class="status-pass">Verified</span></td>
             </tr>
           </tbody>
         </table>
@@ -1709,7 +1743,7 @@ npx aidentity audit --strict</code></pre>
       <div class="ciso-ticket-card">
         <div class="ciso-ticket-header">
           <div class="ciso-ticket-title">
-            <span>📋</span>
+            <span class="mono" style="font-size:11px;font-weight:600;background:rgba(255,255,255,0.08);color:var(--ink-soft);padding:2px 8px;border-radius:4px;letter-spacing:0.04em">TEMPLATE</span>
             <span>Security Architecture Review Packet (Markdown)</span>
           </div>
           ${modernCopyButton(`### Security Review Request: Aidentity AI Agent Skills Framework
