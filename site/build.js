@@ -25,6 +25,7 @@ const SITE = (() => {
 const BASE = new URL(SITE).pathname.replace(/\/$/, "");
 const REPO = "https://github.com/AkshatNaruka/aidentity";
 const GENERATED = new Date().toISOString().slice(0, 10);
+const BUILD_HASH = Date.now().toString(36);
 const INDEXNOW_KEY = "c53fff0269a753a2d4152843dfb58136";
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
@@ -257,7 +258,10 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : `<meta name="
 <link rel="service-desc" href="${p}openapi.json" type="application/json">
 <link rel="alternate" type="text/plain" title="LLMs Context" href="${p}llms.txt">
 ${markdownAlt ? `<link rel="alternate" type="text/markdown" href="${esc(markdownAlt)}">` : ""}
-<link rel="stylesheet" href="${p}assets/style.css">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<link rel="stylesheet" href="${p}assets/style.css?v=${BUILD_HASH}">
 ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
 </head>
 <body>
@@ -372,7 +376,7 @@ ${body}
     </div>
   </div>
 </footer>
-<script src="${p}assets/app.js" defer></script>
+<script src="${p}assets/app.js?v=${BUILD_HASH}" defer></script>
 </body>
 </html>
 `;
