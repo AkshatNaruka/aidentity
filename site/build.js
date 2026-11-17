@@ -208,10 +208,11 @@ if (startHere.length < 6) {
 
 function layout({ title, description, depth, body, page, canonical, jsonld, ogType = "website", keywords = "", markdownAlt = null }) {
   const p = up(depth);
+  const totalRoles = rolesData.roles ? rolesData.roles.length : 21;
   const fullTitle = title ? `${title} — Aidentity` : "Aidentity — the verified index of agent skills, playbooks & courses";
   const rawDescription =
     description ||
-    "A verified, machine-readable index of 526 AI agent skills, 20 role setup playbooks, and courses. One ID, one command, works in every coding agent.";
+    `A verified, machine-readable index of ${registry.total} AI agent skills, ${totalRoles} role setup playbooks, and courses. One ID, one command, works in every coding agent.`;
   const metaDescription = rawDescription.replace(/\s+/g, " ").trim();
   // Search results truncate around 160 characters; keep the full text in the body.
   const shortDescription =
@@ -229,7 +230,7 @@ function layout({ title, description, depth, body, page, canonical, jsonld, ogTy
 <meta name="description" content="${esc(shortDescription)}">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="Akshat Naruka">
-${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
+${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : `<meta name="keywords" content="AI agent skills, Claude Code skills, Cursor skills, Codex skills, OpenCode, Gemini CLI, SKILL.md, MCP, agent playbooks, agentic workflows, GEO, AEO">`}
 <link rel="canonical" href="${esc(canonical || SITE + "/")}">
 <meta property="og:site_name" content="Aidentity">
 <meta property="og:type" content="${ogType}">
@@ -251,6 +252,8 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ""}
 <link rel="manifest" href="${p}manifest.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="${p}feed.xml">
 <link rel="ai-catalog" href="${p}.well-known/ai-catalog.json">
+<link rel="ai-plugin" href="${p}.well-known/ai-plugin.json">
+<link rel="mcp-server" href="${p}.well-known/mcp.json">
 <link rel="service-desc" href="${p}openapi.json" type="application/json">
 <link rel="alternate" type="text/plain" title="LLMs Context" href="${p}llms.txt">
 ${markdownAlt ? `<link rel="alternate" type="text/markdown" href="${esc(markdownAlt)}">` : ""}
@@ -265,7 +268,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
       <a class="wordmark" href="${p}index.html">
         <span class="dot" aria-hidden="true"></span>aidentity <span class="sub">/ index</span>
       </a>
-      <span class="live-pill" title="526 verified skills, 100% SHA-256 integrity checked">
+      <span class="live-pill" title="${registry.total} verified skills, 100% SHA-256 integrity checked">
         <span class="live-beacon" aria-hidden="true"></span>
         <span class="live-text">${registry.total} verified</span>
       </span>
@@ -315,8 +318,8 @@ ${body}
           The verified registry of AI agent skills, playbooks, and curricula. Every file cryptographically verified with SHA-256 digests and validated against SPDX open-source licenses.
         </p>
         <div class="footer-chips">
-          <span class="footer-chip">526 Skills</span>
-          <span class="footer-chip">21 Roles</span>
+          <span class="footer-chip">${registry.total} Skills</span>
+          <span class="footer-chip">${totalRoles} Roles</span>
           <span class="footer-chip">6 Tracks</span>
           <span class="footer-chip">100% Safe</span>
         </div>
@@ -326,11 +329,11 @@ ${body}
         <h4 class="footer-heading">Registry</h4>
         <ul class="footer-links">
           <li><a href="${p}setup/index.html">Setup Generator (5 Qs)</a></li>
-          <li><a href="${p}skills/index.html">Browse All 526 Skills</a></li>
+          <li><a href="${p}skills/index.html">Browse All ${registry.total} Skills</a></li>
           <li><a href="${p}playbooks/index.html">Role Playbooks &amp; Blueprints</a></li>
           <li><a href="${p}playbooks/index.html#courses">Guided Learning Tracks</a></li>
           <li><a href="${p}guides/index.html">Engineering Guides</a></li>
-          <li><a href="${p}sources/index.html">Sources &amp; Authors (25)</a></li>
+          <li><a href="${p}sources/index.html">Sources &amp; Authors (${sourceList.length})</a></li>
         </ul>
       </div>
 
@@ -748,10 +751,25 @@ function buildHome() {
             "@id": SITE + "/#website",
             url: SITE + "/",
             name: "Aidentity",
-            description: "A verified index of 526 AI agent skills, 20 role setup playbooks, and 6 AI agent courses with SHA-256 security verification and one-command install.",
+            description: `A verified index of ${registry.total} AI agent skills, ${rolesData.roles ? rolesData.roles.length : 21} role setup playbooks, and 6 AI agent courses with SHA-256 security verification and one-command install.`,
             inLanguage: "en",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: `${SITE}/skills/index.html?q={search_term_string}`
+              },
+              "query-input": "required name=search_term_string"
+            }
           },
-          { "@type": "Organization", "@id": SITE + "/#organization", name: "Aidentity", url: SITE + "/", sameAs: [REPO] },
+          {
+            "@type": "Organization",
+            "@id": SITE + "/#organization",
+            name: "Aidentity",
+            url: SITE + "/",
+            logo: `${SITE}/assets/favicon.svg`,
+            sameAs: [REPO]
+          },
           {
             "@type": "SoftwareApplication",
             "@id": SITE + "/#software",
@@ -767,6 +785,38 @@ function buildHome() {
               price: "0",
               priceCurrency: "USD",
             },
+          },
+          {
+            "@type": "DataCatalog",
+            "@id": SITE + "/#catalog",
+            name: "Aidentity AI Agent Skills Catalog",
+            url: SITE + "/",
+            description: `Open-source verified catalog of ${registry.total} AI agent skills and ${rolesData.roles ? rolesData.roles.length : 21} role setup blueprints.`,
+            publisher: { "@id": SITE + "/#organization" },
+            dataset: [
+              {
+                "@type": "Dataset",
+                "@id": SITE + "/#dataset-skills",
+                name: "Verified AI Agent Skills Index",
+                description: `Index of ${registry.total} AI agent skills with license, author provenance, and SHA-256 digests.`,
+                license: "https://creativecommons.org/publicdomain/zero/1.0/",
+                distribution: [
+                  { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": `${SITE}/search.json` },
+                  { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": `${SITE}/registry.json` },
+                  { "@type": "DataDownload", "encodingFormat": "text/plain", "contentUrl": `${SITE}/llms.txt` }
+                ]
+              },
+              {
+                "@type": "Dataset",
+                "@id": SITE + "/#dataset-security",
+                name: "AI Agent Skill Security & Integrity Report",
+                description: `7-gate static security audit and SHA-256 cryptographic hashes for ${registry.total} AI agent skills.`,
+                license: "https://creativecommons.org/publicdomain/zero/1.0/",
+                distribution: [
+                  { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": `${SITE}/security.json` }
+                ]
+              }
+            ]
           },
           {
             "@type": "CollectionPage",
@@ -799,7 +849,7 @@ function buildBrowse() {
   const body = `
 <div class="wrap">
   <div class="page-hero">
-    <span class="page-hero-kicker">Verified Registry · All 526 Skills</span>
+    <span class="page-hero-kicker">Verified Registry · All ${registry.total} Skills</span>
     <h1 class="page-title">Browse Verified Agent Skills</h1>
     <p class="page-lead">
       Search and filter across ${registry.total} security-audited skills from ${sourceList.length} upstream sources.
@@ -808,7 +858,7 @@ function buildBrowse() {
     <div class="page-hero-meta">
       <span class="hero-pill"><span class="dot"></span> ${registry.total} Total Skills</span>
       <span class="hero-pill"><span class="dot"></span> ${registry.distributable} One-Command Install</span>
-      <span class="hero-pill"><span class="dot"></span> 25 Upstream Repositories</span>
+      <span class="hero-pill"><span class="dot"></span> ${sourceList.length} Upstream Repositories</span>
       <span class="hero-pill"><span class="dot"></span> Weekly Verified</span>
     </div>
   </div>
@@ -1223,7 +1273,7 @@ function buildAbout() {
           <span class="terminal-title">Terminal · npx aidentity audit</span>
         </div>
         <div class="terminal-body">
-<span style="color:#10b981">✓</span> Scanning 526 skills across 2,492 files...
+<span style="color:#10b981">✓</span> Scanning ${registry.total} skills across 2,492 files...
 <span style="color:#10b981">✓</span> Gate 01: Zero-width &amp; BiDi Unicode: 0 findings
 <span style="color:#10b981">✓</span> Gate 02: Hardcoded credentials &amp; tokens: 0 findings
 <span style="color:#10b981">✓</span> Gate 03: Destructive shell operations: 0 findings
@@ -1262,7 +1312,7 @@ function buildAbout() {
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body">
-            Aidentity is a verified, open-source registry of ${registry.total} AI agent skills and 20 role-based setups. Each entry records its source repository, author, license, SHA-256 security verification status, category, and automated verification date.
+            Aidentity is a verified, open-source registry of ${registry.total} AI agent skills and ${rolesData.roles ? rolesData.roles.length : 21} role-based setups. Each entry records its source repository, author, license, SHA-256 security verification status, category, and automated verification date.
           </div>
         </details>
 
@@ -1330,7 +1380,7 @@ function buildAbout() {
     "about/index.html",
     layout({
       title: "About Aidentity — Verified AI Agent Registry",
-      description: "How Aidentity indexes, security-verifies, and licenses AI agent skills and role setups with complete provenance receipts.",
+      description: `How Aidentity indexes, security-verifies, and licenses ${registry.total} AI agent skills and ${rolesData.roles ? rolesData.roles.length : 21} role setups with complete provenance receipts.`,
       depth: 1,
       body,
       page: "about",
@@ -1339,7 +1389,7 @@ function buildAbout() {
         "@context": "https://schema.org",
         "@type": "FAQPage",
         mainEntity: [
-          { "@type": "Question", name: "What is Aidentity?", acceptedAnswer: { "@type": "Answer", text: `Aidentity is a verified index of ${registry.total} AI agent skills with source, author, license, SHA-256 security verification, and 20 role-based setups.` } },
+          { "@type": "Question", name: "What is Aidentity?", acceptedAnswer: { "@type": "Answer", text: `Aidentity is a verified index of ${registry.total} AI agent skills with source, author, license, SHA-256 security verification, and ${rolesData.roles ? rolesData.roles.length : 21} role-based setups.` } },
           { "@type": "Question", name: "How do I set up an agent for my role?", acceptedAnswer: { "@type": "Answer", text: "Run npx aidentity setup <role> --profile individual (or enterprise), or copy a role setup prompt from the Roles page." } },
           { "@type": "Question", name: "Are the skills free to use?", acceptedAnswer: { "@type": "Answer", text: "Most are MIT or Apache-2.0. Trail of Bits skills are CC BY-SA 4.0. Some Anthropic skills are index-only because their license does not permit redistribution. Each page states its license." } },
           { "@type": "Question", name: "How are skills verified for security?", acceptedAnswer: { "@type": "Answer", text: "Every skill is scanned for hidden Unicode, hardcoded secrets, destructive commands, prompt injection, and untrusted remote script execution, with SHA-256 digests published in security.json." } }
@@ -3167,20 +3217,20 @@ function buildMachineReadable() {
   write("llms.txt", llms.join("\n"));
 
   const urls = [
-    "/",
-    "/setup/",
-    "/skills/",
-    "/sources/",
-    "/about/",
-    "/for-agents/",
-    "/playbooks/",
-    "/guides/",
-    "/bundles/",
-    "/support/",
-    "/pricing.md",
-    "/okf/index.md",
-    ...roles.map((r) => `/playbooks/${r.slug}/`),
-    ...skills.map((skill) => `/skills/${skill.id}/`),
+    { loc: "/", priority: "1.0", changefreq: "daily" },
+    { loc: "/setup/", priority: "0.9", changefreq: "daily" },
+    { loc: "/skills/", priority: "0.9", changefreq: "daily" },
+    { loc: "/playbooks/", priority: "0.9", changefreq: "daily" },
+    { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
+    { loc: "/sources/", priority: "0.8", changefreq: "weekly" },
+    { loc: "/for-agents/", priority: "0.9", changefreq: "daily" },
+    { loc: "/about/", priority: "0.7", changefreq: "monthly" },
+    { loc: "/bundles/", priority: "0.8", changefreq: "weekly" },
+    { loc: "/support/", priority: "0.6", changefreq: "monthly" },
+    { loc: "/pricing.md", priority: "0.7", changefreq: "monthly" },
+    { loc: "/okf/index.md", priority: "0.8", changefreq: "weekly" },
+    ...roles.map((r) => ({ loc: `/playbooks/${r.slug}/`, priority: "0.8", changefreq: "weekly" })),
+    ...skills.map((skill) => ({ loc: `/skills/${skill.id}/`, priority: "0.7", changefreq: "weekly" })),
   ];
   write(
     "sitemap.xml",
@@ -3188,7 +3238,12 @@ function buildMachineReadable() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
   .map(
-    (url) => `  <url><loc>${SITE}${url}</loc><lastmod>${GENERATED}</lastmod></url>`
+    (u) => `  <url>
+    <loc>${SITE}${u.loc}</loc>
+    <lastmod>${GENERATED}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`
   )
   .join("\n")}
 </urlset>
@@ -3207,12 +3262,22 @@ ${urls
     "Perplexity-User",
     "Google-Extended",
     "Googlebot",
+    "Googlebot-Image",
+    "Applebot",
     "Applebot-Extended",
     "meta-externalagent",
     "meta-externalfetcher",
     "meta-webindexer",
+    "cohere-ai",
+    "Diffbot",
+    "Bytespider",
     "CCBot",
     "Bingbot",
+    "BingPreview",
+    "Amazonbot",
+    "YouBot",
+    "AI2Bot",
+    "Scrapy",
   ];
   write(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY + "\n");
   write(".nojekyll", "");
@@ -3223,7 +3288,10 @@ ${urls
       "Allow: /",
       "",
       ...aiBots.flatMap((bot) => [`User-agent: ${bot}`, "Allow: /", ""]),
+      `Host: ${new URL(SITE).host}`,
       `Sitemap: ${SITE}/sitemap.xml`,
+      `LLMs-Txt: ${SITE}/llms.txt`,
+      `Agent-Manifest: ${SITE}/agent.json`,
       "",
     ].join("\n")
   );
@@ -3237,7 +3305,7 @@ ${urls
       "User-Agent: *",
       "Allow: /",
       "",
-      "# Aidentity is an index of AI agent skills, role setup playbooks, and courses. Facts may be quoted and cited.",
+      `# Aidentity is a verified index of ${registry.total} AI agent skills, ${roles.length} role setup playbooks, and 6 courses. Facts may be quoted and cited.`,
       "Citation: allowed",
       "Attribution: required (link to the page and to the upstream skill author)",
       "Training: allowed for the registry metadata; vendored skills keep their upstream licenses",
@@ -3249,6 +3317,8 @@ ${urls
       `Security: ${SITE}/security.json`,
       `OpenAPI: ${SITE}/openapi.json`,
       `AI-Catalog: ${SITE}/.well-known/ai-catalog.json`,
+      `AI-Plugin: ${SITE}/.well-known/ai-plugin.json`,
+      `MCP: ${SITE}/.well-known/mcp.json`,
       `OKF: ${SITE}/okf/index.md`,
       `Pricing: ${SITE}/pricing.md`,
       `Sitemap: ${SITE}/sitemap.xml`,
@@ -3268,7 +3338,7 @@ ${urls
     "## Individual Profile (`--profile individual`)",
     "- Price: $0 / forever",
     "- Limits: Unlimited installs, unlimited repositories, unlimited developers",
-    "- Included: All 507 installable skills, 20 role setup playbooks, coding rules, subagents, slash commands, `block-dangerous.js` and `scan-secrets.js` hooks, SHA-256 verification",
+    `- Included: All ${registry.distributable} installable skills, ${roles.length} role setup playbooks, coding rules, subagents, slash commands, \`block-dangerous.js\` and \`scan-secrets.js\` hooks, SHA-256 verification`,
     "- Install command: `npx aidentity setup <role> --profile individual`",
     "",
     "## Enterprise Profile (`--profile enterprise`)",
@@ -3417,7 +3487,7 @@ function buildAgentSurface() {
   const manifest = {
     name: "aidentity",
     version: "1.2.0",
-    description: "A verified index of AI agent skills, 20 role setup playbooks, and 6 courses with license, source, and SHA-256 security verification.",
+    description: `A verified index of ${registry.total} AI agent skills, ${roles.length} role setup playbooks, and 6 courses with license, source, and SHA-256 security verification.`,
     updated: GENERATED,
     counts: {
       skills: registry.total,
@@ -3444,6 +3514,8 @@ function buildAgentSurface() {
       okf: `${SITE}/okf/index.md`,
       openapi: `${SITE}/openapi.json`,
       ai_catalog: `${SITE}/.well-known/ai-catalog.json`,
+      ai_plugin: `${SITE}/.well-known/ai-plugin.json`,
+      mcp_manifest: `${SITE}/.well-known/mcp.json`,
       llms: `${SITE}/llms.txt`,
       llms_full: `${SITE}/llms-full.txt`,
       ai: `${SITE}/ai.txt`,
@@ -3465,14 +3537,16 @@ function buildAgentSurface() {
   const aiCatalog = {
     schema_version: "1.0",
     name: "Aidentity",
-    description: "Verified index of 526 AI agent skills, 20 role setup playbooks (Individual & Enterprise), and 6 AI agent courses.",
+    description: `Verified index of ${registry.total} AI agent skills, ${roles.length} role setup playbooks (Individual & Enterprise), and 6 AI agent courses.`,
     url: SITE + "/",
     updated_at: GENERATED,
     pricing_url: `${SITE}/pricing.md`,
     resources: [
-      { type: "llms-txt", url: `${SITE}/llms.txt`, description: "Concise index overview, role playbooks, courses, and all 526 skills" },
+      { type: "llms-txt", url: `${SITE}/llms.txt`, description: `Concise index overview, role playbooks, courses, and all ${registry.total} skills` },
       { type: "llms-full-txt", url: `${SITE}/llms-full.txt`, description: "Complete metadata, SHA-256 status, and instructions URL for every skill" },
       { type: "openapi", url: `${SITE}/openapi.json`, description: "OpenAPI 3.1 specification for static JSON endpoints" },
+      { type: "ai-plugin", url: `${SITE}/.well-known/ai-plugin.json`, description: "OpenAI ChatGPT plugin and Custom GPT actions discovery manifest" },
+      { type: "mcp-manifest", url: `${SITE}/.well-known/mcp.json`, description: "Model Context Protocol (MCP) server discovery specification" },
       { type: "okf-bundle", url: `${SITE}/okf/index.md`, description: "Open Knowledge Format (OKF v0.1) cross-linked markdown concept bundle" },
       { type: "mcp-server", url: `${SITE}/for-agents/#mcp`, command: "npx aidentity-mcp", description: "Local stdio MCP server for searching, verifying, and installing skills and role setups" },
       { type: "cli", command: "npx aidentity setup <role> --profile individual|enterprise", description: "Zero-dependency CLI installer for Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and Copilot" },
@@ -3480,13 +3554,50 @@ function buildAgentSurface() {
   };
   write(".well-known/ai-catalog.json", JSON.stringify(aiCatalog, null, 2) + "\n");
 
+  // OpenAI ChatGPT Plugin / Custom GPT Action Discovery (/.well-known/ai-plugin.json)
+  const aiPlugin = {
+    schema_version: "v1",
+    name_for_human: "Aidentity AI Skills & Playbooks",
+    name_for_model: "aidentity",
+    description_for_human: `Search ${registry.total} verified AI agent skills, ${roles.length} role setup playbooks, and SHA-256 security digests.`,
+    description_for_model: `Registry API and discovery manifest for searching ${registry.total} verified AI agent skills, 7-gate security verification audits, and ${roles.length} role setup blueprints for Claude Code, Cursor, Codex, OpenCode, Gemini CLI, and Copilot.`,
+    auth: { type: "none" },
+    api: { type: "openapi", url: `${SITE}/openapi.json` },
+    logo_url: `${SITE}/assets/favicon.svg`,
+    contact_email: "support@aidentity.dev",
+    legal_info_url: `${SITE}/about/#licensing`,
+  };
+  write(".well-known/ai-plugin.json", JSON.stringify(aiPlugin, null, 2) + "\n");
+  write("ai-plugin.json", JSON.stringify(aiPlugin, null, 2) + "\n");
+
+  // Model Context Protocol (MCP) server discovery manifest
+  const mcpDiscovery = {
+    $schema: "https://modelcontextprotocol.io/schema.json",
+    name: "aidentity-mcp",
+    version: "1.2.0",
+    description: "Model Context Protocol (MCP) server for Aidentity — search skills, inspect security digests, and generate role blueprints.",
+    command: "npx",
+    args: ["-y", "aidentity-mcp"],
+    transport: "stdio",
+    tools: [
+      { name: "search_skills", description: `Search ${registry.total} verified AI agent skills by query, category, or tag.` },
+      { name: "get_skill", description: "Retrieve complete metadata, provenance, and SKILL.md instructions for a skill by ID." },
+      { name: "verify_security", description: "Inspect 7-gate static security audit and SHA-256 digests for any skill." },
+      { name: "get_role_setup", description: `Retrieve deterministic workspace setup blueprint for any of ${roles.length} job roles.` },
+      { name: "list_roles", description: `List all ${roles.length} available role blueprints with skill counts and profiles.` },
+    ],
+    homepage: `${SITE}/for-agents/#mcp`,
+  };
+  write(".well-known/mcp.json", JSON.stringify(mcpDiscovery, null, 2) + "\n");
+  write("mcp.json", JSON.stringify(mcpDiscovery, null, 2) + "\n");
+
   // OpenAPI 3.1 specification for static JSON endpoints (AR-ACT-02)
   const openApi = {
     openapi: "3.1.0",
     info: {
       title: "Aidentity Static Registry & Security API",
       version: "1.2.0",
-      description: "Read-only JSON endpoints for searching 526 AI agent skills, verifying SHA-256 security digests, and retrieving 20 Individual/Enterprise role setup blueprints.",
+      description: `Read-only JSON endpoints for searching ${registry.total} AI agent skills, verifying SHA-256 security digests, and retrieving ${roles.length} Individual/Enterprise role setup blueprints.`,
       license: { name: "CC0-1.0", url: "https://creativecommons.org/publicdomain/zero/1.0/" },
     },
     servers: [{ url: SITE }],
@@ -3494,7 +3605,7 @@ function buildAgentSurface() {
       "/search.json": {
         get: {
           operationId: "getCompactSkillSearchIndex",
-          summary: "Compact search index of all 526 skills with SHA-256 digest and content_url",
+          summary: `Compact search index of all ${registry.total} skills with SHA-256 digest and content_url`,
           responses: { "200": { description: "Compact search index JSON" } },
         },
       },
@@ -3515,7 +3626,7 @@ function buildAgentSurface() {
       "/roles.json": {
         get: {
           operationId: "getRoleSetupBlueprints",
-          summary: "20 job role setup blueprints with Individual and Enterprise profiles",
+          summary: `${roles.length} job role setup blueprints with Individual and Enterprise profiles`,
           responses: { "200": { description: "Role blueprints JSON" } },
         },
       },
@@ -3544,7 +3655,7 @@ function buildAgentSurface() {
       "---",
       "type: Index",
       "title: Aidentity Open Knowledge Format (OKF) Bundle",
-      "description: Cross-linked markdown knowledge graph of Aidentity skills, 20 role setup playbooks, 6 courses, and 7-gate security verification.",
+      "description: Cross-linked markdown knowledge graph of Aidentity skills, " + roles.length + " role setup playbooks, 6 courses, and 7-gate security verification.",
       `resource: ${SITE}/okf/index.md`,
       "tags: [okf, ai-agent-skills, playbooks, courses, security, claude-code, cursor, codex, gemini-cli]",
       `timestamp: ${GENERATED}`,
@@ -3556,7 +3667,7 @@ function buildAgentSurface() {
       "",
       "## Concept Files in This Bundle",
       "",
-      "- [Role Setup Playbooks](./playbooks.md) — 20 job role setup blueprints (Individual & Enterprise profiles)",
+      `- [Role Setup Playbooks](./playbooks.md) — ${roles.length} job role setup blueprints (Individual & Enterprise profiles)`,
       "- [AI Agent Courses](./courses.md) — 6 structured learning curricula built from verified skills",
       "- [Skill Security Standard](./security.md) — 7-gate static security scanner and SHA-256 verification protocol",
       `- [Pricing & Licensing](../pricing.md) — $0 open-source pricing and SPDX license rules`,
@@ -3570,7 +3681,7 @@ function buildAgentSurface() {
     [
       "---",
       "type: PlaybookCollection",
-      "title: Aidentity Role Setup Playbooks (20 Jobs · Individual & Enterprise)",
+      `title: Aidentity Role Setup Playbooks (${roles.length} Jobs · Individual & Enterprise)`,
       "description: Deterministic setup blueprints for configuring AI coding agents by job role.",
       `resource: ${SITE}/playbooks/`,
       "tags: [playbooks, roles, individual, enterprise, agent-setup]",
@@ -3622,7 +3733,7 @@ function buildAgentSurface() {
       "---",
       "type: SecurityPolicy",
       "title: Aidentity 7-Gate Skill Security Verification Standard",
-      "description: Static security verification and deterministic SHA-256 content hashing across all 526 AI agent skills.",
+      `description: Static security verification and deterministic SHA-256 content hashing across all ${registry.total} AI agent skills.`,
       `resource: ${SITE}/security.json`,
       "tags: [security, sha256, prompt-injection, unicode, supply-chain]",
       `timestamp: ${GENERATED}`,
