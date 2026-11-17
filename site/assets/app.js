@@ -18,14 +18,18 @@
 
     const done = function () {
       button.classList.add("copied");
-      if (copyTextElem) {
-        copyTextElem.textContent = "Copied ✓";
-        const svg = button.querySelector("svg");
-        if (svg) {
-          svg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+      const svg = button.querySelector("svg");
+      if (svg) {
+        svg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+        if (copyTextElem) {
+          copyTextElem.textContent = "Copied";
         }
       } else {
-        button.textContent = "copied ✓";
+        if (copyTextElem) {
+          copyTextElem.textContent = "Copied ✓";
+        } else {
+          button.textContent = "Copied ✓";
+        }
       }
       window.setTimeout(function () {
         button.classList.remove("copied");
@@ -231,7 +235,7 @@
             " · security: " +
             (sec.status || "verified") +
             sha +
-            ") — " +
+            "): " +
             s.description
           );
         })
@@ -258,7 +262,7 @@
       ].join("\n");
 
       const promptText =
-        "# Aidentity One-Time Initial Setup — " +
+        "# Aidentity One-Time Initial Setup: " +
         roleName +
         " (" +
         profileName +
@@ -376,55 +380,218 @@
     updateBuilder();
   }
 
-  // --- browse filtering ---------------------------------------------------
+  // --- browse filtering & enhanced search --------------------------------
   const list = document.getElementById("skill-list");
   if (list) {
     const search = document.getElementById("q");
+    const searchClearBtn = document.getElementById("search-clear-btn");
     const sourceFilter = document.getElementById("filter-source");
     const categoryFilter = document.getElementById("filter-category");
+    const sortFilter = document.getElementById("filter-sort");
+    const distFilterBtn = document.getElementById("filter-dist-btn");
+    const clearAllBtn = document.getElementById("clear-all-filters");
+    const emptyClearBtn = document.getElementById("empty-clear-btn");
     const count = document.getElementById("result-count");
     const empty = document.getElementById("empty");
-    const rows = Array.prototype.slice.call(list.querySelectorAll(".row"));
+    const pillStrip = document.getElementById("category-pills");
+    const pillButtons = pillStrip ? Array.prototype.slice.call(pillStrip.querySelectorAll(".pill-btn")) : [];
+    const topicChips = Array.prototype.slice.call(document.querySelectorAll(".topic-chip"));
+
+    let onlyDistributable = false;
+    const initialRows = Array.prototype.slice.call(list.querySelectorAll(".row"));
 
     const params = new URLSearchParams(window.location.search);
     if (search && params.get("q")) search.value = params.get("q");
     if (categoryFilter && params.get("category")) categoryFilter.value = params.get("category");
     if (sourceFilter && params.get("source")) sourceFilter.value = params.get("source");
+    if (sortFilter && params.get("sort")) sortFilter.value = params.get("sort");
+    if (params.get("distributable") === "1" || params.get("installable") === "1") {
+      onlyDistributable = true;
+      if (distFilterBtn) {
+        distFilterBtn.classList.add("active");
+        distFilterBtn.setAttribute("aria-pressed", "true");
+      }
+    }
+
+    function syncPills() {
+      const activeCat = categoryFilter ? categoryFilter.value : "";
+      pillButtons.forEach(function (btn) {
+        const cat = btn.getAttribute("data-cat") || "";
+        btn.classList.toggle("active", cat === activeCat);
+      });
+    }
+
+    function syncTopicChips() {
+      const currentQuery = (search ? search.value : "").trim().toLowerCase();
+      topicChips.forEach(function (chip) {
+        const topic = (chip.getAttribute("data-topic") || "").toLowerCase();
+        chip.classList.toggle("active", currentQuery.includes(topic));
+      });
+    }
+
+    function sortRows(rows, sortMode) {
+      if (sortMode === "name-asc") {
+        return rows.slice().sort(function (a, b) {
+          const na = a.getAttribute("data-name") || "";
+          const nb = b.getAttribute("data-name") || "";
+          return na.localeCompare(nb);
+        });
+      } else if (sortMode === "name-desc") {
+        return rows.slice().sort(function (a, b) {
+          const na = a.getAttribute("data-name") || "";
+          const nb = b.getAttribute("data-name") || "";
+          return nb.localeCompare(na);
+        });
+      }
+      return initialRows;
+    }
 
     function apply() {
-      const query = (search ? search.value : "").trim().toLowerCase();
+      const rawQuery = (search ? search.value : "").trim().toLowerCase();
+      const tokens = rawQuery.split(/\s+/).filter(Boolean);
       const source = sourceFilter ? sourceFilter.value : "";
       const category = categoryFilter ? categoryFilter.value : "";
-      let visible = 0;
+      const sortMode = sortFilter ? sortFilter.value : "default";
 
-      rows.forEach(function (row) {
+      if (searchClearBtn) {
+        searchClearBtn.hidden = !rawQuery;
+      }
+
+      const hasActiveFilter = Boolean(rawQuery || source || category || onlyDistributable || (sortMode && sortMode !== "default"));
+      if (clearAllBtn) {
+        clearAllBtn.hidden = !hasActiveFilter;
+      }
+
+      let visible = 0;
+      const sorted = sortRows(initialRows, sortMode);
+
+      sorted.forEach(function (row) {
         const text = row.getAttribute("data-search") || "";
         const rowSource = row.getAttribute("data-source") || "";
         const rowCategory = row.getAttribute("data-category") || "";
-        const match =
-          (!query || text.indexOf(query) !== -1) &&
-          (!source || rowSource === source) &&
-          (!category || rowCategory === category);
+        const isDist = row.getAttribute("data-distributable") === "1";
 
+        const matchQuery = tokens.length === 0 || tokens.every(function (token) {
+          return text.indexOf(token) !== -1;
+        });
+        const matchSource = !source || rowSource === source;
+        const matchCategory = !category || rowCategory === category;
+        const matchDist = !onlyDistributable || isDist;
+
+        const match = matchQuery && matchSource && matchCategory && matchDist;
         row.hidden = !match;
         if (match) visible += 1;
+
+        list.appendChild(row);
       });
 
-      if (count) count.textContent = visible + (visible === 1 ? " skill" : " skills");
-      if (empty) empty.hidden = visible !== 0;
+      if (count) {
+        count.innerHTML = "<strong>" + visible + "</strong> " + (visible === 1 ? "skill" : "skills") + " available";
+      }
+      if (empty) {
+        empty.hidden = visible !== 0;
+      }
+
+      syncPills();
+      syncTopicChips();
 
       const next = new URLSearchParams();
-      if (query) next.set("q", query);
+      if (rawQuery) next.set("q", rawQuery);
       if (source) next.set("source", source);
       if (category) next.set("category", category);
+      if (sortMode && sortMode !== "default") next.set("sort", sortMode);
+      if (onlyDistributable) next.set("distributable", "1");
       const suffix = next.toString();
       window.history.replaceState(null, "", window.location.pathname + (suffix ? "?" + suffix : ""));
     }
 
-    [search, sourceFilter, categoryFilter].forEach(function (element) {
+    function resetFilters() {
+      if (search) search.value = "";
+      if (categoryFilter) categoryFilter.value = "";
+      if (sourceFilter) sourceFilter.value = "";
+      if (sortFilter) sortFilter.value = "default";
+      onlyDistributable = false;
+      if (distFilterBtn) {
+        distFilterBtn.classList.remove("active");
+        distFilterBtn.setAttribute("aria-pressed", "false");
+      }
+      apply();
+      if (search) search.focus();
+    }
+
+    [search, sourceFilter, categoryFilter, sortFilter].forEach(function (element) {
       if (!element) return;
       element.addEventListener("input", apply);
       element.addEventListener("change", apply);
+    });
+
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener("click", function () {
+        if (search) {
+          search.value = "";
+          search.focus();
+        }
+        apply();
+      });
+    }
+
+    if (distFilterBtn) {
+      distFilterBtn.addEventListener("click", function () {
+        onlyDistributable = !onlyDistributable;
+        distFilterBtn.classList.toggle("active", onlyDistributable);
+        distFilterBtn.setAttribute("aria-pressed", onlyDistributable ? "true" : "false");
+        apply();
+      });
+    }
+
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener("click", resetFilters);
+    }
+    if (emptyClearBtn) {
+      emptyClearBtn.addEventListener("click", resetFilters);
+    }
+
+    pillButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const cat = btn.getAttribute("data-cat") || "";
+        if (categoryFilter) {
+          categoryFilter.value = cat;
+          categoryFilter.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+
+    topicChips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        const topic = chip.getAttribute("data-topic") || "";
+        if (!search) return;
+        const current = search.value.trim();
+        if (current.toLowerCase().includes(topic.toLowerCase())) {
+          const regex = new RegExp("\\b" + topic + "\\b", "gi");
+          search.value = current.replace(regex, "").replace(/\s+/g, " ").trim();
+        } else {
+          search.value = current ? current + " " + topic : topic;
+        }
+        search.dispatchEvent(new Event("input"));
+        search.focus();
+      });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "/" && document.activeElement !== search && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+        if (search) {
+          search.focus();
+          search.select();
+        }
+      } else if (e.key === "Escape" && document.activeElement === search) {
+        if (search.value) {
+          search.value = "";
+          apply();
+        } else {
+          search.blur();
+        }
+      }
     });
 
     apply();
@@ -637,24 +804,6 @@
     }
     requestAnimationFrame(render);
   })();
-
-  // --- Category Pill Strip for Browse ------------------------------------
-  const pillStrip = document.getElementById("category-pills");
-  if (pillStrip) {
-    const pillButtons = pillStrip.querySelectorAll(".pill-btn");
-    const categorySelect = document.getElementById("filter-category");
-    pillButtons.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        const cat = btn.getAttribute("data-cat") || "";
-        pillButtons.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        if (categorySelect) {
-          categorySelect.value = cat;
-          categorySelect.dispatchEvent(new Event("change"));
-        }
-      });
-    });
-  }
 
   // --- Setup Preset Cards -----------------------------------------------
   document.querySelectorAll("[data-preset-role]").forEach(function (preset) {

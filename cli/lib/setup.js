@@ -219,7 +219,7 @@ function generateSetupPrompt(plan) {
   const skillLines = plan.skills
     .map(
       (s) =>
-        `  - \`${s.id}\` (${s.license} · security: ${s.security.status}${s.security.sha256 ? ` · sha256:${s.security.sha256}` : ""}) — ${s.description}`
+        `  - \`${s.id}\` (${s.license} · security: ${s.security.status}${s.security.sha256 ? ` · sha256:${s.security.sha256}` : ""}): ${(s.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ")}`
     )
     .join("\n");
 
@@ -235,7 +235,7 @@ function generateSetupPrompt(plan) {
     ? plan.hooks.map((h) => `  - \`${h}\``).join("\n")
     : "  - `hooks/scan-secrets.js`";
 
-  return `# Aidentity Setup Prompt — ${plan.role.name} (${plan.profile.name})
+  return `# Aidentity Setup Prompt: ${plan.role.name} (${plan.profile.name})
 
 Set up my AI agent environment for the **${plan.role.name}** role using the **${plan.profile.name}** profile.
 

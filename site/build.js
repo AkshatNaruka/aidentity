@@ -210,9 +210,12 @@ if (startHere.length < 6) {
 function layout({ title, description, depth, body, page, canonical, jsonld, ogType = "website", keywords = "", markdownAlt = null }) {
   const p = up(depth);
   const totalRoles = rolesData.roles ? rolesData.roles.length : 21;
-  const fullTitle = title ? `${title} — Aidentity` : "Aidentity — the verified index of agent skills, playbooks & courses";
+  const fullTitle = title ? `${title} | Aidentity` : "Aidentity: the verified index of agent skills, playbooks & courses";
+  const cleanDescription = (description || "")
+    .replace(/\s*—\s*/g, ", ")
+    .replace(/\s*–\s*/g, " - ");
   const rawDescription =
-    description ||
+    cleanDescription ||
     `A verified, machine-readable index of ${registry.total} AI agent skills, ${totalRoles} role setup playbooks, and courses. One ID, one command, works in every coding agent.`;
   const metaDescription = rawDescription.replace(/\s+/g, " ").trim();
   // Search results truncate around 160 characters; keep the full text in the body.
@@ -241,7 +244,7 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : `<meta name="
 <meta property="og:image" content="${ogImage}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Aidentity — the verified index of AI agent skills">
+<meta property="og:image:alt" content="Aidentity: the verified index of AI agent skills">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(fullTitle)}">
 <meta name="twitter:description" content="${esc(shortDescription)}">
@@ -251,7 +254,7 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : `<meta name="
 <link rel="icon" href="${p}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${p}assets/apple-touch-icon.png">
 <link rel="manifest" href="${p}manifest.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="Aidentity — new skills" href="${p}feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Aidentity: new skills" href="${p}feed.xml">
 <link rel="ai-catalog" href="${p}.well-known/ai-catalog.json">
 <link rel="ai-plugin" href="${p}.well-known/ai-plugin.json">
 <link rel="mcp-server" href="${p}.well-known/mcp.json">
@@ -262,7 +265,7 @@ ${markdownAlt ? `<link rel="alternate" type="text/markdown" href="${esc(markdown
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
 <link rel="stylesheet" href="${p}assets/style.css?v=${BUILD_HASH}">
-${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
+${jsonld ? `<script type="application/ld+json">${jsonld.replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ")}</script>` : ""}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -365,7 +368,7 @@ ${body}
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 — see <a href="${p}about/index.html#licensing">licensing</a>.</p>
+        <p>Aidentity is an index, not a fork. Every skill belongs to its upstream author.<br>Registry generated ${GENERATED}. Content under MIT, Apache-2.0 and CC0 (see <a href="${p}about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -384,14 +387,17 @@ ${body}
 
 function row(skill, depth) {
   const p = up(depth);
-  const search = `${skill.name} ${skill.description} ${skill.category} ${skill.tags.join(" ")} ${skill.source.repo}`.toLowerCase();
+  const cleanDesc = (skill.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ");
+  const search = `${skill.name} ${cleanDesc} ${skill.category} ${skill.tags.join(" ")} ${skill.source.repo}`.toLowerCase();
   return `<a class="row" href="${p}skills/${skill.id}/index.html"
      data-source="${esc(skill.source.key)}"
      data-category="${esc(skill.category)}"
+     data-name="${esc(skill.name.toLowerCase())}"
+     data-distributable="${skill.install ? "1" : "0"}"
      data-search="${esc(search)}">
   <span>
     <span class="r-name">${esc(skill.name)}</span>
-    <span class="r-desc">${esc(skill.description)}</span>
+    <span class="r-desc">${esc(cleanDesc)}</span>
   </span>
   <span class="r-src">${esc(skill.source.repo)}</span>
   <span class="r-lic">${esc(licenseLabel(skill.source.license))}</span>
@@ -411,10 +417,13 @@ function commandBlock(command, label) {
 // headings, lists, fenced code, tables, quotes, inline code, links, emphasis.
 function renderMarkdown(markdown) {
   const codeBlocks = [];
-  let text = String(markdown || "").replace(/```([a-z0-9-]*)\n([\s\S]*?)```/gi, (_, lang, code) => {
-    codeBlocks.push(`<pre><code>${esc(code.replace(/\n$/, ""))}</code></pre>`);
-    return `\u0000CODE${codeBlocks.length - 1}\u0000`;
-  });
+  let text = String(markdown || "")
+    .replace(/\s*—\s*/g, ", ")
+    .replace(/\s*–\s*/g, " - ")
+    .replace(/```([a-z0-9-]*)\n([\s\S]*?)```/gi, (_, lang, code) => {
+      codeBlocks.push(`<pre><code>${esc(code.replace(/\n$/, ""))}</code></pre>`);
+      return `\u0000CODE${codeBlocks.length - 1}\u0000`;
+    });
 
   const lines = esc(text).split(/\r?\n/);
   const out = [];
@@ -600,7 +609,7 @@ function buildHome() {
     <p class="kicker">Agent skills · role setups · 100% security-verified</p>
     <h1>The index of agent skills that <em>still work</em>.</h1>
     <p class="lede">
-      Aidentity is a verified index of ${registry.total} AI agent skills from ${sourceList.length} sources — plus one-command <strong>Individual &amp; Enterprise role setups</strong> for ${homeRoles.length} jobs.
+      Aidentity is a verified index of ${registry.total} AI agent skills from ${sourceList.length} sources, plus one-command <strong>Individual &amp; Enterprise role setups</strong> for ${homeRoles.length} jobs.
       Every entry is SHA-256 verified for security, carries its author and license, and installs into Claude Code, OpenCode, Codex, Cursor,
       Copilot or Gemini CLI.
     </p>
@@ -610,7 +619,7 @@ function buildHome() {
       <a href="playbooks/index.html" class="btn btn-ghost">Role Playbooks (${homeRoles.length})</a>
       <a href="skills/index.html" class="btn btn-ghost">Browse All ${registry.total} Skills</a>
     </div>
-    ${shareRow(SITE + "/", "Aidentity — the verified index of AI agent skills, playbooks & curricula")}
+    ${shareRow(SITE + "/", "Aidentity: the verified index of AI agent skills, playbooks & curricula")}
     </div>
   </div>
 </section>
@@ -638,7 +647,7 @@ function buildHome() {
       <div>
         <span class="num">02</span>
         <h3>Security &amp; licenses are verified.</h3>
-        <p>Every file across all ${registry.total} skills is scanned for hidden Unicode, hardcoded secrets, destructive shell commands, and prompt injection — with SHA-256 digests published in <a href="security.json">security.json</a> and SPDX licenses enforced in CI.</p>
+        <p>Every file across all ${registry.total} skills is scanned for hidden Unicode, hardcoded secrets, destructive shell commands, and prompt injection, with SHA-256 digests published in <a href="security.json">security.json</a> and SPDX licenses enforced in CI.</p>
       </div>
       <div>
         <span class="num">03</span>
@@ -708,7 +717,7 @@ function buildHome() {
     <div class="callout">
       <strong>On the proprietary entries.</strong> ${(sourceList.find((source) => source.key === "anthropic-official") || {}).count || 0} skills from
       <a href="https://github.com/anthropics/skills" rel="noopener">anthropics/skills</a> are indexed with their
-      metadata and an upstream link, but their content is not hosted here — the upstream license does not permit
+      metadata and an upstream link, but their content is not hosted here because the upstream license does not permit
       redistribution. They are marked <span class="mono">Proprietary</span> everywhere they appear.
     </div>
   </div>
@@ -869,30 +878,75 @@ function buildBrowse() {
     ${topPillCategories.map((c) => `<button type="button" class="pill-btn" data-cat="${esc(c.name)}">${esc(c.name)} (${c.count})</button>`).join("\n    ")}
   </div>
 
-  <div class="controls">
-    <label class="sr-only" for="q">Search skills</label>
-    <input id="q" type="search" placeholder="Search ${registry.total} skills — name, tag, category, author…" autocomplete="off" spellcheck="false">
-    <label class="sr-only" for="filter-category">Filter by category</label>
-    <select id="filter-category">
-      <option value="">All categories (${categoryList.length})</option>
-      ${options(categoryList.map((category) => category.name))}
-    </select>
-    <label class="sr-only" for="filter-source">Filter by source</label>
-    <select id="filter-source">
-      <option value="">All sources (${sourceList.length})</option>
-      ${options(sourceList.map((source) => source.key))}
-    </select>
+  <div class="quick-topics" id="quick-topics" aria-label="Popular topic filters">
+    <span class="quick-topics-label">Quick topics:</span>
+    <button type="button" class="topic-chip" data-topic="claude">Claude</button>
+    <button type="button" class="topic-chip" data-topic="cursor">Cursor</button>
+    <button type="button" class="topic-chip" data-topic="python">Python</button>
+    <button type="button" class="topic-chip" data-topic="react">React</button>
+    <button type="button" class="topic-chip" data-topic="security">Security</button>
+    <button type="button" class="topic-chip" data-topic="testing">Testing</button>
+    <button type="button" class="topic-chip" data-topic="git">Git</button>
+    <button type="button" class="topic-chip" data-topic="azure">Azure</button>
+    <button type="button" class="topic-chip" data-topic="scrum">Scrum</button>
+  </div>
+
+  <div class="controls browse-controls">
+    <div class="search-input-wrap">
+      <span class="search-input-icon" aria-hidden="true">⌕</span>
+      <label class="sr-only" for="q">Search skills</label>
+      <input id="q" type="search" placeholder="Search ${registry.total} skills by name, tag, category, author..." autocomplete="off" spellcheck="false">
+      <button type="button" id="search-clear-btn" class="search-clear-btn" aria-label="Clear search" title="Clear search" hidden>&times;</button>
+      <kbd class="search-input-kbd">/</kbd>
+    </div>
+
+    <div class="select-wrap">
+      <label class="sr-only" for="filter-category">Filter by category</label>
+      <select id="filter-category">
+        <option value="">All categories (${categoryList.length})</option>
+        ${options(categoryList.map((category) => category.name))}
+      </select>
+    </div>
+
+    <div class="select-wrap">
+      <label class="sr-only" for="filter-source">Filter by source</label>
+      <select id="filter-source">
+        <option value="">All sources (${sourceList.length})</option>
+        ${options(sourceList.map((source) => source.key))}
+      </select>
+    </div>
+
+    <div class="select-wrap">
+      <label class="sr-only" for="filter-sort">Sort skills</label>
+      <select id="filter-sort">
+        <option value="default">Sort: Default</option>
+        <option value="name-asc">Sort: Name (A to Z)</option>
+        <option value="name-desc">Sort: Name (Z to A)</option>
+      </select>
+    </div>
   </div>
 
   <div class="browse-meta">
-    <span id="result-count"><strong>${registry.total}</strong> skills available</span>
-    <span class="mono">${registry.distributable} distributable · ${registry.total - registry.distributable} indexed only (proprietary notice)</span>
+    <div class="browse-meta-left">
+      <span id="result-count"><strong>${registry.total}</strong> skills available</span>
+      <span class="browse-meta-sub mono">${registry.distributable} distributable · ${registry.total - registry.distributable} index only</span>
+    </div>
+    <div class="browse-meta-right">
+      <button type="button" class="filter-dist-btn" id="filter-dist-btn" aria-pressed="false" title="Show only skills installable with a single command">
+        <span class="filter-dist-dot" aria-hidden="true"></span>1-Command Install Only
+      </button>
+      <button type="button" id="clear-all-filters" class="clear-all-filters" hidden>Reset filters ✕</button>
+    </div>
   </div>
 
   <div class="rows" id="skill-list">
     ${skills.map((skill) => row(skill, 1)).join("\n")}
   </div>
-  <p class="empty" id="empty" hidden>No skills match that search term. Try clearing filters or searching by author/tool name.</p>
+  <div class="empty empty-browse" id="empty" hidden>
+    <p class="empty-msg">No skills match your search or filter.</p>
+    <p class="empty-sub">Try broadening keywords, choosing another category, or resetting all filters.</p>
+    <button type="button" id="empty-clear-btn" class="empty-clear-btn">Reset All Filters</button>
+  </div>
 </div>
 `;
 
@@ -939,7 +993,7 @@ function skillPage(skill) {
     <div>
       <p class="kicker">${esc(skill.source.repo)} · ${esc(licenseLabel(skill.source.license))}</p>
       <h1>${esc(skill.name)}</h1>
-      <p class="summary">${esc(skill.description)}</p>
+      <p class="summary">${esc((skill.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - "))}</p>
 
       <div class="tags" style="margin-top:20px">
         ${skill.tags.map((tag) => `<a class="tag" href="${p}skills/index.html?q=${encodeURIComponent(tag)}">${esc(tag)}</a>`).join(" ")}
@@ -951,7 +1005,7 @@ function skillPage(skill) {
           ? `<h2>Contents</h2>
       <div class="skill-content">${renderMarkdown(content)}</div>`
           : `<h2>Contents</h2>
-      <p class="prose">This entry is indexed but not hosted here — the upstream license does not permit
+      <p class="prose">This entry is indexed but not hosted here because the upstream license does not permit
       redistribution. <a href="${esc(skill.upstream ? skill.upstream.url : skill.source.url)}" rel="noopener">Read it at the source ↗</a></p>`
       }
 
@@ -991,7 +1045,7 @@ function skillPage(skill) {
           <div><dt>Checked</dt><dd>${verifiedOn(skill.source.key)}</dd></div>
           <div><dt>ID</dt><dd class="mono" style="font-size:11px">${esc(skill.id)}</dd></div>
         </dl>
-        ${shareRow(pageUrl, `${skill.name} — AI agent skill`)}
+        ${shareRow(pageUrl, `${skill.name} | AI agent skill`)}
         ${
           skill.distributable
             ? `<a class="btn" href="${REPO}/blob/main/${esc(skill.path)}" rel="noopener">View file ↗</a>`
@@ -1032,7 +1086,7 @@ function skillPage(skill) {
   });
 
   return layout({
-    title: `${skill.name} — ${skill.category === skill.name ? "AI agent skill" : `${skill.category} AI agent skill`}`,
+    title: `${skill.name} | ${skill.category === skill.name ? "AI agent skill" : `${skill.category} AI agent skill`}`, 
     description: skill.description,
     depth,
     body,
@@ -1154,7 +1208,7 @@ function buildSources() {
             </td>
             <td data-label="License" class="mono">${esc(licenseLabel(source.license))}</td>
             <td data-label="Skills" class="mono"><strong style="color:var(--ink)">${source.count}</strong></td>
-            <td data-label="Hosted" class="mono">${source.publish === false ? '<span style="color:var(--muted)">no — index only</span>' : '<span style="color:var(--ok)">✓ mirrored</span>'}</td>
+            <td data-label="Hosted" class="mono">${source.publish === false ? '<span style="color:var(--muted)">index only</span>' : '<span style="color:var(--ok)">✓ mirrored</span>'}</td>
             <td data-label="Checked" class="mono" style="color:var(--ink-soft)">${esc(source.verified)}</td>
           </tr>`
             )
@@ -1177,7 +1231,7 @@ function buildSources() {
   write(
     "sources/index.html",
     layout({
-      title: "Sources — Upstream Repositories & License Attribution",
+      title: "Sources: Upstream Repositories & License Attribution",
       description: "Every upstream repository indexed by Aidentity, with license, attribution, and live verification status.",
       depth: 1,
       body,
@@ -1380,7 +1434,7 @@ function buildAbout() {
   write(
     "about/index.html",
     layout({
-      title: "About Aidentity — Verified AI Agent Registry",
+      title: "About Aidentity: Verified AI Agent Registry",
       description: `How Aidentity indexes, security-verifies, and licenses ${registry.total} AI agent skills and ${rolesData.roles ? rolesData.roles.length : 21} role setups with complete provenance receipts.`,
       depth: 1,
       body,
@@ -1597,7 +1651,7 @@ function buildEnterprise() {
 
       <div style="display:grid;grid-template-columns:1fr;gap:20px">
         ${modernCommandSnippet({
-          title: "Runtime Guardrail 1: hooks/block-dangerous.js — Intercepts Destructive Bash",
+          title: "Runtime Guardrail 1: hooks/block-dangerous.js (Intercepts Destructive Bash)",
           badge: "HOOK",
           command: `// Intercepts PreToolUse before shell commands execute in the terminal
 const dangerousPatterns = [
@@ -1613,7 +1667,7 @@ if (dangerousPatterns.some(re => re.test(toolInput.command))) {
         })}
 
         ${modernCommandSnippet({
-          title: "Runtime Guardrail 2: hooks/scan-secrets.js — Prevents Credential Leakage to LLMs",
+          title: "Runtime Guardrail 2: hooks/scan-secrets.js (Prevents Credential Leakage to LLMs)",
           badge: "HOOK",
           command: `// Inspects agent file reads and stdout to prevent secrets leakage into LLM context
 const secretPatterns = [
@@ -1872,7 +1926,7 @@ Recommendation: APPROVED for developer workstations with --profile enterprise</c
   write(
     "enterprise/index.html",
     layout({
-      title: "Enterprise AI Agent Trust Center — Air-Gapped, Cryptographically Verified",
+      title: "Enterprise AI Agent Trust Center: Air-Gapped, Cryptographically Verified",
       description: "How enterprises adopt verified AI agent skills with zero external telemetry, SHA-256 lockfiles, 7-gate static analysis, runtime pre-execution hooks, and air-gapped mirroring.",
       depth: 1,
       body,
@@ -1886,7 +1940,7 @@ Recommendation: APPROVED for developer workstations with --profile enterprise</c
             "@type": "WebPage",
             "@id": SITE + "/enterprise/#webpage",
             url: SITE + "/enterprise/",
-            name: "Enterprise AI Agent Trust Center — Aidentity",
+            name: "Enterprise AI Agent Trust Center | Aidentity",
             description: "Air-gapped, cryptographically verified governance architecture for AI agent skills and role blueprints.",
             isPartOf: { "@id": SITE + "/#website" }
           },
@@ -2075,7 +2129,7 @@ function buildForAgents() {
         
         <details class="accordion-item" style="margin-bottom:8px" open>
           <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
-            <span>Claude Code — Terminal Setup</span>
+            <span>Claude Code: Terminal Setup</span>
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
@@ -2088,7 +2142,7 @@ function buildForAgents() {
 
         <details class="accordion-item" style="margin-bottom:8px">
           <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
-            <span>Cursor — .cursor/mcp.json</span>
+            <span>Cursor: .cursor/mcp.json</span>
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
@@ -2108,7 +2162,7 @@ function buildForAgents() {
 
         <details class="accordion-item" style="margin-bottom:8px">
           <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
-            <span>OpenAI Codex — ~/.codex/config.toml</span>
+            <span>OpenAI Codex: ~/.codex/config.toml</span>
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
@@ -2123,7 +2177,7 @@ args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
 
         <details class="accordion-item" style="margin-bottom:8px">
           <summary class="accordion-trigger" style="font-family:var(--mono);font-size:12px;padding:12px 16px">
-            <span>Gemini CLI — ~/.gemini/settings.json</span>
+            <span>Gemini CLI: ~/.gemini/settings.json</span>
             <span class="chevron">›</span>
           </summary>
           <div class="accordion-body" style="padding:14px 16px">
@@ -2189,7 +2243,7 @@ args = ["/path/to/aidentity/cli/mcp.js"]</code></pre>
   write(
     "for-agents/index.html",
     layout({
-      title: "Use Aidentity from an AI Agent — Machine-Readable Registry API",
+      title: "Use Aidentity from an AI Agent: Machine-Readable Registry API",
       description: "Machine-readable endpoints, an MCP server, security verification, and role setup prompts for AI coding agents.",
       depth: 1,
       body,
@@ -2322,9 +2376,10 @@ function renderSetupWizardSection({ roles, securityPath = "../security.json", he
     stackPresets,
     extraSkillsCatalog,
   };
+  const wizardJson = JSON.stringify(wizardData).replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ");
 
   return `
-    <div class="setup-builder" id="setup-builder" data-wizard="${esc(JSON.stringify(wizardData))}">
+    <div class="setup-builder" id="setup-builder" data-wizard="${esc(wizardJson)}">
       <div class="wizard-header">
         <div>
           <p class="kicker" style="margin:0 0 6px">One-Time Initial Agent Setup Generator</p>
@@ -2598,7 +2653,7 @@ function buildSetup() {
 `;
 
   write("setup/index.html", layout({
-    title: "One-Time Initial Agent Setup Generator — Custom AI Agent Prompts",
+    title: "One-Time Initial Agent Setup Generator: Custom AI Agent Prompts",
     description: "Answer 5 quick questions to generate a customized one-time AI agent setup prompt for Founders, Software Engineers, Architects, PMs, Designers, Marketers, and Quants.",
     depth: 1,
     body,
@@ -2754,7 +2809,7 @@ function buildPlaybooks() {
 `;
 
   write("playbooks/index.html", layout({
-    title: "AI Agent Setup Playbooks & Curricula — Blueprints for 21 Roles & 6 Tracks",
+    title: "AI Agent Setup Playbooks & Curricula: Blueprints for 21 Roles & 6 Tracks",
     description: "21 step-by-step AI agent setup playbooks and 6 guided curricula for software engineers, architects, PMs, designers, marketers, and quants. SHA-256 verified skills for Claude Code & Cursor.",
     depth: 1,
     body: hubBody,
@@ -2880,7 +2935,7 @@ function buildPlaybooks() {
           `#### ${m.title}`,
           ...m.skills.map((id) => {
             const s = skills.find((sk) => sk.id === id);
-            return s ? `- **${s.name}** (\`${s.id}\`, ${s.license}): ${s.description}` : `- \`${id}\``;
+            return s ? `- **${s.name}** (\`${s.id}\`, ${s.license}): ${(s.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ")}` : `- \`${id}\``;
           }),
           ``,
         ])
@@ -2906,12 +2961,12 @@ function buildPlaybooks() {
         Last updated: ${GENERATED} · Author: Akshat Naruka · Aliases: ${esc([role.slug, ...(role.aliases || [])].join(", "))} · <a href="playbook.md">Download playbook.md</a>
       </p>
 
-      <h2>Step 1 — Run the One-Command Setup</h2>
+      <h2>Step 1: Run the One-Command Setup</h2>
       <p class="prose">Choose <strong>Individual</strong> for solo work and fast iteration, or <strong>Enterprise</strong> for team governance, supply-chain security audits, and automated pre-commit/stop hooks:</p>
       ${commandBlock(`npx aidentity setup ${role.slug} --profile individual`, `setup ${role.name} individual`)}
       ${commandBlock(`npx aidentity setup ${role.slug} --profile enterprise`, `setup ${role.name} enterprise`)}
 
-      <h2>Step 2 — Individual vs. Enterprise Profile Comparison</h2>
+      <h2>Step 2: Individual vs. Enterprise Profile Comparison</h2>
       <div class="table-scroll">
         <table class="table">
           <thead>
@@ -2968,7 +3023,7 @@ function buildPlaybooks() {
             return `<div class="module-block" style="padding:10px 14px;margin-bottom:10px;background:var(--paper);border:1px solid var(--rule)">
               <div style="font-weight:600;font-size:13px;margin-bottom:4px">${esc(m.title)}</div>
               <div class="skill-chips">
-                ${mSkills.map((s) => `<a class="skill-chip" href="../../skills/${esc(s.id)}/index.html" title="${esc(s.description)}">${esc(s.name)}</a>`).join("")}
+                ${mSkills.map((s) => `<a class="skill-chip" href="../../skills/${esc(s.id)}/index.html" title="${esc((s.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - "))}">${esc(s.name)}</a>`).join("")}
               </div>
             </div>`;
           }).join("\n")}
@@ -2976,7 +3031,7 @@ function buildPlaybooks() {
       </div>
       ` : ""}
 
-      <h2>Step 3 — Verified Skills in This Playbook</h2>
+      <h2>Step 3: Verified Skills in This Playbook</h2>
       <p class="prose">Every skill below has passed Aidentity's 7-gate static security scanner (<span class="mono">0</span> critical findings) and carries a deterministic SHA-256 content digest:</p>
       <div class="table-scroll">
         <table class="table">
@@ -2987,7 +3042,7 @@ function buildPlaybooks() {
             ${entPlan.skills.map((s) => {
               const inInd = indPlan.skills.some((i) => i.id === s.id);
               return `<tr>
-                <td data-label="Skill"><a href="../../skills/${esc(s.id)}/index.html"><strong>${esc(s.name)}</strong></a><div style="font-size:12px;color:var(--ink-soft)">${esc(s.description)}</div></td>
+                <td data-label="Skill"><a href="../../skills/${esc(s.id)}/index.html"><strong>${esc(s.name)}</strong></a><div style="font-size:12px;color:var(--ink-soft)">${esc((s.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - "))}</div></td>
                 <td data-label="Profile" class="mono">${inInd ? "Individual &amp; Enterprise" : "Enterprise"}</td>
                 <td data-label="License" class="mono">${esc(s.license)}</td>
                 <td data-label="SHA-256 Digest" class="mono">${esc((s.sha256 || "").slice(0, 12))}…</td>
@@ -2998,7 +3053,7 @@ function buildPlaybooks() {
         </table>
       </div>
 
-      <h2>Step 4 — Copyable One-Shot Setup Prompts</h2>
+      <h2>Step 4: Copyable One-Shot Setup Prompts</h2>
       <p class="prose">Paste either prompt directly into Claude Code, Cursor, Codex, or Gemini CLI to configure your workspace automatically:</p>
       <details class="prompt-details" open style="margin-top:14px">
         <summary>${esc(role.name)} · Individual Setup Prompt <span class="mono" style="font-size:11px;color:var(--muted);font-weight:normal">(${indPlan.skills.length} skills · Click to collapse)</span></summary>
@@ -3013,12 +3068,12 @@ function buildPlaybooks() {
         </div>
       </details>
 
-      <h2 id="faq">Frequently Asked Questions — ${esc(role.name)} AI Setup</h2>
+      <h2 id="faq">Frequently Asked Questions: ${esc(role.name)} AI Setup</h2>
       <div class="prose">
         <h3>How do I set up Claude Code or Cursor for a ${esc(role.name.toLowerCase())}?</h3>
         <p>Run <span class="mono">npx aidentity setup ${esc(role.slug)} --profile individual --agent claude</span> (or <span class="mono">--agent cursor</span>). The CLI verifies SHA-256 digests against <span class="mono">security.json</span> and writes the skills, coding rules, subagents, and hooks to your agent directory.</p>
         <h3>What is the difference between the Individual and Enterprise ${esc(role.name.toLowerCase())} setup?</h3>
-        <p>The Individual profile installs ${indPlan.skills.length} core skills and essential secret/command safety hooks. The Enterprise profile installs ${entPlan.skills.length} skills — adding Trail of Bits supply-chain risk auditing, agentic actions auditing, and security hardening — plus format-on-save and test-on-stop hooks.</p>
+        <p>The Individual profile installs ${indPlan.skills.length} core skills and essential secret/command safety hooks. The Enterprise profile installs ${entPlan.skills.length} skills, adding Trail of Bits supply-chain risk auditing, agentic actions auditing, and security hardening, plus format-on-save and test-on-stop hooks.</p>
         <h3>Are all skills in the ${esc(role.name)} playbook security-verified?</h3>
         <p>Yes. Every skill in this playbook is scanned by <span class="mono">scripts/scan-skills-security.js</span> for hidden Unicode, hardcoded credentials, destructive commands, and prompt injection, with SHA-256 hashes published at <a href="../../security.json">security.json</a>.</p>
       </div>
@@ -3030,7 +3085,7 @@ function buildPlaybooks() {
         ${commandBlock(`npx aidentity setup ${role.slug}`, `setup ${role.name}`)}
         <dl class="meta" style="margin-top:20px">
           <div><dt>Role Slug</dt><dd class="mono">${esc(role.slug)}</dd></div>
-          <div><dt>Aliases</dt><dd class="mono">${esc((role.aliases || []).join(", ") || "—")}</dd></div>
+          <div><dt>Aliases</dt><dd class="mono">${esc((role.aliases || []).join(", ") || "None")}</dd></div>
           <div><dt>Ind. Skills</dt><dd class="mono">${indPlan.skills.length} verified</dd></div>
           <div><dt>Ent. Skills</dt><dd class="mono">${entPlan.skills.length} verified</dd></div>
           ${matchingCourse ? `<div><dt>Curriculum</dt><dd class="mono"><a href="#curriculum">Included (${matchingCourse.modules.length} mod)</a></dd></div>` : ""}
@@ -3039,7 +3094,7 @@ function buildPlaybooks() {
           <div><dt>Security</dt><dd>100% SHA-256 verified</dd></div>
           <div><dt>Updated</dt><dd>${GENERATED}</dd></div>
         </dl>
-        ${shareRow(pageUrl, `${role.name} AI Agent Setup Playbook — Aidentity`)}
+        ${shareRow(pageUrl, `${role.name} AI Agent Setup Playbook | Aidentity`)}
         <a class="btn" href="playbook.md">View Markdown (playbook.md) ↗</a>
         <a class="btn" href="../../setup/index.html" style="margin-top:8px">Open in Interactive Setup Generator ↗</a>
       </div>
@@ -3128,7 +3183,7 @@ function buildPlaybooks() {
     });
 
     write(`playbooks/${role.slug}/index.html`, layout({
-      title: `${role.name} AI Agent Playbook — Individual & Enterprise Setup`,
+      title: `${role.name} AI Agent Playbook: Individual & Enterprise Setup`,
       description: `Set up Claude Code, Cursor, Codex, or Gemini CLI for a ${role.name.toLowerCase()}. ${indPlan.skills.length} Individual / ${entPlan.skills.length} Enterprise SHA-256 verified skills, rules & hooks.`,
       depth: 2,
       body,
@@ -3286,7 +3341,7 @@ function buildCourses() {
   <meta charset="utf-8">
   <meta http-equiv="refresh" content="0; url=../playbooks/index.html">
   <link rel="canonical" href="${SITE}/playbooks/">
-  <title>Courses Redirect — Aidentity</title>
+  <title>Courses Redirect | Aidentity</title>
 </head>
 <body>
   <p>Courses &amp; Curricula have been merged into Playbooks. Redirecting to <a href="../playbooks/index.html">Playbooks &amp; Curricula</a>...</p>
@@ -3304,7 +3359,7 @@ function buildCourses() {
   <meta charset="utf-8">
   <meta http-equiv="refresh" content="0; url=../../playbooks/${course.roleSlug}/index.html#curriculum">
   <link rel="canonical" href="${SITE}/playbooks/${course.roleSlug}/">
-  <title>${esc(course.name)} Redirect — Aidentity</title>
+  <title>${esc(course.name)} Redirect | Aidentity</title>
 </head>
 <body>
   <p>This course curriculum is integrated into the ${course.roleSlug} playbook. Redirecting to <a href="../../playbooks/${course.roleSlug}/index.html#curriculum">${esc(course.name)}</a>...</p>
@@ -3570,7 +3625,7 @@ function buildGuides() {
 `;
 
   write("guides/index.html", layout({
-    title: "AI Agent Guides — Claude Code vs Cursor, Enterprise Setup, Skill Security & GEO",
+    title: "AI Agent Guides: Claude Code vs Cursor, Enterprise Setup, Skill Security & GEO",
     description: "Definitive reference guides comparing Claude Code, Cursor, Codex, and Gemini CLI directory structures, Individual vs Enterprise setups, 7-gate SKILL.md security, and AgentReady GEO.",
     depth: 1,
     body,
@@ -3716,7 +3771,7 @@ function buildMachineReadable() {
     "",
     ...roles.map((r) => {
       const c = COURSES_DATA.find((crs) => crs.roleSlug === r.slug);
-      return `- [${r.name} Playbook](${SITE}/playbooks/${r.slug}/) ([playbook.md](${SITE}/playbooks/${r.slug}/playbook.md)): \`npx aidentity setup ${r.slug} --profile individual|enterprise\` — ${r.description}${c ? ` (Includes curriculum: ${c.name})` : ""}`;
+      return `- [${r.name} Playbook](${SITE}/playbooks/${r.slug}/) ([playbook.md](${SITE}/playbooks/${r.slug}/playbook.md)): \`npx aidentity setup ${r.slug} --profile individual|enterprise\` : ${r.description}${c ? ` (Includes curriculum: ${c.name})` : ""}`;
     }),
     "",
     "## Guided Learning Tracks (Curricula)",
@@ -3835,7 +3890,7 @@ ${urls
   write(
     "ai.txt",
     [
-      "# ai.txt — usage preferences for AI systems",
+      "# ai.txt: usage preferences for AI systems",
       `# ${SITE}/ai.txt`,
       "",
       "User-Agent: *",
@@ -3866,7 +3921,7 @@ ${urls
   );
 
   const pricingMd = [
-    "# Pricing — Aidentity",
+    "# Pricing: Aidentity",
     "",
     `Last updated: ${GENERATED}`,
     "",
@@ -3915,7 +3970,7 @@ ${urls
   const xml = (value) =>
     String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const feedItems = skills.slice(0, 50).map((skill) => `    <item>
-      <title>${xml(skill.name)} — ${xml(skill.category)} AI agent skill</title>
+      <title>${xml(skill.name)} | ${xml(skill.category)} AI agent skill</title>
       <link>${SITE}/skills/${skill.id}/</link>
       <guid>${SITE}/skills/${skill.id}/</guid>
       <description>${xml(skill.description)}</description>
@@ -3927,7 +3982,7 @@ ${urls
     `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Aidentity — AI agent skills</title>
+    <title>Aidentity: AI agent skills</title>
     <link>${SITE}/</link>
     <description>A verified index of AI agent skills, with license and source for every entry.</description>
     <language>en</language>
@@ -3953,7 +4008,7 @@ ${feedItems}
 
   write(
     "404.html",
-    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found — Aidentity</title><link rel="stylesheet" href="${BASE}/assets/style.css"></head><body><main id="main"><section style="padding-top:80px"><div class="wrap"><p class="kicker">404</p><h2>That page isn't indexed.</h2><p style="color:var(--muted);margin-top:14px">Try the <a href="${BASE}/skills/index.html">full index</a>, <a href="${BASE}/playbooks/index.html">role playbooks &amp; curricula</a>, or <a href="${BASE}/guides/index.html">guides</a>.</p></div></section></main></body></html>`
+    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found | Aidentity</title><link rel="stylesheet" href="${BASE}/assets/style.css"></head><body><main id="main"><section style="padding-top:80px"><div class="wrap"><p class="kicker">404</p><h2>That page isn't indexed.</h2><p style="color:var(--muted);margin-top:14px">Try the <a href="${BASE}/skills/index.html">full index</a>, <a href="${BASE}/playbooks/index.html">role playbooks &amp; curricula</a>, or <a href="${BASE}/guides/index.html">guides</a>.</p></div></section></main></body></html>`
   );
 }
 
@@ -4114,7 +4169,7 @@ function buildAgentSurface() {
     $schema: "https://modelcontextprotocol.io/schema.json",
     name: "aidentity-mcp",
     version: "1.2.0",
-    description: "Model Context Protocol (MCP) server for Aidentity — search skills, inspect security digests, and generate role blueprints.",
+    description: "Model Context Protocol (MCP) server for Aidentity to search skills, inspect security digests, and generate role blueprints.",
     command: "npx",
     args: ["-y", "aidentity-mcp"],
     transport: "stdio",
@@ -4206,12 +4261,12 @@ function buildAgentSurface() {
       "",
       "## Concept Files in This Bundle",
       "",
-      `- [Role Setup Playbooks](./playbooks.md) — ${roles.length} job role setup blueprints (Individual & Enterprise profiles)`,
-      "- [Enterprise Trust & Governance](./enterprise.md) — Zero-telemetry guarantees, SHA-256 lockfile, air-gapped mirroring, and CISO approval kit",
-      "- [AI Agent Courses](./courses.md) — 6 structured learning curricula built from verified skills",
-      "- [Skill Security Standard](./security.md) — 7-gate static security scanner and SHA-256 verification protocol",
-      `- [Pricing & Licensing](../pricing.md) — $0 open-source pricing and SPDX license rules`,
-      `- [Full LLMs Index](../llms-full.txt) — Complete skill metadata and instruction URLs`,
+      `- [Role Setup Playbooks](./playbooks.md): ${roles.length} job role setup blueprints (Individual & Enterprise profiles)`,
+      "- [Enterprise Trust & Governance](./enterprise.md): Zero-telemetry guarantees, SHA-256 lockfile, air-gapped mirroring, and CISO approval kit",
+      "- [AI Agent Courses](./courses.md): 6 structured learning curricula built from verified skills",
+      "- [Skill Security Standard](./security.md): 7-gate static security scanner and SHA-256 verification protocol",
+      `- [Pricing & Licensing](../pricing.md): $0 open-source pricing and SPDX license rules`,
+      `- [Full LLMs Index](../llms-full.txt): Complete skill metadata and instruction URLs`,
       "",
     ].join("\n")
   );
@@ -4232,7 +4287,7 @@ function buildAgentSurface() {
       "",
       "See [OKF Index](./index.md) · [AI Agent Courses](./courses.md) · [Skill Security Standard](./security.md) · [Enterprise Trust](./enterprise.md).",
       "",
-      ...roles.map((r) => `- **[${r.name} Playbook](${SITE}/playbooks/${r.slug}/playbook.md)**: \`npx aidentity setup ${r.slug} --profile individual|enterprise\` — ${r.description}`),
+      ...roles.map((r) => `- **[${r.name} Playbook](${SITE}/playbooks/${r.slug}/playbook.md)**: \`npx aidentity setup ${r.slug} --profile individual|enterprise\` : ${r.description}`),
       "",
     ].join("\n")
   );
@@ -4329,7 +4384,7 @@ function buildAgentSurface() {
   );
 
   const full = [
-    "# Aidentity — full index for agents",
+    "# Aidentity: full index for agents",
     "",
     `Generated ${GENERATED}. ${registry.total} skills, ${registry.distributable} installable, ${security.verified}/${security.total_skills} security-verified, ${roles.length} role playbooks & curricula, ${sourceList.length} sources.`,
     "",
@@ -4339,12 +4394,12 @@ function buildAgentSurface() {
     "",
     ...roles.map((r) => {
       const c = COURSES_DATA.find((crs) => crs.roleSlug === r.slug);
-      return `- **${r.name}** (\`${r.slug}\`): \`npx aidentity setup ${r.slug} --profile individual|enterprise\` — ${SITE}/playbooks/${r.slug}/playbook.md${c ? ` (Includes: ${c.name})` : ""}`;
+      return `- **${r.name}** (\`${r.slug}\`): \`npx aidentity setup ${r.slug} --profile individual|enterprise\` : ${SITE}/playbooks/${r.slug}/playbook.md${c ? ` (Includes: ${c.name})` : ""}`;
     }),
     "",
     "## Guided Learning Tracks (Curricula)",
     "",
-    ...COURSES_DATA.map((c) => `- **${c.name}** (\`${c.slug}\`): \`npx aidentity setup ${c.roleSlug}\` — ${SITE}/playbooks/${c.roleSlug}/#curriculum`),
+    ...COURSES_DATA.map((c) => `- **${c.name}** (\`${c.slug}\`): \`npx aidentity setup ${c.roleSlug}\` : ${SITE}/playbooks/${c.roleSlug}/#curriculum`),
     "",
     "## Skills",
     "",
@@ -4360,7 +4415,7 @@ function buildAgentSurface() {
       `- status: ${skill.status}`,
       `- security: ${sec && sec.verified ? (sec.sha256 ? `verified (sha256:${sec.sha256.slice(0, 16)}…)` : "verified (index-only)") : "verified"}`,
       `- source: ${skill.source.repo}`,
-      `- install: ${skill.install || "not hosted — use upstream"}`,
+      `- install: ${skill.install || "not hosted, use upstream"}`,
       `- page: ${url(skill)}`,
       skill.distributable ? `- instructions: ${SITE}/skills/${skill.id}/SKILL.md` : `- upstream: ${skill.upstream ? skill.upstream.url : skill.source.url}`,
       "",
