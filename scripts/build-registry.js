@@ -182,6 +182,11 @@ const SOURCE_CATEGORY = {
   "emmapbingham-agentic-newsroom": "media",
   "agents365-ai-drawio-skill": "architecture",
   "abrahamferga-scrum-skills": "project-management",
+  "google-labs-stitch": "design",
+  "vercel-labs": "design",
+  shadcn: "design",
+  designspells: "design",
+  "community-design": "design",
 };
 
 const NAME_RULES = [

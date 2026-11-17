@@ -31,24 +31,24 @@ npx aidentity audit
 
 | Role | CLI Command | Individual Profile | Enterprise Profile |
 |---|---|---|---|
-| **[Founder / Startup builder](roles/founder.md)** | `npx aidentity setup founder` | 9 skills · 2 rules · 4 agents | 12 skills · 4 hooks |
-| **[Software engineer](roles/software-engineer.md)** | `npx aidentity setup software-engineer` | 8 skills · 3 rules · 3 agents | 11 skills · 4 hooks |
-| **[Software architect](roles/architect.md)** | `npx aidentity setup architect` | 8 skills · 2 rules · 3 agents | 11 skills · 4 hooks |
-| **[Product manager](roles/product-manager.md)** | `npx aidentity setup product-manager` | 8 skills · 0 rules · 3 agents | 12 skills · 4 hooks |
-| **[Engineering manager](roles/engineering-manager.md)** | `npx aidentity setup engineering-manager` | 8 skills · 0 rules · 3 agents | 11 skills · 4 hooks |
-| **[Product designer](roles/designer.md)** | `npx aidentity setup designer` | 8 skills · 2 rules · 2 agents | 12 skills · 4 hooks |
-| **[Motion designer](roles/motion-designer.md)** | `npx aidentity setup motion-designer` | 7 skills · 1 rules · 2 agents | 11 skills · 4 hooks |
-| **[Content creator](roles/content-creator.md)** | `npx aidentity setup content-creator` | 8 skills · 0 rules · 2 agents | 12 skills · 4 hooks |
-| **[Growth marketer](roles/marketer.md)** | `npx aidentity setup marketer` | 8 skills · 0 rules · 3 agents | 12 skills · 4 hooks |
-| **[SEO specialist](roles/seo-specialist.md)** | `npx aidentity setup seo-specialist` | 8 skills · 0 rules · 2 agents | 12 skills · 4 hooks |
-| **[Finance analyst](roles/finance-analyst.md)** | `npx aidentity setup finance-analyst` | 8 skills · 1 rules · 3 agents | 12 skills · 4 hooks |
-| **[Quant researcher](roles/quant-researcher.md)** | `npx aidentity setup quant-researcher` | 8 skills · 1 rules · 3 agents | 12 skills · 4 hooks |
-| **[Music producer](roles/music-producer.md)** | `npx aidentity setup music-producer` | 7 skills · 0 rules · 2 agents | 11 skills · 4 hooks |
-| **[Filmmaker](roles/filmmaker.md)** | `npx aidentity setup filmmaker` | 7 skills · 0 rules · 2 agents | 11 skills · 4 hooks |
-| **[Journalist](roles/journalist.md)** | `npx aidentity setup journalist` | 6 skills · 0 rules · 2 agents | 10 skills · 4 hooks |
-| **[Legal counsel](roles/legal-counsel.md)** | `npx aidentity setup legal-counsel` | 6 skills · 0 rules · 3 agents | 9 skills · 4 hooks |
-| **[Sales](roles/sales.md)** | `npx aidentity setup sales` | 8 skills · 0 rules · 2 agents | 12 skills · 4 hooks |
-| **[Customer support](roles/support.md)** | `npx aidentity setup support` | 6 skills · 0 rules · 3 agents | 10 skills · 4 hooks |
-| **[Teacher](roles/teacher.md)** | `npx aidentity setup teacher` | 6 skills · 0 rules · 3 agents | 10 skills · 4 hooks |
-| **[HR / people ops](roles/hr-people.md)** | `npx aidentity setup hr-people` | 6 skills · 0 rules · 2 agents | 10 skills · 4 hooks |
-| **[Data analyst](roles/data-analyst.md)** | `npx aidentity setup data-analyst` | 8 skills · 1 rules · 3 agents | 12 skills · 4 hooks |
+| **[Founder / Startup builder](roles/founder.md)** | `npx aidentity setup founder` | 15 skills · 2 rules · 4 agents | 18 skills · 4 hooks |
+| **[Software engineer](roles/software-engineer.md)** | `npx aidentity setup software-engineer` | 14 skills · 3 rules · 3 agents | 16 skills · 4 hooks |
+| **[Software architect](roles/architect.md)** | `npx aidentity setup architect` | 13 skills · 2 rules · 3 agents | 15 skills · 4 hooks |
+| **[Product manager](roles/product-manager.md)** | `npx aidentity setup product-manager` | 13 skills · 0 rules · 3 agents | 17 skills · 4 hooks |
+| **[Engineering manager](roles/engineering-manager.md)** | `npx aidentity setup engineering-manager` | 13 skills · 0 rules · 3 agents | 16 skills · 4 hooks |
+| **[Product designer](roles/designer.md)** | `npx aidentity setup designer` | 18 skills · 2 rules · 2 agents | 22 skills · 4 hooks |
+| **[Motion designer](roles/motion-designer.md)** | `npx aidentity setup motion-designer` | 11 skills · 1 rules · 2 agents | 15 skills · 4 hooks |
+| **[Content creator](roles/content-creator.md)** | `npx aidentity setup content-creator` | 12 skills · 0 rules · 2 agents | 16 skills · 4 hooks |
+| **[Growth marketer](roles/marketer.md)** | `npx aidentity setup marketer` | 13 skills · 0 rules · 3 agents | 17 skills · 4 hooks |
+| **[SEO specialist](roles/seo-specialist.md)** | `npx aidentity setup seo-specialist` | 12 skills · 0 rules · 2 agents | 16 skills · 4 hooks |
+| **[Finance analyst](roles/finance-analyst.md)** | `npx aidentity setup finance-analyst` | 12 skills · 1 rules · 3 agents | 16 skills · 4 hooks |
+| **[Quant researcher](roles/quant-researcher.md)** | `npx aidentity setup quant-researcher` | 12 skills · 1 rules · 3 agents | 16 skills · 4 hooks |
+| **[Music producer](roles/music-producer.md)** | `npx aidentity setup music-producer` | 11 skills · 0 rules · 2 agents | 15 skills · 4 hooks |
+| **[Filmmaker](roles/filmmaker.md)** | `npx aidentity setup filmmaker` | 11 skills · 0 rules · 2 agents | 15 skills · 4 hooks |
+| **[Journalist](roles/journalist.md)** | `npx aidentity setup journalist` | 10 skills · 0 rules · 2 agents | 14 skills · 4 hooks |
+| **[Legal counsel](roles/legal-counsel.md)** | `npx aidentity setup legal-counsel` | 9 skills · 0 rules · 3 agents | 11 skills · 4 hooks |
+| **[Sales](roles/sales.md)** | `npx aidentity setup sales` | 12 skills · 0 rules · 2 agents | 16 skills · 4 hooks |
+| **[Customer support](roles/support.md)** | `npx aidentity setup support` | 10 skills · 0 rules · 3 agents | 14 skills · 4 hooks |
+| **[Teacher](roles/teacher.md)** | `npx aidentity setup teacher` | 9 skills · 0 rules · 3 agents | 13 skills · 4 hooks |
+| **[HR / people ops](roles/hr-people.md)** | `npx aidentity setup hr-people` | 9 skills · 0 rules · 2 agents | 13 skills · 4 hooks |
+| **[Data analyst](roles/data-analyst.md)** | `npx aidentity setup data-analyst` | 12 skills · 1 rules · 3 agents | 16 skills · 4 hooks |
