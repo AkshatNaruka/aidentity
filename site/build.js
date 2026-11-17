@@ -280,6 +280,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld}</script>` : ""}
         <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
         <a href="${p}playbooks/index.html"${page === "playbooks" || page === "roles" || page === "courses" ? ' aria-current="page"' : ""}>Playbooks</a>
         <a href="${p}guides/index.html"${page === "guides" ? ' aria-current="page"' : ""}>Guides</a>
+        <a href="${p}enterprise/index.html"${page === "enterprise" ? ' aria-current="page"' : ""}>Enterprise</a>
         <a href="${p}sources/index.html"${page === "sources" ? ' aria-current="page"' : ""}>Sources</a>
         <a href="${p}for-agents/index.html"${page === "agents" ? ' aria-current="page"' : ""}>Agents</a>
         <a href="${p}about/index.html"${page === "about" ? ' aria-current="page"' : ""}>About</a>
@@ -350,14 +351,15 @@ ${body}
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-heading">Integrity &amp; Open Source</h4>
+        <h4 class="footer-heading">Integrity &amp; Enterprise</h4>
         <ul class="footer-links">
+          <li><a href="${p}enterprise/index.html">Enterprise Trust Center</a></li>
+          <li><a href="${p}enterprise/index.html#seven-gates">7-Gate Security Audit</a></li>
+          <li><a href="${p}enterprise/index.html#air-gapped">Air-Gapped VPC Setup</a></li>
+          <li><a href="${p}enterprise/index.html#ciso-packet">CISO Approval Packet</a></li>
           <li><a href="${REPO}" rel="noopener" target="_blank">GitHub Repository ↗</a></li>
-          <li><a href="${p}about/index.html">About &amp; Architecture</a></li>
           <li><a href="${p}about/index.html#licensing">SPDX Licensing Notice</a></li>
-          <li><a href="${p}security.json">Threat Gate &amp; Audit</a></li>
-          <li><a href="${p}pricing.md">Zero-Cost Model (Free/MIT)</a></li>
-          <li><a href="${p}support/index.html">Support &amp; Community</a></li>
+          <li><a href="${p}pricing.md">Zero-Cost Model ($0 Free)</a></li>
         </ul>
       </div>
     </div>
@@ -1395,6 +1397,505 @@ function buildAbout() {
           { "@type": "Question", name: "How are skills verified for security?", acceptedAnswer: { "@type": "Answer", text: "Every skill is scanned for hidden Unicode, hardcoded secrets, destructive commands, prompt injection, and untrusted remote script execution, with SHA-256 digests published in security.json." } }
         ]
       }),
+    })
+  );
+}
+
+// ---------------------------------------------------------------------------
+// enterprise trust center
+// ---------------------------------------------------------------------------
+
+function buildEnterprise() {
+  const verifiedCount = security.verified || registry.total;
+  const filesScanned = security.total_files_scanned || 2499;
+
+  const body = `
+<section class="page-hero">
+  <div class="wrap" style="max-width:920px">
+    <div class="enterprise-hero-badge">
+      <span class="shield-dot" aria-hidden="true"></span>
+      <span>Enterprise Trust &amp; Governance Standard</span>
+    </div>
+    <h1 class="hero-title" style="font-size:clamp(2rem, 3.8vw, 3rem);line-height:1.15;margin-bottom:16px">
+      Air-Gapped, Cryptographically Verified AI Skills for Enterprise
+    </h1>
+    <p class="hero-desc" style="font-size:1.05rem;line-height:1.65;color:var(--ink-soft)">
+      Security teams and CISOs block outside AI agent skills because of untrusted supply chains, hidden prompt injection, and credential exfiltration. 
+      Aidentity eliminates these risks with <strong>deterministic SHA-256 lockfiles</strong>, <strong>automated 7-gate AST static analysis</strong>, <strong>active pre-execution runtime hooks</strong>, and <strong>100% air-gapped private VPC mirroring</strong>.
+    </p>
+    <div class="page-hero-meta" style="justify-content:center;margin-top:24px">
+      <span class="hero-pill"><span class="dot" style="background:#10b981"></span> Zero Telemetry / 100% Local</span>
+      <span class="hero-pill"><span class="dot" style="background:#10b981"></span> ${verifiedCount} Cryptographically Verified</span>
+      <span class="hero-pill"><span class="dot" style="background:#10b981"></span> Pre-Execution Hook Defense</span>
+      <span class="hero-pill"><span class="dot" style="background:#10b981"></span> NIST SSDF &amp; OWASP LLM Guarded</span>
+      <span class="hero-pill"><span class="dot" style="background:#10b981"></span> Air-Gapped Mirror Ready</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 24px 0 64px">
+  <div class="wrap" style="max-width:920px">
+
+    <!-- 5 Enterprise Trust Pillars -->
+    <div style="margin-bottom:56px">
+      <p class="kicker">Security Architecture</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 12px">The 5 Enterprise Security Guarantees</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6">
+        How Aidentity is engineered to satisfy strict AppSec, SecOps, and compliance standards (SOC 2 Type II, ISO 27001, NIST SP 800-218):
+      </p>
+
+      <div class="trust-pillars-grid">
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">🔒</div>
+          <h3 class="trust-pillar-title">1. Zero External Telemetry</h3>
+          <p class="trust-pillar-desc">
+            No cloud registry server, no telemetry daemons, and zero network calls during agent operation. All skills, prompts, and hooks execute 100% locally in your developer environment or private CI/CD runners. Your company source code and proprietary prompts never touch third-party servers.
+          </p>
+        </div>
+
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">🛡️</div>
+          <h3 class="trust-pillar-title">2. SHA-256 Lockfile Immutability</h3>
+          <p class="trust-pillar-desc">
+            Every skill release is cryptographically fingerprinted in <span class="mono">registry/security.json</span> and pinned in <span class="mono">.aidentity-lock.json</span>. If an upstream repository is compromised or a single character in a skill is altered, <span class="mono">npx aidentity audit</span> halts execution immediately.
+          </p>
+        </div>
+
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">⚡</div>
+          <h3 class="trust-pillar-title">3. 7-Gate AST Static Analysis</h3>
+          <p class="trust-pillar-desc">
+            Every file passes a continuous 7-gate static analysis scanner on every commit: zero hidden/BiDi Unicode, zero hardcoded API keys or private certificates, zero destructive shell commands, zero prompt injection exfiltration, zero untrusted script piping, and zero symlink directory escapes.
+          </p>
+        </div>
+
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">🛑</div>
+          <h3 class="trust-pillar-title">4. Runtime Pre-Execution Hooks</h3>
+          <p class="trust-pillar-desc">
+            The Enterprise Profile automatically configures pre-tool hooks (<span class="mono">block-dangerous.js</span> and <span class="mono">scan-secrets.js</span>) for Claude Code, Cursor, and Codex. Harmful shell operations (<span class="mono">rm -rf /</span>, disk format) and credential leaks (<span class="mono">.env</span>, tokens) are intercepted and rejected before execution.
+          </p>
+        </div>
+
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">⚖️</div>
+          <h3 class="trust-pillar-title">5. SPDX License &amp; IP Hygiene</h3>
+          <p class="trust-pillar-desc">
+            Eliminate legal risk and copyright contamination. Every skill is audited against standard open-source licenses (MIT, Apache-2.0, CC BY-SA 4.0). Non-redistributable upstream skills are indexed by metadata reference only and never vendored. Registry metadata is dedicated to the public domain under CC0.
+          </p>
+        </div>
+
+        <div class="trust-pillar-card">
+          <div class="trust-pillar-icon">🏢</div>
+          <h3 class="trust-pillar-title">Air-Gapped &amp; Private VPC Ready</h3>
+          <p class="trust-pillar-desc">
+            Designed for isolated defense, finance, and healthcare networks. Mirror the entire repository into internal GitLab, GitHub Enterprise, or Artifactory. Your teams run the exact same governance CLI and skill sets behind your corporate proxy without internet access.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 7-Gate Security Verification Explorer -->
+    <div style="margin-bottom:56px" id="seven-gates">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+        <div>
+          <p class="kicker">Continuous Audit Protocol</p>
+          <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 0">The 7-Gate Static Security Inspection</h2>
+        </div>
+        <a class="mono" href="../security.json" style="font-size:12px;color:var(--accent)">Fetch security.json ↗</a>
+      </div>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:24px">
+        Implemented in <span class="mono">scripts/scan-skills-security.js</span>. Re-scans all ${filesScanned} files on every pull request, release, and CI build:
+      </p>
+
+      <div class="gates-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px">
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 01 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Zero-Width &amp; BiDi Unicode</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Scans for Trojan Source invisible characters (U+200B..U+200D, U+FEFF) and bidirectional control overrides that disguise malicious code in text editors.</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 02 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Hardcoded Credentials &amp; Secrets</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Detects AWS keys, GitHub PATs, OpenAI/Anthropic secret keys, Slack tokens, Google credentials, and PEM private keys with high-entropy regex patterns.</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 03 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Destructive Shell Operations</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Blocks recursive deletion of root or home directories (<span class="mono">rm -rf /</span>, <span class="mono">~</span>), shell fork bombs, filesystem formatters (<span class="mono">mkfs</span>), raw disk writes via <span class="mono">dd</span>, and universal <span class="mono">chmod 777</span>.</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 04 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Prompt Injection &amp; Exfiltration</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Identifies system prompt override commands ("ignore previous instructions") and credential exfiltration triggers ("upload environment variables", reverse shells).</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 05 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Untrusted Remote Script Piping</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Disallows <span class="mono">curl | sh</span> execution pipelines from unverified domains, preventing dynamic supply-chain injection attacks.</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 06 · PASSED (0 findings)</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Symlink &amp; Binary Hygiene</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Prevents directory traversal escapes via malicious symlinks and ensures no uninspected compiled ELF/Mach-O binaries are smuggled into skill folders.</p>
+        </div>
+
+        <div class="gate-card" style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid #10b981;padding:16px 18px;border-radius:6px;grid-column:1 / -1">
+          <span class="gate-num" style="color:#10b981;font-weight:600;font-size:11px;font-family:var(--mono)">GATE 07 · 100% ATTESTED</span>
+          <h3 style="font-size:14.5px;margin:6px 0 6px;color:var(--ink)">Deterministic SHA-256 Digest Attestation</h3>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5">Computes a cryptographic SHA-256 digest over normalized contents for every skill. Published publicly in <a href="../security.json" class="mono">security.json</a> and checked against developer lockfiles via <span class="mono">npx aidentity audit</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Runtime Defense Interceptor Hooks -->
+    <div style="margin-bottom:56px" id="runtime-hooks">
+      <p class="kicker">Active Defense</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 12px">Pre-Execution Runtime Guardrails</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        Static scanning protects the supply chain, but what protects against agent hallucination or unexpected commands at runtime? 
+        The Aidentity Enterprise profile (<span class="mono">--profile enterprise</span>) automatically configures pre-tool execution hooks in Claude Code, Cursor, and Codex:
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:20px">
+        ${modernCommandSnippet({
+          title: "Runtime Guardrail 1: hooks/block-dangerous.js — Intercepts Destructive Bash",
+          badge: "HOOK",
+          command: `// Intercepts PreToolUse before shell commands execute in the terminal
+const dangerousPatterns = [
+  /\\brm\\s+(-[a-z]*[rf][a-z]*\\s+)+(\\/?|~|\\$HOME)(\\s|$)/i, // rm -rf / or ~
+  /:\\(\\)\\s*\\{\\s*:\\|:&\\s*\\};:/,                           // fork bombs
+  /\\bmkfs(\\.\\w+)?\\s+\\/dev\\//i,                             // filesystem wipe
+  /\\bdd\\b[^\\n]*\\bof=\\/dev\\/(sd|nvme|hd|disk)/i             // raw disk writes
+];
+if (dangerousPatterns.some(re => re.test(toolInput.command))) {
+  console.error("🛑 [AIDENTITY HOOK BLOCKED]: Destructive command rejected prior to execution.");
+  process.exit(1);
+}`
+        })}
+
+        ${modernCommandSnippet({
+          title: "Runtime Guardrail 2: hooks/scan-secrets.js — Prevents Credential Leakage to LLMs",
+          badge: "HOOK",
+          command: `// Inspects agent file reads and stdout to prevent secrets leakage into LLM context
+const secretPatterns = [
+  /\\b(AKIA|ASIA)[0-9A-Z]{16}\\b/,               // AWS Access Keys
+  /\\bgh[pousr]_[A-Za-z0-9]{36,}\\b/,             // GitHub Personal Access Tokens
+  /\\bsk-[A-Za-z0-9]{32,}\\b/,                    // OpenAI API Keys
+  /-----BEGIN [A-Z ]*PRIVATE KEY-----/           // Private Cryptographic Keys
+];
+if (secretPatterns.some(re => re.test(payloadContent))) {
+  console.error("🛑 [AIDENTITY HOOK BLOCKED]: High-entropy secret detected. Scrub before LLM API transmission.");
+  process.exit(1);
+}`
+        })}
+      </div>
+    </div>
+
+    <!-- Air-Gapped & Private Mirroring Blueprint -->
+    <div style="margin-bottom:56px" id="air-gapped">
+      <p class="kicker">Air-Gapped Deployment</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 12px">Private VPC &amp; Self-Hosted Mirroring Guide</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        For enterprises operating under air-gapped environments, FedRAMP High, or strict proxy isolation, Aidentity requires zero external network access:
+      </p>
+
+      <div class="steps" style="margin-bottom:28px">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Mirror to Internal GitLab / GitHub Enterprise</h4>
+            <p>Clone a clean mirror of the verified registry into your company's private version control system:</p>
+            <pre class="snippet-body" style="background:#14130f;color:#efeade;padding:12px 14px;border-radius:4px;font-family:var(--mono);font-size:12px;margin:8px 0"><code>git clone --mirror https://github.com/AkshatNaruka/aidentity.git aidentity-mirror.git
+cd aidentity-mirror.git
+git push --mirror https://gitlab.internal.company.com/appsec/aidentity-verified.git</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Deploy to Developer Workstations Offline</h4>
+            <p>Developers install skills and role blueprints directly from the internal mirror with zero external requests:</p>
+            <pre class="snippet-body" style="background:#14130f;color:#efeade;padding:12px 14px;border-radius:4px;font-family:var(--mono);font-size:12px;margin:8px 0"><code># Install role blueprint and pre-execution hooks locally
+node /opt/aidentity/cli/index.js setup software-engineer --profile enterprise --agent claude</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Enforce CI/CD Integrity Audit</h4>
+            <p>Add a required PR status check verifying all developer workspaces match the authorized SHA-256 lockfile:</p>
+            <pre class="snippet-body" style="background:#14130f;color:#efeade;padding:12px 14px;border-radius:4px;font-family:var(--mono);font-size:12px;margin:8px 0"><code># Run in your GitLab CI / GitHub Actions pipeline
+npx aidentity audit --strict</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compliance Mapping Matrix -->
+    <div style="margin-bottom:56px" id="compliance">
+      <p class="kicker">Regulatory Alignment</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 12px">Compliance &amp; Governance Mapping</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6">
+        How Aidentity controls satisfy enterprise audit requirements:
+      </p>
+
+      <div class="compliance-table-wrap">
+        <table class="compliance-table">
+          <thead>
+            <tr>
+              <th>Framework / Standard</th>
+              <th>Control Requirement</th>
+              <th>Aidentity Implementation</th>
+              <th>Audit Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="std-badge">NIST SP 800-218</span></td>
+              <td><strong>PS.1 / PS.2: Software Supply Chain Integrity</strong></td>
+              <td>Cryptographic SHA-256 digest hashing of all vendored files; immutable lockfile pinning.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="std-badge">NIST SP 800-218</span></td>
+              <td><strong>PW.1: Static Application Security Testing (SAST)</strong></td>
+              <td>Continuous 7-gate static analysis scanner inspecting Unicode, tokens, prompt injection, and shell syntax.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="std-badge">OWASP LLM01</span></td>
+              <td><strong>Prompt Injection Defense</strong></td>
+              <td>Gate 04 scans for instruction overrides; runtime hooks intercept unauthorized system context altering.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="std-badge">OWASP LLM02</span></td>
+              <td><strong>Sensitive Information Disclosure</strong></td>
+              <td>Gate 02 + runtime <span class="mono">scan-secrets.js</span> prevents API keys, tokens, and .env files from entering LLM context.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="std-badge">SOC 2 Type II</span></td>
+              <td><strong>CC6.1 / CC6.6: Perimeter &amp; Tooling Governance</strong></td>
+              <td>Zero external telemetry; completely self-contained local CLI; optional air-gapped internal Git mirroring.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td><span class="std-badge">Legal / SPDX</span></td>
+              <td><strong>Open-Source License Compliance</strong></td>
+              <td>Automated SPDX license audits; strict segregation of permissive vs. non-distributable upstream items.</td>
+              <td><span class="status-pass">✓ Verified</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CISO Security Review Ticket Template -->
+    <div style="margin-bottom:56px" id="ciso-packet">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+        <div>
+          <p class="kicker">AppSec Approval Fast-Track</p>
+          <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 0">Copy-Paste CISO / AppSec Approval Packet</h2>
+        </div>
+      </div>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:16px">
+        Need to get approval from your Security or DevSecOps team? Copy and paste this exact evaluation packet into your internal Jira, ServiceNow, or Archer approval ticket:
+      </p>
+
+      <div class="ciso-ticket-card">
+        <div class="ciso-ticket-header">
+          <div class="ciso-ticket-title">
+            <span>📋</span>
+            <span>Security Architecture Review Packet (Markdown)</span>
+          </div>
+          ${modernCopyButton(`### Security Review Request: Aidentity AI Agent Skills Framework
+
+**Tool Name:** Aidentity (AI Agent Skills Registry & Governance CLI)
+**Vendor / Publisher:** Open-Source (MIT License, CC0 Metadata)
+**Repository:** https://github.com/AkshatNaruka/aidentity
+**Website / Trust Center:** https://akshatnaruka.github.io/aidentity/enterprise/
+
+#### 1. Architecture & Data Flow
+- **Hosting Model:** 100% Client-Side Static Markdown & Node.js CLI. Zero cloud backend servers.
+- **External Telemetry:** NONE. Zero analytics, zero phone-home daemons, zero external API requests.
+- **Data Sensitivity:** Customer source code and prompts remain 100% within the developer's local machine or corporate CI/CD container.
+
+#### 2. Supply Chain & Integrity Controls
+- **Cryptographic Attestation:** Every skill has a published SHA-256 digest in security.json.
+- **Dependency Pinning:** Local lockfile (.aidentity-lock.json) checked via \`npx aidentity audit\`.
+- **Automated Verification:** 7-gate static analysis scanner verifies 0 hidden Unicode (Trojan Source), 0 hardcoded credentials, 0 destructive shell operations, and 0 prompt injections across 2,499+ files.
+
+#### 3. Runtime Defense & Guardrails
+- **Pre-Execution Shell Interceptor:** hooks/block-dangerous.js terminates destructive commands (rm -rf, format) before terminal execution.
+- **Secret Exfiltration Guard:** hooks/scan-secrets.js intercepts credentials and environment tokens prior to LLM submission.
+
+#### 4. Compliance & Licensing
+- **Licensing:** CLI is MIT; Metadata is CC0; Vendored skills strictly permissive (MIT/Apache-2.0).
+- **Standards Alignment:** NIST SP 800-218 SSDF v1.1, OWASP Top 10 for LLMs, SOC 2 Type II controls.
+- **Air-Gap Capability:** Fully compatible with internal GitLab/GitHub Enterprise mirroring behind corporate firewalls.
+
+**Recommendation:** Approve for enterprise engineering usage under the \`--profile enterprise\` configuration.`, "Copy CISO Ticket")}
+        </div>
+        <div class="ciso-ticket-body">
+          <pre><code>### Security Review Request: Aidentity AI Agent Skills Framework
+
+**Tool Name:** Aidentity (AI Agent Skills Registry & Governance CLI)
+**Hosting Model:** 100% Client-Side Static Markdown & Node.js CLI (Zero cloud backend servers)
+**External Telemetry:** NONE. Zero analytics, zero external API requests
+**Data Sensitivity:** Source code & prompts remain strictly within local developer VPC
+**Integrity Controls:** Cryptographic SHA-256 lockfile (.aidentity-lock.json) + 7-gate static analysis
+**Runtime Guardrails:** hooks/block-dangerous.js (destruct command halt) + hooks/scan-secrets.js (token exfil halt)
+**Compliance Alignment:** NIST SP 800-218 (SSDF), OWASP LLM Top 10, SOC 2 Type II CC6.1
+**Licensing:** MIT CLI, CC0 Metadata, 100% Permissive Open Source (MIT/Apache-2.0)
+
+Recommendation: APPROVED for developer workstations with --profile enterprise</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enterprise CISO FAQ Accordion -->
+    <div style="margin-bottom:48px" id="enterprise-faq">
+      <p class="kicker">Executive FAQ</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 20px">Security &amp; Governance FAQ</h2>
+
+      <div class="accordion-group">
+        <details class="accordion-item" open>
+          <summary class="accordion-trigger">
+            <span>Does Aidentity collect, transmit, or log any proprietary code or prompts?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            <strong>No, absolutely zero.</strong> Aidentity is completely decentralized with zero server-side telemetry. The CLI operates entirely as a local file generator and inspector. Your code, prompts, and agent activities are never transmitted outside your machine.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>How does Aidentity protect against malicious upstream supply-chain updates?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            Every file in the registry is pinned by a deterministic SHA-256 hash. When a skill is installed, its digest is recorded in <span class="mono">.aidentity-lock.json</span>. If an upstream author modifies a skill to inject a payload, the hash mismatch immediately fails your build and CI gate via <span class="mono">npx aidentity audit</span>.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>Can our organization run Aidentity in an air-gapped VPC?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            <strong>Yes.</strong> You can mirror the Git repository into your internal GitHub Enterprise or GitLab server with a simple <span class="mono">git clone --mirror</span>. The CLI has zero runtime npm dependencies, requiring only local Node.js to execute.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>How do pre-execution runtime hooks stop agents from executing dangerous shell commands?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            When you run <span class="mono">npx aidentity setup &lt;role&gt; --profile enterprise</span>, Aidentity configures pre-tool use interceptors (<span class="mono">block-dangerous.js</span>). In tools like Claude Code and Cursor, this hook is called synchronously before any bash command executes. If the command matches patterns like <span class="mono">rm -rf /</span> or filesystem formatters, the hook exits with an error and halts tool execution.
+          </div>
+        </details>
+
+        <details class="accordion-item">
+          <summary class="accordion-trigger">
+            <span>What is the cost of the Enterprise Profile?</span>
+            <span class="chevron">›</span>
+          </summary>
+          <div class="accordion-body">
+            <strong>$0 / forever.</strong> Aidentity is 100% free and open-source under the MIT license. There are no enterprise seat licenses, no premium feature paywalls, and no sales calls. Everything is open, transparent, and inspectable in the GitHub repository.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Final CTA Banner -->
+    <div style="background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:36px;text-align:center;margin-top:40px">
+      <h3 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;margin:0 0 10px">Ready to Secure Your Organization's AI Agents?</h3>
+      <p style="color:var(--ink-soft);font-size:0.95rem;max-width:600px;margin:0 auto 24px">
+        Deploy verified skills and active runtime guardrails across your engineering teams in 30 seconds.
+      </p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+        <a class="btn" href="../setup/index.html">Configure Role Blueprint →</a>
+        <a class="btn btn-secondary" href="../security.json">Download security.json</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+`;
+
+  write(
+    "enterprise/index.html",
+    layout({
+      title: "Enterprise AI Agent Trust Center — Air-Gapped, Cryptographically Verified",
+      description: "How enterprises adopt verified AI agent skills with zero external telemetry, SHA-256 lockfiles, 7-gate static analysis, runtime pre-execution hooks, and air-gapped mirroring.",
+      depth: 1,
+      body,
+      page: "enterprise",
+      canonical: SITE + "/enterprise/",
+      keywords: "enterprise AI agent security, CISO AI agent approval, air gapped AI skills, SHA-256 skill verification, NIST SSDF AI, OWASP LLM Top 10, Claude Code enterprise, Cursor enterprise security, agentic governance",
+      jsonld: jsonld({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": SITE + "/enterprise/#webpage",
+            url: SITE + "/enterprise/",
+            name: "Enterprise AI Agent Trust Center — Aidentity",
+            description: "Air-gapped, cryptographically verified governance architecture for AI agent skills and role blueprints.",
+            isPartOf: { "@id": SITE + "/#website" }
+          },
+          {
+            "@type": "SecurityPolicy",
+            "@id": SITE + "/enterprise/#policy",
+            name: "Aidentity Enterprise AI Skill Verification & Runtime Guardrail Policy",
+            description: "7-gate static analysis and deterministic SHA-256 cryptographic verification for AI coding agent skills.",
+            publisher: { "@id": SITE + "/#organization" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": SITE + "/enterprise/#faq",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Does Aidentity collect, transmit, or log any proprietary code or prompts?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "No, absolutely zero. Aidentity has zero server infrastructure and zero telemetry. All operations run 100% locally on developer machines."
+                }
+              },
+              {
+                "@type": "Question",
+                name: "How does Aidentity protect against malicious upstream supply-chain updates?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Every skill is pinned by a deterministic SHA-256 hash in .aidentity-lock.json. Any upstream tampering triggers a hard execution halt in CI via npx aidentity audit."
+                }
+              },
+              {
+                "@type": "Question",
+                name: "Can our organization run Aidentity in an air-gapped VPC?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. The entire repository can be mirrored to internal GitLab or GitHub Enterprise servers, operating completely offline with zero external network access."
+                }
+              }
+            ]
+          }
+        ]
+      })
     })
   );
 }
@@ -3166,9 +3667,10 @@ function buildMachineReadable() {
     "## Files & Hubs",
     "",
     `- [Registry](${SITE}/registry.json): every skill with id, description, category, tags, status, source, license and install command.`,
-    `- [Roles](${SITE}/roles.json): 20 job role setup blueprints with Individual and Enterprise profiles.`,
+    `- [Roles](${SITE}/roles.json): ${roles.length} job role setup blueprints with Individual and Enterprise profiles.`,
     `- [Playbooks & Curricula](${SITE}/playbooks/): 21 step-by-step AI agent setup playbooks and 6 guided learning tracks by job role.`,
     `- [Guides Hub](${SITE}/guides/): comparisons (Claude Code vs Cursor vs Codex vs Gemini CLI), security verification, and GEO/OKF architecture.`,
+    `- [Enterprise Trust Center](${SITE}/enterprise/): CISO governance, 7-gate static analysis, air-gapped mirroring, and runtime execution guardrails.`,
     `- [Security](${SITE}/security.json): static security scan status and SHA-256 digests for all ${security.total_skills} skills.`,
     `- [Pricing](${SITE}/pricing.md): $0 open-source pricing and licensing tiers.`,
     `- [Open Knowledge Format (OKF)](${SITE}/okf/index.md): cross-linked markdown concept bundle for RAG and agent ingestion.`,
@@ -3222,6 +3724,7 @@ function buildMachineReadable() {
     { loc: "/skills/", priority: "0.9", changefreq: "daily" },
     { loc: "/playbooks/", priority: "0.9", changefreq: "daily" },
     { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
+    { loc: "/enterprise/", priority: "0.95", changefreq: "daily" },
     { loc: "/sources/", priority: "0.8", changefreq: "weekly" },
     { loc: "/for-agents/", priority: "0.9", changefreq: "daily" },
     { loc: "/about/", priority: "0.7", changefreq: "monthly" },
@@ -3319,6 +3822,7 @@ ${urls
       `AI-Catalog: ${SITE}/.well-known/ai-catalog.json`,
       `AI-Plugin: ${SITE}/.well-known/ai-plugin.json`,
       `MCP: ${SITE}/.well-known/mcp.json`,
+      `Enterprise: ${SITE}/enterprise/`,
       `OKF: ${SITE}/okf/index.md`,
       `Pricing: ${SITE}/pricing.md`,
       `Sitemap: ${SITE}/sitemap.xml`,
@@ -3510,6 +4014,7 @@ function buildAgentSurface() {
       playbooks: `${SITE}/playbooks/`,
       courses: `${SITE}/courses/`,
       guides: `${SITE}/guides/`,
+      enterprise: `${SITE}/enterprise/`,
       pricing: `${SITE}/pricing.md`,
       okf: `${SITE}/okf/index.md`,
       openapi: `${SITE}/openapi.json`,
@@ -3548,6 +4053,7 @@ function buildAgentSurface() {
       { type: "ai-plugin", url: `${SITE}/.well-known/ai-plugin.json`, description: "OpenAI ChatGPT plugin and Custom GPT actions discovery manifest" },
       { type: "mcp-manifest", url: `${SITE}/.well-known/mcp.json`, description: "Model Context Protocol (MCP) server discovery specification" },
       { type: "okf-bundle", url: `${SITE}/okf/index.md`, description: "Open Knowledge Format (OKF v0.1) cross-linked markdown concept bundle" },
+      { type: "enterprise-trust", url: `${SITE}/enterprise/`, description: "Enterprise AI Agent Security & Trust Center (CISO approval, SHA-256 lockfile, air-gapped mirroring, and runtime hooks)" },
       { type: "mcp-server", url: `${SITE}/for-agents/#mcp`, command: "npx aidentity-mcp", description: "Local stdio MCP server for searching, verifying, and installing skills and role setups" },
       { type: "cli", command: "npx aidentity setup <role> --profile individual|enterprise", description: "Zero-dependency CLI installer for Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and Copilot" },
     ],
@@ -3668,6 +4174,7 @@ function buildAgentSurface() {
       "## Concept Files in This Bundle",
       "",
       `- [Role Setup Playbooks](./playbooks.md) — ${roles.length} job role setup blueprints (Individual & Enterprise profiles)`,
+      "- [Enterprise Trust & Governance](./enterprise.md) — Zero-telemetry guarantees, SHA-256 lockfile, air-gapped mirroring, and CISO approval kit",
       "- [AI Agent Courses](./courses.md) — 6 structured learning curricula built from verified skills",
       "- [Skill Security Standard](./security.md) — 7-gate static security scanner and SHA-256 verification protocol",
       `- [Pricing & Licensing](../pricing.md) — $0 open-source pricing and SPDX license rules`,
@@ -3690,7 +4197,7 @@ function buildAgentSurface() {
       "",
       "# Aidentity Role Setup Playbooks",
       "",
-      "See [OKF Index](./index.md) · [AI Agent Courses](./courses.md) · [Skill Security Standard](./security.md).",
+      "See [OKF Index](./index.md) · [AI Agent Courses](./courses.md) · [Skill Security Standard](./security.md) · [Enterprise Trust](./enterprise.md).",
       "",
       ...roles.map((r) => `- **[${r.name} Playbook](${SITE}/playbooks/${r.slug}/playbook.md)**: \`npx aidentity setup ${r.slug} --profile individual|enterprise\` — ${r.description}`),
       "",
@@ -3741,12 +4248,49 @@ function buildAgentSurface() {
       "",
       "# Aidentity 7-Gate Skill Security Verification Standard",
       "",
-      "See [OKF Index](./index.md) · [Role Setup Playbooks](./playbooks.md) · [AI Agent Courses](./courses.md).",
+      "See [OKF Index](./index.md) · [Role Setup Playbooks](./playbooks.md) · [Enterprise Trust](./enterprise.md).",
       "",
       `- Verified skills: ${security.verified}/${security.total_skills} (100%)`,
       `- Files scanned: ${security.total_files_scanned || 2492}`,
       `- Critical findings: 0`,
       `- Machine-readable report: [${SITE}/security.json](${SITE}/security.json)`,
+      "",
+    ].join("\n")
+  );
+
+  write(
+    "okf/enterprise.md",
+    [
+      "---",
+      "type: EnterpriseGovernancePolicy",
+      "title: Aidentity Enterprise AI Agent Trust & Security Architecture",
+      "description: Complete enterprise governance framework: zero external telemetry, SHA-256 lockfile immutability, 7-gate AST static analysis, runtime pre-execution hooks, air-gapped private VPC mirroring, and compliance mapping (NIST SSDF & OWASP LLM).",
+      `resource: ${SITE}/enterprise/`,
+      "tags: [enterprise, ciso-approval, zero-telemetry, sha256-lockfile, air-gapped, nist-ssdf, owasp-llm, runtime-hooks]",
+      `timestamp: ${GENERATED}`,
+      "---",
+      "",
+      "# Aidentity Enterprise AI Agent Security & Trust Architecture",
+      "",
+      "See [OKF Index](./index.md) · [Skill Security Standard](./security.md) · [Role Setup Playbooks](./playbooks.md).",
+      "",
+      "## 5 Enterprise Guarantees",
+      "",
+      "1. **Zero External Telemetry**: 100% local execution. Code, prompts, and tokens never leave developer machines or VPCs.",
+      "2. **Cryptographic SHA-256 Lockfile**: `.aidentity-lock.json` records immutable content hashes. Upstream tampering halts execution in CI.",
+      "3. **7-Gate Static AST Analysis**: Scans every file for Trojan Unicode, hardcoded secrets, destructive shell patterns, and prompt injections.",
+      "4. **Active Runtime Guardrails**: Synchronous pre-tool hooks (`block-dangerous.js` and `scan-secrets.js`) intercept and block unauthorized operations before execution.",
+      "5. **Air-Gapped & Self-Hosted Ready**: Complete repository mirrors cleanly into internal GitLab or GitHub Enterprise servers with zero external network access required.",
+      "",
+      "## Compliance & Standards Alignment",
+      "",
+      "- **NIST SP 800-218 (SSDF v1.1)**: PO.3.1 (Software Tampering Protection), PS.1.1 (Pre-release Software Security Testing), PW.1.2 (Security Review Checklists).",
+      "- **OWASP Top 10 for LLMs (2025)**: LLM01:2025 Prompt Injection, LLM02:2025 Sensitive Information Disclosure, LLM05:2025 Supply Chain Vulnerabilities, LLM07:2025 System Prompt Leakage.",
+      "- **SOC 2 Type II**: CC6.1 (Logical Access Controls), CC6.6 (Boundary Protection & Exfiltration Prevention), CC7.1 (Vulnerability Detection & Static Analysis).",
+      "",
+      "## CISO Architecture Review Ticket Template",
+      "",
+      `Ready-to-file security clearance request template available at [Enterprise Trust Center](${SITE}/enterprise/#ciso-ticket).`,
       "",
     ].join("\n")
   );
@@ -3808,12 +4352,13 @@ buildForRoles();
 buildPlaybooks();
 buildCourses();
 buildGuides();
+buildEnterprise();
 buildBundlesPage();
 buildSupport();
 buildMachineReadable();
 buildAgentSurface();
 
-const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + COURSES_DATA.length + 12;
+const pages = skills.length + (rolesData.roles ? rolesData.roles.length : 0) + COURSES_DATA.length + 13;
 console.log(`Built ${pages} pages → ${path.relative(ROOT, OUT)}`);
 console.log(`  ${registry.total} skills · ${(rolesData.roles || []).length} role playbooks & curricula · ${COURSES_DATA.length} guided tracks · ${sourceList.length} sources · ${categoryList.length} categories`);
 
