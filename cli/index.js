@@ -350,6 +350,11 @@ switch (command) {
     break;
   }
 
+  case "mcp": {
+    require("./mcp");
+    break;
+  }
+
   case undefined:
   case "help":
   case "--help":
@@ -358,7 +363,7 @@ switch (command) {
   
 Usage
   aidentity setup <role> [options]      install role skills, rules, subagents & hooks (or --prompt)
-  aidentity roles                       list all 20 roles (developer, architect, pm, designer, etc.)
+  aidentity roles                       list all 21 roles (developer, architect, pm, designer, etc.)
   aidentity audit [skill-id]            verify skill security status & SHA-256 digests
   aidentity search <query>              find a skill
   aidentity recommend "<task>"          bundle + skills for a task
@@ -366,6 +371,7 @@ Usage
   aidentity add <id> [options]          install a security-verified skill into your agent
   aidentity list                        list everything
   aidentity agents                      supported agent directories
+  aidentity mcp                         run local stdio MCP server for agent integration
 
 Options
   --profile <p>     individual (default) | enterprise
