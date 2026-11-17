@@ -9,7 +9,7 @@ timestamp: 2026-11-17
 
 # Aidentity Role Setup Playbooks
 
-See [OKF Index](./index.md) · [AI Agent Courses](./courses.md) · [Skill Security Standard](./security.md).
+See [OKF Index](./index.md) · [AI Agent Courses](./courses.md) · [Skill Security Standard](./security.md) · [Enterprise Trust](./enterprise.md).
 
 - **[Founder / Startup builder Playbook](https://akshatnaruka.github.io/aidentity/playbooks/founder/playbook.md)**: `npx aidentity setup founder --profile individual|enterprise` — End-to-end startup building: product specs, shipping MVPs, pricing, launch, AI SEO, and pitch decks.
 - **[Software engineer Playbook](https://akshatnaruka.github.io/aidentity/playbooks/software-engineer/playbook.md)**: `npx aidentity setup software-engineer --profile individual|enterprise` — Day-to-day coding: planning, implementation, review, tests, debugging.

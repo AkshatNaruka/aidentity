@@ -9,7 +9,7 @@ timestamp: 2026-11-17
 
 # Aidentity 7-Gate Skill Security Verification Standard
 
-See [OKF Index](./index.md) · [Role Setup Playbooks](./playbooks.md) · [AI Agent Courses](./courses.md).
+See [OKF Index](./index.md) · [Role Setup Playbooks](./playbooks.md) · [Enterprise Trust](./enterprise.md).
 
 - Verified skills: undefined/533 (100%)
 - Files scanned: 2499

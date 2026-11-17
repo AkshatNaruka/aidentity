@@ -14,6 +14,7 @@ This directory contains cross-linked concept files in the [Open Knowledge Format
 ## Concept Files in This Bundle
 
 - [Role Setup Playbooks](./playbooks.md) — 21 job role setup blueprints (Individual & Enterprise profiles)
+- [Enterprise Trust & Governance](./enterprise.md) — Zero-telemetry guarantees, SHA-256 lockfile, air-gapped mirroring, and CISO approval kit
 - [AI Agent Courses](./courses.md) — 6 structured learning curricula built from verified skills
 - [Skill Security Standard](./security.md) — 7-gate static security scanner and SHA-256 verification protocol
 - [Pricing & Licensing](../pricing.md) — $0 open-source pricing and SPDX license rules
