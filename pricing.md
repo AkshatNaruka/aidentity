@@ -7,7 +7,7 @@ Aidentity is 100% free and open-source. There are no paid tiers, no seat limits,
 ## Individual Profile (`--profile individual`)
 - Price: $0 / forever
 - Limits: Unlimited installs, unlimited repositories, unlimited developers
-- Included: All 507 installable skills, 20 role setup playbooks, coding rules, subagents, slash commands, `block-dangerous.js` and `scan-secrets.js` hooks, SHA-256 verification
+- Included: All 514 installable skills, 21 role setup playbooks, coding rules, subagents, slash commands, `block-dangerous.js` and `scan-secrets.js` hooks, SHA-256 verification
 - Install command: `npx aidentity setup <role> --profile individual`
 
 ## Enterprise Profile (`--profile enterprise`)
