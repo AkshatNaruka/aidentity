@@ -854,7 +854,28 @@ function buildBrowse() {
       )
       .join("\n");
 
-  const topPillCategories = categoryList.slice(0, 10);
+  const topicKeywords = ["claude", "cursor", "python", "react", "security", "testing", "git", "scrum"];
+  const existingCatNames = new Set(categoryList.slice(0, 10).map((c) => c.name.toLowerCase()));
+
+  const topicPills = topicKeywords
+    .filter((kw) => !existingCatNames.has(kw.toLowerCase()))
+    .map((kw) => {
+      const matchCount = skills.filter((s) =>
+        (s.id + " " + s.name + " " + s.description + " " + (s.tags || []).join(" ") + " " + s.category)
+          .toLowerCase()
+          .includes(kw)
+      ).length;
+      return { name: kw, count: matchCount, type: "query" };
+    });
+
+  const catPills = categoryList.slice(0, 10).map((c) => ({
+    name: c.name,
+    count: c.count,
+    type: "cat"
+  }));
+
+  // Unified list of filter pills sorted by count descending (zero duplicates)
+  const unifiedPills = [...catPills, ...topicPills].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 
   const body = `
 <div class="wrap">
@@ -873,22 +894,12 @@ function buildBrowse() {
     </div>
   </div>
 
-  <div class="pill-strip" id="category-pills" role="toolbar" aria-label="Quick category filters">
+  <div class="pill-strip" id="category-pills" role="toolbar" aria-label="Quick filters">
     <button type="button" class="pill-btn active" data-cat="">All (${registry.total})</button>
-    ${topPillCategories.map((c) => `<button type="button" class="pill-btn" data-cat="${esc(c.name)}">${esc(c.name)} (${c.count})</button>`).join("\n    ")}
-  </div>
-
-  <div class="quick-topics" id="quick-topics" aria-label="Popular topic filters">
-    <span class="quick-topics-label">Quick topics:</span>
-    <button type="button" class="topic-chip" data-topic="claude">Claude</button>
-    <button type="button" class="topic-chip" data-topic="cursor">Cursor</button>
-    <button type="button" class="topic-chip" data-topic="python">Python</button>
-    <button type="button" class="topic-chip" data-topic="react">React</button>
-    <button type="button" class="topic-chip" data-topic="security">Security</button>
-    <button type="button" class="topic-chip" data-topic="testing">Testing</button>
-    <button type="button" class="topic-chip" data-topic="git">Git</button>
-    <button type="button" class="topic-chip" data-topic="azure">Azure</button>
-    <button type="button" class="topic-chip" data-topic="scrum">Scrum</button>
+    ${unifiedPills.map((p) => p.type === "cat"
+      ? `<button type="button" class="pill-btn" data-cat="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
+      : `<button type="button" class="pill-btn" data-query="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
+    ).join("\n    ")}
   </div>
 
   <div class="controls browse-controls">

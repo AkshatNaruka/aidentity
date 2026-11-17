@@ -395,7 +395,6 @@
     const empty = document.getElementById("empty");
     const pillStrip = document.getElementById("category-pills");
     const pillButtons = pillStrip ? Array.prototype.slice.call(pillStrip.querySelectorAll(".pill-btn")) : [];
-    const topicChips = Array.prototype.slice.call(document.querySelectorAll(".topic-chip"));
 
     let onlyDistributable = false;
     const initialRows = Array.prototype.slice.call(list.querySelectorAll(".row"));
@@ -414,19 +413,29 @@
     }
 
     function syncPills() {
-      const activeCat = categoryFilter ? categoryFilter.value : "";
-      pillButtons.forEach(function (btn) {
-        const cat = btn.getAttribute("data-cat") || "";
-        btn.classList.toggle("active", cat === activeCat);
-      });
-    }
-
-    function syncTopicChips() {
+      const activeCat = (categoryFilter ? categoryFilter.value : "").trim().toLowerCase();
       const currentQuery = (search ? search.value : "").trim().toLowerCase();
-      topicChips.forEach(function (chip) {
-        const topic = (chip.getAttribute("data-topic") || "").toLowerCase();
-        chip.classList.toggle("active", currentQuery.includes(topic));
+      let hasSpecific = false;
+
+      pillButtons.forEach(function (btn) {
+        const cat = btn.getAttribute("data-cat");
+        const query = btn.getAttribute("data-query");
+        let isActive = false;
+        if (cat !== null && cat !== "") {
+          isActive = Boolean(activeCat && cat.toLowerCase() === activeCat && !currentQuery);
+        } else if (query) {
+          isActive = Boolean(currentQuery && currentQuery === query.toLowerCase() && !activeCat);
+        }
+        btn.classList.toggle("active", isActive);
+        if (isActive) hasSpecific = true;
       });
+
+      const allBtn = pillButtons.filter(function (b) {
+        return b.getAttribute("data-cat") === "" && !b.getAttribute("data-query");
+      })[0];
+      if (allBtn) {
+        allBtn.classList.toggle("active", !hasSpecific && !activeCat && !currentQuery);
+      }
     }
 
     function sortRows(rows, sortMode) {
@@ -493,7 +502,6 @@
       }
 
       syncPills();
-      syncTopicChips();
 
       const next = new URLSearchParams();
       if (rawQuery) next.set("q", rawQuery);
@@ -553,27 +561,32 @@
 
     pillButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        const cat = btn.getAttribute("data-cat") || "";
-        if (categoryFilter) {
-          categoryFilter.value = cat;
-          categoryFilter.dispatchEvent(new Event("change"));
-        }
-      });
-    });
+        const cat = btn.getAttribute("data-cat");
+        const query = btn.getAttribute("data-query");
 
-    topicChips.forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        const topic = chip.getAttribute("data-topic") || "";
-        if (!search) return;
-        const current = search.value.trim();
-        if (current.toLowerCase().includes(topic.toLowerCase())) {
-          const regex = new RegExp("\\b" + topic + "\\b", "gi");
-          search.value = current.replace(regex, "").replace(/\s+/g, " ").trim();
-        } else {
-          search.value = current ? current + " " + topic : topic;
+        if (cat !== null) {
+          if (cat === "") {
+            // "All" clicked
+            if (categoryFilter) categoryFilter.value = "";
+            if (search) search.value = "";
+          } else {
+            // Toggle category filter
+            if (categoryFilter) {
+              categoryFilter.value = (categoryFilter.value.toLowerCase() === cat.toLowerCase()) ? "" : cat;
+            }
+            if (search) search.value = "";
+          }
+          apply();
+        } else if (query) {
+          // Toggle query filter
+          if (search) {
+            const current = search.value.trim().toLowerCase();
+            search.value = (current === query.toLowerCase()) ? "" : query;
+          }
+          if (categoryFilter) categoryFilter.value = "";
+          apply();
+          if (search && search.value) search.focus();
         }
-        search.dispatchEvent(new Event("input"));
-        search.focus();
       });
     });
 
