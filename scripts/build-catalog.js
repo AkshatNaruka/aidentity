@@ -15,6 +15,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { serializeStable } = require("./lib/stable-json");
 
 const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "registry", "catalog.json");
@@ -133,7 +134,7 @@ for (const [type, [dir, predicate]] of Object.entries(DIRS)) {
       category: fm.category || type,
       tags: fm.tags ? fm.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
       status: "stable",
-      path: path.relative(ROOT, file),
+      path: path.relative(ROOT, file).split(path.sep).join("/"),
       source: { key: "local", repo: "AkshatNaruka/aidentity", url: "https://github.com/AkshatNaruka/aidentity", author: "Aidentity contributors", license: "MIT" },
       license: "MIT",
       distributable: true,
@@ -163,11 +164,10 @@ const catalog = {
   entries,
 };
 
-const serialized = JSON.stringify(catalog, null, 2) + "\n";
+const { previous, serialized } = serializeStable(OUT, catalog);
 
 if (process.argv.includes("--check")) {
-  const current = fs.existsSync(OUT) ? fs.readFileSync(OUT, "utf8") : "";
-  if (current !== serialized) {
+  if (previous !== serialized) {
     console.error("registry/catalog.json is stale. Run: node scripts/build-catalog.js");
     process.exit(1);
   }
