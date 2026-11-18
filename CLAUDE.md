@@ -1,107 +1,26 @@
-# All AI
+# CLAUDE.md
 
-Self-dependent repository of AI agent resources: skills, prompts, agents, memory systems, and tools.
+Read [AGENTS.md](AGENTS.md) first. It is the source of truth for what this repo is, the rules for adding skills, and the commands. This file only adds notes for working on the site and tooling.
 
-## Repository Structure
+## Layout
 
-```
-all-ai/
-├── skills/                  # Importable SKILL.md files
-│   ├── mattpocock/         # Engineering workflow skills
-│   ├── obra-superpowers/   # Development best practices
-│   ├── addyosmani/         # Production-grade skills
-│   ├── anthropic-official/ # Official document/creative skills
-│   ├── google-cloud/       # Google Cloud skills
-│   ├── microsoft-azure/    # Azure/Foundry skills
-│   ├── archify/            # Architecture diagrams
-│   └── repo-scanner/       # Auto-discovery skill
-├── prompts/                 # Consolidated prompt templates
-│   ├── system/             # System prompts
-│   ├── routing/            # Model routing prompts
-│   ├── domain/             # Domain-specific prompts
-│   └── imported/           # Imported prompts by category
-├── agents/                  # Agent definitions (.md)
-│   ├── free-models/        # Free model agents
-│   └── imported/           # Imported agent definitions
-├── memory/                  # Memory systems
-│   ├── skills/             # Memory-related skills
-│   ├── patterns/           # Architecture patterns
-│   └── configs/            # Configuration examples
-├── references/              # Documentation & sources
-├── templates/               # Project templates
-├── routing/                 # Model routing configs
-├── supabase-mcp/           # Supabase MCP configs
-├── scripts/                 # Automation scripts
-│   └── scan-repos.js       # GitHub scanner
-├── .github/workflows/       # GitHub Actions
-│   └── weekly-scan.yml     # Automated weekly scan
-└── docs/                    # Documentation
-```
+- `skills/<source-key>/…/SKILL.md`: redistributable skill content, with the upstream `LICENSE` at the source root.
+- `registry/`: generated JSON (`skills.json`, `catalog.json`, `security.json`) plus hand-maintained `sources.json` and `pointers/`.
+- `site/build.js`: zero-dependency static site generator (all pages). Output: `site/dist/` (git-ignored).
+- `site/assets/app.js`, `site/assets/style.css`: progressive enhancement only. Every page must work without JS.
+- `cli/`: `aidentity` CLI and the stdio MCP server.
+- `scripts/`: registry, security, license and site gates.
 
-## Working with This Repo
+## Before claiming done
 
-### Importing Content
-
-When importing from external repos:
-1. Create folder: `skills/<source-name>/`
-2. Add `README.md` with source attribution
-3. Copy SKILL.md files maintaining structure
-4. For large files (>1MB), ensure Git LFS tracking
-
-### Creating Skills
-
-Follow the SKILL.md standard:
-```markdown
----
-name: skill-name
-description: What the skill does. Use when [trigger condition].
----
-
-# Skill Name
-
-## When to Use
-- [Trigger 1]
-- [Trigger 2]
-
-## Steps
-1. [Step 1]
-2. [Step 2]
-
-## Examples
-[Input/Output examples]
-```
-
-### Auto-Discovery
-
-Use the repo-scanner skill or run:
 ```bash
-node scripts/scan-repos.js
+npm run validate      # registry, security scan, licenses, skills, catalog
+npm run check:site    # build the site, then check links, ids, h1, meta, sitemap
 ```
 
-Results go to `scan-results/` directory. Create PR for review.
+## Conventions
 
-## Key Commands
-
-| Command | Description |
-|---------|-------------|
-| `/scan` | Run full GitHub scan for new resources |
-| `/import <repo>` | Import specific GitHub repository |
-| `/update-check` | Check for updates to imported content |
-| `/list-skills` | List all available skills |
-
-## Quality Standards
-
-- Minimum 1000 stars for new repos
-- Active maintenance (updated within 6 months)
-- Clear documentation
-- Compatible with SKILL.md standard
-- Source attribution required
-
-## Git LFS
-
-Large files tracked via Git LFS:
-- `*.html` - Interactive diagrams, demos
-- `*.png` - Exports, share cards
-- `*.svg` - Vector diagrams
-- `*.webm` - Video exports
-- `*.zip` - Skill bundles
+- Generated files (`registry/skills.json`, `registry/catalog.json`, `THIRD_PARTY_NOTICES.md`, `prompts/setup/**`) are never hand-edited. Rebuild them.
+- Generated output must be byte-identical on Windows and Linux: write POSIX paths and keep `generated_at` stable (see `scripts/lib/stable-json.js`).
+- Pages are served from `/aidentity/` on GitHub Pages. Use relative links (`up(depth)` in `site/build.js`). Only `404.html` uses `${BASE}`-absolute links, because it is served at arbitrary paths.
+- No Git LFS: `.gitattributes` keeps everything as plain git objects so clones stay fast.
