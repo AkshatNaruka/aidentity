@@ -261,9 +261,6 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : `<meta name="
 <link rel="service-desc" href="${p}openapi.json" type="application/json">
 <link rel="alternate" type="text/plain" title="LLMs Context" href="${p}llms.txt">
 ${markdownAlt ? `<link rel="alternate" type="text/markdown" href="${esc(markdownAlt)}">` : ""}
-<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="0">
 <link rel="stylesheet" href="${p}assets/style.css?v=${BUILD_HASH}">
 ${jsonld ? `<script type="application/ld+json">${jsonld.replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - ")}</script>` : ""}
 </head>
@@ -913,10 +910,10 @@ function buildBrowse() {
   </div>
 
   <div class="pill-strip" id="category-pills" role="toolbar" aria-label="Quick filters">
-    <button type="button" class="pill-btn active" data-cat="">All (${registry.total})</button>
+    <button type="button" class="pill-btn active" aria-pressed="true" data-cat="">All (${registry.total})</button>
     ${unifiedPills.map((p) => p.type === "cat"
-      ? `<button type="button" class="pill-btn" data-cat="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
-      : `<button type="button" class="pill-btn" data-query="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
+      ? `<button type="button" class="pill-btn" aria-pressed="false" data-cat="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
+      : `<button type="button" class="pill-btn" aria-pressed="false" data-query="${esc(p.name)}">${esc(p.name)} (${p.count})</button>`
     ).join("\n    ")}
   </div>
 
@@ -2565,7 +2562,7 @@ function buildSetup() {
       Quick Role Launchpads (Click to auto-populate questionnaire)
     </h3>
     <div class="presets-grid">
-      <div class="preset-card active" data-preset-role="founder" data-preset-profile="individual">
+      <div class="preset-card active" role="button" tabindex="0" aria-pressed="true" data-preset-role="founder" data-preset-profile="individual">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2581,7 +2578,7 @@ function buildSetup() {
         <span class="mono" style="font-size:11px;color:var(--accent);margin-top:10px">Individual · 9 skills →</span>
       </div>
 
-      <div class="preset-card" data-preset-role="software-engineer" data-preset-profile="individual">
+      <div class="preset-card" role="button" tabindex="0" aria-pressed="false" data-preset-role="software-engineer" data-preset-profile="individual">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2595,7 +2592,7 @@ function buildSetup() {
         <span class="mono" style="font-size:11px;color:var(--accent);margin-top:10px">Individual · 8 skills →</span>
       </div>
 
-      <div class="preset-card" data-preset-role="architect" data-preset-profile="enterprise">
+      <div class="preset-card" role="button" tabindex="0" aria-pressed="false" data-preset-role="architect" data-preset-profile="enterprise">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2610,7 +2607,7 @@ function buildSetup() {
         <span class="mono" style="font-size:11px;color:var(--accent);margin-top:10px">Enterprise · 8 skills →</span>
       </div>
 
-      <div class="preset-card" data-preset-role="product-manager" data-preset-profile="individual">
+      <div class="preset-card" role="button" tabindex="0" aria-pressed="false" data-preset-role="product-manager" data-preset-profile="individual">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2625,7 +2622,7 @@ function buildSetup() {
         <span class="mono" style="font-size:11px;color:var(--accent);margin-top:10px">Individual · 6 skills →</span>
       </div>
 
-      <div class="preset-card" data-preset-role="designer" data-preset-profile="individual">
+      <div class="preset-card" role="button" tabindex="0" aria-pressed="false" data-preset-role="designer" data-preset-profile="individual">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2642,7 +2639,7 @@ function buildSetup() {
         <span class="mono" style="font-size:11px;color:var(--accent);margin-top:10px">Individual · 6 skills →</span>
       </div>
 
-      <div class="preset-card" data-preset-role="quant-researcher" data-preset-profile="enterprise">
+      <div class="preset-card" role="button" tabindex="0" aria-pressed="false" data-preset-role="quant-researcher" data-preset-profile="enterprise">
         <div>
           <div class="preset-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2861,13 +2858,13 @@ function buildPlaybooks() {
   </div>
 
   <div class="filter-bar" role="tablist" aria-label="Filter playbooks by category">
-    <button type="button" class="filter-btn active" data-playbook-filter="all">All (${roles.length + COURSES_DATA.length})</button>
-    <button type="button" class="filter-btn" data-playbook-filter="courses">Guided Curricula (${COURSES_DATA.length})</button>
-    <button type="button" class="filter-btn" data-playbook-filter="engineering">Engineering &amp; Infra</button>
-    <button type="button" class="filter-btn" data-playbook-filter="product">Product &amp; Design</button>
-    <button type="button" class="filter-btn" data-playbook-filter="marketing">Growth &amp; Marketing</button>
-    <button type="button" class="filter-btn" data-playbook-filter="finance">Finance &amp; Quant</button>
-    <button type="button" class="filter-btn" data-playbook-filter="specialized">Specialized</button>
+    <button type="button" class="filter-btn active" aria-pressed="true" data-playbook-filter="all">All (${roles.length + COURSES_DATA.length})</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="courses">Guided Curricula (${COURSES_DATA.length})</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="engineering">Engineering &amp; Infra</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="product">Product &amp; Design</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="marketing">Growth &amp; Marketing</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="finance">Finance &amp; Quant</button>
+    <button type="button" class="filter-btn" aria-pressed="false" data-playbook-filter="specialized">Specialized</button>
   </div>
 
   <div class="playbook-grid" style="margin-top:24px">${hubCards}</div>
@@ -3405,6 +3402,7 @@ function buildCourses() {
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="robots" content="noindex,follow">
   <meta http-equiv="refresh" content="0; url=../playbooks/index.html">
   <link rel="canonical" href="${SITE}/playbooks/">
   <title>Courses Redirect | Aidentity</title>
@@ -3423,6 +3421,7 @@ function buildCourses() {
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="robots" content="noindex,follow">
   <meta http-equiv="refresh" content="0; url=../../playbooks/${course.roleSlug}/index.html#curriculum">
   <link rel="canonical" href="${SITE}/playbooks/${course.roleSlug}/">
   <title>${esc(course.name)} Redirect | Aidentity</title>
@@ -3736,7 +3735,7 @@ function buildBundlesPage() {
   }).join("\n");
   const body = `<section style="padding-top:44px"><div class="wrap" style="max-width:900px">
     <p class="kicker">Bundles</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Install a working set</h2>
+    <h1 style="font-size:clamp(2rem,4.6vw,3.2rem)">Install a working set</h1>
     <p style="max-width:62ch;color:var(--ink-soft);margin-top:14px">Five to fifteen skills, chosen for a task. Smaller than loading the whole index, larger than guessing.</p>
     ${cards}
   </div></section>`;
@@ -3749,7 +3748,7 @@ function buildSupport() {
 <section style="padding-top:44px">
   <div class="wrap" style="max-width:820px">
     <p class="kicker">Support</p>
-    <h2 style="font-size:clamp(2rem,4.6vw,3.2rem)">Keep the index verified</h2>
+    <h1 style="font-size:clamp(2rem,4.6vw,3.2rem)">Keep the index verified</h1>
     <p style="max-width:62ch;color:var(--ink-soft);margin-top:16px">
       Aidentity is free, the registry is CC0, and every install is open source.
       If it saved you a search, you can fund the weekly verification, new imports
@@ -3770,7 +3769,7 @@ function buildSupport() {
       </div>
     </div>
     <div class="callout" style="margin-top:28px">
-      <strong>Prefer contributing?</strong> Adding a skill, fixing a license or reporting a dead link is worth more than money. See <a href="../CONTRIBUTING.md">CONTRIBUTING.md</a>.
+      <strong>Prefer contributing?</strong> Adding a skill, fixing a license or reporting a dead link is worth more than money. See <a href="${REPO}/blob/main/CONTRIBUTING.md" rel="noopener">CONTRIBUTING.md</a>.
     </div>
   </div>
 </section>
@@ -4074,7 +4073,7 @@ ${feedItems}
 
   write(
     "404.html",
-    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found | Aidentity</title><link rel="stylesheet" href="${BASE}/assets/style.css"></head><body><main id="main"><section style="padding-top:80px"><div class="wrap"><p class="kicker">404</p><h2>That page isn't indexed.</h2><p style="color:var(--muted);margin-top:14px">Try the <a href="${BASE}/skills/index.html">full index</a>, <a href="${BASE}/playbooks/index.html">role playbooks &amp; curricula</a>, or <a href="${BASE}/guides/index.html">guides</a>.</p></div></section></main></body></html>`
+    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | Aidentity</title><meta name="robots" content="noindex"><meta name="description" content="This page is not in the Aidentity index."><link rel="icon" href="${BASE}/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="${BASE}/assets/style.css?v=${BUILD_HASH}"></head><body><main id="main"><section style="padding-top:80px"><div class="wrap"><p class="kicker">404</p><h1>That page isn't indexed.</h1><p style="color:var(--muted);margin-top:14px">Try the <a href="${BASE}/skills/index.html">full index</a>, <a href="${BASE}/playbooks/index.html">role playbooks &amp; curricula</a>, or <a href="${BASE}/guides/index.html">guides</a>.</p></div></section></main></body></html>`
   );
 }
 
@@ -4166,7 +4165,7 @@ function buildAgentSurface() {
       catalog: `${SITE}/catalog.json`,
       bundles: `${SITE}/bundles.json`,
       playbooks: `${SITE}/playbooks/`,
-      courses: `${SITE}/courses/`,
+      courses: `${SITE}/playbooks/`,
       guides: `${SITE}/guides/`,
       enterprise: `${SITE}/enterprise/`,
       pricing: `${SITE}/pricing.md`,

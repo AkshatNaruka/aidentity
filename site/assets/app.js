@@ -2,6 +2,13 @@
 (function () {
   "use strict";
 
+  const APP_SCRIPT_URL =
+    (document.currentScript && document.currentScript.src) ||
+    (document.querySelector('script[src*="assets/app.js"]') || {}).src ||
+    window.location.href;
+  // Read before the browse filter rewrites the URL via history.replaceState.
+  const WANTS_SEARCH_FOCUS = new URLSearchParams(window.location.search).get("focus") === "1";
+
   // --- copy install commands & modern copy components -----------------------
   document.addEventListener("click", function (event) {
     const button = event.target.closest("[data-copy], [data-copy-target]");
@@ -14,7 +21,11 @@
     if (!value) return;
 
     const copyTextElem = button.querySelector(".copy-text");
-    const originalHTML = button.innerHTML;
+    // Capture the pristine markup once. Re-reading innerHTML on a second click
+    // inside the feedback window would capture "Copied" and never restore.
+    if (!button.__copyOriginal) button.__copyOriginal = button.innerHTML;
+    const originalHTML = button.__copyOriginal;
+    window.clearTimeout(button.__copyTimer);
 
     const done = function () {
       button.classList.add("copied");
@@ -31,7 +42,7 @@
           button.textContent = "Copied ✓";
         }
       }
-      window.setTimeout(function () {
+      button.__copyTimer = window.setTimeout(function () {
         button.classList.remove("copied");
         button.innerHTML = originalHTML;
       }, 1800);
@@ -65,7 +76,7 @@
           selection.addRange(range);
         }
         button.textContent = "selected";
-        window.setTimeout(function () {
+        button.__copyTimer = window.setTimeout(function () {
           button.innerHTML = originalHTML;
         }, 2000);
       }
@@ -114,7 +125,10 @@
           code.classList.remove("swap");
         }, 200);
       };
+      let paused = false;
       const start = function () {
+        // Guard: hover + focus leave events can both fire; never stack intervals.
+        if (timer || paused || document.hidden) return;
         timer = window.setInterval(function () {
           index = (index + 1) % commands.length;
           show(commands[index]);
@@ -124,13 +138,25 @@
         if (timer) window.clearInterval(timer);
         timer = null;
       };
-      rotator.addEventListener("mouseenter", stop);
-      rotator.addEventListener("mouseleave", start);
-      rotator.addEventListener("focusin", stop);
-      rotator.addEventListener("focusout", start);
+      const pause = function () {
+        paused = true;
+        stop();
+      };
+      const resume = function () {
+        if (rotator.matches(":hover") || rotator.contains(document.activeElement)) return;
+        paused = false;
+        start();
+      };
+      rotator.addEventListener("mouseenter", pause);
+      rotator.addEventListener("mouseleave", resume);
+      rotator.addEventListener("focusin", pause);
+      rotator.addEventListener("focusout", function () {
+        // activeElement is updated after focusout; defer the check.
+        window.setTimeout(resume, 0);
+      });
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) stop();
-        else if (!timer) start();
+        else start();
       });
       start();
     }
@@ -197,7 +223,6 @@
       } else if (options.stack === "role" || !stackPreset.rules || !stackPreset.rules.length) {
         mergedRules = (entry.rules || []).slice();
       } else {
-        const ruleSet = new Set(stackPreset.rules.concat(entry.rules || []));
         // If user explicitly picked a single language stack, prioritize that stack's rules
         mergedRules = stackPreset.rules.slice();
         (entry.rules || []).forEach(function (r) {
@@ -397,6 +422,7 @@
     const pillButtons = pillStrip ? Array.prototype.slice.call(pillStrip.querySelectorAll(".pill-btn")) : [];
 
     let onlyDistributable = false;
+    let lastSortMode = "default";
     const initialRows = Array.prototype.slice.call(list.querySelectorAll(".row"));
 
     const params = new URLSearchParams(window.location.search);
@@ -427,6 +453,7 @@
           isActive = Boolean(currentQuery && currentQuery === query.toLowerCase() && !activeCat);
         }
         btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-pressed", isActive ? "true" : "false");
         if (isActive) hasSpecific = true;
       });
 
@@ -434,7 +461,9 @@
         return b.getAttribute("data-cat") === "" && !b.getAttribute("data-query");
       })[0];
       if (allBtn) {
-        allBtn.classList.toggle("active", !hasSpecific && !activeCat && !currentQuery);
+        const allActive = !hasSpecific && !activeCat && !currentQuery;
+        allBtn.classList.toggle("active", allActive);
+        allBtn.setAttribute("aria-pressed", allActive ? "true" : "false");
       }
     }
 
@@ -473,6 +502,10 @@
 
       let visible = 0;
       const sorted = sortRows(initialRows, sortMode);
+      // Re-appending 500+ rows forces layout; only reorder when the sort changes.
+      const reorder = sortMode !== lastSortMode;
+      lastSortMode = sortMode;
+      const fragment = reorder ? document.createDocumentFragment() : null;
 
       sorted.forEach(function (row) {
         const text = row.getAttribute("data-search") || "";
@@ -491,8 +524,9 @@
         row.hidden = !match;
         if (match) visible += 1;
 
-        list.appendChild(row);
+        if (fragment) fragment.appendChild(row);
       });
+      if (fragment) list.appendChild(fragment);
 
       if (count) {
         count.innerHTML = "<strong>" + visible + "</strong> " + (visible === 1 ? "skill" : "skills") + " available";
@@ -590,14 +624,9 @@
       });
     });
 
+    // "/" and Cmd/Ctrl+K are handled globally by triggerSearch() below.
     document.addEventListener("keydown", function (e) {
-      if (e.key === "/" && document.activeElement !== search && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
-        e.preventDefault();
-        if (search) {
-          search.focus();
-          search.select();
-        }
-      } else if (e.key === "Escape" && document.activeElement === search) {
+      if (e.key === "Escape" && search && document.activeElement === search) {
         if (search.value) {
           search.value = "";
           apply();
@@ -619,8 +648,10 @@
     filterButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
         const filter = btn.getAttribute("data-playbook-filter") || btn.getAttribute("data-PlaybookFilter") || "all";
-        filterButtons.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
+        filterButtons.forEach(function (b) {
+          b.classList.toggle("active", b === btn);
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
 
         cards.forEach(function (card) {
           const domain = card.getAttribute("data-domain") || "";
@@ -656,10 +687,17 @@
       const isOpen = siteNav.classList.toggle("open");
       mobileToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
+    const closeNav = function () {
+      siteNav.classList.remove("open");
+      mobileToggle.setAttribute("aria-expanded", "false");
+    };
     document.addEventListener("click", function (e) {
-      if (!siteNav.contains(e.target) && !mobileToggle.contains(e.target)) {
-        siteNav.classList.remove("open");
-        mobileToggle.setAttribute("aria-expanded", "false");
+      if (!siteNav.contains(e.target) && !mobileToggle.contains(e.target)) closeNav();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && siteNav.classList.contains("open")) {
+        closeNav();
+        mobileToggle.focus();
       }
     });
   }
@@ -671,9 +709,9 @@
       search.focus();
       search.select();
     } else {
-      const pathname = window.location.pathname;
-      const isSub = pathname.includes("/skills/") || pathname.includes("/playbooks/") || pathname.includes("/guides/") || pathname.includes("/sources/") || pathname.includes("/setup/") || pathname.includes("/about/") || pathname.includes("/for-agents/");
-      window.location.href = (isSub ? "../skills/index.html" : "skills/index.html") + "?focus=1";
+      // Resolve against this script's URL (always <site>/assets/app.js), so it
+      // works from any depth, including nested skill pages.
+      window.location.href = new URL("../skills/index.html?focus=1", APP_SCRIPT_URL).href;
     }
   }
 
@@ -695,7 +733,7 @@
   });
 
   // Focus search if URL query contains focus=1
-  if (window.location.search.indexOf("focus=1") !== -1) {
+  if (WANTS_SEARCH_FOCUS) {
     const search = document.getElementById("q");
     if (search) {
       window.setTimeout(function () {
@@ -709,7 +747,8 @@
   const backToTop = document.getElementById("back-to-top");
   if (backToTop) {
     backToTop.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     });
   }
 
@@ -779,6 +818,7 @@
     const uTime = gl.getUniformLocation(prog, "u_time");
 
     let isVisible = false;
+    let rafId = 0;
     let width = 0, height = 0;
 
     function resize() {
@@ -796,48 +836,68 @@
     window.addEventListener("resize", resize);
     resize();
 
-    if ("IntersectionObserver" in window) {
-      const observer = new IntersectionObserver(function (entries) {
-        isVisible = entries[0].isIntersecting;
-      }, { threshold: 0.05 });
-      observer.observe(foot);
-    } else {
-      isVisible = true;
-    }
-
     const t0 = performance.now();
+    // Only keep a frame loop alive while the footer is on screen; an idle
+    // rAF loop still wakes the main thread 60 times a second.
     function render(now) {
-      requestAnimationFrame(render);
-      if (!isVisible) return;
+      if (!isVisible) {
+        rafId = 0;
+        return;
+      }
+      rafId = requestAnimationFrame(render);
       resize();
       gl.useProgram(prog);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, (now - t0) * 0.001);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
-    requestAnimationFrame(render);
+    function setVisible(next) {
+      isVisible = next;
+      if (isVisible && !rafId) rafId = requestAnimationFrame(render);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(function (entries) {
+        setVisible(entries[0].isIntersecting);
+      }, { threshold: 0.05 });
+      observer.observe(foot);
+    } else {
+      setVisible(true);
+    }
   })();
 
   // --- Setup Preset Cards -----------------------------------------------
-  document.querySelectorAll("[data-preset-role]").forEach(function (preset) {
+  // Previously targeted #wiz-role / #wiz-profile / #wizard-output, which do not
+  // exist, so clicking a preset did nothing. The wizard uses #setup-*.
+  const presets = Array.prototype.slice.call(document.querySelectorAll("[data-preset-role]"));
+  const applyPreset = function (preset) {
+    const role = preset.getAttribute("data-preset-role");
+    const profile = preset.getAttribute("data-preset-profile") || "individual";
+    const roleSelect = document.getElementById("setup-role");
+    const profileSelect = document.getElementById("setup-profile");
+    if (profileSelect) profileSelect.value = profile;
+    if (roleSelect) {
+      roleSelect.value = role;
+      roleSelect.dispatchEvent(new Event("change"));
+    }
+    presets.forEach(function (p) {
+      p.classList.toggle("active", p === preset);
+      p.setAttribute("aria-pressed", p === preset ? "true" : "false");
+    });
+    const outputElem = document.getElementById("setup-builder");
+    if (outputElem) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      outputElem.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    }
+  };
+  presets.forEach(function (preset) {
     preset.addEventListener("click", function () {
-      const role = preset.getAttribute("data-preset-role");
-      const profile = preset.getAttribute("data-preset-profile") || "individual";
-      const roleSelect = document.getElementById("wiz-role");
-      const profileSelect = document.getElementById("wiz-profile");
-      if (roleSelect) {
-        roleSelect.value = role;
-        roleSelect.dispatchEvent(new Event("change"));
-      }
-      if (profileSelect) {
-        profileSelect.value = profile;
-        profileSelect.dispatchEvent(new Event("change"));
-      }
-      document.querySelectorAll("[data-preset-role]").forEach(function (p) { p.classList.remove("active"); });
-      preset.classList.add("active");
-      const outputElem = document.getElementById("wizard-output");
-      if (outputElem) {
-        outputElem.scrollIntoView({ behavior: "smooth", block: "center" });
+      applyPreset(preset);
+    });
+    preset.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        applyPreset(preset);
       }
     });
   });

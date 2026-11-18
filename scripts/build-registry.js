@@ -14,6 +14,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { serializeStable } = require("./lib/stable-json");
 
 const ROOT = path.join(__dirname, "..");
 const SKILLS_DIR = path.join(ROOT, "skills");
@@ -296,7 +297,7 @@ function build() {
       category,
       tags,
       status,
-      path: path.relative(ROOT, file),
+      path: path.relative(ROOT, file).split(path.sep).join("/"),
       source: {
         key: sourceKey,
         repo: source.repo,
@@ -331,11 +332,10 @@ function build() {
 }
 
 const registry = build();
-const serialized = JSON.stringify(registry, null, 2) + "\n";
+const { previous, serialized } = serializeStable(OUT_FILE, registry);
 
 if (process.argv.includes("--check")) {
-  const current = fs.existsSync(OUT_FILE) ? fs.readFileSync(OUT_FILE, "utf8") : "";
-  if (current !== serialized) {
+  if (previous !== serialized) {
     console.error("registry/skills.json is stale. Run: node scripts/build-registry.js");
     process.exit(1);
   }

@@ -38,6 +38,7 @@ node scripts/check-licenses.js        # legal gate: fails on redistribution viol
 node scripts/verify-sources.js        # re-check every upstream (writes verified.json)
 node scripts/generate-notices.js      # regenerate THIRD_PARTY_NOTICES.md
 node site/build.js                    # build the static site into site/dist
+node scripts/check-site.js            # links, ids, h1, meta and sitemap gate for site/dist
 node site/serve.js                    # preview at http://localhost:4173
 node cli/mcp.js                       # MCP server (stdio)
 node cli/index.js recommend "<task>"  # bundle + ranked skills
