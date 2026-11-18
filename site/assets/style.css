@@ -334,7 +334,7 @@ img { max-width: 100%; }
   font-family: var(--serif);
   font-size: clamp(2.6rem, 6.4vw, 4.8rem);
   line-height: 0.98; letter-spacing: -0.025em;
-  font-weight: 400; margin: 0 0 26px; max-width: 18ch;
+  font-weight: 400; margin: 0 0 26px; max-width: 24ch; text-wrap: balance;
 }
 .hero h1 em { font-style: italic; color: var(--accent); }
 .hero .lede {
@@ -2206,4 +2206,72 @@ summary:focus-visible,
 [tabindex]:not([tabindex="-1"]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ---------- homepage: proof, steps, comparison, roles, FAQ ---------- */
+.proof-strip {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px;
+  padding: 22px 0; border-top: 1px solid var(--rule);
+}
+.proof-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.proof-strip ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; margin: 0; padding: 0; }
+.proof-strip a { color: var(--ink); text-decoration: none; font-size: 15px; border-bottom: 1px solid var(--rule-strong); }
+.proof-strip a:hover { color: var(--accent); border-color: var(--accent); }
+
+.section-lede { max-width: 64ch; color: var(--ink-soft); font-size: 1.05rem; margin: -14px 0 36px; }
+section > .wrap > .note, .wrap > .note { font-size: 13px; color: var(--muted); margin-top: 26px; max-width: 72ch; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; list-style: none; margin: 0; padding: 0; }
+.steps .num { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.steps h3 { margin: 8px 0 10px; }
+.steps p { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+.checklist { list-style: none; margin: 14px 0 0; padding: 0; font-size: 0.9rem; color: var(--ink-soft); }
+.checklist li { padding: 5px 0 5px 22px; position: relative; border-bottom: 1px solid var(--rule); }
+.checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 600; }
+
+.compare-table th[scope="row"] { text-align: left; font-weight: 500; color: var(--ink); padding: 13px 16px 13px 0; border-bottom: 1px solid var(--rule); }
+.compare-table td, .compare-table td:last-child, .compare-table th:last-child { text-align: left; padding-right: 16px; }
+.compare-table td:nth-of-type(1) { color: var(--ink); font-weight: 500; }
+.compare-wide { font-size: 13px; }
+.table-scroll .compare-wide { min-width: 860px; }
+
+.role-chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.role-chips a {
+  display: inline-block; padding: 8px 14px; border: 1px solid var(--rule-strong); border-radius: 999px;
+  color: var(--ink); text-decoration: none; font-size: 14px;
+}
+.role-chips a:hover { border-color: var(--accent); color: var(--accent); }
+
+.faq { max-width: 78ch; border-top: 1px solid var(--rule); }
+.faq details { border-bottom: 1px solid var(--rule); }
+.faq summary {
+  cursor: pointer; list-style: none; padding: 18px 32px 18px 0; position: relative;
+  font-size: 1.05rem; color: var(--ink);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font-family: var(--mono); color: var(--muted); }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { margin: 0 0 20px; color: var(--ink-soft); max-width: 70ch; }
+
+.vet-list { max-width: 72ch; margin: 24px 0 0; padding-left: 22px; color: var(--ink-soft); }
+.vet-list li { padding: 8px 0; }
+.vet-list strong { color: var(--ink); }
+
+@media (max-width: 860px) {
+  .steps { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 640px) {
+  .compare-table th[scope="row"] { display: block; border: 0; padding: 4px 0 6px; }
+  .table-scroll .compare-wide { min-width: 0; }
+  .section-lede { margin-top: -10px; }
+}
+
+.wordmark { white-space: nowrap; }
+@media (max-width: 420px) { .wordmark .sub { display: none; } }
+@media (max-width: 640px) {
+  .compare-table td { display: block; overflow-wrap: anywhere; padding: 4px 0; }
+  .compare-table td::before { display: block; margin-bottom: 2px; }
 }

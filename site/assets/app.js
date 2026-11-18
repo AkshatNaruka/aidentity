@@ -382,7 +382,7 @@
           built.agentsCount +
           " subagents · " +
           built.hooksCount +
-          " safety hooks · 100% SHA-256 verified";
+          " safety hooks · each skill scanned, SHA-256 published";
       }
     };
 
