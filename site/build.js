@@ -26,9 +26,13 @@ const BASE = new URL(SITE).pathname.replace(/\/$/, "");
 const REPO = "https://github.com/AkshatNaruka/aidentity";
 const GENERATED = new Date().toISOString().slice(0, 10);
 const BUILD_HASH = Date.now().toString(36);
+// Date the indexed content last changed (stable across rebuilds), for
+// sitemap lastmod and schema dateModified. Falls back to the build date.
+let CONTENT_DATE = GENERATED;
 const INDEXNOW_KEY = "c53fff0269a753a2d4152843dfb58136";
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "skills.json"), "utf8"));
+CONTENT_DATE = registry.generated_at || GENERATED;
 const security = fs.existsSync(path.join(ROOT, "registry", "security.json"))
   ? JSON.parse(fs.readFileSync(path.join(ROOT, "registry", "security.json"), "utf8"))
   : { skills: {} };
@@ -57,6 +61,42 @@ const esc = (value) =>
     .replace(/'/g, "&#39;");
 
 const up = (depth) => "../".repeat(depth);
+
+// Human-readable skill name for titles and headings: "tdd" -> "TDD",
+// "supabase-postgres-best-practices" -> "Supabase Postgres Best Practices".
+const ACRONYMS = new Set([
+  "ai", "api", "apis", "ui", "ux", "seo", "aeo", "geo", "cro", "tdd", "sql", "css", "html", "js", "ts", "ios",
+  "aws", "gcp", "gke", "cli", "mcp", "pr", "prs", "llm", "llms", "rag", "adr", "adrs", "e2e", "ci", "cd", "md",
+  "pdf", "pptx", "docx", "xlsx", "ado", "sdk", "jwt", "oauth", "waf", "tpu", "gpu", "vm", "iam", "rbac", "sre",
+  "kpi", "okr", "aso", "ppc", "sm", "qa", "ml", "nlp", "ocr", "py", "url", "json", "yaml", "dns", "ssr",
+]);
+function displayName(name) {
+  return String(name || "")
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase();
+      if (ACRONYMS.has(lower)) return lower.toUpperCase();
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ");
+}
+
+// <title> that matches search intent and stays near 60 chars with the " | Aidentity" suffix.
+function skillTitle(name) {
+  const full = `${name}: agent skill for Claude Code, Codex & Cursor`;
+  if (full.length <= 58) return full;
+  const short = `${name}: AI agent skill`;
+  return short.length <= 58 ? short : name;
+}
+
+// Security label that never claims more than the scanner did.
+function securityLabel(record) {
+  if (!record) return "not scanned";
+  if (!record.files_scanned) return "not scanned (content not hosted)";
+  if (record.verified && !record.findings_count) return `scanned, 0 findings (${record.files_scanned} file${record.files_scanned === 1 ? "" : "s"})`;
+  return `scanned, ${record.findings_count || 0} finding(s)`;
+}
 
 
 const SETUP_PROMPT = `Set up my agent with Aidentity.
@@ -210,13 +250,13 @@ if (startHere.length < 6) {
 function layout({ title, description, depth, body, page, canonical, jsonld, ogType = "website", keywords = "", markdownAlt = null }) {
   const p = up(depth);
   const totalRoles = rolesData.roles ? rolesData.roles.length : 21;
-  const fullTitle = title ? `${title} | Aidentity` : "Aidentity: the verified index of agent skills, playbooks & courses";
+  const fullTitle = title ? `${title} | Aidentity` : "Aidentity: agent skills, checked before you install them";
   const cleanDescription = (description || "")
     .replace(/\s*—\s*/g, ", ")
     .replace(/\s*–\s*/g, " - ");
   const rawDescription =
     cleanDescription ||
-    `A verified, machine-readable index of ${registry.total} AI agent skills, ${totalRoles} role setup playbooks, and courses. One ID, one command, works in every coding agent.`;
+    `${registry.total} agent skills from Anthropic, Google, Microsoft, Vercel and more. Hosted skills are scanned and license-checked; one command installs into 6 coding agents.`;
   const metaDescription = rawDescription.replace(/\s+/g, " ").trim();
   // Search results truncate around 160 characters; keep the full text in the body.
   const shortDescription =
@@ -329,7 +369,7 @@ ${body}
           <span class="footer-chip">${registry.total} Skills</span>
           <span class="footer-chip">${totalRoles} Roles</span>
           <span class="footer-chip">6 Tracks</span>
-          <span class="footer-chip">100% Safe</span>
+          <span class="footer-chip">Scanned &amp; licensed</span>
         </div>
         <div class="footer-maker">
           <span class="footer-maker-label">Built by maker</span>
@@ -351,6 +391,7 @@ ${body}
           <li><a href="${p}playbooks/index.html#courses">Guided Learning Tracks</a></li>
           <li><a href="${p}guides/index.html">Engineering Guides</a></li>
           <li><a href="${p}sources/index.html">Sources &amp; Authors (${sourceList.length})</a></li>
+          <li><a href="${p}compare/index.html">Compare Skill Directories</a></li>
         </ul>
       </div>
 
@@ -578,6 +619,30 @@ function skillBody(skill) {
 // home
 // ---------------------------------------------------------------------------
 
+// Homepage FAQ: rendered visibly and as FAQPage JSON-LD (answer engines quote these).
+const HOME_FAQ = [
+  {
+    q: "What is an agent skill?",
+    html: "A folder with a <span class=\"mono\">SKILL.md</span> file: instructions, and sometimes scripts, that a coding agent loads when a task matches the skill's description. Claude Code, Codex, Cursor, OpenCode, GitHub Copilot and Gemini CLI all read the same format.",
+  },
+  {
+    q: "What does \"scanned\" mean on Aidentity?",
+    html: "Every file in every hosted skill passes six static checks in CI: hidden or bidirectional Unicode, live credentials, destructive commands, prompt-injection payloads, unverified remote execution such as <span class=\"mono\">curl | sh</span>, and symlink or binary escapes. Each skill's SHA-256 digest is published in <a href=\"security.json\">security.json</a>. It is a static scan, not a guarantee, so read a skill before giving your agent broad permissions.",
+  },
+  {
+    q: "How is this different from skills.sh or SkillsMP?",
+    html: "Large directories optimise for reach and volume and list far more skills. Aidentity lists fewer and checks each one for security, license and provenance before it appears. If you need something we don't list, use a large directory, then check the skill the same way. <a href=\"compare/index.html\">See the full comparison</a>.",
+  },
+  {
+    q: "Which coding agents does it work with?",
+    html: "Claude Code, Codex, Cursor, OpenCode, GitHub Copilot and Gemini CLI. <span class=\"mono\">npx aidentity add &lt;id&gt;</span> detects your agent from the project, or pass <span class=\"mono\">--agent</span> to choose. Agents that can fetch a URL can also install from <a href=\"llms.txt\">llms.txt</a> or the MCP server.",
+  },
+  {
+    q: "Is it free, and who owns the skills?",
+    html: "Yes. The CLI is MIT-licensed and the index data is CC0. Skill content belongs to its authors and keeps its upstream license, shown on every page. Skills whose license does not allow redistribution are linked to their source, never mirrored.",
+  },
+];
+
 function buildHome() {
   const topPrioritySkillIds = [
     "mattpocock/engineering/tdd",
@@ -617,59 +682,123 @@ function buildHome() {
   const distributable = registry.distributable;
   const homeRoles = rolesData.roles || [];
 
+  // Named upstream maintainers: the strongest proof we have, shown first.
+  const PROOF = [
+    ["anthropic-official", "Anthropic"],
+    ["google-cloud", "Google Cloud"],
+    ["microsoft-azure", "Microsoft"],
+    ["vercel-labs", "Vercel"],
+    ["trailofbits", "Trail of Bits"],
+    ["supabase", "Supabase"],
+    ["expo", "Expo"],
+    ["shadcn", "shadcn/ui"],
+    ["mattpocock", "Matt Pocock"],
+    ["addyosmani", "Addy Osmani"],
+    ["obra-superpowers", "obra/superpowers"],
+  ]
+    .map(([key, label]) => ({ label, source: sourceList.find((s) => s.key === key) }))
+    .filter((item) => item.source);
+  const otherSources = sourceList.length - PROOF.length;
+  const topSources = sourceList.slice().sort((a, b) => b.count - a.count).slice(0, 8);
+  const roleChips = homeRoles.slice(0, 8);
+
   const body = `
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-    <p class="kicker">Agent skills · role setups · 100% security-verified</p>
-    <h1>The index of agent skills that <em>still work</em>.</h1>
+    <p class="kicker">Open source · ${registry.total} skills · 6 coding agents</p>
+    <h1>Agent skills, <em>checked</em> before you install them.</h1>
     <p class="lede">
-      Aidentity is a verified index of ${registry.total} AI agent skills from ${sourceList.length} sources, plus one-command <strong>Individual &amp; Enterprise role setups</strong> for ${homeRoles.length} jobs.
-      Every entry is SHA-256 verified for security, carries its author and license, and installs into Claude Code, OpenCode, Codex, Cursor,
-      Copilot or Gemini CLI.
+      ${registry.total} skills from Anthropic, Google, Microsoft, Vercel and ${sourceList.length - 4} more maintainers.
+      Every hosted skill is scanned for prompt injection, leaked secrets and unsafe shell, license-checked,
+      and installs into your coding agent with one command.
     </p>
     ${rotatingCommandBlock(heroCommands)}
     <div class="hero-actions">
-      <a href="setup/index.html" class="btn btn-shimmer">Launch Setup Generator (5 Qs) &rarr;</a>
-      <a href="playbooks/index.html" class="btn btn-ghost">Role Playbooks (${homeRoles.length})</a>
-      <a href="skills/index.html" class="btn btn-ghost">Browse All ${registry.total} Skills</a>
+      <a href="skills/index.html" class="btn btn-shimmer">Browse ${registry.total} skills &rarr;</a>
+      <a href="setup/index.html" class="btn btn-ghost">Build my role setup</a>
     </div>
-    ${shareRow(SITE + "/", "Aidentity: the verified index of AI agent skills, playbooks & curricula")}
+    <p class="hero-links"><a href="#how">How skills are checked</a><a href="compare/index.html">Compare with other directories</a></p>
     </div>
   </div>
 </section>
 
 <div class="wrap">
+  <div class="proof-strip" aria-label="Upstream maintainers">
+    <span class="proof-label">Skills from</span>
+    <ul>
+      ${PROOF.map((p) => `<li><a href="${esc(p.source.url)}" rel="noopener">${esc(p.label)}</a></li>`).join("\n      ")}
+      <li><a href="sources/index.html">+ ${otherSources} more</a></li>
+    </ul>
+  </div>
   <div class="stats">
-    <div><b>${registry.total}</b><span>Skills · 100% security-verified</span></div>
-    <div><b>${homeRoles.length}</b><span>Role playbooks &amp; blueprints</span></div>
-    <div><b>${COURSES_DATA.length}</b><span>Guided learning tracks</span></div>
-    <div><b>6</b><span>Agents supported</span></div>
+    <div><b>${registry.total}</b><span>Skills indexed</span></div>
+    <div><b>${distributable}</b><span>Scanned &amp; installable</span></div>
+    <div><b>${sourceList.length}</b><span>Upstream repositories</span></div>
+    <div><b>6</b><span>Coding agents supported</span></div>
   </div>
 </div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>A skill is a prompt with access to your shell.</h2>
+    </div>
+    <p class="section-lede">
+      Your agent follows a skill's instructions with the same tools you gave it: files, terminal, network.
+      A hidden Unicode instruction or a pasted <span class="mono">curl | sh</span> line is a supply-chain risk.
+      Aidentity checks every hosted skill before it is listed.
+    </p>
+    <ol class="steps">
+      <li>
+        <span class="num">01</span>
+        <h3>Find</h3>
+        <p>Search ${registry.total} skills by task, category or source, or <a href="setup/index.html">answer five questions</a> to get a set for your role.</p>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <h3>Check</h3>
+        <p>Every page shows the author, SPDX license, scan result and SHA-256 digest. In CI, each file must pass six static checks:</p>
+        <ul class="checklist">
+          <li>No hidden or bidirectional Unicode</li>
+          <li>No live credentials or private keys</li>
+          <li>No destructive commands</li>
+          <li>No prompt-injection payloads</li>
+          <li>No unverified <span class="mono">curl | sh</span></li>
+          <li>No symlink or binary escapes</li>
+        </ul>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <h3>Install</h3>
+        <p><span class="mono">npx aidentity add &lt;id&gt;</span> detects your agent and writes the skill to <span class="mono">.claude/skills</span>, <span class="mono">.codex/skills</span>, <span class="mono">.cursor/skills</span>, <span class="mono">.opencode/skills</span>, <span class="mono">.github/skills</span> or <span class="mono">.gemini/skills</span>. Pass <span class="mono">--agent</span> to choose.</p>
+      </li>
+    </ol>
+    <p class="note">This is a static scan, not a guarantee. Read a skill before giving your agent broad permissions. Results are public in <a href="security.json">security.json</a>.</p>
+  </div>
+</section>
 
 <section>
   <div class="wrap">
     <div class="section-head">
-      <h2>Why an index, and not another list</h2>
+      <h2>Fewer skills, each one checked.</h2>
+      <a class="more" href="compare/index.html">Full comparison →</a>
     </div>
-    <div class="three">
-      <div>
-        <span class="num">01</span>
-        <h3>One prompt sets up your role.</h3>
-        <p>Whether you are a founder, software engineer, architect, PM, designer, marketer, or quant, use the new <a href="setup/index.html"><strong>Setup Generator</strong></a> to answer 5 quick questions and copy your initial setup prompt. Or browse all <a href="playbooks/index.html">${homeRoles.length} role playbooks →</a></p>
-      </div>
-      <div>
-        <span class="num">02</span>
-        <h3>Security &amp; licenses are verified.</h3>
-        <p>Every file across all ${registry.total} skills is scanned for hidden Unicode, hardcoded secrets, destructive shell commands, and prompt injection, with SHA-256 digests published in <a href="security.json">security.json</a> and SPDX licenses enforced in CI.</p>
-      </div>
-      <div>
-        <span class="num">03</span>
-        <h3>Guided curricula &amp; tracks.</h3>
-        <p>Follow ${COURSES_DATA.length} structured <a href="playbooks/index.html#courses">learning tracks</a> (TDD &amp; spec engineering, AI SEO/GEO, AppSec, UI design, quant trading) directly embedded in each role's playbook.</p>
-      </div>
+    <div class="table-scroll">
+    <table class="table compare-table">
+      <thead>
+        <tr><th scope="col"></th><th scope="col">Aidentity</th><th scope="col">Large directories</th><th scope="col">Copying from GitHub</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Security scan before listing</th><td data-label="Aidentity">Yes, 6 checks per file</td><td data-label="Large directories">Varies, often none</td><td data-label="Copying from GitHub">You review it</td></tr>
+        <tr><th scope="row">License checked</th><td data-label="Aidentity">Yes, enforced in CI</td><td data-label="Large directories">Rarely</td><td data-label="Copying from GitHub">You check it</td></tr>
+        <tr><th scope="row">Author and source on every entry</th><td data-label="Aidentity">Yes</td><td data-label="Large directories">Usually</td><td data-label="Copying from GitHub">Yes</td></tr>
+        <tr><th scope="row">One command, six agents</th><td data-label="Aidentity">Yes</td><td data-label="Large directories">Often</td><td data-label="Copying from GitHub">No</td></tr>
+        <tr><th scope="row">Catalogue size</th><td data-label="Aidentity">${registry.total}</td><td data-label="Large directories">Tens of thousands or more</td><td data-label="Copying from GitHub">Unlimited</td></tr>
+      </tbody>
+    </table>
     </div>
+    <p class="note">Need a skill that isn't here? A large directory will have more. Check it the same way before you install it, or <a href="${REPO}/issues/new?template=submit-a-skill.yml" rel="noopener">submit it</a> so we can scan it.</p>
   </div>
 </section>
 
@@ -681,6 +810,24 @@ function buildHome() {
     </div>
     <div class="rows">
       ${featured.map((skill) => row(skill, 0)).join("\n")}
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <h2>Not sure what to install? Start from your role.</h2>
+        <p style="max-width:60ch;color:var(--ink-soft);margin-top:14px">${homeRoles.length} role playbooks bundle the skills, rules, subagents and safety hooks for a job. Pick a role, choose Individual or Enterprise, and get one command plus a setup prompt for your agent.</p>
+        <p class="hero-actions"><a href="setup/index.html" class="btn">Build my role setup &rarr;</a></p>
+      </div>
+      <div>
+        <ul class="role-chips">
+          ${roleChips.map((r) => `<li><a href="playbooks/${esc(r.slug)}/index.html">${esc(r.name)}</a></li>`).join("\n          ")}
+          <li><a href="playbooks/index.html">All ${homeRoles.length} roles →</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -704,11 +851,25 @@ function buildHome() {
   </div>
 </section>
 
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Questions</h2>
+    </div>
+    <div class="faq">
+      ${HOME_FAQ.map((item) => `<details>
+        <summary>${esc(item.q)}</summary>
+        <p>${item.html}</p>
+      </details>`).join("\n      ")}
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="section-head">
-      <h2>Sources</h2>
-      <a class="more" href="sources/index.html">Full provenance →</a>
+      <h2>Largest sources</h2>
+      <a class="more" href="sources/index.html">All ${sourceList.length} sources →</a>
     </div>
     <div class="table-scroll">
     <table class="table">
@@ -716,7 +877,7 @@ function buildHome() {
         <tr><th>Repository</th><th>Author</th><th>License</th><th>Skills</th></tr>
       </thead>
       <tbody>
-        ${sourceList
+        ${topSources
           .map(
             (source) => `<tr>
           <td data-label="Repository"><a href="${source.url}" rel="noopener">${esc(source.repo)}</a></td>
@@ -743,7 +904,7 @@ function buildHome() {
     <div class="split">
       <div>
         <h2>Add a skill</h2>
-        <p style="max-width:60ch;color:var(--ink-soft);margin-top:14px">One JSON record, one pull request. If it's accurate and correctly licensed, it ships the same day. No editorial committee, no backlog.</p>
+        <p style="max-width:60ch;color:var(--ink-soft);margin-top:14px">One JSON record, one pull request. If it's accurate, correctly licensed and passes the scan, it ships the same day.</p>
         ${commandBlock("./scripts/check-all.sh", "validate command")}
         <p class="hero-links"><a href="${REPO}/blob/main/CONTRIBUTING.md" rel="noopener">Contributing guide →</a></p>
       </div>
@@ -754,6 +915,7 @@ function buildHome() {
         <p class="hero-links"><a href="for-agents/index.html">Agent setup page →</a><a href="llms.txt">llms.txt</a><a href="agent.json">agent.json</a><a href="okf/index.md">okf/</a></p>
       </div>
     </div>
+    ${shareRow(SITE + "/", "Aidentity: agent skills, checked before you install them")}
   </div>
 </section>
 `;
@@ -776,7 +938,7 @@ function buildHome() {
             "@id": SITE + "/#website",
             url: SITE + "/",
             name: "Aidentity",
-            description: `A verified index of ${registry.total} AI agent skills, ${rolesData.roles ? rolesData.roles.length : 21} role setup playbooks, and 6 AI agent courses with SHA-256 security verification and one-command install.`,
+            description: `An open-source index of ${registry.total} AI agent skills. Every hosted skill is statically scanned, license-checked and installable into six coding agents with one command.`,
             inLanguage: "en",
             potentialAction: {
               "@type": "SearchAction",
@@ -842,6 +1004,15 @@ function buildHome() {
                 ]
               }
             ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": SITE + "/#faq",
+            mainEntity: HOME_FAQ.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: { "@type": "Answer", text: item.html.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") },
+            })),
           },
           {
             "@type": "CollectionPage",
@@ -994,6 +1165,12 @@ function buildBrowse() {
   }
 }
 
+const DUPLICATE_NAMES = (() => {
+  const seen = new Map();
+  for (const s of skills) seen.set(s.name.toLowerCase(), (seen.get(s.name.toLowerCase()) || 0) + 1);
+  return new Set([...seen].filter(([, n]) => n > 1).map(([name]) => name));
+})();
+
 function skillPage(skill) {
   const depth = 1 + skill.id.split("/").length;
   const p = up(depth);
@@ -1008,17 +1185,22 @@ function skillPage(skill) {
   const source = sources[skill.source.key] || {};
   const install = skill.install;
   const content = skillBody(skill);
+  const title = displayName(skill.name);
+  // Two upstreams can ship a skill with the same name; keep <title>s unique.
+  const owner = (skill.source.repo || "").split("/")[0];
+  const seoName = DUPLICATE_NAMES.has(skill.name.toLowerCase()) ? `${title} (${owner})` : title;
+  const scan = security.skills ? security.skills[skill.id] : null;
 
   const body = `
 <div class="wrap">
   <nav class="crumbs" aria-label="Breadcrumb">
-    <a href="${p}skills/index.html">Skills</a><span>/</span><a href="${p}skills/index.html?category=${encodeURIComponent(skill.category)}">${esc(skill.category)}</a><span>/</span>${esc(skill.name)}
+    <a href="${p}skills/index.html">Skills</a><span>/</span><a href="${p}skills/index.html?category=${encodeURIComponent(skill.category)}">${esc(skill.category)}</a><span>/</span>${esc(title)}
   </nav>
 
   <article class="detail">
     <div>
       <p class="kicker">${esc(skill.source.repo)} · ${esc(licenseLabel(skill.source.license))}</p>
-      <h1>${esc(skill.name)}</h1>
+      <h1>${esc(title)}</h1>
       <p class="summary">${esc((skill.description || "").replace(/\s*—\s*/g, ", ").replace(/\s*–\s*/g, " - "))}</p>
 
       <div class="tags" style="margin-top:20px">
@@ -1067,11 +1249,11 @@ function skillPage(skill) {
           <div><dt>License</dt><dd>${esc(licenseLabel(skill.source.license))}</dd></div>
           <div><dt>Category</dt><dd>${esc(skill.category)}</dd></div>
           <div><dt>Status</dt><dd>${esc(skill.status)}</dd></div>
-          <div><dt>Security</dt><dd>${security.skills && security.skills[skill.id] && security.skills[skill.id].verified ? "verified (0 findings)" : "verified"}</dd></div>
+          <div><dt>Security</dt><dd>${esc(securityLabel(scan))}</dd></div>${scan && scan.sha256 ? `<div><dt>SHA-256</dt><dd class="mono" style="font-size:11px" title="${esc(scan.sha256)}">${esc(scan.sha256.slice(0, 16))}…</dd></div>` : ""}
           <div><dt>Checked</dt><dd>${verifiedOn(skill.source.key)}</dd></div>
           <div><dt>ID</dt><dd class="mono" style="font-size:11px">${esc(skill.id)}</dd></div>
         </dl>
-        ${shareRow(pageUrl, `${skill.name} | AI agent skill`)}
+        ${shareRow(pageUrl, `${title}: AI agent skill`)}
         ${
           skill.distributable
             ? `<a class="btn" href="${REPO}/blob/main/${esc(skill.path)}" rel="noopener">View file ↗</a>`
@@ -1092,16 +1274,29 @@ function skillPage(skill) {
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Skills", item: `${SITE}/skills/` },
           { "@type": "ListItem", position: 2, name: skill.category, item: `${SITE}/skills/?category=${encodeURIComponent(skill.category)}` },
-          { "@type": "ListItem", position: 3, name: skill.name, item: pageUrl }
+          { "@type": "ListItem", position: 3, name: title, item: pageUrl }
         ]
       },
       {
+        "@type": "SoftwareSourceCode",
+        name: title,
+        description: skill.description,
+        url: pageUrl,
+        codeRepository: skill.source.url,
+        programmingLanguage: "Markdown",
+        runtimePlatform: "Claude Code, Codex, Cursor, OpenCode, GitHub Copilot, Gemini CLI",
+        license: skill.source.license,
+        author: { "@type": "Person", name: skill.source.author },
+        dateModified: CONTENT_DATE,
+        isAccessibleForFree: true,
+      },
+      {
         "@type": "TechArticle",
-        headline: skill.name,
+        headline: title,
         description: skill.description,
         url: pageUrl,
         mainEntityOfPage: pageUrl,
-        dateModified: GENERATED,
+        dateModified: CONTENT_DATE,
         author: { "@type": "Person", name: skill.source.author },
         license: skill.source.license,
         isPartOf: { "@id": `${SITE}/#website` },
@@ -1112,7 +1307,7 @@ function skillPage(skill) {
   });
 
   return layout({
-    title: `${skill.name} | ${skill.category === skill.name ? "AI agent skill" : `${skill.category} AI agent skill`}`, 
+    title: skillTitle(seoName),
     description: skill.description,
     depth,
     body,
@@ -2484,7 +2679,7 @@ function renderSetupWizardSection({ roles, securityPath = "../security.json", he
       </div>
 
       <div class="setup-summary">
-        <span id="setup-summary-text" class="mono">${defaultPlan.skillsCount} verified skills · ${defaultPlan.rulesCount} rules · ${defaultPlan.agentsCount} subagents · ${defaultPlan.hooksCount} safety hooks · 100% SHA-256 verified</span>
+        <span id="setup-summary-text" class="mono">${defaultPlan.skillsCount} verified skills · ${defaultPlan.rulesCount} rules · ${defaultPlan.agentsCount} subagents · ${defaultPlan.hooksCount} safety hooks · each skill scanned, SHA-256 published</span>
         <a class="mono" style="font-size:11.5px" href="${securityPath}">Verify in security.json →</a>
       </div>
 
@@ -2551,7 +2746,7 @@ function buildSetup() {
     </p>
     <div class="page-hero-meta">
       <span class="hero-pill"><span class="dot"></span> ${roles.length} Role Profiles</span>
-      <span class="hero-pill"><span class="dot"></span> 100% SHA-256 Verified</span>
+      <span class="hero-pill"><span class="dot"></span> SHA-256 digests published</span>
       <span class="hero-pill"><span class="dot"></span> 6 Agents Supported</span>
       <span class="hero-pill"><span class="dot"></span> Zero Prompt Injections</span>
     </div>
@@ -2848,7 +3043,7 @@ function buildPlaybooks() {
     <div class="page-hero-meta">
       <span class="hero-pill"><span class="dot"></span> 21 Role Blueprints</span>
       <span class="hero-pill"><span class="dot"></span> 6 Hands-on Tracks</span>
-      <span class="hero-pill"><span class="dot"></span> 100% SHA-256 Verified</span>
+      <span class="hero-pill"><span class="dot"></span> SHA-256 digests published</span>
       <span class="hero-pill"><span class="dot"></span> Individual &amp; Enterprise</span>
     </div>
   </div>
@@ -3015,7 +3210,7 @@ function buildPlaybooks() {
 
   <article class="detail">
     <div>
-      <p class="kicker">Role Playbook · Individual &amp; Enterprise · 100% SHA-256 Verified</p>
+      <p class="kicker">Role Playbook · Individual &amp; Enterprise · scanned &amp; licensed</p>
       <h1>${esc(role.name)} AI Agent Setup Playbook</h1>
       <p class="summary">
         <strong>What is the ${esc(role.name)} AI Agent Playbook?</strong> The ${esc(role.name)} AI Agent Playbook is a complete, security-verified configuration for Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and GitHub Copilot tailored to ${esc(role.description.toLowerCase())} It bundles ${indPlan.skills.length} verified skills (Individual) or ${entPlan.skills.length} skills + 4 runtime safety hooks (Enterprise), ${indPlan.rules.length} coding rules, and ${indPlan.agents.length} specialist subagents in one command.
@@ -3154,7 +3349,7 @@ function buildPlaybooks() {
           ${matchingCourse ? `<div><dt>Curriculum</dt><dd class="mono"><a href="#curriculum">Included (${matchingCourse.modules.length} mod)</a></dd></div>` : ""}
           <div><dt>Subagents</dt><dd class="mono">${indPlan.agents.length}</dd></div>
           <div><dt>Rules</dt><dd class="mono">${indPlan.rules.length}</dd></div>
-          <div><dt>Security</dt><dd>100% SHA-256 verified</dd></div>
+          <div><dt>Security</dt><dd>6 static checks + SHA-256 digest per skill</dd></div>
           <div><dt>Updated</dt><dd>${GENERATED}</dd></div>
         </dl>
         ${shareRow(pageUrl, `${role.name} AI Agent Setup Playbook | Aidentity`)}
@@ -3743,6 +3938,153 @@ function buildBundlesPage() {
 }
 
 
+// ---------------------------------------------------------------------------
+// compare: honest comparison page for "alternative" / "vs" search intent
+// ---------------------------------------------------------------------------
+
+const COMPARE_REVIEWED = "2026-11-18"; // editorial date: update when the facts below are re-checked
+
+function buildCompare() {
+  const rows = [
+    ["What it is", "Curated, open-source index with a CLI and MCP server", "Vercel's open directory and leaderboard for agent skills", "Large aggregator of skills found in public GitHub repositories", "The marketplace built into one agent (Claude Code <span class=\"mono\">/plugin</span>, Codex <span class=\"mono\">$skill-installer</span>)", "Clone a repo and copy the folder into your agent's skills directory"],
+    ["Catalogue size", `${registry.total} skills from ${sourceList.length} repositories`, "Very large, open to any GitHub repo", "Hundreds of thousands listed", "Depends on the marketplaces you add", "Unlimited"],
+    ["How entries are ranked or chosen", "Hand-picked upstreams, then automated gates", "By install count", "By category, author and popularity", "By the marketplace owner", "By you"],
+    ["Security scan before listing", "Yes: 6 static checks on every hosted file, results public", "Not part of the documented listing process", "Not part of the documented listing process", "Depends on the marketplace", "Your own review"],
+    ["License checked", "Yes, enforced in CI. Non-redistributable skills are linked, not mirrored", "Not documented", "Not documented", "Depends on the marketplace", "Your own check"],
+    ["Integrity digest", "SHA-256 per skill in security.json", "Not documented", "Not documented", "Depends on the marketplace", "Git commit hash"],
+    ["Install command", "<span class=\"mono\">npx aidentity add &lt;id&gt;</span>", "<span class=\"mono\">npx skills add owner/repo</span>", "Copy or a third-party CLI", "Inside the agent", "<span class=\"mono\">git clone</span> + copy"],
+    ["Agents", "Claude Code, Codex, Cursor, OpenCode, GitHub Copilot, Gemini CLI", "Many agents", "Many agents", "One", "Any, manually"],
+    ["Role bundles", `${(rolesData.roles || []).length} role setups (Individual and Enterprise)`, "No", "No", "Plugins can bundle skills", "No"],
+    ["Machine-readable index", "registry.json, search.json, llms.txt, OpenAPI, MCP", "Website and CLI", "Website", "Agent UI", "No"],
+  ];
+  const cols = ["", "Aidentity", "skills.sh", "SkillsMP", "Agent marketplaces", "Copying from GitHub"];
+
+  const faq = [
+    {
+      q: "Is Aidentity a skills.sh alternative?",
+      a: "It solves a narrower problem. skills.sh helps you find popular skills across all of GitHub. Aidentity lists fewer skills and checks each hosted one for security issues, license and provenance before it appears. Many people use both: discover broadly, then prefer a checked copy when one exists.",
+    },
+    {
+      q: "Are skills from large directories unsafe?",
+      a: "Not by default. Most are fine. The risk is that a skill is a prompt your agent follows with your tools, so one malicious or careless skill can run commands, read files or leak secrets. Without a review step, you are the review step.",
+    },
+    {
+      q: "Can I use Aidentity's checks on a skill it does not list?",
+      a: "Yes. The scanner is open source: run node scripts/scan-skills-security.js against a skills folder in a clone of the repo, or submit the skill so it is scanned in CI and added to the index.",
+    },
+  ];
+
+  const body = `
+<div class="wrap">
+  <div class="page-hero">
+    <span class="page-hero-kicker">Comparison · reviewed ${COMPARE_REVIEWED}</span>
+    <h1 class="page-title">Aidentity vs skills.sh, SkillsMP and agent marketplaces</h1>
+    <p class="page-lead">
+      There are several ways to get agent skills into Claude Code, Codex or Cursor. They make different trade-offs between
+      how many skills you can reach and how much is checked before you install one. This page lays them side by side,
+      including when another option is the better choice.
+    </p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="table-scroll">
+    <table class="table compare-table compare-wide">
+      <thead><tr>${cols.map((c) => `<th scope="col">${c}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${rows.map(([label, ...cells]) => `<tr><th scope="row">${label}</th>${cells.map((cell, i) => `<td data-label="${cols[i + 1]}">${cell}</td>`).join("")}</tr>`).join("\n        ")}
+      </tbody>
+    </table>
+    </div>
+    <p class="note">Facts about other services come from their public documentation and launch posts as of ${COMPARE_REVIEWED}. Spot something out of date? <a href="${REPO}/issues/new" rel="noopener">Open an issue</a>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>When to use each</h2>
+    <div class="three" style="margin-top:28px">
+      <div>
+        <h3>Use Aidentity</h3>
+        <p>When you want a short list you can install without reading every file first, need license and provenance for a team or enterprise review, or want a whole role set up in one command.</p>
+      </div>
+      <div>
+        <h3>Use a large directory</h3>
+        <p>When you need a niche skill nobody has curated yet, or want to see what is popular this week. Read the skill before you install it, or run the open-source scanner on it.</p>
+      </div>
+      <div>
+        <h3>Use your agent's marketplace</h3>
+        <p>When you only use one agent and want plugins that bundle skills with commands and hooks, managed from inside the agent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How to vet any skill in five minutes</h2>
+    <ol class="vet-list">
+      <li><strong>Read SKILL.md and every script it references.</strong> Look for commands that delete, upload or fetch-and-run.</li>
+      <li><strong>Search for hidden characters.</strong> Zero-width and bidirectional Unicode can hide instructions from a human reader.</li>
+      <li><strong>Check for secrets and endpoints.</strong> API keys, tokens or unfamiliar URLs have no place in a skill.</li>
+      <li><strong>Confirm the license and author.</strong> No license means you have no right to redistribute it inside your company.</li>
+      <li><strong>Pin a version.</strong> Install from a specific commit or digest so the skill cannot change under you.</li>
+    </ol>
+    <p class="note">Aidentity automates steps 2 to 5 for every hosted skill. Step 1 is still worth doing for anything that runs scripts.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Questions</h2>
+    <div class="faq" style="margin-top:28px">
+      ${faq.map((item) => `<details><summary>${esc(item.q)}</summary><p>${esc(item.a)}</p></details>`).join("\n      ")}
+    </div>
+    <p class="hero-actions" style="margin-top:32px"><a class="btn btn-shimmer" href="../skills/index.html">Browse ${registry.total} checked skills &rarr;</a><a class="btn btn-ghost" href="../setup/index.html">Build my role setup</a></p>
+  </div>
+</section>
+`;
+
+  write(
+    "compare/index.html",
+    layout({
+      title: "Aidentity vs skills.sh vs SkillsMP: agent skill directories compared",
+      description: "How Aidentity, skills.sh, SkillsMP, agent marketplaces and copying from GitHub compare on security scanning, licensing, size and install. Includes when to use each.",
+      depth: 1,
+      body,
+      page: "compare",
+      canonical: SITE + "/compare/",
+      keywords: "skills.sh alternative, SkillsMP alternative, agent skills directory, safe Claude Code skills, agent skill security, SKILL.md marketplace comparison",
+      jsonld: jsonld({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": SITE + "/compare/#page",
+            url: SITE + "/compare/",
+            name: "Aidentity vs skills.sh vs SkillsMP: agent skill directories compared",
+            dateModified: COMPARE_REVIEWED,
+            isPartOf: { "@id": SITE + "/#website" },
+            about: ["Agent skills", "SKILL.md", "Software supply chain security"],
+          },
+          {
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
+              { "@type": "ListItem", position: 2, name: "Compare", item: SITE + "/compare/" },
+            ],
+          },
+          {
+            "@type": "FAQPage",
+            mainEntity: faq.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })),
+          },
+        ],
+      }),
+    })
+  );
+}
+
 function buildSupport() {
   const body = `
 <section style="padding-top:44px">
@@ -3802,7 +4144,8 @@ function buildMachineReadable() {
     `- ${registry.total} entries: ${registry.distributable} hosted and installable, ${registry.total - registry.distributable} indexed with an upstream link only.`,
     `- Role setup playbooks (Individual or Enterprise): \`npx aidentity setup <role> --profile individual|enterprise --agent claude|cursor|codex|gemini|opencode|copilot\`.`,
     `- Install a single skill: \`npx aidentity add <id>\` or copy \`skills/<source>/<name>/\`.`,
-    `- Every skill is scanned by \`scripts/scan-skills-security.js\` (${security.verified}/${security.total_skills} verified, 0 critical findings) with SHA-256 digests in \`${SITE}/security.json\`.`,
+    `- Every hosted skill is scanned by \`scripts/scan-skills-security.js\` (${security.verified}/${security.total_skills} verified, 0 critical findings) with SHA-256 digests in \`${SITE}/security.json\`.`,
+    `- Compared with skills.sh, SkillsMP and agent marketplaces: ${SITE}/compare/ (Aidentity lists fewer skills and checks each hosted one for security, license and provenance).`,
     `- Pricing: $0 (100% free & open-source). See \`${SITE}/pricing.md\`.`,
     `- Licenses are per entry. MIT and Apache-2.0 are hosted; CC BY-SA 4.0 content keeps its share-alike terms; proprietary entries are not redistributed.`,
     `- Every source is re-checked weekly; \`registry/verified.json\` records the last check.`,
@@ -3872,19 +4215,20 @@ function buildMachineReadable() {
   write("llms.txt", llms.join("\n"));
 
   const urls = [
-    { loc: "/", priority: "1.0", changefreq: "daily" },
-    { loc: "/setup/", priority: "0.9", changefreq: "daily" },
-    { loc: "/skills/", priority: "0.9", changefreq: "daily" },
-    { loc: "/playbooks/", priority: "0.9", changefreq: "daily" },
-    { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
-    { loc: "/enterprise/", priority: "0.95", changefreq: "daily" },
-    { loc: "/sources/", priority: "0.8", changefreq: "weekly" },
-    { loc: "/for-agents/", priority: "0.9", changefreq: "daily" },
-    { loc: "/about/", priority: "0.7", changefreq: "monthly" },
-    { loc: "/bundles/", priority: "0.8", changefreq: "weekly" },
-    { loc: "/support/", priority: "0.6", changefreq: "monthly" },
-    { loc: "/pricing.md", priority: "0.7", changefreq: "monthly" },
-    { loc: "/okf/index.md", priority: "0.8", changefreq: "weekly" },
+    { loc: "/" },
+    { loc: "/setup/" },
+    { loc: "/skills/" },
+    { loc: "/playbooks/" },
+    { loc: "/guides/" },
+    { loc: "/enterprise/" },
+    { loc: "/sources/" },
+    { loc: "/for-agents/" },
+    { loc: "/about/" },
+    { loc: "/bundles/" },
+    { loc: "/support/" },
+    { loc: "/compare/" },
+    { loc: "/pricing.md" },
+    { loc: "/okf/index.md" },
     ...roles.map((r) => ({ loc: `/playbooks/${r.slug}/`, priority: "0.8", changefreq: "weekly" })),
     ...skills.map((skill) => ({ loc: `/skills/${skill.id}/`, priority: "0.7", changefreq: "weekly" })),
   ];
@@ -3896,9 +4240,7 @@ ${urls
   .map(
     (u) => `  <url>
     <loc>${SITE}${u.loc}</loc>
-    <lastmod>${GENERATED}</lastmod>
-    <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+    <lastmod>${CONTENT_DATE}</lastmod>
   </url>`
   )
   .join("\n")}
@@ -4508,6 +4850,7 @@ buildGuides();
 buildEnterprise();
 buildBundlesPage();
 buildSupport();
+buildCompare();
 buildMachineReadable();
 buildAgentSurface();
 
