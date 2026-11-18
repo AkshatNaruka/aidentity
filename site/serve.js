@@ -12,6 +12,7 @@ const path = require("path");
 
 const DIST = path.join(__dirname, "dist");
 const PORT = Number(process.argv[2]) || 4173;
+const BASE = new URL(process.env.SITE_URL || "https://akshatnaruka.github.io/aidentity").pathname.replace(/\/$/, "");
 
 const TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -30,7 +31,10 @@ if (!fs.existsSync(DIST)) {
 
 http
   .createServer((request, response) => {
-    const url = decodeURIComponent((request.url || "/").split("?")[0]);
+    let url = decodeURIComponent((request.url || "/").split("?")[0]);
+    // Production lives under /<repo>/ on GitHub Pages and the 404 page uses
+    // absolute links to it. Serve that prefix too so local preview matches.
+    if (url === BASE || url.startsWith(BASE + "/")) url = url.slice(BASE.length) || "/";
     let file = path.join(DIST, url);
 
     if (!file.startsWith(DIST)) {
