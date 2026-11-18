@@ -13,6 +13,7 @@ on:
       - "registry/**"
       - "skills/**"
       - "scripts/**"
+      - "site/**"
   workflow_dispatch: # manual only: Actions minutes are opt-in
 
 permissions:
@@ -49,6 +50,25 @@ jobs:
         run: |
           node scripts/generate-notices.js
           git diff --exit-code THIRD_PARTY_NOTICES.md
+
+  site:
+    name: Build and check site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Client script parses
+        run: node --check site/assets/app.js
+
+      - name: Build site
+        run: node site/build.js
+
+      - name: Links, headings and metadata
+        run: node scripts/check-site.js
 
   verify:
     name: Verify upstream sources
