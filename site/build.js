@@ -185,6 +185,7 @@ const sourceList = Object.entries(sources)
 
 // Hand-picked starting points. Falls back to the first distributable skills.
 const START_HERE = [
+  "aidentity/agent-brain",
   "mattpocock/engineering/grill-with-docs",
   "mattpocock/engineering/tdd",
   "mattpocock/engineering/code-review",
@@ -583,6 +584,7 @@ function skillBody(skill) {
 
 function buildHome() {
   const topPrioritySkillIds = [
+    "aidentity/agent-brain",
     "mattpocock/engineering/tdd",
     "mattpocock/engineering/code-review",
     "obra-superpowers/systematic-debugging",
@@ -3486,6 +3488,7 @@ function buildGuides() {
       <a href="#individual-vs-enterprise" class="pill-btn">2. Individual vs. Enterprise</a>
       <a href="#security-standard" class="pill-btn">3. 7-Gate Security Standard</a>
       <a href="#ai-visibility-architecture" class="pill-btn">4. AI Visibility Architecture</a>
+      <a href="#self-improving-loop" class="pill-btn">5. Self-Improving Agent Loop</a>
     </nav>
 
     <!-- SECTION 1: Coding Agent Directory Comparison -->
@@ -3684,6 +3687,34 @@ function buildGuides() {
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- SECTION 5: Self-improving agent loop -->
+    <div id="self-improving-loop" style="margin-bottom:40px">
+      <p class="kicker">Evidence Loop</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">5. Self-Improving Agent Loop on One Device</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        The <a href="../skills/aidentity/agent-brain/index.html">agent-brain</a> skill turns past sessions into reviewed rules for the next session. It is local, file-based, and reversible. It reads session exports, scores the process, proposes one small edit, and measures whether that edit helped.
+      </p>
+
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr><th>Stage</th><th>Command</th><th>Writes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-label="Stage"><strong>Observe</strong></td><td data-label="Command" class="mono">node scripts/brain.js collect</td><td data-label="Writes">sessions.jsonl, metrics and redacted snippets only</td></tr>
+            <tr><td data-label="Stage"><strong>Audit</strong></td><td data-label="Command" class="mono">node scripts/brain.js analyze</td><td data-label="Writes">reports/YYYY-MM-DD.md with a score and the top repeated cause</td></tr>
+            <tr><td data-label="Stage"><strong>Distill</strong></td><td data-label="Command" class="mono">node scripts/brain.js lessons</td><td data-label="Writes">lessons.jsonl with trigger, rule, and evidence</td></tr>
+            <tr><td data-label="Stage"><strong>Improve</strong></td><td data-label="Command" class="mono">propose, then apply &lt;id&gt; --yes</td><td data-label="Writes">proposals/ and a managed block in one instruction file</td></tr>
+            <tr><td data-label="Stage"><strong>Verify</strong></td><td data-label="Command" class="mono">verify &lt;id&gt; --result keep|revert</td><td data-label="Writes">experiments.jsonl outcome and a changelog entry</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-top:20px">
+        Guards that make this safe to run: no network calls, no raw transcripts, redaction before any write, a backup before every edit, approval through <span class="mono">--yes</span>, and a promotion gate of at least 3 post-change sessions and a 3 point score delta. Run <span class="mono">node scripts/brain.js demo</span> to see the whole loop on synthetic data.
+      </p>
     </div>
 
   </div>
