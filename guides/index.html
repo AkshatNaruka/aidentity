@@ -37,8 +37,8 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<link rel="stylesheet" href="../assets/style.css?v=mwkdoxqe">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://akshatnaruka.github.io/aidentity/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://akshatnaruka.github.io/aidentity/guides/"}]},{"@type":"TechArticle","headline":"Definitive Guides to AI Agent Skills, Role Setup & Security Verification","description":"Comparison of Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and Copilot skill paths, Individual vs Enterprise setup profiles, and 7-gate SKILL.md security scanning.","url":"https://akshatnaruka.github.io/aidentity/guides/","datePublished":"2026-11-17","dateModified":"2026-11-17","author":{"@type":"Person","name":"Akshat Naruka"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"}}]}</script>
+<link rel="stylesheet" href="../assets/style.css?v=mwsq73pp">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://akshatnaruka.github.io/aidentity/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://akshatnaruka.github.io/aidentity/guides/"}]},{"@type":"TechArticle","headline":"Definitive Guides to AI Agent Skills, Role Setup & Security Verification","description":"Comparison of Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and Copilot skill paths, Individual vs Enterprise setup profiles, and 7-gate SKILL.md security scanning.","url":"https://akshatnaruka.github.io/aidentity/guides/","datePublished":"2026-11-23","dateModified":"2026-11-23","author":{"@type":"Person","name":"Akshat Naruka"},"publisher":{"@id":"https://akshatnaruka.github.io/aidentity/#organization"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -112,6 +112,7 @@
       <a href="#individual-vs-enterprise" class="pill-btn">2. Individual vs. Enterprise</a>
       <a href="#security-standard" class="pill-btn">3. 7-Gate Security Standard</a>
       <a href="#ai-visibility-architecture" class="pill-btn">4. AI Visibility Architecture</a>
+      <a href="#self-improving-loop" class="pill-btn">5. Self-Improving Agent Loop</a>
     </nav>
 
     <!-- SECTION 1: Coding Agent Directory Comparison -->
@@ -246,7 +247,7 @@
       <p class="kicker">Defense in Depth</p>
       <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">3. How Aidentity Verifies Skill Security (7-Gate Static Analysis)</h2>
       <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
-        Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection directives that leak <span class="mono">.env</span> secrets, or destructive shell operations. Every skill in Aidentity (2499 files across 533 skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
+        Unverified <span class="mono">SKILL.md</span> files from random repositories can contain invisible Trojan-Source Unicode, prompt injection directives that leak <span class="mono">.env</span> secrets, or destructive shell operations. Every skill in Aidentity (2510 files across 534 skills) is scanned on every commit by <span class="mono">scripts/scan-skills-security.js</span>:
       </p>
 
       <div class="gate-grid">
@@ -312,6 +313,34 @@
       </div>
     </div>
 
+    <!-- SECTION 5: Self-improving agent loop -->
+    <div id="self-improving-loop" style="margin-bottom:40px">
+      <p class="kicker">Evidence Loop</p>
+      <h2 style="font-family:var(--serif);font-size:1.85rem;font-weight:400;margin:6px 0 16px">5. Self-Improving Agent Loop on One Device</h2>
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-bottom:20px">
+        The <a href="../skills/aidentity/agent-brain/index.html">agent-brain</a> skill turns past sessions into reviewed rules for the next session. It is local, file-based, and reversible. It reads session exports, scores the process, proposes one small edit, and measures whether that edit helped.
+      </p>
+
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr><th>Stage</th><th>Command</th><th>Writes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-label="Stage"><strong>Observe</strong></td><td data-label="Command" class="mono">node scripts/brain.js collect</td><td data-label="Writes">sessions.jsonl, metrics and redacted snippets only</td></tr>
+            <tr><td data-label="Stage"><strong>Audit</strong></td><td data-label="Command" class="mono">node scripts/brain.js analyze</td><td data-label="Writes">reports/YYYY-MM-DD.md with a score and the top repeated cause</td></tr>
+            <tr><td data-label="Stage"><strong>Distill</strong></td><td data-label="Command" class="mono">node scripts/brain.js lessons</td><td data-label="Writes">lessons.jsonl with trigger, rule, and evidence</td></tr>
+            <tr><td data-label="Stage"><strong>Improve</strong></td><td data-label="Command" class="mono">propose, then apply &lt;id&gt; --yes</td><td data-label="Writes">proposals/ and a managed block in one instruction file</td></tr>
+            <tr><td data-label="Stage"><strong>Verify</strong></td><td data-label="Command" class="mono">verify &lt;id&gt; --result keep|revert</td><td data-label="Writes">experiments.jsonl outcome and a changelog entry</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="color:var(--ink-soft);font-size:0.95rem;line-height:1.6;margin-top:20px">
+        Guards that make this safe to run: no network calls, no raw transcripts, redaction before any write, a backup before every edit, approval through <span class="mono">--yes</span>, and a promotion gate of at least 3 post-change sessions and a 3 point score delta. Run <span class="mono">node scripts/brain.js demo</span> to see the whole loop on synthetic data.
+      </p>
+    </div>
+
   </div>
 </section>
 
@@ -330,7 +359,7 @@
           The verified registry of AI agent skills, playbooks, and curricula. Every file cryptographically verified with SHA-256 digests and validated against SPDX open-source licenses.
         </p>
         <div class="footer-chips">
-          <span class="footer-chip">533 Skills</span>
+          <span class="footer-chip">534 Skills</span>
           <span class="footer-chip">21 Roles</span>
           <span class="footer-chip">6 Tracks</span>
           <span class="footer-chip">100% Safe</span>
@@ -350,11 +379,11 @@
         <h4 class="footer-heading">Registry</h4>
         <ul class="footer-links">
           <li><a href="../setup/index.html">Setup Generator (5 Qs)</a></li>
-          <li><a href="../skills/index.html">Browse All 533 Skills</a></li>
+          <li><a href="../skills/index.html">Browse All 534 Skills</a></li>
           <li><a href="../playbooks/index.html">Role Playbooks &amp; Blueprints</a></li>
           <li><a href="../playbooks/index.html#courses">Guided Learning Tracks</a></li>
           <li><a href="../guides/index.html">Engineering Guides</a></li>
-          <li><a href="../sources/index.html">Sources &amp; Authors (30)</a></li>
+          <li><a href="../sources/index.html">Sources &amp; Authors (31)</a></li>
         </ul>
       </div>
 
@@ -387,7 +416,7 @@
 
     <div class="footer-bottom">
       <div class="footer-legal">
-        <p>Built by <a href="https://x.com/probiex007" rel="noopener" target="_blank"><strong>@probiex007</strong> on X</a> · Aidentity is an open registry, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-17. Content under MIT, Apache-2.0 and CC0 (see <a href="../about/index.html#licensing">licensing</a>).</p>
+        <p>Built by <a href="https://x.com/probiex007" rel="noopener" target="_blank"><strong>@probiex007</strong> on X</a> · Aidentity is an open registry, not a fork. Every skill belongs to its upstream author.<br>Registry generated 2026-11-23. Content under MIT, Apache-2.0 and CC0 (see <a href="../about/index.html#licensing">licensing</a>).</p>
       </div>
       <div class="footer-actions">
         <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top of page">
@@ -398,6 +427,6 @@
     </div>
   </div>
 </footer>
-<script src="../assets/app.js?v=mwkdoxqe" defer></script>
+<script src="../assets/app.js?v=mwsq73pp" defer></script>
 </body>
 </html>

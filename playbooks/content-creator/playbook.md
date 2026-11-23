@@ -4,7 +4,7 @@ title: "Content creator AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Copy, editing, SEO, social, video, email and launch content. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/content-creator/
 tags: [content-creator, copywriting, social, seo, video, email, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Content creator AI Agent Setup Playbook (Individual & Enterprise)

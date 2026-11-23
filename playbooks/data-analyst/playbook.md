@@ -4,7 +4,7 @@ title: "Data analyst AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Excel, SQL, cleaning, dashboards, statistics and reporting. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/data-analyst/
 tags: [data-analyst, corporate, database, analytics, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Data analyst AI Agent Setup Playbook (Individual & Enterprise)

@@ -4,7 +4,7 @@ title: "Customer support AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Tickets, escalation, help-centre content and customer research. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/support/
 tags: [support, support, docs, research, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Customer support AI Agent Setup Playbook (Individual & Enterprise)

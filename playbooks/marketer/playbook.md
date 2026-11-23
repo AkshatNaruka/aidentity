@@ -4,7 +4,7 @@ title: "Growth marketer AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Acquisition, ads, CRO, analytics, email, launch and retention. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/marketer/
 tags: [marketer, growth, ads, analytics, cro, email, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Growth marketer AI Agent Setup Playbook (Individual & Enterprise)

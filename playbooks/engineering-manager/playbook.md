@@ -4,7 +4,7 @@ title: "Engineering manager AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Sprint delivery, capacity, retrospectives, hiring and people ops. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/engineering-manager/
 tags: [engineering-manager, project-management, people, planning, engineering, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Engineering manager AI Agent Setup Playbook (Individual & Enterprise)

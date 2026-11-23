@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "Full-Stack Product Design, UI Systems & Conversion Engineering"
 target: https://akshatnaruka.github.io/aidentity/playbooks/designer/#curriculum
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Full-Stack Product Design, UI Systems & Conversion Engineering

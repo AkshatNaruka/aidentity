@@ -4,7 +4,7 @@ title: "Music producer AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Lyrics, song structure, mastering, album concepts and release assets. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/music-producer/
 tags: [music-producer, music, motion, playbook, agent-setup]
-timestamp: 2026-11-17
+timestamp: 2026-11-23
 ---
 
 # Music producer AI Agent Setup Playbook (Individual & Enterprise)
