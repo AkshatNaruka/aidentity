@@ -4,7 +4,7 @@ title: "Software architect AI Agent Setup Playbook (Individual & Enterprise)"
 description: "System design, interfaces, diagrams, trade-offs and technical direction. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/architect/
 tags: [architect, architecture, design, api, docs, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Software architect AI Agent Setup Playbook (Individual & Enterprise)

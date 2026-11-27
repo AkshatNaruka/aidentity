@@ -4,7 +4,7 @@ title: "Finance analyst AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Three-statement models, DCF, comps, LBO, budgets and Excel workflows. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/finance-analyst/
 tags: [finance-analyst, finance, corporate, quant, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Finance analyst AI Agent Setup Playbook (Individual & Enterprise)

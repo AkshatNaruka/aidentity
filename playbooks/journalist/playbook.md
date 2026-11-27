@@ -4,7 +4,7 @@ title: "Journalist AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Reporting, data journalism, editorial workflow and source verification. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/journalist/
 tags: [journalist, media, docs, research, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Journalist AI Agent Setup Playbook (Individual & Enterprise)

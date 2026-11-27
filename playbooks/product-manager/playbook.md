@@ -4,7 +4,7 @@ title: "Product manager AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Specs, discovery, prioritisation, stakeholder updates, sprint planning. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/product-manager/
 tags: [product-manager, planning, project-management, research, docs, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Product manager AI Agent Setup Playbook (Individual & Enterprise)

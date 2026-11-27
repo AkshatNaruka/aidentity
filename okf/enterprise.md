@@ -4,7 +4,7 @@ title: Aidentity Enterprise AI Agent Trust & Security Architecture
 description: Complete enterprise governance framework: zero external telemetry, SHA-256 lockfile immutability, 7-gate AST static analysis, runtime pre-execution hooks, air-gapped private VPC mirroring, and compliance mapping (NIST SSDF & OWASP LLM).
 resource: https://akshatnaruka.github.io/aidentity/enterprise/
 tags: [enterprise, ciso-approval, zero-telemetry, sha256-lockfile, air-gapped, nist-ssdf, owasp-llm, runtime-hooks]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Aidentity Enterprise AI Agent Security & Trust Architecture

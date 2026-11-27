@@ -1,6 +1,6 @@
 # Pricing: Aidentity
 
-Last updated: 2026-11-23
+Last updated: 2026-11-27
 
 Aidentity is 100% free and open-source. There are no paid tiers, no seat limits, no API keys required, and no paywalls.
 

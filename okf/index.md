@@ -4,7 +4,7 @@ title: Aidentity Open Knowledge Format (OKF) Bundle
 description: Cross-linked markdown knowledge graph of Aidentity skills, 21 role setup playbooks, 6 courses, and 7-gate security verification.
 resource: https://akshatnaruka.github.io/aidentity/okf/index.md
 tags: [okf, ai-agent-skills, playbooks, courses, security, claude-code, cursor, codex, gemini-cli]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Aidentity Knowledge Bundle (OKF v0.1)

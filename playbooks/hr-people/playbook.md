@@ -4,7 +4,7 @@ title: "HR / people ops AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Hiring, interviews, job descriptions, onboarding and policy. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/hr-people/
 tags: [hr-people, people, docs, project-management, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # HR / people ops AI Agent Setup Playbook (Individual & Enterprise)

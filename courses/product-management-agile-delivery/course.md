@@ -2,7 +2,7 @@
 type: CourseRedirect
 title: "AI-Native Product Management, Spec Writing & Sprint Delivery"
 target: https://akshatnaruka.github.io/aidentity/playbooks/product-manager/#curriculum
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # AI-Native Product Management, Spec Writing & Sprint Delivery

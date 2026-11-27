@@ -4,7 +4,7 @@ title: "Founder / Startup builder AI Agent Setup Playbook (Individual & Enterpri
 description: "End-to-end startup building: product specs, shipping MVPs, pricing, launch, AI SEO, and pitch decks. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/founder/
 tags: [founder, planning, engineering, growth, seo, finance, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Founder / Startup builder AI Agent Setup Playbook (Individual & Enterprise)

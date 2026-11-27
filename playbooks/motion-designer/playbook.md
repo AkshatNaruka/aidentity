@@ -4,7 +4,7 @@ title: "Motion designer AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Motion graphics, video composition, easing, rendering and review. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/motion-designer/
 tags: [motion-designer, motion, video, design, film, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Motion designer AI Agent Setup Playbook (Individual & Enterprise)

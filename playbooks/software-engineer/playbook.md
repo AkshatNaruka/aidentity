@@ -4,7 +4,7 @@ title: "Software engineer AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Day-to-day coding: planning, implementation, review, tests, debugging. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/software-engineer/
 tags: [software-engineer, engineering, code-review, testing, debugging, git, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # Software engineer AI Agent Setup Playbook (Individual & Enterprise)

@@ -4,7 +4,7 @@ title: "SEO specialist AI Agent Setup Playbook (Individual & Enterprise)"
 description: "Technical SEO, content, schema, internal links and AI search visibility. Verified skills, rules, subagents, and safety hooks for Claude Code, Cursor, Codex, and Gemini CLI."
 resource: https://akshatnaruka.github.io/aidentity/playbooks/seo-specialist/
 tags: [seo-specialist, seo, copywriting, analytics, playbook, agent-setup]
-timestamp: 2026-11-23
+timestamp: 2026-11-27
 ---
 
 # SEO specialist AI Agent Setup Playbook (Individual & Enterprise)
