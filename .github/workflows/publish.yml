@@ -33,9 +33,11 @@ jobs:
       # package aidentity -> Settings -> Trusted Publishing -> GitHub
       # owner AkshatNaruka, repo aidentity, workflow publish.yml.
       - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             npm publish --access public --dry-run
           else
-            npm publish --access public --provenance
+            npm publish --access public
           fi
