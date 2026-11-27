@@ -45,6 +45,11 @@
         "description": { "type": "string", "minLength": 1 },
         "category": { "type": "string" },
         "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "tokens": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Approximate context cost of SKILL.md, in tokens. Null for index-only entries."
+        },
         "status": { "enum": ["stable", "in-progress", "deprecated"] },
         "path": {
           "type": ["string", "null"],

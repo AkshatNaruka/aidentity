@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Aidentity</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body data-token="__AIDENTITY_TOKEN__" data-cwd="__AIDENTITY_CWD__">
+
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div>
+        <div class="brand-name">Aidentity</div>
+        <div class="brand-sub">skill manager</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Sections">
+      <button class="nav-item is-active" data-page="overview">
+        <span class="nav-icon">◧</span> Overview
+      </button>
+      <button class="nav-item" data-page="browse">
+        <span class="nav-icon">⌕</span> Browse
+      </button>
+      <button class="nav-item" data-page="installed">
+        <span class="nav-icon">◉</span> Installed <span class="pill" id="nav-installed-count">0</span>
+      </button>
+      <button class="nav-item" data-page="stacks">
+        <span class="nav-icon">▤</span> Stacks
+      </button>
+      <button class="nav-item" data-page="roles">
+        <span class="nav-icon">◈</span> Roles
+      </button>
+      <button class="nav-item" data-page="security">
+        <span class="nav-icon">⛨</span> Security
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="workspace">
+        <div class="label">Workspace</div>
+        <div class="workspace-path" id="workspace-path" title=""></div>
+        <button class="ghost small" id="change-folder">Change folder</button>
+      </div>
+      <div class="rail-meta" id="rail-meta"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- OVERVIEW -->
+    <section class="page is-active" data-page="overview">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Workspace</div>
+          <h1>What this agent knows</h1>
+        </div>
+        <div class="head-actions">
+          <button class="ghost" id="refresh">Refresh</button>
+          <button class="primary" data-goto="browse">Add skills</button>
+        </div>
+      </header>
+
+      <div class="stat-row" id="overview-stats"></div>
+
+      <div class="split">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Installed here</h2>
+            <span class="muted" id="overview-installed-note"></span>
+          </div>
+          <div id="overview-installed" class="stack-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Health</h2></div>
+          <div id="overview-health"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Agents in this folder</h2>
+          <span class="muted">Aidentity writes to whichever agent you pick.</span>
+        </div>
+        <div class="agent-grid" id="agent-grid"></div>
+      </div>
+    </section>
+
+    <!-- BROWSE -->
+    <section class="page" data-page="browse">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Index</div>
+          <h1>Find a skill</h1>
+        </div>
+        <div class="head-actions">
+          <kbd class="hint">⌘K</kbd>
+        </div>
+      </header>
+
+      <div class="search-bar">
+        <input id="search-input" type="search" placeholder="Describe the task, e.g. “postgres migrations” or “code review”" autocomplete="off" spellcheck="false">
+        <select id="category-filter" aria-label="Category"><option value="">All categories</option></select>
+        <select id="agent-select" aria-label="Install into"></select>
+      </div>
+
+      <div class="result-meta" id="result-meta"></div>
+      <div class="results" id="results"></div>
+    </section>
+
+    <!-- INSTALLED -->
+    <section class="page" data-page="installed">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Local state</div>
+          <h1>Installed</h1>
+        </div>
+        <div class="head-actions">
+          <button class="ghost" id="update-all">Update all</button>
+        </div>
+      </header>
+
+      <div class="panel budget-panel">
+        <div class="budget-head">
+          <h2>Context budget</h2>
+          <span class="muted" id="budget-note"></span>
+        </div>
+        <div class="budget-bar"><div class="budget-fill" id="budget-fill"></div></div>
+        <div class="budget-legend" id="budget-legend"></div>
+      </div>
+
+      <div id="installed-list" class="installed-list"></div>
+    </section>
+
+    <!-- STACKS -->
+    <section class="page" data-page="stacks">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Curated</div>
+          <h1>Stacks</h1>
+        </div>
+        <span class="muted">Install a whole task in one click.</span>
+      </header>
+      <div class="stack-grid" id="stack-grid"></div>
+    </section>
+
+    <!-- ROLES -->
+    <section class="page" data-page="roles">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Setup</div>
+          <h1>Roles</h1>
+        </div>
+        <div class="head-actions">
+          <select id="profile-select" aria-label="Profile">
+            <option value="individual">Individual</option>
+            <option value="enterprise">Enterprise</option>
+          </select>
+        </div>
+      </header>
+      <div class="role-grid" id="role-grid"></div>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="page" data-page="security">
+      <header class="page-head">
+        <div>
+          <div class="kicker">Trust</div>
+          <h1>Security</h1>
+        </div>
+        <button class="ghost" id="recheck">Re-check installed</button>
+      </header>
+      <div class="stat-row" id="security-stats"></div>
+      <div class="panel">
+        <div class="panel-head"><h2>Verification policy</h2></div>
+        <div id="security-policy"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Integrity of installed skills</h2></div>
+        <div id="security-integrity"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer-scrim" data-close></div>
+  <div class="drawer-body" role="dialog" aria-modal="true" aria-label="Skill details">
+    <button class="drawer-close" data-close aria-label="Close">×</button>
+    <div id="drawer-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

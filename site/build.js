@@ -281,6 +281,7 @@ ${jsonld ? `<script type="application/ld+json">${jsonld.replace(/\s*—\s*/g, ",
     <div class="site-nav-group">
       <nav class="site-nav" id="site-nav" aria-label="Primary">
         <a href="${p}setup/index.html"${page === "setup" ? ' aria-current="page"' : ""}>Setup</a>
+        <a href="${p}download/index.html"${page === "download" ? ' aria-current="page"' : ""}>Download</a>
         <a href="${p}skills/index.html"${page === "browse" ? ' aria-current="page"' : ""}>Browse</a>
         <a href="${p}playbooks/index.html"${page === "playbooks" || page === "roles" || page === "courses" ? ' aria-current="page"' : ""}>Playbooks</a>
         <a href="${p}guides/index.html"${page === "guides" ? ' aria-current="page"' : ""}>Guides</a>
@@ -635,7 +636,8 @@ function buildHome() {
     </p>
     ${rotatingCommandBlock(heroCommands)}
     <div class="hero-actions">
-      <a href="setup/index.html" class="btn btn-shimmer">Launch Setup Generator (5 Qs) &rarr;</a>
+      <a href="https://github.com/AkshatNaruka/aidentity/releases/latest/download/Aidentity-mac.dmg" class="btn btn-shimmer">Download Mac App &darr;</a>
+      <a href="setup/index.html" class="btn btn-ghost">Launch Setup Generator (5 Qs) &rarr;</a>
       <a href="playbooks/index.html" class="btn btn-ghost">Role Playbooks (${homeRoles.length})</a>
       <a href="skills/index.html" class="btn btn-ghost">Browse All ${registry.total} Skills</a>
     </div>
@@ -3816,6 +3818,83 @@ function buildSupport() {
   }));
 }
 
+function buildDownload() {
+  const release = "https://github.com/AkshatNaruka/aidentity/releases/latest/download";
+  const body = `
+<section class="hero" style="padding-bottom:28px">
+  <div class="wrap">
+    <p class="kicker">Mac app</p>
+    <h1>Aidentity for macOS</h1>
+    <p class="lede" style="max-width:62ch">
+      A local-first skill manager for AI coding agents: browse all ${registry.total} skills, install with one click,
+      see the context cost of every skill and bundle, apply role setups, and audit what is installed.
+      Binds to 127.0.0.1. Sends nothing off the machine.
+    </p>
+    <div class="hero-actions" style="margin-top:22px">
+      <a href="${release}/Aidentity-mac.dmg" class="btn btn-shimmer">Download .dmg (macOS) &darr;</a>
+      <a href="${release}/Aidentity-mac.zip" class="btn btn-ghost">Download .zip</a>
+      <a href="https://github.com/AkshatNaruka/aidentity/releases" class="btn btn-ghost">All releases</a>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:16px">
+      macOS 11+. Ad-hoc signed: on first launch, right-click the app and choose Open.
+    </p>
+  </div>
+</section>
+
+<section style="padding:40px 0">
+  <div class="wrap" style="max-width:820px">
+    <h2 style="font-family:var(--serif);font-weight:400;font-size:1.6rem;margin:0 0 14px">What it does</h2>
+    <div class="support-grid">
+      <div class="support-card">
+        <h3>Browse ${registry.total} skills</h3>
+        <p>Instant search with reasons. Filter by category or source. Every skill shows its license, security status and context cost.</p>
+      </div>
+      <div class="support-card">
+        <h3>Context budget</h3>
+        <p>See how many tokens each skill, bundle and role adds to your agent's window. A 10-skill bundle is about 22k tokens.</p>
+      </div>
+      <div class="support-card">
+        <h3>One-click stacks</h3>
+        <p>Install a whole task at once: web app, mobile app, content, security review, data &amp; AI, devops, cloud.</p>
+      </div>
+      <div class="support-card">
+        <h3>Role setups</h3>
+        <p>Apply an Individual or Enterprise profile for any of 21 roles. Preview the plan before writing anything.</p>
+      </div>
+      <div class="support-card">
+        <h3>Security audit</h3>
+        <p>Every install is blocked unless verified. Content hashes detect drift. Untracked skill directories are flagged.</p>
+      </div>
+      <div class="support-card">
+        <h3>No network</h3>
+        <p>The app reads the registry from the package and binds to 127.0.0.1. Nothing is sent off the machine.</p>
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--serif);font-weight:400;font-size:1.6rem;margin:32px 0 14px">Install from the terminal instead</h2>
+    <pre style="background:var(--paper-2);border:1px solid var(--rule);border-radius:4px;padding:16px;font-family:var(--mono);font-size:12.5px;overflow-x:auto">npx aidentity setup software-engineer --profile individual
+npx aidentity search "postgres migrations"
+npx aidentity add supabase/supabase-postgres-best-practices --agent claude
+npx aidentity doctor</pre>
+
+    <p style="color:var(--muted);font-size:13px;margin-top:18px">
+      Prefer the CLI or the MCP server? Both ship in the same package:
+      <code style="font-family:var(--mono)">npx aidentity mcp</code>.
+    </p>
+  </div>
+</section>
+`;
+  write("download/index.html", layout({
+    title: "Download",
+    description: "Download the Aidentity Mac app: a local-first skill manager for AI coding agents.",
+    depth: 1,
+    body,
+    page: "download",
+    canonical: SITE + "/download/",
+  }));
+}
+
+
 function buildMachineReadable() {
   write("registry.json", JSON.stringify(registry, null, 2) + "\n");
 
@@ -4213,7 +4292,7 @@ function buildAgentSurface() {
       mcp: `${SITE}/for-agents/#mcp`,
     },
     usage: [
-      "Run `npx aidentity setup <role> --profile <individual|enterprise>` for one-command role setup.",
+      "Run `npx aidentity setup {role} --profile {individual|enterprise}` for one-command role setup.",
       "Fetch /search.json and /security.json once. Verify `verified: true` before recommending or installing any skill.",
       "Fetch content_url for the full SKILL.md before recommending an install.",
       "Respect distributable: index-only entries (content_url null) must be linked upstream, not installed.",
@@ -4540,6 +4619,7 @@ buildGuides();
 buildEnterprise();
 buildBundlesPage();
 buildSupport();
+buildDownload();
 buildMachineReadable();
 buildAgentSurface();
 

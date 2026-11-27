@@ -9,7 +9,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { registry, bundles, recommend, tokens } = require("./recommend");
+const { registry, bundles, recommend, tokens } = require("./search");
+const { AGENT_TARGETS } = require("./agents");
 
 const ROOT = path.join(__dirname, "..", "..");
 const ROLES_FILE = path.join(ROOT, "roles", "roles.json");
@@ -21,64 +22,6 @@ const rolesData = fs.existsSync(ROLES_FILE)
 const securityData = fs.existsSync(SECURITY_FILE)
   ? JSON.parse(fs.readFileSync(SECURITY_FILE, "utf8"))
   : { skills: {} };
-
-const AGENT_TARGETS = {
-  claude: {
-    label: "Claude Code",
-    rootDir: ".claude",
-    skillsDir: ".claude/skills",
-    rulesDir: ".claude/rules",
-    agentsDir: ".claude/agents",
-    commandsDir: ".claude/commands",
-    hooksDir: ".claude/hooks",
-    settingsFile: ".claude/settings.json",
-  },
-  cursor: {
-    label: "Cursor",
-    rootDir: ".cursor",
-    skillsDir: ".cursor/skills",
-    rulesDir: ".cursor/rules",
-    agentsDir: ".cursor/agents",
-    commandsDir: ".cursor/commands",
-    hooksDir: ".cursor/hooks",
-  },
-  codex: {
-    label: "Codex",
-    rootDir: ".codex",
-    skillsDir: ".codex/skills",
-    rulesDir: ".codex/rules",
-    agentsDir: ".codex/agents",
-    commandsDir: ".codex/commands",
-    hooksDir: ".codex/hooks",
-  },
-  gemini: {
-    label: "Gemini CLI",
-    rootDir: ".gemini",
-    skillsDir: ".gemini/skills",
-    rulesDir: ".gemini/rules",
-    agentsDir: ".gemini/agents",
-    commandsDir: ".gemini/commands",
-    hooksDir: ".gemini/hooks",
-  },
-  opencode: {
-    label: "OpenCode",
-    rootDir: ".opencode",
-    skillsDir: ".opencode/skills",
-    rulesDir: ".opencode/rules",
-    agentsDir: ".opencode/agents",
-    commandsDir: ".opencode/commands",
-    hooksDir: ".opencode/hooks",
-  },
-  copilot: {
-    label: "GitHub Copilot",
-    rootDir: ".github",
-    skillsDir: ".github/skills",
-    rulesDir: ".github/rules",
-    agentsDir: ".github/agents",
-    commandsDir: ".github/commands",
-    hooksDir: ".github/hooks",
-  },
-};
 
 function findRole(query) {
   if (!query) return null;
@@ -171,6 +114,7 @@ function buildRolePlan({ role: roleInput, profile: profileKey = "individual", ta
       license: skill.source.license,
       source: skill.source.repo,
       path: skill.path,
+      tokens: skill.tokens || null,
       install: skill.install,
       security: {
         status: sec.status,
@@ -280,7 +224,7 @@ function executeSetup(plan, { global = false, dryRun = false, cwd = process.cwd(
   const baseRoot = global ? process.env.HOME || process.env.USERPROFILE : cwd;
   const actions = [];
 
-  const copyItem = (relSource, destSubdir, destName, kind) => {
+  const copyItem = (relSource, destSubdir, destName, kind, meta = {}) => {
     const src = path.join(ROOT, relSource);
     const destDir = path.join(baseRoot, destSubdir);
     const dest = path.join(destDir, destName);
@@ -302,13 +246,18 @@ function executeSetup(plan, { global = false, dryRun = false, cwd = process.cwd(
     } else {
       fs.copyFileSync(src, dest);
     }
-    actions.push({ kind, id: relSource, status: "installed", destination: relDest });
+    actions.push({ kind, id: relSource, status: "installed", destination: relDest, absolute: dest, ...meta });
   };
 
   // 1. Skills (already security-gated in buildRolePlan)
   for (const skill of plan.skills) {
     const skillDir = path.dirname(skill.path);
-    copyItem(skillDir, target.skillsDir, path.basename(skill.id), "skill");
+    copyItem(skillDir, target.skillsDir, path.basename(skill.id), "skill", {
+      skillId: skill.id,
+      skillName: skill.name,
+      sourceRepo: skill.source,
+      sourceLicense: skill.license,
+    });
   }
 
   // 2. Rules
@@ -331,6 +280,40 @@ function executeSetup(plan, { global = false, dryRun = false, cwd = process.cwd(
   // 5. Hooks
   for (const hookPath of plan.hooks) {
     copyItem(hookPath, target.hooksDir, path.basename(hookPath), "hook");
+  }
+
+  // 6. Record everything in the install manifest so it can be listed,
+  //    verified and removed later.
+  if (!dryRun) {
+    try {
+      const { contentHash, readManifest, writeManifest } = require("./installed");
+      let manifest = readManifest({ cwd: baseRoot, global: false });
+      for (const action of actions) {
+        if (action.status !== "installed" || !action.absolute) continue;
+        const item = {
+          id: action.skillId || action.id,
+          name: action.skillName || path.basename(action.id),
+          kind: action.kind,
+          agent: plan.agent,
+          path: path.relative(baseRoot, action.absolute).split(path.sep).join("/"),
+          content_hash: contentHash(action.absolute),
+          source_repo: action.sourceRepo || "AkshatNaruka/aidentity",
+          source_license: action.sourceLicense || "MIT",
+          installed_at: new Date().toISOString(),
+          via: `setup:${plan.role.slug}:${plan.profile.slug}`,
+        };
+        manifest = {
+          ...manifest,
+          items: manifest.items.filter(
+            (entry) => !(entry.id === item.id && entry.agent === item.agent && entry.kind === item.kind)
+          ).concat(item),
+        };
+      }
+      writeManifest(manifest, { cwd: baseRoot, global: false });
+    } catch (error) {
+      // A manifest failure must not fail an otherwise successful install.
+      actions.push({ kind: "manifest", id: "installed.json", status: "skipped", reason: error.message });
+    }
   }
 
   return {

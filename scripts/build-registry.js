@@ -280,6 +280,9 @@ function build() {
     const description = (fm.description || "").replace(/\s+/g, " ").trim();
     const rest = rel.slice(1);
 
+    // Context cost: agents load SKILL.md into the window, so the file size is
+    // the number that matters. ~4 bytes per token is the usual approximation.
+    const tokens = Math.max(1, Math.round(fs.statSync(file).size / 4));
     let status = "stable";
     if (rel.includes("deprecated")) status = "deprecated";
     else if (rel.includes("in-progress")) status = "in-progress";
@@ -296,6 +299,7 @@ function build() {
       category,
       tags,
       status,
+      tokens,
       path: path.relative(ROOT, file),
       source: {
         key: sourceKey,

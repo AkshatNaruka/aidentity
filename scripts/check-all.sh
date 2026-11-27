@@ -17,4 +17,6 @@ echo "→ tools doc"
 node scripts/build-tools-doc.js --check
 echo "→ validate"
 node scripts/validate.js
+echo "→ test"
+node scripts/test.js
 echo "✓ all checks passed"

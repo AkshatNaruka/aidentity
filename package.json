@@ -1,6 +1,6 @@
 {
   "name": "aidentity",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Install AI agent skills from a verified, machine-readable registry.",
   "keywords": [
     "ai",
@@ -25,6 +25,7 @@
   },
   "files": [
     "cli",
+    "app",
     "registry",
     "skills",
     "bundles",
@@ -50,11 +51,18 @@
     "notices": "node scripts/generate-notices.js",
     "verify": "node scripts/verify-sources.js",
     "serve": "node site/serve.js",
+    "app": "electron app/main.js",
+    "app:web": "node app/server.js",
+    "app:build:mac": "bash scripts/build-mac-app.sh",
     "mcp": "node cli/mcp.js",
     "recommend": "node cli/index.js recommend",
     "setup": "node cli/index.js setup",
     "audit": "node cli/index.js audit",
-    "prepublishOnly": "node scripts/build-registry.js --check && node scripts/scan-skills-security.js --check && node scripts/check-licenses.js && node scripts/validate.js"
+    "test": "node scripts/test.js",
+    "prepublishOnly": "node scripts/build-registry.js --check && node scripts/scan-skills-security.js --check && node scripts/check-licenses.js && node scripts/validate.js && node scripts/test.js"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11"
   },
   "funding": [
     {
@@ -65,5 +73,8 @@
       "type": "individual",
       "url": "https://paypal.me/AkshatNaruka007"
     }
-  ]
+  ],
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
 }

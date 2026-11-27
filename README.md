@@ -25,7 +25,7 @@
 
 </div>
 
-> **526 skills · 507 installable · 25 sources · 47 categories · re-verified weekly**
+> **534 skills · 515 installable · 31 sources · 47 categories · re-verified weekly**
 
 ```bash
 npx aidentity add code-review
@@ -108,6 +108,20 @@ node scripts/install.js starter-10 --platform claude
 No config, no account, no vendor lock-in. The skill lands in `.claude/skills/`, `.cursor/skills/`, `.codex/skills/`, `.gemini/skills/`, `.opencode/skills/` or `.github/skills/`.
 
 **Supported agents:** Claude Code · Cursor · Codex · Gemini CLI · OpenCode · GitHub Copilot
+
+### Desktop app
+
+```bash
+npx aidentity app            # opens the desktop window if Electron is installed
+npx aidentity app --web      # same UI in a browser tab, no Electron
+npm run app:build:mac        # build dist/Aidentity.app (macOS)
+```
+
+The app is a local-first skill manager: it shows what each agent has installed,
+the context cost of each skill and bundle, search across all 534 skills, one-click
+stack installs, role setup, and a security audit. It binds to 127.0.0.1 and sends
+nothing off the machine. Every install is recorded in `.aidentity/installed.json`
+with a content hash, so `aidentity verify` and `aidentity doctor` can detect drift.
 
 ---
 
