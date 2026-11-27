@@ -32,6 +32,13 @@ jobs:
       # publish credential. Requires a Trusted Publisher entry on npmjs.com:
       # package aidentity -> Settings -> Trusted Publishing -> GitHub
       # owner AkshatNaruka, repo aidentity, workflow publish.yml.
+      - name: Configure npm auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
